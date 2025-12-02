@@ -1,0 +1,106 @@
+//
+//  ContentView.swift
+//  LeaveWise
+//
+//  메인 탭 뷰
+//
+
+import SwiftUI
+import SwiftData
+
+struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var profiles: [UserProfile]
+    @Query private var leaveRecords: [LeaveRecord]
+    @Query private var bonusLeaves: [BonusLeave]
+
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+
+    var currentProfile: UserProfile? {
+        profiles.first
+    }
+
+    var body: some View {
+        Group {
+            if hasCompletedOnboarding, let profile = currentProfile {
+                MainTabView(profile: profile)
+                    .onAppear {
+                        updateWidget()
+                    }
+                    .onChange(of: profile.usedLeave) { _, _ in
+                        updateWidget()
+                    }
+                    .onChange(of: profile.totalAnnualLeave) { _, _ in
+                        updateWidget()
+                    }
+                    .onChange(of: leaveRecords.count) { _, _ in
+                        updateWidget()
+                    }
+                    .onChange(of: bonusLeaves.count) { _, _ in
+                        updateWidget()
+                    }
+            } else {
+                OnboardingView(isOnboardingComplete: $hasCompletedOnboarding)
+            }
+        }
+    }
+
+    private func updateWidget() {
+        guard let profile = currentProfile else { return }
+        WidgetService.shared.updateWidgetData(
+            profile: profile,
+            bonusLeaves: bonusLeaves,
+            leaveRecords: leaveRecords
+        )
+    }
+}
+
+struct MainTabView: View {
+    @Bindable var profile: UserProfile
+    @State private var selectedTab = 0
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            HomeView(profile: profile)
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text("홈")
+                }
+                .tag(0)
+
+            CalendarView(profile: profile)
+                .tabItem {
+                    Image(systemName: "calendar")
+                    Text("캘린더")
+                }
+                .tag(1)
+
+            AddLeaveView(profile: profile)
+                .tabItem {
+                    Image(systemName: "plus.circle.fill")
+                    Text("등록")
+                }
+                .tag(2)
+
+            RecommendationsView(profile: profile)
+                .tabItem {
+                    Image(systemName: "lightbulb.fill")
+                    Text("추천")
+                }
+                .tag(3)
+
+            SettingsView(profile: profile)
+                .tabItem {
+                    Image(systemName: "gearshape.fill")
+                    Text("설정")
+                }
+                .tag(4)
+        }
+        .tint(Color(red: 0.0, green: 0.4, blue: 0.9))
+    }
+}
+
+#Preview {
+    ContentView()
+        .modelContainer(for: [UserProfile.self, LeaveRecord.self, BonusLeave.self], inMemory: true)
+}
