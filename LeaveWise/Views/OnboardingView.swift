@@ -16,6 +16,7 @@ struct OnboardingView: View {
     @State private var userName = ""
     @State private var totalLeave: Double = 15
     @State private var yearStartMonth = 1
+    @FocusState private var isNameFieldFocused: Bool
 
     private let blueColor = Color(red: 0.0, green: 0.4, blue: 0.9)
     private let greenColor = Color(red: 0.15, green: 0.68, blue: 0.38)
@@ -42,7 +43,7 @@ struct OnboardingView: View {
                     .tag(1)
 
                 // 페이지 3: 이름 입력
-                NameInputPage(userName: $userName)
+                NameInputPage(userName: $userName, isFocused: $isNameFieldFocused)
                     .tag(2)
 
                 // 페이지 4: 연차 설정
@@ -59,6 +60,8 @@ struct OnboardingView: View {
             // 하단 버튼
             if currentPage < 3 {
                 Button {
+                    // 키보드 내리기
+                    isNameFieldFocused = false
                     withAnimation {
                         currentPage += 1
                     }
@@ -76,6 +79,16 @@ struct OnboardingView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
+        .onTapGesture {
+            // 빈 영역 탭 시 키보드 내리기
+            isNameFieldFocused = false
+        }
+        .onChange(of: currentPage) { _, newPage in
+            // 페이지 변경 시 키보드 내리기
+            if newPage != 2 {
+                isNameFieldFocused = false
+            }
+        }
     }
 
     private func completeOnboarding() {
@@ -182,7 +195,7 @@ struct FeatureRow: View {
 // MARK: - 이름 입력 페이지
 struct NameInputPage: View {
     @Binding var userName: String
-    @FocusState private var isFocused: Bool
+    var isFocused: FocusState<Bool>.Binding
 
     var body: some View {
         VStack(spacing: 32) {
@@ -206,14 +219,19 @@ struct NameInputPage: View {
                 .padding()
                 .background(Color(.systemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                .focused($isFocused)
+                .focused(isFocused)
+                .submitLabel(.done)
+                .onSubmit {
+                    isFocused.wrappedValue = false
+                }
 
             Spacer()
             Spacer()
         }
         .padding(.horizontal, 32)
-        .onAppear {
-            isFocused = true
+        .contentShape(Rectangle())
+        .onTapGesture {
+            isFocused.wrappedValue = false
         }
     }
 }
