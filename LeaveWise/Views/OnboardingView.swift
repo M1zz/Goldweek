@@ -291,12 +291,22 @@ struct LeaveSetupPage: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    Picker("기준월", selection: $yearStartMonth) {
+                    // 4x3 그리드로 월 선택
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 6), spacing: 8) {
                         ForEach(1...12, id: \.self) { month in
-                            Text("\(month)").tag(month)
+                            Button {
+                                yearStartMonth = month
+                            } label: {
+                                Text("\(month)월")
+                                    .font(.subheadline.weight(yearStartMonth == month ? .bold : .regular))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 10)
+                                    .background(yearStartMonth == month ? blueColor : Color(.systemGray5))
+                                    .foregroundStyle(yearStartMonth == month ? .white : .primary)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
                         }
                     }
-                    .pickerStyle(.segmented)
                 }
                 .padding()
                 .background(Color(.systemBackground))
