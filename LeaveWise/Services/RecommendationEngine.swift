@@ -84,7 +84,36 @@ class RecommendationEngine {
             }
         }
 
-        // 8. 효율성 + 매칭점수로 정렬
+        // 8. 의미없는 추천 제거 (정교한 필터링)
+        scoredRecommendations = scoredRecommendations.filter { recommendation in
+            // 연차가 0일 이하면 제외
+            guard recommendation.requiredLeaveDays > 0 else { return false }
+
+            // 효율이 2.0 미만이면 제외 (연차 1일에 최소 2일 이상 쉴 수 있어야 함)
+            guard recommendation.efficiency >= 2.0 else { return false }
+
+            // 총 휴일이 3일 미만이면 제외
+            guard recommendation.totalDaysOff >= 3 else { return false }
+
+            // 실제 휴식일(연차+주말+공휴일 조합)이 의미있는지 확인
+            // 연차 5일로 5일 쉬는 것은 비효율 (주말 미포함)
+            if recommendation.requiredLeaveDays >= 5 && Double(recommendation.totalDaysOff) <= recommendation.requiredLeaveDays + 1 {
+                return false
+            }
+
+            // 너무 먼 미래 (6개월 이후)는 정확도가 떨어지므로 제외
+            let monthsAhead = calendar.dateComponents([.month], from: Date(), to: recommendation.startDate).month ?? 0
+            if monthsAhead > 6 {
+                return false
+            }
+
+            return true
+        }
+
+        // 9. 중복 제거 (날짜가 겹치는 추천 중 더 좋은 것만 유지)
+        scoredRecommendations = removeDuplicateRecommendations(scoredRecommendations)
+
+        // 10. 효율성 + 매칭점수로 정렬
         scoredRecommendations.sort { ($0.efficiency + $0.matchScore) > ($1.efficiency + $1.matchScore) }
 
         // 캐시 저장
@@ -94,6 +123,86 @@ class RecommendationEngine {
 
         logInfo("추천 생성 완료 - \(scoredRecommendations.count)개 추천", category: .recommendation)
         return scoredRecommendations
+    }
+
+    // MARK: - 중복 제거
+
+    private func removeDuplicateRecommendations(_ recommendations: [LeaveRecommendation]) -> [LeaveRecommendation] {
+        var result: [LeaveRecommendation] = []
+        var seenTitlePatterns: Set<String> = []
+
+        // 효율+매칭점수 기준 정렬 후 처리 (좋은 것 먼저)
+        let sorted = recommendations.sorted {
+            ($0.efficiency + $0.matchScore) > ($1.efficiency + $1.matchScore)
+        }
+
+        for recommendation in sorted {
+            // 1. 같은 제목 패턴 중복 체크 (같은 유형의 추천)
+            let titlePattern = extractTitlePattern(recommendation.title)
+            if seenTitlePatterns.contains(titlePattern) {
+                continue
+            }
+
+            // 2. 날짜 겹침 체크 (30% 이상 겹치면 중복)
+            let hasSignificantOverlap = result.contains { existing in
+                datesOverlapSignificantly(
+                    start1: existing.startDate, end1: existing.endDate,
+                    start2: recommendation.startDate, end2: recommendation.endDate,
+                    threshold: 0.3
+                )
+            }
+
+            if hasSignificantOverlap {
+                continue
+            }
+
+            // 3. 같은 월에 유사한 추천 제한 (월당 최대 2개)
+            let month = calendar.component(.month, from: recommendation.startDate)
+            let sameMonthCount = result.filter {
+                calendar.component(.month, from: $0.startDate) == month
+            }.count
+
+            if sameMonthCount >= 2 {
+                continue
+            }
+
+            result.append(recommendation)
+            seenTitlePatterns.insert(titlePattern)
+        }
+
+        return result
+    }
+
+    /// 제목에서 패턴 추출 (예: "5월 황금연휴" -> "황금연휴", "추석 징검다리 연휴" -> "추석 징검다리")
+    private func extractTitlePattern(_ title: String) -> String {
+        // 명절 이름 + 타입 조합으로 패턴 생성
+        let patterns = ["황금연휴", "징검다리", "연계 휴가", "봄 여행", "여름 휴가", "가을 단풍", "연말 휴가"]
+        for pattern in patterns {
+            if title.contains(pattern) {
+                // 명절 이름이 있으면 포함
+                if title.contains("설날") { return "설날-\(pattern)" }
+                if title.contains("추석") { return "추석-\(pattern)" }
+                return pattern
+            }
+        }
+        return title
+    }
+
+    private func datesOverlapSignificantly(start1: Date, end1: Date, start2: Date, end2: Date, threshold: Double) -> Bool {
+        let overlapStart = max(start1, start2)
+        let overlapEnd = min(end1, end2)
+
+        if overlapStart > overlapEnd {
+            return false
+        }
+
+        let overlapDays = calendar.dateComponents([.day], from: overlapStart, to: overlapEnd).day ?? 0
+        let period1Days = calendar.dateComponents([.day], from: start1, to: end1).day ?? 0
+        let period2Days = calendar.dateComponents([.day], from: start2, to: end2).day ?? 0
+
+        let minPeriod = min(period1Days, period2Days)
+
+        return minPeriod > 0 && Double(overlapDays) / Double(minPeriod) >= threshold
     }
 
     /// 캐시 무효화
@@ -307,50 +416,74 @@ class RecommendationEngine {
         return opportunities
     }
     
-    // MARK: - 연속 휴가 기회
-    
+    // MARK: - 연속 휴가 기회 (공휴일 연계)
+
     private func findConsecutiveOpportunities(holidays: [Holiday], year: Int) -> [LeaveRecommendation] {
         var opportunities: [LeaveRecommendation] = []
-        
-        // 각 계절별 추천 휴가 시기
-        let seasonalOpportunities: [(month: Int, name: String, description: String)] = [
-            (3, "봄 여행", "벚꽃 시즌에 맞춘 봄 여행"),
-            (7, "여름 휴가", "본격 여름 휴가 시즌"),
-            (10, "가을 단풍 여행", "단풍 시즌 가을 여행"),
-            (12, "연말 휴가", "연말연시 특별 휴가")
-        ]
-        
-        for seasonal in seasonalOpportunities {
-            var components = DateComponents()
-            components.year = year
-            components.month = seasonal.month
-            components.day = 15  // 월 중순
-            
-            guard let midMonth = calendar.date(from: components) else { continue }
-            
-            // 해당 주의 월~금 찾기
-            let weekday = calendar.component(.weekday, from: midMonth)
-            let daysToMonday = weekday == 1 ? 1 : (weekday == 7 ? 2 : -(weekday - 2))
-            
-            guard let monday = calendar.date(byAdding: .day, value: daysToMonday, to: midMonth),
+
+        // 공휴일 주변 연속 휴가 기회 찾기
+        for holiday in holidays {
+            // 해당 공휴일 주의 월~금 분석
+            let weekday = calendar.component(.weekday, from: holiday.date)
+
+            // 주중 공휴일만 (월~금)
+            guard weekday >= 2 && weekday <= 6 else { continue }
+
+            // 해당 주의 월요일과 금요일 찾기
+            let daysToMonday = -(weekday - 2)
+            guard let monday = calendar.date(byAdding: .day, value: daysToMonday, to: holiday.date),
                   let friday = calendar.date(byAdding: .day, value: 4, to: monday),
-                  let sunday = calendar.date(byAdding: .day, value: 6, to: monday) else {
+                  let prevSaturday = calendar.date(byAdding: .day, value: -2, to: monday),
+                  let nextSunday = calendar.date(byAdding: .day, value: 6, to: monday) else {
                 continue
             }
-            
+
+            // 해당 주의 공휴일 개수 계산
+            var holidaysInWeek = 0
+            var currentDate = monday
+            while currentDate <= friday {
+                if holidays.contains(where: { calendar.isDate($0.date, inSameDayAs: currentDate) }) {
+                    holidaysInWeek += 1
+                }
+                currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+            }
+
+            // 공휴일이 2개 이상인 주는 더 효율적
+            let requiredLeave = Double(5 - holidaysInWeek)
+
+            // 연차가 0이면 스킵
+            guard requiredLeave > 0 else { continue }
+
+            let efficiency = 9.0 / requiredLeave
+
+            // 효율이 좋은 경우만 추천 (최소 2.5 이상)
+            guard efficiency >= 2.5 else { continue }
+
+            let month = calendar.component(.month, from: holiday.date)
+            let seasonName = getSeasonName(for: month)
+
             opportunities.append(LeaveRecommendation(
-                title: seasonal.name,
-                description: "\(seasonal.description). 연차 5일로 9일 연휴를 즐기세요!",
-                startDate: calendar.date(byAdding: .day, value: -2, to: monday)!,
-                endDate: sunday,
-                requiredLeaveDays: 5,
+                title: "\(holiday.name) 연계 주간휴가",
+                description: "\(holiday.name)이 있는 주를 활용! 연차 \(Int(requiredLeave))일로 9일 연휴.",
+                startDate: prevSaturday,
+                endDate: nextSunday,
+                requiredLeaveDays: requiredLeave,
                 totalDaysOff: 9,
-                tags: ["연속휴가", Season.allCases[seasonal.month / 4].rawValue, "여행"],
-                reason: seasonal.description
+                tags: ["연속휴가", seasonName, "효율적"],
+                reason: "\(holiday.name) 연계"
             ))
         }
-        
+
         return opportunities
+    }
+
+    private func getSeasonName(for month: Int) -> String {
+        switch month {
+        case 3, 4, 5: return "봄"
+        case 6, 7, 8: return "여름"
+        case 9, 10, 11: return "가을"
+        default: return "겨울"
+        }
     }
     
     // MARK: - 선호도 매칭 점수 계산

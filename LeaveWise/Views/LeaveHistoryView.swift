@@ -12,14 +12,21 @@ struct LeaveHistoryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \LeaveRecord.startDate, order: .reverse) private var allRecords: [LeaveRecord]
+    @Query private var profiles: [UserProfile]
 
     @State private var selectedYear: Int
     @State private var selectedStatus: LeaveStatus?
     @State private var selectedType: LeaveType?
     @State private var showingDeleteAlert = false
     @State private var recordToDelete: LeaveRecord?
+    @State private var showingEditSheet = false
+    @State private var recordToEdit: LeaveRecord?
 
     private let calendar = Calendar.current
+
+    private var profile: UserProfile? {
+        profiles.first
+    }
 
     init() {
         _selectedYear = State(initialValue: Calendar.current.component(.year, from: Date()))
@@ -138,7 +145,7 @@ struct LeaveHistoryView: View {
                         Button {
                             withAnimation { selectedYear = year }
                         } label: {
-                            Text("\(year)년")
+                            Text(verbatim: "\(year)년")
                                 .font(.subheadline.weight(selectedYear == year ? .semibold : .regular))
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
@@ -242,6 +249,12 @@ struct LeaveHistoryView: View {
                 Section {
                     ForEach(group.records) { record in
                         HistoryRecordRow(record: record)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                recordToEdit = record
+                                showingEditSheet = true
+                                HapticFeedback.selection()
+                            }
                             .swipeActions(edge: .trailing) {
                                 Button(role: .destructive) {
                                     recordToDelete = record
@@ -259,6 +272,15 @@ struct LeaveHistoryView: View {
                                     .tint(.orange)
                                 }
                             }
+                            .swipeActions(edge: .leading) {
+                                Button {
+                                    recordToEdit = record
+                                    showingEditSheet = true
+                                } label: {
+                                    Label("수정", systemImage: "pencil")
+                                }
+                                .tint(.blue)
+                            }
                     }
                 } header: {
                     Text("\(group.month)월")
@@ -267,6 +289,13 @@ struct LeaveHistoryView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .sheet(isPresented: $showingEditSheet) {
+            if let record = recordToEdit {
+                EditLeaveSheet(record: record, profile: profile, onSave: {
+                    showingEditSheet = false
+                })
+            }
+        }
     }
 
     // MARK: - 빈 상태 뷰
@@ -281,7 +310,7 @@ struct LeaveHistoryView: View {
             Text("휴가 기록이 없습니다")
                 .font(.headline)
 
-            Text("\(selectedYear)년에 등록된 휴가가 없습니다.\n새로운 휴가를 등록해보세요.")
+            Text(verbatim: "\(selectedYear)년에 등록된 휴가가 없습니다.\n새로운 휴가를 등록해보세요.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -504,7 +533,188 @@ struct StatusBadge: View {
     }
 }
 
+// MARK: - 연차 수정 시트
+struct EditLeaveSheet: View {
+    @Bindable var record: LeaveRecord
+    var profile: UserProfile?
+    let onSave: () -> Void
+
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var startDate: Date
+    @State private var endDate: Date
+    @State private var leaveType: LeaveType
+    @State private var leaveStatus: LeaveStatus
+    @State private var note: String
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
+
+    private let calendar = Calendar.current
+
+    init(record: LeaveRecord, profile: UserProfile?, onSave: @escaping () -> Void) {
+        self.record = record
+        self.profile = profile
+        self.onSave = onSave
+        _startDate = State(initialValue: record.startDate)
+        _endDate = State(initialValue: record.endDate)
+        _leaveType = State(initialValue: record.type)
+        _leaveStatus = State(initialValue: record.status)
+        _note = State(initialValue: record.note)
+    }
+
+    var originalLeaveDays: Double {
+        if record.type == .half { return 0.5 }
+        if record.type == .quarter { return 0.25 }
+        let days = calendar.dateComponents([.day], from: record.startDate, to: record.endDate).day ?? 0
+        return Double(max(days + 1, 1))
+    }
+
+    var newLeaveDays: Double {
+        if leaveType == .half { return 0.5 }
+        if leaveType == .quarter { return 0.25 }
+        let days = calendar.dateComponents([.day], from: startDate, to: endDate).day ?? 0
+        return Double(max(days + 1, 1))
+    }
+
+    var leaveDaysDifference: Double {
+        if !leaveType.deductsFromAnnual && !record.type.deductsFromAnnual {
+            return 0
+        }
+        let originalDeduction = record.type.deductsFromAnnual ? originalLeaveDays : 0
+        let newDeduction = leaveType.deductsFromAnnual ? newLeaveDays : 0
+        return newDeduction - originalDeduction
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                // 휴가 유형
+                Section("휴가 유형") {
+                    Picker("유형", selection: $leaveType) {
+                        ForEach(LeaveType.allCases) { type in
+                            HStack {
+                                Image(systemName: type.icon)
+                                Text(type.rawValue)
+                            }
+                            .tag(type)
+                        }
+                    }
+                }
+
+                // 상태
+                Section("상태") {
+                    Picker("상태", selection: $leaveStatus) {
+                        ForEach(LeaveStatus.allCases) { status in
+                            Text(status.rawValue).tag(status)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+
+                // 날짜 선택
+                Section("날짜") {
+                    DatePicker("시작일", selection: $startDate, displayedComponents: .date)
+
+                    if leaveType != .half && leaveType != .quarter {
+                        DatePicker("종료일", selection: $endDate, in: startDate..., displayedComponents: .date)
+                    }
+
+                    HStack {
+                        Text("사용일수")
+                        Spacer()
+                        Text("\(String(format: "%.1f", newLeaveDays))일")
+                            .foregroundStyle(.blue)
+                            .fontWeight(.semibold)
+                    }
+
+                    if leaveDaysDifference != 0 {
+                        HStack {
+                            Image(systemName: leaveDaysDifference > 0 ? "arrow.up.circle.fill" : "arrow.down.circle.fill")
+                                .foregroundStyle(leaveDaysDifference > 0 ? .red : .green)
+                            Text(leaveDaysDifference > 0 ? "연차 \(String(format: "%.1f", leaveDaysDifference))일 추가 사용" : "연차 \(String(format: "%.1f", abs(leaveDaysDifference)))일 복원")
+                                .font(.caption)
+                                .foregroundStyle(leaveDaysDifference > 0 ? .red : .green)
+                        }
+                    }
+                }
+
+                // 메모
+                Section("메모") {
+                    TextField("휴가 목적", text: $note)
+                }
+
+                // 일정 미리보기
+                Section("일정 미리보기") {
+                    RecommendationDatePreview(
+                        startDate: startDate,
+                        endDate: leaveType == .half || leaveType == .quarter ? startDate : endDate
+                    )
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+                }
+            }
+            .navigationTitle("휴가 수정")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("취소") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("저장") { saveChanges() }
+                }
+            }
+            .onChange(of: leaveType) { _, newValue in
+                if newValue == .half || newValue == .quarter {
+                    endDate = startDate
+                }
+            }
+            .alert("알림", isPresented: $showingAlert) {
+                Button("확인", role: .cancel) { }
+            } message: {
+                Text(alertMessage)
+            }
+        }
+    }
+
+    private func saveChanges() {
+        // 연차 차감량 조정
+        if let profile = profile {
+            let difference = leaveDaysDifference
+            if profile.remainingLeave - difference < 0 && difference > 0 {
+                alertMessage = "연차가 부족합니다."
+                showingAlert = true
+                HapticFeedback.error()
+                return
+            }
+            profile.usedLeave += difference
+        }
+
+        // 기록 업데이트
+        record.startDate = startDate
+        record.endDate = leaveType == .half || leaveType == .quarter ? startDate : endDate
+        record.type = leaveType
+        record.status = leaveStatus
+        record.note = note
+
+        do {
+            try modelContext.save()
+            HapticFeedback.success()
+            onSave()
+            dismiss()
+        } catch {
+            // 롤백
+            if let profile = profile {
+                profile.usedLeave -= leaveDaysDifference
+            }
+            alertMessage = "저장에 실패했습니다."
+            showingAlert = true
+            HapticFeedback.error()
+        }
+    }
+}
+
 #Preview {
     LeaveHistoryView()
-        .modelContainer(for: [LeaveRecord.self], inMemory: true)
+        .modelContainer(for: [LeaveRecord.self, UserProfile.self], inMemory: true)
 }

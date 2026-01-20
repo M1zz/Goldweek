@@ -85,7 +85,7 @@ struct LeaveStatusCard: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("\(Calendar.current.component(.year, from: Date()))년 연차 현황")
+                Text(verbatim: "\(Calendar.current.component(.year, from: Date()))년 연차 현황")
                     .font(.headline)
                 Spacer()
             }

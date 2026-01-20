@@ -89,69 +89,62 @@ struct LeaveWidgetSmallView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 0) {
             // 헤더
-            HStack {
+            HStack(spacing: 4) {
                 Image(systemName: "calendar.badge.clock")
-                    .font(.caption)
+                    .font(.system(size: 12))
                     .foregroundStyle(blueColor)
                 Text("휴가캘린더")
-                    .font(.caption)
-                    .fontWeight(.semibold)
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(.secondary)
+                Spacer()
             }
-
-            Spacer()
+            .padding(.bottom, 12)
 
             // 남은 연차
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("남은 연차")
-                    .font(.caption2)
+                    .font(.system(size: 11))
                     .foregroundStyle(.secondary)
                 HStack(alignment: .firstTextBaseline, spacing: 2) {
                     Text(String(format: "%.1f", totalAvailable))
-                        .font(.system(size: 32, weight: .bold, design: .rounded))
+                        .font(.system(size: 34, weight: .bold, design: .rounded))
                         .foregroundStyle(greenColor)
                     Text("일")
-                        .font(.subheadline)
+                        .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(.secondary)
                 }
             }
 
             // 보너스 표시
             if entry.data.bonusLeave > 0 {
-                HStack(spacing: 4) {
+                HStack(spacing: 3) {
                     Image(systemName: "gift.fill")
-                        .font(.caption2)
+                        .font(.system(size: 10))
                         .foregroundStyle(orangeColor)
-                    Text("+\(String(format: "%.1f", entry.data.bonusLeave))")
-                        .font(.caption2)
-                        .fontWeight(.medium)
+                    Text("보너스 +\(String(format: "%.1f", entry.data.bonusLeave))일")
+                        .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(orangeColor)
                 }
+                .padding(.top, 4)
             }
 
-            Spacer()
+            Spacer(minLength: 8)
 
             // 프로그레스 바
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 3)
-                        .fill(Color(.systemGray5))
-                        .frame(height: 6)
+            VStack(alignment: .leading, spacing: 6) {
+                ProgressView(value: entry.data.usagePercentage)
+                    .progressViewStyle(.linear)
+                    .tint(blueColor)
 
-                    RoundedRectangle(cornerRadius: 3)
-                        .fill(blueColor)
-                        .frame(width: geo.size.width * entry.data.usagePercentage, height: 6)
-                }
+                Text("\(Int(entry.data.usagePercentage * 100))% 사용")
+                    .font(.system(size: 10))
+                    .foregroundStyle(.secondary)
             }
-            .frame(height: 6)
-
-            Text("\(Int(entry.data.usagePercentage * 100))% 사용")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
         }
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .padding(14)
     }
 }
 
@@ -168,107 +161,113 @@ struct LeaveWidgetMediumView: View {
     }
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 0) {
             // 왼쪽: 남은 연차
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 4) {
                     Image(systemName: "calendar.badge.clock")
+                        .font(.system(size: 14))
                         .foregroundStyle(blueColor)
                     Text("휴가캘린더")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                }
-
-                Spacer()
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("남은 연차")
-                        .font(.caption)
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(.secondary)
-                    HStack(alignment: .firstTextBaseline, spacing: 2) {
-                        Text(String(format: "%.1f", totalAvailable))
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundStyle(greenColor)
-                        Text("일")
-                            .font(.headline)
-                            .foregroundStyle(.secondary)
-                    }
+                }
+                .padding(.bottom, 12)
+
+                Text("남은 연차")
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 4)
+
+                HStack(alignment: .firstTextBaseline, spacing: 2) {
+                    Text(String(format: "%.1f", totalAvailable))
+                        .font(.system(size: 38, weight: .bold, design: .rounded))
+                        .foregroundStyle(greenColor)
+                    Text("일")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(.secondary)
                 }
 
                 if entry.data.bonusLeave > 0 {
-                    HStack(spacing: 4) {
+                    HStack(spacing: 3) {
                         Image(systemName: "gift.fill")
-                            .font(.caption)
+                            .font(.system(size: 11))
                             .foregroundStyle(orangeColor)
                         Text("보너스 +\(String(format: "%.1f", entry.data.bonusLeave))일")
-                            .font(.caption)
+                            .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(orangeColor)
                     }
+                    .padding(.top, 6)
                 }
 
-                Spacer()
+                Spacer(minLength: 0)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-            Divider()
+            // 구분선
+            Rectangle()
+                .fill(Color(.separator).opacity(0.3))
+                .frame(width: 1)
+                .padding(.vertical, 8)
 
             // 오른쪽: 다가오는 휴가 & 통계
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 0) {
                 // 다가오는 휴가
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text("다가오는 휴가")
-                        .font(.caption)
+                        .font(.system(size: 11))
                         .foregroundStyle(.secondary)
 
                     if let nextDate = entry.data.nextLeaveDate,
                        let nextType = entry.data.nextLeaveType {
-                        HStack {
+                        HStack(spacing: 6) {
                             Image(systemName: "airplane.departure")
+                                .font(.system(size: 14))
                                 .foregroundStyle(blueColor)
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 1) {
                                 Text(nextType)
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
+                                    .font(.system(size: 13, weight: .medium))
                                 Text(nextDate, format: .dateTime.month().day())
-                                    .font(.caption)
+                                    .font(.system(size: 11))
                                     .foregroundStyle(.secondary)
                             }
                         }
                     } else {
-                        Text("예정된 휴가 없음")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                Spacer()
-
-                // 사용률
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("연차 사용률")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(Color(.systemGray5))
-                                .frame(height: 8)
-
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(blueColor)
-                                .frame(width: geo.size.width * entry.data.usagePercentage, height: 8)
+                        HStack(spacing: 6) {
+                            Image(systemName: "moon.zzz")
+                                .font(.system(size: 14))
+                                .foregroundStyle(.tertiary)
+                            Text("예정된 휴가 없음")
+                                .font(.system(size: 12))
+                                .foregroundStyle(.tertiary)
                         }
                     }
-                    .frame(height: 8)
+                }
 
-                    Text("\(Int(entry.data.usagePercentage * 100))%")
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundStyle(blueColor)
+                Spacer(minLength: 12)
+
+                // 사용률
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text("연차 사용률")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text("\(Int(entry.data.usagePercentage * 100))%")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(blueColor)
+                    }
+
+                    ProgressView(value: entry.data.usagePercentage)
+                        .progressViewStyle(.linear)
+                        .tint(blueColor)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, 16)
         }
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(14)
     }
 }
 
@@ -331,36 +330,42 @@ struct LeaveAccessoryView: View {
         entry.data.remainingLeave + entry.data.bonusLeave
     }
 
+    var remainingPercentage: Double {
+        min(max(1 - entry.data.usagePercentage, 0), 1)
+    }
+
     var body: some View {
         switch family {
         case .accessoryCircular:
-            Gauge(value: 1 - entry.data.usagePercentage) {
+            Gauge(value: remainingPercentage) {
                 Image(systemName: "calendar")
             } currentValueLabel: {
-                Text(String(format: "%.1f", totalAvailable))
-                    .font(.system(.body, design: .rounded))
+                Text(String(format: "%.0f", totalAvailable))
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
             }
-            .gaugeStyle(.accessoryCircular)
+            .gaugeStyle(.accessoryCircularCapacity)
 
         case .accessoryRectangular:
-            VStack(alignment: .leading, spacing: 2) {
-                HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 4) {
                     Image(systemName: "calendar.badge.clock")
+                        .font(.system(size: 12))
                     Text("남은 연차")
+                        .font(.system(size: 12, weight: .medium))
                 }
-                .font(.caption)
 
                 Text("\(String(format: "%.1f", totalAvailable))일")
-                    .font(.title2)
-                    .fontWeight(.bold)
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
 
-                ProgressView(value: 1 - entry.data.usagePercentage)
+                ProgressView(value: remainingPercentage)
+                    .progressViewStyle(.linear)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
         case .accessoryInline:
-            HStack {
+            HStack(spacing: 4) {
                 Image(systemName: "calendar")
-                Text("남은 연차 \(String(format: "%.1f", totalAvailable))일")
+                Text("연차 \(String(format: "%.1f", totalAvailable))일 남음")
             }
 
         default:

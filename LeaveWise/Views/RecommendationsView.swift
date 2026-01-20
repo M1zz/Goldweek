@@ -36,7 +36,15 @@ struct RecommendationsView: View {
                     
                     // 남은 연차 정보
                     RemainingLeaveInfo(profile: profile)
-                    
+
+                    // 추천 일정 미리보기 달력
+                    if !recommendations.isEmpty && !isLoading {
+                        RecommendationCalendarPreview(
+                            recommendations: recommendations,
+                            selectedYear: selectedYear
+                        )
+                    }
+
                     // 추천 리스트
                     if isLoading {
                         ProgressView("추천 일정 분석 중...")
@@ -118,7 +126,7 @@ struct YearPicker: View {
             
             Spacer()
             
-            Text("\(selectedYear)년 추천")
+            Text(verbatim: "\(selectedYear)년 추천")
                 .font(.title2.bold())
             
             Spacer()
@@ -222,16 +230,16 @@ struct DetailedRecommendationCard: View {
     let recommendation: LeaveRecommendation
     let isAdded: Bool
     let onAdd: () -> Void
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // 헤더
             HStack {
                 Text("🎯 \(recommendation.title)")
                     .font(.headline)
-                
+
                 Spacer()
-                
+
                 VStack(alignment: .trailing) {
                     Text("효율")
                         .font(.caption2)
@@ -240,45 +248,39 @@ struct DetailedRecommendationCard: View {
                         .font(.caption)
                 }
             }
-            
+
             Divider()
-            
-            // 날짜 정보
-            HStack(spacing: 20) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("기간")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text("\(recommendation.startDate.formatted(date: .abbreviated, time: .omitted)) - \(recommendation.endDate.formatted(date: .abbreviated, time: .omitted))")
-                        .font(.subheadline)
-                }
-                
+
+            // 일정 미리보기 (시각화)
+            RecommendationDatePreview(
+                startDate: recommendation.startDate,
+                endDate: recommendation.endDate
+            )
+
+            // 요약 정보
+            HStack(spacing: 0) {
                 Spacer()
-                
-                VStack(alignment: .center, spacing: 4) {
-                    Text("연차 사용")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text("\(String(format: "%.1f", recommendation.requiredLeaveDays))일")
-                        .font(.subheadline.bold())
-                        .foregroundStyle(.blue)
-                }
-                
-                VStack(alignment: .center, spacing: 4) {
-                    Text("총 휴일")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text("\(recommendation.totalDaysOff)일")
-                        .font(.subheadline.bold())
-                        .foregroundStyle(.green)
-                }
+                Label("\(Int(recommendation.requiredLeaveDays))일 연차", systemImage: "briefcase.fill")
+                    .font(.caption)
+                    .foregroundStyle(.blue)
+                Spacer()
+                Text("→")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Label("\(recommendation.totalDaysOff)일 휴식", systemImage: "sun.max.fill")
+                    .font(.caption)
+                    .foregroundStyle(.green)
+                Spacer()
             }
-            
+            .padding(.vertical, 8)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+
             // 설명
             Text(recommendation.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            
+
             // 태그
             if !recommendation.tags.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -295,7 +297,7 @@ struct DetailedRecommendationCard: View {
                     }
                 }
             }
-            
+
             // 추가 버튼
             Button(action: onAdd) {
                 HStack {
@@ -319,6 +321,168 @@ struct DetailedRecommendationCard: View {
     }
 }
 
+// MARK: - 추천 날짜 미리보기 (요일별 시각화)
+struct RecommendationDatePreview: View {
+    let startDate: Date
+    let endDate: Date
+
+    private let calendar = Calendar.current
+    private let holidayService = HolidayService()
+    private let weekdayNames = ["일", "월", "화", "수", "목", "금", "토"]
+
+    var dateRange: [Date] {
+        var dates: [Date] = []
+        var current = startDate
+        while current <= endDate {
+            dates.append(current)
+            current = calendar.date(byAdding: .day, value: 1, to: current)!
+        }
+        return dates
+    }
+
+    var holidays: [Holiday] {
+        let year = calendar.component(.year, from: startDate)
+        return holidayService.getHolidays(for: year)
+    }
+
+    var body: some View {
+        VStack(spacing: 8) {
+            // 월 표시 (시작월과 종료월이 다르면 둘 다 표시)
+            let startMonth = calendar.component(.month, from: startDate)
+            let endMonth = calendar.component(.month, from: endDate)
+            HStack {
+                if startMonth == endMonth {
+                    Text("\(startMonth)월")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("\(startMonth)월 → \(endMonth)월")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+
+            // 날짜 미리보기
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(Array(dateRange.enumerated()), id: \.offset) { _, date in
+                        DatePreviewCell(
+                            date: date,
+                            dayType: getDayType(for: date)
+                        )
+                    }
+                }
+            }
+
+            // 범례
+            HStack(spacing: 12) {
+                MiniLegend(color: .green, text: "연차")
+                MiniLegend(color: .red.opacity(0.7), text: "공휴일")
+                MiniLegend(color: .blue.opacity(0.7), text: "주말")
+            }
+            .font(.system(size: 10))
+        }
+        .padding(12)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func getDayType(for date: Date) -> DayType {
+        let weekday = calendar.component(.weekday, from: date)
+        let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
+
+        if isHoliday {
+            return .holiday
+        } else if weekday == 1 { // 일요일
+            return .sunday
+        } else if weekday == 7 { // 토요일
+            return .saturday
+        } else {
+            return .leave // 평일 = 연차 사용
+        }
+    }
+}
+
+// MARK: - 날짜 타입
+enum DayType {
+    case leave      // 연차 사용일 (평일)
+    case saturday   // 토요일
+    case sunday     // 일요일
+    case holiday    // 공휴일
+
+    var color: Color {
+        switch self {
+        case .leave: return .green
+        case .saturday: return .blue.opacity(0.7)
+        case .sunday: return .red.opacity(0.7)
+        case .holiday: return .red.opacity(0.7)
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .leave: return "연차"
+        case .saturday: return "토"
+        case .sunday: return "일"
+        case .holiday: return "휴일"
+        }
+    }
+}
+
+// MARK: - 날짜 미리보기 셀
+struct DatePreviewCell: View {
+    let date: Date
+    let dayType: DayType
+
+    private let calendar = Calendar.current
+    private let weekdayNames = ["일", "월", "화", "수", "목", "금", "토"]
+
+    var dayNumber: Int {
+        calendar.component(.day, from: date)
+    }
+
+    var weekdayName: String {
+        let weekday = calendar.component(.weekday, from: date)
+        return weekdayNames[weekday - 1]
+    }
+
+    var body: some View {
+        VStack(spacing: 4) {
+            // 요일
+            Text(weekdayName)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(dayType == .sunday || dayType == .holiday ? .red : (dayType == .saturday ? .blue : .secondary))
+
+            // 날짜
+            Text("\(dayNumber)")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 28, height: 28)
+                .background(dayType.color)
+                .clipShape(Circle())
+        }
+    }
+}
+
+// MARK: - 미니 범례
+struct MiniLegend: View {
+    let color: Color
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 3) {
+            Circle()
+                .fill(color)
+                .frame(width: 6, height: 6)
+            Text(text)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
 // MARK: - 빈 추천 뷰
 struct EmptyRecommendationView: View {
     var body: some View {
@@ -326,16 +490,173 @@ struct EmptyRecommendationView: View {
             Image(systemName: "calendar.badge.exclamationmark")
                 .font(.system(size: 60))
                 .foregroundStyle(.secondary)
-            
+
             Text("추천 일정이 없습니다")
                 .font(.headline)
-            
+
             Text("선호도 설정을 확인하거나\n연차를 더 확보해보세요")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
         .padding(.top, 60)
+    }
+}
+
+// MARK: - 추천 일정 달력 미리보기
+struct RecommendationCalendarPreview: View {
+    let recommendations: [LeaveRecommendation]
+    let selectedYear: Int
+
+    private let calendar = Calendar.current
+    private let monthNames = ["1월", "2월", "3월", "4월", "5월", "6월",
+                              "7월", "8월", "9월", "10월", "11월", "12월"]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // 헤더
+            HStack {
+                Image(systemName: "calendar.badge.clock")
+                    .foregroundStyle(.blue)
+                Text("추천 일정 미리보기")
+                    .font(.headline)
+                Spacer()
+                Text("\(recommendations.count)개")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            // 연간 달력 미리보기
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 6), spacing: 8) {
+                ForEach(0..<12, id: \.self) { monthIndex in
+                    MonthPreviewCell(
+                        month: monthIndex + 1,
+                        monthName: monthNames[monthIndex],
+                        recommendations: recommendationsForMonth(monthIndex + 1),
+                        year: selectedYear
+                    )
+                }
+            }
+
+            // 범례
+            HStack(spacing: 16) {
+                LegendDot(color: .orange, text: "황금연휴")
+                LegendDot(color: .green, text: "징검다리")
+                LegendDot(color: .blue, text: "연속휴가")
+            }
+            .font(.caption2)
+            .frame(maxWidth: .infinity)
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.05), radius: 5)
+    }
+
+    private func recommendationsForMonth(_ month: Int) -> [LeaveRecommendation] {
+        recommendations.filter {
+            calendar.component(.month, from: $0.startDate) == month
+        }
+    }
+}
+
+// MARK: - 월별 미리보기 셀
+struct MonthPreviewCell: View {
+    let month: Int
+    let monthName: String
+    let recommendations: [LeaveRecommendation]
+    let year: Int
+
+    private let calendar = Calendar.current
+
+    var isPastMonth: Bool {
+        let now = Date()
+        let currentYear = calendar.component(.year, from: now)
+        let currentMonth = calendar.component(.month, from: now)
+
+        if year < currentYear { return true }
+        if year == currentYear && month < currentMonth { return true }
+        return false
+    }
+
+    var recommendationColor: Color {
+        guard let first = recommendations.first else { return .clear }
+
+        if first.tags.contains("황금연휴") || first.title.contains("황금") {
+            return .orange
+        } else if first.tags.contains("징검다리") {
+            return .green
+        } else {
+            return .blue
+        }
+    }
+
+    var body: some View {
+        VStack(spacing: 2) {
+            Text(monthName)
+                .font(.caption2)
+                .fontWeight(.medium)
+                .foregroundStyle(isPastMonth ? .secondary : .primary)
+
+            ZStack {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(isPastMonth ? Color(.systemGray5) : Color(.systemGray6))
+                    .frame(height: 32)
+
+                if !recommendations.isEmpty {
+                    // 추천 일정 표시 (점으로)
+                    HStack(spacing: 2) {
+                        ForEach(Array(recommendations.prefix(3).enumerated()), id: \.offset) { index, rec in
+                            Circle()
+                                .fill(colorForRecommendation(rec))
+                                .frame(width: 6, height: 6)
+                        }
+                        if recommendations.count > 3 {
+                            Text("+")
+                                .font(.system(size: 8))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+
+            // 추천 개수
+            if !recommendations.isEmpty && !isPastMonth {
+                Text("\(recommendations.count)개")
+                    .font(.system(size: 9))
+                    .foregroundStyle(.blue)
+            } else {
+                Text(" ")
+                    .font(.system(size: 9))
+            }
+        }
+        .opacity(isPastMonth ? 0.5 : 1)
+    }
+
+    private func colorForRecommendation(_ rec: LeaveRecommendation) -> Color {
+        if rec.tags.contains("황금연휴") || rec.title.contains("황금") || rec.title.contains("연계 휴가") {
+            return .orange
+        } else if rec.tags.contains("징검다리") {
+            return .green
+        } else {
+            return .blue
+        }
+    }
+}
+
+// MARK: - 범례 점
+struct LegendDot: View {
+    let color: Color
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(color)
+                .frame(width: 8, height: 8)
+            Text(text)
+                .foregroundStyle(.secondary)
+        }
     }
 }
 
