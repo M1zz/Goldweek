@@ -11,5 +11,6 @@ struct LeaveWidgetBundle: WidgetBundle {
     var body: some Widget {
         LeaveWidget()
         LeaveAccessoryWidget()
+        BurnRateWidget()
     }
 }

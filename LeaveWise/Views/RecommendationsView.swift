@@ -330,13 +330,27 @@ struct RecommendationDatePreview: View {
     private let holidayService = HolidayService()
     private let weekdayNames = ["일", "월", "화", "수", "목", "금", "토"]
 
-    var dateRange: [Date] {
+    // 앞뒤로 평일 하루씩 추가한 날짜 범위
+    var extendedDateRange: [Date] {
         var dates: [Date] = []
+
+        // 하루 전 추가
+        if let dayBefore = calendar.date(byAdding: .day, value: -1, to: startDate) {
+            dates.append(dayBefore)
+        }
+
+        // 원래 범위
         var current = startDate
         while current <= endDate {
             dates.append(current)
             current = calendar.date(byAdding: .day, value: 1, to: current)!
         }
+
+        // 하루 후 추가
+        if let dayAfter = calendar.date(byAdding: .day, value: 1, to: endDate) {
+            dates.append(dayAfter)
+        }
+
         return dates
     }
 
@@ -368,7 +382,7 @@ struct RecommendationDatePreview: View {
             // 날짜 미리보기
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 6) {
-                    ForEach(Array(dateRange.enumerated()), id: \.offset) { _, date in
+                    ForEach(Array(extendedDateRange.enumerated()), id: \.offset) { _, date in
                         DatePreviewCell(
                             date: date,
                             dayType: getDayType(for: date)
@@ -379,6 +393,7 @@ struct RecommendationDatePreview: View {
 
             // 범례
             HStack(spacing: 12) {
+                MiniLegend(color: .gray.opacity(0.5), text: "평일")
                 MiniLegend(color: .green, text: "연차")
                 MiniLegend(color: .red.opacity(0.7), text: "공휴일")
                 MiniLegend(color: .blue.opacity(0.7), text: "주말")
@@ -393,6 +408,7 @@ struct RecommendationDatePreview: View {
     private func getDayType(for date: Date) -> DayType {
         let weekday = calendar.component(.weekday, from: date)
         let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
+        let isInLeaveRange = date >= startDate && date <= endDate
 
         if isHoliday {
             return .holiday
@@ -400,8 +416,10 @@ struct RecommendationDatePreview: View {
             return .sunday
         } else if weekday == 7 { // 토요일
             return .saturday
+        } else if isInLeaveRange {
+            return .leave // 연차 범위 내 평일 = 연차 사용
         } else {
-            return .leave // 평일 = 연차 사용
+            return .workday // 연차 범위 밖 평일 = 일반 근무일
         }
     }
 }
@@ -412,6 +430,7 @@ enum DayType {
     case saturday   // 토요일
     case sunday     // 일요일
     case holiday    // 공휴일
+    case workday    // 일반 근무일 (연차 범위 밖 평일)
 
     var color: Color {
         switch self {
@@ -419,6 +438,7 @@ enum DayType {
         case .saturday: return .blue.opacity(0.7)
         case .sunday: return .red.opacity(0.7)
         case .holiday: return .red.opacity(0.7)
+        case .workday: return .gray.opacity(0.5)
         }
     }
 
@@ -428,6 +448,7 @@ enum DayType {
         case .saturday: return "토"
         case .sunday: return "일"
         case .holiday: return "휴일"
+        case .workday: return "평일"
         }
     }
 }

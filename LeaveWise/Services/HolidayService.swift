@@ -177,27 +177,29 @@ class HolidayService {
     }
     
     // MARK: - 대체공휴일
-    
+
     private func getSubstituteHolidays(holidays: [Holiday], year: Int) -> [Holiday] {
         var substituteHolidays: [Holiday] = []
-        
+
         // 대체공휴일 적용 대상 확인
-        let substituteEligible = ["어린이날", "설날", "설날 연휴", "추석", "추석 연휴", 
+        let substituteEligible = ["어린이날", "설날", "설날 연휴", "추석", "추석 연휴",
                                    "삼일절", "광복절", "개천절", "한글날", "크리스마스"]
-        
+
         for holiday in holidays {
-            // 일요일인 경우만 대체공휴일
             let weekday = calendar.component(.weekday, from: holiday.date)
-            
-            if weekday == 1 && substituteEligible.contains(where: { holiday.name.contains($0) }) {
+
+            // 토요일(7) 또는 일요일(1)인 경우 대체공휴일 적용
+            let isWeekend = weekday == 1 || weekday == 7
+
+            if isWeekend && substituteEligible.contains(where: { holiday.name.contains($0) }) {
                 // 다음 평일 찾기
                 var nextDay = calendar.date(byAdding: .day, value: 1, to: holiday.date)!
-                
+
                 while true {
                     let nextWeekday = calendar.component(.weekday, from: nextDay)
                     let isAlreadyHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: nextDay) }
                     let isAlreadySubstitute = substituteHolidays.contains { calendar.isDate($0.date, inSameDayAs: nextDay) }
-                    
+
                     if nextWeekday != 1 && nextWeekday != 7 && !isAlreadyHoliday && !isAlreadySubstitute {
                         substituteHolidays.append(Holiday(
                             date: nextDay,
@@ -206,12 +208,12 @@ class HolidayService {
                         ))
                         break
                     }
-                    
+
                     nextDay = calendar.date(byAdding: .day, value: 1, to: nextDay)!
                 }
             }
         }
-        
+
         return substituteHolidays
     }
     

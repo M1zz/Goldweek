@@ -7,9 +7,11 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @Query private var profiles: [UserProfile]
     @Query private var leaveRecords: [LeaveRecord]
     @Query private var bonusLeaves: [BonusLeave]
@@ -26,6 +28,11 @@ struct ContentView: View {
                 MainTabView(profile: profile)
                     .onAppear {
                         updateWidget()
+                    }
+                    .onChange(of: scenePhase) { _, newPhase in
+                        if newPhase == .active {
+                            updateWidget()
+                        }
                     }
                     .onChange(of: profile.usedLeave) { _, _ in
                         updateWidget()

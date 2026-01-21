@@ -19,7 +19,6 @@ struct LeaveHistoryView: View {
     @State private var selectedType: LeaveType?
     @State private var showingDeleteAlert = false
     @State private var recordToDelete: LeaveRecord?
-    @State private var showingEditSheet = false
     @State private var recordToEdit: LeaveRecord?
 
     private let calendar = Calendar.current
@@ -252,7 +251,6 @@ struct LeaveHistoryView: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 recordToEdit = record
-                                showingEditSheet = true
                                 HapticFeedback.selection()
                             }
                             .swipeActions(edge: .trailing) {
@@ -262,20 +260,10 @@ struct LeaveHistoryView: View {
                                 } label: {
                                     Label("삭제", systemImage: "trash")
                                 }
-
-                                if record.status == .planned {
-                                    Button {
-                                        cancelRecord(record)
-                                    } label: {
-                                        Label("취소", systemImage: "xmark.circle")
-                                    }
-                                    .tint(.orange)
-                                }
                             }
                             .swipeActions(edge: .leading) {
                                 Button {
                                     recordToEdit = record
-                                    showingEditSheet = true
                                 } label: {
                                     Label("수정", systemImage: "pencil")
                                 }
@@ -289,12 +277,10 @@ struct LeaveHistoryView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .sheet(isPresented: $showingEditSheet) {
-            if let record = recordToEdit {
-                EditLeaveSheet(record: record, profile: profile, onSave: {
-                    showingEditSheet = false
-                })
-            }
+        .sheet(item: $recordToEdit) { record in
+            EditLeaveSheet(record: record, profile: profile, onSave: {
+                recordToEdit = nil
+            })
         }
     }
 
@@ -323,24 +309,25 @@ struct LeaveHistoryView: View {
     // MARK: - Actions
     private func deleteRecord(_ record: LeaveRecord) {
         logInfo("휴가 기록 삭제 - \(record.startDate) ~ \(record.endDate)", category: .data)
+
+        // 연차 복원
+        if let profile = profile, record.type.deductsFromAnnual && record.status != .cancelled {
+            let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
+            profile.usedLeave -= days
+            logInfo("연차 복원: \(days)일", category: .data)
+        }
+
         modelContext.delete(record)
         do {
             try modelContext.save()
             HapticFeedback.success()
         } catch {
+            // 롤백
+            if let profile = profile, record.type.deductsFromAnnual && record.status != .cancelled {
+                let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
+                profile.usedLeave += days
+            }
             logError("휴가 기록 삭제 실패: \(error.localizedDescription)", category: .data)
-            HapticFeedback.error()
-        }
-    }
-
-    private func cancelRecord(_ record: LeaveRecord) {
-        logInfo("휴가 취소 처리 - \(record.startDate) ~ \(record.endDate)", category: .data)
-        record.status = .cancelled
-        do {
-            try modelContext.save()
-            HapticFeedback.success()
-        } catch {
-            logError("휴가 취소 실패: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
         }
     }

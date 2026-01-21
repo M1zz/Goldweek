@@ -45,15 +45,19 @@ class RecommendationEngine {
         let holidays = holidayService.getHolidays(for: year)
         logDebug("\(year)년 공휴일 \(holidays.count)개 로드", category: .recommendation)
 
-        // 1. 황금연휴 기회 탐색
+        // 1. 연차 없이 쉴 수 있는 황금연휴 자동 감지
+        let goldenWeeksNoLeave = findGoldenWeeksWithoutLeave(holidays: holidays, year: year)
+        recommendations.append(contentsOf: goldenWeeksNoLeave)
+
+        // 2. 황금연휴 기회 탐색 (연차 활용)
         let goldenWeeks = findGoldenWeekOpportunities(holidays: holidays, year: year)
         recommendations.append(contentsOf: goldenWeeks)
 
-        // 2. 징검다리 휴일 찾기
+        // 3. 징검다리 휴일 찾기
         let bridgeDays = findBridgeDayOpportunities(holidays: holidays, year: year)
         recommendations.append(contentsOf: bridgeDays)
 
-        // 3. 연속 휴가 기회
+        // 4. 연속 휴가 기회
         let consecutiveDays = findConsecutiveOpportunities(holidays: holidays, year: year)
         recommendations.append(contentsOf: consecutiveDays)
 
@@ -86,10 +90,13 @@ class RecommendationEngine {
 
         // 8. 의미없는 추천 제거 (정교한 필터링)
         scoredRecommendations = scoredRecommendations.filter { recommendation in
-            // 연차가 0일 이하면 제외
-            guard recommendation.requiredLeaveDays > 0 else { return false }
+            // 연차 0일인 황금연휴는 무조건 허용
+            if recommendation.requiredLeaveDays == 0 && recommendation.totalDaysOff >= 3 {
+                let recommendationYear = calendar.component(.year, from: recommendation.startDate)
+                return recommendationYear == year
+            }
 
-            // 효율이 2.0 미만이면 제외 (연차 1일에 최소 2일 이상 쉴 수 있어야 함)
+            // 연차가 필요한 경우: 효율이 2.0 미만이면 제외
             guard recommendation.efficiency >= 2.0 else { return false }
 
             // 총 휴일이 3일 미만이면 제외
@@ -101,9 +108,9 @@ class RecommendationEngine {
                 return false
             }
 
-            // 너무 먼 미래 (6개월 이후)는 정확도가 떨어지므로 제외
-            let monthsAhead = calendar.dateComponents([.month], from: Date(), to: recommendation.startDate).month ?? 0
-            if monthsAhead > 6 {
+            // 해당 연도 내의 추천만 포함
+            let recommendationYear = calendar.component(.year, from: recommendation.startDate)
+            if recommendationYear != year {
                 return false
             }
 
@@ -156,13 +163,13 @@ class RecommendationEngine {
                 continue
             }
 
-            // 3. 같은 월에 유사한 추천 제한 (월당 최대 2개)
+            // 3. 같은 월에 유사한 추천 제한 (월당 최대 3개)
             let month = calendar.component(.month, from: recommendation.startDate)
             let sameMonthCount = result.filter {
                 calendar.component(.month, from: $0.startDate) == month
             }.count
 
-            if sameMonthCount >= 2 {
+            if sameMonthCount >= 3 {
                 continue
             }
 
@@ -213,8 +220,203 @@ class RecommendationEngine {
         cacheTimestamp = nil
     }
     
-    // MARK: - 황금연휴 찾기
-    
+    // MARK: - 연차 없이 쉴 수 있는 황금연휴 자동 감지
+
+    private func findGoldenWeeksWithoutLeave(holidays: [Holiday], year: Int) -> [LeaveRecommendation] {
+        var recommendations: [LeaveRecommendation] = []
+
+        // 1년 전체를 스캔하여 연속 휴일(주말+공휴일) 찾기
+        var components = DateComponents()
+        components.year = year
+        components.month = 1
+        components.day = 1
+
+        guard let yearStart = calendar.date(from: components) else { return [] }
+
+        components.month = 12
+        components.day = 31
+        guard let yearEnd = calendar.date(from: components) else { return [] }
+
+        var currentDate = yearStart
+        var consecutiveStart: Date?
+        var consecutiveDays: [Date] = []
+        var includedHolidays: [String] = []
+
+        while currentDate <= yearEnd {
+            let isOff = isNonWorkingDay(currentDate, holidays: holidays)
+
+            if isOff {
+                if consecutiveStart == nil {
+                    consecutiveStart = currentDate
+                }
+                consecutiveDays.append(currentDate)
+
+                // 공휴일 이름 수집
+                if let holiday = holidays.first(where: { calendar.isDate($0.date, inSameDayAs: currentDate) }) {
+                    if !includedHolidays.contains(holiday.name) && !holiday.name.contains("대체") {
+                        includedHolidays.append(holiday.name)
+                    }
+                }
+            } else {
+                // 연속 휴일 종료 - 3일 이상이면 추천 생성
+                if consecutiveDays.count >= 3, let start = consecutiveStart {
+                    let end = consecutiveDays.last!
+                    let recommendation = createGoldenWeekRecommendation(
+                        start: start,
+                        end: end,
+                        totalDays: consecutiveDays.count,
+                        holidayNames: includedHolidays,
+                        year: year
+                    )
+                    recommendations.append(recommendation)
+                }
+
+                // 리셋
+                consecutiveStart = nil
+                consecutiveDays = []
+                includedHolidays = []
+            }
+
+            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+        }
+
+        // 마지막 연속 휴일 처리
+        if consecutiveDays.count >= 3, let start = consecutiveStart {
+            let end = consecutiveDays.last!
+            let recommendation = createGoldenWeekRecommendation(
+                start: start,
+                end: end,
+                totalDays: consecutiveDays.count,
+                holidayNames: includedHolidays,
+                year: year
+            )
+            recommendations.append(recommendation)
+        }
+
+        return recommendations
+    }
+
+    /// 해당 날짜가 쉬는 날인지 확인 (주말 또는 공휴일)
+    private func isNonWorkingDay(_ date: Date, holidays: [Holiday]) -> Bool {
+        let weekday = calendar.component(.weekday, from: date)
+        let isWeekend = weekday == 1 || weekday == 7 // 일요일(1), 토요일(7)
+        let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
+        return isWeekend || isHoliday
+    }
+
+    /// 황금연휴 추천 생성
+    private func createGoldenWeekRecommendation(
+        start: Date,
+        end: Date,
+        totalDays: Int,
+        holidayNames: [String],
+        year: Int
+    ) -> LeaveRecommendation {
+        // 제목 생성
+        let title = generateGoldenWeekTitle(holidayNames: holidayNames, totalDays: totalDays)
+
+        // 설명 생성
+        let description = generateGoldenWeekDescription(
+            start: start,
+            end: end,
+            totalDays: totalDays,
+            holidayNames: holidayNames
+        )
+
+        // 태그 생성
+        var tags = ["황금연휴", "연차없음"]
+        tags.append(contentsOf: holidayNames.prefix(2))
+        tags.append(getSeasonTag(for: start))
+
+        return LeaveRecommendation(
+            title: title,
+            description: description,
+            startDate: start,
+            endDate: end,
+            requiredLeaveDays: 0,
+            totalDaysOff: totalDays,
+            tags: tags,
+            reason: holidayNames.isEmpty ? "주말 연휴" : holidayNames.joined(separator: " + ")
+        )
+    }
+
+    /// 황금연휴 제목 생성
+    private func generateGoldenWeekTitle(holidayNames: [String], totalDays: Int) -> String {
+        if holidayNames.isEmpty {
+            return "\(totalDays)일 연휴"
+        }
+
+        // 명절 우선
+        if holidayNames.contains(where: { $0.contains("설날") }) {
+            return "설날 황금연휴"
+        }
+        if holidayNames.contains(where: { $0.contains("추석") }) {
+            return "추석 황금연휴"
+        }
+
+        // 첫 번째 공휴일 이름 사용
+        let mainHoliday = holidayNames.first?.replacingOccurrences(of: " 연휴", with: "") ?? ""
+        return totalDays >= 4 ? "\(mainHoliday) 황금연휴" : "\(mainHoliday) 연휴"
+    }
+
+    /// 황금연휴 설명 생성
+    private func generateGoldenWeekDescription(
+        start: Date,
+        end: Date,
+        totalDays: Int,
+        holidayNames: [String]
+    ) -> String {
+        let startWeekday = getWeekdayName(for: start)
+        let endWeekday = getWeekdayName(for: end)
+
+        var desc = "\(startWeekday)~\(endWeekday) "
+
+        if holidayNames.isEmpty {
+            desc += "주말 연휴로 "
+        } else {
+            desc += "\(holidayNames.joined(separator: " + "))로 "
+        }
+
+        desc += "연차 없이 \(totalDays)일 연휴!"
+
+        // 계절별 추천 문구
+        let month = calendar.component(.month, from: start)
+        switch month {
+        case 3, 4, 5:
+            desc += " 봄나들이 추천."
+        case 6, 7, 8:
+            desc += " 여름 휴가 적기."
+        case 9, 10, 11:
+            desc += " 단풍 여행 추천."
+        case 12, 1, 2:
+            desc += " 연말연시 힐링."
+        default:
+            break
+        }
+
+        return desc
+    }
+
+    /// 요일 이름 반환
+    private func getWeekdayName(for date: Date) -> String {
+        let weekday = calendar.component(.weekday, from: date)
+        let names = ["일", "월", "화", "수", "목", "금", "토"]
+        return names[weekday - 1]
+    }
+
+    /// 계절 태그 반환
+    private func getSeasonTag(for date: Date) -> String {
+        let month = calendar.component(.month, from: date)
+        switch month {
+        case 3, 4, 5: return "봄"
+        case 6, 7, 8: return "여름"
+        case 9, 10, 11: return "가을"
+        default: return "겨울"
+        }
+    }
+
+    // MARK: - 황금연휴 찾기 (연차 활용)
+
     private func findGoldenWeekOpportunities(holidays: [Holiday], year: Int) -> [LeaveRecommendation] {
         var opportunities: [LeaveRecommendation] = []
         

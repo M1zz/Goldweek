@@ -15,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A5000000"
+               BlueprintIdentifier = "A5000001"
                BuildableName = "LeaveWise.app"
                BlueprintName = "LeaveWise"
                ReferencedContainer = "container:LeaveWise.xcodeproj">
@@ -44,7 +44,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A5000000"
+            BlueprintIdentifier = "A5000001"
             BuildableName = "LeaveWise.app"
             BlueprintName = "LeaveWise"
             ReferencedContainer = "container:LeaveWise.xcodeproj">
@@ -61,7 +61,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A5000000"
+            BlueprintIdentifier = "A5000001"
             BuildableName = "LeaveWise.app"
             BlueprintName = "LeaveWise"
             ReferencedContainer = "container:LeaveWise.xcodeproj">

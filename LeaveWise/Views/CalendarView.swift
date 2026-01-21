@@ -10,11 +10,15 @@ import SwiftData
 
 struct CalendarView: View {
     @Bindable var profile: UserProfile
+    @Environment(\.modelContext) private var modelContext
     @Query(sort: \LeaveRecord.startDate) private var leaveRecords: [LeaveRecord]
-    
+
     @State private var selectedDate = Date()
     @State private var currentMonth = Date()
-    
+    @State private var recordToEdit: LeaveRecord?
+    @State private var showingDeleteAlert = false
+    @State private var recordToDelete: LeaveRecord?
+
     private let holidayService = HolidayService()
     private let calendar = Calendar.current
     
@@ -65,14 +69,58 @@ struct CalendarView: View {
                     // 나의 연차 일정
                     MyLeaveListView(
                         upcomingLeaves: upcomingLeaves,
-                        pastLeaves: pastLeaves
+                        pastLeaves: pastLeaves,
+                        onEdit: { record in
+                            recordToEdit = record
+                        },
+                        onDelete: { record in
+                            recordToDelete = record
+                            showingDeleteAlert = true
+                        }
                     )
                 }
                 .padding()
             }
             .navigationTitle("캘린더")
+            .sheet(item: $recordToEdit) { record in
+                EditLeaveSheet(record: record, profile: profile) {
+                    recordToEdit = nil
+                }
+            }
+            .alert("휴가 삭제", isPresented: $showingDeleteAlert) {
+                Button("취소", role: .cancel) { }
+                Button("삭제", role: .destructive) {
+                    if let record = recordToDelete {
+                        deleteRecord(record)
+                    }
+                }
+            } message: {
+                Text("이 휴가 기록을 삭제하시겠습니까?\n연차가 복원됩니다.")
+            }
         }
     }
+
+    private func deleteRecord(_ record: LeaveRecord) {
+        // 연차 복원
+        if record.type.deductsFromAnnual {
+            let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
+            profile.usedLeave -= days
+        }
+
+        modelContext.delete(record)
+        do {
+            try modelContext.save()
+            HapticFeedback.success()
+        } catch {
+            // 롤백
+            if record.type.deductsFromAnnual {
+                let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
+                profile.usedLeave += days
+            }
+            HapticFeedback.error()
+        }
+    }
+
 }
 
 // MARK: - 월 네비게이터
@@ -369,6 +417,8 @@ struct SelectedDateInfo: View {
 struct MyLeaveListView: View {
     let upcomingLeaves: [LeaveRecord]
     let pastLeaves: [LeaveRecord]
+    var onEdit: ((LeaveRecord) -> Void)?
+    var onDelete: ((LeaveRecord) -> Void)?
 
     @State private var showPastLeaves = false
 
@@ -397,6 +447,18 @@ struct MyLeaveListView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 32)
             } else {
+                // 안내 텍스트
+                if onEdit != nil {
+                    HStack(spacing: 4) {
+                        Image(systemName: "hand.tap")
+                            .font(.caption2)
+                        Text("탭하여 수정 · 스와이프하여 삭제")
+                            .font(.caption2)
+                    }
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+
                 // 예정된 연차
                 if !upcomingLeaves.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
@@ -410,7 +472,12 @@ struct MyLeaveListView: View {
                             .clipShape(Capsule())
 
                         ForEach(upcomingLeaves) { leave in
-                            LeaveListRow(leave: leave, isUpcoming: true)
+                            LeaveListRowInteractive(
+                                leave: leave,
+                                isUpcoming: true,
+                                onEdit: onEdit,
+                                onDelete: onDelete
+                            )
                         }
                     }
                 }
@@ -446,7 +513,12 @@ struct MyLeaveListView: View {
 
                         if showPastLeaves {
                             ForEach(pastLeaves.prefix(10)) { leave in
-                                LeaveListRow(leave: leave, isUpcoming: false)
+                                LeaveListRowInteractive(
+                                    leave: leave,
+                                    isUpcoming: false,
+                                    onEdit: onEdit,
+                                    onDelete: onDelete
+                                )
                             }
 
                             if pastLeaves.count > 10 {
@@ -465,6 +537,71 @@ struct MyLeaveListView: View {
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.05), radius: 5)
+    }
+}
+
+// MARK: - 연차 리스트 행 (인터랙티브)
+struct LeaveListRowInteractive: View {
+    let leave: LeaveRecord
+    let isUpcoming: Bool
+    var onEdit: ((LeaveRecord) -> Void)?
+    var onDelete: ((LeaveRecord) -> Void)?
+
+    @State private var offset: CGFloat = 0
+
+    var body: some View {
+        ZStack(alignment: .trailing) {
+            // 스와이프 삭제 버튼 배경
+            HStack(spacing: 0) {
+                Spacer()
+
+                if let onDelete = onDelete {
+                    Button {
+                        onDelete(leave)
+                        withAnimation { offset = 0 }
+                    } label: {
+                        VStack(spacing: 4) {
+                            Image(systemName: "trash.fill")
+                            Text("삭제")
+                                .font(.caption2)
+                        }
+                        .foregroundStyle(.white)
+                        .frame(width: 70, height: 70)
+                    }
+                    .background(Color.red)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            // 메인 콘텐츠
+            LeaveListRow(leave: leave, isUpcoming: isUpcoming)
+                .offset(x: offset)
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            if value.translation.width < 0 {
+                                offset = max(value.translation.width, -70.0)
+                            }
+                        }
+                        .onEnded { value in
+                            withAnimation(.spring(response: 0.3)) {
+                                if value.translation.width < -30 {
+                                    offset = -70.0
+                                } else {
+                                    offset = 0
+                                }
+                            }
+                        }
+                )
+                .onTapGesture {
+                    if offset != 0 {
+                        withAnimation { offset = 0 }
+                    } else {
+                        onEdit?(leave)
+                        HapticFeedback.selection()
+                    }
+                }
+        }
     }
 }
 

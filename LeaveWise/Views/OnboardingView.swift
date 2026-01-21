@@ -101,6 +101,13 @@ struct OnboardingView: View {
         modelContext.insert(profile)
         try? modelContext.save()
 
+        // 위젯 데이터 즉시 업데이트
+        WidgetService.shared.updateWidgetData(
+            profile: profile,
+            bonusLeaves: [],
+            leaveRecords: []
+        )
+
         withAnimation {
             isOnboardingComplete = true
         }

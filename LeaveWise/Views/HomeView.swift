@@ -20,8 +20,17 @@ struct HomeView: View {
     private let holidayService = HolidayService()
 
     var upcomingLeaves: [LeaveRecord] {
-        leaveRecords.filter { $0.startDate > Date() && $0.status == .planned }
-            .sorted { $0.startDate < $1.startDate }
+        let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: Date())
+        let today = calendar.startOfDay(for: Date())
+
+        return leaveRecords.filter { record in
+            let recordYear = calendar.component(.year, from: record.startDate)
+            return recordYear == currentYear &&
+                   record.startDate >= today &&
+                   record.status == .planned
+        }
+        .sorted { $0.startDate < $1.startDate }
     }
 
     var usedLeavesCount: Int {
@@ -48,7 +57,7 @@ struct HomeView: View {
 
                     // 추천 휴가 일정
                     RecommendationSection(
-                        recommendations: Array(recommendations.prefix(3)),
+                        recommendations: recommendations,
                         profile: profile
                     )
                 }
@@ -77,11 +86,12 @@ struct HomeView: View {
 // MARK: - 연차 현황 카드
 struct LeaveStatusCard: View {
     @Bindable var profile: UserProfile
-    
-    var usedPercentage: Double {
-        profile.usedLeave / profile.totalAnnualLeave
+
+    var remainingPercentage: Double {
+        guard profile.totalAnnualLeave > 0 else { return 0 }
+        return profile.remainingLeave / profile.totalAnnualLeave
     }
-    
+
     var body: some View {
         VStack(spacing: 16) {
             HStack {
@@ -89,23 +99,23 @@ struct LeaveStatusCard: View {
                     .font(.headline)
                 Spacer()
             }
-            
+
             // 프로그레스 바
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.gray.opacity(0.2))
                         .frame(height: 20)
-                    
+
                     RoundedRectangle(cornerRadius: 10)
                         .fill(
                             LinearGradient(
-                                colors: [.blue, .cyan],
+                                colors: [.green, .cyan],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
-                        .frame(width: geometry.size.width * usedPercentage, height: 20)
+                        .frame(width: geometry.size.width * remainingPercentage, height: 20)
                 }
             }
             .frame(height: 20)
@@ -153,13 +163,19 @@ struct LeaveStatusCard: View {
 // MARK: - 다가오는 휴가 섹션
 struct UpcomingLeavesSection: View {
     let leaves: [LeaveRecord]
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("📅 다가오는 휴가")
-                .font(.headline)
-            
-            ForEach(leaves.prefix(3)) { leave in
+            HStack {
+                Text("📅 다가오는 휴가")
+                    .font(.headline)
+                Spacer()
+                Text("\(leaves.count)건")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            ForEach(leaves) { leave in
                 UpcomingLeaveRow(leave: leave)
             }
         }
@@ -208,12 +224,20 @@ struct RecommendationSection: View {
     let recommendations: [LeaveRecommendation]
     @Bindable var profile: UserProfile
     @Environment(\.modelContext) private var modelContext
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("💡 추천 휴가 일정")
-                .font(.headline)
-            
+            HStack {
+                Text("💡 추천 휴가 일정")
+                    .font(.headline)
+                Spacer()
+                if !recommendations.isEmpty {
+                    Text("\(recommendations.count)건")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
             if recommendations.isEmpty {
                 Text("추천을 생성 중입니다...")
                     .foregroundStyle(.secondary)
@@ -275,34 +299,36 @@ struct RecommendationCard: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             
-            HStack {
-                // 태그들
-                ForEach(recommendation.tags, id: \.self) { tag in
-                    Text(tag)
-                        .font(.caption2)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.blue.opacity(0.1))
-                        .foregroundStyle(.blue)
-                        .clipShape(Capsule())
+            // 태그들
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(recommendation.tags, id: \.self) { tag in
+                        Text(tag)
+                            .font(.caption2)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.blue.opacity(0.1))
+                            .foregroundStyle(.blue)
+                            .clipShape(Capsule())
+                    }
                 }
-                
-                Spacer()
-                
-                Button(action: {
-                    onAdd()
-                    isAdded = true
-                }) {
-                    Text(isAdded ? "추가됨 ✓" : "일정 추가하기")
-                        .font(.caption.bold())
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(isAdded ? Color.green : Color.blue)
-                        .foregroundStyle(.white)
-                        .clipShape(Capsule())
-                }
-                .disabled(isAdded)
             }
+
+            // 버튼
+            Button(action: {
+                onAdd()
+                isAdded = true
+            }) {
+                Text(isAdded ? "추가됨 ✓" : "일정 추가하기")
+                    .font(.caption.bold())
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background(isAdded ? Color.green : Color.blue)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
+            .disabled(isAdded)
         }
         .padding()
         .background(Color(.secondarySystemBackground))

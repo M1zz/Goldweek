@@ -144,8 +144,12 @@ struct SettingsView: View {
                     HStack {
                         Text("사용한 연차")
                         Spacer()
-                        Text("\(String(format: "%.1f", profile.usedLeave))일")
-                            .foregroundStyle(.secondary)
+                        Stepper(
+                            "\(String(format: "%.1f", profile.usedLeave))일",
+                            value: $profile.usedLeave,
+                            in: 0...profile.totalAnnualLeave,
+                            step: 0.5
+                        )
                     }
 
                     Picker("연차 기준월", selection: $profile.yearStartMonth) {
