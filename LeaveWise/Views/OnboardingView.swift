@@ -16,7 +16,6 @@ struct OnboardingView: View {
     @State private var userName = ""
     @State private var totalLeave: Double = 15
     @State private var yearStartMonth = 1
-    @State private var selectedCountry: Country = Country.fromDeviceLocale()
     @FocusState private var isNameFieldFocused: Bool
 
     private let blueColor = Color(red: 0.0, green: 0.4, blue: 0.9)
@@ -27,7 +26,7 @@ struct OnboardingView: View {
         VStack(spacing: 0) {
             // 페이지 인디케이터
             HStack(spacing: 8) {
-                ForEach(0..<5) { index in
+                ForEach(0..<4) { index in
                     Circle()
                         .fill(currentPage == index ? blueColor : Color(.systemGray4))
                         .frame(width: 8, height: 8)
@@ -44,27 +43,23 @@ struct OnboardingView: View {
                 FeaturesPage()
                     .tag(1)
 
-                // 페이지 3: 국가 선택
-                CountrySelectionPage(selectedCountry: $selectedCountry)
+                // 페이지 3: 이름 입력
+                NameInputPage(userName: $userName, isFocused: $isNameFieldFocused)
                     .tag(2)
 
-                // 페이지 4: 이름 입력
-                NameInputPage(userName: $userName, isFocused: $isNameFieldFocused)
-                    .tag(3)
-
-                // 페이지 5: 연차 설정
+                // 페이지 4: 연차 설정
                 LeaveSetupPage(
                     totalLeave: $totalLeave,
                     yearStartMonth: $yearStartMonth,
                     onComplete: completeOnboarding
                 )
-                .tag(4)
+                .tag(3)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: currentPage)
 
             // 하단 버튼
-            if currentPage < 4 {
+            if currentPage < 3 {
                 Button {
                     isNameFieldFocused = false
                     withAnimation {
@@ -88,28 +83,29 @@ struct OnboardingView: View {
             isNameFieldFocused = false
         }
         .onChange(of: currentPage) { _, newPage in
-            if newPage != 3 {
+            if newPage != 2 {
                 isNameFieldFocused = false
-            }
-        }
-        .onChange(of: selectedCountry) { _, newCountry in
-            // Set language based on country
-            switch newCountry {
-            case .korea: AppLanguage.current = .korean
-            case .japan: AppLanguage.current = .japanese
-            case .china: AppLanguage.current = .chinese
-            case .usa: AppLanguage.current = .english
             }
         }
     }
 
     private func completeOnboarding() {
+        let country = Country.fromDeviceLocale()
+
+        // 국가에 따라 언어 설정
+        switch country {
+        case .korea: AppLanguage.current = .korean
+        case .japan: AppLanguage.current = .japanese
+        case .china: AppLanguage.current = .chinese
+        case .usa: AppLanguage.current = .english
+        }
+
         let profile = UserProfile(
             name: userName.isEmpty ? Strings.defaultUser : userName,
             yearStartMonth: yearStartMonth,
             totalAnnualLeave: totalLeave,
             usedLeave: 0,
-            country: selectedCountry
+            country: country
         )
         modelContext.insert(profile)
         try? modelContext.save()

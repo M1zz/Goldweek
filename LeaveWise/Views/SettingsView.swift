@@ -7,10 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct SettingsView: View {
     @Bindable var profile: UserProfile
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.requestReview) private var requestReview
     @Query private var leaveRecords: [LeaveRecord]
     @Query(sort: \BonusLeave.grantedDate, order: .reverse) private var bonusLeaves: [BonusLeave]
 
@@ -354,10 +356,26 @@ struct SettingsView: View {
 
                 // 앱 정보
                 Section(Strings.appInfo) {
+                    // 앱 평가하기
+                    Button {
+                        requestReview()
+                    } label: {
+                        HStack {
+                            Image(systemName: "star.fill")
+                                .foregroundStyle(.yellow)
+                            Text(Strings.rateApp)
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
+                    }
+
                     HStack {
                         Text(Strings.version)
                         Spacer()
-                        Text("1.0.0")
+                        Text("1.0.4")
                             .foregroundStyle(.secondary)
                     }
 

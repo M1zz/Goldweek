@@ -857,6 +857,15 @@ enum Strings {
         }
     }
 
+    static var rateApp: String {
+        switch lang {
+        case .korean: return "앱 평가하기"
+        case .english: return "Rate This App"
+        case .japanese: return "アプリを評価"
+        case .chinese: return "评价应用"
+        }
+    }
+
     static var confirm: String {
         switch lang {
         case .korean: return "확인"
