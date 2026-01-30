@@ -16,16 +16,18 @@ struct OnboardingView: View {
     @State private var userName = ""
     @State private var totalLeave: Double = 15
     @State private var yearStartMonth = 1
+    @State private var selectedCountry: Country = Country.fromDeviceLocale()
     @FocusState private var isNameFieldFocused: Bool
 
     private let blueColor = Color(red: 0.0, green: 0.4, blue: 0.9)
     private let greenColor = Color(red: 0.15, green: 0.68, blue: 0.38)
 
     var body: some View {
+        let _ = LanguageManager.shared.currentLanguage
         VStack(spacing: 0) {
             // 페이지 인디케이터
             HStack(spacing: 8) {
-                ForEach(0..<4) { index in
+                ForEach(0..<5) { index in
                     Circle()
                         .fill(currentPage == index ? blueColor : Color(.systemGray4))
                         .frame(width: 8, height: 8)
@@ -42,31 +44,34 @@ struct OnboardingView: View {
                 FeaturesPage()
                     .tag(1)
 
-                // 페이지 3: 이름 입력
-                NameInputPage(userName: $userName, isFocused: $isNameFieldFocused)
+                // 페이지 3: 국가 선택
+                CountrySelectionPage(selectedCountry: $selectedCountry)
                     .tag(2)
 
-                // 페이지 4: 연차 설정
+                // 페이지 4: 이름 입력
+                NameInputPage(userName: $userName, isFocused: $isNameFieldFocused)
+                    .tag(3)
+
+                // 페이지 5: 연차 설정
                 LeaveSetupPage(
                     totalLeave: $totalLeave,
                     yearStartMonth: $yearStartMonth,
                     onComplete: completeOnboarding
                 )
-                .tag(3)
+                .tag(4)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: currentPage)
 
             // 하단 버튼
-            if currentPage < 3 {
+            if currentPage < 4 {
                 Button {
-                    // 키보드 내리기
                     isNameFieldFocused = false
                     withAnimation {
                         currentPage += 1
                     }
                 } label: {
-                    Text(currentPage == 0 ? "시작하기" : "다음")
+                    Text(currentPage == 0 ? Strings.getStarted : Strings.next)
                         .font(.headline)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -80,23 +85,31 @@ struct OnboardingView: View {
         }
         .background(Color(.systemGroupedBackground))
         .onTapGesture {
-            // 빈 영역 탭 시 키보드 내리기
             isNameFieldFocused = false
         }
         .onChange(of: currentPage) { _, newPage in
-            // 페이지 변경 시 키보드 내리기
-            if newPage != 2 {
+            if newPage != 3 {
                 isNameFieldFocused = false
+            }
+        }
+        .onChange(of: selectedCountry) { _, newCountry in
+            // Set language based on country
+            switch newCountry {
+            case .korea: AppLanguage.current = .korean
+            case .japan: AppLanguage.current = .japanese
+            case .china: AppLanguage.current = .chinese
+            case .usa: AppLanguage.current = .english
             }
         }
     }
 
     private func completeOnboarding() {
         let profile = UserProfile(
-            name: userName.isEmpty ? "사용자" : userName,
+            name: userName.isEmpty ? Strings.defaultUser : userName,
             yearStartMonth: yearStartMonth,
             totalAnnualLeave: totalLeave,
-            usedLeave: 0
+            usedLeave: 0,
+            country: selectedCountry
         )
         modelContext.insert(profile)
         try? modelContext.save()
@@ -125,10 +138,10 @@ struct WelcomePage: View {
                 .foregroundStyle(Color(red: 0.0, green: 0.4, blue: 0.9))
                 .padding(.bottom, 20)
 
-            Text("휴가캘린더")
+            Text(Strings.appName)
                 .font(.largeTitle.bold())
 
-            Text("연차를 똑똑하게 관리하고\n최적의 휴가 일정을 추천받으세요")
+            Text(Strings.onboardingSubtitle)
                 .font(.title3)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -143,16 +156,18 @@ struct WelcomePage: View {
 
 // MARK: - 기능 소개 페이지
 struct FeaturesPage: View {
-    private let features = [
-        ("calendar.badge.plus", "연차 관리", "연차, 반차, 대체휴무 등\n다양한 휴가를 기록하세요"),
-        ("sparkles", "AI 추천", "공휴일과 주말을 활용한\n최적의 휴가 조합을 추천"),
-        ("gift.fill", "보너스 연차", "대체휴무, 포상휴가 등\n추가 연차도 관리"),
-        ("apps.iphone", "위젯", "홈 화면에서 바로\n남은 연차 확인")
-    ]
+    var features: [(String, String, String)] {
+        [
+            ("calendar.badge.plus", Strings.featureLeaveManagement, Strings.featureLeaveManagementDesc),
+            ("sparkles", Strings.featureAIRecommend, Strings.featureAIRecommendDesc),
+            ("gift.fill", Strings.featureBonusLeave, Strings.featureBonusLeaveDesc),
+            ("apps.iphone", Strings.featureWidget, Strings.featureWidgetDesc)
+        ]
+    }
 
     var body: some View {
         VStack(spacing: 32) {
-            Text("주요 기능")
+            Text(Strings.mainFeatures)
                 .font(.title.bold())
                 .padding(.top, 40)
 
@@ -199,6 +214,57 @@ struct FeatureRow: View {
     }
 }
 
+// MARK: - 국가 선택 페이지
+struct CountrySelectionPage: View {
+    @Binding var selectedCountry: Country
+
+    private let blueColor = Color(red: 0.0, green: 0.4, blue: 0.9)
+
+    var body: some View {
+        VStack(spacing: 32) {
+            Spacer()
+
+            Image(systemName: "globe")
+                .font(.system(size: 60))
+                .foregroundStyle(blueColor)
+
+            VStack(spacing: 8) {
+                Text(Strings.selectCountry)
+                    .font(.title.bold())
+                Text(Strings.selectCountryDesc)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), spacing: 16) {
+                ForEach(Country.allCases) { country in
+                    Button {
+                        selectedCountry = country
+                    } label: {
+                        VStack(spacing: 8) {
+                            Text(country.flag)
+                                .font(.system(size: 40))
+                            Text(country.displayName)
+                                .font(.headline)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 20)
+                        .background(selectedCountry == country ? blueColor : Color(.secondarySystemBackground))
+                        .foregroundStyle(selectedCountry == country ? .white : .primary)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
+            Spacer()
+            Spacer()
+        }
+        .padding(.horizontal, 32)
+    }
+}
+
 // MARK: - 이름 입력 페이지
 struct NameInputPage: View {
     @Binding var userName: String
@@ -213,14 +279,14 @@ struct NameInputPage: View {
                 .foregroundStyle(Color(red: 0.0, green: 0.4, blue: 0.9))
 
             VStack(spacing: 8) {
-                Text("이름을 알려주세요")
+                Text(Strings.enterName)
                     .font(.title.bold())
-                Text("앱에서 사용할 이름을 입력해주세요")
+                Text(Strings.enterNameDesc)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
 
-            TextField("이름", text: $userName)
+            TextField(Strings.name, text: $userName)
                 .font(.title2)
                 .multilineTextAlignment(.center)
                 .padding()
@@ -254,9 +320,9 @@ struct LeaveSetupPage: View {
     var body: some View {
         VStack(spacing: 32) {
             VStack(spacing: 8) {
-                Text("연차 정보 설정")
+                Text(Strings.leaveSetup)
                     .font(.title.bold())
-                Text("나중에 설정에서 변경할 수 있어요")
+                Text(Strings.leaveSetupDesc)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -265,11 +331,11 @@ struct LeaveSetupPage: View {
             VStack(spacing: 20) {
                 // 총 연차
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("올해 총 연차")
+                    Text(Strings.totalAnnualLeave)
                         .font(.headline)
 
                     HStack {
-                        Text("\(Int(totalLeave))일")
+                        Text("\(Int(totalLeave))\(Strings.dayUnitSuffix)")
                             .font(.title.bold())
                             .foregroundStyle(blueColor)
 
@@ -286,25 +352,24 @@ struct LeaveSetupPage: View {
                 // 연차 기준월
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        Text("연차 기준월")
+                        Text(Strings.yearStartMonthLabel)
                             .font(.headline)
                         Spacer()
-                        Text("\(yearStartMonth)월")
+                        Text(Strings.monthShort(yearStartMonth))
                             .font(.title2.bold())
                             .foregroundStyle(blueColor)
                     }
 
-                    Text("연차가 갱신되는 시작 월")
+                    Text(Strings.yearStartMonthDesc)
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    // 4x3 그리드로 월 선택
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 6), spacing: 8) {
                         ForEach(1...12, id: \.self) { month in
                             Button {
                                 yearStartMonth = month
                             } label: {
-                                Text("\(month)월")
+                                Text(Strings.monthShort(month))
                                     .font(.subheadline.weight(yearStartMonth == month ? .bold : .regular))
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 10)
@@ -324,7 +389,7 @@ struct LeaveSetupPage: View {
 
             // 완료 버튼
             Button(action: onComplete) {
-                Text("시작하기")
+                Text(Strings.getStarted)
                     .font(.headline)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)

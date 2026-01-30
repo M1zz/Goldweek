@@ -21,12 +21,12 @@ struct CalendarView: View {
 
     private let holidayService = HolidayService()
     private let calendar = Calendar.current
-    
+
     var holidays: [Holiday] {
         let year = calendar.component(.year, from: currentMonth)
-        return holidayService.getHolidays(for: year)
+        return holidayService.getHolidays(for: year, country: profile.country)
     }
-    
+
     var upcomingLeaves: [LeaveRecord] {
         let today = calendar.startOfDay(for: Date())
         return leaveRecords
@@ -81,27 +81,26 @@ struct CalendarView: View {
                 }
                 .padding()
             }
-            .navigationTitle("캘린더")
+            .navigationTitle(Strings.navTitleCalendar)
             .sheet(item: $recordToEdit) { record in
                 EditLeaveSheet(record: record, profile: profile) {
                     recordToEdit = nil
                 }
             }
-            .alert("휴가 삭제", isPresented: $showingDeleteAlert) {
-                Button("취소", role: .cancel) { }
-                Button("삭제", role: .destructive) {
+            .alert(Strings.deleteLeave, isPresented: $showingDeleteAlert) {
+                Button(Strings.cancel, role: .cancel) { }
+                Button(Strings.delete, role: .destructive) {
                     if let record = recordToDelete {
                         deleteRecord(record)
                     }
                 }
             } message: {
-                Text("이 휴가 기록을 삭제하시겠습니까?\n연차가 복원됩니다.")
+                Text(Strings.deleteLeaveConfirm)
             }
         }
     }
 
     private func deleteRecord(_ record: LeaveRecord) {
-        // 연차 복원
         if record.type.deductsFromAnnual {
             let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
             profile.usedLeave -= days
@@ -112,7 +111,6 @@ struct CalendarView: View {
             try modelContext.save()
             HapticFeedback.success()
         } catch {
-            // 롤백
             if record.type.deductsFromAnnual {
                 let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
                 profile.usedLeave += days
@@ -126,16 +124,15 @@ struct CalendarView: View {
 // MARK: - 월 네비게이터
 struct MonthNavigator: View {
     @Binding var currentMonth: Date
-    
+
     private let calendar = Calendar.current
-    
+
     var monthYearString: String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "yyyy년 M월"
-        return formatter.string(from: currentMonth)
+        let year = calendar.component(.year, from: currentMonth)
+        let month = calendar.component(.month, from: currentMonth)
+        return Strings.monthYearFormat(year: year, month: month)
     }
-    
+
     var body: some View {
         HStack {
             Button(action: previousMonth) {
@@ -143,14 +140,14 @@ struct MonthNavigator: View {
                     .font(.title2)
                     .foregroundStyle(.blue)
             }
-            
+
             Spacer()
-            
+
             Text(monthYearString)
                 .font(.title2.bold())
-            
+
             Spacer()
-            
+
             Button(action: nextMonth) {
                 Image(systemName: "chevron.right")
                     .font(.title2)
@@ -159,13 +156,13 @@ struct MonthNavigator: View {
         }
         .padding(.horizontal)
     }
-    
+
     private func previousMonth() {
         if let newMonth = calendar.date(byAdding: .month, value: -1, to: currentMonth) {
             currentMonth = newMonth
         }
     }
-    
+
     private func nextMonth() {
         if let newMonth = calendar.date(byAdding: .month, value: 1, to: currentMonth) {
             currentMonth = newMonth
@@ -179,45 +176,43 @@ struct CalendarGrid: View {
     @Binding var selectedDate: Date
     let holidays: [Holiday]
     let leaveRecords: [LeaveRecord]
-    
+
     private let calendar = Calendar.current
-    private let weekdays = ["일", "월", "화", "수", "목", "금", "토"]
-    
+
     var daysInMonth: [Date?] {
         guard let range = calendar.range(of: .day, in: .month, for: currentMonth),
               let firstDay = calendar.date(from: calendar.dateComponents([.year, .month], from: currentMonth)) else {
             return []
         }
-        
+
         let firstWeekday = calendar.component(.weekday, from: firstDay) - 1
         var days: [Date?] = Array(repeating: nil, count: firstWeekday)
-        
+
         for day in range {
             if let date = calendar.date(byAdding: .day, value: day - 1, to: firstDay) {
                 days.append(date)
             }
         }
-        
-        // 마지막 주 채우기
+
         while days.count % 7 != 0 {
             days.append(nil)
         }
-        
+
         return days
     }
-    
+
     var body: some View {
         VStack(spacing: 8) {
             // 요일 헤더
             HStack {
-                ForEach(weekdays, id: \.self) { day in
+                ForEach(Array(Strings.weekdays.enumerated()), id: \.offset) { index, day in
                     Text(day)
                         .font(.caption.bold())
-                        .foregroundStyle(day == "일" ? .red : (day == "토" ? .blue : .primary))
+                        .foregroundStyle(index == 0 ? .red : (index == 6 ? .blue : .primary))
                         .frame(maxWidth: .infinity)
                 }
             }
-            
+
             // 날짜 그리드
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 8) {
                 ForEach(Array(daysInMonth.enumerated()), id: \.offset) { _, date in
@@ -244,11 +239,11 @@ struct CalendarGrid: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.05), radius: 5)
     }
-    
+
     private func isHoliday(_ date: Date) -> Bool {
         holidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
     }
-    
+
     private func isLeave(_ date: Date) -> Bool {
         leaveRecords.contains { record in
             date >= record.startDate && date <= record.endDate && record.status != .cancelled
@@ -288,7 +283,6 @@ struct DayCell: View {
 
     var body: some View {
         ZStack {
-            // 배경
             if isSelected {
                 Circle()
                     .fill(AppTheme.Colors.brand)
@@ -297,12 +291,10 @@ struct DayCell: View {
                     .stroke(AppTheme.Colors.brand, lineWidth: 2)
             }
 
-            // 날짜 텍스트
             Text("\(dayNumber)")
                 .font(.system(size: 14, weight: isToday ? .bold : .regular))
                 .foregroundStyle(textColor)
 
-            // 연차 표시
             if isLeave && !isSelected {
                 Circle()
                     .fill(AppTheme.Colors.leave)
@@ -310,7 +302,6 @@ struct DayCell: View {
                     .offset(y: 14)
             }
 
-            // 공휴일 표시
             if isHoliday && !isSelected && !isLeave {
                 Circle()
                     .fill(AppTheme.Colors.holiday)
@@ -320,7 +311,7 @@ struct DayCell: View {
         }
         .frame(height: 40)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(dayNumber)일\(isToday ? ", 오늘" : "")\(isHoliday ? ", 공휴일" : "")\(isLeave ? ", 연차" : "")\(isSelected ? ", 선택됨" : "")")
+        .accessibilityLabel(Strings.accessibilityDayLabel(day: dayNumber, isToday: isToday, isHoliday: isHoliday, isLeave: isLeave, isSelected: isSelected))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
@@ -329,20 +320,20 @@ struct DayCell: View {
 struct LegendView: View {
     var body: some View {
         HStack(spacing: 20) {
-            LegendItem(color: AppTheme.Colors.holiday, text: "공휴일")
-            LegendItem(color: AppTheme.Colors.leave, text: "연차")
-            LegendItem(color: AppTheme.Colors.weekend, text: "주말")
+            LegendItem(color: AppTheme.Colors.holiday, text: Strings.holiday)
+            LegendItem(color: AppTheme.Colors.leave, text: Strings.annualLeave)
+            LegendItem(color: AppTheme.Colors.weekend, text: Strings.weekend)
         }
         .font(.caption)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("범례: 빨간색 공휴일, 초록색 연차, 파란색 주말")
+        .accessibilityLabel(Strings.legendAccessibility)
     }
 }
 
 struct LegendItem: View {
     let color: Color
     let text: String
-    
+
     var body: some View {
         HStack(spacing: 4) {
             Circle()
@@ -359,50 +350,50 @@ struct SelectedDateInfo: View {
     let date: Date
     let holidays: [Holiday]
     let leaveRecords: [LeaveRecord]
-    
+
     private let calendar = Calendar.current
-    
+
     var holidayOnDate: Holiday? {
         holidays.first { calendar.isDate($0.date, inSameDayAs: date) }
     }
-    
+
     var leaveOnDate: LeaveRecord? {
         leaveRecords.first { record in
             date >= record.startDate && date <= record.endDate && record.status != .cancelled
         }
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(date.formatted(date: .complete, time: .omitted))
                 .font(.headline)
-            
+
             if let holiday = holidayOnDate {
                 HStack {
                     Image(systemName: "flag.fill")
                         .foregroundStyle(.red)
                     Text(holiday.name)
                     if holiday.isSubstitute {
-                        Text("(대체공휴일)")
+                        Text("(\(Strings.substituteHoliday))")
                             .foregroundStyle(.secondary)
                     }
                 }
             }
-            
+
             if let leave = leaveOnDate {
                 HStack {
                     Image(systemName: "calendar.badge.checkmark")
                         .foregroundStyle(.green)
-                    Text("\(leave.type.rawValue)")
+                    Text(Strings.leaveTypeName(leave.type))
                     if !leave.note.isEmpty {
                         Text("- \(leave.note)")
                             .foregroundStyle(.secondary)
                     }
                 }
             }
-            
+
             if holidayOnDate == nil && leaveOnDate == nil {
-                Text("일정 없음")
+                Text(Strings.noSchedule)
                     .foregroundStyle(.secondary)
             }
         }
@@ -424,45 +415,41 @@ struct MyLeaveListView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // 헤더
             HStack {
-                Text("나의 연차 일정")
+                Text(Strings.myLeaveSchedule)
                     .font(.title3.bold())
                 Spacer()
-                Text("\(upcomingLeaves.count + pastLeaves.count)건")
+                Text(Strings.itemCount(upcomingLeaves.count + pastLeaves.count))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
 
             if upcomingLeaves.isEmpty && pastLeaves.isEmpty {
-                // 빈 상태
                 VStack(spacing: 12) {
                     Image(systemName: "calendar.badge.plus")
                         .font(.largeTitle)
                         .foregroundStyle(.secondary)
-                    Text("등록된 연차가 없습니다")
+                    Text(Strings.noLeaveRegistered)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 32)
             } else {
-                // 안내 텍스트
                 if onEdit != nil {
                     HStack(spacing: 4) {
                         Image(systemName: "hand.tap")
                             .font(.caption2)
-                        Text("탭하여 수정 · 스와이프하여 삭제")
+                        Text(Strings.tapToEditSwipeToDelete)
                             .font(.caption2)
                     }
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 }
 
-                // 예정된 연차
                 if !upcomingLeaves.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("예정된 일정")
+                        Text(Strings.upcomingSchedule)
                             .font(.caption)
                             .fontWeight(.semibold)
                             .foregroundStyle(AppTheme.Colors.brand)
@@ -482,7 +469,6 @@ struct MyLeaveListView: View {
                     }
                 }
 
-                // 지난 연차
                 if !pastLeaves.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Button {
@@ -492,7 +478,7 @@ struct MyLeaveListView: View {
                             HapticFeedback.selection()
                         } label: {
                             HStack {
-                                Text("지난 일정")
+                                Text(Strings.pastSchedule)
                                     .font(.caption)
                                     .fontWeight(.semibold)
                                     .foregroundStyle(.secondary)
@@ -500,7 +486,7 @@ struct MyLeaveListView: View {
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                 Spacer()
-                                Text("\(pastLeaves.count)건")
+                                Text(Strings.itemCount(pastLeaves.count))
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -522,7 +508,7 @@ struct MyLeaveListView: View {
                             }
 
                             if pastLeaves.count > 10 {
-                                Text("외 \(pastLeaves.count - 10)건")
+                                Text(Strings.moreItems(pastLeaves.count - 10))
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                     .frame(maxWidth: .infinity)
@@ -551,7 +537,6 @@ struct LeaveListRowInteractive: View {
 
     var body: some View {
         ZStack(alignment: .trailing) {
-            // 스와이프 삭제 버튼 배경
             HStack(spacing: 0) {
                 Spacer()
 
@@ -562,7 +547,7 @@ struct LeaveListRowInteractive: View {
                     } label: {
                         VStack(spacing: 4) {
                             Image(systemName: "trash.fill")
-                            Text("삭제")
+                            Text(Strings.delete)
                                 .font(.caption2)
                         }
                         .foregroundStyle(.white)
@@ -573,7 +558,6 @@ struct LeaveListRowInteractive: View {
             }
             .clipShape(RoundedRectangle(cornerRadius: 12))
 
-            // 메인 콘텐츠
             LeaveListRow(leave: leave, isUpcoming: isUpcoming)
                 .offset(x: offset)
                 .gesture(
@@ -614,15 +598,15 @@ struct LeaveListRow: View {
 
     var dateText: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "M월 d일 (E)"
+        formatter.locale = Locale(identifier: Strings.localeIdentifier)
+        formatter.dateFormat = Strings.dateFormat(style: "monthDay")
 
         if calendar.isDate(leave.startDate, inSameDayAs: leave.endDate) {
             return formatter.string(from: leave.startDate)
         } else {
             let endFormatter = DateFormatter()
-            endFormatter.locale = Locale(identifier: "ko_KR")
-            endFormatter.dateFormat = "M월 d일"
+            endFormatter.locale = Locale(identifier: Strings.localeIdentifier)
+            endFormatter.dateFormat = Strings.dateFormat(style: "monthDayOnly")
             return "\(formatter.string(from: leave.startDate)) ~ \(endFormatter.string(from: leave.endDate))"
         }
     }
@@ -639,7 +623,7 @@ struct LeaveListRow: View {
         let days = calendar.dateComponents([.day], from: today, to: startDay).day ?? 0
 
         if days == 0 {
-            return "오늘"
+            return Strings.today
         } else if days > 0 {
             return "D-\(days)"
         }
@@ -652,7 +636,6 @@ struct LeaveListRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            // 휴가 유형 아이콘
             Image(systemName: leave.type.icon)
                 .font(.title3)
                 .foregroundStyle(.white)
@@ -660,15 +643,14 @@ struct LeaveListRow: View {
                 .background(typeColor)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
 
-            // 정보
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text(leave.type.rawValue)
+                    Text(Strings.leaveTypeName(leave.type))
                         .font(.subheadline)
                         .fontWeight(.semibold)
 
                     if leave.type == .annual && daysCount > 1 {
-                        Text("\(daysCount)일")
+                        Text(Strings.dayUnit(daysCount))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -688,18 +670,17 @@ struct LeaveListRow: View {
 
             Spacer()
 
-            // D-Day 또는 상태
             if let dDay = dDayText {
                 Text(dDay)
                     .font(.caption)
                     .fontWeight(.bold)
-                    .foregroundStyle(dDay == "오늘" ? .white : AppTheme.Colors.brand)
+                    .foregroundStyle(dDay == Strings.today ? .white : AppTheme.Colors.brand)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(dDay == "오늘" ? AppTheme.Colors.brand : AppTheme.Colors.brand.opacity(0.1))
+                    .background(dDay == Strings.today ? AppTheme.Colors.brand : AppTheme.Colors.brand.opacity(0.1))
                     .clipShape(Capsule())
             } else if !isUpcoming {
-                Text(leave.status.rawValue)
+                Text(Strings.leaveStatusName(leave.status))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -709,17 +690,17 @@ struct LeaveListRow: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .opacity(isUpcoming ? 1 : 0.7)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(leave.type.rawValue), \(dateText)\(dDayText != nil ? ", \(dDayText!)" : "")")
+        .accessibilityLabel("\(Strings.leaveTypeName(leave.type)), \(dateText)\(dDayText != nil ? ", \(dDayText!)" : "")")
     }
 }
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: UserProfile.self, LeaveRecord.self, configurations: config)
-    
+
     let profile = UserProfile(name: "홍길동", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 5)
     container.mainContext.insert(profile)
-    
+
     return CalendarView(profile: profile)
         .modelContainer(container)
 }

@@ -8,6 +8,53 @@
 import Foundation
 import SwiftData
 
+// MARK: - 국가
+enum Country: String, CaseIterable, Identifiable, Codable {
+    case korea = "korea"
+    case japan = "japan"
+    case china = "china"
+    case usa = "usa"
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .korea: return "한국"
+        case .japan: return "日本"
+        case .china: return "中国"
+        case .usa: return "USA"
+        }
+    }
+
+    var flag: String {
+        switch self {
+        case .korea: return "🇰🇷"
+        case .japan: return "🇯🇵"
+        case .china: return "🇨🇳"
+        case .usa: return "🇺🇸"
+        }
+    }
+
+    var localeIdentifier: String {
+        switch self {
+        case .korea: return "ko_KR"
+        case .japan: return "ja_JP"
+        case .china: return "zh_CN"
+        case .usa: return "en_US"
+        }
+    }
+
+    static func fromDeviceLocale() -> Country {
+        let lang = Locale.current.language.languageCode?.identifier ?? "en"
+        switch lang {
+        case "ko": return .korea
+        case "ja": return .japan
+        case "zh": return .china
+        default: return .usa
+        }
+    }
+}
+
 // MARK: - 사용자 프로필
 @Model
 final class UserProfile {
@@ -17,7 +64,8 @@ final class UserProfile {
     var totalAnnualLeave: Double         // 총 연차 일수
     var usedLeave: Double                // 사용한 연차
     var createdAt: Date
-    
+    var countryRaw: String               // 국가 코드
+
     // 선호도 설정
     var preferredDurationRaw: String
     var preferredSeasonsRaw: String      // 쉼표로 구분된 문자열
@@ -25,12 +73,13 @@ final class UserProfile {
     var preferConsecutive: Bool
     var avoidPeakSeason: Bool
     var priorityActivitiesRaw: String    // 쉼표로 구분된 문자열
-    
+
     init(
         name: String = "",
         yearStartMonth: Int = 1,
         totalAnnualLeave: Double = 15,
-        usedLeave: Double = 0
+        usedLeave: Double = 0,
+        country: Country = .korea
     ) {
         self.id = UUID()
         self.name = name
@@ -38,6 +87,7 @@ final class UserProfile {
         self.totalAnnualLeave = totalAnnualLeave
         self.usedLeave = usedLeave
         self.createdAt = Date()
+        self.countryRaw = country.rawValue
         self.preferredDurationRaw = PreferredDuration.mixed.rawValue
         self.preferredSeasonsRaw = ""
         self.preferLongWeekend = true
@@ -49,7 +99,12 @@ final class UserProfile {
     var remainingLeave: Double {
         totalAnnualLeave - usedLeave
     }
-    
+
+    var country: Country {
+        get { Country(rawValue: countryRaw) ?? .korea }
+        set { countryRaw = newValue.rawValue }
+    }
+
     var preferredDuration: PreferredDuration {
         get { PreferredDuration(rawValue: preferredDurationRaw) ?? .mixed }
         set { preferredDurationRaw = newValue.rawValue }

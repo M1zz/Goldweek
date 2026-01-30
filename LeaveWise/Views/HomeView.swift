@@ -63,7 +63,7 @@ struct HomeView: View {
                 }
                 .padding()
             }
-            .navigationTitle("휴가플래너")
+            .navigationTitle(Strings.navTitleHome)
             .onAppear {
                 loadRecommendations()
             }
@@ -72,13 +72,14 @@ struct HomeView: View {
             }
         }
     }
-    
+
     private func loadRecommendations() {
         let year = Calendar.current.component(.year, from: Date())
         recommendations = recommendationEngine.generateRecommendations(
             for: profile,
             remainingLeave: profile.remainingLeave,
-            year: year
+            year: year,
+            country: profile.country
         )
     }
 }
@@ -95,7 +96,7 @@ struct LeaveStatusCard: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text(verbatim: "\(Calendar.current.component(.year, from: Date()))년 연차 현황")
+                Text(Strings.annualLeaveStatus(year: Calendar.current.component(.year, from: Date())))
                     .font(.headline)
                 Spacer()
             }
@@ -119,35 +120,35 @@ struct LeaveStatusCard: View {
                 }
             }
             .frame(height: 20)
-            
+
             // 연차 텍스트
             HStack {
                 VStack(alignment: .leading) {
-                    Text("사용")
+                    Text(Strings.used)
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Text("\(String(format: "%.1f", profile.usedLeave))일")
+                    Text("\(String(format: "%.1f", profile.usedLeave))\(Strings.dayUnitSuffix)")
                         .font(.title2.bold())
                         .foregroundStyle(.blue)
                 }
-                
+
                 Spacer()
-                
+
                 VStack {
-                    Text("총")
+                    Text(Strings.total)
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Text("\(String(format: "%.1f", profile.totalAnnualLeave))일")
+                    Text("\(String(format: "%.1f", profile.totalAnnualLeave))\(Strings.dayUnitSuffix)")
                         .font(.title2.bold())
                 }
-                
+
                 Spacer()
-                
+
                 VStack(alignment: .trailing) {
-                    Text("남음")
+                    Text(Strings.remaining)
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Text("\(String(format: "%.1f", profile.remainingLeave))일")
+                    Text("\(String(format: "%.1f", profile.remainingLeave))\(Strings.dayUnitSuffix)")
                         .font(.title2.bold())
                         .foregroundStyle(.green)
                 }
@@ -167,10 +168,10 @@ struct UpcomingLeavesSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("📅 다가오는 휴가")
+                Text("📅 \(Strings.upcomingLeaves)")
                     .font(.headline)
                 Spacer()
-                Text("\(leaves.count)건")
+                Text(Strings.itemCount(leaves.count))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -185,30 +186,30 @@ struct UpcomingLeavesSection: View {
 
 struct UpcomingLeaveRow: View {
     let leave: LeaveRecord
-    
+
     var daysUntil: Int {
         Calendar.current.dateComponents([.day], from: Date(), to: leave.startDate).day ?? 0
     }
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(leave.note.isEmpty ? "휴가" : leave.note)
+                Text(leave.note.isEmpty ? Strings.vacation : leave.note)
                     .font(.subheadline.bold())
-                
+
                 Text("\(leave.startDate.formatted(date: .abbreviated, time: .omitted)) - \(leave.endDate.formatted(date: .abbreviated, time: .omitted))")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            
+
             Spacer()
-            
+
             VStack(alignment: .trailing) {
                 Text("D-\(daysUntil)")
                     .font(.headline)
                     .foregroundStyle(.blue)
-                
-                Text("\(leave.type.rawValue) \(leave.daysCount)일")
+
+                Text("\(Strings.leaveTypeName(leave.type)) \(leave.daysCount)\(Strings.dayUnitSuffix)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -228,18 +229,18 @@ struct RecommendationSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("💡 추천 휴가 일정")
+                Text("💡 \(Strings.recommendedSchedule)")
                     .font(.headline)
                 Spacer()
                 if !recommendations.isEmpty {
-                    Text("\(recommendations.count)건")
+                    Text(Strings.itemCount(recommendations.count))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
 
             if recommendations.isEmpty {
-                Text("추천을 생성 중입니다...")
+                Text(Strings.generatingRecommendations)
                     .foregroundStyle(.secondary)
                     .padding()
             } else {
@@ -255,7 +256,7 @@ struct RecommendationSection: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-    
+
     private func addLeave(from recommendation: LeaveRecommendation) {
         let record = LeaveRecord(
             startDate: recommendation.startDate,
@@ -272,7 +273,6 @@ struct RecommendationSection: View {
             try modelContext.save()
             HapticFeedback.success()
         } catch {
-            // 롤백
             profile.usedLeave -= recommendation.requiredLeaveDays
             modelContext.delete(record)
             HapticFeedback.error()
@@ -284,21 +284,21 @@ struct RecommendationCard: View {
     let recommendation: LeaveRecommendation
     let onAdd: () -> Void
     @State private var isAdded = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("🎯 \(recommendation.title)")
                     .font(.subheadline.bold())
                 Spacer()
-                Text("효율: \(recommendation.efficiencyStars)")
+                Text("\(Strings.efficiency): \(recommendation.efficiencyStars)")
                     .font(.caption)
             }
-            
+
             Text(recommendation.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            
+
             // 태그들
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 6) {
@@ -319,7 +319,7 @@ struct RecommendationCard: View {
                 onAdd()
                 isAdded = true
             }) {
-                Text(isAdded ? "추가됨 ✓" : "일정 추가하기")
+                Text(isAdded ? Strings.addedToSchedule : Strings.addToSchedule)
                     .font(.caption.bold())
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 8)
@@ -350,11 +350,11 @@ struct LeaveHistoryButton: View {
                     .frame(width: 40)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("휴가 사용 내역")
+                    Text(Strings.leaveHistory)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.primary)
 
-                    Text("지난 휴가 기록을 확인하세요")
+                    Text(Strings.checkPastRecords)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -362,7 +362,7 @@ struct LeaveHistoryButton: View {
                 Spacer()
 
                 if usedCount > 0 {
-                    Text("\(usedCount)건")
+                    Text(Strings.itemCount(usedCount))
                         .font(.caption.weight(.medium))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 4)

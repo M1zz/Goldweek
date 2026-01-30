@@ -34,12 +34,11 @@ struct AddLeaveView: View {
                     totalAvailable: totalAvailableLeave
                 )
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("연차 현황: 기본 연차 \(String(format: "%.1f", profile.remainingLeave))일, 보너스 \(String(format: "%.1f", totalBonusLeave))일, 총 사용 가능 \(String(format: "%.1f", totalAvailableLeave))일")
 
                 // 탭 선택
-                Picker("관리 유형", selection: $selectedTab) {
-                    Text("휴가 등록").tag(0)
-                    Text("연차 추가").tag(1)
+                Picker(Strings.managementType, selection: $selectedTab) {
+                    Text(Strings.registerLeave).tag(0)
+                    Text(Strings.addLeave).tag(1)
                 }
                 .pickerStyle(.segmented)
                 .padding()
@@ -57,7 +56,7 @@ struct AddLeaveView: View {
                     BonusLeaveView(bonusLeaves: bonusLeaves)
                 }
             }
-            .navigationTitle("연차 관리")
+            .navigationTitle(Strings.navTitleLeaveManagement)
         }
     }
 }
@@ -71,11 +70,11 @@ struct LeaveStatusHeader: View {
     var body: some View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("기본 연차")
+                Text(Strings.basicLeave)
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundStyle(.secondary)
-                Text("\(String(format: "%.1f", remainingLeave))일")
+                Text("\(String(format: "%.1f", remainingLeave))\(Strings.dayUnitSuffix)")
                     .font(.title3.bold())
                     .foregroundStyle(AppTheme.Colors.brand)
             }
@@ -86,11 +85,11 @@ struct LeaveStatusHeader: View {
                     .foregroundStyle(.secondary)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("보너스")
+                    Text(Strings.bonus)
                         .font(.caption)
                         .fontWeight(.medium)
                         .foregroundStyle(.secondary)
-                    Text("\(String(format: "%.1f", bonusLeave))일")
+                    Text("\(String(format: "%.1f", bonusLeave))\(Strings.dayUnitSuffix)")
                         .font(.title3.bold())
                         .foregroundStyle(AppTheme.Colors.compensatory)
                 }
@@ -103,11 +102,11 @@ struct LeaveStatusHeader: View {
             Spacer()
 
             VStack(alignment: .trailing, spacing: 4) {
-                Text("총 사용 가능")
+                Text(Strings.totalAvailable)
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundStyle(.secondary)
-                Text("\(String(format: "%.1f", totalAvailable))일")
+                Text("\(String(format: "%.1f", totalAvailable))\(Strings.dayUnitSuffix)")
                     .font(.title2.bold())
                     .foregroundStyle(AppTheme.Colors.success)
             }
@@ -162,7 +161,7 @@ struct LeaveRegistrationView: View {
     var body: some View {
         Form {
             // 휴가 유형
-            Section("휴가 유형") {
+            Section(Strings.leaveTypeSection) {
                 LeaveTypePicker(selectedType: $leaveType)
             }
 
@@ -172,7 +171,7 @@ struct LeaveRegistrationView: View {
                     HStack {
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.blue)
-                        Text("\(leaveType.rawValue)은(는) 연차에서 차감되지 않습니다.")
+                        Text(Strings.noDeductionInfo(Strings.leaveTypeName(leaveType)))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -180,32 +179,30 @@ struct LeaveRegistrationView: View {
             }
 
             // 날짜 선택
-            Section("날짜 선택") {
-                DatePicker("시작일", selection: $startDate, displayedComponents: .date)
+            Section(Strings.dateSelection) {
+                DatePicker(Strings.startDate, selection: $startDate, displayedComponents: .date)
 
                 if leaveType != .half && leaveType != .quarter {
-                    DatePicker("종료일", selection: $endDate, in: startDate..., displayedComponents: .date)
+                    DatePicker(Strings.endDate, selection: $endDate, in: startDate..., displayedComponents: .date)
                 }
 
                 HStack {
-                    Text("사용일수")
+                    Text(Strings.daysUsed)
                     Spacer()
-                    Text("\(String(format: "%.1f", leaveDays))일")
+                    Text("\(String(format: "%.1f", leaveDays))\(Strings.dayUnitSuffix)")
                         .foregroundStyle(.blue)
                         .fontWeight(.semibold)
                 }
             }
 
             // 메모
-            Section("메모 (선택)") {
-                TextField("휴가 목적을 입력하세요", text: $note)
+            Section(Strings.memoOptional) {
+                TextField(Strings.memoPlaceholder, text: $note)
                     .focused($isNoteFocused)
                     .submitLabel(.done)
                     .onSubmit {
                         isNoteFocused = false
                     }
-                    .accessibilityLabel("휴가 메모")
-                    .accessibilityHint("휴가 목적이나 설명을 입력하세요")
             }
 
             // 등록 버튼
@@ -218,7 +215,7 @@ struct LeaveRegistrationView: View {
                                 .tint(.white)
                         } else {
                             Image(systemName: "plus.circle.fill")
-                            Text("휴가 등록하기")
+                            Text(Strings.registerLeaveButton)
                                 .fontWeight(.semibold)
                         }
                         Spacer()
@@ -227,13 +224,11 @@ struct LeaveRegistrationView: View {
                 .disabled(!canAddLeave || isSaving)
                 .foregroundStyle(canAddLeave ? .white : .gray)
                 .listRowBackground(canAddLeave ? AppTheme.Colors.brand : Color.gray.opacity(0.3))
-                .accessibilityLabel("휴가 등록하기")
-                .accessibilityHint(canAddLeave ? "\(leaveType.rawValue) \(String(format: "%.1f", leaveDays))일을 등록합니다" : "연차가 부족하거나 날짜가 올바르지 않습니다")
             }
 
             // 최근 등록 내역
             if !leaveRecords.isEmpty {
-                Section("최근 등록 내역") {
+                Section(Strings.recentRecords) {
                     ForEach(leaveRecords) { record in
                         LeaveRecordRow(record: record)
                     }
@@ -245,8 +240,8 @@ struct LeaveRegistrationView: View {
                 endDate = startDate
             }
         }
-        .alert("알림", isPresented: $showingAlert) {
-            Button("확인", role: .cancel) { }
+        .alert(Strings.alert, isPresented: $showingAlert) {
+            Button(Strings.confirm, role: .cancel) { }
         } message: {
             Text(alertMessage)
         }
@@ -254,7 +249,7 @@ struct LeaveRegistrationView: View {
 
     private func addLeave() {
         guard canAddLeave else {
-            alertMessage = "연차가 부족합니다."
+            alertMessage = Strings.insufficientLeave
             isSuccess = false
             showingAlert = true
             HapticFeedback.error()
@@ -288,11 +283,11 @@ struct LeaveRegistrationView: View {
             startDate = Date()
             endDate = Date()
 
-            alertMessage = "\(leaveType.rawValue)이(가) 등록되었습니다!"
+            alertMessage = Strings.leaveRegistered(Strings.leaveTypeName(leaveType))
             isSuccess = true
             HapticFeedback.success()
         } catch {
-            alertMessage = "저장에 실패했습니다. 다시 시도해주세요.\n\(error.localizedDescription)"
+            alertMessage = Strings.saveFailed
             isSuccess = false
             HapticFeedback.error()
             // 롤백
@@ -346,7 +341,7 @@ struct LeaveTypeButton: View {
                 Image(systemName: type.icon)
                     .font(.title3)
                     .fontWeight(.semibold)
-                Text(type.rawValue)
+                Text(Strings.leaveTypeName(type))
                     .font(.caption2)
                     .fontWeight(.semibold)
             }
@@ -361,8 +356,6 @@ struct LeaveTypeButton: View {
             )
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("\(type.rawValue) 휴가")
-        .accessibilityHint(type.deductsFromAnnual ? "연차에서 차감됩니다" : "연차에서 차감되지 않습니다")
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
@@ -398,7 +391,7 @@ struct BonusLeaveView: View {
                     HStack {
                         Image(systemName: "plus.circle.fill")
                             .foregroundStyle(.green)
-                        Text("보너스 연차 추가")
+                        Text(Strings.addBonusLeave)
                             .foregroundStyle(.primary)
                         Spacer()
                         Image(systemName: "chevron.right")
@@ -407,12 +400,12 @@ struct BonusLeaveView: View {
                     }
                 }
             } footer: {
-                Text("대체휴무, 포상휴가, 리프레시휴가 등 추가로 받은 연차를 기록합니다.")
+                Text(Strings.bonusLeaveFooter)
             }
 
             // 사용 가능한 보너스 연차
             if !activeBonusLeaves.isEmpty {
-                Section("사용 가능") {
+                Section(Strings.available) {
                     ForEach(activeBonusLeaves) { bonus in
                         BonusLeaveRow(bonus: bonus)
                     }
@@ -422,7 +415,7 @@ struct BonusLeaveView: View {
 
             // 사용 완료된 보너스 연차
             if !usedBonusLeaves.isEmpty {
-                Section("사용 완료") {
+                Section(Strings.usedComplete) {
                     ForEach(usedBonusLeaves) { bonus in
                         BonusLeaveRow(bonus: bonus)
                     }
@@ -436,7 +429,7 @@ struct BonusLeaveView: View {
                         Image(systemName: "gift")
                             .font(.largeTitle)
                             .foregroundStyle(.secondary)
-                        Text("등록된 보너스 연차가 없습니다")
+                        Text(Strings.noBonusLeave)
                             .foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity)
@@ -513,15 +506,15 @@ struct AddBonusLeaveSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("연차 일수") {
+                Section(Strings.leaveDaysSection) {
                     HStack {
-                        Text("추가할 일수")
+                        Text(Strings.daysToAdd)
                         Spacer()
-                        TextField("일수", value: $bonusDays, format: .number)
+                        TextField(Strings.dayUnitSuffix, value: $bonusDays, format: .number)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .frame(width: 60)
-                        Text("일")
+                        Text(Strings.dayUnitSuffix)
                     }
 
                     // 빠른 선택
@@ -544,12 +537,12 @@ struct AddBonusLeaveSheet: View {
                     }
                 }
 
-                Section("유형") {
-                    Picker("유형", selection: $bonusType) {
+                Section(Strings.typeSection) {
+                    Picker(Strings.typeSection, selection: $bonusType) {
                         ForEach(BonusLeaveType.allCases) { type in
                             HStack {
                                 Image(systemName: type.icon)
-                                Text(type.rawValue)
+                                Text(Strings.bonusLeaveTypeName(type))
                             }
                             .tag(type)
                         }
@@ -557,28 +550,28 @@ struct AddBonusLeaveSheet: View {
                     .pickerStyle(.menu)
                 }
 
-                Section("사유") {
-                    TextField("예: 휴일근무 대체, 프로젝트 포상 등", text: $bonusReason)
+                Section(Strings.reasonSection) {
+                    TextField(Strings.reasonPlaceholder, text: $bonusReason)
                 }
 
                 Section {
-                    Toggle("만료일 설정", isOn: $hasExpiration)
+                    Toggle(Strings.setExpiration, isOn: $hasExpiration)
 
                     if hasExpiration {
-                        DatePicker("만료일", selection: $expirationDate, in: Date()..., displayedComponents: .date)
+                        DatePicker(Strings.expirationDate, selection: $expirationDate, in: Date()..., displayedComponents: .date)
                     }
                 } footer: {
-                    Text("만료일을 설정하지 않으면 연말까지 사용 가능합니다.")
+                    Text(Strings.expirationFooter)
                 }
             }
-            .navigationTitle("보너스 연차 추가")
+            .navigationTitle(Strings.addBonusLeave)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") { dismiss() }
+                    Button(Strings.cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("저장") { onSave() }
+                    Button(Strings.save) { onSave() }
                         .disabled(bonusDays <= 0)
                 }
             }
@@ -599,10 +592,10 @@ struct BonusLeaveRow: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text(bonus.type.rawValue)
+                    Text(Strings.bonusLeaveTypeName(bonus.type))
                         .font(.subheadline)
                         .fontWeight(.medium)
-                    Text("\(String(format: "%.1f", bonus.days))일")
+                    Text("\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
                         .font(.subheadline)
                         .foregroundStyle(.orange)
                 }
@@ -632,7 +625,7 @@ struct BonusLeaveRow: View {
             Spacer()
 
             if bonus.isUsed {
-                Text("사용완료")
+                Text(Strings.usedComplete)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 8)
@@ -666,7 +659,7 @@ struct LeaveRecordRow: View {
                     HStack(spacing: 4) {
                         Image(systemName: record.type.icon)
                             .font(.caption)
-                        Text(record.type.rawValue)
+                        Text(Strings.leaveTypeName(record.type))
                     }
                     .font(.caption)
                     .fontWeight(.medium)
@@ -676,7 +669,7 @@ struct LeaveRecordRow: View {
                     .foregroundStyle(.white)
                     .clipShape(Capsule())
 
-                    Text(record.status.rawValue)
+                    Text(Strings.leaveStatusName(record.status))
                         .font(.caption)
                         .fontWeight(.medium)
                         .padding(.horizontal, 8)
@@ -705,12 +698,12 @@ struct LeaveRecordRow: View {
         }
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(record.type.rawValue), \(dateRangeText), \(record.status.rawValue)")
+        .accessibilityLabel("\(Strings.leaveTypeName(record.type)), \(dateRangeText), \(Strings.leaveStatusName(record.status))")
     }
 }
 
 #Preview {
-    @Previewable @State var profile = UserProfile(name: "홍길동", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 5)
+    @Previewable @State var profile = UserProfile(name: "Test", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 5)
 
     AddLeaveView(profile: profile)
 }

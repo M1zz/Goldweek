@@ -209,8 +209,8 @@ struct DateRangeLabel: View {
     
     private var formatter: DateFormatter {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "M/d(E)"
+        f.locale = Locale(identifier: Strings.localeIdentifier)
+        f.dateFormat = Strings.dateRangeFormat
         return f
     }
     

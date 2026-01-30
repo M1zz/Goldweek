@@ -23,6 +23,7 @@ struct ContentView: View {
     }
 
     var body: some View {
+        let _ = LanguageManager.shared.currentLanguage
         Group {
             if hasCompletedOnboarding, let profile = currentProfile {
                 MainTabView(profile: profile)
@@ -71,35 +72,35 @@ struct MainTabView: View {
             HomeView(profile: profile)
                 .tabItem {
                     Image(systemName: "house.fill")
-                    Text("홈")
+                    Text(Strings.tabHome)
                 }
                 .tag(0)
 
             CalendarView(profile: profile)
                 .tabItem {
                     Image(systemName: "calendar")
-                    Text("캘린더")
+                    Text(Strings.tabCalendar)
                 }
                 .tag(1)
 
             AddLeaveView(profile: profile)
                 .tabItem {
                     Image(systemName: "plus.circle.fill")
-                    Text("등록")
+                    Text(Strings.tabRegister)
                 }
                 .tag(2)
 
             RecommendationsView(profile: profile)
                 .tabItem {
                     Image(systemName: "lightbulb.fill")
-                    Text("추천")
+                    Text(Strings.tabRecommendations)
                 }
                 .tag(3)
 
             SettingsView(profile: profile)
                 .tabItem {
                     Image(systemName: "gearshape.fill")
-                    Text("설정")
+                    Text(Strings.tabSettings)
                 }
                 .tag(4)
         }
