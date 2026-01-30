@@ -25,10 +25,13 @@ struct ContentView: View {
     var body: some View {
         let _ = LanguageManager.shared.currentLanguage
         Group {
-            if hasCompletedOnboarding, let profile = currentProfile {
+            if let profile = currentProfile {
                 MainTabView(profile: profile)
                     .onAppear {
                         updateWidget()
+                        if !hasCompletedOnboarding {
+                            hasCompletedOnboarding = true
+                        }
                     }
                     .onChange(of: scenePhase) { _, newPhase in
                         if newPhase == .active {
