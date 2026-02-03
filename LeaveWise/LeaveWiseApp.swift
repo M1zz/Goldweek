@@ -28,17 +28,9 @@ struct LeaveWiseApp: App {
             AppLogger.shared.info("ModelContainer 생성 성공 (영구 저장소)", category: .data)
         } catch {
             AppLogger.shared.error("ModelContainer 생성 실패: \(error.localizedDescription)", category: .data)
-            AppLogger.shared.warning("메모리 전용 컨테이너로 폴백 시도", category: .data)
-
-            do {
-                let fallbackConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-                sharedModelContainer = try ModelContainer(for: schema, configurations: [fallbackConfig])
-                AppLogger.shared.warning("메모리 전용 ModelContainer 생성 성공 - 데이터가 영구 저장되지 않습니다", category: .data)
-            } catch {
-                AppLogger.shared.error("메모리 전용 컨테이너도 실패: \(error.localizedDescription)", category: .data)
-                sharedModelContainer = try! ModelContainer(for: schema)
-                AppLogger.shared.error("기본 컨테이너로 최종 폴백", category: .data)
-            }
+            // 기본 컨테이너 사용 (영구 저장소 - 데이터 절대 삭제하지 않음)
+            sharedModelContainer = try! ModelContainer(for: schema)
+            AppLogger.shared.warning("기본 컨테이너로 폴백 (영구 저장소 유지)", category: .data)
         }
 
         // iCloud 상태 확인
