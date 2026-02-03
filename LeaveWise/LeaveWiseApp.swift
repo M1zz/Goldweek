@@ -20,23 +20,37 @@ struct LeaveWiseApp: App {
             LeaveRecord.self,
             BonusLeave.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         AppLogger.shared.debug("SwiftData 스키마 설정 완료", category: .data)
 
-        do {
-            sharedModelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-            AppLogger.shared.info("ModelContainer 생성 성공 (영구 저장소)", category: .data)
-        } catch {
-            AppLogger.shared.error("ModelContainer 생성 실패: \(error.localizedDescription)", category: .data)
-            // 기본 컨테이너 사용 (영구 저장소 - 데이터 절대 삭제하지 않음)
-            sharedModelContainer = try! ModelContainer(for: schema)
-            AppLogger.shared.warning("기본 컨테이너로 폴백 (영구 저장소 유지)", category: .data)
-        }
+        sharedModelContainer = Self.createModelContainer(schema: schema)
 
         // iCloud 상태 확인
         checkICloudStatus()
 
         AppLogger.shared.info("LeaveWise 앱 초기화 완료", category: .app)
+    }
+
+    private static func createModelContainer(schema: Schema) -> ModelContainer {
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            AppLogger.shared.info("ModelContainer 생성 성공 (영구 저장소)", category: .data)
+            return container
+        } catch {
+            // 상세 에러 로깅 (디버깅용)
+            AppLogger.shared.error("ModelContainer 생성 실패: \(error)", category: .data)
+            AppLogger.shared.error("에러 상세: \(String(describing: error))", category: .data)
+
+            // 크래시 방지: 인메모리로 전환 (기존 저장소 파일은 유지)
+            AppLogger.shared.warning("인메모리 저장소로 임시 전환 - 앱 재시작 시 데이터 복구 시도됨", category: .data)
+            let inMemoryConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            do {
+                return try ModelContainer(for: schema, configurations: [inMemoryConfig])
+            } catch {
+                fatalError("인메모리 ModelContainer 생성 불가: \(error)")
+            }
+        }
     }
 
     private func checkICloudStatus() {
