@@ -34,6 +34,11 @@
 		A1000021 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000021 /* Logger.swift */; };
 		A1000022 /* LeaveHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000022 /* LeaveHistoryView.swift */; };
 		A1000023 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000023 /* Strings.swift */; };
+		A1000030 /* SchemaVersioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* SchemaVersioning.swift */; };
+		A1000031 /* DataProtectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000031 /* DataProtectionService.swift */; };
+		A1000032 /* ProManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000032 /* ProManager.swift */; };
+		A1000033 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000033 /* CalendarService.swift */; };
+		A1000034 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000034 /* PaywallView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +96,11 @@
 		A2000021 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		A2000022 /* LeaveHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveHistoryView.swift; sourceTree = "<group>"; };
 		A2000023 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		A2000030 /* SchemaVersioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaVersioning.swift; sourceTree = "<group>"; };
+		A2000031 /* DataProtectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProtectionService.swift; sourceTree = "<group>"; };
+		A2000032 /* ProManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProManager.swift; sourceTree = "<group>"; };
+		A2000033 /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
+		A2000034 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -177,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				A2000004 /* Models.swift */,
+				A2000030 /* SchemaVersioning.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -194,6 +205,7 @@
 				A2000019 /* LaunchScreenView.swift */,
 				A2000022 /* LeaveHistoryView.swift */,
 				A2000013 /* Components.swift */,
+				A2000034 /* PaywallView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -207,6 +219,9 @@
 				A2000017 /* WidgetService.swift */,
 				A2000018 /* BackupService.swift */,
 				A2000021 /* Logger.swift */,
+				A2000031 /* DataProtectionService.swift */,
+				A2000032 /* ProManager.swift */,
+				A2000033 /* CalendarService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -365,6 +380,11 @@
 				A1000021 /* Logger.swift in Sources */,
 				A1000022 /* LeaveHistoryView.swift in Sources */,
 				A1000023 /* Strings.swift in Sources */,
+				A1000030 /* SchemaVersioning.swift in Sources */,
+				A1000031 /* DataProtectionService.swift in Sources */,
+				A1000032 /* ProManager.swift in Sources */,
+				A1000033 /* CalendarService.swift in Sources */,
+				A1000034 /* PaywallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -111,33 +111,63 @@ struct RecommendationsView: View {
 // MARK: - 연도 선택기
 struct YearPicker: View {
     @Binding var selectedYear: Int
-
+    
+    @State private var showingPaywall = false
+    private let proManager = ProManager.shared
     private let currentYear = Calendar.current.component(.year, from: Date())
 
     var body: some View {
         HStack {
-            Button(action: { selectedYear -= 1 }) {
-                Image(systemName: "chevron.left.circle.fill")
+            Button(action: { 
+                if proManager.isPro || selectedYear > currentYear {
+                    selectedYear -= 1 
+                } else {
+                    showingPaywall = true
+                }
+            }) {
+                Image(systemName: proManager.isPro ? "chevron.left.circle.fill" : "lock.circle.fill")
                     .font(.title2)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
-            .disabled(selectedYear <= currentYear)
+            .disabled(selectedYear <= currentYear && proManager.isPro)
 
             Spacer()
 
-            Text(Strings.yearRecommendation(year: selectedYear))
-                .font(.title2.bold())
+            VStack(spacing: 4) {
+                Text(Strings.yearRecommendation(year: selectedYear))
+                    .font(.title2.bold())
+                
+                if !proManager.isPro && selectedYear != currentYear {
+                    HStack(spacing: 4) {
+                        Image(systemName: "crown.fill")
+                            .font(.caption2)
+                            .foregroundColor(.yellow)
+                        Text(Strings.currentYearOnly)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
 
             Spacer()
 
-            Button(action: { selectedYear += 1 }) {
-                Image(systemName: "chevron.right.circle.fill")
+            Button(action: { 
+                if proManager.isPro {
+                    selectedYear += 1 
+                } else {
+                    showingPaywall = true
+                }
+            }) {
+                Image(systemName: proManager.isPro ? "chevron.right.circle.fill" : "lock.circle.fill")
                     .font(.title2)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
-            .disabled(selectedYear >= currentYear + 1)
+            .disabled(selectedYear >= currentYear + 1 && proManager.isPro)
         }
         .padding(.horizontal)
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+        }
     }
 }
 
@@ -210,16 +240,87 @@ struct RecommendationList: View {
     let recommendations: [LeaveRecommendation]
     @Binding var addedRecommendations: Set<UUID>
     let onAdd: (LeaveRecommendation) -> Void
+    
+    @State private var showingPaywall = false
+    private let proManager = ProManager.shared
+    private let freeRecommendationLimit = 3
 
     var body: some View {
         VStack(spacing: 16) {
-            ForEach(recommendations) { recommendation in
+            // Free users: show first 3 recommendations
+            let visibleRecommendations = proManager.isPro ? recommendations : Array(recommendations.prefix(freeRecommendationLimit))
+            let hiddenRecommendations = proManager.isPro ? [] : Array(recommendations.dropFirst(freeRecommendationLimit))
+            
+            // Visible recommendations
+            ForEach(visibleRecommendations) { recommendation in
                 DetailedRecommendationCard(
                     recommendation: recommendation,
                     isAdded: addedRecommendations.contains(recommendation.id),
                     onAdd: { onAdd(recommendation) }
                 )
             }
+            
+            // Hidden recommendations (blurred) for free users
+            if !hiddenRecommendations.isEmpty {
+                VStack(spacing: 16) {
+                    ForEach(hiddenRecommendations) { recommendation in
+                        DetailedRecommendationCard(
+                            recommendation: recommendation,
+                            isAdded: false,
+                            onAdd: {}
+                        )
+                        .blur(radius: 8)
+                        .disabled(true)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.black.opacity(0.1))
+                        )
+                    }
+                    
+                    // Pro upgrade banner
+                    VStack(spacing: 12) {
+                        HStack {
+                            Image(systemName: "crown.fill")
+                                .foregroundColor(.yellow)
+                            Text("더 많은 추천이 \(hiddenRecommendations.count)개 있습니다!")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                        }
+                        
+                        Text(Strings.proFeaturesBanner)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                        
+                        Button(action: {
+                            showingPaywall = true
+                        }) {
+                            HStack {
+                                Image(systemName: "crown.fill")
+                                Text(Strings.upgradeToPro)
+                                    .fontWeight(.semibold)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                        }
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.accentColor.opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(Color.accentColor.opacity(0.3), lineWidth: 1)
+                            )
+                    )
+                }
+            }
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
         }
     }
 }

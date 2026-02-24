@@ -36,6 +36,7 @@ struct SettingsView: View {
     @State private var showingBackupAlert = false
     @State private var backupAlertMessage = ""
     @State private var showingRestoreConfirm = false
+    @State private var showingPaywall = false
 
     // 국가 & 언어
     @State private var selectedCountry: Country
@@ -199,22 +200,38 @@ struct SettingsView: View {
                     }
                 }
 
-                // 보너스 연차 관리
+                // 보너스 연차 관리 (Pro 전용)
                 Section {
                     Button {
-                        showingBonusLeaveSheet = true
+                        if ProManager.shared.isPro {
+                            showingBonusLeaveSheet = true
+                        } else {
+                            showingPaywall = true
+                        }
                     } label: {
                         HStack {
-                            Image(systemName: "plus.circle.fill")
-                                .foregroundStyle(.orange)
+                            Image(systemName: ProManager.shared.isPro ? "plus.circle.fill" : "crown.fill")
+                                .foregroundStyle(ProManager.shared.isPro ? .orange : .yellow)
                             Text(Strings.addBonusLeave)
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(ProManager.shared.isPro ? .primary : .secondary)
                             Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.secondary)
-                                .font(.caption)
+                            if ProManager.shared.isPro {
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.secondary)
+                                    .font(.caption)
+                            } else {
+                                Text("Pro")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.yellow)
+                                    .foregroundColor(.black)
+                                    .cornerRadius(4)
+                            }
                         }
                     }
+                    .disabled(!ProManager.shared.isPro)
 
                     // 활성 보너스 연차 목록
                     ForEach(bonusLeaves.filter { !$0.isUsed }) { bonus in

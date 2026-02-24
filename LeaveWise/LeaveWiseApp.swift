@@ -20,33 +20,40 @@ struct LeaveWiseApp: App {
             LeaveRecord.self,
             BonusLeave.self,
         ])
-        AppLogger.shared.debug("SwiftData 스키마 설정 완료", category: .data)
 
         sharedModelContainer = Self.createModelContainer(schema: schema)
 
-        // iCloud 상태 확인
         checkICloudStatus()
 
         AppLogger.shared.info("LeaveWise 앱 초기화 완료", category: .app)
     }
 
     private static func createModelContainer(schema: Schema) -> ModelContainer {
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            let container = try ModelContainer(for: schema, configurations: [config])
             AppLogger.shared.info("ModelContainer 생성 성공 (영구 저장소)", category: .data)
             return container
         } catch {
-            // 상세 에러 로깅 (디버깅용)
             AppLogger.shared.error("ModelContainer 생성 실패: \(error)", category: .data)
-            AppLogger.shared.error("에러 상세: \(String(describing: error))", category: .data)
 
-            // 크래시 방지: 인메모리로 전환 (기존 저장소 파일은 유지)
-            AppLogger.shared.warning("인메모리 저장소로 임시 전환 - 앱 재시작 시 데이터 복구 시도됨", category: .data)
-            let inMemoryConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            // Layer 2: 인메모리로 전환 + 로컬 백업에서 복구 시도
+            AppLogger.shared.warning("인메모리 전환 + Layer 2 백업 복구 시도", category: .data)
+            let inMemConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
             do {
-                return try ModelContainer(for: schema, configurations: [inMemoryConfig])
+                let container = try ModelContainer(for: schema, configurations: [inMemConfig])
+
+                Task {
+                    let context = ModelContext(container)
+                    if DataProtectionService.shared.restoreFromLatestBackup(to: context) {
+                        AppLogger.shared.info("Layer 2 백업에서 데이터 복구 성공!", category: .data)
+                    } else {
+                        AppLogger.shared.warning("Layer 2 백업 복구 실패", category: .data)
+                    }
+                }
+
+                return container
             } catch {
                 fatalError("인메모리 ModelContainer 생성 불가: \(error)")
             }

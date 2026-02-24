@@ -43,6 +43,11 @@ struct HomeView: View {
                 VStack(spacing: 20) {
                     // 연차 현황 카드
                     LeaveStatusCard(profile: profile)
+                    
+                    // Pro 업그레이드 배너 (무료 사용자만)
+                    if !ProManager.shared.isPro {
+                        ProBannerView()
+                    }
 
                     // 휴가 사용 내역 버튼
                     LeaveHistoryButton(

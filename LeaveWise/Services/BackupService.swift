@@ -58,6 +58,11 @@ class BackupService {
     private let fileManager = FileManager.default
     private let backupFileName = "LeaveWiseBackup.enc"  // 암호화된 파일
     private let legacyBackupFileName = "LeaveWiseBackup.json"  // 기존 파일 호환
+    private let backupPrefix = "LeaveWiseICloud_"
+    private let maxICloudBackups = 3
+    private let autoBackupIntervalKey = "lastAutoICloudBackupDate"
+    private let dailyBackupHour = 2  // 새벽 2시에 자동 백업
+    private let backupChecksumKey = "icloudBackupChecksum"
 
     // 암호화 키 (앱 고유 식별자 기반)
     private var encryptionKey: SymmetricKey {
@@ -355,8 +360,212 @@ class BackupService {
         try modelContext.save()
     }
 
+    // MARK: - Layer 3: Enhanced iCloud Backup
+    
+    /// 자동 일일 백업 (조용히 백그라운드에서 실행)
+    func performAutoICloudBackup(
+        profile: UserProfile,
+        leaveRecords: [LeaveRecord],
+        bonusLeaves: [BonusLeave]
+    ) async {
+        guard shouldPerformAutoBackup() else {
+            logDebug("자동 백업 조건 불충족, 스킵", category: .backup)
+            return
+        }
+        
+        do {
+            try await backupToICloudWithRotation(
+                profile: profile,
+                leaveRecords: leaveRecords,
+                bonusLeaves: bonusLeaves
+            )
+            
+            // 백업 성공시 타임스탬프 업데이트
+            UserDefaults.standard.set(Date(), forKey: autoBackupIntervalKey)
+            logInfo("자동 iCloud 백업 완료", category: .backup)
+        } catch {
+            logError("자동 iCloud 백업 실패: \(error.localizedDescription)", category: .backup)
+        }
+    }
+    
+    /// 백업과 함께 로테이션 수행 (최대 3개 유지)
+    func backupToICloudWithRotation(
+        profile: UserProfile,
+        leaveRecords: [LeaveRecord],
+        bonusLeaves: [BonusLeave]
+    ) async throws {
+        // 기존 백업 파일들 가져오기
+        let existingBackups = getTimestampedICloudBackups()
+        
+        // 새 백업 생성
+        let timestamp = ISO8601DateFormatter().string(from: Date())
+            .replacingOccurrences(of: ":", with: "-")
+            .replacingOccurrences(of: ".", with: "-")
+        let newBackupFileName = "\(backupPrefix)\(timestamp).enc"
+        
+        guard let containerURL = iCloudContainerURL else {
+            throw BackupError.iCloudNotAvailable
+        }
+        
+        let newBackupURL = containerURL.appendingPathComponent(newBackupFileName)
+        
+        // 백업 데이터 생성 및 무결성 체크섬 계산
+        let jsonData = try createBackup(profile: profile, leaveRecords: leaveRecords, bonusLeaves: bonusLeaves)
+        let checksum = calculateChecksum(for: jsonData)
+        let encryptedData = try encrypt(jsonData)
+        
+        // iCloud Documents 디렉토리 생성
+        try? fileManager.createDirectory(at: containerURL, withIntermediateDirectories: true)
+        
+        // 새 백업 저장
+        try encryptedData.write(to: newBackupURL)
+        
+        // 체크섬 저장
+        UserDefaults.standard.set(checksum, forKey: "\(backupChecksumKey)_\(timestamp)")
+        
+        logInfo("새 iCloud 백업 생성: \(newBackupFileName)", category: .backup)
+        
+        // 오래된 백업 삭제 (최대 3개 유지)
+        await rotateICloudBackups(existingBackups: existingBackups)
+        
+        // 기존 단일 백업 파일 정리
+        if let legacyURL = iCloudBackupURL, fileManager.fileExists(atPath: legacyURL.path) {
+            try? fileManager.removeItem(at: legacyURL)
+            logDebug("기존 단일 백업 파일 정리 완료", category: .backup)
+        }
+    }
+    
+    /// iCloud 백업 로테이션 (최대 3개 유지)
+    private func rotateICloudBackups(existingBackups: [URL]) async {
+        guard existingBackups.count >= maxICloudBackups else { return }
+        
+        // 최신순으로 정렬 (타임스탬프 기반)
+        let sortedBackups = existingBackups.sorted { url1, url2 in
+            let timestamp1 = extractTimestamp(from: url1)
+            let timestamp2 = extractTimestamp(from: url2)
+            return timestamp1 > timestamp2
+        }
+        
+        // 최대 개수 초과시 오래된 것부터 삭제
+        for oldBackup in sortedBackups.dropFirst(maxICloudBackups - 1) {
+            do {
+                try fileManager.removeItem(at: oldBackup)
+                let timestamp = extractTimestamp(from: oldBackup)
+                UserDefaults.standard.removeObject(forKey: "\(backupChecksumKey)_\(timestamp)")
+                logDebug("오래된 iCloud 백업 삭제: \(oldBackup.lastPathComponent)", category: .backup)
+            } catch {
+                logWarning("백업 파일 삭제 실패: \(error.localizedDescription)", category: .backup)
+            }
+        }
+    }
+    
+    /// 타임스탬프가 포함된 iCloud 백업 파일들 가져오기
+    private func getTimestampedICloudBackups() -> [URL] {
+        guard let containerURL = iCloudContainerURL else { return [] }
+        
+        do {
+            let contents = try fileManager.contentsOfDirectory(at: containerURL, includingPropertiesForKeys: nil)
+            return contents.filter { url in
+                url.lastPathComponent.hasPrefix(backupPrefix) &&
+                url.pathExtension == "enc"
+            }
+        } catch {
+            logWarning("iCloud 백업 디렉토리 읽기 실패: \(error.localizedDescription)", category: .backup)
+            return []
+        }
+    }
+    
+    /// 백업 무결성 검증 (체크섬 기반)
+    func verifyICloudBackupIntegrity(_ backupURL: URL) async -> Bool {
+        guard fileManager.fileExists(atPath: backupURL.path) else {
+            return false
+        }
+        
+        do {
+            let encryptedData = try Data(contentsOf: backupURL)
+            let decryptedData = try decrypt(encryptedData)
+            let calculatedChecksum = calculateChecksum(for: decryptedData)
+            
+            let timestamp = extractTimestamp(from: backupURL)
+            let storedChecksum = UserDefaults.standard.string(forKey: "\(backupChecksumKey)_\(timestamp)")
+            
+            let isValid = calculatedChecksum == storedChecksum
+            if !isValid {
+                logWarning("백업 무결성 검증 실패: \(backupURL.lastPathComponent)", category: .backup)
+            }
+            return isValid
+        } catch {
+            logError("백업 무결성 검증 중 오류: \(error.localizedDescription)", category: .backup)
+            return false
+        }
+    }
+    
+    /// 가장 최신이고 무결성이 검증된 iCloud 백업 찾기
+    func getVerifiedLatestICloudBackup() async -> URL? {
+        let backups = getTimestampedICloudBackups().sorted { url1, url2 in
+            extractTimestamp(from: url1) > extractTimestamp(from: url2)
+        }
+        
+        for backup in backups {
+            if await verifyICloudBackupIntegrity(backup) {
+                return backup
+            }
+        }
+        
+        // 검증된 백업이 없으면 nil 반환
+        logWarning("검증된 iCloud 백업을 찾을 수 없음", category: .backup)
+        return nil
+    }
+    
+    /// 자동 백업 수행 조건 확인
+    private func shouldPerformAutoBackup() -> Bool {
+        guard isICloudAvailable else { return false }
+        
+        let lastBackupDate = UserDefaults.standard.object(forKey: autoBackupIntervalKey) as? Date
+        
+        // 마지막 백업이 24시간 이전이거나 없으면 백업 수행
+        if let lastDate = lastBackupDate {
+            let interval = Date().timeIntervalSince(lastDate)
+            return interval >= 24 * 60 * 60  // 24시간 = 86400초
+        }
+        
+        return true  // 처음 백업
+    }
+    
+    /// 파일명에서 타임스탬프 추출
+    private func extractTimestamp(from url: URL) -> String {
+        let filename = url.lastPathComponent
+        if filename.hasPrefix(backupPrefix) {
+            let startIndex = filename.index(filename.startIndex, offsetBy: backupPrefix.count)
+            let endIndex = filename.lastIndex(of: ".") ?? filename.endIndex
+            return String(filename[startIndex..<endIndex])
+        }
+        return ""
+    }
+    
+    /// 데이터 체크섬 계산
+    private func calculateChecksum(for data: Data) -> String {
+        let hash = SHA256.hash(data: data)
+        return hash.compactMap { String(format: "%02x", $0) }.joined()
+    }
+
     // MARK: - 백업 정보
     func getICloudBackupInfo() async -> (exists: Bool, date: Date?) {
+        // 새로운 타임스탬프 백업들 확인
+        let timestampedBackups = getTimestampedICloudBackups()
+        if let latestBackup = timestampedBackups.max(by: { url1, url2 in
+            extractTimestamp(from: url1) < extractTimestamp(from: url2)
+        }) {
+            do {
+                let attributes = try fileManager.attributesOfItem(atPath: latestBackup.path)
+                let modificationDate = attributes[.modificationDate] as? Date
+                return (true, modificationDate)
+            } catch {
+                return (true, nil)
+            }
+        }
+        
+        // 기존 단일 백업 파일 확인 (레거시 호환)
         guard let url = iCloudBackupURL else {
             return (false, nil)
         }
@@ -373,6 +582,21 @@ class BackupService {
             return (true, nil)
         }
     }
+    
+    /// 모든 iCloud 백업 정보 가져오기 (관리용)
+    func getAllICloudBackups() async -> [(url: URL, date: Date?, verified: Bool)] {
+        let backups = getTimestampedICloudBackups()
+        var result: [(url: URL, date: Date?, verified: Bool)] = []
+        
+        for backup in backups {
+            let attributes = try? fileManager.attributesOfItem(atPath: backup.path)
+            let date = attributes?[.modificationDate] as? Date
+            let verified = await verifyICloudBackupIntegrity(backup)
+            result.append((backup, date, verified))
+        }
+        
+        return result.sorted { $0.date ?? Date.distantPast > $1.date ?? Date.distantPast }
+    }
 }
 
 // MARK: - 에러
@@ -383,6 +607,9 @@ enum BackupError: LocalizedError {
     case invalidBackupData
     case encryptionFailed
     case decryptionFailed
+    case integrityVerificationFailed
+    case backupRotationFailed
+    case checksumMismatch
 
     var errorDescription: String? {
         switch self {
@@ -398,6 +625,12 @@ enum BackupError: LocalizedError {
             return "백업 암호화에 실패했습니다."
         case .decryptionFailed:
             return "백업 복호화에 실패했습니다. 다른 기기의 백업일 수 있습니다."
+        case .integrityVerificationFailed:
+            return "백업 파일 무결성 검증에 실패했습니다."
+        case .backupRotationFailed:
+            return "백업 파일 로테이션에 실패했습니다."
+        case .checksumMismatch:
+            return "백업 파일이 손상되었습니다. (체크섬 불일치)"
         }
     }
 }

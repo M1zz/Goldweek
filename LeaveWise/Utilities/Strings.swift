@@ -2340,4 +2340,248 @@ enum Strings {
         case .workday: return workday
         }
     }
+    
+    // MARK: - Pro / Paywall
+    static var upgradeToPro: String {
+        switch lang {
+        case .korean: return "Pro로 업그레이드"
+        case .english: return "Upgrade to Pro"
+        case .japanese: return "Proにアップグレード"
+        case .chinese: return "升级到Pro版"
+        }
+    }
+    
+    static var leaveWisePro: String {
+        switch lang {
+        case .korean: return "LeaveWise Pro"
+        case .english: return "LeaveWise Pro"
+        case .japanese: return "LeaveWise Pro"
+        case .chinese: return "LeaveWise Pro"
+        }
+    }
+    
+    static var unlockAllFeatures: String {
+        switch lang {
+        case .korean: return "모든 기능을 잠금해제하세요"
+        case .english: return "Unlock all features"
+        case .japanese: return "すべての機能をアンロック"
+        case .chinese: return "解锁所有功能"
+        }
+    }
+    
+    static var freeVersion: String {
+        switch lang {
+        case .korean: return "무료 버전"
+        case .english: return "Free"
+        case .japanese: return "無料版"
+        case .chinese: return "免费版"
+        }
+    }
+    
+    static var proVersion: String {
+        switch lang {
+        case .korean: return "Pro 버전"
+        case .english: return "Pro"
+        case .japanese: return "Pro版"
+        case .chinese: return "Pro版"
+        }
+    }
+    
+    static var purchase: String {
+        switch lang {
+        case .korean: return "구매하기"
+        case .english: return "Purchase"
+        case .japanese: return "購入"
+        case .chinese: return "购买"
+        }
+    }
+    
+    static var restorePurchase: String {
+        switch lang {
+        case .korean: return "구매 복원"
+        case .english: return "Restore Purchase"
+        case .japanese: return "購入を復元"
+        case .chinese: return "恢复购买"
+        }
+    }
+    
+    static var featureComparison: String {
+        switch lang {
+        case .korean: return "기능 비교"
+        case .english: return "Feature Comparison"
+        case .japanese: return "機能比較"
+        case .chinese: return "功能对比"
+        }
+    }
+    
+    static var basicLeaveManagement: String {
+        switch lang {
+        case .korean: return "기본 연차 관리"
+        case .english: return "Basic Leave Management"
+        case .japanese: return "基本的な有給管理"
+        case .chinese: return "基本年假管理"
+        }
+    }
+    
+    static var leaveRecommendations: String {
+        switch lang {
+        case .korean: return "연차 추천"
+        case .english: return "Leave Recommendations"
+        case .japanese: return "有給おすすめ"
+        case .chinese: return "年假推荐"
+        }
+    }
+    
+    static var limitedRecommendations: String {
+        switch lang {
+        case .korean: return "3개 추천만 표시"
+        case .english: return "3 recommendations only"
+        case .japanese: return "3つの推奨のみ"
+        case .chinese: return "仅显示3个推荐"
+        }
+    }
+    
+    static var unlimitedRecommendations: String {
+        switch lang {
+        case .korean: return "모든 추천 표시"
+        case .english: return "All recommendations"
+        case .japanese: return "すべての推奨"
+        case .chinese: return "显示所有推荐"
+        }
+    }
+    
+    static var yearSelector: String {
+        switch lang {
+        case .korean: return "연도 선택"
+        case .english: return "Year Selection"
+        case .japanese: return "年選択"
+        case .chinese: return "年份选择"
+        }
+    }
+    
+    static var currentYearOnly: String {
+        switch lang {
+        case .korean: return "올해만"
+        case .english: return "Current year only"
+        case .japanese: return "今年のみ"
+        case .chinese: return "仅当前年"
+        }
+    }
+    
+    static var allYears: String {
+        switch lang {
+        case .korean: return "모든 년도"
+        case .english: return "All years"
+        case .japanese: return "すべての年"
+        case .chinese: return "所有年份"
+        }
+    }
+    
+    static var systemCalendarSync: String {
+        switch lang {
+        case .korean: return "시스템 캘린더 연동"
+        case .english: return "System Calendar Sync"
+        case .japanese: return "システムカレンダー連携"
+        case .chinese: return "系统日历同步"
+        }
+    }
+    
+    static var notAvailable: String {
+        switch lang {
+        case .korean: return "사용 불가"
+        case .english: return "Not available"
+        case .japanese: return "利用不可"
+        case .chinese: return "不可用"
+        }
+    }
+    
+    static var bonusLeaveManagement: String {
+        switch lang {
+        case .korean: return "보너스 연차 관리"
+        case .english: return "Bonus Leave Management"
+        case .japanese: return "ボーナス休暇管理"
+        case .chinese: return "奖励年假管理"
+        }
+    }
+    
+    static var iCloudBackup: String {
+        switch lang {
+        case .korean: return "iCloud 백업"
+        case .english: return "iCloud Backup"
+        case .japanese: return "iCloudバックアップ"
+        case .chinese: return "iCloud备份"
+        }
+    }
+    
+    static var oneTimePurchase: String {
+        switch lang {
+        case .korean: return "1회 구매, 평생 사용"
+        case .english: return "One-time purchase, lifetime access"
+        case .japanese: return "一度の購入で永続利用"
+        case .chinese: return "一次购买，终身使用"
+        }
+    }
+    
+    static var noSubscription: String {
+        switch lang {
+        case .korean: return "구독 없음"
+        case .english: return "No subscription"
+        case .japanese: return "サブスクなし"
+        case .chinese: return "无订阅"
+        }
+    }
+    
+    static var purchasing: String {
+        switch lang {
+        case .korean: return "구매 중..."
+        case .english: return "Purchasing..."
+        case .japanese: return "購入中..."
+        case .chinese: return "购买中..."
+        }
+    }
+    
+    static var purchaseSuccess: String {
+        switch lang {
+        case .korean: return "구매 완료!"
+        case .english: return "Purchase successful!"
+        case .japanese: return "購入完了！"
+        case .chinese: return "购买成功！"
+        }
+    }
+    
+    static var purchaseError: String {
+        switch lang {
+        case .korean: return "구매 실패"
+        case .english: return "Purchase failed"
+        case .japanese: return "購入失敗"
+        case .chinese: return "购买失败"
+        }
+    }
+    
+    static var restoreSuccess: String {
+        switch lang {
+        case .korean: return "복원 완료!"
+        case .english: return "Restore successful!"
+        case .japanese: return "復元完了！"
+        case .chinese: return "恢复成功！"
+        }
+    }
+    
+    static var youArePro: String {
+        switch lang {
+        case .korean: return "Pro 사용자입니다!"
+        case .english: return "You are a Pro user!"
+        case .japanese: return "Pro ユーザーです！"
+        case .chinese: return "您是Pro用户！"
+        }
+    }
+    
+    static var proFeaturesBanner: String {
+        switch lang {
+        case .korean: return "더 많은 기능을 원하시나요? Pro로 업그레이드하세요"
+        case .english: return "Want more features? Upgrade to Pro"
+        case .japanese: return "もっと機能が欲しい？Proにアップグレード"
+        case .chinese: return "想要更多功能？升级到Pro版"
+        }
+    }
 }
