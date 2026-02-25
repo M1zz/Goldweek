@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9C2035682F29933E00AF1279 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9C2035672F29933E00AF1279 /* Localizable.xcstrings */; };
+		9C5397B92F4E825600905CF0 /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5397B82F4E825600905CF0 /* ReviewManager.swift */; };
 		9C61C0042EDD629400BC5930 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C61C0032EDD629400BC5930 /* WidgetKit.framework */; };
 		9C61C0062EDD629400BC5930 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C61C0052EDD629400BC5930 /* SwiftUI.framework */; };
 		9C61C0172EDD629600BC5930 /* widgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9C61C0012EDD629400BC5930 /* widgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -69,6 +70,7 @@
 		584ABA642F211E0C008AD1DB /* LeaveWise.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LeaveWise.entitlements; sourceTree = "<group>"; };
 		584ABA652F211E1E008AD1DB /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
 		9C2035672F29933E00AF1279 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		9C5397B82F4E825600905CF0 /* ReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewManager.swift; sourceTree = "<group>"; };
 		9C61C0012EDD629400BC5930 /* widgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = widgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C61C0032EDD629400BC5930 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		9C61C0052EDD629400BC5930 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -213,6 +215,7 @@
 		A4000005 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				9C5397B82F4E825600905CF0 /* ReviewManager.swift */,
 				A2000010 /* LeaveManager.swift */,
 				A2000011 /* RecommendationEngine.swift */,
 				A2000012 /* HolidayService.swift */,
@@ -361,6 +364,7 @@
 				A1000001 /* LeaveWiseApp.swift in Sources */,
 				A1000002 /* ContentView.swift in Sources */,
 				A1000004 /* Models.swift in Sources */,
+				9C5397B92F4E825600905CF0 /* ReviewManager.swift in Sources */,
 				A1000005 /* HomeView.swift in Sources */,
 				A1000006 /* CalendarView.swift in Sources */,
 				A1000007 /* PreferencesView.swift in Sources */,

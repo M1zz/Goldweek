@@ -123,6 +123,7 @@ struct LeaveRegistrationView: View {
     let leaveRecords: [LeaveRecord]
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.requestReview) private var requestReview
 
     @State private var startDate = Date()
     @State private var endDate = Date()
@@ -132,6 +133,7 @@ struct LeaveRegistrationView: View {
     @State private var alertMessage = ""
     @State private var isSuccess = false
     @State private var isSaving = false
+    @State private var shouldPromptReview = false
     @FocusState private var isNoteFocused: Bool
 
     var leaveDays: Double {
@@ -245,6 +247,15 @@ struct LeaveRegistrationView: View {
         } message: {
             Text(alertMessage)
         }
+        .onChange(of: shouldPromptReview) { _, newValue in
+            if newValue {
+                shouldPromptReview = false
+                // 약간의 딜레이 후 리뷰 요청 (UX 개선)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    ReviewManager.shared.requestReviewAfterPositiveAction(using: requestReview)
+                }
+            }
+        }
     }
 
     private func addLeave() {
@@ -286,6 +297,10 @@ struct LeaveRegistrationView: View {
             alertMessage = Strings.leaveRegistered(Strings.leaveTypeName(leaveType))
             isSuccess = true
             HapticFeedback.success()
+            
+            // 리뷰 요청 트리거
+            ReviewManager.shared.recordLeaveRegistration()
+            shouldPromptReview = true
         } catch {
             alertMessage = Strings.saveFailed
             isSuccess = false

@@ -373,14 +373,32 @@ struct SettingsView: View {
 
                 // 앱 정보
                 Section(Strings.appInfo) {
-                    // 앱 평가하기
+                    // 앱 평가하기 (App Store 직접 열기)
                     Button {
-                        requestReview()
+                        ReviewManager.shared.openAppStoreForReview()
                     } label: {
                         HStack {
                             Image(systemName: "star.fill")
                                 .foregroundStyle(.yellow)
                             Text(Strings.rateApp)
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            Image(systemName: "arrow.up.right.square")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
+                    }
+                    
+                    // 앱 공유하기
+                    ShareLink(
+                        item: URL(string: "https://apps.apple.com/app/id6739899592")!,
+                        subject: Text("LeaveWise - 연차 관리 앱"),
+                        message: Text(Strings.shareMessage)
+                    ) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundStyle(.blue)
+                            Text(Strings.shareApp)
                                 .foregroundStyle(.primary)
                             Spacer()
                             Image(systemName: "chevron.right")

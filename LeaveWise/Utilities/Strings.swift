@@ -2584,4 +2584,23 @@ enum Strings {
         case .chinese: return "想要更多功能？升级到Pro版"
         }
     }
+    
+    // MARK: - 앱 공유
+    static var shareApp: String {
+        switch lang {
+        case .korean: return "앱 공유하기"
+        case .english: return "Share App"
+        case .japanese: return "アプリを共有"
+        case .chinese: return "分享应用"
+        }
+    }
+    
+    static var shareMessage: String {
+        switch lang {
+        case .korean: return "연차 관리가 편해지는 앱! 공휴일을 활용한 최적의 휴가 추천까지 받아보세요 🏖️"
+        case .english: return "The easiest way to manage your annual leave! Get AI-powered vacation recommendations 🏖️"
+        case .japanese: return "有給管理が楽になるアプリ！祝日を活用した最適な休暇をおすすめ 🏖️"
+        case .chinese: return "轻松管理年假！获取利用节假日的最佳休假推荐 🏖️"
+        }
+    }
 }

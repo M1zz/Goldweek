@@ -29,6 +29,7 @@ struct ContentView: View {
                 MainTabView(profile: profile)
                     .onAppear {
                         updateWidget()
+                        ReviewManager.shared.recordLaunch()
                         if !hasCompletedOnboarding {
                             hasCompletedOnboarding = true
                         }
