@@ -2353,10 +2353,10 @@ enum Strings {
     
     static var leaveWisePro: String {
         switch lang {
-        case .korean: return "LeaveWise Pro"
-        case .english: return "LeaveWise Pro"
-        case .japanese: return "LeaveWise Pro"
-        case .chinese: return "LeaveWise Pro"
+        case .korean: return "휴가플래너 Pro"
+        case .english: return "Leave Planner Pro"
+        case .japanese: return "休暇プランナー Pro"
+        case .chinese: return "休假规划 Pro"
         }
     }
     

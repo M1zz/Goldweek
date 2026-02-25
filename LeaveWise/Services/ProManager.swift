@@ -17,7 +17,7 @@ class ProManager {
     private(set) var purchaseState: PurchaseState = .notPurchased
     private(set) var isLoading = false
 
-    private let productID = "com.leeo.leavewise.pro"
+    private let productID = "com.Ysoup.LeaveWise.pro"
     private var updateListenerTask: Task<Void, Never>?
 
     var isPro: Bool {
