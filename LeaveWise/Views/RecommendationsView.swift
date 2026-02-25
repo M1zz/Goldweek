@@ -11,19 +11,19 @@ import SwiftData
 struct RecommendationsView: View {
     @Bindable var profile: UserProfile
     @Environment(\.modelContext) private var modelContext
-    
+
     @State private var recommendations: [LeaveRecommendation] = []
     @State private var selectedYear: Int
     @State private var isLoading = true
     @State private var addedRecommendations: Set<UUID> = []
-    
+
     private let recommendationEngine = RecommendationEngine()
-    
+
     init(profile: UserProfile) {
         self.profile = profile
         _selectedYear = State(initialValue: Calendar.current.component(.year, from: Date()))
     }
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -33,7 +33,7 @@ struct RecommendationsView: View {
                         .onChange(of: selectedYear) { _, _ in
                             loadRecommendations()
                         }
-                    
+
                     // 남은 연차 정보
                     RemainingLeaveInfo(profile: profile)
 
@@ -47,7 +47,7 @@ struct RecommendationsView: View {
 
                     // 추천 리스트
                     if isLoading {
-                        ProgressView("추천 일정 분석 중...")
+                        ProgressView(Strings.analyzingSchedule)
                             .padding(.top, 40)
                     } else if recommendations.isEmpty {
                         EmptyRecommendationView()
@@ -61,27 +61,27 @@ struct RecommendationsView: View {
                 }
                 .padding()
             }
-            .navigationTitle("💡 휴가 추천")
+            .navigationTitle("💡 \(Strings.navTitleRecommendations)")
             .onAppear {
                 loadRecommendations()
             }
         }
     }
-    
+
     private func loadRecommendations() {
         isLoading = true
-        
-        // 약간의 딜레이로 로딩 효과
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             recommendations = recommendationEngine.generateRecommendations(
                 for: profile,
                 remainingLeave: profile.remainingLeave,
-                year: selectedYear
+                year: selectedYear,
+                country: profile.country
             )
             isLoading = false
         }
     }
-    
+
     private func addLeave(from recommendation: LeaveRecommendation) {
         let record = LeaveRecord(
             startDate: recommendation.startDate,
@@ -100,7 +100,6 @@ struct RecommendationsView: View {
             try modelContext.save()
             HapticFeedback.success()
         } catch {
-            // 롤백
             profile.usedLeave -= recommendation.requiredLeaveDays
             addedRecommendations.remove(recommendation.id)
             modelContext.delete(record)
@@ -113,58 +112,88 @@ struct RecommendationsView: View {
 struct YearPicker: View {
     @Binding var selectedYear: Int
     
+    @State private var showingPaywall = false
+    private let proManager = ProManager.shared
     private let currentYear = Calendar.current.component(.year, from: Date())
-    
+
     var body: some View {
         HStack {
-            Button(action: { selectedYear -= 1 }) {
-                Image(systemName: "chevron.left.circle.fill")
+            Button(action: { 
+                if proManager.isPro || selectedYear > currentYear {
+                    selectedYear -= 1 
+                } else {
+                    showingPaywall = true
+                }
+            }) {
+                Image(systemName: proManager.isPro ? "chevron.left.circle.fill" : "lock.circle.fill")
                     .font(.title2)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
-            .disabled(selectedYear <= currentYear)
-            
+            .disabled(selectedYear <= currentYear && proManager.isPro)
+
             Spacer()
-            
-            Text(verbatim: "\(selectedYear)년 추천")
-                .font(.title2.bold())
-            
+
+            VStack(spacing: 4) {
+                Text(Strings.yearRecommendation(year: selectedYear))
+                    .font(.title2.bold())
+                
+                if !proManager.isPro && selectedYear != currentYear {
+                    HStack(spacing: 4) {
+                        Image(systemName: "crown.fill")
+                            .font(.caption2)
+                            .foregroundColor(.yellow)
+                        Text(Strings.currentYearOnly)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+
             Spacer()
-            
-            Button(action: { selectedYear += 1 }) {
-                Image(systemName: "chevron.right.circle.fill")
+
+            Button(action: { 
+                if proManager.isPro {
+                    selectedYear += 1 
+                } else {
+                    showingPaywall = true
+                }
+            }) {
+                Image(systemName: proManager.isPro ? "chevron.right.circle.fill" : "lock.circle.fill")
                     .font(.title2)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
-            .disabled(selectedYear >= currentYear + 1)
+            .disabled(selectedYear >= currentYear + 1 && proManager.isPro)
         }
         .padding(.horizontal)
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+        }
     }
 }
 
 // MARK: - 남은 연차 정보
 struct RemainingLeaveInfo: View {
     @Bindable var profile: UserProfile
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text("사용 가능한 연차")
+                Text(Strings.availableLeave)
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                
+
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text("\(String(format: "%.1f", profile.remainingLeave))")
                         .font(.system(size: 36, weight: .bold))
                         .foregroundStyle(.green)
-                    Text("일")
+                    Text(Strings.dayUnitSuffix)
                         .font(.title3)
                         .foregroundStyle(.secondary)
                 }
             }
-            
+
             Spacer()
-            
+
             CircularProgressView(
                 progress: profile.usedLeave / profile.totalAnnualLeave,
                 lineWidth: 8
@@ -182,12 +211,12 @@ struct RemainingLeaveInfo: View {
 struct CircularProgressView: View {
     let progress: Double
     let lineWidth: CGFloat
-    
+
     var body: some View {
         ZStack {
             Circle()
                 .stroke(Color.gray.opacity(0.2), lineWidth: lineWidth)
-            
+
             Circle()
                 .trim(from: 0, to: min(progress, 1))
                 .stroke(
@@ -199,7 +228,7 @@ struct CircularProgressView: View {
                     style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
-            
+
             Text("\(Int(progress * 100))%")
                 .font(.caption.bold())
         }
@@ -212,15 +241,86 @@ struct RecommendationList: View {
     @Binding var addedRecommendations: Set<UUID>
     let onAdd: (LeaveRecommendation) -> Void
     
+    @State private var showingPaywall = false
+    private let proManager = ProManager.shared
+    private let freeRecommendationLimit = 3
+
     var body: some View {
         VStack(spacing: 16) {
-            ForEach(recommendations) { recommendation in
+            // Free users: show first 3 recommendations
+            let visibleRecommendations = proManager.isPro ? recommendations : Array(recommendations.prefix(freeRecommendationLimit))
+            let hiddenRecommendations = proManager.isPro ? [] : Array(recommendations.dropFirst(freeRecommendationLimit))
+            
+            // Visible recommendations
+            ForEach(visibleRecommendations) { recommendation in
                 DetailedRecommendationCard(
                     recommendation: recommendation,
                     isAdded: addedRecommendations.contains(recommendation.id),
                     onAdd: { onAdd(recommendation) }
                 )
             }
+            
+            // Hidden recommendations (blurred) for free users
+            if !hiddenRecommendations.isEmpty {
+                VStack(spacing: 16) {
+                    ForEach(hiddenRecommendations) { recommendation in
+                        DetailedRecommendationCard(
+                            recommendation: recommendation,
+                            isAdded: false,
+                            onAdd: {}
+                        )
+                        .blur(radius: 8)
+                        .disabled(true)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.black.opacity(0.1))
+                        )
+                    }
+                    
+                    // Pro upgrade banner
+                    VStack(spacing: 12) {
+                        HStack {
+                            Image(systemName: "crown.fill")
+                                .foregroundColor(.yellow)
+                            Text("더 많은 추천이 \(hiddenRecommendations.count)개 있습니다!")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                        }
+                        
+                        Text(Strings.proFeaturesBanner)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                        
+                        Button(action: {
+                            showingPaywall = true
+                        }) {
+                            HStack {
+                                Image(systemName: "crown.fill")
+                                Text(Strings.upgradeToPro)
+                                    .fontWeight(.semibold)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                        }
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.accentColor.opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(Color.accentColor.opacity(0.3), lineWidth: 1)
+                            )
+                    )
+                }
+            }
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
         }
     }
 }
@@ -233,7 +333,6 @@ struct DetailedRecommendationCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // 헤더
             HStack {
                 Text("🎯 \(recommendation.title)")
                     .font(.headline)
@@ -241,7 +340,7 @@ struct DetailedRecommendationCard: View {
                 Spacer()
 
                 VStack(alignment: .trailing) {
-                    Text("효율")
+                    Text(Strings.efficiency)
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                     Text(recommendation.efficiencyStars)
@@ -260,14 +359,14 @@ struct DetailedRecommendationCard: View {
             // 요약 정보
             HStack(spacing: 0) {
                 Spacer()
-                Label("\(Int(recommendation.requiredLeaveDays))일 연차", systemImage: "briefcase.fill")
+                Label(Strings.leaveRequired(Int(recommendation.requiredLeaveDays)), systemImage: "briefcase.fill")
                     .font(.caption)
                     .foregroundStyle(.blue)
                 Spacer()
                 Text("→")
                     .foregroundStyle(.secondary)
                 Spacer()
-                Label("\(recommendation.totalDaysOff)일 휴식", systemImage: "sun.max.fill")
+                Label(Strings.daysOff(recommendation.totalDaysOff), systemImage: "sun.max.fill")
                     .font(.caption)
                     .foregroundStyle(.green)
                 Spacer()
@@ -276,12 +375,10 @@ struct DetailedRecommendationCard: View {
             .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 8))
 
-            // 설명
             Text(recommendation.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            // 태그
             if !recommendation.tags.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
@@ -298,12 +395,11 @@ struct DetailedRecommendationCard: View {
                 }
             }
 
-            // 추가 버튼
             Button(action: onAdd) {
                 HStack {
                     Spacer()
                     Image(systemName: isAdded ? "checkmark.circle.fill" : "plus.circle.fill")
-                    Text(isAdded ? "일정에 추가됨" : "일정에 추가하기")
+                    Text(isAdded ? Strings.addedToScheduleAction : Strings.addToScheduleAction)
                         .fontWeight(.semibold)
                     Spacer()
                 }
@@ -328,25 +424,20 @@ struct RecommendationDatePreview: View {
 
     private let calendar = Calendar.current
     private let holidayService = HolidayService()
-    private let weekdayNames = ["일", "월", "화", "수", "목", "금", "토"]
 
-    // 앞뒤로 평일 하루씩 추가한 날짜 범위
     var extendedDateRange: [Date] {
         var dates: [Date] = []
 
-        // 하루 전 추가
         if let dayBefore = calendar.date(byAdding: .day, value: -1, to: startDate) {
             dates.append(dayBefore)
         }
 
-        // 원래 범위
         var current = startDate
         while current <= endDate {
             dates.append(current)
             current = calendar.date(byAdding: .day, value: 1, to: current)!
         }
 
-        // 하루 후 추가
         if let dayAfter = calendar.date(byAdding: .day, value: 1, to: endDate) {
             dates.append(dayAfter)
         }
@@ -361,17 +452,16 @@ struct RecommendationDatePreview: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            // 월 표시 (시작월과 종료월이 다르면 둘 다 표시)
             let startMonth = calendar.component(.month, from: startDate)
             let endMonth = calendar.component(.month, from: endDate)
             HStack {
                 if startMonth == endMonth {
-                    Text("\(startMonth)월")
+                    Text(Strings.monthShort(startMonth))
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                 } else {
-                    Text("\(startMonth)월 → \(endMonth)월")
+                    Text("\(Strings.monthShort(startMonth)) → \(Strings.monthShort(endMonth))")
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
@@ -379,7 +469,6 @@ struct RecommendationDatePreview: View {
                 Spacer()
             }
 
-            // 날짜 미리보기
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 6) {
                     ForEach(Array(extendedDateRange.enumerated()), id: \.offset) { _, date in
@@ -391,12 +480,11 @@ struct RecommendationDatePreview: View {
                 }
             }
 
-            // 범례
             HStack(spacing: 12) {
-                MiniLegend(color: .gray.opacity(0.5), text: "평일")
-                MiniLegend(color: .green, text: "연차")
-                MiniLegend(color: .red.opacity(0.7), text: "공휴일")
-                MiniLegend(color: .blue.opacity(0.7), text: "주말")
+                MiniLegend(color: .gray.opacity(0.5), text: Strings.workday)
+                MiniLegend(color: .green, text: Strings.annualLeave)
+                MiniLegend(color: .red.opacity(0.7), text: Strings.holiday)
+                MiniLegend(color: .blue.opacity(0.7), text: Strings.weekend)
             }
             .font(.system(size: 10))
         }
@@ -412,25 +500,25 @@ struct RecommendationDatePreview: View {
 
         if isHoliday {
             return .holiday
-        } else if weekday == 1 { // 일요일
+        } else if weekday == 1 {
             return .sunday
-        } else if weekday == 7 { // 토요일
+        } else if weekday == 7 {
             return .saturday
         } else if isInLeaveRange {
-            return .leave // 연차 범위 내 평일 = 연차 사용
+            return .leave
         } else {
-            return .workday // 연차 범위 밖 평일 = 일반 근무일
+            return .workday
         }
     }
 }
 
 // MARK: - 날짜 타입
 enum DayType {
-    case leave      // 연차 사용일 (평일)
-    case saturday   // 토요일
-    case sunday     // 일요일
-    case holiday    // 공휴일
-    case workday    // 일반 근무일 (연차 범위 밖 평일)
+    case leave
+    case saturday
+    case sunday
+    case holiday
+    case workday
 
     var color: Color {
         switch self {
@@ -443,13 +531,7 @@ enum DayType {
     }
 
     var label: String {
-        switch self {
-        case .leave: return "연차"
-        case .saturday: return "토"
-        case .sunday: return "일"
-        case .holiday: return "휴일"
-        case .workday: return "평일"
-        }
+        Strings.dayTypeLabel(self)
     }
 }
 
@@ -459,7 +541,6 @@ struct DatePreviewCell: View {
     let dayType: DayType
 
     private let calendar = Calendar.current
-    private let weekdayNames = ["일", "월", "화", "수", "목", "금", "토"]
 
     var dayNumber: Int {
         calendar.component(.day, from: date)
@@ -467,17 +548,15 @@ struct DatePreviewCell: View {
 
     var weekdayName: String {
         let weekday = calendar.component(.weekday, from: date)
-        return weekdayNames[weekday - 1]
+        return Strings.weekdays[weekday - 1]
     }
 
     var body: some View {
         VStack(spacing: 4) {
-            // 요일
             Text(weekdayName)
                 .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(dayType == .sunday || dayType == .holiday ? .red : (dayType == .saturday ? .blue : .secondary))
 
-            // 날짜
             Text("\(dayNumber)")
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(.white)
@@ -512,10 +591,10 @@ struct EmptyRecommendationView: View {
                 .font(.system(size: 60))
                 .foregroundStyle(.secondary)
 
-            Text("추천 일정이 없습니다")
+            Text(Strings.noRecommendations)
                 .font(.headline)
 
-            Text("선호도 설정을 확인하거나\n연차를 더 확보해보세요")
+            Text(Strings.noRecommendationsHint)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -530,40 +609,35 @@ struct RecommendationCalendarPreview: View {
     let selectedYear: Int
 
     private let calendar = Calendar.current
-    private let monthNames = ["1월", "2월", "3월", "4월", "5월", "6월",
-                              "7월", "8월", "9월", "10월", "11월", "12월"]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // 헤더
             HStack {
                 Image(systemName: "calendar.badge.clock")
                     .foregroundStyle(.blue)
-                Text("추천 일정 미리보기")
+                Text(Strings.previewCalendar)
                     .font(.headline)
                 Spacer()
-                Text("\(recommendations.count)개")
+                Text(Strings.itemCountUnit(recommendations.count))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
-            // 연간 달력 미리보기
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 6), spacing: 8) {
                 ForEach(0..<12, id: \.self) { monthIndex in
                     MonthPreviewCell(
                         month: monthIndex + 1,
-                        monthName: monthNames[monthIndex],
+                        monthName: Strings.monthShort(monthIndex + 1),
                         recommendations: recommendationsForMonth(monthIndex + 1),
                         year: selectedYear
                     )
                 }
             }
 
-            // 범례
             HStack(spacing: 16) {
-                LegendDot(color: .orange, text: "황금연휴")
-                LegendDot(color: .green, text: "징검다리")
-                LegendDot(color: .blue, text: "연속휴가")
+                LegendDot(color: .orange, text: Strings.goldenWeekLegend)
+                LegendDot(color: .green, text: Strings.bridgeDayLegend)
+                LegendDot(color: .blue, text: Strings.consecutiveLeaveLegend)
             }
             .font(.caption2)
             .frame(maxWidth: .infinity)
@@ -600,18 +674,6 @@ struct MonthPreviewCell: View {
         return false
     }
 
-    var recommendationColor: Color {
-        guard let first = recommendations.first else { return .clear }
-
-        if first.tags.contains("황금연휴") || first.title.contains("황금") {
-            return .orange
-        } else if first.tags.contains("징검다리") {
-            return .green
-        } else {
-            return .blue
-        }
-    }
-
     var body: some View {
         VStack(spacing: 2) {
             Text(monthName)
@@ -625,9 +687,8 @@ struct MonthPreviewCell: View {
                     .frame(height: 32)
 
                 if !recommendations.isEmpty {
-                    // 추천 일정 표시 (점으로)
                     HStack(spacing: 2) {
-                        ForEach(Array(recommendations.prefix(3).enumerated()), id: \.offset) { index, rec in
+                        ForEach(Array(recommendations.prefix(3).enumerated()), id: \.offset) { _, rec in
                             Circle()
                                 .fill(colorForRecommendation(rec))
                                 .frame(width: 6, height: 6)
@@ -641,9 +702,8 @@ struct MonthPreviewCell: View {
                 }
             }
 
-            // 추천 개수
             if !recommendations.isEmpty && !isPastMonth {
-                Text("\(recommendations.count)개")
+                Text(Strings.itemCountUnit(recommendations.count))
                     .font(.system(size: 9))
                     .foregroundStyle(.blue)
             } else {
@@ -655,9 +715,9 @@ struct MonthPreviewCell: View {
     }
 
     private func colorForRecommendation(_ rec: LeaveRecommendation) -> Color {
-        if rec.tags.contains("황금연휴") || rec.title.contains("황금") || rec.title.contains("연계 휴가") {
+        if rec.tags.contains(Strings.goldenWeek) || rec.title.contains(Strings.goldenWeek) || rec.title.contains("Golden") || rec.title.contains("황금") {
             return .orange
-        } else if rec.tags.contains("징검다리") {
+        } else if rec.tags.contains(Strings.bridgeDay) || rec.title.contains(Strings.bridgeDay) || rec.title.contains("Bridge") || rec.title.contains("징검다리") {
             return .green
         } else {
             return .blue
@@ -684,10 +744,10 @@ struct LegendDot: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: UserProfile.self, LeaveRecord.self, configurations: config)
-    
+
     let profile = UserProfile(name: "홍길동", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 3)
     container.mainContext.insert(profile)
-    
+
     return RecommendationsView(profile: profile)
         .modelContainer(container)
 }

@@ -23,11 +23,16 @@ struct ContentView: View {
     }
 
     var body: some View {
+        let _ = LanguageManager.shared.currentLanguage
         Group {
-            if hasCompletedOnboarding, let profile = currentProfile {
+            if let profile = currentProfile {
                 MainTabView(profile: profile)
                     .onAppear {
                         updateWidget()
+                        ReviewManager.shared.recordLaunch()
+                        if !hasCompletedOnboarding {
+                            hasCompletedOnboarding = true
+                        }
                     }
                     .onChange(of: scenePhase) { _, newPhase in
                         if newPhase == .active {
@@ -46,10 +51,38 @@ struct ContentView: View {
                     .onChange(of: bonusLeaves.count) { _, _ in
                         updateWidget()
                     }
+            } else if hasCompletedOnboarding {
+                // 온보딩 완료했지만 profile이 없는 경우 (빌드로 SwiftData 초기화됨)
+                // 기본 profile 자동 생성
+                Color.clear.onAppear {
+                    createDefaultProfile()
+                }
             } else {
                 OnboardingView(isOnboardingComplete: $hasCompletedOnboarding)
             }
         }
+    }
+
+    private func createDefaultProfile() {
+        let country = Country.fromDeviceLocale()
+
+        // 국가에 따라 언어 설정
+        switch country {
+        case .korea: AppLanguage.current = .korean
+        case .japan: AppLanguage.current = .japanese
+        case .china: AppLanguage.current = .chinese
+        case .usa: AppLanguage.current = .english
+        }
+
+        let profile = UserProfile(
+            name: Strings.defaultUser,
+            yearStartMonth: 1,
+            totalAnnualLeave: 15,
+            usedLeave: 0,
+            country: country
+        )
+        modelContext.insert(profile)
+        try? modelContext.save()
     }
 
     private func updateWidget() {
@@ -71,35 +104,35 @@ struct MainTabView: View {
             HomeView(profile: profile)
                 .tabItem {
                     Image(systemName: "house.fill")
-                    Text("홈")
+                    Text(Strings.tabHome)
                 }
                 .tag(0)
 
             CalendarView(profile: profile)
                 .tabItem {
                     Image(systemName: "calendar")
-                    Text("캘린더")
+                    Text(Strings.tabCalendar)
                 }
                 .tag(1)
 
             AddLeaveView(profile: profile)
                 .tabItem {
                     Image(systemName: "plus.circle.fill")
-                    Text("등록")
+                    Text(Strings.tabRegister)
                 }
                 .tag(2)
 
             RecommendationsView(profile: profile)
                 .tabItem {
                     Image(systemName: "lightbulb.fill")
-                    Text("추천")
+                    Text(Strings.tabRecommendations)
                 }
                 .tag(3)
 
             SettingsView(profile: profile)
                 .tabItem {
                     Image(systemName: "gearshape.fill")
-                    Text("설정")
+                    Text(Strings.tabSettings)
                 }
                 .tag(4)
         }

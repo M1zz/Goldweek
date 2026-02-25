@@ -1,128 +1,160 @@
-# LeaveWise 지원 페이지
-
-## 앱 소개
-
-**LeaveWise**는 직장인을 위한 스마트 연차 관리 앱입니다. 남은 연차를 효율적으로 관리하고, AI 기반 추천으로 최적의 휴가 일정을 계획하세요.
+# LeaveWise Support / 휴가캘린더 지원
 
 ---
 
-## 주요 기능
+## About the App / 앱 소개
 
-### 연차 관리
-- 총 연차, 사용 연차, 남은 연차 한눈에 확인
-- 연차 기준월 설정 (회사별 회계연도 지원)
-- 반차, 반반차 등 다양한 휴가 유형 지원
+**LeaveWise** is a smart annual leave management app for workers. Manage your remaining leave efficiently and plan optimal vacation schedules with AI-powered recommendations.
 
-### 휴가 추천
-- 공휴일과 주말을 활용한 황금연휴 추천
-- 징검다리 휴일 자동 탐지
-- 개인 선호도 기반 맞춤 추천
-  - 선호 계절 (봄/여름/가을/겨울)
-  - 선호 휴가 기간 (단기/중기/장기)
-  - 선호 활동 (여행/휴식/가족시간 등)
-
-### 캘린더
-- 월별 휴가 일정 시각화
-- 공휴일 자동 표시
-- 휴가 등록/수정/삭제
-
-### 보너스 연차
-- 대체휴무, 포상휴가 등 추가 연차 관리
-- 만료일 설정 및 알림
-
-### 위젯
-- 홈 화면에서 남은 연차 바로 확인
-- 다가오는 휴가 정보 표시
-
-### iCloud 백업
-- 데이터 자동 암호화 백업
-- 기기 간 데이터 동기화
+**휴가캘린더**는 직장인을 위한 스마트 연차 관리 앱입니다. 남은 연차를 효율적으로 관리하고, AI 기반 추천으로 최적의 휴가 일정을 계획하세요.
 
 ---
 
-## 자주 묻는 질문 (FAQ)
+## Supported Countries & Languages / 지원 국가 및 언어
 
-### Q: 연차 기준월은 어떻게 설정하나요?
-**A:** 설정 > 연차 설정 > 연차 기준월에서 회사의 회계연도 시작월을 선택하세요. 예를 들어, 1월 시작이면 1월, 4월 시작이면 4월을 선택합니다.
+| Country | Flag | Language |
+|---------|------|----------|
+| Korea (한국) | 🇰🇷 | 한국어 |
+| Japan (日本) | 🇯🇵 | 日本語 |
+| China (中国) | 🇨🇳 | 中文 |
+| USA | 🇺🇸 | English |
 
-### Q: 반차는 어떻게 등록하나요?
-**A:** 등록 탭에서 휴가 유형을 "반차" 또는 "반반차"로 선택하면 됩니다. 반차는 0.5일, 반반차는 0.25일로 자동 계산됩니다.
-
-### Q: 보너스 연차란 무엇인가요?
-**A:** 기본 연차 외에 추가로 받는 휴가입니다. 대체휴무, 포상휴가, 리프레시휴가 등을 설정 > 보너스 연차에서 추가할 수 있습니다.
-
-### Q: iCloud 백업은 어떻게 하나요?
-**A:** 설정 > 데이터 관리 > iCloud에 백업을 탭하세요. 백업된 데이터는 암호화되어 안전하게 저장됩니다.
-
-### Q: 다른 기기에서 데이터를 복원하려면?
-**A:** 새 기기에서 앱 설치 후, 설정 > 데이터 관리 > iCloud에서 복원을 탭하세요. 동일한 Apple ID로 로그인되어 있어야 합니다.
-
-### Q: 위젯이 업데이트되지 않아요
-**A:** 위젯을 길게 눌러 삭제 후 다시 추가해보세요. 그래도 안 되면 앱을 한 번 실행하면 위젯이 업데이트됩니다.
-
-### Q: 추천 휴가가 마음에 들지 않아요
-**A:** 설정 > 휴가 스타일 > 선호도 설정에서 선호하는 계절, 휴가 기간, 활동 등을 수정하면 더 맞춤화된 추천을 받을 수 있습니다.
-
-### Q: 공휴일이 표시되지 않아요
-**A:** 현재 대한민국 공휴일(2024-2030년)을 지원합니다. 누락된 공휴일이 있다면 문의해 주세요.
+Each country includes localized national holidays (2024–2030) and country-specific leave recommendations.
 
 ---
 
-## 시스템 요구사항
+## Key Features / 주요 기능
 
-- iOS 17.0 이상
-- iPhone 호환
-- iCloud 계정 (백업 기능 사용 시)
+### Leave Management / 연차 관리
+- Track total, used, and remaining annual leave at a glance
+- Set your year start month to match your company's fiscal year
+- Support for various leave types: full-day, half-day (AM/PM), quarter-day, sick leave
 
----
+### AI Recommendations / 휴가 추천
+- Smart suggestions that maximize consecutive days off using public holidays and weekends
+- Automatic bridge holiday detection
+- Personalized recommendations based on preferences (season, duration, activity type, budget)
 
-## 개인정보 처리
+### Calendar / 캘린더
+- Monthly view of your leave schedule with national holidays
+- Register, edit, and delete leave directly from the calendar
 
-LeaveWise는 사용자의 개인정보를 소중히 여깁니다.
+### Bonus Leave / 보너스 연차
+- Manage additional leave such as compensation days, anniversary leave, and special leave
+- Set expiration dates for time-limited bonus leave
 
-- **수집하는 정보**: 앱 내에서 입력하는 연차 정보만 저장됩니다.
-- **저장 위치**: 모든 데이터는 사용자의 기기와 iCloud에만 저장됩니다.
-- **제3자 공유**: 어떠한 데이터도 외부로 전송되거나 공유되지 않습니다.
-- **암호화**: iCloud 백업 시 AES-GCM 암호화를 적용합니다.
+### Widget / 위젯
+- View remaining leave, burn rate, and upcoming schedule from your home screen
 
-자세한 내용은 [개인정보 처리방침](privacy-policy.md)을 참조하세요.
-
----
-
-## 문의하기
-
-앱 사용 중 문제가 발생하거나 개선 의견이 있으시면 아래로 연락해 주세요.
-
-- **이메일**: support@leavewise.app
-- **응답 시간**: 영업일 기준 1-2일 내 답변
-
-### 문의 시 포함해 주세요
-1. 사용 중인 iPhone 모델
-2. iOS 버전
-3. 앱 버전
-4. 문제 상황 설명
-5. 스크린샷 (가능한 경우)
+### Leave History / 휴가 기록
+- Review past and upcoming leave records
+- Filter by year, leave type, or status
 
 ---
 
-## 업데이트 내역
+## FAQ / 자주 묻는 질문
 
-### 버전 1.0.0
-- 최초 출시
-- 연차 관리 기능
-- AI 기반 휴가 추천
-- 캘린더 뷰
-- 보너스 연차 관리
-- iCloud 백업/복원
-- 홈 화면 위젯
+### How do I change my country or language?
+Go to **Settings** > **Country & Language** and select your country. The app language, holidays, and recommendations will update automatically.
+
+### 국가나 언어는 어떻게 변경하나요?
+**설정** > **국가 및 언어**에서 국가를 선택하세요. 앱 언어, 공휴일, 추천이 자동으로 변경됩니다.
 
 ---
 
-## 감사의 말
+### How do I set the year start month?
+Go to **Settings** > **Annual Leave Settings** and select the month your company's leave year begins (e.g., January or April).
 
-LeaveWise를 사용해 주셔서 감사합니다. 더 나은 서비스를 위해 항상 노력하겠습니다.
+### 연차 기준월은 어떻게 설정하나요?
+**설정** > **연차 설정**에서 회사의 회계연도 시작월을 선택하세요.
 
-여러분의 소중한 연차, LeaveWise와 함께 알차게 사용하세요! 🏖️
+---
+
+### How do I register half-day leave?
+In the **Register** tab, select "Half-day (AM)" or "Half-day (PM)" as the leave type. Half-days are calculated as 0.5 days.
+
+### 반차는 어떻게 등록하나요?
+**등록** 탭에서 휴가 유형을 "오전반차" 또는 "오후반차"로 선택하면 0.5일로 자동 계산됩니다.
+
+---
+
+### What is bonus leave?
+Additional leave granted outside your regular annual allowance, such as compensation days, anniversary leave, or refresh leave. Add them in **Settings** > **Bonus Leave**.
+
+### 보너스 연차란 무엇인가요?
+기본 연차 외에 추가로 받는 휴가입니다. 대체휴무, 포상휴가 등을 **설정** > **보너스 연차**에서 추가할 수 있습니다.
+
+---
+
+### The widget is not updating
+Try removing and re-adding the widget. If the issue persists, open the app once to refresh widget data.
+
+### 위젯이 업데이트되지 않아요
+위젯을 삭제 후 다시 추가해보세요. 그래도 안 되면 앱을 한 번 실행하면 위젯이 업데이트됩니다.
+
+---
+
+### Recommendations don't match my preferences
+Go to **Settings** > **Vacation Style** to adjust your preferred season, duration, activity type, and budget for more personalized recommendations.
+
+### 추천 휴가가 맞지 않아요
+**설정** > **휴가 스타일**에서 선호 계절, 기간, 활동, 예산을 수정하면 더 맞춤화된 추천을 받을 수 있습니다.
+
+---
+
+## System Requirements / 시스템 요구사항
+
+- iOS 17.0 or later
+- iPhone
+
+---
+
+## Privacy Policy / 개인정보 처리
+
+LeaveWise respects your privacy.
+
+- **No data collection**: The app does not collect, transmit, or share any personal data.
+- **Local storage only**: All data is stored on your device using SwiftData.
+- **No analytics**: No third-party analytics or tracking SDKs are included.
+- **No account required**: The app works entirely without sign-up or login.
+- **iCloud backup**: Your data may be included in your device's standard iCloud backup if enabled, but is never sent to our servers.
+
+---
+
+## Contact / 문의하기
+
+If you experience issues or have suggestions, please contact us:
+
+앱 사용 중 문제가 발생하거나 개선 의견이 있으시면 연락해 주세요.
+
+- **Email**: support@leavewise.app
+
+### When contacting us, please include / 문의 시 포함해 주세요
+1. iPhone model / 기기 모델
+2. iOS version / iOS 버전
+3. App version / 앱 버전
+4. Description of the issue / 문제 상황 설명
+5. Screenshots if possible / 스크린샷 (가능한 경우)
+
+---
+
+## Version History / 업데이트 내역
+
+### v1.0.2
+- Multi-country support (Korea, Japan, China, USA)
+- Multi-language support (한국어, English, 日本語, 中文)
+- Country-specific holidays and AI recommendations
+
+### v1.0.1
+- Bug fixes
+
+### v1.0.0
+- Initial release
+- Annual leave management
+- AI-powered leave recommendations
+- Calendar view
+- Bonus leave management
+- Home screen widget
 
 ---
 

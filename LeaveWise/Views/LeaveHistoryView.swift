@@ -112,24 +112,24 @@ struct LeaveHistoryView: View {
                     recordsList
                 }
             }
-            .navigationTitle("휴가 사용 내역")
+            .navigationTitle(Strings.navTitleLeaveHistory)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("닫기") {
+                    Button(Strings.close) {
                         dismiss()
                     }
                 }
             }
-            .alert("휴가 삭제", isPresented: $showingDeleteAlert) {
-                Button("취소", role: .cancel) { }
-                Button("삭제", role: .destructive) {
+            .alert(Strings.deleteLeave, isPresented: $showingDeleteAlert) {
+                Button(Strings.cancel, role: .cancel) { }
+                Button(Strings.delete, role: .destructive) {
                     if let record = recordToDelete {
                         deleteRecord(record)
                     }
                 }
             } message: {
-                Text("이 휴가 기록을 삭제하시겠습니까?")
+                Text(Strings.deleteLeaveConfirm)
             }
         }
     }
@@ -144,7 +144,7 @@ struct LeaveHistoryView: View {
                         Button {
                             withAnimation { selectedYear = year }
                         } label: {
-                            Text(verbatim: "\(year)년")
+                            Text(verbatim: Strings.yearLabel(year))
                                 .font(.subheadline.weight(selectedYear == year ? .semibold : .regular))
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
@@ -161,7 +161,7 @@ struct LeaveHistoryView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     FilterChip(
-                        title: "전체",
+                        title: Strings.all,
                         isSelected: selectedStatus == nil,
                         color: .gray
                     ) {
@@ -170,7 +170,7 @@ struct LeaveHistoryView: View {
 
                     ForEach(LeaveStatus.allCases) { status in
                         FilterChip(
-                            title: status.rawValue,
+                            title: Strings.leaveStatusName(status),
                             isSelected: selectedStatus == status,
                             color: statusColor(status)
                         ) {
@@ -187,7 +187,7 @@ struct LeaveHistoryView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     FilterChip(
-                        title: "전체 유형",
+                        title: Strings.allTypes,
                         isSelected: selectedType == nil,
                         color: .gray
                     ) {
@@ -196,7 +196,7 @@ struct LeaveHistoryView: View {
 
                     ForEach(LeaveType.allCases) { type in
                         FilterChip(
-                            title: type.rawValue,
+                            title: Strings.leaveTypeName(type),
                             isSelected: selectedType == type,
                             color: typeColor(type)
                         ) {
@@ -217,21 +217,21 @@ struct LeaveHistoryView: View {
     private var statsSection: some View {
         HStack(spacing: 16) {
             StatCard(
-                title: "사용 완료",
-                value: String(format: "%.1f일", yearStats.totalUsed),
+                title: Strings.statUsed,
+                value: String(format: "%.1f\(Strings.dayUnitSuffix)", yearStats.totalUsed),
                 count: yearStats.usedCount,
                 color: .green
             )
 
             StatCard(
-                title: "예정",
-                value: String(format: "%.1f일", yearStats.totalPlanned),
+                title: Strings.statPlanned,
+                value: String(format: "%.1f\(Strings.dayUnitSuffix)", yearStats.totalPlanned),
                 count: yearStats.plannedCount,
                 color: .blue
             )
 
             StatCard(
-                title: "취소",
+                title: Strings.statCancelled,
                 value: "-",
                 count: yearStats.cancelledCount,
                 color: .gray
@@ -258,20 +258,20 @@ struct LeaveHistoryView: View {
                                     recordToDelete = record
                                     showingDeleteAlert = true
                                 } label: {
-                                    Label("삭제", systemImage: "trash")
+                                    Label(Strings.delete, systemImage: "trash")
                                 }
                             }
                             .swipeActions(edge: .leading) {
                                 Button {
                                     recordToEdit = record
                                 } label: {
-                                    Label("수정", systemImage: "pencil")
+                                    Label(Strings.edit, systemImage: "pencil")
                                 }
                                 .tint(.blue)
                             }
                     }
                 } header: {
-                    Text("\(group.month)월")
+                    Text(Strings.monthLabel(group.month))
                         .font(.headline)
                 }
             }
@@ -293,10 +293,10 @@ struct LeaveHistoryView: View {
                 .font(.system(size: 60))
                 .foregroundStyle(.secondary)
 
-            Text("휴가 기록이 없습니다")
+            Text(Strings.noLeaveRecords)
                 .font(.headline)
 
-            Text(verbatim: "\(selectedYear)년에 등록된 휴가가 없습니다.\n새로운 휴가를 등록해보세요.")
+            Text(Strings.noLeaveForYear(selectedYear))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -308,13 +308,13 @@ struct LeaveHistoryView: View {
 
     // MARK: - Actions
     private func deleteRecord(_ record: LeaveRecord) {
-        logInfo("휴가 기록 삭제 - \(record.startDate) ~ \(record.endDate)", category: .data)
+        logInfo("Leave record deleted - \(record.startDate) ~ \(record.endDate)", category: .data)
 
         // 연차 복원
         if let profile = profile, record.type.deductsFromAnnual && record.status != .cancelled {
             let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
             profile.usedLeave -= days
-            logInfo("연차 복원: \(days)일", category: .data)
+            logInfo("Leave restored: \(days) days", category: .data)
         }
 
         modelContext.delete(record)
@@ -327,7 +327,7 @@ struct LeaveHistoryView: View {
                 let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
                 profile.usedLeave += days
             }
-            logError("휴가 기록 삭제 실패: \(error.localizedDescription)", category: .data)
+            logError("Failed to delete leave record: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
         }
     }
@@ -404,7 +404,7 @@ struct StatCard: View {
                 .font(.title3.bold())
                 .foregroundStyle(color)
 
-            Text("\(count)건")
+            Text(Strings.casesCount(count))
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }
@@ -421,8 +421,8 @@ struct HistoryRecordRow: View {
 
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateFormat = "M/d (E)"
-        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = Strings.dateRangeFormat
+        formatter.locale = Locale(identifier: Strings.localeIdentifier)
         return formatter
     }
 
@@ -442,7 +442,7 @@ struct HistoryRecordRow: View {
             // 정보
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text(record.type.rawValue)
+                    Text(Strings.leaveTypeName(record.type))
                         .font(.subheadline.weight(.semibold))
 
                     Spacer()
@@ -456,7 +456,7 @@ struct HistoryRecordRow: View {
                         .foregroundStyle(.secondary)
 
                     if record.daysCount > 1 {
-                        Text("(\(record.daysCount)일)")
+                        Text(Strings.daysCountLabel(record.daysCount))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -502,7 +502,7 @@ struct StatusBadge: View {
     let status: LeaveStatus
 
     var body: some View {
-        Text(status.rawValue)
+        Text(Strings.leaveStatusName(status))
             .font(.caption2.weight(.medium))
             .padding(.horizontal, 8)
             .padding(.vertical, 2)
@@ -577,12 +577,12 @@ struct EditLeaveSheet: View {
         NavigationStack {
             Form {
                 // 휴가 유형
-                Section("휴가 유형") {
-                    Picker("유형", selection: $leaveType) {
+                Section(Strings.leaveTypeSection) {
+                    Picker(Strings.typeSection, selection: $leaveType) {
                         ForEach(LeaveType.allCases) { type in
                             HStack {
                                 Image(systemName: type.icon)
-                                Text(type.rawValue)
+                                Text(Strings.leaveTypeName(type))
                             }
                             .tag(type)
                         }
@@ -590,27 +590,27 @@ struct EditLeaveSheet: View {
                 }
 
                 // 상태
-                Section("상태") {
-                    Picker("상태", selection: $leaveStatus) {
+                Section(Strings.statusSection) {
+                    Picker(Strings.statusSection, selection: $leaveStatus) {
                         ForEach(LeaveStatus.allCases) { status in
-                            Text(status.rawValue).tag(status)
+                            Text(Strings.leaveStatusName(status)).tag(status)
                         }
                     }
                     .pickerStyle(.segmented)
                 }
 
                 // 날짜 선택
-                Section("날짜") {
-                    DatePicker("시작일", selection: $startDate, displayedComponents: .date)
+                Section(Strings.dateSection) {
+                    DatePicker(Strings.startDate, selection: $startDate, displayedComponents: .date)
 
                     if leaveType != .half && leaveType != .quarter {
-                        DatePicker("종료일", selection: $endDate, in: startDate..., displayedComponents: .date)
+                        DatePicker(Strings.endDate, selection: $endDate, in: startDate..., displayedComponents: .date)
                     }
 
                     HStack {
-                        Text("사용일수")
+                        Text(Strings.daysUsed)
                         Spacer()
-                        Text("\(String(format: "%.1f", newLeaveDays))일")
+                        Text("\(String(format: "%.1f", newLeaveDays))\(Strings.dayUnitSuffix)")
                             .foregroundStyle(.blue)
                             .fontWeight(.semibold)
                     }
@@ -619,7 +619,9 @@ struct EditLeaveSheet: View {
                         HStack {
                             Image(systemName: leaveDaysDifference > 0 ? "arrow.up.circle.fill" : "arrow.down.circle.fill")
                                 .foregroundStyle(leaveDaysDifference > 0 ? .red : .green)
-                            Text(leaveDaysDifference > 0 ? "연차 \(String(format: "%.1f", leaveDaysDifference))일 추가 사용" : "연차 \(String(format: "%.1f", abs(leaveDaysDifference)))일 복원")
+                            Text(leaveDaysDifference > 0
+                                 ? Strings.additionalLeaveUsed(String(format: "%.1f", leaveDaysDifference))
+                                 : Strings.leaveRestored(String(format: "%.1f", abs(leaveDaysDifference))))
                                 .font(.caption)
                                 .foregroundStyle(leaveDaysDifference > 0 ? .red : .green)
                         }
@@ -627,12 +629,12 @@ struct EditLeaveSheet: View {
                 }
 
                 // 메모
-                Section("메모") {
-                    TextField("휴가 목적", text: $note)
+                Section(Strings.memo) {
+                    TextField(Strings.leavePurpose, text: $note)
                 }
 
                 // 일정 미리보기
-                Section("일정 미리보기") {
+                Section(Strings.schedulePreview) {
                     RecommendationDatePreview(
                         startDate: startDate,
                         endDate: leaveType == .half || leaveType == .quarter ? startDate : endDate
@@ -641,14 +643,14 @@ struct EditLeaveSheet: View {
                     .listRowBackground(Color.clear)
                 }
             }
-            .navigationTitle("휴가 수정")
+            .navigationTitle(Strings.navTitleEditLeave)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") { dismiss() }
+                    Button(Strings.cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("저장") { saveChanges() }
+                    Button(Strings.save) { saveChanges() }
                 }
             }
             .onChange(of: leaveType) { _, newValue in
@@ -656,8 +658,8 @@ struct EditLeaveSheet: View {
                     endDate = startDate
                 }
             }
-            .alert("알림", isPresented: $showingAlert) {
-                Button("확인", role: .cancel) { }
+            .alert(Strings.alert, isPresented: $showingAlert) {
+                Button(Strings.confirm, role: .cancel) { }
             } message: {
                 Text(alertMessage)
             }
@@ -669,7 +671,7 @@ struct EditLeaveSheet: View {
         if let profile = profile {
             let difference = leaveDaysDifference
             if profile.remainingLeave - difference < 0 && difference > 0 {
-                alertMessage = "연차가 부족합니다."
+                alertMessage = Strings.insufficientLeave
                 showingAlert = true
                 HapticFeedback.error()
                 return
@@ -694,7 +696,7 @@ struct EditLeaveSheet: View {
             if let profile = profile {
                 profile.usedLeave -= leaveDaysDifference
             }
-            alertMessage = "저장에 실패했습니다."
+            alertMessage = Strings.saveFailed
             showingAlert = true
             HapticFeedback.error()
         }

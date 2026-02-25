@@ -7,10 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct SettingsView: View {
     @Bindable var profile: UserProfile
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.requestReview) private var requestReview
     @Query private var leaveRecords: [LeaveRecord]
     @Query(sort: \BonusLeave.grantedDate, order: .reverse) private var bonusLeaves: [BonusLeave]
 
@@ -34,6 +36,19 @@ struct SettingsView: View {
     @State private var showingBackupAlert = false
     @State private var backupAlertMessage = ""
     @State private var showingRestoreConfirm = false
+    @State private var showingPaywall = false
+
+    // 국가 & 언어
+    @State private var selectedCountry: Country
+    @State private var selectedLanguage: AppLanguage
+
+    private let recommendationEngine = RecommendationEngine()
+
+    init(profile: UserProfile) {
+        self.profile = profile
+        _selectedCountry = State(initialValue: profile.country)
+        _selectedLanguage = State(initialValue: AppLanguage.current)
+    }
 
     var usedLeaveCount: Int {
         leaveRecords.filter { $0.status == .used }.count
@@ -50,7 +65,7 @@ struct SettingsView: View {
     var totalAvailableLeave: Double {
         profile.remainingLeave + activeBonusLeave
     }
-    
+
     var body: some View {
         NavigationStack {
             Form {
@@ -67,16 +82,16 @@ struct SettingsView: View {
                                     )
                                 )
                                 .frame(width: 70, height: 70)
-                            
+
                             Text(String(profile.name.prefix(1)))
                                 .font(.title)
                                 .fontWeight(.bold)
                                 .foregroundStyle(.white)
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 4) {
                             if editingName {
-                                TextField("이름", text: $tempName)
+                                TextField(Strings.name, text: $tempName)
                                     .textFieldStyle(.roundedBorder)
                                     .onSubmit {
                                         profile.name = tempName
@@ -86,14 +101,14 @@ struct SettingsView: View {
                                 Text(profile.name)
                                     .font(.title2.bold())
                             }
-                            
-                            Text("가입일: \(profile.createdAt.formatted(date: .abbreviated, time: .omitted))")
+
+                            Text(Strings.joinDate(profile.createdAt.formatted(date: .abbreviated, time: .omitted)))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
-                        
+
                         Spacer()
-                        
+
                         Button(action: {
                             if editingName {
                                 profile.name = tempName
@@ -109,32 +124,58 @@ struct SettingsView: View {
                     }
                     .padding(.vertical, 8)
                 }
-                
+
+                // 국가 및 언어
+                Section(Strings.countryAndLanguage) {
+                    Picker(Strings.country, selection: $selectedCountry) {
+                        ForEach(Country.allCases) { country in
+                            Text("\(country.flag) \(country.displayName)").tag(country)
+                        }
+                    }
+                    .onChange(of: selectedCountry) { _, newValue in
+                        profile.country = newValue
+                        recommendationEngine.invalidateCache()
+                    }
+
+                    Picker(Strings.language, selection: $selectedLanguage) {
+                        ForEach(AppLanguage.allCases) { lang in
+                            Text("\(lang.flag) \(lang.displayName)").tag(lang)
+                        }
+                    }
+                    .onChange(of: selectedLanguage) { _, newValue in
+                        AppLanguage.current = newValue
+                        recommendationEngine.invalidateCache()
+                    }
+                }
+
                 // 연차 설정
-                Section("연차 설정") {
+                Section(Strings.annualLeaveSettings) {
                     // 총 사용 가능 연차 표시
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("사용 가능 연차")
+                            Text(Strings.availableLeaveLabel)
                                 .font(.subheadline)
                             if activeBonusLeave > 0 {
-                                Text("기본 \(String(format: "%.1f", profile.remainingLeave))일 + 보너스 \(String(format: "%.1f", activeBonusLeave))일")
+                                Text(Strings.baseAndBonus(
+                                    base: String(format: "%.1f", profile.remainingLeave),
+                                    bonus: String(format: "%.1f", activeBonusLeave)
+                                ))
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
                         }
                         Spacer()
-                        Text("\(String(format: "%.1f", totalAvailableLeave))일")
+                        Text("\(String(format: "%.1f", totalAvailableLeave))\(Strings.dayUnitSuffix)")
                             .font(.title2.bold())
                             .foregroundStyle(.green)
                     }
                     .padding(.vertical, 4)
 
                     HStack {
-                        Text("총 연차")
+                        Text(Strings.totalLeave)
                         Spacer()
                         Stepper(
-                            "\(Int(profile.totalAnnualLeave))일",
+                            "\(Int(profile.totalAnnualLeave))\(Strings.dayUnitSuffix)",
                             value: $profile.totalAnnualLeave,
                             in: max(profile.usedLeave, 1)...30,
                             step: 1
@@ -142,39 +183,55 @@ struct SettingsView: View {
                     }
 
                     HStack {
-                        Text("사용한 연차")
+                        Text(Strings.usedLeave)
                         Spacer()
                         Stepper(
-                            "\(String(format: "%.1f", profile.usedLeave))일",
+                            "\(String(format: "%.1f", profile.usedLeave))\(Strings.dayUnitSuffix)",
                             value: $profile.usedLeave,
                             in: 0...profile.totalAnnualLeave,
                             step: 0.5
                         )
                     }
 
-                    Picker("연차 기준월", selection: $profile.yearStartMonth) {
+                    Picker(Strings.yearStartMonth, selection: $profile.yearStartMonth) {
                         ForEach(1...12, id: \.self) { month in
-                            Text("\(month)월").tag(month)
+                            Text(Strings.monthShort(month)).tag(month)
                         }
                     }
                 }
 
-                // 보너스 연차 관리
+                // 보너스 연차 관리 (Pro 전용)
                 Section {
                     Button {
-                        showingBonusLeaveSheet = true
+                        if ProManager.shared.isPro {
+                            showingBonusLeaveSheet = true
+                        } else {
+                            showingPaywall = true
+                        }
                     } label: {
                         HStack {
-                            Image(systemName: "plus.circle.fill")
-                                .foregroundStyle(.orange)
-                            Text("보너스 연차 추가")
-                                .foregroundStyle(.primary)
+                            Image(systemName: ProManager.shared.isPro ? "plus.circle.fill" : "crown.fill")
+                                .foregroundStyle(ProManager.shared.isPro ? .orange : .yellow)
+                            Text(Strings.addBonusLeave)
+                                .foregroundStyle(ProManager.shared.isPro ? .primary : .secondary)
                             Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.secondary)
-                                .font(.caption)
+                            if ProManager.shared.isPro {
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.secondary)
+                                    .font(.caption)
+                            } else {
+                                Text("Pro")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.yellow)
+                                    .foregroundColor(.black)
+                                    .cornerRadius(4)
+                            }
                         }
                     }
+                    .disabled(!ProManager.shared.isPro)
 
                     // 활성 보너스 연차 목록
                     ForEach(bonusLeaves.filter { !$0.isUsed }) { bonus in
@@ -185,9 +242,9 @@ struct SettingsView: View {
 
                             VStack(alignment: .leading, spacing: 2) {
                                 HStack {
-                                    Text(bonus.type.rawValue)
+                                    Text(Strings.bonusLeaveTypeName(bonus.type))
                                         .font(.subheadline)
-                                    Text("\(String(format: "%.1f", bonus.days))일")
+                                    Text("\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
                                         .font(.subheadline)
                                         .foregroundStyle(.orange)
                                 }
@@ -209,45 +266,45 @@ struct SettingsView: View {
                     }
                     .onDelete(perform: deleteBonusLeave)
                 } header: {
-                    Text("보너스 연차")
+                    Text(Strings.bonusLeave)
                 } footer: {
-                    Text("대체휴무, 포상휴가 등 추가로 받은 연차를 관리합니다.")
+                    Text(Strings.bonusLeaveFooter)
                 }
-                
+
                 // 휴가 스타일
-                Section("휴가 스타일") {
+                Section(Strings.vacationStyle) {
                     Button(action: { showingPreferences = true }) {
                         HStack {
                             Image(systemName: "slider.horizontal.3")
                                 .foregroundStyle(.blue)
-                            Text("선호도 설정")
+                            Text(Strings.preferencesSettings)
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.secondary)
                         }
                     }
                     .foregroundStyle(.primary)
-                    
+
                     // 현재 설정 요약
                     VStack(alignment: .leading, spacing: 8) {
                         PreferenceSummaryRow(
                             icon: "clock",
-                            title: "선호 기간",
-                            value: profile.preferredDuration.rawValue
+                            title: Strings.preferredDuration,
+                            value: Strings.durationName(profile.preferredDuration)
                         )
-                        
+
                         if !profile.preferredSeasons.isEmpty {
                             PreferenceSummaryRow(
                                 icon: "leaf",
-                                title: "선호 계절",
+                                title: Strings.preferredSeason,
                                 value: profile.preferredSeasons.map { $0.icon }.joined(separator: " ")
                             )
                         }
-                        
+
                         if !profile.priorityActivities.isEmpty {
                             PreferenceSummaryRow(
                                 icon: "star",
-                                title: "선호 활동",
+                                title: Strings.preferredActivity,
                                 value: profile.priorityActivities.map { $0.icon }.joined(separator: " ")
                             )
                         }
@@ -255,14 +312,14 @@ struct SettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 }
-                
+
                 // 통계
-                Section("사용 통계") {
-                    StatRow(icon: "checkmark.circle.fill", iconColor: .green, title: "사용 완료", value: "\(usedLeaveCount)건")
-                    StatRow(icon: "calendar.badge.clock", iconColor: .blue, title: "예정된 휴가", value: "\(plannedLeaveCount)건")
-                    StatRow(icon: "chart.pie.fill", iconColor: .orange, title: "연차 소진율", value: "\(Int((profile.usedLeave / profile.totalAnnualLeave) * 100))%")
+                Section(Strings.usageStats) {
+                    StatRow(icon: "checkmark.circle.fill", iconColor: .green, title: Strings.completed, value: Strings.itemCount(usedLeaveCount))
+                    StatRow(icon: "calendar.badge.clock", iconColor: .blue, title: Strings.plannedLeave, value: Strings.itemCount(plannedLeaveCount))
+                    StatRow(icon: "chart.pie.fill", iconColor: .orange, title: Strings.leaveUsageRate, value: "\(Int((profile.usedLeave / profile.totalAnnualLeave) * 100))%")
                 }
-                
+
                 // 데이터 관리
                 Section {
                     // iCloud 백업
@@ -272,7 +329,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "icloud.and.arrow.up")
                                 .foregroundStyle(.blue)
-                            Text("iCloud에 백업")
+                            Text(Strings.backupToICloud)
                                 .foregroundStyle(.primary)
                             Spacer()
                             if isBackingUp {
@@ -289,7 +346,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "icloud.and.arrow.down")
                                 .foregroundStyle(.blue)
-                            Text("iCloud에서 복원")
+                            Text(Strings.restoreFromICloud)
                                 .foregroundStyle(.primary)
                             Spacer()
                             if isRestoring {
@@ -303,35 +360,69 @@ struct SettingsView: View {
                     Button(role: .destructive, action: { showingResetAlert = true }) {
                         HStack {
                             Image(systemName: "arrow.counterclockwise")
-                            Text("연차 데이터 초기화")
+                            Text(Strings.resetData)
                         }
                     }
                 } header: {
-                    Text("데이터 관리")
+                    Text(Strings.dataManagement)
                 } footer: {
                     if let lastBackup = lastBackupDate {
-                        Text("마지막 백업: \(lastBackup.formatted(date: .abbreviated, time: .shortened))")
+                        Text(Strings.lastBackup(lastBackup.formatted(date: .abbreviated, time: .shortened)))
                     }
                 }
-                
+
                 // 앱 정보
-                Section("앱 정보") {
-                    HStack {
-                        Text("버전")
-                        Spacer()
-                        Text("1.0.0")
-                            .foregroundStyle(.secondary)
+                Section(Strings.appInfo) {
+                    // 앱 평가하기 (App Store 직접 열기)
+                    Button {
+                        ReviewManager.shared.openAppStoreForReview()
+                    } label: {
+                        HStack {
+                            Image(systemName: "star.fill")
+                                .foregroundStyle(.yellow)
+                            Text(Strings.rateApp)
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            Image(systemName: "arrow.up.right.square")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
                     }
                     
+                    // 앱 공유하기
+                    ShareLink(
+                        item: URL(string: "https://apps.apple.com/app/id6739899592")!,
+                        subject: Text("LeaveWise - 연차 관리 앱"),
+                        message: Text(Strings.shareMessage)
+                    ) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundStyle(.blue)
+                            Text(Strings.shareApp)
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
+                    }
+
                     HStack {
-                        Text("개발")
+                        Text(Strings.version)
+                        Spacer()
+                        Text("1.0.4")
+                            .foregroundStyle(.secondary)
+                    }
+
+                    HStack {
+                        Text(Strings.developer)
                         Spacer()
                         Text("LeaveWise Team")
                             .foregroundStyle(.secondary)
                     }
                 }
             }
-            .navigationTitle("설정")
+            .navigationTitle(Strings.navTitleSettings)
             .sheet(isPresented: $showingPreferences) {
                 PreferencesView(profile: profile)
             }
@@ -345,26 +436,26 @@ struct SettingsView: View {
                     onSave: saveBonusLeave
                 )
             }
-            .alert("연차 데이터 초기화", isPresented: $showingResetAlert) {
-                Button("취소", role: .cancel) { }
-                Button("초기화", role: .destructive) {
+            .alert(Strings.resetDataTitle, isPresented: $showingResetAlert) {
+                Button(Strings.cancel, role: .cancel) { }
+                Button(Strings.reset, role: .destructive) {
                     resetData()
                 }
             } message: {
-                Text("모든 연차 기록이 삭제되고 사용한 연차가 0으로 초기화됩니다. 이 작업은 되돌릴 수 없습니다.")
+                Text(Strings.resetDataMessage)
             }
-            .alert("백업", isPresented: $showingBackupAlert) {
-                Button("확인", role: .cancel) { }
+            .alert(Strings.backup, isPresented: $showingBackupAlert) {
+                Button(Strings.confirm, role: .cancel) { }
             } message: {
                 Text(backupAlertMessage)
             }
-            .alert("복원 확인", isPresented: $showingRestoreConfirm) {
-                Button("취소", role: .cancel) { }
-                Button("복원", role: .destructive) {
+            .alert(Strings.restoreConfirmTitle, isPresented: $showingRestoreConfirm) {
+                Button(Strings.cancel, role: .cancel) { }
+                Button(Strings.restore, role: .destructive) {
                     Task { await performRestore() }
                 }
             } message: {
-                Text("iCloud 백업에서 데이터를 복원합니다. 현재 데이터는 모두 삭제됩니다.")
+                Text(Strings.restoreConfirmMessage)
             }
             .task {
                 await checkLastBackup()
@@ -455,7 +546,6 @@ struct SettingsView: View {
             try modelContext.save()
             logInfo("보너스 연차 추가 완료 - \(bonusType.rawValue) \(bonusDays)일", category: .data)
             HapticFeedback.success()
-            // 초기화
             bonusDays = 1.0
             bonusType = .compensatory
             bonusReason = ""
@@ -490,19 +580,16 @@ struct SettingsView: View {
     private func resetData() {
         logWarning("사용자 데이터 초기화 요청", category: .data)
 
-        // 모든 연차 기록 삭제
         for record in leaveRecords {
             modelContext.delete(record)
         }
         logDebug("연차 기록 \(leaveRecords.count)건 삭제", category: .data)
 
-        // 모든 보너스 연차 삭제
         for bonus in bonusLeaves {
             modelContext.delete(bonus)
         }
         logDebug("보너스 연차 \(bonusLeaves.count)건 삭제", category: .data)
 
-        // 사용한 연차 초기화
         profile.usedLeave = 0
 
         do {
@@ -523,7 +610,7 @@ struct PreferenceSummaryRow: View {
     let icon: String
     let title: String
     let value: String
-    
+
     var body: some View {
         HStack {
             Image(systemName: icon)
@@ -541,7 +628,7 @@ struct StatRow: View {
     let iconColor: Color
     let title: String
     let value: String
-    
+
     var body: some View {
         HStack {
             Image(systemName: icon)
