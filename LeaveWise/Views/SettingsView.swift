@@ -373,6 +373,27 @@ struct SettingsView: View {
 
                 // 앱 정보
                 Section(Strings.appInfo) {
+                        // 구매 복원
+                    if !ProManager.shared.isPro {
+                        Button {
+                            Task {
+                                await ProManager.shared.restorePurchases()
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: "arrow.clockwise.circle.fill")
+                                    .foregroundStyle(.blue)
+                                Text(Strings.restorePurchase)
+                                    .foregroundStyle(.primary)
+                                Spacer()
+                                if ProManager.shared.isLoading {
+                                    ProgressView()
+                                }
+                            }
+                        }
+                        .disabled(ProManager.shared.isLoading)
+                    }
+
                     // 앱 평가하기 (App Store 직접 열기)
                     Button {
                         ReviewManager.shared.openAppStoreForReview()
