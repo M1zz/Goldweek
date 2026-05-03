@@ -10,6 +10,7 @@ import StoreKit
 
 struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.requestReview) private var requestReview
     @State private var proManager = ProManager.shared
     @State private var showingAlert = false
     @State private var alertMessage = ""
@@ -270,6 +271,9 @@ struct PaywallView: View {
                     alertMessage = Strings.youArePro
                     showingAlert = true
                 }
+                // 구매 완료 직후 리뷰 요청 — 가장 만족도 높은 시점
+                try? await Task.sleep(for: .seconds(1.5))
+                await ReviewManager.shared.requestReviewAfterPurchase(using: requestReview)
             } catch {
                 await MainActor.run {
                     isSuccess = false
@@ -390,21 +394,37 @@ struct FeatureRowView: View {
 // MARK: - Pro Banner Component
 
 struct ProBannerView: View {
+    /// 스마트 트리거 아이콘 (nil이면 crown 기본)
+    var triggerIcon: String? = nil
+    /// 스마트 트리거 메시지 (nil이면 기본 문구)
+    var triggerMessage: String? = nil
+    /// 배너가 화면에 표시될 때 호출 (쿨다운 타임스탬프 기록용)
+    var onShow: (() -> Void)? = nil
+
     @State private var showingPaywall = false
+
+    private var displayMessage: String {
+        triggerMessage ?? Strings.proFeaturesBanner
+    }
 
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    Image(systemName: "crown.fill")
-                        .foregroundColor(.yellow)
-                        .font(.subheadline)
+                    if let icon = triggerIcon {
+                        Text(icon)
+                            .font(.subheadline)
+                    } else {
+                        Image(systemName: "crown.fill")
+                            .foregroundColor(.yellow)
+                            .font(.subheadline)
+                    }
                     Text(Strings.upgradeToPro)
                         .font(.subheadline)
                         .fontWeight(.semibold)
                 }
 
-                Text(Strings.proFeaturesBanner)
+                Text(displayMessage)
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .lineLimit(2)
@@ -434,6 +454,9 @@ struct ProBannerView: View {
                         .stroke(Color.accentColor.opacity(0.25), lineWidth: 1)
                 )
         )
+        .onAppear {
+            onShow?()
+        }
         .sheet(isPresented: $showingPaywall) {
             PaywallView()
         }

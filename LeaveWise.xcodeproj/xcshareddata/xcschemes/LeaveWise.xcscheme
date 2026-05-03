@@ -29,6 +29,19 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A5000002"
+               BuildableName = "LeaveWiseTests.xctest"
+               BlueprintName = "LeaveWiseTests"
+               ReferencedContainer = "container:LeaveWise.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -50,6 +63,9 @@
             ReferencedContainer = "container:LeaveWise.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <StoreKitConfigurationFileReference
+         identifier = "../../LeaveWise/&#x1112;&#x1172;&#x1100;&#x1161; &#x1111;&#x1173;&#x11af;&#x1105;&#x1162;&#x1102;&#x1165;.storekit">
+      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

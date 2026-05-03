@@ -9,6 +9,7 @@ import SwiftUI
 @main
 struct LeaveWidgetBundle: WidgetBundle {
     var body: some Widget {
+        DDayWidget()
         LeaveWidget()
         LeaveAccessoryWidget()
         BurnRateWidget()

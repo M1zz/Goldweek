@@ -19,6 +19,7 @@ struct LeaveWiseApp: App {
             UserProfile.self,
             LeaveRecord.self,
             BonusLeave.self,
+            CustomHoliday.self,
         ])
 
         sharedModelContainer = Self.createModelContainer(schema: schema)

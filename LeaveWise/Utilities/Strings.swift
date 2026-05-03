@@ -65,10 +65,10 @@ enum Strings {
     // MARK: - 탭 / 네비게이션
     static var tabHome: String {
         switch lang {
-        case .korean: return "홈"
-        case .english: return "Home"
-        case .japanese: return "ホーム"
-        case .chinese: return "首页"
+        case .korean: return "현황"
+        case .english: return "Status"
+        case .japanese: return "状況"
+        case .chinese: return "概览"
         }
     }
 
@@ -1330,6 +1330,7 @@ enum Strings {
             case .official: return "공가"
             case .sick: return "병가"
             case .special: return "특별휴가"
+            case .businessTrip: return "출장"
             }
         case .english:
             switch type {
@@ -1340,6 +1341,7 @@ enum Strings {
             case .official: return "Official"
             case .sick: return "Sick"
             case .special: return "Special"
+            case .businessTrip: return "Trip"
             }
         case .japanese:
             switch type {
@@ -1350,6 +1352,7 @@ enum Strings {
             case .official: return "公休"
             case .sick: return "病休"
             case .special: return "特別休暇"
+            case .businessTrip: return "出張"
             }
         case .chinese:
             switch type {
@@ -1360,6 +1363,7 @@ enum Strings {
             case .official: return "公假"
             case .sick: return "病假"
             case .special: return "特殊假"
+            case .businessTrip: return "出差"
             }
         }
     }
@@ -2601,6 +2605,107 @@ enum Strings {
         case .english: return "The easiest way to manage your annual leave! Get AI-powered vacation recommendations 🏖️"
         case .japanese: return "有給管理が楽になるアプリ！祝日を活用した最適な休暇をおすすめ 🏖️"
         case .chinese: return "轻松管理年假！获取利用节假日的最佳休假推荐 🏖️"
+        }
+    }
+
+    // MARK: - Pro 온보딩 페이지
+    static var proOnboardingSubtitle: String {
+        switch lang {
+        case .korean: return "한 번 결제로 모든 기능을 영구적으로 사용하세요"
+        case .english: return "One purchase. All features. Forever."
+        case .japanese: return "一度の購入ですべての機能を永続利用"
+        case .chinese: return "一次购买，永久使用全部功能"
+        }
+    }
+
+    static var proOnboardingSkip: String {
+        switch lang {
+        case .korean: return "나중에 알아볼게요"
+        case .english: return "Maybe later"
+        case .japanese: return "あとで確認する"
+        case .chinese: return "稍后了解"
+        }
+    }
+
+    // MARK: - 이전 연차 빠른 입력
+    static var pastLeavePromptTitle: String {
+        switch lang {
+        case .korean: return "올해 사용한 연차가 있나요?"
+        case .english: return "Did you take any leave this year?"
+        case .japanese: return "今年すでに有給を使いましたか？"
+        case .chinese: return "今年已经使用过年假吗？"
+        }
+    }
+
+    static var pastLeavePromptDesc: String {
+        switch lang {
+        case .korean: return "지금까지 사용한 연차를 입력하면 남은 연차를 정확히 파악할 수 있어요"
+        case .english: return "Log your past leave to see your accurate remaining balance"
+        case .japanese: return "過去の有給を入力して正確な残日数を確認しましょう"
+        case .chinese: return "输入已使用的年假以准确查看剩余天数"
+        }
+    }
+
+    static var pastLeaveQuickAdd: String {
+        switch lang {
+        case .korean: return "빠른 입력"
+        case .english: return "Quick Entry"
+        case .japanese: return "クイック入力"
+        case .chinese: return "快速输入"
+        }
+    }
+
+    static var pastLeaveTotalUsed: String {
+        switch lang {
+        case .korean: return "사용한 연차"
+        case .english: return "Leave days used"
+        case .japanese: return "使用した有給日数"
+        case .chinese: return "已使用年假"
+        }
+    }
+
+    static var pastLeaveSheetTitle: String {
+        switch lang {
+        case .korean: return "이전 연차 입력"
+        case .english: return "Add Past Leave"
+        case .japanese: return "過去の有給を入力"
+        case .chinese: return "输入过去的年假"
+        }
+    }
+
+    static var pastLeaveSheetDesc: String {
+        switch lang {
+        case .korean: return "올해 이미 사용한 연차 일수를 입력하세요.\n정확한 날짜는 + 탭에서 개별 입력할 수 있어요."
+        case .english: return "Enter the total leave days already used this year.\nFor exact dates, add them individually in the + tab."
+        case .japanese: return "今年すでに使用した有給日数を入力してください。\n正確な日付は＋タブから個別入力できます。"
+        case .chinese: return "请输入今年已使用的年假天数。\n精确日期可在+标签中单独输入。"
+        }
+    }
+
+    static var pastLeaveConfirm: String {
+        switch lang {
+        case .korean: return "반영하기"
+        case .english: return "Confirm"
+        case .japanese: return "反映する"
+        case .chinese: return "确认"
+        }
+    }
+
+    static var pastLeaveSummaryNote: String {
+        switch lang {
+        case .korean: return "이전 사용 연차 (일괄 입력)"
+        case .english: return "Prior leave (bulk entry)"
+        case .japanese: return "過去の有給（一括入力）"
+        case .chinese: return "过去的年假（批量录入）"
+        }
+    }
+
+    static var pastLeaveAutoUsed: String {
+        switch lang {
+        case .korean: return "과거 날짜 선택 시 자동으로 '사용 완료' 처리됩니다"
+        case .english: return "Past dates are automatically marked as 'Used'"
+        case .japanese: return "過去の日付は自動的に「使用済み」になります"
+        case .chinese: return "过去日期会自动标记为「已使用」"
         }
     }
 }

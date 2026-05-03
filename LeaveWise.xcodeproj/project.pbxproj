@@ -40,6 +40,8 @@
 		A1000032 /* ProManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000032 /* ProManager.swift */; };
 		A1000033 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000033 /* CalendarService.swift */; };
 		A1000034 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000034 /* PaywallView.swift */; };
+		A1000035 /* HolidayManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000035 /* HolidayManagementView.swift */; };
+		A1000036 /* LeaveCalculationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000036 /* LeaveCalculationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9C61C0002EDD629400BC5930;
 			remoteInfo = widgetExtension;
+		};
+		A9000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A7000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A5000001;
+			remoteInfo = LeaveWise;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -103,6 +112,9 @@
 		A2000032 /* ProManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProManager.swift; sourceTree = "<group>"; };
 		A2000033 /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
 		A2000034 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		A2000035 /* HolidayManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayManagementView.swift; sourceTree = "<group>"; };
+		A2000036 /* LeaveCalculationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveCalculationTests.swift; sourceTree = "<group>"; };
+		A2000037 /* LeaveWiseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeaveWiseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -172,6 +184,7 @@
 				A4000006 /* Utilities */,
 				A4000007 /* Theme */,
 				A2000003 /* Assets.xcassets */,
+				A2000036 /* LeaveCalculationTests.swift */,
 			);
 			path = LeaveWise;
 			sourceTree = "<group>";
@@ -181,6 +194,7 @@
 			children = (
 				A2000000 /* LeaveWise.app */,
 				9C61C0012EDD629400BC5930 /* widgetExtension.appex */,
+				A2000037 /* LeaveWiseTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -208,6 +222,7 @@
 				A2000022 /* LeaveHistoryView.swift */,
 				A2000013 /* Components.swift */,
 				A2000034 /* PaywallView.swift */,
+				A2000035 /* HolidayManagementView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -290,6 +305,24 @@
 			productReference = A2000000 /* LeaveWise.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A5000002 /* LeaveWiseTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6000004 /* Build configuration list for PBXNativeTarget "LeaveWiseTests" */;
+			buildPhases = (
+				A3000010 /* Sources (Tests) */,
+				A3000011 /* Frameworks (Tests) */,
+				A3000012 /* Resources (Tests) */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A9000001 /* PBXTargetDependency */,
+			);
+			name = LeaveWiseTests;
+			productName = LeaveWiseTests;
+			productReference = A2000037 /* LeaveWiseTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -305,6 +338,10 @@
 					};
 					A5000001 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					A5000002 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = A5000001;
 					};
 				};
 			};
@@ -326,6 +363,7 @@
 			targets = (
 				A5000001 /* LeaveWise */,
 				9C61C0002EDD629400BC5930 /* widgetExtension */,
+				A5000002 /* LeaveWiseTests */,
 			);
 		};
 /* End PBXProject section */
@@ -389,6 +427,29 @@
 				A1000032 /* ProManager.swift in Sources */,
 				A1000033 /* CalendarService.swift in Sources */,
 				A1000034 /* PaywallView.swift in Sources */,
+				A1000035 /* HolidayManagementView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3000010 /* Sources (Tests) */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000036 /* LeaveCalculationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3000011 /* Frameworks (Tests) */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3000012 /* Resources (Tests) */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,6 +460,11 @@
 			isa = PBXTargetDependency;
 			target = 9C61C0002EDD629400BC5930 /* widgetExtension */;
 			targetProxy = 9C61C0152EDD629600BC5930 /* PBXContainerItemProxy */;
+		};
+		A9000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A5000001 /* LeaveWise */;
+			targetProxy = A9000002 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -421,7 +487,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Ysoup.LeaveWise.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -452,7 +518,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Ysoup.LeaveWise.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -613,7 +679,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Ysoup.LeaveWise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -646,7 +712,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Ysoup.LeaveWise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -655,6 +721,44 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A8000005 /* Debug (Tests) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QGAQ3AY3R3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Ysoup.LeaveWise.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeaveWise.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LeaveWise";
+			};
+			name = Debug;
+		};
+		A8000006 /* Release (Tests) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QGAQ3AY3R3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Ysoup.LeaveWise.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeaveWise.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LeaveWise";
 			};
 			name = Release;
 		};
@@ -684,6 +788,15 @@
 			buildConfigurations = (
 				A8000003 /* Debug */,
 				A8000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A6000004 /* Build configuration list for PBXNativeTarget "LeaveWiseTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A8000005 /* Debug (Tests) */,
+				A8000006 /* Release (Tests) */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -94,9 +94,19 @@ final class ReviewManager: ObservableObject {
     /// 연차 등록 완료 후 리뷰 요청 (자연스러운 타이밍)
     @MainActor
     func requestReviewAfterPositiveAction(using requestReview: RequestReviewAction) {
-        // 등록 3회 이상 && 최근 요청 없음
         guard leaveRegistrationCount >= registrationCountThreshold else { return }
         requestReviewIfAppropriate(using: requestReview)
+    }
+
+    /// Pro 구매 완료 후 리뷰 요청 — 임계값 무시, 최고 전환 시점
+    @MainActor
+    func requestReviewAfterPurchase(using requestReview: RequestReviewAction) {
+        guard lastVersionPrompted != currentAppVersion else { return }
+        AppLogger.shared.info("구매 후 리뷰 요청 실행", category: .app)
+        requestReview()
+        lastReviewRequestDate = Date()
+        lastVersionPrompted = currentAppVersion
+        updateCanRequestReview()
     }
     
     /// App Store 리뷰 페이지 직접 열기 (설정에서 사용)

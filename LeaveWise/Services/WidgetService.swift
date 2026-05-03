@@ -31,10 +31,12 @@ class WidgetService {
             return
         }
 
-        // 기본 연차 정보
-        let remaining = profile.remainingLeave
+        // 기본 연차 정보 (계획 중인 휴가도 사용된 것으로 계산)
         let total = profile.totalAnnualLeave
-        let used = profile.usedLeave
+        let used = leaveRecords
+            .filter { ($0.status == .used || $0.status == .planned) && $0.type.deductsFromAnnual }
+            .reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        let remaining = max(0, total - used)
 
         defaults.set(remaining, forKey: "remainingLeave")
         defaults.set(total, forKey: "totalLeave")
@@ -48,6 +50,9 @@ class WidgetService {
         defaults.set(activeBonusLeave, forKey: "bonusLeave")
         logDebug("보너스 연차 저장: \(activeBonusLeave)일", category: .widget)
 
+        // 사용자 이름
+        defaults.set(profile.name, forKey: "userName")
+
         // 다가오는 휴가
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -59,10 +64,22 @@ class WidgetService {
         if let nextLeave = upcomingLeave {
             defaults.set(nextLeave.startDate, forKey: "nextLeaveDate")
             defaults.set(nextLeave.type.rawValue, forKey: "nextLeaveType")
-            logDebug("다가오는 휴가 저장: \(nextLeave.startDate), 타입: \(nextLeave.type.rawValue)", category: .widget)
+            defaults.set(nextLeave.note, forKey: "nextLeaveNote")
+
+            let daysUntil = calendar.dateComponents([.day], from: today, to: nextLeave.startDate).day ?? 0
+            defaults.set(daysUntil, forKey: "daysUntilNextLeave")
+
+            // 휴가 기간 (일수)
+            let duration = calendar.dateComponents([.day], from: nextLeave.startDate, to: nextLeave.endDate).day ?? 0
+            defaults.set(duration + 1, forKey: "nextLeaveDuration")
+
+            logDebug("다가오는 휴가 저장: D-\(daysUntil), 기간: \(duration + 1)일", category: .widget)
         } else {
             defaults.removeObject(forKey: "nextLeaveDate")
             defaults.removeObject(forKey: "nextLeaveType")
+            defaults.removeObject(forKey: "nextLeaveNote")
+            defaults.set(-1, forKey: "daysUntilNextLeave")
+            defaults.set(0, forKey: "nextLeaveDuration")
             logDebug("다가오는 휴가 없음", category: .widget)
         }
 
@@ -164,6 +181,10 @@ class WidgetService {
         defaults.removeObject(forKey: "bonusLeave")
         defaults.removeObject(forKey: "nextLeaveDate")
         defaults.removeObject(forKey: "nextLeaveType")
+        defaults.removeObject(forKey: "nextLeaveNote")
+        defaults.removeObject(forKey: "userName")
+        defaults.set(-1, forKey: "daysUntilNextLeave")
+        defaults.set(0, forKey: "nextLeaveDuration")
 
         WidgetCenter.shared.reloadAllTimelines()
         logInfo("위젯 데이터 초기화 완료", category: .widget)

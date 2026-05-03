@@ -19,12 +19,21 @@ struct CalendarView: View {
     @State private var showingDeleteAlert = false
     @State private var recordToDelete: LeaveRecord?
 
+    @Query private var customHolidays: [CustomHoliday]
+    @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
+
     private let holidayService = HolidayService()
     private let calendar = Calendar.current
 
+    private var hiddenDates: Set<String> {
+        Set(hiddenHolidayDatesRaw.split(separator: ",").map(String.init).filter { !$0.isEmpty })
+    }
+
     var holidays: [Holiday] {
         let year = calendar.component(.year, from: currentMonth)
-        return holidayService.getHolidays(for: year, country: profile.country)
+        return holidayService.getHolidays(for: year, country: profile.country,
+                                           customHolidays: customHolidays,
+                                           hiddenDates: hiddenDates)
     }
 
     var upcomingLeaves: [LeaveRecord] {
@@ -81,7 +90,8 @@ struct CalendarView: View {
                 }
                 .padding()
             }
-            .navigationTitle(Strings.navTitleCalendar)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
             .sheet(item: $recordToEdit) { record in
                 EditLeaveSheet(record: record, profile: profile) {
                     recordToEdit = nil
@@ -245,8 +255,11 @@ struct CalendarGrid: View {
     }
 
     private func isLeave(_ date: Date) -> Bool {
-        leaveRecords.contains { record in
-            date >= record.startDate && date <= record.endDate && record.status != .cancelled
+        let dayStart = calendar.startOfDay(for: date)
+        return leaveRecords.contains { record in
+            let recordStart = calendar.startOfDay(for: record.startDate)
+            let recordEnd = calendar.startOfDay(for: record.endDate)
+            return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
         }
     }
 }
@@ -358,8 +371,11 @@ struct SelectedDateInfo: View {
     }
 
     var leaveOnDate: LeaveRecord? {
-        leaveRecords.first { record in
-            date >= record.startDate && date <= record.endDate && record.status != .cancelled
+        let dayStart = calendar.startOfDay(for: date)
+        return leaveRecords.first { record in
+            let recordStart = calendar.startOfDay(for: record.startDate)
+            let recordEnd = calendar.startOfDay(for: record.endDate)
+            return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
         }
     }
 

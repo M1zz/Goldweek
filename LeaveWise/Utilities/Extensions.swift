@@ -197,6 +197,16 @@ extension Array where Element == LeaveRecord {
     }
 }
 
+// MARK: - Leave Days Formatting
+
+/// 연차 일수를 정확하게 표시 (%.1f의 0.25→0.2 뱅커스 라운딩 버그 방지)
+/// 1.0 → "1",  0.5 → "0.5",  0.25 → "0.25",  1.25 → "1.25"
+func formatLeave(_ value: Double) -> String {
+    if value == Double(Int(value)) { return "\(Int(value))" }
+    if value.truncatingRemainder(dividingBy: 0.5) == 0 { return String(format: "%.1f", value) }
+    return String(format: "%.2f", value)
+}
+
 // MARK: - Notification Names
 
 extension Notification.Name {

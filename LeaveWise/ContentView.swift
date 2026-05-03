@@ -103,7 +103,7 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             HomeView(profile: profile)
                 .tabItem {
-                    Image(systemName: "house.fill")
+                    Image(systemName: "chart.bar.fill")
                     Text(Strings.tabHome)
                 }
                 .tag(0)
@@ -142,5 +142,5 @@ struct MainTabView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [UserProfile.self, LeaveRecord.self, BonusLeave.self], inMemory: true)
+        .modelContainer(for: [UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self], inMemory: true)
 }

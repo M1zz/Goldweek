@@ -13,6 +13,7 @@ struct LeaveHistoryView: View {
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \LeaveRecord.startDate, order: .reverse) private var allRecords: [LeaveRecord]
     @Query private var profiles: [UserProfile]
+    @Query private var allBonusLeaves: [BonusLeave]
 
     @State private var selectedYear: Int
     @State private var selectedStatus: LeaveStatus?
@@ -22,20 +23,48 @@ struct LeaveHistoryView: View {
     @State private var recordToEdit: LeaveRecord?
 
     private let calendar = Calendar.current
+    private let initYearStartMonth: Int
 
-    private var profile: UserProfile? {
-        profiles.first
+    private var profile: UserProfile? { profiles.first }
+
+    private var yearStartMonth: Int { profile?.yearStartMonth ?? initYearStartMonth }
+
+    init(yearStartMonth: Int = 1) {
+        self.initYearStartMonth = yearStartMonth
+        let cal = Calendar.current
+        let now = Date()
+        let month = cal.component(.month, from: now)
+        let year = cal.component(.year, from: now)
+        let fiscalYear = month >= yearStartMonth ? year : year - 1
+        _selectedYear = State(initialValue: fiscalYear)
     }
 
-    init() {
-        _selectedYear = State(initialValue: Calendar.current.component(.year, from: Date()))
+    // 회계연도 시작일 (yearStartMonth 기준)
+    private func fiscalYearStart(for year: Int) -> Date {
+        let sm = yearStartMonth
+        return calendar.date(from: DateComponents(year: year, month: sm, day: 1)) ?? Date()
     }
 
-    // 필터링된 기록
+    // 회계연도 종료일
+    private func fiscalYearEnd(for year: Int) -> Date {
+        let start = fiscalYearStart(for: year)
+        return calendar.date(byAdding: DateComponents(year: 1, second: -1), to: start) ?? start
+    }
+
+    // 날짜가 속한 회계연도
+    private func fiscalYear(for date: Date) -> Int {
+        let sm = yearStartMonth
+        let year = calendar.component(.year, from: date)
+        let month = calendar.component(.month, from: date)
+        return month >= sm ? year : year - 1
+    }
+
+    // 필터링된 기록 (회계연도 기준)
     var filteredRecords: [LeaveRecord] {
-        allRecords.filter { record in
-            let recordYear = calendar.component(.year, from: record.startDate)
-            let yearMatch = recordYear == selectedYear
+        let start = fiscalYearStart(for: selectedYear)
+        let end = fiscalYearEnd(for: selectedYear)
+        return allRecords.filter { record in
+            let inYear = record.startDate >= start && record.startDate <= end
 
             let statusMatch: Bool
             if let status = selectedStatus {
@@ -51,24 +80,35 @@ struct LeaveHistoryView: View {
                 typeMatch = true
             }
 
-            return yearMatch && statusMatch && typeMatch
+            return inYear && statusMatch && typeMatch
         }
     }
 
-    // 연도별 통계
+    // 연도별 통계 (회계연도 기준)
     var yearStats: YearStats {
-        let records = allRecords.filter {
-            calendar.component(.year, from: $0.startDate) == selectedYear
-        }
+        let start = fiscalYearStart(for: selectedYear)
+        let end = fiscalYearEnd(for: selectedYear)
+        let records = allRecords.filter { $0.startDate >= start && $0.startDate <= end }
+        let today = calendar.startOfDay(for: Date())
 
-        let totalUsed = records.filter { $0.status == .used }
-            .reduce(0.0) { $0 + $1.type.leaveValue * Double($1.daysCount) }
+        // 내역은 모든 휴가 유형의 일수를 합산 (연차 차감 여부 무관)
+        // endDate가 지난 .planned도 완료로 집계
+        let totalUsed = records.filter { record in
+            record.status == .used ||
+            (record.status == .planned && calendar.startOfDay(for: record.endDate) < today)
+        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
 
-        let totalPlanned = records.filter { $0.status == .planned }
-            .reduce(0.0) { $0 + $1.type.leaveValue * Double($1.daysCount) }
+        let totalPlanned = records.filter { record in
+            record.status == .planned && calendar.startOfDay(for: record.endDate) >= today
+        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
 
-        let usedCount = records.filter { $0.status == .used }.count
-        let plannedCount = records.filter { $0.status == .planned }.count
+        let usedCount = records.filter { record in
+            record.status == .used ||
+            (record.status == .planned && calendar.startOfDay(for: record.endDate) < today)
+        }.count
+        let plannedCount = records.filter { record in
+            record.status == .planned && calendar.startOfDay(for: record.endDate) >= today
+        }.count
         let cancelledCount = records.filter { $0.status == .cancelled }.count
 
         return YearStats(
@@ -89,11 +129,11 @@ struct LeaveHistoryView: View {
             .sorted { $0.month > $1.month }
     }
 
-    // 사용 가능한 연도 목록
+    // 사용 가능한 연도 목록 (회계연도 기준)
     var availableYears: [Int] {
-        let years = Set(allRecords.map { calendar.component(.year, from: $0.startDate) })
-        let currentYear = calendar.component(.year, from: Date())
-        return Array(Set(years).union([currentYear, currentYear - 1])).sorted(by: >)
+        let years = Set(allRecords.map { fiscalYear(for: $0.startDate) })
+        let currentFiscal = fiscalYear(for: Date())
+        return Array(years.union([currentFiscal, currentFiscal - 1])).sorted(by: >)
     }
 
     var body: some View {
@@ -130,6 +170,9 @@ struct LeaveHistoryView: View {
                 }
             } message: {
                 Text(Strings.deleteLeaveConfirm)
+            }
+            .onAppear {
+                repairBonusLeaveUsage()
             }
         }
     }
@@ -310,11 +353,14 @@ struct LeaveHistoryView: View {
     private func deleteRecord(_ record: LeaveRecord) {
         logInfo("Leave record deleted - \(record.startDate) ~ \(record.endDate)", category: .data)
 
-        // 연차 복원
-        if let profile = profile, record.type.deductsFromAnnual && record.status != .cancelled {
-            let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
-            profile.usedLeave -= days
-            logInfo("Leave restored: \(days) days", category: .data)
+        // 보너스 연차 레코드 삭제 시 usedDays 복원
+        if let bonusId = record.bonusLeaveId,
+           let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
+            let days = record.effectiveLeaveDays
+            bonus.usedDays = max(0, bonus.usedDays - days)
+            if bonus.isUsed && bonus.remainingDays > 0 {
+                bonus.isUsed = false
+            }
         }
 
         modelContext.delete(record)
@@ -322,13 +368,31 @@ struct LeaveHistoryView: View {
             try modelContext.save()
             HapticFeedback.success()
         } catch {
-            // 롤백
-            if let profile = profile, record.type.deductsFromAnnual && record.status != .cancelled {
-                let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
-                profile.usedLeave += days
-            }
             logError("Failed to delete leave record: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
+        }
+    }
+
+    /// 보너스 연차 usedDays와 실제 LeaveRecord가 불일치하는 깨진 데이터 복구
+    private func repairBonusLeaveUsage() {
+        var needsSave = false
+        for bonus in allBonusLeaves {
+            guard bonus.usedDays > 0 else { continue }
+            // 이 보너스에 연결된 레코드의 실제 사용 일수 합산
+            let linkedDays = allRecords
+                .filter { $0.bonusLeaveId == bonus.id }
+                .reduce(0.0) { $0 + $1.effectiveLeaveDays }
+            // 불일치 시 레코드 기준으로 교정
+            if abs(linkedDays - bonus.usedDays) > 0.001 {
+                bonus.usedDays = linkedDays
+                if bonus.isUsed && bonus.remainingDays > 0 {
+                    bonus.isUsed = false
+                }
+                needsSave = true
+            }
+        }
+        if needsSave {
+            try? modelContext.save()
         }
     }
 
@@ -350,6 +414,7 @@ struct LeaveHistoryView: View {
         case .official: return .purple
         case .sick: return .red
         case .special: return .yellow
+        case .businessTrip: return .brown
         }
     }
 }
@@ -455,11 +520,9 @@ struct HistoryRecordRow: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    if record.daysCount > 1 {
-                        Text(Strings.daysCountLabel(record.daysCount))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
+                    Text("\(formatLeave(record.effectiveLeaveDays))\(Strings.dayUnitSuffix)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
                 if !record.note.isEmpty {
@@ -528,6 +591,8 @@ struct EditLeaveSheet: View {
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Query private var allLeaveRecords: [LeaveRecord]
+    @Query private var allBonusLeaves: [BonusLeave]
 
     @State private var startDate: Date
     @State private var endDate: Date
@@ -565,12 +630,27 @@ struct EditLeaveSheet: View {
     }
 
     var leaveDaysDifference: Double {
-        if !leaveType.deductsFromAnnual && !record.type.deductsFromAnnual {
+        let originalDeductsFromAnnual = record.deductsFromAnnualLeave
+        let newDeductsFromAnnual = leaveType.deductsFromAnnual && record.bonusLeaveId == nil
+        if !newDeductsFromAnnual && !originalDeductsFromAnnual {
             return 0
         }
-        let originalDeduction = record.type.deductsFromAnnual ? originalLeaveDays : 0
-        let newDeduction = leaveType.deductsFromAnnual ? newLeaveDays : 0
+        let originalDeduction = originalDeductsFromAnnual ? originalLeaveDays : 0
+        let newDeduction = newDeductsFromAnnual ? newLeaveDays : 0
         return newDeduction - originalDeduction
+    }
+
+    // 현재 레코드를 제외한 다른 레코드들의 committed leave
+    var committedExcludingSelf: Double {
+        let others = allLeaveRecords.filter { $0.id != record.id }
+        let active = others.filter { $0.status == .used || $0.status == .planned }
+        let deducting = active.filter { $0.deductsFromAnnualLeave }
+        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+    }
+
+    var availableForEdit: Double {
+        guard let profile = profile else { return 0 }
+        return max(0, profile.totalAnnualLeave - committedExcludingSelf)
     }
 
     var body: some View {
@@ -667,19 +747,30 @@ struct EditLeaveSheet: View {
     }
 
     private func saveChanges() {
-        // 연차 차감량 조정
-        if let profile = profile {
-            let difference = leaveDaysDifference
-            if profile.remainingLeave - difference < 0 && difference > 0 {
+        // 잔여 연차 검증 (레코드 기반, leisure 모드는 검증 없음, 보너스 연차는 제외)
+        let isLeisure = profile?.userType == .leisure
+        let newDeductsFromAnnual = leaveType.deductsFromAnnual && record.bonusLeaveId == nil
+        if !isLeisure, newDeductsFromAnnual {
+            let needed = leaveType == .half ? 0.5 : leaveType == .quarter ? 0.25 : newLeaveDays
+            if needed > availableForEdit {
                 alertMessage = Strings.insufficientLeave
                 showingAlert = true
                 HapticFeedback.error()
                 return
             }
-            profile.usedLeave += difference
         }
 
-        // 기록 업데이트
+        // 보너스 연차 레코드를 편집하면 usedDays 차분 반영
+        if let bonusId = record.bonusLeaveId,
+           let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
+            let diff = newLeaveDays - originalLeaveDays
+            if abs(diff) > 0.001 {
+                bonus.usedDays = max(0, bonus.usedDays + diff)
+                if bonus.isUsed && bonus.remainingDays > 0 { bonus.isUsed = false }
+            }
+        }
+
+        // 기록 업데이트 (records가 source of truth이므로 profile.usedLeave 조정 불필요)
         record.startDate = startDate
         record.endDate = leaveType == .half || leaveType == .quarter ? startDate : endDate
         record.type = leaveType
@@ -692,10 +783,6 @@ struct EditLeaveSheet: View {
             onSave()
             dismiss()
         } catch {
-            // 롤백
-            if let profile = profile {
-                profile.usedLeave -= leaveDaysDifference
-            }
             alertMessage = Strings.saveFailed
             showingAlert = true
             HapticFeedback.error()

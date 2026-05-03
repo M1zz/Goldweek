@@ -37,6 +37,7 @@ struct SettingsView: View {
     @State private var backupAlertMessage = ""
     @State private var showingRestoreConfirm = false
     @State private var showingPaywall = false
+    @State private var editingBonus: BonusLeave?
 
     // 국가 & 언어
     @State private var selectedCountry: Country
@@ -58,12 +59,21 @@ struct SettingsView: View {
         leaveRecords.filter { $0.status == .planned }.count
     }
 
+    var committedLeave: Double {
+        let active = leaveRecords.filter { $0.status == .used || $0.status == .planned }
+        let deducting = active.filter { $0.deductsFromAnnualLeave }
+        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+    }
+
     var activeBonusLeave: Double {
-        bonusLeaves.filter { !$0.isUsed }.reduce(0) { $0 + $1.days }
+        let now = Date()
+        return bonusLeaves
+            .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > now) }
+            .reduce(0) { $0 + $1.remainingDays }
     }
 
     var totalAvailableLeave: Double {
-        profile.remainingLeave + activeBonusLeave
+        max(0, profile.totalAnnualLeave - committedLeave) + activeBonusLeave
     }
 
     var body: some View {
@@ -148,60 +158,104 @@ struct SettingsView: View {
                     }
                 }
 
-                // 연차 설정
-                Section(Strings.annualLeaveSettings) {
-                    // 총 사용 가능 연차 표시
-                    HStack {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(Strings.availableLeaveLabel)
-                                .font(.subheadline)
-                            if activeBonusLeave > 0 {
-                                Text(Strings.baseAndBonus(
-                                    base: String(format: "%.1f", profile.remainingLeave),
-                                    bonus: String(format: "%.1f", activeBonusLeave)
-                                ))
+                // 공휴일 관리
+                Section {
+                    NavigationLink(destination: HolidayManagementView(country: profile.country)) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "calendar.badge.plus")
+                                .foregroundStyle(.orange)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("공휴일 관리")
+                                Text("공휴일 추가·숨기기")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
                         }
-                        Spacer()
-                        Text("\(String(format: "%.1f", totalAvailableLeave))\(Strings.dayUnitSuffix)")
-                            .font(.title2.bold())
-                            .foregroundStyle(.green)
                     }
+                }
+
+                // 사용자 유형
+                Section("사용자 유형") {
+                    Picker("모드", selection: $profile.userType) {
+                        ForEach(UserType.allCases) { type in
+                            Label(type.displayName, systemImage: type.icon).tag(type)
+                        }
+                    }
+                    .pickerStyle(.segmented)
                     .padding(.vertical, 4)
 
-                    HStack {
-                        Text(Strings.totalLeave)
-                        Spacer()
-                        Stepper(
-                            "\(Int(profile.totalAnnualLeave))\(Strings.dayUnitSuffix)",
-                            value: $profile.totalAnnualLeave,
-                            in: max(profile.usedLeave, 1)...30,
-                            step: 1
-                        )
+                    if profile.userType == .leisure {
+                        Text("연차 제한 없이 자유롭게 휴가를 계획하고 싶은 분을 위한 모드입니다.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                // 연차/휴가 설정
+                let isLeisure = profile.userType == .leisure
+                Section(isLeisure ? "휴가 설정" : Strings.annualLeaveSettings) {
+                    // 총 사용 가능 연차 표시 — 직장인 모드만
+                    if !isLeisure {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.availableLeaveLabel)
+                                    .font(.subheadline)
+                                if activeBonusLeave > 0 {
+                                    Text(Strings.baseAndBonus(
+                                        base: formatLeave(max(0, profile.totalAnnualLeave - committedLeave)),
+                                        bonus: formatLeave(activeBonusLeave)
+                                    ))
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer()
+                            Text("\(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
+                                .font(.title2.bold())
+                                .foregroundStyle(.green)
+                        }
+                        .padding(.vertical, 4)
                     }
 
                     HStack {
-                        Text(Strings.usedLeave)
+                        Text(isLeisure ? "연간 목표 일수" : Strings.totalLeave)
                         Spacer()
-                        Stepper(
-                            "\(String(format: "%.1f", profile.usedLeave))\(Strings.dayUnitSuffix)",
-                            value: $profile.usedLeave,
-                            in: 0...profile.totalAnnualLeave,
-                            step: 0.5
-                        )
+                        if isLeisure {
+                            Stepper(
+                                profile.totalAnnualLeave == 0
+                                    ? "무제한"
+                                    : "\(Int(profile.totalAnnualLeave))\(Strings.dayUnitSuffix)",
+                                value: $profile.totalAnnualLeave,
+                                in: 0...365,
+                                step: 1
+                            )
+                        } else {
+                            Stepper(
+                                "\(Int(profile.totalAnnualLeave))\(Strings.dayUnitSuffix)",
+                                value: $profile.totalAnnualLeave,
+                                in: max(committedLeave, 1)...365,
+                                step: 1
+                            )
+                        }
                     }
 
-                    Picker(Strings.yearStartMonth, selection: $profile.yearStartMonth) {
+                    HStack {
+                        Text(isLeisure ? "계획된 휴가" : Strings.usedLeave)
+                        Spacer()
+                        Text("\(formatLeave(committedLeave))\(Strings.dayUnitSuffix)")
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Picker(isLeisure ? "기준 연도 시작월" : Strings.yearStartMonth, selection: $profile.yearStartMonth) {
                         ForEach(1...12, id: \.self) { month in
                             Text(Strings.monthShort(month)).tag(month)
                         }
                     }
                 }
 
-                // 보너스 연차 관리 (Pro 전용)
-                Section {
+                // 보너스 연차 관리 (Pro 전용, 직장인 모드만)
+                if !isLeisure { Section {
                     Button {
                         if ProManager.shared.isPro {
                             showingBonusLeaveSheet = true
@@ -231,7 +285,6 @@ struct SettingsView: View {
                             }
                         }
                     }
-                    .disabled(!ProManager.shared.isPro)
 
                     // 활성 보너스 연차 목록
                     ForEach(bonusLeaves.filter { !$0.isUsed }) { bonus in
@@ -244,7 +297,7 @@ struct SettingsView: View {
                                 HStack {
                                     Text(Strings.bonusLeaveTypeName(bonus.type))
                                         .font(.subheadline)
-                                    Text("\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
+                                    Text("\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
                                         .font(.subheadline)
                                         .foregroundStyle(.orange)
                                 }
@@ -262,7 +315,13 @@ struct SettingsView: View {
                                     .font(.caption)
                                     .foregroundStyle(expiration < Date() ? .red : .secondary)
                             }
+
+                            Image(systemName: "pencil.circle")
+                                .foregroundStyle(.secondary)
+                                .font(.subheadline)
                         }
+                        .contentShape(Rectangle())
+                        .onTapGesture { editingBonus = bonus }
                     }
                     .onDelete(perform: deleteBonusLeave)
                 } header: {
@@ -270,6 +329,7 @@ struct SettingsView: View {
                 } footer: {
                     Text(Strings.bonusLeaveFooter)
                 }
+                } // end if !isLeisure
 
                 // 휴가 스타일
                 Section(Strings.vacationStyle) {
@@ -317,7 +377,7 @@ struct SettingsView: View {
                 Section(Strings.usageStats) {
                     StatRow(icon: "checkmark.circle.fill", iconColor: .green, title: Strings.completed, value: Strings.itemCount(usedLeaveCount))
                     StatRow(icon: "calendar.badge.clock", iconColor: .blue, title: Strings.plannedLeave, value: Strings.itemCount(plannedLeaveCount))
-                    StatRow(icon: "chart.pie.fill", iconColor: .orange, title: Strings.leaveUsageRate, value: "\(Int((profile.usedLeave / profile.totalAnnualLeave) * 100))%")
+                    StatRow(icon: "chart.pie.fill", iconColor: .orange, title: Strings.leaveUsageRate, value: profile.totalAnnualLeave > 0 ? "\(Int((committedLeave / profile.totalAnnualLeave) * 100))%" : "0%")
                 }
 
                 // 데이터 관리
@@ -373,6 +433,27 @@ struct SettingsView: View {
 
                 // 앱 정보
                 Section(Strings.appInfo) {
+                        // 구매 복원
+                    if !ProManager.shared.isPro {
+                        Button {
+                            Task {
+                                await ProManager.shared.restorePurchases()
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: "arrow.clockwise.circle.fill")
+                                    .foregroundStyle(.blue)
+                                Text(Strings.restorePurchase)
+                                    .foregroundStyle(.primary)
+                                Spacer()
+                                if ProManager.shared.isLoading {
+                                    ProgressView()
+                                }
+                            }
+                        }
+                        .disabled(ProManager.shared.isLoading)
+                    }
+
                     // 앱 평가하기 (App Store 직접 열기)
                     Button {
                         ReviewManager.shared.openAppStoreForReview()
@@ -410,7 +491,7 @@ struct SettingsView: View {
                     HStack {
                         Text(Strings.version)
                         Spacer()
-                        Text("1.0.4")
+                        Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "-")
                             .foregroundStyle(.secondary)
                     }
 
@@ -435,6 +516,9 @@ struct SettingsView: View {
                     expirationDate: $expirationDate,
                     onSave: saveBonusLeave
                 )
+            }
+            .sheet(item: $editingBonus) { bonus in
+                EditBonusLeaveSheet(bonus: bonus)
             }
             .alert(Strings.resetDataTitle, isPresented: $showingResetAlert) {
                 Button(Strings.cancel, role: .cancel) { }
