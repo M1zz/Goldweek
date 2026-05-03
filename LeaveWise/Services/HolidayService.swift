@@ -13,18 +13,47 @@ class HolidayService {
 
     // MARK: - 공휴일 데이터 (국가별)
 
-    /// 해당 연도의 공휴일 목록 반환 (국가별)
-    func getHolidays(for year: Int, country: Country = .korea) -> [Holiday] {
+    private let holidayDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        f.locale = Locale(identifier: "en_US_POSIX")
+        return f
+    }()
+
+    func dateKey(_ date: Date) -> String {
+        holidayDateFormatter.string(from: date)
+    }
+
+    /// 해당 연도의 공휴일 목록 반환 (국가별, 커스텀 포함)
+    func getHolidays(for year: Int, country: Country = .korea,
+                     customHolidays: [CustomHoliday] = [],
+                     hiddenDates: Set<String> = []) -> [Holiday] {
+        var result: [Holiday]
         switch country {
         case .korea:
-            return getKoreanHolidays(for: year)
+            result = getKoreanHolidays(for: year)
         case .japan:
-            return getJapaneseHolidays(for: year)
+            result = getJapaneseHolidays(for: year)
         case .china:
-            return getChineseHolidays(for: year)
+            result = getChineseHolidays(for: year)
         case .usa:
-            return getUSAHolidays(for: year)
+            result = getUSAHolidays(for: year)
         }
+
+        // 숨김 처리된 기본 공휴일 제거
+        if !hiddenDates.isEmpty {
+            result = result.filter { !hiddenDates.contains(dateKey($0.date)) }
+        }
+
+        // 사용자 정의 공휴일 추가
+        let yearCustom = customHolidays.filter {
+            calendar.component(.year, from: $0.date) == year
+        }
+        result.append(contentsOf: yearCustom.map {
+            Holiday(date: $0.date, name: $0.name, isCustom: true)
+        })
+
+        return result.sorted { $0.date < $1.date }
     }
 
     // MARK: - 한국 공휴일
@@ -38,10 +67,39 @@ class HolidayService {
         // 음력 공휴일 (설날, 추석, 부처님오신날)
         holidays.append(contentsOf: getKoreanLunarHolidays(for: year))
 
+        // 특별 공휴일 (선거일 등 임시 지정)
+        holidays.append(contentsOf: getKoreanSpecialHolidays(for: year))
+
         // 대체공휴일 계산
         holidays.append(contentsOf: getKoreanSubstituteHolidays(holidays: holidays, year: year))
 
         return holidays.sorted { $0.date < $1.date }
+    }
+
+    private func getKoreanSpecialHolidays(for year: Int) -> [Holiday] {
+        let lang = AppLanguage.current
+
+        // 선거일 등 연도별 임시 공휴일
+        // (month, day, names)
+        let specialData: [Int: [(month: Int, day: Int, names: [AppLanguage: String])]] = [
+            2025: [
+                (6, 3, [.korean: "대통령선거일", .english: "Presidential Election Day", .japanese: "大統領選挙日", .chinese: "总统选举日"])
+            ],
+            2026: [
+                (6, 4, [.korean: "지방선거일", .english: "Local Election Day", .japanese: "地方選挙日", .chinese: "地方选举日"])
+            ]
+        ]
+
+        guard let yearData = specialData[year] else { return [] }
+
+        return yearData.compactMap { special in
+            var components = DateComponents()
+            components.year = year
+            components.month = special.month
+            components.day = special.day
+            guard let date = calendar.date(from: components) else { return nil }
+            return Holiday(date: date, name: special.names[lang] ?? special.names[.korean]!)
+        }
     }
 
     private func getKoreanFixedHolidays(for year: Int) -> [Holiday] {
@@ -49,6 +107,7 @@ class HolidayService {
         let fixedDates: [(month: Int, day: Int, names: [AppLanguage: String])] = [
             (1, 1, [.korean: "신정", .english: "New Year's Day", .japanese: "元日", .chinese: "元旦"]),
             (3, 1, [.korean: "삼일절", .english: "Independence Movement Day", .japanese: "三一節", .chinese: "三一节"]),
+            (5, 1, [.korean: "근로자의 날", .english: "Workers' Day", .japanese: "労働者の日", .chinese: "劳动节"]),
             (5, 5, [.korean: "어린이날", .english: "Children's Day", .japanese: "こどもの日", .chinese: "儿童节"]),
             (6, 6, [.korean: "현충일", .english: "Memorial Day", .japanese: "顕忠日", .chinese: "显忠日"]),
             (8, 15, [.korean: "광복절", .english: "Liberation Day", .japanese: "光復節", .chinese: "光复节"]),
@@ -172,13 +231,13 @@ class HolidayService {
         var substituteHolidays: [Holiday] = []
         let lang = AppLanguage.current
 
-        let substituteEligibleKR = ["어린이날", "설날", "설날 연휴", "추석", "추석 연휴",
+        let substituteEligibleKR = ["어린이날", "근로자의 날", "설날", "설날 연휴", "추석", "추석 연휴",
                                      "삼일절", "광복절", "개천절", "한글날", "크리스마스"]
-        let substituteEligibleEN = ["Children's Day", "Seollal", "Seollal Holiday", "Chuseok", "Chuseok Holiday",
+        let substituteEligibleEN = ["Children's Day", "Workers' Day", "Seollal", "Seollal Holiday", "Chuseok", "Chuseok Holiday",
                                      "Independence Movement Day", "Liberation Day", "National Foundation Day", "Hangul Day", "Christmas"]
-        let substituteEligibleJP = ["こどもの日", "ソルラル", "ソルラル連休", "秋夕", "秋夕連休",
+        let substituteEligibleJP = ["こどもの日", "労働者の日", "ソルラル", "ソルラル連休", "秋夕", "秋夕連休",
                                      "三一節", "光復節", "開天節", "ハングルの日", "クリスマス"]
-        let substituteEligibleZH = ["儿童节", "春节", "春节假期", "中秋节", "中秋节假期",
+        let substituteEligibleZH = ["儿童节", "劳动节", "春节", "春节假期", "中秋节", "中秋节假期",
                                      "三一节", "光复节", "开天节", "韩文日", "圣诞节"]
 
         let substituteEligible: [String]

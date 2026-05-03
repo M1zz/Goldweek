@@ -55,16 +55,40 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     }
 }
 
+// MARK: - 사용자 유형
+
+enum UserType: String, Codable, CaseIterable, Identifiable {
+    case employee = "employee"   // 직장인 — 연차 관리
+    case leisure = "leisure"     // 자유 계획 — 연차 없이 휴가 플래닝
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .employee: return "직장인"
+        case .leisure: return "자유 계획"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .employee: return "briefcase"
+        case .leisure: return "beach.umbrella"
+        }
+    }
+}
+
 // MARK: - 사용자 프로필
 @Model
 final class UserProfile {
     var id: UUID
     var name: String
     var yearStartMonth: Int              // 연차 기준 시작월 (1-12)
-    var totalAnnualLeave: Double         // 총 연차 일수
-    var usedLeave: Double                // 사용한 연차
+    var totalAnnualLeave: Double         // 총 연차 / 연간 목표 일수
+    var usedLeave: Double                // 사용한 연차 (레거시 — records가 source of truth)
     var createdAt: Date
     var countryRaw: String               // 국가 코드
+    var userTypeRaw: String = UserType.employee.rawValue  // 사용자 유형
 
     // 선호도 설정
     var preferredDurationRaw: String
@@ -79,7 +103,8 @@ final class UserProfile {
         yearStartMonth: Int = 1,
         totalAnnualLeave: Double = 15,
         usedLeave: Double = 0,
-        country: Country = .korea
+        country: Country = .korea,
+        userType: UserType = .employee
     ) {
         self.id = UUID()
         self.name = name
@@ -88,6 +113,7 @@ final class UserProfile {
         self.usedLeave = usedLeave
         self.createdAt = Date()
         self.countryRaw = country.rawValue
+        self.userTypeRaw = userType.rawValue
         self.preferredDurationRaw = PreferredDuration.mixed.rawValue
         self.preferredSeasonsRaw = ""
         self.preferLongWeekend = true
@@ -103,6 +129,11 @@ final class UserProfile {
     var country: Country {
         get { Country(rawValue: countryRaw) ?? .korea }
         set { countryRaw = newValue.rawValue }
+    }
+
+    var userType: UserType {
+        get { UserType(rawValue: userTypeRaw) ?? .employee }
+        set { userTypeRaw = newValue.rawValue }
     }
 
     var preferredDuration: PreferredDuration {
@@ -141,20 +172,24 @@ final class LeaveRecord {
     var statusRaw: String
     var note: String
     var isRecommended: Bool
-    
+    /// 보너스 연차 사용 시 연결된 BonusLeave.id (일반 연차는 nil)
+    var bonusLeaveId: UUID?
+
     init(
         startDate: Date,
         endDate: Date,
         type: LeaveType = .annual,
         status: LeaveStatus = .planned,
         note: String = "",
-        isRecommended: Bool = false
+        isRecommended: Bool = false,
+        bonusLeaveId: UUID? = nil
     ) {
         self.id = UUID()
         self.startDate = startDate
         self.endDate = endDate
         self.typeRaw = type.rawValue
         self.statusRaw = status.rawValue
+        self.bonusLeaveId = bonusLeaveId
         self.note = note
         self.isRecommended = isRecommended
     }
@@ -172,6 +207,22 @@ final class LeaveRecord {
     var daysCount: Int {
         let components = Calendar.current.dateComponents([.day], from: startDate, to: endDate)
         return (components.day ?? 0) + 1
+    }
+
+    /// 연차 차감 일수 (반차 0.5, 반반차 0.25, 그 외 달력 일수)
+    var effectiveLeaveDays: Double {
+        switch type {
+        case .half: return 0.5
+        case .quarter: return 0.25
+        default:
+            let days = Calendar.current.dateComponents([.day], from: startDate, to: endDate).day ?? 0
+            return Double(days + 1)
+        }
+    }
+
+    /// 실제 연차 차감 여부 — bonusLeaveId가 있으면 보너스 차감이므로 연차 차감 아님
+    var deductsFromAnnualLeave: Bool {
+        type.deductsFromAnnual && bonusLeaveId == nil
     }
 }
 
@@ -357,12 +408,18 @@ struct LeaveRecommendation: Identifiable {
 @Model
 final class BonusLeave {
     var id: UUID
-    var days: Double                     // 추가된 일수
+    var days: Double                     // 최초 부여 일수 (절대 변경하지 않음)
+    var usedDays: Double = 0             // 사용된 일수 (증가만 함)
     var typeRaw: String                  // 보너스 유형
     var reason: String                   // 사유
     var grantedDate: Date                // 부여 날짜
     var expirationDate: Date?            // 만료일 (없으면 연말까지)
-    var isUsed: Bool                     // 사용 완료 여부
+    var isUsed: Bool                     // 완전 소진 여부
+
+    /// 잔여 일수 (부여 - 사용)
+    var remainingDays: Double {
+        max(0, days - usedDays)
+    }
 
     init(
         days: Double,
@@ -373,6 +430,7 @@ final class BonusLeave {
     ) {
         self.id = UUID()
         self.days = days
+        self.usedDays = 0
         self.typeRaw = type.rawValue
         self.reason = reason
         self.grantedDate = grantedDate
@@ -418,14 +476,32 @@ enum BonusLeaveType: String, Codable, CaseIterable, Identifiable {
 
 // MARK: - 공휴일
 struct Holiday: Identifiable {
-    let id = UUID()
+    let id: UUID = UUID()
     let date: Date
     let name: String
     let isSubstitute: Bool
+    let isCustom: Bool
 
-    init(date: Date, name: String, isSubstitute: Bool = false) {
+    init(date: Date, name: String, isSubstitute: Bool = false, isCustom: Bool = false) {
         self.date = date
         self.name = name
         self.isSubstitute = isSubstitute
+        self.isCustom = isCustom
+    }
+}
+
+// MARK: - 사용자 정의 공휴일
+@Model
+class CustomHoliday {
+    var id: UUID
+    var date: Date
+    var name: String
+    var createdAt: Date
+
+    init(date: Date, name: String) {
+        self.id = UUID()
+        self.date = date
+        self.name = name
+        self.createdAt = Date()
     }
 }

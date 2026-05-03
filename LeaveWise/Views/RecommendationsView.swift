@@ -61,7 +61,8 @@ struct RecommendationsView: View {
                 }
                 .padding()
             }
-            .navigationTitle("💡 \(Strings.navTitleRecommendations)")
+            .navigationTitle(Strings.navTitleRecommendations)
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 loadRecommendations()
             }

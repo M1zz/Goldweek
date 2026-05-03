@@ -16,37 +16,58 @@ struct AddLeaveView: View {
 
     @State private var selectedTab = 0
 
+    var committedLeave: Double {
+        let active = leaveRecords.filter { $0.status == .used || $0.status == .planned }
+        let deducting = active.filter { $0.deductsFromAnnualLeave }
+        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+    }
+
     var totalBonusLeave: Double {
-        bonusLeaves.filter { !$0.isUsed }.reduce(0) { $0 + $1.days }
+        let now = Date()
+        let available = bonusLeaves.filter { !$0.isUsed }
+        let notExpired = available.filter { $0.expirationDate == nil || $0.expirationDate! > now }
+        return notExpired.reduce(0.0) { $0 + $1.remainingDays }
     }
 
     var totalAvailableLeave: Double {
-        profile.remainingLeave + totalBonusLeave
+        max(0, profile.totalAnnualLeave - committedLeave) + totalBonusLeave
     }
+
+    private var isLeisure: Bool { profile.userType == .leisure }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // 연차 현황 요약
-                LeaveStatusHeader(
-                    remainingLeave: profile.remainingLeave,
-                    bonusLeave: totalBonusLeave,
-                    totalAvailable: totalAvailableLeave
-                )
-                .accessibilityElement(children: .combine)
-
-                // 탭 선택
-                Picker(Strings.managementType, selection: $selectedTab) {
-                    Text(Strings.registerLeave).tag(0)
-                    Text(Strings.addLeave).tag(1)
-                }
-                .pickerStyle(.segmented)
-                .padding()
-                .onChange(of: selectedTab) { _, _ in
-                    HapticFeedback.selection()
+                // 현황 요약 헤더
+                if isLeisure {
+                    LeisureStatusHeader(
+                        usedDays: committedLeave,
+                        goalDays: profile.totalAnnualLeave
+                    )
+                    .accessibilityElement(children: .combine)
+                } else {
+                    LeaveStatusHeader(
+                        remainingLeave: max(0, profile.totalAnnualLeave - committedLeave),
+                        bonusLeave: totalBonusLeave,
+                        totalAvailable: totalAvailableLeave
+                    )
+                    .accessibilityElement(children: .combine)
                 }
 
-                if selectedTab == 0 {
+                // 탭 선택 — 직장인 모드만 보너스 탭 노출
+                if !isLeisure {
+                    Picker(Strings.managementType, selection: $selectedTab) {
+                        Text(Strings.registerLeave).tag(0)
+                        Text(Strings.addLeave).tag(1)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding()
+                    .onChange(of: selectedTab) { _, _ in
+                        HapticFeedback.selection()
+                    }
+                }
+
+                if selectedTab == 0 || isLeisure {
                     LeaveRegistrationView(
                         profile: profile,
                         totalAvailableLeave: totalAvailableLeave,
@@ -56,8 +77,43 @@ struct AddLeaveView: View {
                     BonusLeaveView(bonusLeaves: bonusLeaves)
                 }
             }
-            .navigationTitle(Strings.navTitleLeaveManagement)
+            .navigationTitle(isLeisure ? "휴가 등록" : Strings.navTitleLeaveManagement)
+            .navigationBarTitleDisplayMode(.inline)
         }
+    }
+}
+
+// MARK: - 자유 계획 현황 헤더
+struct LeisureStatusHeader: View {
+    let usedDays: Double
+    let goalDays: Double
+
+    var body: some View {
+        HStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("완료")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.secondary)
+                Text("\(formatLeave(usedDays))일")
+                    .font(.title3.bold())
+                    .foregroundStyle(.blue)
+            }
+
+            Spacer()
+
+            VStack(alignment: .trailing, spacing: 4) {
+                Text(goalDays > 0 ? "목표까지 남은 일수" : "총 계획")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.secondary)
+                Text(goalDays > 0 ? "\(formatLeave(max(0, goalDays - usedDays)))일" : "\(formatLeave(usedDays))일")
+                    .font(.title2.bold())
+                    .foregroundStyle(.purple)
+            }
+        }
+        .padding()
+        .background(Color(.systemGroupedBackground))
     }
 }
 
@@ -74,7 +130,7 @@ struct LeaveStatusHeader: View {
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundStyle(.secondary)
-                Text("\(String(format: "%.1f", remainingLeave))\(Strings.dayUnitSuffix)")
+                Text("\(formatLeave(remainingLeave))\(Strings.dayUnitSuffix)")
                     .font(.title3.bold())
                     .foregroundStyle(AppTheme.Colors.brand)
             }
@@ -89,7 +145,7 @@ struct LeaveStatusHeader: View {
                         .font(.caption)
                         .fontWeight(.medium)
                         .foregroundStyle(.secondary)
-                    Text("\(String(format: "%.1f", bonusLeave))\(Strings.dayUnitSuffix)")
+                    Text("\(formatLeave(bonusLeave))\(Strings.dayUnitSuffix)")
                         .font(.title3.bold())
                         .foregroundStyle(AppTheme.Colors.compensatory)
                 }
@@ -106,7 +162,7 @@ struct LeaveStatusHeader: View {
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundStyle(.secondary)
-                Text("\(String(format: "%.1f", totalAvailable))\(Strings.dayUnitSuffix)")
+                Text("\(formatLeave(totalAvailable))\(Strings.dayUnitSuffix)")
                     .font(.title2.bold())
                     .foregroundStyle(AppTheme.Colors.success)
             }
@@ -125,6 +181,12 @@ struct LeaveRegistrationView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.requestReview) private var requestReview
 
+    @Query private var allLeaveRecords: [LeaveRecord]
+
+    // 사용 가능한 보너스 연차 (미사용 + 미만료)
+    @Query(filter: #Predicate<BonusLeave> { $0.isUsed == false })
+    private var unusedBonusLeaves: [BonusLeave]
+
     @State private var startDate = Date()
     @State private var endDate = Date()
     @State private var leaveType: LeaveType = .annual
@@ -134,7 +196,22 @@ struct LeaveRegistrationView: View {
     @State private var isSuccess = false
     @State private var isSaving = false
     @State private var shouldPromptReview = false
+    @State private var selectedBonusLeave: BonusLeave?
     @FocusState private var isNoteFocused: Bool
+
+    var committedLeave: Double {
+        let active = allLeaveRecords.filter { $0.status == .used || $0.status == .planned }
+        let deducting = active.filter { $0.deductsFromAnnualLeave }
+        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+    }
+
+    /// 만료되지 않은 보너스 연차
+    var availableBonusLeaves: [BonusLeave] {
+        let now = Date()
+        return unusedBonusLeaves.filter {
+            $0.expirationDate == nil || $0.expirationDate! > now
+        }
+    }
 
     var leaveDays: Double {
         switch leaveType {
@@ -149,33 +226,180 @@ struct LeaveRegistrationView: View {
         }
     }
 
-    var requiredAnnualLeave: Double {
-        leaveType.deductsFromAnnual ? leaveDays : 0
-    }
-
     var canAddLeave: Bool {
-        if leaveType.deductsFromAnnual {
-            return totalAvailableLeave >= leaveDays && startDate <= endDate
+        guard startDate <= endDate else { return false }
+        // 보너스 연차 사용 시: 잔여 보너스 초과 불가
+        if let bonus = selectedBonusLeave {
+            return leaveDays <= bonus.remainingDays
         }
-        return startDate <= endDate
+        // 자유 계획 모드: 한도 없음
+        if profile.userType == .leisure { return true }
+        // 직장인: 연차 차감 유형이면 잔여 연차 초과 불가
+        if leaveType.deductsFromAnnual {
+            return max(0, profile.totalAnnualLeave - committedLeave) >= leaveDays
+        }
+        return true
     }
 
     var body: some View {
         Form {
-            // 휴가 유형
-            Section(Strings.leaveTypeSection) {
-                LeaveTypePicker(selectedType: $leaveType)
+            // 보너스 연차 선택 (사용 가능한 경우 최상단 표시)
+            if !availableBonusLeaves.isEmpty {
+                Section {
+                    ForEach(availableBonusLeaves) { bonus in
+                        Button {
+                            if selectedBonusLeave?.id == bonus.id {
+                                selectedBonusLeave = nil
+                            } else {
+                                selectedBonusLeave = bonus
+                                // 보너스 선택 시 단위가 기타 유형이면 연차로 초기화
+                                if !leaveType.deductsFromAnnual {
+                                    leaveType = .annual
+                                }
+                            }
+                        } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: bonus.type.icon)
+                                    .font(.title3)
+                                    .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white : .orange)
+                                    .frame(width: 32)
+
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(Strings.bonusLeaveTypeName(bonus.type))
+                                        .fontWeight(.semibold)
+                                        .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white : .primary)
+                                    HStack(spacing: 4) {
+                                        Text("\(formatLeave(bonus.remainingDays))\(Strings.dayUnitSuffix) 사용 가능")
+                                            .font(.caption)
+                                            .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.85) : .secondary)
+                                        if !bonus.reason.isEmpty {
+                                            Text("· \(bonus.reason)")
+                                                .font(.caption)
+                                                .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.85) : .secondary)
+                                                .lineLimit(1)
+                                        }
+                                    }
+                                    if let exp = bonus.expirationDate {
+                                        Text("~\(exp.formatted(.dateTime.month().day())) 만료")
+                                            .font(.caption2)
+                                            .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.7) : .orange)
+                                    }
+                                }
+
+                                Spacer()
+
+                                Image(systemName: selectedBonusLeave?.id == bonus.id ? "checkmark.circle.fill" : "circle")
+                                    .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white : Color(.systemGray3))
+                                    .font(.title3)
+                            }
+                            .padding(.vertical, 4)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .listRowBackground(
+                            selectedBonusLeave?.id == bonus.id
+                                ? Color.orange.opacity(0.85)
+                                : Color(.systemBackground)
+                        )
+                    }
+                } header: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "gift.fill").foregroundStyle(.orange)
+                        Text("보너스 연차 사용")
+                    }
+                } footer: {
+                    if selectedBonusLeave != nil {
+                        Text("보너스 연차를 사용합니다. 연차에서 차감되지 않습니다.")
+                    } else {
+                        Text("탭하여 보너스 연차를 선택하면 연차 대신 사용할 수 있습니다.")
+                    }
+                }
             }
 
-            // 연차 차감 안내
-            if !leaveType.deductsFromAnnual {
-                Section {
-                    HStack {
+            // 사용 단위 선택 — 보너스/일반 연차 모두 항상 표시
+            let isLeisureMode = profile.userType == .leisure
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(selectedBonusLeave != nil ? "보너스 연차 사용 단위"
+                         : isLeisureMode ? "휴가 기간"
+                         : "연차 차감 단위")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+                    HStack(spacing: 8) {
+                        ForEach([LeaveType.quarter, .half, .annual], id: \.self) { type in
+                            Button {
+                                HapticFeedback.selection()
+                                leaveType = type
+                            } label: {
+                                VStack(spacing: 3) {
+                                    Text(type == .quarter ? "¼" : type == .half ? "½" : "1")
+                                        .font(.system(size: 22, weight: .black, design: .rounded))
+                                    Text(type == .quarter ? (isLeisureMode ? "반나절" : "반반차")
+                                         : type == .half ? (isLeisureMode ? "반나절" : "반차")
+                                         : (isLeisureMode ? "휴가" : "연차"))
+                                        .font(.caption)
+                                        .fontWeight(.semibold)
+                                    Text(type == .quarter ? "0.25일" : type == .half ? "0.5일" : "1일~")
+                                        .font(.caption2)
+                                        .opacity(0.8)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                                .background(leaveType == type ? type.themeColor : Color(.systemGray5))
+                                .foregroundStyle(leaveType == type ? .white : .primary)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityAddTraits(leaveType == type ? .isSelected : [])
+                        }
+                    }
+                }
+                .padding(.vertical, 4)
+
+                // 기타 유형 — 직장인 + 보너스 미선택 시만 표시
+                if selectedBonusLeave == nil && !isLeisureMode {
+                    Divider()
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("기타 (연차 미차감)")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.secondary)
+                        HStack(spacing: 6) {
+                            ForEach([LeaveType.compensatory, .official, .sick, .special], id: \.self) { type in
+                                Button {
+                                    HapticFeedback.selection()
+                                    leaveType = type
+                                } label: {
+                                    VStack(spacing: 3) {
+                                        Image(systemName: type.icon)
+                                            .font(.subheadline)
+                                        Text(Strings.leaveTypeName(type))
+                                            .font(.caption2)
+                                            .fontWeight(.semibold)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(leaveType == type ? type.themeColor : Color(.systemGray5))
+                                    .foregroundStyle(leaveType == type ? .white : .primary)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityAddTraits(leaveType == type ? .isSelected : [])
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            } header: {
+                Text(Strings.leaveTypeSection)
+            } footer: {
+                if selectedBonusLeave == nil && !leaveType.deductsFromAnnual {
+                    HStack(spacing: 4) {
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.blue)
                         Text(Strings.noDeductionInfo(Strings.leaveTypeName(leaveType)))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
                     }
                 }
             }
@@ -191,9 +415,29 @@ struct LeaveRegistrationView: View {
                 HStack {
                     Text(Strings.daysUsed)
                     Spacer()
-                    Text("\(String(format: "%.1f", leaveDays))\(Strings.dayUnitSuffix)")
-                        .foregroundStyle(.blue)
-                        .fontWeight(.semibold)
+                    HStack(spacing: 4) {
+                        Text(leaveType == .quarter ? "반반차" : leaveType == .half ? "반차" : "연차")
+                            .font(.caption)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(leaveType.themeColor.opacity(0.15))
+                            .foregroundStyle(leaveType.themeColor)
+                            .clipShape(Capsule())
+                        Text("\(String(format: leaveDays == Double(Int(leaveDays)) ? "%.0f" : "%.2g", leaveDays))\(Strings.dayUnitSuffix)")
+                            .foregroundStyle(.blue)
+                            .fontWeight(.semibold)
+                    }
+                }
+
+                if startDate < Calendar.current.startOfDay(for: Date()) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.green)
+                            .font(.caption)
+                        Text(Strings.pastLeaveAutoUsed)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
 
@@ -237,6 +481,15 @@ struct LeaveRegistrationView: View {
                 }
             }
         }
+        .onChange(of: startDate) { oldStart, newStart in
+            let calendar = Calendar.current
+            if leaveType == .half || leaveType == .quarter {
+                endDate = newStart
+            } else {
+                let duration = calendar.dateComponents([.day], from: oldStart, to: endDate).day ?? 0
+                endDate = calendar.date(byAdding: .day, value: max(duration, 0), to: newStart) ?? newStart
+            }
+        }
         .onChange(of: leaveType) { _, newValue in
             if newValue == .half || newValue == .quarter {
                 endDate = startDate
@@ -271,34 +524,44 @@ struct LeaveRegistrationView: View {
         isNoteFocused = false
 
         let actualEndDate = (leaveType == .half || leaveType == .quarter) ? startDate : endDate
+        let today = Calendar.current.startOfDay(for: Date())
+        let isPastLeave = startDate < today
+        let status: LeaveStatus = isPastLeave ? .used : .planned
+
+        // 보너스 링크는 bonusLeaveId로 추적하므로 원래 leaveType 유지
+        let recordType: LeaveType = leaveType
 
         let record = LeaveRecord(
             startDate: startDate,
             endDate: actualEndDate,
-            type: leaveType,
-            status: .planned,
-            note: note
+            type: recordType,
+            status: status,
+            note: note,
+            bonusLeaveId: selectedBonusLeave?.id  // 보너스 연결 — 삭제 시 usedDays 복원에 사용
         )
-
         modelContext.insert(record)
 
-        // 연차 차감 (연차/반차만)
-        if leaveType.deductsFromAnnual {
-            profile.usedLeave += leaveDays
+        // 보너스 연차 차감 (일반 연차는 레코드에서 자동 계산)
+        if let bonus = selectedBonusLeave {
+            bonus.usedDays += leaveDays
+            if bonus.remainingDays <= 0 {
+                bonus.isUsed = true
+            }
         }
 
         do {
             try modelContext.save()
+            let typeName = selectedBonusLeave != nil
+                ? Strings.bonusLeaveTypeName(selectedBonusLeave!.type)
+                : Strings.leaveTypeName(leaveType)
+            alertMessage = Strings.leaveRegistered(typeName)
+            isSuccess = true
             // 초기화
             note = ""
             startDate = Date()
             endDate = Date()
-
-            alertMessage = Strings.leaveRegistered(Strings.leaveTypeName(leaveType))
-            isSuccess = true
+            selectedBonusLeave = nil
             HapticFeedback.success()
-            
-            // 리뷰 요청 트리거
             ReviewManager.shared.recordLeaveRegistration()
             shouldPromptReview = true
         } catch {
@@ -306,8 +569,9 @@ struct LeaveRegistrationView: View {
             isSuccess = false
             HapticFeedback.error()
             // 롤백
-            if leaveType.deductsFromAnnual {
-                profile.usedLeave -= leaveDays
+            if let bonus = selectedBonusLeave {
+                bonus.usedDays -= leaveDays
+                if bonus.isUsed { bonus.isUsed = false }
             }
             modelContext.delete(record)
         }
@@ -382,11 +646,15 @@ struct BonusLeaveView: View {
     @Environment(\.modelContext) private var modelContext
 
     @State private var showingAddSheet = false
+    @State private var showingPaywall = false
+    @State private var editingBonus: BonusLeave?
     @State private var bonusDays: Double = 1.0
     @State private var bonusType: BonusLeaveType = .compensatory
     @State private var bonusReason = ""
     @State private var hasExpiration = false
     @State private var expirationDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())!
+
+    private var isPro: Bool { ProManager.shared.isPro }
 
     var activeBonusLeaves: [BonusLeave] {
         bonusLeaves.filter { !$0.isUsed }
@@ -398,31 +666,48 @@ struct BonusLeaveView: View {
 
     var body: some View {
         Form {
-            // 보너스 연차 추가
+            // 보너스 연차 추가 (Pro 전용)
             Section {
                 Button {
-                    showingAddSheet = true
+                    if isPro {
+                        showingAddSheet = true
+                    } else {
+                        showingPaywall = true
+                    }
                 } label: {
                     HStack {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundStyle(.green)
+                        Image(systemName: isPro ? "plus.circle.fill" : "lock.fill")
+                            .foregroundStyle(isPro ? .green : .secondary)
                         Text(Strings.addBonusLeave)
                             .foregroundStyle(.primary)
                         Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundStyle(.secondary)
-                            .font(.caption)
+                        if !isPro {
+                            Text("Pro")
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background(Color.yellow.opacity(0.85))
+                                .clipShape(Capsule())
+                        } else {
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
                     }
                 }
             } footer: {
-                Text(Strings.bonusLeaveFooter)
+                Text(isPro ? Strings.bonusLeaveFooter : "보너스 연차 추가는 Pro 기능입니다. 이미 추가된 항목은 수정 가능합니다.")
             }
 
             // 사용 가능한 보너스 연차
             if !activeBonusLeaves.isEmpty {
                 Section(Strings.available) {
                     ForEach(activeBonusLeaves) { bonus in
-                        BonusLeaveRow(bonus: bonus)
+                        BonusLeaveRow(bonus: bonus, editable: true)
+                            .contentShape(Rectangle())
+                            .onTapGesture { editingBonus = bonus }
                     }
                     .onDelete(perform: deleteActiveBonus)
                 }
@@ -432,7 +717,7 @@ struct BonusLeaveView: View {
             if !usedBonusLeaves.isEmpty {
                 Section(Strings.usedComplete) {
                     ForEach(usedBonusLeaves) { bonus in
-                        BonusLeaveRow(bonus: bonus)
+                        BonusLeaveRow(bonus: bonus, editable: false)
                     }
                 }
             }
@@ -461,6 +746,12 @@ struct BonusLeaveView: View {
                 expirationDate: $expirationDate,
                 onSave: saveBonusLeave
             )
+        }
+        .sheet(item: $editingBonus) { bonus in
+            EditBonusLeaveSheet(bonus: bonus)
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
         }
     }
 
@@ -493,7 +784,6 @@ struct BonusLeaveView: View {
         do {
             try modelContext.save()
             HapticFeedback.success()
-            // 초기화
             bonusDays = 1.0
             bonusType = .compensatory
             bonusReason = ""
@@ -595,9 +885,126 @@ struct AddBonusLeaveSheet: View {
     }
 }
 
+// MARK: - 보너스 연차 수정 시트
+struct EditBonusLeaveSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @Bindable var bonus: BonusLeave
+
+    @State private var editedDays: Double
+    @State private var editedType: BonusLeaveType
+    @State private var editedReason: String
+    @State private var editedHasExpiration: Bool
+    @State private var editedExpirationDate: Date
+
+    init(bonus: BonusLeave) {
+        self.bonus = bonus
+        _editedDays = State(initialValue: bonus.days)
+        _editedType = State(initialValue: bonus.type)
+        _editedReason = State(initialValue: bonus.reason)
+        _editedHasExpiration = State(initialValue: bonus.expirationDate != nil)
+        _editedExpirationDate = State(initialValue: bonus.expirationDate ?? Calendar.current.date(byAdding: .month, value: 3, to: Date())!)
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section(Strings.leaveDaysSection) {
+                    HStack {
+                        Text(Strings.daysToAdd)
+                        Spacer()
+                        Text("\(String(format: editedDays == Double(Int(editedDays)) ? "%.0f" : "%.2g", editedDays))\(Strings.dayUnitSuffix)")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.blue)
+                        Stepper("", value: $editedDays, in: max(bonus.usedDays, 0.25)...365, step: 0.25)
+                            .labelsHidden()
+                    }
+                    HStack(spacing: 8) {
+                        ForEach([0.25, 0.5, 1.0, 2.0, 3.0], id: \.self) { d in
+                            Button {
+                                editedDays = d
+                            } label: {
+                                Text(d < 1 ? String(format: "%.2g", d) : "\(Int(d))")
+                                    .font(.subheadline).fontWeight(.medium)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(editedDays == d ? Color.blue : Color(.systemGray5))
+                                    .foregroundStyle(editedDays == d ? .white : .primary)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(d < bonus.usedDays)
+                        }
+                    }
+
+                    if bonus.usedDays > 0 {
+                        HStack {
+                            Image(systemName: "info.circle")
+                                .foregroundStyle(.blue)
+                                .font(.caption)
+                            Text("이미 \(String(format: "%.2g", bonus.usedDays))일 사용됨 · 잔여 \(String(format: "%.2g", max(0, editedDays - bonus.usedDays)))일")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+
+                Section(Strings.typeSection) {
+                    Picker(Strings.typeSection, selection: $editedType) {
+                        ForEach(BonusLeaveType.allCases) { type in
+                            HStack {
+                                Image(systemName: type.icon)
+                                Text(Strings.bonusLeaveTypeName(type))
+                            }.tag(type)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+
+                Section(Strings.reasonSection) {
+                    TextField(Strings.reasonPlaceholder, text: $editedReason)
+                }
+
+                Section {
+                    Toggle(Strings.setExpiration, isOn: $editedHasExpiration)
+                    if editedHasExpiration {
+                        DatePicker(Strings.expirationDate, selection: $editedExpirationDate, in: Date()..., displayedComponents: .date)
+                    }
+                } footer: {
+                    Text(Strings.expirationFooter)
+                }
+            }
+            .navigationTitle("보너스 연차 수정")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(Strings.cancel) { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(Strings.save) { saveEdit() }
+                        .disabled(editedDays <= 0 || editedDays < bonus.usedDays)
+                }
+            }
+        }
+        .presentationDetents([.medium])
+    }
+
+    private func saveEdit() {
+        bonus.days = editedDays
+        bonus.type = editedType
+        bonus.reason = editedReason
+        bonus.expirationDate = editedHasExpiration ? editedExpirationDate : nil
+        if bonus.remainingDays > 0 { bonus.isUsed = false }
+        try? modelContext.save()
+        HapticFeedback.success()
+        dismiss()
+    }
+}
+
 // MARK: - 보너스 연차 행
 struct BonusLeaveRow: View {
     let bonus: BonusLeave
+    var editable: Bool = false
 
     var body: some View {
         HStack {
@@ -610,7 +1017,7 @@ struct BonusLeaveRow: View {
                     Text(Strings.bonusLeaveTypeName(bonus.type))
                         .font(.subheadline)
                         .fontWeight(.medium)
-                    Text("\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
+                    Text("\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
                         .font(.subheadline)
                         .foregroundStyle(.orange)
                 }
@@ -647,6 +1054,10 @@ struct BonusLeaveRow: View {
                     .padding(.vertical, 4)
                     .background(Color(.systemGray5))
                     .clipShape(Capsule())
+            } else if editable {
+                Image(systemName: "pencil.circle")
+                    .foregroundStyle(.secondary)
+                    .font(.subheadline)
             }
         }
         .padding(.vertical, 4)
