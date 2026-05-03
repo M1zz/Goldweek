@@ -261,7 +261,7 @@ struct LeaveRegistrationView: View {
                             HStack(spacing: 12) {
                                 Image(systemName: bonus.type.icon)
                                     .font(.title3)
-                                    .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white : .orange)
+                                    .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white : AppTheme.Colors.bonus)
                                     .frame(width: 32)
 
                                 VStack(alignment: .leading, spacing: 3) {
@@ -282,7 +282,7 @@ struct LeaveRegistrationView: View {
                                     if let exp = bonus.expirationDate {
                                         Text("~\(exp.formatted(.dateTime.month().day())) 만료")
                                             .font(.caption2)
-                                            .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.7) : .orange)
+                                            .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.7) : AppTheme.Colors.bonus)
                                     }
                                 }
 
@@ -298,13 +298,13 @@ struct LeaveRegistrationView: View {
                         .buttonStyle(.plain)
                         .listRowBackground(
                             selectedBonusLeave?.id == bonus.id
-                                ? Color.orange.opacity(0.85)
+                                ? AppTheme.Colors.bonus.opacity(0.85)
                                 : Color(.systemBackground)
                         )
                     }
                 } header: {
                     HStack(spacing: 4) {
-                        Image(systemName: "gift.fill").foregroundStyle(.orange)
+                        Image(systemName: "gift.fill").foregroundStyle(AppTheme.Colors.bonus)
                         Text("보너스 연차 사용")
                     }
                 } footer: {
@@ -1009,7 +1009,7 @@ struct BonusLeaveRow: View {
     var body: some View {
         HStack {
             Image(systemName: bonus.type.icon)
-                .foregroundStyle(.orange)
+                .foregroundStyle(AppTheme.Colors.bonus)
                 .frame(width: 30)
 
             VStack(alignment: .leading, spacing: 4) {
@@ -1019,7 +1019,7 @@ struct BonusLeaveRow: View {
                         .fontWeight(.medium)
                     Text("\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
                         .font(.subheadline)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(AppTheme.Colors.bonus)
                 }
 
                 if !bonus.reason.isEmpty {

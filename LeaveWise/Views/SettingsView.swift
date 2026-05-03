@@ -213,7 +213,7 @@ struct SettingsView: View {
                             Spacer()
                             Text("\(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
                                 .font(.title2.bold())
-                                .foregroundStyle(.green)
+                                .foregroundStyle(activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
                         }
                         .padding(.vertical, 4)
                     }
@@ -265,7 +265,7 @@ struct SettingsView: View {
                     } label: {
                         HStack {
                             Image(systemName: ProManager.shared.isPro ? "plus.circle.fill" : "crown.fill")
-                                .foregroundStyle(ProManager.shared.isPro ? .orange : .yellow)
+                                .foregroundStyle(ProManager.shared.isPro ? AppTheme.Colors.bonus : .yellow)
                             Text(Strings.addBonusLeave)
                                 .foregroundStyle(ProManager.shared.isPro ? .primary : .secondary)
                             Spacer()
@@ -290,7 +290,7 @@ struct SettingsView: View {
                     ForEach(bonusLeaves.filter { !$0.isUsed }) { bonus in
                         HStack {
                             Image(systemName: bonus.type.icon)
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(AppTheme.Colors.bonus)
                                 .frame(width: 24)
 
                             VStack(alignment: .leading, spacing: 2) {
@@ -299,7 +299,7 @@ struct SettingsView: View {
                                         .font(.subheadline)
                                     Text("\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
                                         .font(.subheadline)
-                                        .foregroundStyle(.orange)
+                                        .foregroundStyle(AppTheme.Colors.bonus)
                                 }
                                 if !bonus.reason.isEmpty {
                                     Text(bonus.reason)

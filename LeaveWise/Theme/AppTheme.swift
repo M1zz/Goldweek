@@ -88,6 +88,12 @@ struct AppTheme {
             Color(light: Color(red: 0.0, green: 0.4, blue: 0.9),
                   dark: Color(red: 0.4, green: 0.65, blue: 1.0))
         }
+
+        // 보너스 연차 전용 시맨틱 컬러 (모든 탭 통일)
+        static var bonus: Color {
+            Color(light: Color(red: 1.0, green: 0.45, blue: 0.0),
+                  dark: Color(red: 1.0, green: 0.62, blue: 0.22))
+        }
     }
 }
 

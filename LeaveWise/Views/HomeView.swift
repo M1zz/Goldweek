@@ -282,10 +282,10 @@ struct LeaveStatusCard: View {
                             Text("보너스 포함")
                                 .font(.caption)
                         }
-                        .foregroundStyle(includeBonusInStatus ? .orange : .secondary)
+                        .foregroundStyle(includeBonusInStatus ? AppTheme.Colors.bonus : .secondary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(includeBonusInStatus ? Color.orange.opacity(0.12) : Color.gray.opacity(0.1))
+                        .background(includeBonusInStatus ? AppTheme.Colors.bonus.opacity(0.12) : Color.gray.opacity(0.1))
                         .clipShape(Capsule())
                     }
                 }
@@ -317,7 +317,7 @@ struct LeaveStatusCard: View {
                             if remFrac > 0 {
                                 let remColors: [Color] = isLeisure
                                     ? [.purple, .pink]
-                                    : (includeBonusInStatus && remainingBonusLeave > 0 ? [.orange, .yellow] : [.green, .mint])
+                                    : (includeBonusInStatus && remainingBonusLeave > 0 ? [AppTheme.Colors.bonus, Color.yellow] : [.green, .mint])
                                 LinearGradient(colors: remColors, startPoint: .leading, endPoint: .trailing)
                                     .frame(width: max(w * remFrac, 0))
                             }
@@ -366,7 +366,7 @@ struct LeaveStatusCard: View {
                             .font(.title2.bold())
                             .foregroundStyle(
                                 isLeisure ? .purple
-                                : includeBonusInStatus && remainingBonusLeave > 0 ? .orange : .green
+                                : includeBonusInStatus && remainingBonusLeave > 0 ? AppTheme.Colors.bonus : .green
                             )
                     }
                 }
@@ -377,7 +377,7 @@ struct LeaveStatusCard: View {
                 Divider()
                 HStack(spacing: 6) {
                     Image(systemName: "gift.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(AppTheme.Colors.bonus)
                         .font(.subheadline)
                     Text(Strings.bonus)
                         .font(.subheadline)
@@ -385,13 +385,13 @@ struct LeaveStatusCard: View {
                     Spacer()
                     Text("+\(formatLeave(remainingBonusLeave))\(Strings.dayUnitSuffix)")
                         .font(.title3.bold())
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(AppTheme.Colors.bonus)
                     Text("사용 가능")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
-                        .background(Color.orange.opacity(0.12))
+                        .background(AppTheme.Colors.bonus.opacity(0.12))
                         .clipShape(Capsule())
                 }
             }

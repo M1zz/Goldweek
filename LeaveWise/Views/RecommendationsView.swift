@@ -56,7 +56,7 @@ struct RecommendationsView: View {
                         }
 
                     // 남은 연차 정보 — records 기반으로 계산
-                    RemainingLeaveInfo(available: availableLeave, total: profile.totalAnnualLeave, committed: committedLeave)
+                    RemainingLeaveInfo(available: availableLeave, total: profile.totalAnnualLeave, committed: committedLeave, hasBonus: activeBonusLeave > 0)
 
                     // 추천 일정 미리보기 달력
                     if !recommendations.isEmpty && !isLoading {
@@ -197,6 +197,7 @@ struct RemainingLeaveInfo: View {
     let available: Double
     let total: Double
     let committed: Double
+    var hasBonus: Bool = false
 
     var body: some View {
         HStack {
@@ -208,7 +209,7 @@ struct RemainingLeaveInfo: View {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text("\(String(format: "%.1f", available))")
                         .font(.system(size: 36, weight: .bold))
-                        .foregroundStyle(.green)
+                        .foregroundStyle(hasBonus ? AppTheme.Colors.bonus : .green)
                     Text(Strings.dayUnitSuffix)
                         .font(.title3)
                         .foregroundStyle(.secondary)
