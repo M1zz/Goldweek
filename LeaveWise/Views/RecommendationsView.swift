@@ -11,6 +11,8 @@ import SwiftData
 struct RecommendationsView: View {
     @Bindable var profile: UserProfile
     @Environment(\.modelContext) private var modelContext
+    @Query private var allLeaveRecords: [LeaveRecord]
+    @Query private var allBonusLeaves: [BonusLeave]
 
     @State private var recommendations: [LeaveRecommendation] = []
     @State private var selectedYear: Int
@@ -24,6 +26,25 @@ struct RecommendationsView: View {
         _selectedYear = State(initialValue: Calendar.current.component(.year, from: Date()))
     }
 
+    /// Records 기반 사용 확정 연차 (현황·설정과 동일한 공식)
+    private var committedLeave: Double {
+        let active = allLeaveRecords.filter { $0.status == .used || $0.status == .planned }
+        let deducting = active.filter { $0.deductsFromAnnualLeave }
+        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+    }
+
+    private var activeBonusLeave: Double {
+        let now = Date()
+        return allBonusLeaves
+            .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > now) }
+            .reduce(0) { $0 + $1.remainingDays }
+    }
+
+    /// 사용 가능 연차 = 설정·현황과 동일한 계산
+    private var availableLeave: Double {
+        max(0, profile.totalAnnualLeave - committedLeave) + activeBonusLeave
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -34,8 +55,8 @@ struct RecommendationsView: View {
                             loadRecommendations()
                         }
 
-                    // 남은 연차 정보
-                    RemainingLeaveInfo(profile: profile)
+                    // 남은 연차 정보 — records 기반으로 계산
+                    RemainingLeaveInfo(available: availableLeave, total: profile.totalAnnualLeave, committed: committedLeave)
 
                     // 추천 일정 미리보기 달력
                     if !recommendations.isEmpty && !isLoading {
@@ -71,11 +92,12 @@ struct RecommendationsView: View {
 
     private func loadRecommendations() {
         isLoading = true
+        let remaining = availableLeave
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             recommendations = recommendationEngine.generateRecommendations(
                 for: profile,
-                remainingLeave: profile.remainingLeave,
+                remainingLeave: remaining,
                 year: selectedYear,
                 country: profile.country
             )
@@ -94,14 +116,12 @@ struct RecommendationsView: View {
         )
 
         modelContext.insert(record)
-        profile.usedLeave += recommendation.requiredLeaveDays
         addedRecommendations.insert(recommendation.id)
 
         do {
             try modelContext.save()
             HapticFeedback.success()
         } catch {
-            profile.usedLeave -= recommendation.requiredLeaveDays
             addedRecommendations.remove(recommendation.id)
             modelContext.delete(record)
             HapticFeedback.error()
@@ -174,7 +194,9 @@ struct YearPicker: View {
 
 // MARK: - 남은 연차 정보
 struct RemainingLeaveInfo: View {
-    @Bindable var profile: UserProfile
+    let available: Double
+    let total: Double
+    let committed: Double
 
     var body: some View {
         HStack {
@@ -184,7 +206,7 @@ struct RemainingLeaveInfo: View {
                     .foregroundStyle(.secondary)
 
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("\(String(format: "%.1f", profile.remainingLeave))")
+                    Text("\(String(format: "%.1f", available))")
                         .font(.system(size: 36, weight: .bold))
                         .foregroundStyle(.green)
                     Text(Strings.dayUnitSuffix)
@@ -196,7 +218,7 @@ struct RemainingLeaveInfo: View {
             Spacer()
 
             CircularProgressView(
-                progress: profile.usedLeave / profile.totalAnnualLeave,
+                progress: total > 0 ? committed / total : 0,
                 lineWidth: 8
             )
             .frame(width: 60, height: 60)

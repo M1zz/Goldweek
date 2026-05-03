@@ -1,4 +1,5 @@
 {
+  "appStoreURL" : "",
   "colorHex" : "FBBF24",
   "desc" : "SwiftUI 기반 Xcode Project · 27개 파일",
   "doneTasks" : 0,
@@ -6,12 +7,21 @@
   "icon" : "📱",
   "id" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
   "landingURL" : "",
+  "languages" : [
+
+  ],
+  "lastModified" : "2026-02-27T03:23:01Z",
   "name" : "LeaveWise",
-  "pricing" : "",
+  "pricing" : {
+    "downloadPrice" : "",
+    "lifetimePrice" : "",
+    "monthlyPrice" : "",
+    "yearlyPrice" : ""
+  },
   "progress" : 0,
-  "sourcePath" : "\/Users\/hyunholee\/Documents\/workspace\/code\/LeaveWise",
+  "sourcePath" : "~\/Documents\/workspace\/code\/LeaveWise",
   "sprint" : "Sprint 1",
-  "startWeek" : 5,
-  "totalTasks" : 10,
+  "startWeek" : 2,
+  "totalTasks" : 0,
   "version" : "2.0.0"
 }

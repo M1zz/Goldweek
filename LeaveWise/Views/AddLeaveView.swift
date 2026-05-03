@@ -367,7 +367,7 @@ struct LeaveRegistrationView: View {
                             .fontWeight(.semibold)
                             .foregroundStyle(.secondary)
                         HStack(spacing: 6) {
-                            ForEach([LeaveType.compensatory, .official, .sick, .special], id: \.self) { type in
+                            ForEach([LeaveType.compensatory, .official, .sick, .special, .businessTrip], id: \.self) { type in
                                 Button {
                                     HapticFeedback.selection()
                                     leaveType = type
@@ -532,8 +532,8 @@ struct LeaveRegistrationView: View {
         let recordType: LeaveType = leaveType
 
         let record = LeaveRecord(
-            startDate: startDate,
-            endDate: actualEndDate,
+            startDate: Calendar.current.startOfDay(for: startDate),
+            endDate: Calendar.current.startOfDay(for: actualEndDate),
             type: recordType,
             status: status,
             note: note,

@@ -24,9 +24,9 @@ struct OnboardingView: View {
     var body: some View {
         let _ = LanguageManager.shared.currentLanguage
         VStack(spacing: 0) {
-            // 페이지 인디케이터
+            // 페이지 인디케이터 (5페이지)
             HStack(spacing: 8) {
-                ForEach(0..<4) { index in
+                ForEach(0..<5) { index in
                     Circle()
                         .fill(currentPage == index ? blueColor : Color(.systemGray4))
                         .frame(width: 8, height: 8)
@@ -51,14 +51,18 @@ struct OnboardingView: View {
                 LeaveSetupPage(
                     totalLeave: $totalLeave,
                     yearStartMonth: $yearStartMonth,
-                    onComplete: completeOnboarding
+                    onAdvance: { withAnimation { currentPage = 4 } }
                 )
                 .tag(3)
+
+                // 페이지 5: Pro 소개
+                ProShowcasePage(onComplete: completeOnboarding)
+                    .tag(4)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: currentPage)
 
-            // 하단 버튼
+            // 하단 버튼 (페이지 0~2만 표시, 3·4는 자체 버튼 보유)
             if currentPage < 3 {
                 Button {
                     isNameFieldFocused = false
@@ -309,7 +313,7 @@ struct NameInputPage: View {
 struct LeaveSetupPage: View {
     @Binding var totalLeave: Double
     @Binding var yearStartMonth: Int
-    let onComplete: () -> Void
+    let onAdvance: () -> Void
 
     private let blueColor = Color(red: 0.0, green: 0.4, blue: 0.9)
 
@@ -383,15 +387,119 @@ struct LeaveSetupPage: View {
 
             Spacer()
 
-            // 완료 버튼
-            Button(action: onComplete) {
-                Text(Strings.getStarted)
+            // 다음 버튼 → Pro 소개 페이지로 이동
+            Button(action: onAdvance) {
+                Text(Strings.next)
                     .font(.headline)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(blueColor)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
+            }
+            .padding(.horizontal, 24)
+            .padding(.bottom, 40)
+        }
+        .padding(.horizontal, 24)
+    }
+}
+
+// MARK: - Pro 소개 페이지
+struct ProShowcasePage: View {
+    let onComplete: () -> Void
+
+    @State private var proManager = ProManager.shared
+    private let blueColor = Color(red: 0.0, green: 0.4, blue: 0.9)
+    private let goldColor = Color(red: 1.0, green: 0.75, blue: 0.0)
+
+    private let proFeatures: [(String, String, String, Color)] = [
+        ("lightbulb.fill", "무제한 AI 추천", "무료는 3개 제공", .orange),
+        ("gift.fill", "보너스 연차 관리", "보상·특별·병가 등", .pink),
+        ("calendar", "멀티연도 추천", "지난해·내년 플래닝", .purple),
+        ("calendar.badge.plus", "캘린더 연동", "iOS 캘린더에 자동 추가", .green)
+    ]
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Spacer()
+
+            // 크라운 아이콘
+            ZStack {
+                Circle()
+                    .fill(goldColor.opacity(0.12))
+                    .frame(width: 100, height: 100)
+                Image(systemName: "crown.fill")
+                    .font(.system(size: 48))
+                    .foregroundStyle(goldColor)
+            }
+
+            VStack(spacing: 6) {
+                Text(Strings.leaveWisePro)
+                    .font(.title.bold())
+                Text(Strings.proOnboardingSubtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            // Pro 기능 목록
+            VStack(spacing: 12) {
+                ForEach(proFeatures, id: \.1) { icon, title, desc, color in
+                    HStack(spacing: 14) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(color.opacity(0.15))
+                                .frame(width: 36, height: 36)
+                            Image(systemName: icon)
+                                .font(.system(size: 16))
+                                .foregroundStyle(color)
+                        }
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(title).font(.subheadline).fontWeight(.semibold)
+                            Text(desc).font(.caption).foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(color)
+                            .font(.system(size: 18))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(Color(.systemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            }
+            .padding(.horizontal, 24)
+
+            if !proManager.proPrice.isEmpty {
+                Text(proManager.proPrice)
+                    .font(.title2.bold())
+                    .foregroundStyle(blueColor)
+                + Text("  \(Strings.oneTimePurchase)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            VStack(spacing: 12) {
+                // 시작하기 버튼
+                Button(action: onComplete) {
+                    Text(Strings.getStarted)
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(blueColor)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
+
+                // 건너뛰기
+                Button(action: onComplete) {
+                    Text(Strings.proOnboardingSkip)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 40)

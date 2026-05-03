@@ -116,6 +116,7 @@ extension LeaveType {
         case .official: return AppTheme.Colors.official
         case .sick: return AppTheme.Colors.sick
         case .special: return AppTheme.Colors.special
+        case .businessTrip: return Color.brown
         }
     }
 }

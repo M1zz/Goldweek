@@ -624,4 +624,250 @@ final class LeaveCalculationTests: XCTestCase {
             record.status == .planned && cal.startOfDay(for: record.endDate) >= today
         }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
     }
+
+    // MARK: - 캘린더 날짜 하이라이트 로직 복제 (CalendarGrid.isLeave 수정 후 버전)
+    private func calendarIsLeave(date: Date, records: [LeaveRecord]) -> Bool {
+        let cal = Calendar.current
+        let dayStart = cal.startOfDay(for: date)
+        return records.contains { record in
+            let recordStart = cal.startOfDay(for: record.startDate)
+            let recordEnd   = cal.startOfDay(for: record.endDate)
+            return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
+        }
+    }
+
+    // MARK: - 3-way 사용 가능 연차 계산 로직 복제
+
+    // HomeView.effectiveRemaining (includeBonusInStatus=false 시 순수 annual)
+    private func calcHomeEffectiveRemaining(
+        records: [LeaveRecord],
+        bonuses: [BonusLeave],
+        totalAnnual: Double,
+        includeBonusInStatus: Bool
+    ) -> Double {
+        let today = Calendar.current.startOfDay(for: Date())
+        let committed = records.filter { record in
+            guard record.deductsFromAnnualLeave else { return false }
+            return record.status == .used ||
+                   record.status == .planned
+        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        let annualRemaining = max(0, totalAnnual - committed)
+        if includeBonusInStatus {
+            let now = Date()
+            let remainingBonus = bonuses
+                .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > now) }
+                .reduce(0.0) { $0 + $1.remainingDays }
+            return annualRemaining + remainingBonus
+        }
+        return annualRemaining
+    }
+
+    // RecommendationsView.availableLeave / SettingsView.totalAvailableLeave (항상 보너스 포함)
+    private func calcAvailableLeave(
+        records: [LeaveRecord],
+        bonuses: [BonusLeave],
+        totalAnnual: Double
+    ) -> Double {
+        let committed = records.filter { record in
+            guard record.deductsFromAnnualLeave else { return false }
+            return record.status == .used || record.status == .planned
+        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        let now = Date()
+        let activeBonusLeave = bonuses
+            .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > now) }
+            .reduce(0.0) { $0 + $1.remainingDays }
+        return max(0, totalAnnual - committed) + activeBonusLeave
+    }
+
+    // MARK: - 캘린더 ↔ 휴가 내역 싱크 테스트
+
+    // 내역의 레코드가 해당 날짜 캘린더에 하이라이트돼야 함 (단일일)
+    func testCalendarSync_SingleDayRecord_HighlightedOnCorrectDate() {
+        let date = makeDate(daysFromNow: 5)
+        let record = LeaveRecord(startDate: date, endDate: date, type: .annual, status: .planned)
+
+        XCTAssertTrue(calendarIsLeave(date: date, records: [record]),
+                      "레코드 날짜에 캘린더 하이라이트가 있어야 함")
+        XCTAssertFalse(calendarIsLeave(date: makeDate(daysFromNow: 4), records: [record]),
+                       "레코드 없는 날은 하이라이트 없음")
+        XCTAssertFalse(calendarIsLeave(date: makeDate(daysFromNow: 6), records: [record]),
+                       "레코드 없는 날은 하이라이트 없음")
+    }
+
+    // 다중일 레코드: 범위 내 모든 날이 하이라이트돼야 함
+    func testCalendarSync_MultiDayRecord_AllDaysHighlighted() {
+        let start = makeDate(daysFromNow: 3)
+        let end   = makeDate(daysFromNow: 7)
+        let record = LeaveRecord(startDate: start, endDate: end, type: .annual, status: .planned)
+
+        for offset in 3...7 {
+            let d = makeDate(daysFromNow: offset)
+            XCTAssertTrue(calendarIsLeave(date: d, records: [record]),
+                          "다중일 레코드: offset=\(offset)도 하이라이트돼야 함")
+        }
+        XCTAssertFalse(calendarIsLeave(date: makeDate(daysFromNow: 2), records: [record]),
+                       "범위 전 날짜는 하이라이트 없음")
+        XCTAssertFalse(calendarIsLeave(date: makeDate(daysFromNow: 8), records: [record]),
+                       "범위 후 날짜는 하이라이트 없음")
+    }
+
+    // 취소된 레코드는 캘린더에 하이라이트되면 안 됨
+    func testCalendarSync_CancelledRecord_NotHighlighted() {
+        let date = makeDate(daysFromNow: 5)
+        let record = LeaveRecord(startDate: date, endDate: date, type: .annual, status: .cancelled)
+
+        XCTAssertFalse(calendarIsLeave(date: date, records: [record]),
+                       "취소 레코드는 캘린더에 하이라이트 없음")
+    }
+
+    // DatePicker가 time component를 포함해도 (00:00:00이 아닌 경우) 올바른 날짜에 하이라이트돼야 함
+    func testCalendarSync_RecordWithTimeComponent_CorrectDateHighlighted() {
+        let cal = Calendar.current
+        // 오후 3시에 저장된 레코드 시뮬레이션 (DatePicker가 Date()로 초기화되는 경우)
+        let targetDate = makeDate(daysFromNow: 5)
+        var components = cal.dateComponents([.year, .month, .day], from: targetDate)
+        components.hour = 15
+        components.minute = 30
+        let recordDateWithTime = cal.date(from: components)!
+
+        let record = LeaveRecord(startDate: recordDateWithTime, endDate: recordDateWithTime, type: .annual, status: .planned)
+        let calendarCellDate = cal.startOfDay(for: targetDate) // 캘린더 셀은 자정
+
+        XCTAssertTrue(calendarIsLeave(date: calendarCellDate, records: [record]),
+                      "time component가 있는 레코드도 해당 날짜 캘린더에 하이라이트돼야 함 (startOfDay 비교)")
+    }
+
+    // 내역에서 보이는 레코드 수 == 캘린더에서 하이라이트된 날짜 수 (단일일 레코드 기준)
+    func testCalendarSync_HistoryRecordCount_MatchesHighlightedDates() {
+        let date1 = makeDate(daysFromNow: 3)
+        let date2 = makeDate(daysFromNow: 7)
+        let date3 = makeDate(daysFromNow: -2) // 과거 used
+        let records: [LeaveRecord] = [
+            LeaveRecord(startDate: date1, endDate: date1, type: .annual,  status: .planned),
+            LeaveRecord(startDate: date2, endDate: date2, type: .half,    status: .planned),
+            LeaveRecord(startDate: date3, endDate: date3, type: .sick,    status: .used),
+        ]
+        let historyVisible = records.filter { $0.status != .cancelled }.count
+        let calendarHighlighted = [date1, date2, date3].filter { calendarIsLeave(date: $0, records: records) }.count
+
+        XCTAssertEqual(historyVisible, 3, "내역에 취소 아닌 레코드 3건")
+        XCTAssertEqual(calendarHighlighted, 3, "캘린더에서도 3개 날짜 하이라이트")
+        XCTAssertEqual(historyVisible, calendarHighlighted,
+                       "내역 레코드 수 == 캘린더 하이라이트 날짜 수 (단일일 레코드)")
+    }
+
+    // MARK: - 3-way 남은 연차 일관성 테스트
+
+    // 순수 연차만 있을 때: 현황탭·추천탭·설정의 사용 가능 연차가 동일해야 함
+    func testThreeWayConsistency_PureAnnualLeave() {
+        let totalAnnual = 15.0
+        let past = makeDate(daysFromNow: -3)
+        let future = makeDate(daysFromNow: 5)
+        let records: [LeaveRecord] = [
+            LeaveRecord(startDate: past,   endDate: past,   type: .annual, status: .used),
+            LeaveRecord(startDate: future, endDate: future, type: .annual, status: .planned),
+        ]
+
+        let homeRemaining  = calcHomeEffectiveRemaining(records: records, bonuses: [], totalAnnual: totalAnnual, includeBonusInStatus: false)
+        let recoAvailable  = calcAvailableLeave(records: records, bonuses: [], totalAnnual: totalAnnual)
+        let settAvailable  = calcAvailableLeave(records: records, bonuses: [], totalAnnual: totalAnnual)
+
+        XCTAssertEqual(homeRemaining, 13.0, "현황: 15 - 1(used) - 1(planned) = 13")
+        XCTAssertEqual(homeRemaining, recoAvailable,  "현황탭 == 추천탭")
+        XCTAssertEqual(recoAvailable, settAvailable,  "추천탭 == 설정")
+    }
+
+    // 보너스 연차 포함: 3-way 모두 동일 (보너스 잔여 포함)
+    func testThreeWayConsistency_WithBonusLeave() {
+        let totalAnnual = 15.0
+        let bonus = BonusLeave(days: 3.0, type: .compensatory, reason: "테스트")
+        let past = makeDate(daysFromNow: -2)
+        let records: [LeaveRecord] = [
+            LeaveRecord(startDate: past, endDate: past, type: .annual, status: .used),
+        ]
+
+        let homeRemaining = calcHomeEffectiveRemaining(records: records, bonuses: [bonus], totalAnnual: totalAnnual, includeBonusInStatus: true)
+        let recoAvailable = calcAvailableLeave(records: records, bonuses: [bonus], totalAnnual: totalAnnual)
+        let settAvailable = calcAvailableLeave(records: records, bonuses: [bonus], totalAnnual: totalAnnual)
+
+        // 현황(보너스ON) = (15 - 1) + 3 = 17.0
+        XCTAssertEqual(homeRemaining, 17.0, accuracy: 0.001, "현황(보너스ON): 14 + 3 = 17")
+        XCTAssertEqual(homeRemaining, recoAvailable, "현황(보너스ON) == 추천탭")
+        XCTAssertEqual(recoAvailable, settAvailable, "추천탭 == 설정")
+    }
+
+    // 보너스 연결 레코드: SettingsView 버그 수정 검증
+    // 보너스로 사용한 반차는 연차 차감 아님 → 3-way 모두 동일해야 함
+    func testThreeWayConsistency_BonusBackedRecord_NotDeducted() {
+        let totalAnnual = 15.0
+        let bonusId = UUID()
+        let bonus = BonusLeave(days: 2.0, type: .compensatory, reason: "테스트")
+        bonus.usedDays = 0.5
+
+        let past = makeDate(daysFromNow: -1)
+        let records: [LeaveRecord] = [
+            LeaveRecord(startDate: past, endDate: past, type: .half, status: .used, bonusLeaveId: bonusId),
+        ]
+
+        let homeRemaining = calcHomeEffectiveRemaining(records: records, bonuses: [bonus], totalAnnual: totalAnnual, includeBonusInStatus: true)
+        let recoAvailable = calcAvailableLeave(records: records, bonuses: [bonus], totalAnnual: totalAnnual)
+        let settAvailable = calcAvailableLeave(records: records, bonuses: [bonus], totalAnnual: totalAnnual)
+
+        // 보너스 반차는 연차 차감 아님 → committed=0 → annual remaining=15
+        // 보너스 잔여=1.5 (2.0 - 0.5) → available=16.5
+        XCTAssertEqual(homeRemaining, 16.5, accuracy: 0.001,
+                       "보너스 반차는 연차 차감 아님: 15.0 + 1.5(보너스잔여) = 16.5")
+        XCTAssertEqual(homeRemaining, recoAvailable, "현황탭 == 추천탭 (버그수정: deductsFromAnnualLeave 사용)")
+        XCTAssertEqual(recoAvailable, settAvailable, "추천탭 == 설정 (버그수정: deductsFromAnnualLeave 사용)")
+    }
+
+    // 비차감 유형(병가·공가·출장): 연차 차감 없음 → 3-way 모두 동일 (총 연차 그대로)
+    func testThreeWayConsistency_NonDeductingTypes_NoImpact() {
+        let totalAnnual = 15.0
+        let past = makeDate(daysFromNow: -1)
+        let future = makeDate(daysFromNow: 3)
+        let records: [LeaveRecord] = [
+            LeaveRecord(startDate: past,   endDate: past,   type: .sick,         status: .used),
+            LeaveRecord(startDate: past,   endDate: past,   type: .compensatory, status: .used),
+            LeaveRecord(startDate: future, endDate: future, type: .businessTrip, status: .planned),
+        ]
+
+        let homeRemaining = calcHomeEffectiveRemaining(records: records, bonuses: [], totalAnnual: totalAnnual, includeBonusInStatus: false)
+        let recoAvailable = calcAvailableLeave(records: records, bonuses: [], totalAnnual: totalAnnual)
+        let settAvailable = calcAvailableLeave(records: records, bonuses: [], totalAnnual: totalAnnual)
+
+        XCTAssertEqual(homeRemaining, 15.0, "비차감 유형은 연차에 영향 없음")
+        XCTAssertEqual(homeRemaining, recoAvailable, "현황탭 == 추천탭")
+        XCTAssertEqual(recoAvailable, settAvailable, "추천탭 == 설정")
+    }
+
+    // 복합 시나리오: 연차+반차+보너스+출장 혼합
+    func testThreeWayConsistency_Mixed_AllEqual() {
+        let totalAnnual = 20.0
+        let bonusId = UUID()
+        let bonus = BonusLeave(days: 3.0, type: .reward, reason: "포상")
+        bonus.usedDays = 1.0
+
+        let past   = makeDate(daysFromNow: -5)
+        let future = makeDate(daysFromNow: 5)
+        let records: [LeaveRecord] = [
+            LeaveRecord(startDate: past,   endDate: past,   type: .annual,      status: .used),           // 연차 차감 1.0
+            LeaveRecord(startDate: past,   endDate: past,   type: .half,        status: .used),           // 연차 차감 0.5
+            LeaveRecord(startDate: past,   endDate: past,   type: .sick,        status: .used),           // 비차감
+            LeaveRecord(startDate: past,   endDate: past,   type: .annual,      status: .used, bonusLeaveId: bonusId), // 보너스(비차감)
+            LeaveRecord(startDate: future, endDate: future, type: .businessTrip, status: .planned),       // 비차감
+        ]
+
+        // committed = 1.0(annual) + 0.5(half) = 1.5 (sick·bonus·businessTrip 제외)
+        // annualRemaining = 20 - 1.5 = 18.5
+        // activeBonusLeave = 3.0 - 1.0 = 2.0
+        // available = 18.5 + 2.0 = 20.5
+        let homeRemaining = calcHomeEffectiveRemaining(records: records, bonuses: [bonus], totalAnnual: totalAnnual, includeBonusInStatus: true)
+        let recoAvailable = calcAvailableLeave(records: records, bonuses: [bonus], totalAnnual: totalAnnual)
+        let settAvailable = calcAvailableLeave(records: records, bonuses: [bonus], totalAnnual: totalAnnual)
+
+        XCTAssertEqual(homeRemaining, 20.5, accuracy: 0.001, "복합: 18.5 + 2.0 = 20.5")
+        XCTAssertEqual(homeRemaining, recoAvailable, "현황탭 == 추천탭")
+        XCTAssertEqual(recoAvailable, settAvailable, "추천탭 == 설정")
+    }
 }

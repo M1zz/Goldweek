@@ -1,6 +1,19 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "%@" : {
+
+    },
+    "%@ · 연차 %@일" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · 연차 %2$@일"
+          }
+        }
+      }
+    },
     "%@일" : {
       "localizations" : {
         "en" : {
@@ -22,6 +35,9 @@
           }
         }
       }
+    },
+    "%@일 남음" : {
+
     },
     "%lld%%" : {
       "localizations" : {
@@ -89,6 +105,9 @@
         }
       }
     },
+    "%lld일간" : {
+
+    },
     "+%@일" : {
       "localizations" : {
         "en" : {
@@ -111,6 +130,12 @@
         }
       }
     },
+    "D-" : {
+
+    },
+    "LeaveWise" : {
+
+    },
     "갱신까지" : {
       "localizations" : {
         "en" : {
@@ -132,6 +157,9 @@
           }
         }
       }
+    },
+    "갱신까지 %lld일" : {
+
     },
     "기준" : {
       "localizations" : {
@@ -177,6 +205,9 @@
         }
       }
     },
+    "남은 연차 %@일" : {
+
+    },
     "남은 연차와 다가오는 휴가를 확인하세요" : {
       "localizations" : {
         "en" : {
@@ -221,6 +252,15 @@
         }
       }
     },
+    "다음 휴가" : {
+
+    },
+    "다음 휴가까지 남은 날을 카운트다운으로 확인하세요" : {
+
+    },
+    "보너스" : {
+
+    },
     "소진 속도" : {
       "localizations" : {
         "en" : {
@@ -243,6 +283,9 @@
         }
       }
     },
+    "소진 속도: %@" : {
+
+    },
     "실제" : {
       "localizations" : {
         "en" : {
@@ -264,6 +307,9 @@
           }
         }
       }
+    },
+    "앱에서 휴가 계획을 추가해보세요" : {
+
     },
     "연차 %@일 남음" : {
       "localizations" : {
@@ -331,6 +377,9 @@
         }
       }
     },
+    "연차 현황" : {
+
+    },
     "일" : {
       "localizations" : {
         "en" : {
@@ -375,7 +424,11 @@
         }
       }
     },
+    "잠금화면에서 D-day와 남은 연차를 확인하세요" : {
+
+    },
     "잠금화면에서 남은 연차 확인" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -397,7 +450,11 @@
         }
       }
     },
+    "총 연차" : {
+
+    },
     "휴가" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -418,6 +475,12 @@
           }
         }
       }
+    },
+    "휴가 D-Day" : {
+
+    },
+    "휴가 미정" : {
+
     },
     "휴가 없음" : {
       "localizations" : {
@@ -442,6 +505,7 @@
       }
     },
     "휴가캘린더" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

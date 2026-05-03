@@ -61,7 +61,7 @@ struct SettingsView: View {
 
     var committedLeave: Double {
         let active = leaveRecords.filter { $0.status == .used || $0.status == .planned }
-        let deducting = active.filter { $0.type.deductsFromAnnual }
+        let deducting = active.filter { $0.deductsFromAnnualLeave }
         return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
     }
 

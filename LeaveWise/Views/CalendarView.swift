@@ -255,8 +255,11 @@ struct CalendarGrid: View {
     }
 
     private func isLeave(_ date: Date) -> Bool {
-        leaveRecords.contains { record in
-            date >= record.startDate && date <= record.endDate && record.status != .cancelled
+        let dayStart = calendar.startOfDay(for: date)
+        return leaveRecords.contains { record in
+            let recordStart = calendar.startOfDay(for: record.startDate)
+            let recordEnd = calendar.startOfDay(for: record.endDate)
+            return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
         }
     }
 }
@@ -368,8 +371,11 @@ struct SelectedDateInfo: View {
     }
 
     var leaveOnDate: LeaveRecord? {
-        leaveRecords.first { record in
-            date >= record.startDate && date <= record.endDate && record.status != .cancelled
+        let dayStart = calendar.startOfDay(for: date)
+        return leaveRecords.first { record in
+            let recordStart = calendar.startOfDay(for: record.startDate)
+            let recordEnd = calendar.startOfDay(for: record.endDate)
+            return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
         }
     }
 

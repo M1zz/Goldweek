@@ -414,6 +414,7 @@ struct LeaveHistoryView: View {
         case .official: return .purple
         case .sick: return .red
         case .special: return .yellow
+        case .businessTrip: return .brown
         }
     }
 }

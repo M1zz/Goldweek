@@ -300,6 +300,7 @@ enum LeaveType: String, Codable, CaseIterable, Identifiable {
     case official = "공가"
     case sick = "병가"
     case special = "특별휴가"
+    case businessTrip = "출장"
 
     var id: String { rawValue }
 
@@ -307,7 +308,7 @@ enum LeaveType: String, Codable, CaseIterable, Identifiable {
     var deductsFromAnnual: Bool {
         switch self {
         case .annual, .half, .quarter: return true
-        case .compensatory, .official, .sick, .special: return false
+        case .compensatory, .official, .sick, .special, .businessTrip: return false
         }
     }
 
@@ -316,7 +317,7 @@ enum LeaveType: String, Codable, CaseIterable, Identifiable {
         case .annual: return 1.0
         case .half: return 0.5
         case .quarter: return 0.25
-        case .compensatory, .official, .sick, .special: return 0.0
+        case .compensatory, .official, .sick, .special, .businessTrip: return 0.0
         }
     }
 
@@ -329,6 +330,7 @@ enum LeaveType: String, Codable, CaseIterable, Identifiable {
         case .official: return "building.2"
         case .sick: return "cross.case"
         case .special: return "star"
+        case .businessTrip: return "briefcase"
         }
     }
 
@@ -341,6 +343,7 @@ enum LeaveType: String, Codable, CaseIterable, Identifiable {
         case .official: return "purple"
         case .sick: return "red"
         case .special: return "yellow"
+        case .businessTrip: return "brown"
         }
     }
 }
