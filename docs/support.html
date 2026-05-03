@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeaveWise - 고객 지원</title>
-    <meta name="description" content="LeaveWise 앱 고객 지원 페이지. 자주 묻는 질문, 문의하기, 개인정보 처리방침을 확인하세요.">
-    <meta property="og:title" content="LeaveWise - 고객 지원">
-    <meta property="og:description" content="LeaveWise 앱 고객 지원 및 개인정보 처리방침">
+    <title>LeaveWise - Support</title>
+    <meta name="description" content="LeaveWise app support. FAQ, contact, and privacy policy.">
+    <meta property="og:title" content="LeaveWise - Support">
+    <meta property="og:description" content="LeaveWise app support, FAQ, and privacy policy.">
     <meta property="og:url" content="https://m1zz.github.io/LeaveWise/support.html">
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -26,534 +26,507 @@
             --border: #E5E7EB;
             --gradient: linear-gradient(135deg, #0066FF 0%, #00C471 100%);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
         }
-
-        /* Header */
         header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
         }
         .header-inner {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 0 24px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            max-width: 960px; margin: 0 auto;
+            padding: 0 24px; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
         }
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 18px;
-            color: var(--text);
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; font-weight: 700; font-size: 18px; color: var(--text);
         }
-        .logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-        }
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-light);
-            font-size: 15px;
-            transition: color 0.2s;
-        }
+        .logo img { width: 32px; height: 32px; border-radius: 8px; }
+        .nav-links { display: flex; align-items: center; gap: 20px; }
+        .nav-links a { text-decoration: none; color: var(--text-light); font-size: 15px; transition: color 0.2s; }
         .nav-links a:hover { color: var(--primary); }
         .download-btn {
-            background: var(--gradient);
-            color: white !important;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px !important;
+            background: var(--gradient); color: white !important;
+            padding: 8px 18px; border-radius: 20px; font-weight: 600; font-size: 14px !important;
         }
-
-        /* Page header */
         .page-hero {
-            background: var(--gradient);
-            color: white;
-            text-align: center;
-            padding: 64px 24px 48px;
+            background: var(--gradient); color: white;
+            text-align: center; padding: 56px 24px 40px;
         }
-        .page-hero h1 { font-size: 36px; font-weight: 900; margin-bottom: 12px; }
-        .page-hero p { font-size: 17px; opacity: 0.9; }
-
-        /* Lang toggle */
+        .page-hero h1 { font-size: 34px; font-weight: 900; margin-bottom: 10px; }
+        .page-hero p { font-size: 16px; opacity: 0.9; }
         .lang-bar {
-            background: white;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            padding: 8px 24px;
-            max-width: 960px;
-            margin: 0 auto;
+            background: white; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: flex-end;
+        }
+        .lang-bar-inner {
+            max-width: 960px; width: 100%; margin: 0 auto;
+            padding: 10px 24px; display: flex; justify-content: flex-end;
         }
         .lang-toggle {
-            display: flex;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
+            display: flex; border: 1px solid var(--border);
+            border-radius: 8px; overflow: hidden;
         }
         .lang-toggle button {
-            padding: 5px 14px;
-            border: none;
-            background: white;
-            cursor: pointer;
-            font-size: 13px;
-            font-family: inherit;
-            color: var(--text-light);
-            transition: all 0.15s;
+            padding: 5px 13px; border: none; background: white;
+            cursor: pointer; font-size: 13px; font-family: inherit;
+            color: var(--text-light); transition: all 0.15s;
+            border-right: 1px solid var(--border);
         }
-        .lang-toggle button.active {
-            background: var(--primary);
-            color: white;
-            font-weight: 600;
-        }
-
-        /* Main layout */
-        main {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 48px 24px 80px;
-        }
-
-        /* Section */
+        .lang-toggle button:last-child { border-right: none; }
+        .lang-toggle button.active { background: var(--primary); color: white; font-weight: 600; }
+        main { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; }
         .section { margin-bottom: 56px; }
         .section-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 21px; font-weight: 700; margin-bottom: 20px;
+            padding-bottom: 12px; border-bottom: 2px solid var(--primary);
+            display: flex; align-items: center; gap: 8px;
         }
-
-        /* FAQ */
         .faq-item {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            overflow: hidden;
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 12px; margin-bottom: 10px; overflow: hidden;
         }
         .faq-question {
-            width: 100%;
-            text-align: left;
-            padding: 18px 20px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            font-family: inherit;
-            color: var(--text);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
+            width: 100%; text-align: left; padding: 17px 20px;
+            background: none; border: none; cursor: pointer;
+            font-size: 15px; font-weight: 600; font-family: inherit; color: var(--text);
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
         }
         .faq-question:hover { background: #F8F9FA; }
-        .faq-chevron {
-            flex-shrink: 0;
-            font-size: 12px;
-            transition: transform 0.2s;
-            color: var(--text-light);
-        }
+        .faq-chevron { flex-shrink: 0; font-size: 11px; transition: transform 0.2s; color: var(--text-light); }
         .faq-item.open .faq-chevron { transform: rotate(180deg); }
-        .faq-answer {
-            display: none;
-            padding: 0 20px 18px;
-            font-size: 14px;
-            color: var(--text-light);
-            line-height: 1.7;
-        }
+        .faq-answer { display: none; padding: 0 20px 17px; font-size: 14px; color: var(--text-light); line-height: 1.75; }
         .faq-item.open .faq-answer { display: block; }
-
-        /* Contact */
         .contact-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 16px; padding: 28px;
+            display: flex; align-items: center; gap: 20px;
         }
         .contact-icon {
-            width: 56px;
-            height: 56px;
+            width: 56px; height: 56px; flex-shrink: 0;
             background: linear-gradient(135deg, #0066FF20, #00C47120);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            flex-shrink: 0;
+            border-radius: 14px; display: flex; align-items: center;
+            justify-content: center; font-size: 26px;
         }
         .contact-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-        .contact-info p { font-size: 14px; color: var(--text-light); margin-bottom: 10px; }
+        .contact-info p { font-size: 14px; color: var(--text-light); margin-bottom: 12px; }
         .contact-btn {
-            display: inline-block;
-            background: var(--gradient);
-            color: white;
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
+            display: inline-block; background: var(--gradient); color: white;
+            text-decoration: none; padding: 8px 20px;
+            border-radius: 20px; font-size: 14px; font-weight: 600;
         }
-
-        /* Version history */
-        .version-item {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
+        .version-item { display: flex; gap: 16px; margin-bottom: 18px; }
         .version-tag {
-            flex-shrink: 0;
-            background: var(--primary);
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 20px;
-            height: fit-content;
-            margin-top: 3px;
+            flex-shrink: 0; background: var(--primary); color: white;
+            font-size: 12px; font-weight: 700; padding: 3px 10px;
+            border-radius: 20px; height: fit-content; margin-top: 3px;
         }
         .version-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
         .version-content p { font-size: 14px; color: var(--text-light); }
-
-        /* Privacy */
         .privacy-block {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 14px;
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 12px; padding: 22px; margin-bottom: 12px;
         }
-        .privacy-block h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+        .privacy-block h3 { font-size: 15px; font-weight: 700; margin-bottom: 7px; }
         .privacy-block p { font-size: 14px; color: var(--text-light); }
-        .privacy-date { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
-
-        /* Footer */
-        footer {
-            background: #1A1A2E;
-            color: rgba(255,255,255,0.7);
-            text-align: center;
-            padding: 32px 24px;
-        }
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-        .footer-links a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.2s;
-        }
+        .privacy-date { font-size: 13px; color: var(--text-light); margin-bottom: 18px; }
+        footer { background: #1A1A2E; color: rgba(255,255,255,0.7); text-align: center; padding: 32px 24px; }
+        .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
+        .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; transition: color 0.2s; }
         .footer-links a:hover { color: white; }
         .footer-copy { font-size: 13px; }
-
         @media (max-width: 640px) {
-            .page-hero h1 { font-size: 28px; }
-            .nav-links { gap: 12px; }
+            .page-hero h1 { font-size: 26px; }
             .contact-card { flex-direction: column; text-align: center; }
+            .nav-links .hide-mobile { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-inner">
-            <a href="index.html" class="logo">
-                <img src="images/app-icon.png" alt="LeaveWise" onerror="this.style.display='none'">
-                <span>LeaveWise</span>
-            </a>
-            <nav class="nav-links">
-                <a href="index.html">홈</a>
-                <a href="https://apps.apple.com/app/id6739899592" class="download-btn" target="_blank">다운로드</a>
-            </nav>
-        </div>
-    </header>
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo">
+            <img src="images/app-icon.png" alt="LeaveWise" onerror="this.style.display='none'">
+            <span>LeaveWise</span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html" class="hide-mobile" data-i18n="nav_home">Home</a>
+            <a href="https://apps.apple.com/app/id6739899592" class="download-btn" target="_blank" data-i18n="nav_download">Download</a>
+        </nav>
+    </div>
+</header>
 
-    <div class="page-hero">
-        <h1 id="hero-title">고객 지원</h1>
-        <p id="hero-sub">궁금한 점이 있으시면 언제든지 문의해 주세요.</p>
+<div class="page-hero">
+    <h1 data-i18n="hero_title">Support</h1>
+    <p data-i18n="hero_sub">We're here to help. Reach out anytime.</p>
+</div>
+
+<div class="lang-bar">
+    <div class="lang-bar-inner">
+        <div class="lang-toggle">
+            <button onclick="setLang('en')" data-lang-btn="en" class="active">English</button>
+            <button onclick="setLang('ko')" data-lang-btn="ko">한국어</button>
+            <button onclick="setLang('ja')" data-lang-btn="ja">日本語</button>
+            <button onclick="setLang('zh')" data-lang-btn="zh">中文</button>
+        </div>
+    </div>
+</div>
+
+<main>
+
+    <!-- FAQ -->
+    <div class="section" id="faq">
+        <div class="section-title">
+            <span>❓</span>
+            <span data-i18n="faq_title">Frequently Asked Questions</span>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span data-i18n="faq1_q">My leave balance doesn't seem to be calculated correctly.</span>
+                <span class="faq-chevron">▼</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq1_a">Please check the leave year start month and total annual leave days in Settings. Half-days (0.5) and quarter-days (0.25) are automatically deducted. Non-deducting types such as sick leave, official leave, and business trips do not affect your leave balance. If the issue persists, please contact us.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span data-i18n="faq2_q">My leave entries are not showing on the calendar.</span>
+                <span class="faq-chevron">▼</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq2_a">Cancelled leave entries are not displayed on the calendar. Please check the status of the entry in the Add Leave tab. Updating to the latest version may also resolve the issue.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span data-i18n="faq3_q">How do I add bonus leave?</span>
+                <span class="faq-chevron">▼</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq3_a">You can add bonus leave in the Bonus Leave section at the bottom of the Add Leave tab. Select the type (compensatory, reward, refresh, etc.), enter the number of days, and set an optional expiration date. Bonus leave is managed separately from regular annual leave.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span data-i18n="faq4_q">I purchased Pro but the features are not unlocked.</span>
+                <span class="faq-chevron">▼</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq4_a">Please tap the Restore Purchases button at the bottom of the Settings tab. The restore will use the Apple ID currently signed in to the App Store. If the issue is not resolved, please contact us via email.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span data-i18n="faq5_q">Will my data be lost if I delete the app?</span>
+                <span class="faq-chevron">▼</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq5_a">App data is stored locally on your device. Deleting the app will permanently remove all data. We recommend keeping iCloud Backup enabled to protect your data.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span data-i18n="faq6_q">Can I add custom holidays or hide existing ones?</span>
+                <span class="faq-chevron">▼</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq6_a">Yes. In the Holiday Management menu within Settings, you can add your own custom holidays or hide default public holidays.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span data-i18n="faq7_q">Which countries are supported?</span>
+                <span class="faq-chevron">▼</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq7_a">We currently support public holidays for South Korea, the United States, Japan, and China. Changing the country in Settings will update the holidays shown on your calendar.</div>
+        </div>
     </div>
 
-    <div style="background: white; border-bottom: 1px solid var(--border);">
-        <div style="max-width: 960px; margin: 0 auto; padding: 8px 24px; display: flex; justify-content: flex-end;">
-            <div class="lang-toggle">
-                <button class="active" id="btn-ko" onclick="setLang('ko')">한국어</button>
-                <button id="btn-en" onclick="setLang('en')">English</button>
+    <!-- Contact -->
+    <div class="section" id="contact">
+        <div class="section-title">
+            <span>✉️</span>
+            <span data-i18n="contact_title">Contact Us</span>
+        </div>
+        <div class="contact-card">
+            <div class="contact-icon">📬</div>
+            <div class="contact-info">
+                <h3 data-i18n="contact_h">Email Support</h3>
+                <p data-i18n="contact_p">For issues not covered in the FAQ, feature requests, or bug reports, please send us an email. We aim to respond within 1–2 business days.</p>
+                <a class="contact-btn" href="mailto:mizzking75@gmail.com">mizzking75@gmail.com</a>
             </div>
         </div>
     </div>
 
-    <main>
+    <!-- Version History -->
+    <div class="section" id="versions">
+        <div class="section-title">
+            <span>📋</span>
+            <span data-i18n="versions_title">Release Notes</span>
+        </div>
 
-        <!-- FAQ -->
-        <div class="section" id="faq">
-            <div class="section-title">
-                <span>❓</span>
-                <span class="t" data-ko="자주 묻는 질문" data-en="Frequently Asked Questions">자주 묻는 질문</span>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">
-                    <span class="t" data-ko="연차가 정확히 계산되지 않는 것 같아요." data-en="My leave balance doesn't seem to be calculated correctly.">연차가 정확히 계산되지 않는 것 같아요.</span>
-                    <span class="faq-chevron">▼</span>
-                </button>
-                <div class="faq-answer t"
-                    data-ko="설정 화면에서 연차 기준 시작월과 총 연차 일수를 확인해 주세요. 반차(0.5일), 반반차(0.25일)는 자동으로 차감되며, 병가·공가·출장 등 비차감 유형은 연차에서 빠지지 않습니다. 그래도 문제가 있다면 문의해 주세요."
-                    data-en="Please check the leave year start month and total annual leave days in Settings. Half-days (0.5) and quarter-days (0.25) are automatically deducted. Non-deducting types such as sick leave, official leave, and business trips do not affect your leave balance. If the issue persists, please contact us.">
-                    설정 화면에서 연차 기준 시작월과 총 연차 일수를 확인해 주세요. 반차(0.5일), 반반차(0.25일)는 자동으로 차감되며, 병가·공가·출장 등 비차감 유형은 연차에서 빠지지 않습니다. 그래도 문제가 있다면 문의해 주세요.
-                </div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">
-                    <span class="t" data-ko="캘린더에 휴가 표시가 되지 않아요." data-en="My leave entries are not showing on the calendar.">캘린더에 휴가 표시가 되지 않아요.</span>
-                    <span class="faq-chevron">▼</span>
-                </button>
-                <div class="faq-answer t"
-                    data-ko="취소 상태의 휴가는 캘린더에 표시되지 않습니다. 등록 탭에서 해당 기록의 상태를 확인해 주세요. 앱을 최신 버전으로 업데이트하면 해결되는 경우도 있습니다."
-                    data-en="Cancelled leave entries are not displayed on the calendar. Please check the status of the entry in the Add Leave tab. Updating to the latest version may also resolve the issue.">
-                    취소 상태의 휴가는 캘린더에 표시되지 않습니다. 등록 탭에서 해당 기록의 상태를 확인해 주세요. 앱을 최신 버전으로 업데이트하면 해결되는 경우도 있습니다.
-                </div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">
-                    <span class="t" data-ko="보너스 연차는 어떻게 등록하나요?" data-en="How do I add bonus leave?">보너스 연차는 어떻게 등록하나요?</span>
-                    <span class="faq-chevron">▼</span>
-                </button>
-                <div class="faq-answer t"
-                    data-ko="등록 탭 하단의 보너스 연차 섹션에서 추가할 수 있습니다. 대체휴무, 포상휴가, 리프레시 휴가 등 다양한 유형을 선택하고 일수와 만료일을 입력하면 됩니다. 보너스 연차는 일반 연차와 별도로 관리됩니다."
-                    data-en="You can add bonus leave in the Bonus Leave section at the bottom of the Add Leave tab. Select the type (compensatory, reward, refresh, etc.), enter the number of days, and set an optional expiration date. Bonus leave is managed separately from regular annual leave.">
-                    등록 탭 하단의 보너스 연차 섹션에서 추가할 수 있습니다. 대체휴무, 포상휴가, 리프레시 휴가 등 다양한 유형을 선택하고 일수와 만료일을 입력하면 됩니다. 보너스 연차는 일반 연차와 별도로 관리됩니다.
-                </div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">
-                    <span class="t" data-ko="Pro 구독을 결제했는데 기능이 활성화되지 않아요." data-en="I purchased Pro but the features are not unlocked.">Pro 구독을 결제했는데 기능이 활성화되지 않아요.</span>
-                    <span class="faq-chevron">▼</span>
-                </button>
-                <div class="faq-answer t"
-                    data-ko="설정 탭 하단의 구매 복원 버튼을 눌러 주세요. App Store에 로그인된 Apple ID로 복원이 진행됩니다. 그래도 해결되지 않으면 아래 이메일로 문의해 주세요."
-                    data-en="Please tap the Restore Purchases button at the bottom of the Settings tab. The restore will use the Apple ID currently signed in to the App Store. If the issue is not resolved, please contact us via email below.">
-                    설정 탭 하단의 구매 복원 버튼을 눌러 주세요. App Store에 로그인된 Apple ID로 복원이 진행됩니다. 그래도 해결되지 않으면 아래 이메일로 문의해 주세요.
-                </div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">
-                    <span class="t" data-ko="앱을 삭제하면 데이터가 사라지나요?" data-en="Will my data be lost if I delete the app?">앱을 삭제하면 데이터가 사라지나요?</span>
-                    <span class="faq-chevron">▼</span>
-                </button>
-                <div class="faq-answer t"
-                    data-ko="앱 데이터는 기기에 로컬로 저장됩니다. 앱을 삭제하면 모든 데이터가 삭제되므로, 중요한 데이터는 기기 백업(iCloud 백업)을 통해 보호하시기 바랍니다."
-                    data-en="App data is stored locally on your device. Deleting the app will permanently remove all data. We recommend keeping iCloud Backup enabled to protect your data.">
-                    앱 데이터는 기기에 로컬로 저장됩니다. 앱을 삭제하면 모든 데이터가 삭제되므로, 중요한 데이터는 기기 백업(iCloud 백업)을 통해 보호하시기 바랍니다.
-                </div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">
-                    <span class="t" data-ko="공휴일을 직접 추가하거나 숨길 수 있나요?" data-en="Can I add custom holidays or hide existing ones?">공휴일을 직접 추가하거나 숨길 수 있나요?</span>
-                    <span class="faq-chevron">▼</span>
-                </button>
-                <div class="faq-answer t"
-                    data-ko="네, 가능합니다. 설정 탭의 공휴일 관리 메뉴에서 나만의 공휴일을 추가하거나, 기본 제공 공휴일을 숨길 수 있습니다."
-                    data-en="Yes. In the Holiday Management menu within Settings, you can add your own custom holidays or hide default public holidays.">
-                    네, 가능합니다. 설정 탭의 공휴일 관리 메뉴에서 나만의 공휴일을 추가하거나, 기본 제공 공휴일을 숨길 수 있습니다.
-                </div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">
-                    <span class="t" data-ko="지원하는 국가는 어디인가요?" data-en="Which countries are supported?">지원하는 국가는 어디인가요?</span>
-                    <span class="faq-chevron">▼</span>
-                </button>
-                <div class="faq-answer t"
-                    data-ko="현재 한국, 미국, 일본, 중국의 공휴일을 지원합니다. 설정에서 국가를 변경하면 해당 국가의 공휴일이 캘린더에 반영됩니다."
-                    data-en="We currently support public holidays for South Korea, the United States, Japan, and China. Changing the country in Settings will update the holidays shown on your calendar.">
-                    현재 한국, 미국, 일본, 중국의 공휴일을 지원합니다. 설정에서 국가를 변경하면 해당 국가의 공휴일이 캘린더에 반영됩니다.
-                </div>
+        <div class="version-item">
+            <span class="version-tag">2.0.2</span>
+            <div class="version-content">
+                <h4 data-i18n="v202_title">2.0.2 — Business Trip &amp; Bug Fixes</h4>
+                <p data-i18n="v202_body">Added business trip as a new leave type. Fixed an issue where leave entries were not highlighted on the calendar, and corrected remaining leave calculation in Settings.</p>
             </div>
         </div>
 
-        <!-- Contact -->
-        <div class="section" id="contact">
-            <div class="section-title">
-                <span>✉️</span>
-                <span class="t" data-ko="문의하기" data-en="Contact Us">문의하기</span>
-            </div>
-            <div class="contact-card">
-                <div class="contact-icon">📬</div>
-                <div class="contact-info">
-                    <h3 class="t" data-ko="이메일 문의" data-en="Email Support">이메일 문의</h3>
-                    <p class="t"
-                        data-ko="FAQ에서 해결되지 않는 문제, 기능 제안, 버그 신고는 이메일로 보내 주세요. 영업일 기준 1-2일 내에 답변 드립니다."
-                        data-en="For issues not covered in the FAQ, feature requests, or bug reports, please send us an email. We aim to respond within 1-2 business days.">
-                        FAQ에서 해결되지 않는 문제, 기능 제안, 버그 신고는 이메일로 보내 주세요. 영업일 기준 1-2일 내에 답변 드립니다.
-                    </p>
-                    <a class="contact-btn" href="mailto:mizzking75@gmail.com">mizzking75@gmail.com</a>
-                </div>
+        <div class="version-item">
+            <span class="version-tag">2.0.1</span>
+            <div class="version-content">
+                <h4 data-i18n="v201_title">2.0.1 — Leave Calculation Fixes</h4>
+                <p data-i18n="v201_body">Fixed completed days showing as 0 when Bonus Leave was enabled. Fixed non-deducting leave types appearing as 0 days in Leave History. Added Holiday Management and redesigned the Paywall screen.</p>
             </div>
         </div>
 
-        <!-- Version History -->
-        <div class="section" id="versions">
-            <div class="section-title">
-                <span>📋</span>
-                <span class="t" data-ko="업데이트 내역" data-en="Release Notes">업데이트 내역</span>
-            </div>
-
-            <div class="version-item">
-                <span class="version-tag">2.0.2</span>
-                <div class="version-content">
-                    <h4 class="t" data-ko="2.0.2 — 출장 기록 및 버그 수정" data-en="2.0.2 — Business Trip &amp; Bug Fixes">2.0.2 — 출장 기록 및 버그 수정</h4>
-                    <p class="t"
-                        data-ko="출장 유형이 추가되었습니다. 캘린더에 일정이 표시되지 않는 문제와 설정 화면의 잔여 연차 계산 오류를 수정했습니다."
-                        data-en="Added business trip as a new leave type. Fixed an issue where leave entries were not highlighted on the calendar, and corrected remaining leave calculation in Settings.">
-                        출장 유형이 추가되었습니다. 캘린더에 일정이 표시되지 않는 문제와 설정 화면의 잔여 연차 계산 오류를 수정했습니다.
-                    </p>
-                </div>
-            </div>
-
-            <div class="version-item">
-                <span class="version-tag">2.0.1</span>
-                <div class="version-content">
-                    <h4 class="t" data-ko="2.0.1 — 연차 계산 버그 수정" data-en="2.0.1 — Leave Calculation Fixes">2.0.1 — 연차 계산 버그 수정</h4>
-                    <p class="t"
-                        data-ko="보너스 연차 포함 시 완료 일수가 0으로 표시되는 버그를 수정했습니다. 병가·공가 등 비차감 유형이 사용 내역에서 0일로 표시되던 문제도 개선했습니다. 공휴일 관리 기능 추가, Paywall 디자인 개선."
-                        data-en="Fixed a bug where completed days showed as 0 when Bonus Leave was enabled. Fixed non-deducting leave types (sick, official, etc.) appearing as 0 days in Leave History. Added Holiday Management and redesigned the Paywall screen.">
-                        보너스 연차 포함 시 완료 일수가 0으로 표시되는 버그를 수정했습니다. 병가·공가 등 비차감 유형이 사용 내역에서 0일로 표시되던 문제도 개선했습니다. 공휴일 관리 기능 추가, Paywall 디자인 개선.
-                    </p>
-                </div>
-            </div>
-
-            <div class="version-item">
-                <span class="version-tag">2.0.0</span>
-                <div class="version-content">
-                    <h4 class="t" data-ko="2.0.0 — Pro 유료화 및 캘린더 연동" data-en="2.0.0 — Pro Subscription &amp; Calendar Integration">2.0.0 — Pro 유료화 및 캘린더 연동</h4>
-                    <p class="t"
-                        data-ko="StoreKit 2 기반 Pro 구독 도입. EventKit 캘린더 연동, 3중 데이터 보호(SwiftData), 위젯 기능 추가."
-                        data-en="Introduced StoreKit 2-based Pro subscription. EventKit calendar integration, SwiftData triple-layer data protection, and widget support.">
-                        StoreKit 2 기반 Pro 구독 도입. EventKit 캘린더 연동, 3중 데이터 보호(SwiftData), 위젯 기능 추가.
-                    </p>
-                </div>
+        <div class="version-item">
+            <span class="version-tag">2.0.0</span>
+            <div class="version-content">
+                <h4 data-i18n="v200_title">2.0.0 — Pro Subscription &amp; Calendar Integration</h4>
+                <p data-i18n="v200_body">Introduced StoreKit 2-based Pro subscription. EventKit calendar integration, SwiftData triple-layer data protection, and widget support.</p>
             </div>
         </div>
+    </div>
 
-        <!-- Privacy Policy -->
-        <div class="section" id="privacy">
-            <div class="section-title">
-                <span>🔒</span>
-                <span class="t" data-ko="개인정보 처리방침" data-en="Privacy Policy">개인정보 처리방침</span>
-            </div>
-            <p class="privacy-date t"
-                data-ko="최종 업데이트: 2026년 5월"
-                data-en="Last updated: May 2026">
-                최종 업데이트: 2026년 5월
-            </p>
+    <!-- Privacy -->
+    <div class="section" id="privacy">
+        <div class="section-title">
+            <span>🔒</span>
+            <span data-i18n="privacy_title">Privacy Policy</span>
+        </div>
+        <p class="privacy-date" data-i18n="privacy_date">Last updated: May 2026</p>
 
-            <div class="privacy-block">
-                <h3 class="t" data-ko="수집하는 정보" data-en="Information We Collect">수집하는 정보</h3>
-                <p class="t"
-                    data-ko="LeaveWise는 사용자의 개인정보를 수집하지 않습니다. 입력하신 이름, 연차 설정, 휴가 기록 등 모든 데이터는 사용자의 기기 내에만 저장되며 외부 서버로 전송되지 않습니다."
-                    data-en="LeaveWise does not collect personal information. All data you enter — including your name, leave settings, and leave records — is stored locally on your device and is never transmitted to external servers.">
-                    LeaveWise는 사용자의 개인정보를 수집하지 않습니다. 입력하신 이름, 연차 설정, 휴가 기록 등 모든 데이터는 사용자의 기기 내에만 저장되며 외부 서버로 전송되지 않습니다.
-                </p>
-            </div>
-
-            <div class="privacy-block">
-                <h3 class="t" data-ko="제3자 서비스" data-en="Third-Party Services">제3자 서비스</h3>
-                <p class="t"
-                    data-ko="인앱 구매 처리를 위해 Apple의 StoreKit을 사용합니다. 구매 관련 데이터는 Apple의 개인정보 처리방침에 따라 처리됩니다. 그 외 외부 분석 도구나 광고 SDK는 사용하지 않습니다."
-                    data-en="We use Apple's StoreKit for in-app purchase processing. Purchase-related data is handled according to Apple's Privacy Policy. No third-party analytics tools or advertising SDKs are used.">
-                    인앱 구매 처리를 위해 Apple의 StoreKit을 사용합니다. 구매 관련 데이터는 Apple의 개인정보 처리방침에 따라 처리됩니다. 그 외 외부 분석 도구나 광고 SDK는 사용하지 않습니다.
-                </p>
-            </div>
-
-            <div class="privacy-block">
-                <h3 class="t" data-ko="데이터 보안" data-en="Data Security">데이터 보안</h3>
-                <p class="t"
-                    data-ko="모든 데이터는 Apple의 SwiftData 프레임워크를 통해 기기 로컬에 저장됩니다. iCloud 백업이 활성화된 경우 Apple의 암호화 정책에 따라 데이터가 보호됩니다."
-                    data-en="All data is stored locally using Apple's SwiftData framework. If iCloud Backup is enabled, your data is protected by Apple's encryption policies.">
-                    모든 데이터는 Apple의 SwiftData 프레임워크를 통해 기기 로컬에 저장됩니다. iCloud 백업이 활성화된 경우 Apple의 암호화 정책에 따라 데이터가 보호됩니다.
-                </p>
-            </div>
-
-            <div class="privacy-block">
-                <h3 class="t" data-ko="문의" data-en="Contact">문의</h3>
-                <p class="t"
-                    data-ko="개인정보 처리방침에 관한 문의는 mizzking75@gmail.com으로 연락해 주세요."
-                    data-en="For questions about this Privacy Policy, please contact us at mizzking75@gmail.com.">
-                    개인정보 처리방침에 관한 문의는 mizzking75@gmail.com으로 연락해 주세요.
-                </p>
-            </div>
+        <div class="privacy-block">
+            <h3 data-i18n="privacy1_h">Information We Collect</h3>
+            <p data-i18n="privacy1_p">LeaveWise does not collect personal information. All data you enter — including your name, leave settings, and leave records — is stored locally on your device and is never transmitted to external servers.</p>
         </div>
 
-    </main>
-
-    <footer>
-        <div class="footer-links">
-            <a href="index.html" class="t" data-ko="홈" data-en="Home">홈</a>
-            <a href="#faq" class="t" data-ko="자주 묻는 질문" data-en="FAQ">자주 묻는 질문</a>
-            <a href="#contact" class="t" data-ko="문의하기" data-en="Contact">문의하기</a>
-            <a href="#privacy" class="t" data-ko="개인정보 처리방침" data-en="Privacy Policy">개인정보 처리방침</a>
-            <a href="https://github.com/M1zz/LeaveWise" target="_blank">GitHub</a>
+        <div class="privacy-block">
+            <h3 data-i18n="privacy2_h">Third-Party Services</h3>
+            <p data-i18n="privacy2_p">We use Apple's StoreKit for in-app purchase processing. Purchase-related data is handled according to Apple's Privacy Policy. No third-party analytics tools or advertising SDKs are used.</p>
         </div>
-        <p class="footer-copy">© 2024 LeaveWise. All rights reserved.</p>
-    </footer>
 
-    <script>
-        function toggleFaq(btn) {
-            const item = btn.closest('.faq-item');
-            item.classList.toggle('open');
-        }
+        <div class="privacy-block">
+            <h3 data-i18n="privacy3_h">Data Security</h3>
+            <p data-i18n="privacy3_p">All data is stored locally using Apple's SwiftData framework. If iCloud Backup is enabled, your data is protected by Apple's encryption policies.</p>
+        </div>
 
-        function setLang(lang) {
-            document.getElementById('btn-ko').classList.toggle('active', lang === 'ko');
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            document.querySelectorAll('.t[data-' + lang + ']').forEach(el => {
-                el.textContent = el.getAttribute('data-' + lang);
-            });
-            document.getElementById('hero-title').textContent = lang === 'ko' ? '고객 지원' : 'Support';
-            document.getElementById('hero-sub').textContent = lang === 'ko'
-                ? '궁금한 점이 있으시면 언제든지 문의해 주세요.'
-                : 'We\'re here to help. Reach out anytime.';
-        }
-    </script>
+        <div class="privacy-block">
+            <h3 data-i18n="privacy4_h">Contact</h3>
+            <p data-i18n="privacy4_p">For questions about this Privacy Policy, please contact us at mizzking75@gmail.com.</p>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-links">
+        <a href="index.html" data-i18n="nav_home">Home</a>
+        <a href="#faq" data-i18n="faq_title">FAQ</a>
+        <a href="#contact" data-i18n="contact_title">Contact</a>
+        <a href="#privacy" data-i18n="privacy_title">Privacy Policy</a>
+        <a href="https://github.com/M1zz/LeaveWise" target="_blank">GitHub</a>
+    </div>
+    <p class="footer-copy">© 2024 LeaveWise. All rights reserved.</p>
+</footer>
+
+<script>
+const i18n = {
+    en: {
+        nav_home: "Home",
+        nav_download: "Download",
+        hero_title: "Support",
+        hero_sub: "We're here to help. Reach out anytime.",
+        faq_title: "Frequently Asked Questions",
+        faq1_q: "My leave balance doesn't seem to be calculated correctly.",
+        faq1_a: "Please check the leave year start month and total annual leave days in Settings. Half-days (0.5) and quarter-days (0.25) are automatically deducted. Non-deducting types such as sick leave, official leave, and business trips do not affect your leave balance. If the issue persists, please contact us.",
+        faq2_q: "My leave entries are not showing on the calendar.",
+        faq2_a: "Cancelled leave entries are not displayed on the calendar. Please check the status of the entry in the Add Leave tab. Updating to the latest version may also resolve the issue.",
+        faq3_q: "How do I add bonus leave?",
+        faq3_a: "You can add bonus leave in the Bonus Leave section at the bottom of the Add Leave tab. Select the type (compensatory, reward, refresh, etc.), enter the number of days, and set an optional expiration date. Bonus leave is managed separately from regular annual leave.",
+        faq4_q: "I purchased Pro but the features are not unlocked.",
+        faq4_a: "Please tap the Restore Purchases button at the bottom of the Settings tab. The restore will use the Apple ID currently signed in to the App Store. If the issue is not resolved, please contact us via email.",
+        faq5_q: "Will my data be lost if I delete the app?",
+        faq5_a: "App data is stored locally on your device. Deleting the app will permanently remove all data. We recommend keeping iCloud Backup enabled to protect your data.",
+        faq6_q: "Can I add custom holidays or hide existing ones?",
+        faq6_a: "Yes. In the Holiday Management menu within Settings, you can add your own custom holidays or hide default public holidays.",
+        faq7_q: "Which countries are supported?",
+        faq7_a: "We currently support public holidays for South Korea, the United States, Japan, and China. Changing the country in Settings will update the holidays shown on your calendar.",
+        contact_title: "Contact Us",
+        contact_h: "Email Support",
+        contact_p: "For issues not covered in the FAQ, feature requests, or bug reports, please send us an email. We aim to respond within 1–2 business days.",
+        versions_title: "Release Notes",
+        v202_title: "2.0.2 — Business Trip & Bug Fixes",
+        v202_body: "Added business trip as a new leave type. Fixed an issue where leave entries were not highlighted on the calendar, and corrected remaining leave calculation in Settings.",
+        v201_title: "2.0.1 — Leave Calculation Fixes",
+        v201_body: "Fixed completed days showing as 0 when Bonus Leave was enabled. Fixed non-deducting leave types appearing as 0 days in Leave History. Added Holiday Management and redesigned the Paywall screen.",
+        v200_title: "2.0.0 — Pro Subscription & Calendar Integration",
+        v200_body: "Introduced StoreKit 2-based Pro subscription. EventKit calendar integration, SwiftData triple-layer data protection, and widget support.",
+        privacy_title: "Privacy Policy",
+        privacy_date: "Last updated: May 2026",
+        privacy1_h: "Information We Collect",
+        privacy1_p: "LeaveWise does not collect personal information. All data you enter — including your name, leave settings, and leave records — is stored locally on your device and is never transmitted to external servers.",
+        privacy2_h: "Third-Party Services",
+        privacy2_p: "We use Apple's StoreKit for in-app purchase processing. Purchase-related data is handled according to Apple's Privacy Policy. No third-party analytics tools or advertising SDKs are used.",
+        privacy3_h: "Data Security",
+        privacy3_p: "All data is stored locally using Apple's SwiftData framework. If iCloud Backup is enabled, your data is protected by Apple's encryption policies.",
+        privacy4_h: "Contact",
+        privacy4_p: "For questions about this Privacy Policy, please contact us at mizzking75@gmail.com.",
+    },
+    ko: {
+        nav_home: "홈",
+        nav_download: "다운로드",
+        hero_title: "고객 지원",
+        hero_sub: "궁금한 점이 있으시면 언제든지 문의해 주세요.",
+        faq_title: "자주 묻는 질문",
+        faq1_q: "연차가 정확히 계산되지 않는 것 같아요.",
+        faq1_a: "설정 화면에서 연차 기준 시작월과 총 연차 일수를 확인해 주세요. 반차(0.5일), 반반차(0.25일)는 자동으로 차감되며, 병가·공가·출장 등 비차감 유형은 연차에서 빠지지 않습니다. 그래도 문제가 있다면 문의해 주세요.",
+        faq2_q: "캘린더에 휴가 표시가 되지 않아요.",
+        faq2_a: "취소 상태의 휴가는 캘린더에 표시되지 않습니다. 등록 탭에서 해당 기록의 상태를 확인해 주세요. 앱을 최신 버전으로 업데이트하면 해결되는 경우도 있습니다.",
+        faq3_q: "보너스 연차는 어떻게 등록하나요?",
+        faq3_a: "등록 탭 하단의 보너스 연차 섹션에서 추가할 수 있습니다. 대체휴무, 포상휴가, 리프레시 휴가 등 다양한 유형을 선택하고 일수와 만료일을 입력하면 됩니다. 보너스 연차는 일반 연차와 별도로 관리됩니다.",
+        faq4_q: "Pro 구독을 결제했는데 기능이 활성화되지 않아요.",
+        faq4_a: "설정 탭 하단의 구매 복원 버튼을 눌러 주세요. App Store에 로그인된 Apple ID로 복원이 진행됩니다. 그래도 해결되지 않으면 아래 이메일로 문의해 주세요.",
+        faq5_q: "앱을 삭제하면 데이터가 사라지나요?",
+        faq5_a: "앱 데이터는 기기에 로컬로 저장됩니다. 앱을 삭제하면 모든 데이터가 삭제되므로, iCloud 백업을 활성화해 두시길 권장합니다.",
+        faq6_q: "공휴일을 직접 추가하거나 숨길 수 있나요?",
+        faq6_a: "네, 가능합니다. 설정 탭의 공휴일 관리 메뉴에서 나만의 공휴일을 추가하거나 기본 공휴일을 숨길 수 있습니다.",
+        faq7_q: "지원하는 국가는 어디인가요?",
+        faq7_a: "현재 한국, 미국, 일본, 중국의 공휴일을 지원합니다. 설정에서 국가를 변경하면 해당 국가의 공휴일이 캘린더에 반영됩니다.",
+        contact_title: "문의하기",
+        contact_h: "이메일 문의",
+        contact_p: "FAQ에서 해결되지 않는 문제, 기능 제안, 버그 신고는 이메일로 보내 주세요. 영업일 기준 1-2일 내에 답변 드립니다.",
+        versions_title: "업데이트 내역",
+        v202_title: "2.0.2 — 출장 기록 및 버그 수정",
+        v202_body: "출장 유형이 추가되었습니다. 캘린더에 일정이 표시되지 않는 문제와 설정 화면의 잔여 연차 계산 오류를 수정했습니다.",
+        v201_title: "2.0.1 — 연차 계산 버그 수정",
+        v201_body: "보너스 연차 포함 시 완료 일수가 0으로 표시되는 버그를 수정했습니다. 비차감 유형이 사용 내역에서 0일로 표시되던 문제도 개선했습니다. 공휴일 관리 기능 추가, Paywall 디자인 개선.",
+        v200_title: "2.0.0 — Pro 유료화 및 캘린더 연동",
+        v200_body: "StoreKit 2 기반 Pro 구독 도입. EventKit 캘린더 연동, 3중 데이터 보호(SwiftData), 위젯 기능 추가.",
+        privacy_title: "개인정보 처리방침",
+        privacy_date: "최종 업데이트: 2026년 5월",
+        privacy1_h: "수집하는 정보",
+        privacy1_p: "LeaveWise는 사용자의 개인정보를 수집하지 않습니다. 입력하신 이름, 연차 설정, 휴가 기록 등 모든 데이터는 기기에만 저장되며 외부 서버로 전송되지 않습니다.",
+        privacy2_h: "제3자 서비스",
+        privacy2_p: "인앱 구매 처리를 위해 Apple의 StoreKit을 사용합니다. 구매 관련 데이터는 Apple의 개인정보 처리방침에 따라 처리됩니다. 외부 분석 도구나 광고 SDK는 사용하지 않습니다.",
+        privacy3_h: "데이터 보안",
+        privacy3_p: "모든 데이터는 Apple의 SwiftData 프레임워크를 통해 기기 로컬에 저장됩니다. iCloud 백업이 활성화된 경우 Apple의 암호화 정책에 따라 보호됩니다.",
+        privacy4_h: "문의",
+        privacy4_p: "개인정보 처리방침에 관한 문의는 mizzking75@gmail.com으로 연락해 주세요.",
+    },
+    ja: {
+        nav_home: "ホーム",
+        nav_download: "ダウンロード",
+        hero_title: "サポート",
+        hero_sub: "お気軽にお問い合わせください。",
+        faq_title: "よくある質問",
+        faq1_q: "有給休暇の残日数が正しく計算されていないようです。",
+        faq1_a: "設定画面で有給年度の開始月と総有給日数をご確認ください。半休（0.5日）・時間休（0.25日）は自動で差し引かれます。病休・公休・出張などの非控除タイプは有給残日数に影響しません。それでも解決しない場合はお問い合わせください。",
+        faq2_q: "カレンダーに休暇が表示されません。",
+        faq2_a: "キャンセルされた休暇はカレンダーに表示されません。登録タブで該当記録のステータスをご確認ください。アプリを最新バージョンにアップデートすると解消される場合があります。",
+        faq3_q: "ボーナス休暇の追加方法を教えてください。",
+        faq3_a: "登録タブ下部のボーナス休暇セクションから追加できます。代替休暇・報奨休暇・リフレッシュ休暇などのタイプを選択し、日数と任意の有効期限を入力してください。ボーナス休暇は通常の有給とは別に管理されます。",
+        faq4_q: "Proを購入しましたが機能が有効になりません。",
+        faq4_a: "設定タブ下部の「購入を復元」ボタンをタップしてください。App Storeにサインインしている Apple ID で復元が行われます。それでも解決しない場合はメールでお問い合わせください。",
+        faq5_q: "アプリを削除するとデータが消えますか？",
+        faq5_a: "アプリのデータはデバイス内にローカル保存されています。アプリを削除するとすべてのデータが失われます。iCloudバックアップを有効にしておくことをお勧めします。",
+        faq6_q: "祝日を追加したり非表示にしたりできますか？",
+        faq6_a: "はい。設定タブの祝日管理メニューから、独自の祝日を追加したり、デフォルトの祝日を非表示にしたりすることができます。",
+        faq7_q: "対応している国はどこですか？",
+        faq7_a: "現在、韓国・アメリカ・日本・中国の祝日に対応しています。設定で国を変更すると、カレンダーに反映される祝日が切り替わります。",
+        contact_title: "お問い合わせ",
+        contact_h: "メールサポート",
+        contact_p: "FAQで解決しない問題、機能のご提案、バグ報告はメールでお送りください。営業日1〜2日以内にご返答いたします。",
+        versions_title: "アップデート履歴",
+        v202_title: "2.0.2 — 出張記録とバグ修正",
+        v202_body: "出張タイプを新たに追加しました。カレンダーに休暇が表示されない問題と、設定画面の残有給計算の誤りを修正しました。",
+        v201_title: "2.0.1 — 有給計算バグの修正",
+        v201_body: "ボーナス休暇を含む設定でONにしたとき、使用済み日数が0で表示されるバグを修正しました。非控除タイプの休暇が使用内訳に0日と表示される問題も改善しました。祝日管理機能の追加とPaywallデザインの刷新も行いました。",
+        v200_title: "2.0.0 — Proサブスクリプションとカレンダー連携",
+        v200_body: "StoreKit 2ベースのProサブスクリプションを導入。EventKitカレンダー連携、SwiftDataによる三重データ保護、ウィジェット機能を追加しました。",
+        privacy_title: "プライバシーポリシー",
+        privacy_date: "最終更新：2026年5月",
+        privacy1_h: "収集する情報",
+        privacy1_p: "LeaveWiseは個人情報を収集しません。入力したお名前・有給設定・休暇記録などのすべてのデータはデバイス内にのみ保存され、外部サーバーへ送信されることはありません。",
+        privacy2_h: "第三者サービス",
+        privacy2_p: "アプリ内購入の処理にAppleのStoreKitを使用しています。購入関連データはAppleのプライバシーポリシーに従って処理されます。サードパーティの分析ツールや広告SDKは使用していません。",
+        privacy3_h: "データセキュリティ",
+        privacy3_p: "すべてのデータはAppleのSwiftDataフレームワークを通じてデバイスにローカル保存されます。iCloudバックアップが有効な場合、Appleの暗号化ポリシーによってデータが保護されます。",
+        privacy4_h: "お問い合わせ",
+        privacy4_p: "プライバシーポリシーに関するご質問は mizzking75@gmail.com までご連絡ください。",
+    },
+    zh: {
+        nav_home: "首页",
+        nav_download: "下载",
+        hero_title: "支持",
+        hero_sub: "有任何问题，随时联系我们。",
+        faq_title: "常见问题",
+        faq1_q: "年假余额计算好像不准确。",
+        faq1_a: "请在设置界面检查年假起始月份和总年假天数。半天假（0.5天）和短假（0.25天）会自动扣除。病假、公假、出差等非扣除类型不会影响年假余额。如问题仍未解决，请联系我们。",
+        faq2_q: "日历中没有显示我的假期。",
+        faq2_a: "已取消的假期不会显示在日历中。请在登记标签页中确认相关记录的状态。将应用更新至最新版本也可能解决此问题。",
+        faq3_q: "如何添加额外假期（奖励假）？",
+        faq3_a: "可以在登记标签页底部的额外假期区域进行添加。选择类型（调休、奖励假、带薪休假等），输入天数并设置可选的到期日期。额外假期与正常年假分开管理。",
+        faq4_q: "我已购买Pro，但功能没有解锁。",
+        faq4_a: "请点击设置标签页底部的「恢复购买」按钮，系统将使用当前登录App Store的Apple ID进行恢复。如问题仍未解决，请通过电子邮件联系我们。",
+        faq5_q: "删除应用会丢失数据吗？",
+        faq5_a: "应用数据存储在本地设备上。删除应用将永久清除所有数据，建议开启iCloud备份以保护您的数据。",
+        faq6_q: "可以添加自定义假日或隐藏现有假日吗？",
+        faq6_a: "可以。在设置中的假日管理菜单里，您可以添加自己的自定义假日，或隐藏默认的法定假日。",
+        faq7_q: "支持哪些国家？",
+        faq7_a: "目前支持韩国、美国、日本和中国的法定假日。在设置中更改国家，日历中显示的假日也会随之切换。",
+        contact_title: "联系我们",
+        contact_h: "邮件支持",
+        contact_p: "对于常见问题中未涉及的问题、功能建议或错误报告，请发送电子邮件给我们，我们将在1-2个工作日内回复。",
+        versions_title: "版本更新记录",
+        v202_title: "2.0.2 — 出差记录及Bug修复",
+        v202_body: "新增出差假期类型。修复了假期在日历中未高亮显示的问题，以及设置界面中剩余年假计算错误的问题。",
+        v201_title: "2.0.1 — 年假计算修复",
+        v201_body: "修复了开启额外假期后已完成天数显示为0的Bug。修复了非扣除类型在使用记录中显示为0天的问题。新增假日管理功能，优化了付费引导页设计。",
+        v200_title: "2.0.0 — Pro订阅及日历集成",
+        v200_body: "引入基于StoreKit 2的Pro订阅。支持EventKit日历集成、SwiftData三重数据保护及小组件功能。",
+        privacy_title: "隐私政策",
+        privacy_date: "最后更新：2026年5月",
+        privacy1_h: "收集的信息",
+        privacy1_p: "LeaveWise不收集个人信息。您输入的姓名、年假设置、假期记录等所有数据均仅存储在本地设备上，不会传输到外部服务器。",
+        privacy2_h: "第三方服务",
+        privacy2_p: "我们使用Apple的StoreKit处理应用内购买。购买相关数据依据Apple隐私政策处理。我们不使用任何第三方分析工具或广告SDK。",
+        privacy3_h: "数据安全",
+        privacy3_p: "所有数据通过Apple的SwiftData框架存储在本地设备上。如已启用iCloud备份，您的数据将受到Apple加密策略的保护。",
+        privacy4_h: "联系方式",
+        privacy4_p: "如对本隐私政策有任何疑问，请联系 mizzking75@gmail.com。",
+    }
+};
+
+function setLang(lang) {
+    document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang-btn') === lang);
+    });
+    const strings = i18n[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (strings[key]) el.textContent = strings[key];
+    });
+    document.documentElement.lang = lang;
+}
+
+function toggleFaq(btn) {
+    btn.closest('.faq-item').classList.toggle('open');
+}
+
+// Default: English
+setLang('en');
+
+// Auto-detect browser language
+const browserLang = navigator.language.slice(0, 2);
+if (['ko', 'ja', 'zh'].includes(browserLang)) setLang(browserLang);
+</script>
 </body>
 </html>
