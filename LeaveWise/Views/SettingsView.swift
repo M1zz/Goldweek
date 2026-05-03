@@ -197,23 +197,23 @@ struct SettingsView: View {
                 Section(isLeisure ? "휴가 설정" : Strings.annualLeaveSettings) {
                     // 총 사용 가능 연차 표시 — 직장인 모드만
                     if !isLeisure {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.availableLeaveLabel)
-                                    .font(.subheadline)
+                        HStack(alignment: .center) {
+                            Text(Strings.availableLeaveLabel)
+                                .font(.subheadline)
+                            Spacer()
+                            VStack(alignment: .trailing, spacing: 2) {
+                                Text("\(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
+                                    .font(.title2.bold())
+                                    .foregroundStyle(activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
                                 if activeBonusLeave > 0 {
                                     Text(Strings.baseAndBonus(
                                         base: formatLeave(max(0, profile.totalAnnualLeave - committedLeave)),
                                         bonus: formatLeave(activeBonusLeave)
                                     ))
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                                 }
                             }
-                            Spacer()
-                            Text("\(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
-                                .font(.title2.bold())
-                                .foregroundStyle(activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
                         }
                         .padding(.vertical, 4)
                     }
