@@ -203,7 +203,7 @@ struct SettingsView: View {
                             Spacer()
                             VStack(alignment: .trailing, spacing: 2) {
                                 Text("\(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
-                                    .font(.title2.bold())
+                                    .font(.system(size: 36, weight: .bold))
                                     .foregroundStyle(activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
                                 if activeBonusLeave > 0 {
                                     Text(Strings.baseAndBonus(

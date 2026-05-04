@@ -2708,4 +2708,41 @@ enum Strings {
         case .chinese: return "过去日期会自动标记为「已使用」"
         }
     }
+
+    // MARK: - 연휴 알림 섹션
+    static var upcomingHolidaysSection: String {
+        switch lang {
+        case .korean: return "연차 없이 쉬는 날"
+        case .english: return "Free Days Off"
+        case .japanese: return "有給不要の連休"
+        case .chinese: return "无需年假的假期"
+        }
+    }
+
+    static var upcomingHolidaysSectionSubtitle: String {
+        switch lang {
+        case .korean: return "이미 연휴가 있어요. 연차를 추가하면 더 길게 쉴 수 있어요."
+        case .english: return "Holidays are already here. Add leave to extend them."
+        case .japanese: return "連休があります。有給を追加して延ばせます。"
+        case .chinese: return "已有假期。添加年假可以延长假期。"
+        }
+    }
+
+    static var addWithPro: String {
+        switch lang {
+        case .korean: return "Pro로 일정 추가"
+        case .english: return "Add with Pro"
+        case .japanese: return "Proで追加"
+        case .chinese: return "Pro版添加"
+        }
+    }
+
+    static var proUnlockHint: String {
+        switch lang {
+        case .korean: return "Pro로 업그레이드하면 모든 추천을 일정에 추가할 수 있어요"
+        case .english: return "Upgrade to Pro to add all recommendations to your schedule"
+        case .japanese: return "Proにアップグレードしてすべての推薦を追加できます"
+        case .chinese: return "升级Pro版即可添加所有推荐到日程"
+        }
+    }
 }

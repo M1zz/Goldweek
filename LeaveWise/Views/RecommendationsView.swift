@@ -45,6 +45,14 @@ struct RecommendationsView: View {
         max(0, profile.totalAnnualLeave - committedLeave) + activeBonusLeave
     }
 
+    private var freeHolidays: [LeaveRecommendation] {
+        recommendations.filter { $0.requiredLeaveDays == 0 }
+    }
+
+    private var actionableRecommendations: [LeaveRecommendation] {
+        recommendations.filter { $0.requiredLeaveDays > 0 }
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -66,18 +74,25 @@ struct RecommendationsView: View {
                         )
                     }
 
-                    // 추천 리스트
                     if isLoading {
                         ProgressView(Strings.analyzingSchedule)
                             .padding(.top, 40)
-                    } else if recommendations.isEmpty {
+                    } else if actionableRecommendations.isEmpty && freeHolidays.isEmpty {
                         EmptyRecommendationView()
                     } else {
-                        RecommendationList(
-                            recommendations: recommendations,
-                            addedRecommendations: $addedRecommendations,
-                            onAdd: addLeave
-                        )
+                        // 연차 없이 쉬는 날 (정보성, 액션 없음)
+                        if !freeHolidays.isEmpty {
+                            UpcomingHolidaysSection(holidays: freeHolidays)
+                        }
+
+                        // 연차를 써야 만들 수 있는 추천
+                        if !actionableRecommendations.isEmpty {
+                            RecommendationList(
+                                recommendations: actionableRecommendations,
+                                addedRecommendations: $addedRecommendations,
+                                onAdd: addLeave
+                            )
+                        }
                     }
                 }
                 .padding()
@@ -264,83 +279,36 @@ struct RecommendationList: View {
     let recommendations: [LeaveRecommendation]
     @Binding var addedRecommendations: Set<UUID>
     let onAdd: (LeaveRecommendation) -> Void
-    
+
     @State private var showingPaywall = false
     private let proManager = ProManager.shared
-    private let freeRecommendationLimit = 3
+    private let freeAddLimit = 3
 
     var body: some View {
         VStack(spacing: 16) {
-            // Free users: show first 3 recommendations
-            let visibleRecommendations = proManager.isPro ? recommendations : Array(recommendations.prefix(freeRecommendationLimit))
-            let hiddenRecommendations = proManager.isPro ? [] : Array(recommendations.dropFirst(freeRecommendationLimit))
-            
-            // Visible recommendations
-            ForEach(visibleRecommendations) { recommendation in
+            ForEach(Array(recommendations.enumerated()), id: \.element.id) { index, recommendation in
+                let requiresPro = !proManager.isPro && index >= freeAddLimit
                 DetailedRecommendationCard(
                     recommendation: recommendation,
                     isAdded: addedRecommendations.contains(recommendation.id),
-                    onAdd: { onAdd(recommendation) }
+                    requiresPro: requiresPro,
+                    onAdd: {
+                        if requiresPro {
+                            showingPaywall = true
+                        } else {
+                            onAdd(recommendation)
+                        }
+                    }
                 )
             }
-            
-            // Hidden recommendations (blurred) for free users
-            if !hiddenRecommendations.isEmpty {
-                VStack(spacing: 16) {
-                    ForEach(hiddenRecommendations) { recommendation in
-                        DetailedRecommendationCard(
-                            recommendation: recommendation,
-                            isAdded: false,
-                            onAdd: {}
-                        )
-                        .blur(radius: 8)
-                        .disabled(true)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color.black.opacity(0.1))
-                        )
-                    }
-                    
-                    // Pro upgrade banner
-                    VStack(spacing: 12) {
-                        HStack {
-                            Image(systemName: "crown.fill")
-                                .foregroundColor(.yellow)
-                            Text("더 많은 추천이 \(hiddenRecommendations.count)개 있습니다!")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                        }
-                        
-                        Text(Strings.proFeaturesBanner)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                        
-                        Button(action: {
-                            showingPaywall = true
-                        }) {
-                            HStack {
-                                Image(systemName: "crown.fill")
-                                Text(Strings.upgradeToPro)
-                                    .fontWeight(.semibold)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.accentColor)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                        }
-                    }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.accentColor.opacity(0.1))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color.accentColor.opacity(0.3), lineWidth: 1)
-                            )
-                    )
-                }
+
+            // Pro 힌트: 무료 사용자이고 추천이 freeAddLimit 초과일 때만
+            if !proManager.isPro && recommendations.count > freeAddLimit {
+                Text(Strings.proUnlockHint)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
             }
         }
         .sheet(isPresented: $showingPaywall) {
@@ -349,10 +317,98 @@ struct RecommendationList: View {
     }
 }
 
+// MARK: - 연차 없이 쉬는 날 섹션
+struct UpcomingHolidaysSection: View {
+    let holidays: [LeaveRecommendation]
+
+    private let dateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "M/d"
+        return f
+    }()
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "gift.fill")
+                            .foregroundStyle(.orange)
+                        Text(Strings.upcomingHolidaysSection)
+                            .font(.headline)
+                    }
+                    Text(Strings.upcomingHolidaysSectionSubtitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(holidays) { holiday in
+                        HolidayInfoCard(holiday: holiday, formatter: dateFormatter)
+                    }
+                }
+                .padding(.horizontal, 2)
+                .padding(.bottom, 4)
+            }
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.05), radius: 5)
+    }
+}
+
+struct HolidayInfoCard: View {
+    let holiday: LeaveRecommendation
+    let formatter: DateFormatter
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(holiday.title)
+                .font(.subheadline.bold())
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text("\(formatter.string(from: holiday.startDate)) – \(formatter.string(from: holiday.endDate))")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: 4) {
+                Image(systemName: "sun.max.fill")
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
+                Text(Strings.daysOff(holiday.totalDaysOff))
+                    .font(.caption.bold())
+                    .foregroundStyle(.orange)
+            }
+
+            Text(Strings.noLeaveRequired)
+                .font(.caption2)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(Color.orange.opacity(0.12))
+                .foregroundStyle(.orange)
+                .clipShape(Capsule())
+        }
+        .padding(12)
+        .frame(width: 148)
+        .background(Color.orange.opacity(0.06))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.orange.opacity(0.2), lineWidth: 1)
+        )
+    }
+}
+
 // MARK: - 상세 추천 카드
 struct DetailedRecommendationCard: View {
     let recommendation: LeaveRecommendation
     let isAdded: Bool
+    var requiresPro: Bool = false
     let onAdd: () -> Void
 
     var body: some View {
@@ -363,12 +419,27 @@ struct DetailedRecommendationCard: View {
 
                 Spacer()
 
-                VStack(alignment: .trailing) {
-                    Text(Strings.efficiency)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                    Text(recommendation.efficiencyStars)
-                        .font(.caption)
+                if requiresPro {
+                    HStack(spacing: 3) {
+                        Image(systemName: "crown.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.yellow)
+                        Text("Pro")
+                            .font(.caption2.bold())
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.yellow.opacity(0.12))
+                    .clipShape(Capsule())
+                } else {
+                    VStack(alignment: .trailing) {
+                        Text(Strings.efficiency)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        Text(recommendation.efficiencyStars)
+                            .font(.caption)
+                    }
                 }
             }
 
@@ -422,17 +493,24 @@ struct DetailedRecommendationCard: View {
             Button(action: onAdd) {
                 HStack {
                     Spacer()
-                    Image(systemName: isAdded ? "checkmark.circle.fill" : "plus.circle.fill")
-                    Text(isAdded ? Strings.addedToScheduleAction : Strings.addToScheduleAction)
-                        .fontWeight(.semibold)
+                    if requiresPro {
+                        Image(systemName: "crown.fill")
+                            .foregroundStyle(.yellow)
+                        Text(Strings.addWithPro)
+                            .fontWeight(.semibold)
+                    } else {
+                        Image(systemName: isAdded ? "checkmark.circle.fill" : "plus.circle.fill")
+                        Text(isAdded ? Strings.addedToScheduleAction : Strings.addToScheduleAction)
+                            .fontWeight(.semibold)
+                    }
                     Spacer()
                 }
                 .padding(.vertical, 12)
-                .background(isAdded ? Color.green : Color.blue)
+                .background(requiresPro ? Color.purple.opacity(0.85) : (isAdded ? Color.green : Color.blue))
                 .foregroundStyle(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             }
-            .disabled(isAdded)
+            .disabled(isAdded && !requiresPro)
         }
         .padding()
         .background(Color(.systemBackground))
