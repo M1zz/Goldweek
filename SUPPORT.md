@@ -1,12 +1,12 @@
-# LeaveWise Support / 휴가캘린더 지원
+# Goldweek Support / 골드위크 지원
 
 ---
 
 ## About the App / 앱 소개
 
-**LeaveWise** is a smart annual leave management app for workers. Manage your remaining leave efficiently and plan optimal vacation schedules with AI-powered recommendations.
+**Goldweek** is a smart annual leave management app for workers. Manage your remaining leave efficiently and plan optimal vacation schedules with AI-powered recommendations.
 
-**휴가캘린더**는 직장인을 위한 스마트 연차 관리 앱입니다. 남은 연차를 효율적으로 관리하고, AI 기반 추천으로 최적의 휴가 일정을 계획하세요.
+**골드위크**는 직장인을 위한 스마트 연차 관리 앱입니다. 남은 연차를 효율적으로 관리하고, AI 기반 추천으로 최적의 휴가 일정을 계획하세요.
 
 ---
 
@@ -111,7 +111,7 @@ Go to **Settings** > **Vacation Style** to adjust your preferred season, duratio
 
 ## Privacy Policy / 개인정보 처리
 
-LeaveWise respects your privacy.
+Goldweek respects your privacy.
 
 - **No data collection**: The app does not collect, transmit, or share any personal data.
 - **Local storage only**: All data is stored on your device using SwiftData.
@@ -127,7 +127,7 @@ If you experience issues or have suggestions, please contact us:
 
 앱 사용 중 문제가 발생하거나 개선 의견이 있으시면 연락해 주세요.
 
-- **Email**: support@leavewise.app
+- **Email**: support@goldweek.app
 
 ### When contacting us, please include / 문의 시 포함해 주세요
 1. iPhone model / 기기 모델
@@ -158,4 +158,4 @@ If you experience issues or have suggestions, please contact us:
 
 ---
 
-© 2024 LeaveWise. All rights reserved.
+© 2024 Goldweek. All rights reserved.

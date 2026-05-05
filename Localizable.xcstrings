@@ -133,8 +133,33 @@
     "D-" : {
 
     },
-    "LeaveWise" : {
-
+    "Goldweek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goldweek"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goldweek"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "골드위크"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goldweek"
+          }
+        }
+      }
     },
     "갱신까지" : {
       "localizations" : {

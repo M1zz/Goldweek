@@ -1,12 +1,12 @@
-# LeaveWise 📅
+# Goldweek 📅 (골드위크)
 
 <p align="center">
-  <img src="docs/images/app-icon.png" width="120" alt="LeaveWise App Icon">
+  <img src="docs/images/app-icon.png" width="120" alt="Goldweek App Icon">
 </p>
 
 <p align="center">
-  <strong>스마트 연차 관리 & 휴가 추천 앱</strong><br>
-  연차를 똑똑하게 관리하고, 공휴일을 활용한 최적의 휴가 일정을 추천받으세요.
+  <strong>스마트 연차 관리 & 황금연휴 플래너</strong><br>
+  최소 연차로 최대 연휴를 — 공휴일을 활용한 최적의 휴가 조합을 추천받으세요.
 </p>
 
 <p align="center">
@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://m1zz.github.io/LeaveWise/">🌐 Landing Page</a> •
+  <a href="https://m1zz.github.io/Goldweek/">🌐 Landing Page</a> •
   <a href="SUPPORT.md">📖 Support</a> •
   <a href="#features">✨ Features</a>
 </p>
@@ -83,16 +83,171 @@
 
 문제가 발생하거나 개선 의견이 있으시면 [SUPPORT.md](SUPPORT.md)를 참고하거나 이메일로 연락해주세요.
 
-📧 support@leavewise.app
+📧 support@goldweek.app  *(이메일 주소는 추후 변경 예정)*
+
+---
+
+## API 설정 (마이리얼트립 service-api)
+
+추천 탭의 여행 큐레이션 카드를 실제 마이리얼트립 상품으로 교체하려면 API 키가 필요합니다.
+
+### 키 설정 방법 (개발 환경)
+
+**옵션 A — Xcode Run Scheme 환경변수** (권장 — 디버그 시 안전)
+
+1. Xcode에서 `Product → Scheme → Edit Scheme...`
+2. `Run → Arguments → Environment Variables`
+3. 추가:
+   - Name: `MRT_API_KEY`
+   - Value: `<발급받은_키>`
+
+**옵션 B — GoldweekSecrets.swift 파일** (배포 빌드용)
+
+1. `Goldweek/GoldweekSecrets.swift` 파일 생성 (`.gitignore` 처리됨)
+2. 다음 코드 작성:
+   ```swift
+   enum GoldweekSecrets {
+       static let mrtAPIKey = "<발급받은_키>"
+   }
+   ```
+3. `RecommendationsView.swift`의 `MRTConfig.apiKey`에서 fallback 라인 주석 해제
+
+### API 명세 통합 (받으면 채울 위치)
+
+`Goldweek/Views/RecommendationsView.swift` 하단의 `MRTConfig` 및 `MyRealTripAPIClient`에 다음을 채워 넣으세요:
+
+1. **`MRTConfig.baseURL`** — 마이리얼트립 service-api 베이스 URL
+2. **`MRTConfig.authHeader`** — 인증 헤더 형태 (Bearer / X-API-Key 등)
+3. **`MRTTourTicket / MRTAccommodation / MRTFlight` 모델의 `CodingKeys`** — 응답 필드명 매핑
+4. **`MyRealTripAPIClient.searchTourTickets / searchAccommodations / searchFlights`의 `path`** — 정확한 엔드포인트 경로
+
+### 보안 주의
+
+- **API 키는 절대 Git에 커밋하지 마세요.** `.gitignore`에 secrets 패턴 등록 완료
+- 마이리얼트립 약관에 따라 **iOS 앱 클라이언트에서 직접 호출 가능** (확인됨)
+- 다만 키가 앱 번들에 포함되므로 디컴파일 시 노출 가능성은 있습니다. 다음 추가 보호 권장:
+  - 가벼운 난독화 (Base64/XOR 등)
+  - 키별 호출 한도 모니터링 (마이리얼트립 대시보드)
+  - 의심 트래픽 발견 시 키 즉시 재발급
+- **민감한 결제·예약 API**가 추후 추가되면 그때는 백엔드 경유 권장
+
+---
+
+## 마이리얼트립 MCP를 LLM과 함께 쓰기
+
+Goldweek 사용자가 ChatGPT, Claude Desktop, Claude Code, Cursor 같은 **AI 에이전트**에서 마이리얼트립 MCP를 등록해두면, Goldweek가 추천한 연휴 일정에 맞는 실제 항공권·숙박·투어를 **자연어로 검색**할 수 있습니다.
+
+**MCP 엔드포인트**: `https://mcp-servers.myrealtrip.com/mcp`
+**인증**: 별도 인증 불필요 (공개 MCP 서버)
+
+### 제공 도구 11종
+
+| 카테고리 | 도구 |
+|---|---|
+| 숙소 | `searchStays`, `getStayDetail` |
+| 항공 | `searchDomesticFlights`, `searchInternationalFlights`, `getPromotionAirlines`, `flightsFareCalendar` |
+| 투어/액티비티 | `searchTnas`, `getTnaDetail`, `getTnaOptions`, `getCategoryList` |
+| 공통 | `getCurrentTime` |
+
+### 1. Claude Desktop
+
+`Settings → 커넥터 → 사용자 지정 → + 커스텀 커넥터 추가`
+
+- 이름: `myrealtrip`
+- 주소: `https://mcp-servers.myrealtrip.com/mcp`
+
+### 2. Claude Code (CLI)
+```bash
+claude mcp add --transport http myrealtrip https://mcp-servers.myrealtrip.com/mcp
+```
+
+### 3. Cursor
+
+`Settings → Tools & MCP → "+ Add new MCP server"` 클릭 후 mcp.json에 추가:
+```json
+{
+  "mcpServers": {
+    "myrealtrip": {
+      "url": "https://mcp-servers.myrealtrip.com/mcp"
+    }
+  }
+}
+```
+
+### 4. Codex CLI
+```bash
+codex mcp add myrealtrip --url https://mcp-servers.myrealtrip.com/mcp
+```
+
+### 5. Gemini CLI
+```bash
+gemini mcp add -t http -s user myrealtrip https://mcp-servers.myrealtrip.com/mcp
+```
+
+### 6. Windsurf
+
+`~/.codeium/windsurf/mcp_config.json`:
+```json
+{
+  "mcpServers": {
+    "myrealtrip": {
+      "serverUrl": "https://mcp-servers.myrealtrip.com/mcp"
+    }
+  }
+}
+```
+
+### 7. Cline (VS Code)
+
+Cline 아이콘 → MCP Servers → Remote Servers:
+```json
+{
+  "mcpServers": {
+    "myrealtrip": {
+      "url": "https://mcp-servers.myrealtrip.com/mcp",
+      "disabled": false
+    }
+  }
+}
+```
+
+### 추천 프롬프트 (Goldweek 일정과 연계)
+
+#### 항공·숙박·투어 통합 큐레이션
+```
+5월 1일~5월 5일 (5일 연휴) 다낭 4인 가족 여행:
+- 항공권 (인천 출발) 가성비 3개
+- 4성 호텔 한강뷰 추천 4박
+- 1일 한국어 가이드 투어 1개 (바나힐 위주)
+모두 마이리얼트립에서 찾아 가격과 함께 정리해줘.
+```
+
+#### 번아웃 회복용 짧은 휴양
+```
+3일 연휴(7월 첫째주) 동안 인천에서 2시간 비행 이내, 휴양에 좋은 곳 + 호텔 1박당 10만원 이하.
+마이리얼트립에서 평점 4.5 이상으로 5개 추천.
+```
+
+#### 황금연휴 미리 예약
+```
+9월 추석 연휴 5박 6일 일본 오사카, 가족 4명, 예산 400만원.
+마이리얼트립에서 항공+호텔+USJ 1일권 조합 3가지로 묶어줘.
+```
+
+#### 캘린더 최저가 활용
+```
+인천 → 후쿠오카 5월 한 달 동안 5박 6일 기준 최저가 캘린더 보여주고,
+가장 저렴한 출발일 TOP 3 + 그 호텔/투어까지 패키지로 짜줘.
+```
 
 ---
 
 ## Contributing
 
-버그 리포트나 기능 제안은 [Issues](https://github.com/M1zz/LeaveWise/issues)에 남겨주세요!
+버그 리포트나 기능 제안은 [Issues](https://github.com/M1zz/Goldweek/issues)에 남겨주세요!
 
 ---
 
 ## License
 
-© 2024 LeaveWise. All rights reserved.
+© 2024 Goldweek. All rights reserved.

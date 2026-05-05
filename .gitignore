@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.swp
+
+# Secrets (API keys, credentials)
+*Secrets.xcconfig
+*Secrets.plist
+Secrets.swift
+GoldweekSecrets.swift
+.env
+.env.*
+!.env.example
+
+# CocoaPods (혹시 도입 시)
+Pods/
+*.xcworkspace
+!Goldweek.xcodeproj/project.xcworkspace
+
+# Swift Package Manager
+.swiftpm/
+.build/
+Package.resolved

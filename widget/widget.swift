@@ -561,7 +561,7 @@ struct LeaveWidgetLargeView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "calendar.badge.clock")
                         .foregroundStyle(blueColor)
-                    Text("LeaveWise")
+                    Text("Goldweek")
                         .font(.system(size: 13, weight: .bold))
                 }
                 Spacer()
