@@ -294,7 +294,7 @@ struct PaywallView: View {
                     showingAlert = true
                 } else {
                     isSuccess = false
-                    alertMessage = "구매 기록을 찾을 수 없습니다."
+                    alertMessage = Strings.paywallNoPurchaseFound
                     showingAlert = true
                 }
             }
@@ -323,7 +323,7 @@ struct FeatureRowView: View {
         HStack(spacing: 12) {
             if isHeader {
                 // Header row
-                Text("기능")
+                Text(Strings.paywallFeaturesHeader)
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)

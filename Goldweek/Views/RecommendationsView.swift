@@ -1211,7 +1211,7 @@ struct MyRealTripPromoCard: View {
                         if hasAnyLive {
                             VStack(alignment: .leading, spacing: 14) {
                                 if let flights = liveFlights, !flights.isEmpty {
-                                    sectionHeader(icon: "airplane", title: "항공권", color: AppTheme.Colors.brand)
+                                    sectionHeader(icon: "airplane", title: Strings.sectionFlight, color: AppTheme.Colors.brand)
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 10) {
                                             ForEach(flights) { f in MRTFlightCard(flight: f) }
@@ -1220,7 +1220,7 @@ struct MyRealTripPromoCard: View {
                                     .scrollClipDisabled()
                                 }
                                 if let accoms = liveAccommodations, !accoms.isEmpty {
-                                    sectionHeader(icon: "bed.double.fill", title: "숙박", color: AppTheme.Colors.success)
+                                    sectionHeader(icon: "bed.double.fill", title: Strings.sectionAccommodation, color: AppTheme.Colors.success)
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 10) {
                                             ForEach(accoms) { a in MRTAccommodationCard(item: a) }
@@ -1229,7 +1229,7 @@ struct MyRealTripPromoCard: View {
                                     .scrollClipDisabled()
                                 }
                                 if let products = liveProducts, !products.isEmpty {
-                                    sectionHeader(icon: "ticket.fill", title: "투어·티켓", color: AppTheme.Colors.bonus)
+                                    sectionHeader(icon: "ticket.fill", title: Strings.sectionTour, color: AppTheme.Colors.bonus)
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 10) {
                                             ForEach(products) { p in MRTLiveTnaCard(product: p) }

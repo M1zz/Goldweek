@@ -31,9 +31,19 @@ class WidgetService {
             return
         }
 
-        // 기본 연차 정보 (계획 중인 휴가도 사용된 것으로 계산)
+        // 기본 연차 정보 (현재 회계연도 기준 — LeaveStatusCard/SettingsView와 동일 계산)
+        let cal = Calendar.current
+        let now = Date()
+        let currentMonth = cal.component(.month, from: now)
+        let currentYear = cal.component(.year, from: now)
+        let sm = profile.yearStartMonth
+        let startYear = currentMonth >= sm ? currentYear : currentYear - 1
+        let annualYearStart = cal.date(from: DateComponents(year: startYear, month: sm, day: 1)) ?? now
+        let annualYearEnd = cal.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
+
         let total = profile.totalAnnualLeave
         let used = leaveRecords
+            .filter { $0.startDate >= annualYearStart && $0.startDate <= annualYearEnd }
             .filter { ($0.status == .used || $0.status == .planned) && $0.type.deductsFromAnnual }
             .reduce(0.0) { $0 + $1.effectiveLeaveDays }
         let remaining = max(0, total - used)

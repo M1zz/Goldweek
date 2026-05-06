@@ -38,12 +38,12 @@ struct LaunchScreenView: View {
                 }
 
                 // 앱 이름
-                Text("휴가캘린더")
+                Text(Strings.launchTitle)
                     .font(.system(size: 32, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
 
                 // 슬로건
-                Text("똑똑한 연차 관리")
+                Text(Strings.launchSubtitle)
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.8))
             }

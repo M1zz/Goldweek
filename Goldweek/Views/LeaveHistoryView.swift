@@ -154,6 +154,16 @@ struct LeaveHistoryView: View {
             }
             .navigationTitle(Strings.navTitleLeaveHistory)
             .navigationBarTitleDisplayMode(.large)
+            .onAppear {
+                // 진입 시 현재 회계연도에 기록이 없고 다른 연도엔 있으면 자동 전환
+                if filteredRecords.isEmpty && !allRecords.isEmpty {
+                    if let mostRecentYearWithData = allRecords
+                        .map({ fiscalYear(for: $0.startDate) })
+                        .max(), mostRecentYearWithData != selectedYear {
+                        selectedYear = mostRecentYearWithData
+                    }
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(Strings.close) {

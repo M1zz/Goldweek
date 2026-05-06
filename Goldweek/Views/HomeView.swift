@@ -273,7 +273,7 @@ struct LeaveStatusCard: View {
         VStack(spacing: 16) {
             // 헤더
             HStack {
-                Text(isLeisure ? "\(year)년 휴가 계획" : Strings.annualLeaveStatus(year: year))
+                Text(isLeisure ? Strings.leisureYearVacationPlan(year: year) : Strings.annualLeaveStatus(year: year))
                     .font(.headline)
                 Spacer()
                 // 보너스 포함 토글 — 직장인 모드에서만

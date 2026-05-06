@@ -59,8 +59,27 @@ struct SettingsView: View {
         leaveRecords.filter { $0.status == .planned }.count
     }
 
+    /// 현재 회계연도 시작일 (yearStartMonth 기준) — LeaveStatusCard와 동일 계산
+    var annualYearStart: Date {
+        let cal = Calendar.current
+        let now = Date()
+        let year = cal.component(.year, from: now)
+        let month = cal.component(.month, from: now)
+        let sm = profile.yearStartMonth
+        let startYear = month >= sm ? year : year - 1
+        return cal.date(from: DateComponents(year: startYear, month: sm, day: 1)) ?? now
+    }
+
+    var annualYearEnd: Date {
+        Calendar.current.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
+    }
+
     var committedLeave: Double {
-        let active = leaveRecords.filter { $0.status == .used || $0.status == .planned }
+        // 현재 회계연도에 속한 기록만 합산 (LeaveStatusCard와 동일 — 화면 일관성)
+        let inYear = leaveRecords.filter {
+            $0.startDate >= annualYearStart && $0.startDate <= annualYearEnd
+        }
+        let active = inYear.filter { $0.status == .used || $0.status == .planned }
         let deducting = active.filter { $0.deductsFromAnnualLeave }
         return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
     }
@@ -166,8 +185,8 @@ struct SettingsView: View {
                                 .foregroundStyle(.orange)
                                 .frame(width: 28)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("공휴일 관리")
-                                Text("공휴일 추가·숨기기")
+                                Text(Strings.holidayMgmtTitle)
+                                Text(Strings.holidayMgmtSubtitle)
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -176,8 +195,8 @@ struct SettingsView: View {
                 }
 
                 // 사용자 유형
-                Section("사용자 유형") {
-                    Picker("모드", selection: $profile.userType) {
+                Section(Strings.userTypeSection) {
+                    Picker(Strings.userTypeMode, selection: $profile.userType) {
                         ForEach(UserType.allCases) { type in
                             Label(type.displayName, systemImage: type.icon).tag(type)
                         }
@@ -186,7 +205,7 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
 
                     if profile.userType == .leisure {
-                        Text("연차 제한 없이 자유롭게 휴가를 계획하고 싶은 분을 위한 모드입니다.")
+                        Text(Strings.userTypeLeisureDesc)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -194,7 +213,7 @@ struct SettingsView: View {
 
                 // 연차/휴가 설정
                 let isLeisure = profile.userType == .leisure
-                Section(isLeisure ? "휴가 설정" : Strings.annualLeaveSettings) {
+                Section(isLeisure ? Strings.leisureVacationSettings : Strings.annualLeaveSettings) {
                     // 총 사용 가능 연차 표시 — 직장인 모드만
                     if !isLeisure {
                         HStack(alignment: .center) {
@@ -219,12 +238,12 @@ struct SettingsView: View {
                     }
 
                     HStack {
-                        Text(isLeisure ? "연간 목표 일수" : Strings.totalLeave)
+                        Text(isLeisure ? Strings.leisureAnnualGoal : Strings.totalLeave)
                         Spacer()
                         if isLeisure {
                             Stepper(
                                 profile.totalAnnualLeave == 0
-                                    ? "무제한"
+                                    ? Strings.leisureUnlimited
                                     : "\(Int(profile.totalAnnualLeave))\(Strings.dayUnitSuffix)",
                                 value: $profile.totalAnnualLeave,
                                 in: 0...365,
@@ -241,13 +260,13 @@ struct SettingsView: View {
                     }
 
                     HStack {
-                        Text(isLeisure ? "계획된 휴가" : Strings.usedLeave)
+                        Text(isLeisure ? Strings.leisurePlannedLeave : Strings.usedLeave)
                         Spacer()
                         Text("\(formatLeave(committedLeave))\(Strings.dayUnitSuffix)")
                             .foregroundStyle(.secondary)
                     }
 
-                    Picker(isLeisure ? "기준 연도 시작월" : Strings.yearStartMonth, selection: $profile.yearStartMonth) {
+                    Picker(isLeisure ? Strings.leisureYearStartMonth : Strings.yearStartMonth, selection: $profile.yearStartMonth) {
                         ForEach(1...12, id: \.self) { month in
                             Text(Strings.monthShort(month)).tag(month)
                         }

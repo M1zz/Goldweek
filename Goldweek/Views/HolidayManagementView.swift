@@ -74,7 +74,7 @@ struct HolidayManagementView: View {
                     Button(role: .destructive) {
                         hiddenHolidayDatesRaw = ""
                     } label: {
-                        Label("기본 공휴일 모두 복원", systemImage: "arrow.counterclockwise")
+                        Label(Strings.holidayMgmtRestoreAll, systemImage: "arrow.counterclockwise")
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color(.systemBackground))
@@ -87,7 +87,7 @@ struct HolidayManagementView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle("공휴일 관리")
+        .navigationTitle(Strings.holidayMgmtTitle)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingAddSheet) {
             AddCustomHolidaySheet(defaultYear: selectedYear) { date, name in
@@ -96,9 +96,9 @@ struct HolidayManagementView: View {
                 try? modelContext.save()
             }
         }
-        .alert("공휴일 삭제", isPresented: $showingDeleteAlert) {
-            Button("취소", role: .cancel) { }
-            Button("삭제", role: .destructive) {
+        .alert(Strings.holidayDeleteAlertTitle, isPresented: $showingDeleteAlert) {
+            Button(Strings.cancel, role: .cancel) { }
+            Button(Strings.commonDelete, role: .destructive) {
                 if let h = holidayToDelete {
                     modelContext.delete(h)
                     try? modelContext.save()
@@ -106,7 +106,7 @@ struct HolidayManagementView: View {
                 }
             }
         } message: {
-            Text("이 공휴일을 삭제할까요?")
+            Text(Strings.holidayDeleteAlertMessage)
         }
     }
 
@@ -116,17 +116,7 @@ struct HolidayManagementView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(availableYears, id: \.self) { year in
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) { selectedYear = year }
-                    } label: {
-                        Text(verbatim: "\(year)년")
-                            .font(.subheadline.weight(selectedYear == year ? .semibold : .regular))
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 7)
-                            .background(selectedYear == year ? Color.blue : Color(.systemGray5))
-                            .foregroundStyle(selectedYear == year ? .white : .primary)
-                            .clipShape(Capsule())
-                    }
+                    yearButton(for: year)
                 }
             }
             .padding(.horizontal)
@@ -134,15 +124,31 @@ struct HolidayManagementView: View {
         }
     }
 
+    private func yearButton(for year: Int) -> some View {
+        let label: String = Strings.yearLabel(year)
+        let isSelected = selectedYear == year
+        return Button {
+            withAnimation(.easeInOut(duration: 0.2)) { selectedYear = year }
+        } label: {
+            Text(label)
+                .font(.subheadline.weight(isSelected ? .semibold : .regular))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 7)
+                .background(isSelected ? Color.blue : Color(.systemGray5))
+                .foregroundStyle(isSelected ? .white : .primary)
+                .clipShape(Capsule())
+        }
+    }
+
     private var builtInSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             // 헤더
             HStack {
-                Text("기본 공휴일")
+                Text(Strings.holidayDefaultSection)
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
-                Text("\(builtInHolidays.count)개")
+                Text(Strings.itemCount(builtInHolidays.count))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -165,7 +171,7 @@ struct HolidayManagementView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal)
 
-            Text("토글을 끄면 캘린더와 추천에서 해당 공휴일이 숨겨집니다.")
+            Text(Strings.holidayDefaultFooter)
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
@@ -177,7 +183,7 @@ struct HolidayManagementView: View {
         VStack(alignment: .leading, spacing: 0) {
             // 헤더
             HStack {
-                Text("내 공휴일")
+                Text(Strings.holidayCustomSection)
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -186,7 +192,7 @@ struct HolidayManagementView: View {
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "plus.circle.fill")
-                        Text("추가")
+                        Text(Strings.commonAdd)
                     }
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.purple)
@@ -202,7 +208,7 @@ struct HolidayManagementView: View {
                         Image(systemName: "plus.circle.dashed")
                             .font(.title3)
                             .foregroundStyle(.secondary)
-                        Text("직접 추가한 공휴일이 없습니다")
+                        Text(Strings.holidayCustomEmpty)
                             .foregroundStyle(.secondary)
                             .font(.subheadline)
                     }
@@ -227,7 +233,7 @@ struct HolidayManagementView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal)
 
-            Text("직접 추가한 공휴일은 캘린더와 추천에 반영됩니다.")
+            Text(Strings.holidayCustomFooter)
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
@@ -261,7 +267,7 @@ private struct BuiltInHolidayRow: View {
                     .foregroundStyle(isHidden ? Color.secondary : Color.primary)
                     .strikethrough(isHidden, color: .secondary)
                 if holiday.isSubstitute {
-                    Text("대체공휴일")
+                    Text(Strings.holidaySubstitute)
                         .font(.caption2)
                         .foregroundStyle(.orange)
                 }
@@ -303,7 +309,7 @@ private struct CustomHolidayRow: View {
                 HStack(spacing: 4) {
                     Image(systemName: "person.fill")
                         .font(.caption2)
-                    Text("내가 추가")
+                    Text(Strings.holidayAddedByMe)
                         .font(.caption2)
                 }
                 .foregroundStyle(.purple)
@@ -343,23 +349,23 @@ struct AddCustomHolidaySheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("날짜") {
-                    DatePicker("날짜 선택", selection: $date, displayedComponents: .date)
+                Section(Strings.holidayDateSection) {
+                    DatePicker(Strings.holidayDatePickerLabel, selection: $date, displayedComponents: .date)
                         .datePickerStyle(.graphical)
                 }
-                Section("이름") {
-                    TextField("공휴일 이름 (예: 창립기념일)", text: $name)
+                Section(Strings.holidayNameSection) {
+                    TextField(Strings.holidayNamePlaceholder, text: $name)
                         .submitLabel(.done)
                 }
             }
-            .navigationTitle("공휴일 추가")
+            .navigationTitle(Strings.holidayAddTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") { dismiss() }
+                    Button(Strings.cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("추가") {
+                    Button(Strings.commonAdd) {
                         let trimmed = name.trimmingCharacters(in: .whitespaces)
                         guard !trimmed.isEmpty else { return }
                         onSave(date, trimmed)

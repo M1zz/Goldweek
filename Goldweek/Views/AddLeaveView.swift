@@ -281,7 +281,7 @@ struct LeaveRegistrationView: View {
                                         .fontWeight(.semibold)
                                         .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white : .primary)
                                     HStack(spacing: 4) {
-                                        Text("\(formatLeave(bonus.remainingDays))\(Strings.dayUnitSuffix) 사용 가능")
+                                        Text(Strings.availableDays(formatLeave(bonus.remainingDays)))
                                             .font(.caption)
                                             .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.85) : .secondary)
                                         if !bonus.reason.isEmpty {
@@ -292,7 +292,7 @@ struct LeaveRegistrationView: View {
                                         }
                                     }
                                     if let exp = bonus.expirationDate {
-                                        Text("~\(exp.formatted(.dateTime.month().day())) 만료")
+                                        Text(Strings.expiresBy(exp.formatted(.dateTime.month().day())))
                                             .font(.caption2)
                                             .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.7) : AppTheme.Colors.bonus)
                                     }

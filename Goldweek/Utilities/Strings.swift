@@ -3293,6 +3293,390 @@ enum Strings {
         }
     }
 
+    // MARK: - 사용자 유형
+    static var userTypeEmployee: String {
+        switch lang {
+        case .korean: return "직장인"
+        case .english: return "Employee"
+        case .japanese: return "会社員"
+        case .chinese: return "上班族"
+        }
+    }
+
+    static var userTypeLeisure: String {
+        switch lang {
+        case .korean: return "자유 계획"
+        case .english: return "Free Plan"
+        case .japanese: return "自由計画"
+        case .chinese: return "自由规划"
+        }
+    }
+
+    static var userTypeSection: String {
+        switch lang {
+        case .korean: return "사용자 유형"
+        case .english: return "User Type"
+        case .japanese: return "ユーザータイプ"
+        case .chinese: return "用户类型"
+        }
+    }
+
+    static var userTypeMode: String {
+        switch lang {
+        case .korean: return "모드"
+        case .english: return "Mode"
+        case .japanese: return "モード"
+        case .chinese: return "模式"
+        }
+    }
+
+    static var userTypeLeisureDesc: String {
+        switch lang {
+        case .korean: return "연차 제한 없이 자유롭게 휴가를 계획하고 싶은 분을 위한 모드입니다."
+        case .english: return "A mode for those who want to plan vacations freely without leave-day limits."
+        case .japanese: return "有給日数の制限なく自由に休暇を計画したい方向けのモードです。"
+        case .chinese: return "适合不受年假天数限制、自由规划休假的用户。"
+        }
+    }
+
+    static var leisureVacationSettings: String {
+        switch lang {
+        case .korean: return "휴가 설정"
+        case .english: return "Vacation Settings"
+        case .japanese: return "休暇設定"
+        case .chinese: return "休假设置"
+        }
+    }
+
+    static var leisureAnnualGoal: String {
+        switch lang {
+        case .korean: return "연간 목표 일수"
+        case .english: return "Annual Goal Days"
+        case .japanese: return "年間目標日数"
+        case .chinese: return "年度目标天数"
+        }
+    }
+
+    static var leisureUnlimited: String {
+        switch lang {
+        case .korean: return "무제한"
+        case .english: return "Unlimited"
+        case .japanese: return "無制限"
+        case .chinese: return "无限"
+        }
+    }
+
+    static var leisurePlannedLeave: String {
+        switch lang {
+        case .korean: return "계획된 휴가"
+        case .english: return "Planned Leave"
+        case .japanese: return "計画した休暇"
+        case .chinese: return "计划休假"
+        }
+    }
+
+    static var leisureYearStartMonth: String {
+        switch lang {
+        case .korean: return "기준 연도 시작월"
+        case .english: return "Year Start Month"
+        case .japanese: return "基準年度の開始月"
+        case .chinese: return "起始月份"
+        }
+    }
+
+    // MARK: - 공휴일 관리
+    static var holidayMgmtTitle: String {
+        switch lang {
+        case .korean: return "공휴일 관리"
+        case .english: return "Holiday Management"
+        case .japanese: return "祝日管理"
+        case .chinese: return "假日管理"
+        }
+    }
+
+    static var holidayMgmtSubtitle: String {
+        switch lang {
+        case .korean: return "공휴일 추가·숨기기"
+        case .english: return "Add or hide holidays"
+        case .japanese: return "祝日の追加・非表示"
+        case .chinese: return "添加·隐藏假日"
+        }
+    }
+
+    static var holidayMgmtRestoreAll: String {
+        switch lang {
+        case .korean: return "기본 공휴일 모두 복원"
+        case .english: return "Restore all default holidays"
+        case .japanese: return "すべてのデフォルト祝日を復元"
+        case .chinese: return "恢复所有默认假日"
+        }
+    }
+
+    static var holidayDeleteAlertTitle: String {
+        switch lang {
+        case .korean: return "공휴일 삭제"
+        case .english: return "Delete Holiday"
+        case .japanese: return "祝日を削除"
+        case .chinese: return "删除假日"
+        }
+    }
+
+    static var holidayDeleteAlertMessage: String {
+        switch lang {
+        case .korean: return "이 공휴일을 삭제할까요?"
+        case .english: return "Delete this holiday?"
+        case .japanese: return "この祝日を削除しますか?"
+        case .chinese: return "要删除此假日吗?"
+        }
+    }
+
+    static var commonDelete: String {
+        switch lang {
+        case .korean: return "삭제"
+        case .english: return "Delete"
+        case .japanese: return "削除"
+        case .chinese: return "删除"
+        }
+    }
+
+    static var commonAdd: String {
+        switch lang {
+        case .korean: return "추가"
+        case .english: return "Add"
+        case .japanese: return "追加"
+        case .chinese: return "添加"
+        }
+    }
+
+    static var holidayDefaultSection: String {
+        switch lang {
+        case .korean: return "기본 공휴일"
+        case .english: return "Default Holidays"
+        case .japanese: return "デフォルト祝日"
+        case .chinese: return "默认假日"
+        }
+    }
+
+    static var holidayDefaultFooter: String {
+        switch lang {
+        case .korean: return "토글을 끄면 캘린더와 추천에서 해당 공휴일이 숨겨집니다."
+        case .english: return "Turn off the toggle to hide the holiday from the calendar and recommendations."
+        case .japanese: return "トグルをオフにすると、カレンダーとおすすめから該当祝日が非表示になります。"
+        case .chinese: return "关闭开关后,该假日将从日历和推荐中隐藏。"
+        }
+    }
+
+    static var holidayCustomSection: String {
+        switch lang {
+        case .korean: return "내 공휴일"
+        case .english: return "My Holidays"
+        case .japanese: return "マイ祝日"
+        case .chinese: return "我的假日"
+        }
+    }
+
+    static var holidayCustomEmpty: String {
+        switch lang {
+        case .korean: return "직접 추가한 공휴일이 없습니다"
+        case .english: return "No custom holidays added"
+        case .japanese: return "追加した祝日はありません"
+        case .chinese: return "未添加自定义假日"
+        }
+    }
+
+    static var holidayCustomFooter: String {
+        switch lang {
+        case .korean: return "직접 추가한 공휴일은 캘린더와 추천에 반영됩니다."
+        case .english: return "Custom holidays will appear in the calendar and recommendations."
+        case .japanese: return "追加した祝日はカレンダーとおすすめに反映されます。"
+        case .chinese: return "自定义假日将显示在日历和推荐中。"
+        }
+    }
+
+    static var holidaySubstitute: String {
+        switch lang {
+        case .korean: return "대체공휴일"
+        case .english: return "Substitute Holiday"
+        case .japanese: return "振替休日"
+        case .chinese: return "调休"
+        }
+    }
+
+    static var holidayAddedByMe: String {
+        switch lang {
+        case .korean: return "내가 추가"
+        case .english: return "Added by me"
+        case .japanese: return "自分で追加"
+        case .chinese: return "我添加的"
+        }
+    }
+
+    static var holidayDateSection: String {
+        switch lang {
+        case .korean: return "날짜"
+        case .english: return "Date"
+        case .japanese: return "日付"
+        case .chinese: return "日期"
+        }
+    }
+
+    static var holidayDatePickerLabel: String {
+        switch lang {
+        case .korean: return "날짜 선택"
+        case .english: return "Select Date"
+        case .japanese: return "日付選択"
+        case .chinese: return "选择日期"
+        }
+    }
+
+    static var holidayNameSection: String {
+        switch lang {
+        case .korean: return "이름"
+        case .english: return "Name"
+        case .japanese: return "名前"
+        case .chinese: return "名称"
+        }
+    }
+
+    static var holidayNamePlaceholder: String {
+        switch lang {
+        case .korean: return "공휴일 이름 (예: 창립기념일)"
+        case .english: return "Holiday name (e.g. Founding Day)"
+        case .japanese: return "祝日名 (例: 創立記念日)"
+        case .chinese: return "假日名称 (例如: 创立纪念日)"
+        }
+    }
+
+    static var holidayAddTitle: String {
+        switch lang {
+        case .korean: return "공휴일 추가"
+        case .english: return "Add Holiday"
+        case .japanese: return "祝日を追加"
+        case .chinese: return "添加假日"
+        }
+    }
+
+    // MARK: - Register / Bonus 등
+    static func availableDays(_ daysText: String) -> String {
+        switch lang {
+        case .korean: return "\(daysText)\(dayUnitSuffix) 사용 가능"
+        case .english: return "\(daysText) days available"
+        case .japanese: return "\(daysText)日利用可能"
+        case .chinese: return "可用\(daysText)天"
+        }
+    }
+
+    static func expiresBy(_ dateText: String) -> String {
+        switch lang {
+        case .korean: return "~\(dateText) 만료"
+        case .english: return "Until \(dateText)"
+        case .japanese: return "\(dateText)まで"
+        case .chinese: return "至\(dateText)到期"
+        }
+    }
+
+    // MARK: - 섹션 헤더 (마이리얼트립)
+    static var sectionFlight: String {
+        switch lang {
+        case .korean: return "항공권"
+        case .english: return "Flights"
+        case .japanese: return "航空券"
+        case .chinese: return "机票"
+        }
+    }
+
+    static var sectionAccommodation: String {
+        switch lang {
+        case .korean: return "숙박"
+        case .english: return "Stays"
+        case .japanese: return "宿泊"
+        case .chinese: return "住宿"
+        }
+    }
+
+    static var sectionTour: String {
+        switch lang {
+        case .korean: return "투어·티켓"
+        case .english: return "Tours & Tickets"
+        case .japanese: return "ツアー・チケット"
+        case .chinese: return "旅游·门票"
+        }
+    }
+
+    // MARK: - 자유 계획 헤더
+    static func leisureYearVacationPlan(year: Int) -> String {
+        switch lang {
+        case .korean: return "\(year)년 휴가 계획"
+        case .english: return "\(year) Vacation Plan"
+        case .japanese: return "\(year)年の休暇計画"
+        case .chinese: return "\(year)年休假计划"
+        }
+    }
+
+    // MARK: - 페이월
+    static var paywallNoPurchaseFound: String {
+        switch lang {
+        case .korean: return "구매 기록을 찾을 수 없습니다."
+        case .english: return "No purchase records found."
+        case .japanese: return "購入履歴が見つかりません。"
+        case .chinese: return "未找到购买记录。"
+        }
+    }
+
+    static var paywallFeaturesHeader: String {
+        switch lang {
+        case .korean: return "기능"
+        case .english: return "Features"
+        case .japanese: return "機能"
+        case .chinese: return "功能"
+        }
+    }
+
+    // MARK: - 런치 스크린
+    static var launchTitle: String {
+        switch lang {
+        case .korean: return "골드위크"
+        case .english: return "Goldweek"
+        case .japanese: return "ゴールドウィーク"
+        case .chinese: return "Goldweek"
+        }
+    }
+
+    static var launchSubtitle: String {
+        switch lang {
+        case .korean: return "똑똑한 연차 관리"
+        case .english: return "Smart leave management"
+        case .japanese: return "スマートな休暇管理"
+        case .chinese: return "智能年假管理"
+        }
+    }
+
+    // MARK: - 국가명 (Settings 노출용)
+    static func countryDisplayName(_ country: Country) -> String {
+        switch lang {
+        case .korean:
+            switch country {
+            case .korea: return "한국"; case .japan: return "일본"
+            case .china: return "중국"; case .usa: return "미국"
+            }
+        case .english:
+            switch country {
+            case .korea: return "Korea"; case .japan: return "Japan"
+            case .china: return "China"; case .usa: return "USA"
+            }
+        case .japanese:
+            switch country {
+            case .korea: return "韓国"; case .japan: return "日本"
+            case .china: return "中国"; case .usa: return "アメリカ"
+            }
+        case .chinese:
+            switch country {
+            case .korea: return "韩国"; case .japan: return "日本"
+            case .china: return "中国"; case .usa: return "美国"
+            }
+        }
+    }
+
     // MARK: - 여행 큐레이션 섹션
     static var travelSuggestionsHeader: String {
         switch lang {

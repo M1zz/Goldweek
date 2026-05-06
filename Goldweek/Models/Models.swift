@@ -18,12 +18,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     var id: String { rawValue }
 
     var displayName: String {
-        switch self {
-        case .korea: return "한국"
-        case .japan: return "日本"
-        case .china: return "中国"
-        case .usa: return "USA"
-        }
+        Strings.countryDisplayName(self)
     }
 
     var flag: String {
@@ -65,8 +60,8 @@ enum UserType: String, Codable, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .employee: return "직장인"
-        case .leisure: return "자유 계획"
+        case .employee: return Strings.userTypeEmployee
+        case .leisure: return Strings.userTypeLeisure
         }
     }
 
@@ -87,7 +82,7 @@ final class UserProfile {
     var totalAnnualLeave: Double         // 총 연차 / 연간 목표 일수
     var usedLeave: Double                // 사용한 연차 (레거시 — records가 source of truth)
     var createdAt: Date
-    var countryRaw: String               // 국가 코드
+    var countryRaw: String = Country.korea.rawValue   // 국가 코드 (default: SwiftData lightweight migration용)
     var userTypeRaw: String = UserType.employee.rawValue  // 사용자 유형
 
     // 선호도 설정

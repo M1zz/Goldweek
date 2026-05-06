@@ -232,13 +232,13 @@ class HolidayService {
         let lang = AppLanguage.current
 
         let substituteEligibleKR = ["어린이날", "근로자의 날", "설날", "설날 연휴", "추석", "추석 연휴",
-                                     "삼일절", "광복절", "개천절", "한글날", "크리스마스"]
+                                     "삼일절", "광복절", "개천절", "한글날", "크리스마스", "부처님오신날"]
         let substituteEligibleEN = ["Children's Day", "Workers' Day", "Seollal", "Seollal Holiday", "Chuseok", "Chuseok Holiday",
-                                     "Independence Movement Day", "Liberation Day", "National Foundation Day", "Hangul Day", "Christmas"]
+                                     "Independence Movement Day", "Liberation Day", "National Foundation Day", "Hangul Day", "Christmas", "Buddha's Birthday"]
         let substituteEligibleJP = ["こどもの日", "労働者の日", "ソルラル", "ソルラル連休", "秋夕", "秋夕連休",
-                                     "三一節", "光復節", "開天節", "ハングルの日", "クリスマス"]
+                                     "三一節", "光復節", "開天節", "ハングルの日", "クリスマス", "釈迦誕生日"]
         let substituteEligibleZH = ["儿童节", "劳动节", "春节", "春节假期", "中秋节", "中秋节假期",
-                                     "三一节", "光复节", "开天节", "韩文日", "圣诞节"]
+                                     "三一节", "光复节", "开天节", "韩文日", "圣诞节", "佛诞日"]
 
         let substituteEligible: [String]
         switch lang {
