@@ -20,9 +20,14 @@ class ProManager {
     private let productID = "com.Ysoup.LeaveWise.pro"
     private var updateListenerTask: Task<Void, Never>?
 
+    // TestFlight 빌드는 sandbox receipt을 사용
+    var isTestFlight: Bool {
+        Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+    }
+
     var isPro: Bool {
         get {
-            UserDefaults.standard.bool(forKey: "isPro")
+            isTestFlight || UserDefaults.standard.bool(forKey: "isPro")
         }
         set {
             UserDefaults.standard.set(newValue, forKey: "isPro")
