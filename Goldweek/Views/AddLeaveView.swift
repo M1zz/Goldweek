@@ -238,6 +238,18 @@ struct LeaveRegistrationView: View {
         }
     }
 
+    /// 등록 버튼 동적 라벨 — 선택한 휴가 유형 이름을 반영
+    /// 예) 출장 → "출장 등록하기", 보너스 사용 시 → 보너스 유형명 사용
+    var registerButtonLabel: String {
+        let typeName: String = {
+            if let bonus = selectedBonusLeave {
+                return Strings.bonusLeaveTypeName(bonus.type)
+            }
+            return Strings.leaveTypeName(leaveType)
+        }()
+        return Strings.registerLeaveButtonWith(typeName: typeName)
+    }
+
     var canAddLeave: Bool {
         guard startDate <= endDate else { return false }
         // 보너스 연차 사용 시: 잔여 보너스 초과 불가
@@ -461,7 +473,7 @@ struct LeaveRegistrationView: View {
                     }
             }
 
-            // 등록 버튼
+            // 등록 버튼 — 선택한 유형에 맞춰 동적 라벨
             Section {
                 Button(action: addLeave) {
                     HStack {
@@ -471,7 +483,7 @@ struct LeaveRegistrationView: View {
                                 .tint(.white)
                         } else {
                             Image(systemName: "plus.circle.fill")
-                            Text(Strings.registerLeaveButton)
+                            Text(registerButtonLabel)
                                 .fontWeight(.semibold)
                         }
                         Spacer()
@@ -566,6 +578,7 @@ struct LeaveRegistrationView: View {
                 : Strings.leaveTypeName(leaveType)
             alertMessage = Strings.leaveRegistered(typeName)
             isSuccess = true
+            AnalyticsService.logLeaveAdded(type: leaveType.rawValue, days: leaveDays, isRecommended: false)
             // 초기화
             note = ""
             startDate = Date()
@@ -575,6 +588,7 @@ struct LeaveRegistrationView: View {
             ReviewManager.shared.recordLeaveRegistration()
             shouldPromptReview = true
         } catch {
+            AnalyticsService.recordError(error, context: ["op": "leave_add"])
             alertMessage = Strings.saveFailed
             isSuccess = false
             HapticFeedback.error()

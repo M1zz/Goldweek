@@ -26,6 +26,7 @@ struct PaywallView: View {
                     purchaseButtons
                     footerSection
                 }
+                .onAppear { AnalyticsService.logPaywallView(source: "direct") }
                 .padding(.horizontal)
                 .padding(.bottom, 32)
             }
@@ -267,6 +268,7 @@ struct PaywallView: View {
             do {
                 try await proManager.purchase()
                 await MainActor.run {
+                    AnalyticsService.logPaywallPurchase(success: true, productId: "pro")
                     isSuccess = true
                     alertMessage = Strings.youArePro
                     showingAlert = true
@@ -276,6 +278,8 @@ struct PaywallView: View {
                 await ReviewManager.shared.requestReviewAfterPurchase(using: requestReview)
             } catch {
                 await MainActor.run {
+                    AnalyticsService.logPaywallPurchase(success: false, productId: "pro")
+                    AnalyticsService.recordError(error, context: ["op": "pro_purchase"])
                     isSuccess = false
                     alertMessage = error.localizedDescription
                     showingAlert = true

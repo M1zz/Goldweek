@@ -95,9 +95,11 @@ struct RecommendationsView: View {
                         }
 
                         // 마이리얼트립 연계 프로모션
-                        // - 한국어 사용자만 노출 (마이리얼트립은 한국 시장 위주, 한국어 인터페이스/KRW 결제)
-                        // - 추천 일정이 있을 때 (직장인/자유 계획 모두)
+                        // 노출 조건 (모두 AND): 한국어 사용자 + 한국 거주 + 직장인
+                        // → 한국에서 일하는 사람을 정확히 타겟 (마이리얼트립은 한국 시장 위주)
                         if LanguageManager.shared.currentLanguage == .korean,
+                           profile.country == .korea,
+                           profile.userType == .employee,
                            let firstRec = actionableRecommendations.first ?? freeHolidays.first {
                             MyRealTripPromoCard(
                                 recommendation: firstRec,
@@ -147,8 +149,13 @@ struct RecommendationsView: View {
 
         do {
             try modelContext.save()
+            AnalyticsService.logRecommendationAdded(
+                days: recommendation.totalDaysOff,
+                efficiency: recommendation.efficiency
+            )
             HapticFeedback.success()
         } catch {
+            AnalyticsService.recordError(error, context: ["op": "recommendation_add"])
             addedRecommendations.remove(recommendation.id)
             modelContext.delete(record)
             HapticFeedback.error()
@@ -1065,6 +1072,12 @@ struct MyRealTripPromoCard: View {
     @State private var liveAccommodations: [MRTAccommodationItem]?  // 숙박
     @State private var isLoading = false
 
+    /// opt-in 상태 — 사용자가 "추천 받기" 누르거나 "자동" 동의 후 true
+    @State private var didOptIn = false
+    @State private var dismissed = false   // "괜찮아요" 누르면 이번 세션 숨김
+    /// 자동 표시 동의 (영구 저장) — 한 번 동의하면 같은 추천에 다시 묻지 않음
+    @AppStorage("mrtAutoShowRecommendations") private var autoShowRecommendations: Bool = false
+
     private var daysSinceLastLeave: Int? {
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
@@ -1157,8 +1170,11 @@ struct MyRealTripPromoCard: View {
     }
 
     var body: some View {
-        if suggestions.isEmpty {
+        if suggestions.isEmpty || dismissed {
             EmptyView()
+        } else if !didOptIn && !autoShowRecommendations {
+            // 단계 1: opt-in prompt (광고 느낌 제거)
+            optInPromptCard
         } else {
             VStack(alignment: .leading, spacing: 12) {
                 // 헤더
@@ -1173,25 +1189,22 @@ struct MyRealTripPromoCard: View {
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
+                    // 자동 표시 끄기
+                    if autoShowRecommendations {
+                        Button {
+                            autoShowRecommendations = false
+                            dismissed = true
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.tertiary)
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
 
-                // 큐레이션 컨텍스트 (첫 도시 + 추천 이유)
+                // 추천 이유 카드 — 도시 + 컨텍스트 이유 강조
                 if let primary = primarySuggestion {
-                    HStack(spacing: 6) {
-                        Text(primary.0.countryFlag)
-                            .font(.subheadline)
-                        Text(Strings.cityName(primary.0.cityKey))
-                            .font(.subheadline.weight(.semibold))
-                        if !primary.1.isEmpty {
-                            Text("·")
-                                .foregroundStyle(.secondary)
-                            Text(Strings.travelReasonLabel(primary.1))
-                                .font(.caption.weight(.medium))
-                                .foregroundStyle(AppTheme.Colors.bonus)
-                        }
-                        Spacer()
-                    }
-                    .padding(.top, 2)
+                    reasonCard(suggestion: primary.0, reasonKey: primary.1)
                 }
 
                 // 본문 — 항공/숙박/투어 3개 섹션 또는 정적 큐레이션 fallback
@@ -1214,7 +1227,10 @@ struct MyRealTripPromoCard: View {
                                     sectionHeader(icon: "airplane", title: Strings.sectionFlight, color: AppTheme.Colors.brand)
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 10) {
-                                            ForEach(flights) { f in MRTFlightCard(flight: f) }
+                                            // 첫 번째 = 가장 저렴 (이미 가격순 정렬됨)
+                                            ForEach(Array(flights.enumerated()), id: \.element.id) { idx, f in
+                                                MRTFlightCard(flight: f, showCheapestBadge: idx == 0)
+                                            }
                                         }
                                     }
                                     .scrollClipDisabled()
@@ -1223,7 +1239,10 @@ struct MyRealTripPromoCard: View {
                                     sectionHeader(icon: "bed.double.fill", title: Strings.sectionAccommodation, color: AppTheme.Colors.success)
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 10) {
-                                            ForEach(accoms) { a in MRTAccommodationCard(item: a) }
+                                            // 첫 번째 = 베스트 평점 (review_desc 정렬)
+                                            ForEach(Array(accoms.enumerated()), id: \.element.id) { idx, a in
+                                                MRTAccommodationCard(item: a, showTopRatedBadge: idx == 0)
+                                            }
                                         }
                                     }
                                     .scrollClipDisabled()
@@ -1232,7 +1251,10 @@ struct MyRealTripPromoCard: View {
                                     sectionHeader(icon: "ticket.fill", title: Strings.sectionTour, color: AppTheme.Colors.bonus)
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 10) {
-                                            ForEach(products) { p in MRTLiveTnaCard(product: p) }
+                                            // 첫 번째 = 베스트셀러 (review_score_desc 정렬)
+                                            ForEach(Array(products.enumerated()), id: \.element.id) { idx, p in
+                                                MRTLiveTnaCard(product: p, showBestsellerBadge: idx == 0)
+                                            }
                                         }
                                     }
                                     .scrollClipDisabled()
@@ -1265,10 +1287,116 @@ struct MyRealTripPromoCard: View {
                     .stroke(AppTheme.Colors.bonus.opacity(0.2), lineWidth: 1)
             )
             .shadow(color: AppTheme.Colors.bonus.opacity(0.10), radius: 8, y: 4)
-            .task(id: primarySuggestion?.0.cityKey) {
+            .task(id: optInTaskKey) {
+                // opt-in 후에만 API 호출
+                guard didOptIn || autoShowRecommendations else { return }
                 await loadLiveProducts()
             }
         }
+    }
+
+    /// task 트리거 키 (opt-in 또는 도시 변경 시 재실행)
+    private var optInTaskKey: String {
+        "\(primarySuggestion?.0.cityKey ?? "")-\(didOptIn || autoShowRecommendations ? "on" : "off")"
+    }
+
+    // MARK: - opt-in prompt 카드 (광고 느낌 제거)
+    private var optInPromptCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 10) {
+                ZStack {
+                    Circle()
+                        .fill(AppTheme.Colors.bonus.opacity(0.15))
+                        .frame(width: 44, height: 44)
+                    Image(systemName: "sparkles")
+                        .font(.title3)
+                        .foregroundStyle(AppTheme.Colors.bonus)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(Strings.mrtOptInTitle)
+                        .font(.subheadline.weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(Strings.mrtOptInSubtitle)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 2)
+                }
+                Spacer(minLength: 0)
+            }
+
+            HStack(spacing: 10) {
+                Button {
+                    AnalyticsService.logMRTOptInDismiss()
+                    dismissed = true
+                } label: {
+                    Text(Strings.mrtOptInDismiss)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(Color(.systemGray6))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    AnalyticsService.logMRTOptInShow()
+                    didOptIn = true
+                    autoShowRecommendations = true  // 다음부터 자동 표시
+                } label: {
+                    Text(Strings.mrtOptInShow)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(
+                            LinearGradient(
+                                colors: [AppTheme.Colors.bonus, AppTheme.Colors.bonus.opacity(0.85)],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(16)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(AppTheme.Colors.bonus.opacity(0.25), lineWidth: 1)
+        )
+    }
+
+    // MARK: - 추천 이유 카드 (도시 + 컨텍스트)
+    @ViewBuilder
+    private func reasonCard(suggestion: TravelSuggestion, reasonKey: String) -> some View {
+        let cityDisplay = Strings.cityName(suggestion.cityKey)
+        let reasonText = reasonKey.isEmpty ? Strings.travelThemeName(suggestion.themeKey)
+                                            : Strings.travelReasonLabel(reasonKey)
+        HStack(spacing: 12) {
+            Text(suggestion.countryFlag)
+                .font(.title2)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(cityDisplay)
+                    .font(.subheadline.weight(.bold))
+                Text(Strings.mrtCityReason(
+                    city: cityDisplay,
+                    season: reasonText,
+                    days: recommendation.totalDaysOff
+                ))
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(10)
+        .background(AppTheme.Colors.bonus.opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     /// 첫 도시 기준으로 마이리얼트립 TNA + 항공권 + 숙박 병렬 호출
@@ -1381,6 +1509,7 @@ extension MyRealTripPromoCard {
 
 struct MRTFlightCard: View {
     let flight: MRTFlightItem
+    var showCheapestBadge: Bool = false   // "가장 저렴" 라벨 (리스트 첫 카드에 부여)
 
     private var dateText: String {
         let f = ISO8601DateFormatter()
@@ -1425,7 +1554,7 @@ struct MRTFlightCard: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
 
-                // 항공사 + 직항 여부
+                // 항공사 + 직항 여부 + 가장 저렴 (이유 라벨)
                 HStack(spacing: 6) {
                     if let airline = flight.airline {
                         Text(airline)
@@ -1437,12 +1566,21 @@ struct MRTFlightCard: View {
                             .clipShape(Capsule())
                     }
                     if let stops = flight.transfer, stops == 0 {
-                        Text("직항")
+                        Text(Strings.mrtFlightReasonDirect)
                             .font(.caption2.weight(.semibold))
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(AppTheme.Colors.success.opacity(0.15))
                             .foregroundStyle(AppTheme.Colors.success)
+                            .clipShape(Capsule())
+                    }
+                    if showCheapestBadge {
+                        Text(Strings.mrtFlightReasonCheapest)
+                            .font(.caption2.weight(.semibold))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(AppTheme.Colors.bonus.opacity(0.15))
+                            .foregroundStyle(AppTheme.Colors.bonus)
                             .clipShape(Capsule())
                     }
                     Spacer(minLength: 0)
@@ -1465,6 +1603,9 @@ struct MRTFlightCard: View {
             )
         }
         .buttonStyle(.plain)
+        .simultaneousGesture(TapGesture().onEnded {
+            AnalyticsService.logMRTCardTap(category: "flight", city: flight.toCity)
+        })
     }
 }
 
@@ -1472,6 +1613,7 @@ struct MRTFlightCard: View {
 
 struct MRTAccommodationCard: View {
     let item: MRTAccommodationItem
+    var showTopRatedBadge: Bool = false   // "베스트 평점" 라벨
 
     private var priceText: String {
         let formatter = NumberFormatter()
@@ -1490,21 +1632,34 @@ struct MRTAccommodationCard: View {
         Link(destination: url) {
             VStack(alignment: .leading, spacing: 0) {
                 // 이미지
-                if let urlStr = item.imageUrl, let imageURL = URL(string: urlStr) {
-                    AsyncImage(url: imageURL) { phase in
-                        switch phase {
-                        case .success(let img): img.resizable().scaledToFill()
-                        case .failure: Rectangle().fill(Color(.systemGray5))
-                        case .empty: Rectangle().fill(Color(.systemGray6)).overlay(ProgressView())
-                        @unknown default: Rectangle().fill(Color(.systemGray6))
+                ZStack(alignment: .topTrailing) {
+                    if let urlStr = item.imageUrl, let imageURL = URL(string: urlStr) {
+                        AsyncImage(url: imageURL) { phase in
+                            switch phase {
+                            case .success(let img): img.resizable().scaledToFill()
+                            case .failure: Rectangle().fill(Color(.systemGray5))
+                            case .empty: Rectangle().fill(Color(.systemGray6)).overlay(ProgressView())
+                            @unknown default: Rectangle().fill(Color(.systemGray6))
+                            }
                         }
-                    }
-                    .frame(width: 200, height: 110)
-                    .clipped()
-                } else {
-                    Rectangle().fill(Color(.systemGray5))
                         .frame(width: 200, height: 110)
-                        .overlay(Image(systemName: "bed.double").foregroundStyle(.secondary))
+                        .clipped()
+                    } else {
+                        Rectangle().fill(Color(.systemGray5))
+                            .frame(width: 200, height: 110)
+                            .overlay(Image(systemName: "bed.double").foregroundStyle(.secondary))
+                    }
+
+                    if showTopRatedBadge {
+                        Text(Strings.mrtAccomReasonTopRated)
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 3)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                            .padding(8)
+                    }
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -1549,6 +1704,9 @@ struct MRTAccommodationCard: View {
             )
         }
         .buttonStyle(.plain)
+        .simultaneousGesture(TapGesture().onEnded {
+            AnalyticsService.logMRTCardTap(category: "stay", city: item.itemName)
+        })
     }
 }
 
@@ -1556,6 +1714,7 @@ struct MRTAccommodationCard: View {
 
 struct MRTLiveTnaCard: View {
     let product: MRTTnaItem
+    var showBestsellerBadge: Bool = false  // "베스트셀러" 라벨
 
     private var url: URL? {
         URL(string: product.productUrl)
@@ -1599,9 +1758,13 @@ struct MRTLiveTnaCard: View {
                             )
                     }
 
-                    // "즉시 확정" 등 태그
-                    if let tags = product.tags, let firstTag = tags.first {
-                        Text(firstTag)
+                    // "베스트셀러" or "즉시 확정" 태그 (이유 라벨)
+                    let displayTag: String? = {
+                        if showBestsellerBadge { return Strings.mrtTourReasonBestseller }
+                        return product.tags?.first
+                    }()
+                    if let tag = displayTag {
+                        Text(tag)
                             .font(.caption2.weight(.semibold))
                             .foregroundStyle(.white)
                             .padding(.horizontal, 6)
@@ -1656,6 +1819,9 @@ struct MRTLiveTnaCard: View {
             )
         }
         .buttonStyle(.plain)
+        .simultaneousGesture(TapGesture().onEnded {
+            AnalyticsService.logMRTCardTap(category: "tour", city: product.itemName)
+        })
     }
 }
 

@@ -2032,6 +2032,17 @@ enum Strings {
         }
     }
 
+    /// 선택한 휴가 유형을 포함한 동적 등록 버튼 라벨
+    /// 예) leaveType=출장 → "출장 등록하기"
+    static func registerLeaveButtonWith(typeName: String) -> String {
+        switch lang {
+        case .korean: return "\(typeName) 등록하기"
+        case .english: return "Register \(typeName)"
+        case .japanese: return "\(typeName)を登録"
+        case .chinese: return "登记\(typeName)"
+        }
+    }
+
     static var recentRecords: String {
         switch lang {
         case .korean: return "최근 등록 내역"
@@ -3290,6 +3301,107 @@ enum Strings {
         case .english: return "Open MyRealTrip"
         case .japanese: return "マイリアルトリップで見る"
         case .chinese: return "在MyRealTrip中查看"
+        }
+    }
+
+    // MARK: - 추천 opt-in
+    static var mrtOptInTitle: String {
+        switch lang {
+        case .korean: return "이 연휴에 해보면 좋을 액티비티들이 있는데\n추천해드릴까요?"
+        case .english: return "We've found some activities for this break.\nShow recommendations?"
+        case .japanese: return "この連休にぴったりのアクティビティがあります。\nおすすめを表示しますか?"
+        case .chinese: return "我们为这个假期找到了一些活动。\n要查看推荐吗?"
+        }
+    }
+
+    static var mrtOptInSubtitle: String {
+        switch lang {
+        case .korean: return "마이리얼트립에서 항공·숙박·투어를 함께 살펴봅니다"
+        case .english: return "Flights, stays, and tours from MyRealTrip"
+        case .japanese: return "マイリアルトリップで航空券・ホテル・ツアーをまとめて確認"
+        case .chinese: return "MyRealTrip上的机票、住宿和旅游产品"
+        }
+    }
+
+    static var mrtOptInShow: String {
+        switch lang {
+        case .korean: return "추천 받기"
+        case .english: return "Show me"
+        case .japanese: return "見てみる"
+        case .chinese: return "查看推荐"
+        }
+    }
+
+    static var mrtOptInDismiss: String {
+        switch lang {
+        case .korean: return "괜찮아요"
+        case .english: return "No thanks"
+        case .japanese: return "結構です"
+        case .chinese: return "不用了"
+        }
+    }
+
+    // MARK: - 추천 이유
+    static func mrtCityReason(city: String, season: String, days: Int) -> String {
+        switch lang {
+        case .korean: return "\(days)일 연휴엔 \(city) — \(season)"
+        case .english: return "\(city) for a \(days)-day break — \(season)"
+        case .japanese: return "\(days)日の連休には\(city) — \(season)"
+        case .chinese: return "\(days)天假期就去\(city) — \(season)"
+        }
+    }
+
+    static var mrtFlightReasonCheapest: String {
+        switch lang {
+        case .korean: return "가장 저렴"
+        case .english: return "Cheapest"
+        case .japanese: return "最安値"
+        case .chinese: return "最便宜"
+        }
+    }
+
+    static var mrtFlightReasonDirect: String {
+        switch lang {
+        case .korean: return "직항"
+        case .english: return "Direct"
+        case .japanese: return "直行"
+        case .chinese: return "直飞"
+        }
+    }
+
+    static var mrtAccomReasonTopRated: String {
+        switch lang {
+        case .korean: return "베스트 평점"
+        case .english: return "Top rated"
+        case .japanese: return "高評価"
+        case .chinese: return "高分推荐"
+        }
+    }
+
+    static var mrtTourReasonBestseller: String {
+        switch lang {
+        case .korean: return "베스트셀러"
+        case .english: return "Bestseller"
+        case .japanese: return "ベストセラー"
+        case .chinese: return "热销"
+        }
+    }
+
+    static var mrtPackageHeader: String {
+        switch lang {
+        case .korean: return "추천 패키지"
+        case .english: return "Suggested package"
+        case .japanese: return "おすすめパッケージ"
+        case .chinese: return "推荐套餐"
+        }
+    }
+
+    static var mrtChangePreference: String {
+        switch lang {
+        case .korean: return "다음부터 자동으로 안 볼래요"
+        case .english: return "Don't show automatically"
+        case .japanese: return "次回から自動表示しない"
+        case .chinese: return "不再自动显示"
         }
     }
 

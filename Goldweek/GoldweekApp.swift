@@ -15,6 +15,9 @@ struct GoldweekApp: App {
     init() {
         AppLogger.shared.info("Goldweek 앱 초기화 시작", category: .app)
 
+        // Firebase Analytics + Crashlytics 초기화 (SDK 미설치 시 no-op)
+        AnalyticsService.configure()
+
         let schema = Schema([
             UserProfile.self,
             LeaveRecord.self,

@@ -133,6 +133,69 @@
 
 ---
 
+## Firebase Analytics + Crashlytics 셋업
+
+`AnalyticsService.swift`는 `#if canImport(FirebaseCore)` 가드로 작성되어, Firebase SDK가 없어도 빌드됩니다. SDK 추가 시 자동 활성화.
+
+### 1. Firebase 콘솔에서 프로젝트 생성
+
+1. [console.firebase.google.com](https://console.firebase.google.com/) → "프로젝트 추가" → 이름: `Goldweek`
+2. Google Analytics 활성화 (Yes)
+3. **iOS 앱 등록**:
+   - Bundle ID: `com.Ysoup.LeaveWise` (Bundle ID 보존 정책)
+   - 닉네임: Goldweek
+4. `GoogleService-Info.plist` 다운로드 → `Goldweek/` 폴더에 추가 (Xcode "Copy items if needed" + Goldweek 메인 타겟만 체크)
+
+### 2. SDK 추가 (Swift Package Manager)
+
+Xcode → File → Add Package Dependencies → `https://github.com/firebase/firebase-ios-sdk`
+
+**필요한 Products** (Goldweek 메인 타겟에만):
+- `FirebaseAnalyticsWithoutAdIdSupport` ⭐ (IDFA 사용 안 함, ATT 모달 안 뜸)
+- `FirebaseCrashlytics`
+
+### 3. Crashlytics build phase 추가 (dSYM 자동 업로드)
+
+Xcode → Goldweek 타겟 → Build Phases → "+" → New Run Script Phase
+
+- 이름: `Crashlytics Upload Symbols`
+- Script:
+  ```bash
+  "${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run"
+  ```
+- Input Files (1번 누르고 추가):
+  ```
+  ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}
+  $(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)
+  ```
+
+### 4. 자동으로 활성화되는 이벤트
+
+`AnalyticsService.swift`가 코드에 이미 통합되어 있어 SDK 추가 후 다음 이벤트 자동 수집:
+
+| 이벤트 | 발생 시점 | 파라미터 |
+|---|---|---|
+| `onboarding_complete` | 온보딩 완료 | country, total_leave |
+| `leave_added` | 휴가 등록 | type, days, is_recommended |
+| `leave_deleted` | 휴가 삭제 | type |
+| `recommendation_added` | 추천 일정 추가 | days, efficiency |
+| `mrt_optin_show` / `mrt_optin_dismiss` | 마이리얼트립 opt-in | - |
+| `mrt_card_tap` | 항공/숙박/투어 카드 탭 | category, city |
+| `paywall_view` | 페이월 진입 | source |
+| `paywall_purchase` | Pro 구매 시도 | success, product_id |
+| `screen_view` | 화면 전환 | (자동) |
+
+크래시는 별도 코드 없이 자동 수집. 비치명적 에러는 `AnalyticsService.recordError()`로 명시 호출 (이미 SwiftData 저장 실패 등에 통합됨).
+
+### 5. 보안 / 개인정보
+
+- `GoogleService-Info.plist`는 **Git에 커밋 OK** (클라이언트용 키만 포함, 노출 안전)
+- IDFA를 안 쓰는 `FirebaseAnalyticsWithoutAdIdSupport` 사용 → ATT 권한 요청 모달 안 뜸
+- 개인정보 처리방침(`SUPPORT.md`)에 분석 SDK 사용 명시 완료
+- App Store Connect → 앱 → 개인정보 처리방침 섹션도 동일하게 업데이트 필요
+
+---
+
 ## 마이리얼트립 MCP를 LLM과 함께 쓰기
 
 Goldweek 사용자가 ChatGPT, Claude Desktop, Claude Code, Cursor 같은 **AI 에이전트**에서 마이리얼트립 MCP를 등록해두면, Goldweek가 추천한 연휴 일정에 맞는 실제 항공권·숙박·투어를 **자연어로 검색**할 수 있습니다.

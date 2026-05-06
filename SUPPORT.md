@@ -113,11 +113,12 @@ Go to **Settings** > **Vacation Style** to adjust your preferred season, duratio
 
 Goldweek respects your privacy.
 
-- **No data collection**: The app does not collect, transmit, or share any personal data.
-- **Local storage only**: All data is stored on your device using SwiftData.
-- **No analytics**: No third-party analytics or tracking SDKs are included.
+- **Local storage**: All your leave records, bonus leave, and preferences are stored on your device using SwiftData. None of this data is sent to our servers.
+- **Anonymous usage analytics**: We use Firebase Analytics (without IDFA / advertising identifier) to understand which features are used and to improve the app. No personally identifiable information (name, email, leave details) is collected.
+- **Crash reports**: Firebase Crashlytics collects anonymous crash logs to help us fix issues quickly.
 - **No account required**: The app works entirely without sign-up or login.
 - **iCloud backup**: Your data may be included in your device's standard iCloud backup if enabled, but is never sent to our servers.
+- **No advertising tracking**: We do not use the IDFA or any advertising identifier. App Tracking Transparency (ATT) prompt is not shown.
 
 ---
 
