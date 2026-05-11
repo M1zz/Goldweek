@@ -452,10 +452,18 @@ struct UpcomingLeaveRow: View {
         Calendar.current.dateComponents([.day], from: Date(), to: leave.startDate).day ?? 0
     }
 
+    /// 노트가 비어있을 때 표시할 제목 — 연차 계열은 "휴가", 그 외(출장·병가·공가 등)는 타입명 그대로 노출
+    private var defaultTitle: String {
+        switch leave.type {
+        case .annual, .half, .quarter: return Strings.vacation
+        default: return Strings.leaveTypeName(leave.type)
+        }
+    }
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(leave.note.isEmpty ? Strings.vacation : leave.note)
+                Text(leave.note.isEmpty ? defaultTitle : leave.note)
                     .font(.subheadline.bold())
 
                 Text("\(leave.startDate.formatted(date: .abbreviated, time: .omitted)) - \(leave.endDate.formatted(date: .abbreviated, time: .omitted))")
@@ -803,10 +811,16 @@ struct BurnoutPaceCard: View {
     }
 
     // MARK: 휴가 텀 (번아웃 지표)
+    /// 쉬어가는 흐름에서 "사무실에서 벗어난 시간"으로 카운트할 레코드.
+    /// 일이긴 하지만 일상 루틴에서 벗어나는 출장도 리프레시 효과가 있어 포함.
+    private func countsAsBreak(_ record: LeaveRecord) -> Bool {
+        record.deductsFromAnnualLeave || record.type == .businessTrip
+    }
+
     private var lastLeaveDate: Date? {
         let today = cal.startOfDay(for: Date())
         return allLeaveRecords.compactMap { record -> Date? in
-            guard record.deductsFromAnnualLeave else { return nil }
+            guard countsAsBreak(record) else { return nil }
             let endDay = cal.startOfDay(for: record.endDate)
             guard endDay <= today else { return nil }
             guard record.status == .used || record.status == .planned else { return nil }
@@ -816,7 +830,7 @@ struct BurnoutPaceCard: View {
     private var nextPlannedLeave: Date? {
         let today = cal.startOfDay(for: Date())
         return allLeaveRecords.compactMap { record -> Date? in
-            guard record.deductsFromAnnualLeave else { return nil }
+            guard countsAsBreak(record) else { return nil }
             let startDay = cal.startOfDay(for: record.startDate)
             guard startDay > today, record.status == .planned else { return nil }
             return record.startDate

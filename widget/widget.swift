@@ -787,8 +787,6 @@ struct LeaveAccessoryView: View {
     @Environment(\.widgetFamily) var family
     var entry: LeaveWidgetEntry
 
-    var gauge: Double { min(max(entry.data.remainingPercentage, 0), 1) }
-
     var body: some View {
         switch family {
         case .accessoryCircular:
@@ -805,73 +803,73 @@ struct LeaveAccessoryView: View {
         }
     }
 
-    // 원형: D-day가 있으면 카운트다운, 없으면 남은 연차
+    // 원형: D-day 숫자가 주인공. 휴가 없으면 남은 연차 일수.
     private var accessoryCircularView: some View {
         Group {
             if entry.data.hasUpcomingLeave {
-                ZStack {
-                    Gauge(value: gauge) {
-                        Image(systemName: "airplane")
-                    }
-                    .gaugeStyle(.accessoryCircularCapacity)
-
-                    VStack(spacing: 0) {
-                        Text("D-")
-                            .font(.system(size: 7, weight: .bold, design: .rounded))
-                        Text("\(entry.data.daysUntilNextLeave == 0 ? "★" : "\(entry.data.daysUntilNextLeave)")")
-                            .font(.system(size: entry.data.daysUntilNextLeave < 10 ? 16 : 13,
-                                          weight: .black, design: .rounded))
-                    }
+                VStack(spacing: -2) {
+                    Text("D-")
+                        .font(.system(size: 10, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.secondary)
+                    Text(entry.data.daysUntilNextLeave == 0 ? "DAY" : "\(entry.data.daysUntilNextLeave)")
+                        .font(.system(size: entry.data.daysUntilNextLeave < 10 ? 28 : 22,
+                                      weight: .black, design: .rounded))
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
                 }
             } else {
-                Gauge(value: gauge) {
-                    Image(systemName: "calendar")
-                } currentValueLabel: {
-                    Text(String(format: "%.0f", entry.data.totalAvailable))
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                VStack(spacing: -2) {
+                    Text("연차")
+                        .font(.system(size: 10, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.secondary)
+                    Text(formatDays(entry.data.totalAvailable))
+                        .font(.system(size: 26, weight: .black, design: .rounded))
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
                 }
-                .gaugeStyle(.accessoryCircularCapacity)
             }
         }
     }
 
-    // 직사각형: D-day + 날짜 + 남은 연차
+    // 직사각형: D-day가 주인공. 그래프 제거, 날짜·남은 연차는 보조 정보로.
     private var accessoryRectangularView: some View {
-        VStack(alignment: .leading, spacing: 3) {
+        HStack(alignment: .center, spacing: 10) {
             if entry.data.hasUpcomingLeave {
-                HStack(spacing: 5) {
-                    Text(entry.data.ddayLabel)
-                        .font(.system(size: 16, weight: .black, design: .rounded))
+                // 좌측: 큼지막한 D-day
+                Text(entry.data.ddayLabel)
+                    .font(.system(size: 26, weight: .black, design: .rounded))
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
+
+                // 우측: 날짜 + 기간 + 남은 연차
+                VStack(alignment: .leading, spacing: 1) {
                     if let nextDate = entry.data.nextLeaveDate {
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text(nextDate, format: .dateTime.month().day())
-                                .font(.system(size: 11, weight: .semibold))
-                            if entry.data.nextLeaveDuration > 1 {
-                                Text("\(entry.data.nextLeaveDuration)일간")
-                                    .font(.system(size: 9))
-                            }
+                        Text(nextDate, format: .dateTime.month().day())
+                            .font(.system(size: 12, weight: .semibold))
+                        if entry.data.nextLeaveDuration > 1 {
+                            Text("\(entry.data.nextLeaveDuration)일간")
+                                .font(.system(size: 10))
+                                .foregroundStyle(.secondary)
                         }
                     }
-                }
-                ProgressView(value: gauge)
-                    .progressViewStyle(.linear)
-                HStack(spacing: 3) {
-                    Image(systemName: "suitcase")
-                        .font(.system(size: 9))
-                    Text("남은 연차 \(formatDays(entry.data.totalAvailable))일")
+                    Text("연차 \(formatDays(entry.data.totalAvailable))일")
                         .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(.secondary)
                 }
             } else {
-                HStack(spacing: 4) {
-                    Image(systemName: "calendar.badge.clock")
-                        .font(.system(size: 12))
+                // 휴가 없을 때: 남은 연차를 크게
+                VStack(alignment: .leading, spacing: 0) {
                     Text("남은 연차")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.secondary)
+                    Text("\(formatDays(entry.data.totalAvailable))일")
+                        .font(.system(size: 24, weight: .black, design: .rounded))
+                        .minimumScaleFactor(0.6)
+                        .lineLimit(1)
+                    Text("휴가 계획을 세워볼까요?")
+                        .font(.system(size: 9))
+                        .foregroundStyle(.secondary)
                 }
-                Text("\(formatDays(entry.data.totalAvailable))일")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
-                ProgressView(value: gauge)
-                    .progressViewStyle(.linear)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

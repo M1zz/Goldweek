@@ -539,6 +539,9 @@ struct SettingsView: View {
             .sheet(item: $editingBonus) { bonus in
                 EditBonusLeaveSheet(bonus: bonus)
             }
+            .sheet(isPresented: $showingPaywall) {
+                PaywallView()
+            }
             .alert(Strings.resetDataTitle, isPresented: $showingResetAlert) {
                 Button(Strings.cancel, role: .cancel) { }
                 Button(Strings.reset, role: .destructive) {

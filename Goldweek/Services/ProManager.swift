@@ -25,12 +25,11 @@ class ProManager {
         Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
     }
 
+    // SwiftUI 옵저베이션을 위해 stored property로 보관하고, didSet으로 UserDefaults 동기화.
+    // computed property로 두면 @Observable이 추적하지 못해 구매 직후 UI가 갱신되지 않음.
     var isPro: Bool {
-        get {
-            isTestFlight || UserDefaults.standard.bool(forKey: "isPro")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "isPro")
+        didSet {
+            UserDefaults.standard.set(isPro, forKey: "isPro")
         }
     }
 
@@ -42,6 +41,10 @@ class ProManager {
     }
 
     private init() {
+        let storedIsPro = UserDefaults.standard.bool(forKey: "isPro")
+        let isTF = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+        self.isPro = storedIsPro || isTF
+
         updateListenerTask = listenForTransactions()
         Task { await loadProducts() }
         Task { await checkEntitlement() }
@@ -137,9 +140,10 @@ class ProManager {
         }
 
         // No valid entitlement found
+        // TestFlight 빌드는 sandbox에서 자동으로 Pro 부여 (init에서 이미 처리)
         await MainActor.run {
-            self.isPro = false
-            self.purchaseState = .notPurchased
+            self.isPro = isTestFlight
+            self.purchaseState = isTestFlight ? .purchased : .notPurchased
         }
     }
 
