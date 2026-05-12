@@ -1505,18 +1505,16 @@ struct MyRealTripPromoCard: View {
 
     private func fetchFlights(depIata: String, arrIata: String?, period: Int) async -> [MRTFlightItem] {
         guard let arrIata = arrIata else { return [] }
-        // 추천 일정의 출발일 ±15일 윈도우로 캘린더 검색
-        let cal = Calendar.current
-        let start = cal.date(byAdding: .day, value: -15, to: recommendation.startDate) ?? recommendation.startDate
-        let end = cal.date(byAdding: .day, value: 15, to: recommendation.startDate) ?? recommendation.startDate
-        let safePeriod = min(7, max(3, period))
+        // 추천일과 정확히 일치하는 항공권만 조회 (±15일 윈도우 → 정확한 출발일 1일).
+        // 사용자 요청: 추천 카드의 날짜와 여행 카드의 항공권 날짜가 딱 맞아야 함.
+        let exactDate = recommendation.startDate
+        let exactPeriod = max(1, period)  // 클램핑 제거 — 추천 일정의 실제 박 수 그대로
         do {
             let items = try await MyRealTripAPIClient.shared.searchFlightCalendar(
-                depCityCd: depIata, arrCityCd: arrIata, period: safePeriod,
-                startDate: start, endDate: end
+                depCityCd: depIata, arrCityCd: arrIata, period: exactPeriod,
+                startDate: exactDate, endDate: exactDate
             )
             print("[MRT] ✅ 항공권 \(items.count)개")
-            // 가격 낮은 순 + 최대 6개
             return Array(items.sorted { $0.totalPrice < $1.totalPrice }.prefix(6))
         } catch {
             print("[MRT] ❌ 항공권: \(error.localizedDescription)")

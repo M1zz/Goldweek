@@ -20,6 +20,10 @@ class HolidayService {
         return f
     }()
 
+    /// (year, country) → 공휴일 기본 세트 캐시.
+    /// 추천 탭에서 카드마다 같은 연도·국가로 6+회 호출되어 스크롤 버벅임의 주요 원인이었음.
+    private var baseHolidaysCache: [String: [Holiday]] = [:]
+
     func dateKey(_ date: Date) -> String {
         holidayDateFormatter.string(from: date)
     }
@@ -28,32 +32,38 @@ class HolidayService {
     func getHolidays(for year: Int, country: Country = .korea,
                      customHolidays: [CustomHoliday] = [],
                      hiddenDates: Set<String> = []) -> [Holiday] {
+        let baseKey = "\(year)-\(country.rawValue)"
         var result: [Holiday]
-        switch country {
-        case .korea:
-            result = getKoreanHolidays(for: year)
-        case .japan:
-            result = getJapaneseHolidays(for: year)
-        case .china:
-            result = getChineseHolidays(for: year)
-        case .usa:
-            result = getUSAHolidays(for: year)
+        if let cached = baseHolidaysCache[baseKey] {
+            result = cached
+        } else {
+            switch country {
+            case .korea:
+                result = getKoreanHolidays(for: year)
+            case .japan:
+                result = getJapaneseHolidays(for: year)
+            case .china:
+                result = getChineseHolidays(for: year)
+            case .usa:
+                result = getUSAHolidays(for: year)
+            }
+            baseHolidaysCache[baseKey] = result
         }
 
-        // 숨김 처리된 기본 공휴일 제거
+        // hiddenDates·customHolidays는 매번 동적이므로 캐시 후 적용
         if !hiddenDates.isEmpty {
             result = result.filter { !hiddenDates.contains(dateKey($0.date)) }
         }
-
-        // 사용자 정의 공휴일 추가
-        let yearCustom = customHolidays.filter {
-            calendar.component(.year, from: $0.date) == year
+        if !customHolidays.isEmpty {
+            let yearCustom = customHolidays.filter {
+                calendar.component(.year, from: $0.date) == year
+            }
+            result.append(contentsOf: yearCustom.map {
+                Holiday(date: $0.date, name: $0.name, isCustom: true)
+            })
+            result.sort { $0.date < $1.date }
         }
-        result.append(contentsOf: yearCustom.map {
-            Holiday(date: $0.date, name: $0.name, isCustom: true)
-        })
-
-        return result.sorted { $0.date < $1.date }
+        return result
     }
 
     // MARK: - 한국 공휴일
