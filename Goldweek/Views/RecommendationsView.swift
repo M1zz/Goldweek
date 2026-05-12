@@ -388,8 +388,38 @@ struct HolidayInfoCard: View {
     let holiday: LeaveRecommendation
     let formatter: DateFormatter
 
+    private let calendar = Calendar.current
+    private let holidayService = HolidayService()
+
+    /// 카드의 시작일~종료일 사이의 모든 날짜
+    var datesInRange: [Date] {
+        var dates: [Date] = []
+        var current = holiday.startDate
+        while current <= holiday.endDate {
+            dates.append(current)
+            current = calendar.date(byAdding: .day, value: 1, to: current)!
+        }
+        return dates
+    }
+
+    /// 해당 연도의 공휴일 (요일 동그라미 색상 판정용)
+    var publicHolidays: [Holiday] {
+        let year = calendar.component(.year, from: holiday.startDate)
+        return holidayService.getHolidays(for: year)
+    }
+
+    /// 추천 카드와 동일한 색상 규칙: 공휴일 우선 → 일/토 → 평일
+    func dayType(for date: Date) -> DayType {
+        let isHoliday = publicHolidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
+        if isHoliday { return .holiday }
+        let weekday = calendar.component(.weekday, from: date)
+        if weekday == 1 { return .sunday }
+        if weekday == 7 { return .saturday }
+        return .workday
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(holiday.title)
                 .font(.subheadline.bold())
                 .lineLimit(2)
@@ -398,6 +428,13 @@ struct HolidayInfoCard: View {
             Text("\(formatter.string(from: holiday.startDate)) – \(formatter.string(from: holiday.endDate))")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+
+            // 요일 동그라미 미리보기 — 추천 카드와 동일한 시각 언어
+            HStack(spacing: 3) {
+                ForEach(Array(datesInRange.prefix(6).enumerated()), id: \.offset) { _, date in
+                    DatePreviewCell(date: date, dayType: dayType(for: date))
+                }
+            }
 
             HStack(spacing: 4) {
                 Image(systemName: "sun.max.fill")
@@ -417,7 +454,7 @@ struct HolidayInfoCard: View {
                 .clipShape(Capsule())
         }
         .padding(12)
-        .frame(width: 148)
+        .frame(width: 200)
         .background(Color.orange.opacity(0.06))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(
