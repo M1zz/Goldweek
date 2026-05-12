@@ -18,6 +18,8 @@ struct RecommendationsView: View {
     @State private var selectedYear: Int
     @State private var isLoading = true
     @State private var addedRecommendations: Set<UUID> = []
+    /// 한 해의 황금연휴 전체 보기 (지난 휴가 포함). 사용자 요청 — 회고용/계획용 양쪽 활용.
+    @State private var showAllYear = false
 
     private let recommendationEngine = RecommendationEngine()
 
@@ -69,6 +71,24 @@ struct RecommendationsView: View {
                         .onChange(of: selectedYear) { _, _ in
                             loadRecommendations()
                         }
+
+                    // 한 해 전체 보기 토글 — 지난 황금연휴까지 회고/계획 양면 활용
+                    Toggle(isOn: $showAllYear) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "calendar.circle")
+                                .foregroundStyle(.blue)
+                            Text(Strings.showAllYearToggle)
+                                .font(.subheadline)
+                        }
+                    }
+                    .toggleStyle(.switch)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color(.secondarySystemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .onChange(of: showAllYear) { _, _ in
+                        loadRecommendations()
+                    }
 
                     // 남은 연차 정보 — records 기반으로 계산
                     RemainingLeaveInfo(available: availableLeave, total: profile.totalAnnualLeave, committed: committedLeave, hasBonus: activeBonusLeave > 0)
@@ -123,12 +143,14 @@ struct RecommendationsView: View {
         // 캐시는 1시간 TTL이지만 동일 입력이면 옛 결과를 그대로 반환할 수 있음.
         recommendationEngine.invalidateCache()
 
+        let includePast = showAllYear
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             recommendations = recommendationEngine.generateRecommendations(
                 for: profile,
                 remainingLeave: remaining,
                 year: selectedYear,
-                country: profile.country
+                country: profile.country,
+                includePast: includePast
             )
             isLoading = false
         }
@@ -1158,11 +1180,9 @@ struct MyRealTripPromoCard: View {
     @State private var liveAccommodations: [MRTAccommodationItem]?  // 숙박
     @State private var isLoading = false
 
-    /// opt-in 상태 — 사용자가 "추천 받기" 누르거나 "자동" 동의 후 true
+    /// 펼침 상태 — 사용자가 "보기" 누르면 true (per-card). 본질은 연차 추천이라 매번 접힌 상태로 시작.
     @State private var didOptIn = false
-    @State private var dismissed = false   // "괜찮아요" 누르면 이번 세션 숨김
-    /// 자동 표시 동의 (영구 저장) — 한 번 동의하면 같은 추천에 다시 묻지 않음
-    @AppStorage("mrtAutoShowRecommendations") private var autoShowRecommendations: Bool = false
+    @State private var dismissed = false   // 이번 세션 숨김 (현재 코드에선 트리거 없음)
 
     private var daysSinceLastLeave: Int? {
         let cal = Calendar.current
@@ -1258,12 +1278,12 @@ struct MyRealTripPromoCard: View {
     var body: some View {
         if suggestions.isEmpty || dismissed {
             EmptyView()
-        } else if !didOptIn && !autoShowRecommendations {
-            // 단계 1: opt-in prompt (광고 느낌 제거)
-            optInPromptCard
+        } else if !didOptIn {
+            // 기본 상태: 접힌 카드 + "보기" 버튼. 본질(연차 추천)을 가리지 않도록.
+            collapsedCard
         } else {
             VStack(alignment: .leading, spacing: 12) {
-                // 헤더
+                // 헤더 — 펼친 상태에선 "접기" 버튼 제공
                 HStack(spacing: 8) {
                     Image(systemName: "airplane.departure")
                         .foregroundStyle(AppTheme.Colors.bonus)
@@ -1275,17 +1295,14 @@ struct MyRealTripPromoCard: View {
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
-                    // 자동 표시 끄기
-                    if autoShowRecommendations {
-                        Button {
-                            autoShowRecommendations = false
-                            dismissed = true
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.tertiary)
-                        }
-                        .buttonStyle(.plain)
+                    Button {
+                        didOptIn = false  // 다시 접음
+                    } label: {
+                        Image(systemName: "chevron.up.circle.fill")
+                            .foregroundStyle(.tertiary)
+                            .font(.title3)
                     }
+                    .buttonStyle(.plain)
                 }
 
                 // 추천 이유 카드 — 도시 + 컨텍스트 이유 강조
@@ -1374,86 +1391,54 @@ struct MyRealTripPromoCard: View {
             )
             .shadow(color: AppTheme.Colors.bonus.opacity(0.10), radius: 8, y: 4)
             .task(id: optInTaskKey) {
-                // opt-in 후에만 API 호출
-                guard didOptIn || autoShowRecommendations else { return }
+                // 펼친 상태에서만 API 호출
+                guard didOptIn else { return }
                 await loadLiveProducts()
             }
         }
     }
 
-    /// task 트리거 키 (opt-in 또는 도시 변경 시 재실행)
+    /// task 트리거 키 — 펼친 상태에서만 API 호출
     private var optInTaskKey: String {
-        "\(primarySuggestion?.0.cityKey ?? "")-\(didOptIn || autoShowRecommendations ? "on" : "off")"
+        "\(primarySuggestion?.0.cityKey ?? "")-\(didOptIn ? "on" : "off")"
     }
 
-    // MARK: - opt-in prompt 카드 (광고 느낌 제거)
-    private var optInPromptCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(spacing: 10) {
-                ZStack {
-                    Circle()
-                        .fill(AppTheme.Colors.bonus.opacity(0.15))
-                        .frame(width: 44, height: 44)
-                    Image(systemName: "sparkles")
-                        .font(.title3)
-                        .foregroundStyle(AppTheme.Colors.bonus)
-                }
+    // MARK: - 접힌 카드 (기본 상태) — 본질은 연차 추천. MRT는 사용자가 원할 때만 펼침.
+    private var collapsedCard: some View {
+        Button {
+            AnalyticsService.logMRTOptInShow()
+            didOptIn = true
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "airplane.departure")
+                    .foregroundStyle(AppTheme.Colors.bonus)
+                    .font(.subheadline)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(Strings.mrtOptInTitle)
+                    Text(Strings.travelSuggestionsHeader)
                         .font(.subheadline.weight(.semibold))
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(Strings.mrtOptInSubtitle)
+                        .foregroundStyle(.primary)
+                    Text("\(dateRangeText) · \(recommendation.totalDaysOff)\(Strings.dayUnitSuffix)")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
-                        .padding(.top, 2)
                 }
-                Spacer(minLength: 0)
+                Spacer()
+                Text(Strings.mrtOptInShow)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 7)
+                    .background(AppTheme.Colors.bonus)
+                    .clipShape(Capsule())
             }
-
-            HStack(spacing: 10) {
-                Button {
-                    AnalyticsService.logMRTOptInDismiss()
-                    dismissed = true
-                } label: {
-                    Text(Strings.mrtOptInDismiss)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                        .background(Color(.systemGray6))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
-                .buttonStyle(.plain)
-
-                Button {
-                    AnalyticsService.logMRTOptInShow()
-                    didOptIn = true
-                    autoShowRecommendations = true  // 다음부터 자동 표시
-                } label: {
-                    Text(Strings.mrtOptInShow)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                        .background(
-                            LinearGradient(
-                                colors: [AppTheme.Colors.bonus, AppTheme.Colors.bonus.opacity(0.85)],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
-                .buttonStyle(.plain)
-            }
+            .padding(12)
+            .background(AppTheme.Colors.bonus.opacity(0.06))
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(AppTheme.Colors.bonus.opacity(0.18), lineWidth: 1)
+            )
         }
-        .padding(16)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .overlay(
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(AppTheme.Colors.bonus.opacity(0.25), lineWidth: 1)
-        )
+        .buttonStyle(.plain)
     }
 
     // MARK: - 추천 이유 카드 (도시 + 컨텍스트)

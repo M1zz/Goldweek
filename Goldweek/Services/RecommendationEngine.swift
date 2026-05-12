@@ -24,13 +24,14 @@ class RecommendationEngine {
         for profile: UserProfile,
         remainingLeave: Double,
         year: Int,
-        country: Country? = nil
+        country: Country? = nil,
+        includePast: Bool = false   // true면 현재 날짜 이전 황금연휴도 함께 노출 (한 해 전체 보기)
     ) -> [LeaveRecommendation] {
         let targetCountry = country ?? profile.country
-        logDebug("추천 생성 시작 - 연도: \(year), 잔여연차: \(remainingLeave), 국가: \(targetCountry.rawValue)", category: .recommendation)
+        logDebug("추천 생성 시작 - 연도: \(year), 잔여연차: \(remainingLeave), 국가: \(targetCountry.rawValue), includePast: \(includePast)", category: .recommendation)
 
-        // 캐시 키 생성
-        let newCacheKey = "\(year)-\(remainingLeave)-\(profile.preferredDurationRaw)-\(profile.preferredSeasonsRaw)-\(profile.preferLongWeekend)-\(profile.avoidPeakSeason)-\(targetCountry.rawValue)"
+        // 캐시 키 생성 — includePast도 키에 포함 (토글하면 캐시 무효화 효과)
+        let newCacheKey = "\(year)-\(remainingLeave)-\(profile.preferredDurationRaw)-\(profile.preferredSeasonsRaw)-\(profile.preferLongWeekend)-\(profile.avoidPeakSeason)-\(targetCountry.rawValue)-past:\(includePast)"
 
         // 캐시 유효성 확인
         if let timestamp = cacheTimestamp,
@@ -76,9 +77,11 @@ class RecommendationEngine {
         // 6. 남은 연차 기준 필터링
         scoredRecommendations = scoredRecommendations.filter { $0.requiredLeaveDays <= remainingLeave }
 
-        // 7. 현재 날짜 이후만
-        let today = Date()
-        scoredRecommendations = scoredRecommendations.filter { $0.startDate > today }
+        // 7. 현재 날짜 이후만 (includePast가 false일 때) — true면 한 해 전체 노출
+        if !includePast {
+            let today = Date()
+            scoredRecommendations = scoredRecommendations.filter { $0.startDate > today }
+        }
 
         // 8. 성수기 회피 필터링 (선호도 설정 반영)
         if profile.avoidPeakSeason {

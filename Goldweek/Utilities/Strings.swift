@@ -4132,6 +4132,16 @@ enum Strings {
         }
     }
 
+    /// 한 해 전체 황금연휴 보기 토글
+    static var showAllYearToggle: String {
+        switch lang {
+        case .korean: return "한 해 전체 보기 (지난 휴가 포함)"
+        case .english: return "Show whole year (include past)"
+        case .japanese: return "1年分すべて表示(過去も含む)"
+        case .chinese: return "查看全年(包含过去)"
+        }
+    }
+
     static var upcomingHolidaysSectionSubtitle: String {
         switch lang {
         case .korean: return "이미 연휴가 있어요. 연차를 추가하면 더 길게 쉴 수 있어요."
