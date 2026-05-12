@@ -53,6 +53,13 @@ struct RecommendationsView: View {
         recommendations.filter { $0.requiredLeaveDays > 0 }
     }
 
+    /// MRT 여행 큐레이션 노출 조건: 한국어 + 한국 거주 + 직장인 (마이리얼트립은 한국 시장 위주)
+    private var showsMRTSuggestions: Bool {
+        LanguageManager.shared.currentLanguage == .korean
+            && profile.country == .korea
+            && profile.userType == .employee
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -85,24 +92,13 @@ struct RecommendationsView: View {
                             UpcomingHolidaysSection(holidays: freeHolidays)
                         }
 
-                        // 연차를 써야 만들 수 있는 추천
+                        // 연차를 써야 만들 수 있는 추천 + 일정별 MRT 여행 큐레이션
                         if !actionableRecommendations.isEmpty {
                             RecommendationList(
                                 recommendations: actionableRecommendations,
                                 addedRecommendations: $addedRecommendations,
-                                onAdd: addLeave
-                            )
-                        }
-
-                        // 마이리얼트립 연계 프로모션
-                        // 노출 조건 (모두 AND): 한국어 사용자 + 한국 거주 + 직장인
-                        // → 한국에서 일하는 사람을 정확히 타겟 (마이리얼트립은 한국 시장 위주)
-                        if LanguageManager.shared.currentLanguage == .korean,
-                           profile.country == .korea,
-                           profile.userType == .employee,
-                           let firstRec = actionableRecommendations.first ?? freeHolidays.first {
-                            MyRealTripPromoCard(
-                                recommendation: firstRec,
+                                onAdd: addLeave,
+                                showsTravelSuggestions: showsMRTSuggestions,
                                 originCountry: profile.country,
                                 allLeaveRecords: allLeaveRecords
                             )
@@ -302,27 +298,43 @@ struct RecommendationList: View {
     let recommendations: [LeaveRecommendation]
     @Binding var addedRecommendations: Set<UUID>
     let onAdd: (LeaveRecommendation) -> Void
+    /// MRT 여행 큐레이션 카드 노출 여부 (한국어 + 한국 거주 + 직장인일 때만)
+    let showsTravelSuggestions: Bool
+    let originCountry: Country
+    let allLeaveRecords: [LeaveRecord]
 
     @State private var showingPaywall = false
     private let proManager = ProManager.shared
     private let freeAddLimit = 3
 
     var body: some View {
-        VStack(spacing: 16) {
+        LazyVStack(spacing: 16) {
             ForEach(Array(recommendations.enumerated()), id: \.element.id) { index, recommendation in
                 let requiresPro = !proManager.isPro && index >= freeAddLimit
-                DetailedRecommendationCard(
-                    recommendation: recommendation,
-                    isAdded: addedRecommendations.contains(recommendation.id),
-                    requiresPro: requiresPro,
-                    onAdd: {
-                        if requiresPro {
-                            showingPaywall = true
-                        } else {
-                            onAdd(recommendation)
+                VStack(spacing: 12) {
+                    DetailedRecommendationCard(
+                        recommendation: recommendation,
+                        isAdded: addedRecommendations.contains(recommendation.id),
+                        requiresPro: requiresPro,
+                        onAdd: {
+                            if requiresPro {
+                                showingPaywall = true
+                            } else {
+                                onAdd(recommendation)
+                            }
                         }
+                    )
+
+                    // 추천 일정마다 여행 큐레이션 카드 부착 (한국 직장인 한정).
+                    // LazyVStack 안이므로 스크롤로 화면에 들어와야만 .task가 발화 → API 호출이 점진적으로 일어남.
+                    if showsTravelSuggestions {
+                        MyRealTripPromoCard(
+                            recommendation: recommendation,
+                            originCountry: originCountry,
+                            allLeaveRecords: allLeaveRecords
+                        )
                     }
-                )
+                }
             }
 
             // Pro 힌트: 무료 사용자이고 추천이 freeAddLimit 초과일 때만
