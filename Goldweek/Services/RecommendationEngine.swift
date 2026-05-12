@@ -174,23 +174,19 @@ class RecommendationEngine {
 
     private func removeDuplicateRecommendations(_ recommendations: [LeaveRecommendation]) -> [LeaveRecommendation] {
         var result: [LeaveRecommendation] = []
-        var seenTitlePatterns: Set<String> = []
 
         let sorted = recommendations.sorted {
             ($0.efficiency + $0.matchScore) > ($1.efficiency + $1.matchScore)
         }
 
         for recommendation in sorted {
-            let titlePattern = extractTitlePattern(recommendation.title)
-            if seenTitlePatterns.contains(titlePattern) {
-                continue
-            }
-
+            // 같은 휴가 기간을 다른 findX 함수가 중복 생성한 경우만 제거 (50% 이상 날짜 겹침).
+            // 0.3은 너무 공격적이어서 인접한 두 휴가(예: 10/3 개천절·10/9 한글날)가 일부 겹치면 하나가 잘리는 문제 발생.
             let hasSignificantOverlap = result.contains { existing in
                 datesOverlapSignificantly(
                     start1: existing.startDate, end1: existing.endDate,
                     start2: recommendation.startDate, end2: recommendation.endDate,
-                    threshold: 0.3
+                    threshold: 0.5
                 )
             }
 
@@ -203,31 +199,15 @@ class RecommendationEngine {
                 calendar.component(.month, from: $0.startDate) == month
             }.count
 
-            if sameMonthCount >= 3 {
+            // 한 달에 최대 5개까지 허용 (3 → 5로 완화: 10월처럼 공휴일 많은 달에 선택지 다양화)
+            if sameMonthCount >= 5 {
                 continue
             }
 
             result.append(recommendation)
-            seenTitlePatterns.insert(titlePattern)
         }
 
         return result
-    }
-
-    private func extractTitlePattern(_ title: String) -> String {
-        let patterns = [
-            Strings.goldenWeek, Strings.bridgeDay, Strings.consecutiveLeave,
-            "황금연휴", "징검다리", "연계 휴가", "봄 여행", "여름 휴가", "가을 단풍", "연말 휴가",
-            "Golden Week", "Bridge", "Extended", "Week Off",
-            "ゴールデンウィーク", "飛び石", "連続休暇",
-            "黄金周", "桥接假"
-        ]
-        for pattern in patterns {
-            if title.contains(pattern) {
-                return pattern
-            }
-        }
-        return title
     }
 
     private func datesOverlapSignificantly(start1: Date, end1: Date, start2: Date, end2: Date, threshold: Double) -> Bool {

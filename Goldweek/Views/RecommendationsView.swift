@@ -123,6 +123,10 @@ struct RecommendationsView: View {
         isLoading = true
         let remaining = availableLeave
 
+        // 추천 로직 업데이트 후 사용자 기기에 캐시가 남아있을 수 있어 강제 무효화.
+        // 캐시는 1시간 TTL이지만 동일 입력이면 옛 결과를 그대로 반환할 수 있음.
+        recommendationEngine.invalidateCache()
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             recommendations = recommendationEngine.generateRecommendations(
                 for: profile,
