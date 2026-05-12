@@ -648,8 +648,7 @@ enum DayType {
     var color: Color {
         switch self {
         case .leave: return .green
-        case .saturday: return .blue.opacity(0.7)
-        case .sunday: return .red.opacity(0.7)
+        case .saturday, .sunday: return .blue.opacity(0.7)  // 범례와 일치: 주말 = 파랑
         case .holiday: return .red.opacity(0.7)
         case .workday: return .gray.opacity(0.5)
         }
@@ -680,7 +679,7 @@ struct DatePreviewCell: View {
         VStack(spacing: 4) {
             Text(weekdayName)
                 .font(.system(size: 10, weight: .medium))
-                .foregroundStyle(dayType == .sunday || dayType == .holiday ? .red : (dayType == .saturday ? .blue : .secondary))
+                .foregroundStyle(dayType == .holiday ? .red : (dayType == .saturday || dayType == .sunday ? .blue : .secondary))
 
             Text("\(dayNumber)")
                 .font(.system(size: 13, weight: .semibold))
