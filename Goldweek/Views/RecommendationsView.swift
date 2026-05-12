@@ -1114,6 +1114,38 @@ enum TravelSuggestionEngine {
     }
 }
 
+// MARK: - 마이리얼트립 결과 캐시
+//
+// LazyVStack 안에 MRT 카드가 N개 있을 때, 사용자가 스크롤 아웃 → 다시 스크롤 인 하면
+// 카드가 새로 생성되어 @State가 리셋되고 .task가 다시 발화 → API 재호출 (이전 호출은 "취소됨")
+// 이게 무한히 반복되며 메인 스레드 부담 + 네트워크 낭비 + 스크롤 버벅임 유발.
+//
+// 결과를 (추천ID + 도시키)로 캐싱해두고, 스크롤 백 시엔 즉시 캐시에서 복원.
+@MainActor
+final class MRTResultCache {
+    static let shared = MRTResultCache()
+    private init() {}
+
+    struct Entry {
+        let tnas: [MRTTnaItem]
+        let flights: [MRTFlightItem]
+        let accommodations: [MRTAccommodationItem]
+        let timestamp: Date
+    }
+
+    private var store: [String: Entry] = [:]
+    private let ttl: TimeInterval = 3600  // 1시간
+
+    func get(key: String) -> Entry? {
+        guard let entry = store[key], Date().timeIntervalSince(entry.timestamp) < ttl else { return nil }
+        return entry
+    }
+
+    func set(key: String, tnas: [MRTTnaItem], flights: [MRTFlightItem], accommodations: [MRTAccommodationItem]) {
+        store[key] = Entry(tnas: tnas, flights: flights, accommodations: accommodations, timestamp: Date())
+    }
+}
+
 // MARK: - 마이리얼트립 연계 프로모션 섹션 (가로 스크롤 큐레이션)
 
 struct MyRealTripPromoCard: View {
@@ -1469,6 +1501,16 @@ struct MyRealTripPromoCard: View {
             liveProducts = []; liveFlights = []; liveAccommodations = []
             return
         }
+
+        // 캐시 우선 — 스크롤 백/앞 반복 시 API 재호출 방지
+        let cacheKey = "\(recommendation.id.uuidString)-\(primary.0.cityKey)"
+        if let cached = MRTResultCache.shared.get(key: cacheKey) {
+            liveProducts = cached.tnas
+            liveFlights = cached.flights
+            liveAccommodations = cached.accommodations
+            return
+        }
+
         let cityName = Self.koreanCityName(for: primary.0.cityKey)
         let cityIata = Self.iataCode(for: primary.0.cityKey)
         let depIata = Self.departureIata(for: originCountry)
@@ -1484,9 +1526,14 @@ struct MyRealTripPromoCard: View {
         async let accomTask = fetchAccommodations(cityName: cityName)
 
         let (tnas, flights, accoms) = await (tnaTask, flightTask, accomTask)
+
+        // Task가 도중에 cancel되면(스크롤 아웃 등) 부분 결과를 캐시하지 않음 — 완료된 경우만 저장
+        guard !Task.isCancelled else { return }
+
         liveProducts = tnas
         liveFlights = flights
         liveAccommodations = accoms
+        MRTResultCache.shared.set(key: cacheKey, tnas: tnas, flights: flights, accommodations: accoms)
     }
 
     private func fetchTnas(cityName: String) async -> [MRTTnaItem] {
@@ -1505,13 +1552,13 @@ struct MyRealTripPromoCard: View {
 
     private func fetchFlights(depIata: String, arrIata: String?, period: Int) async -> [MRTFlightItem] {
         guard let arrIata = arrIata else { return [] }
-        // 추천일과 정확히 일치하는 항공권만 조회 (±15일 윈도우 → 정확한 출발일 1일).
-        // 사용자 요청: 추천 카드의 날짜와 여행 카드의 항공권 날짜가 딱 맞아야 함.
+        // 추천일과 정확히 일치하는 항공권만 조회. startDate=endDate=추천 출발일.
+        // period(박 수)는 MRT API 제한상 1~7로 클램핑 — 8박 이상 추천(예: 9일 추석)도 7박 항공권으로 검색.
         let exactDate = recommendation.startDate
-        let exactPeriod = max(1, period)  // 클램핑 제거 — 추천 일정의 실제 박 수 그대로
+        let safePeriod = min(7, max(1, period))
         do {
             let items = try await MyRealTripAPIClient.shared.searchFlightCalendar(
-                depCityCd: depIata, arrCityCd: arrIata, period: exactPeriod,
+                depCityCd: depIata, arrCityCd: arrIata, period: safePeriod,
                 startDate: exactDate, endDate: exactDate
             )
             print("[MRT] ✅ 항공권 \(items.count)개")
