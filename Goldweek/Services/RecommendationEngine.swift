@@ -180,10 +180,13 @@ class RecommendationEngine {
         }
 
         for recommendation in sorted {
-            // 같은 휴가 기간을 다른 findX 함수가 중복 생성한 경우만 제거 (50% 이상 날짜 겹침).
-            // 0.3은 너무 공격적이어서 인접한 두 휴가(예: 10/3 개천절·10/9 한글날)가 일부 겹치면 하나가 잘리는 문제 발생.
+            // 같은 카테고리(둘 다 무료 또는 둘 다 연차필요) 안에서만 날짜 중복 체크.
+            // 추석 5일 무료 추천과 추석 9일 연차활용 추천은 서로 다른 가치 제안이므로 둘 다 노출.
+            let isFree = recommendation.requiredLeaveDays == 0
             let hasSignificantOverlap = result.contains { existing in
-                datesOverlapSignificantly(
+                let existingIsFree = existing.requiredLeaveDays == 0
+                guard isFree == existingIsFree else { return false }
+                return datesOverlapSignificantly(
                     start1: existing.startDate, end1: existing.endDate,
                     start2: recommendation.startDate, end2: recommendation.endDate,
                     threshold: 0.5

@@ -408,13 +408,13 @@ struct HolidayInfoCard: View {
         return holidayService.getHolidays(for: year)
     }
 
-    /// 추천 카드와 동일한 색상 규칙: 공휴일 우선 → 일/토 → 평일
+    /// 추천 카드와 동일한 색상 규칙: 주말(토/일) 우선 파랑 → 평일 공휴일은 빨강 → 평일
     func dayType(for date: Date) -> DayType {
-        let isHoliday = publicHolidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
-        if isHoliday { return .holiday }
         let weekday = calendar.component(.weekday, from: date)
         if weekday == 1 { return .sunday }
         if weekday == 7 { return .saturday }
+        let isHoliday = publicHolidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
+        if isHoliday { return .holiday }
         return .workday
     }
 
@@ -660,12 +660,14 @@ struct RecommendationDatePreview: View {
         let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
         let isInLeaveRange = date >= startDate && date <= endDate
 
-        if isHoliday {
-            return .holiday
-        } else if weekday == 1 {
+        // 사용자 요청: 토/일은 공휴일과 겹쳐도 항상 파랑 (주말 우선).
+        // 공휴일은 평일에 떨어진 경우에만 빨강으로 표시.
+        if weekday == 1 {
             return .sunday
         } else if weekday == 7 {
             return .saturday
+        } else if isHoliday {
+            return .holiday
         } else if isInLeaveRange {
             return .leave
         } else {
