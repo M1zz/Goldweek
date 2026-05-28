@@ -150,11 +150,13 @@ struct MonthNavigator: View {
                     .font(.title2)
                     .foregroundStyle(.blue)
             }
+            .accessibilityLabel(Text(Strings.previousMonth))
 
             Spacer()
 
             Text(monthYearString)
                 .font(.title2.bold())
+                .voHeader()
 
             Spacer()
 
@@ -163,8 +165,11 @@ struct MonthNavigator: View {
                     .font(.title2)
                     .foregroundStyle(.blue)
             }
+            .accessibilityLabel(Text(Strings.nextMonth))
         }
         .padding(.horizontal)
+        .accessibilityAction(named: Text(Strings.previousMonth), previousMonth)
+        .accessibilityAction(named: Text(Strings.nextMonth), nextMonth)
     }
 
     private func previousMonth() {
@@ -227,19 +232,22 @@ struct CalendarGrid: View {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 8) {
                 ForEach(Array(daysInMonth.enumerated()), id: \.offset) { _, date in
                     if let date = date {
-                        DayCell(
-                            date: date,
-                            isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
-                            isHoliday: isHoliday(date),
-                            isLeave: isLeave(date),
-                            isToday: calendar.isDateInToday(date)
-                        )
-                        .onTapGesture {
+                        Button {
                             selectedDate = date
+                        } label: {
+                            DayCell(
+                                date: date,
+                                isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
+                                isHoliday: isHoliday(date),
+                                isLeave: isLeave(date),
+                                isToday: calendar.isDateInToday(date)
+                            )
                         }
+                        .buttonStyle(.plain)
                     } else {
                         Color.clear
                             .frame(height: 40)
+                            .accessibilityHidden(true)
                     }
                 }
             }
@@ -305,7 +313,7 @@ struct DayCell: View {
             }
 
             Text("\(dayNumber)")
-                .font(.system(size: 14, weight: isToday ? .bold : .regular))
+                .font(.system(.subheadline, weight: isToday ? .bold : .regular))
                 .foregroundStyle(textColor)
 
             if isLeave && !isSelected {
@@ -553,26 +561,26 @@ struct LeaveListRowInteractive: View {
 
     var body: some View {
         ZStack(alignment: .trailing) {
-            HStack(spacing: 0) {
-                Spacer()
-
-                if let onDelete = onDelete {
-                    Button {
-                        onDelete(leave)
-                        withAnimation { offset = 0 }
-                    } label: {
-                        VStack(spacing: 4) {
-                            Image(systemName: "trash.fill")
-                            Text(Strings.delete)
-                                .font(.caption2)
-                        }
-                        .foregroundStyle(.white)
-                        .frame(width: 70, height: 70)
+            // 삭제 버튼: 스와이프 시 우측에서 노출
+            if onDelete != nil {
+                Button {
+                    if let onDelete { onDelete(leave) }
+                    withAnimation { offset = 0 }
+                } label: {
+                    VStack(spacing: 4) {
+                        Image(systemName: "trash.fill")
+                        Text(Strings.delete)
+                            .font(.caption2)
                     }
+                    .foregroundStyle(.white)
+                    .frame(width: 70)
+                    .frame(maxHeight: .infinity)
                     .background(Color.red)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+                .opacity(offset < 0 ? 1 : 0)
+                .accessibilityLabel(Text(Strings.delete))
             }
-            .clipShape(RoundedRectangle(cornerRadius: 12))
 
             LeaveListRow(leave: leave, isUpcoming: isUpcoming)
                 .offset(x: offset)
@@ -602,6 +610,7 @@ struct LeaveListRowInteractive: View {
                     }
                 }
         }
+        .frame(maxWidth: .infinity)
     }
 }
 
@@ -651,7 +660,7 @@ struct LeaveListRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: leave.type.icon)
                 .font(.title3)
                 .foregroundStyle(.white)
@@ -660,7 +669,7 @@ struct LeaveListRow: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
 
             VStack(alignment: .leading, spacing: 4) {
-                HStack {
+                HStack(spacing: 6) {
                     Text(Strings.leaveTypeName(leave.type))
                         .font(.subheadline)
                         .fontWeight(.semibold)
@@ -684,7 +693,7 @@ struct LeaveListRow: View {
                 }
             }
 
-            Spacer()
+            Spacer(minLength: 0)
 
             if let dDay = dDayText {
                 Text(dDay)
@@ -702,6 +711,7 @@ struct LeaveListRow: View {
             }
         }
         .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .opacity(isUpcoming ? 1 : 0.7)

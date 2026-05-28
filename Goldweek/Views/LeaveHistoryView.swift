@@ -343,8 +343,9 @@ struct LeaveHistoryView: View {
             Spacer()
 
             Image(systemName: "calendar.badge.exclamationmark")
-                .font(.system(size: 60))
+                .font(.system(.largeTitle))
                 .foregroundStyle(.secondary)
+                .voDecorative()
 
             Text(Strings.noLeaveRecords)
                 .font(.headline)
@@ -513,8 +514,9 @@ struct HistoryRecordRow: View {
                     .frame(width: 44, height: 44)
 
                 Image(systemName: record.type.icon)
-                    .font(.system(size: 18))
+                    .font(.system(.body))
                     .foregroundStyle(statusColor)
+                    .voDecorative()
             }
 
             // 정보
@@ -734,6 +736,19 @@ struct EditLeaveSheet: View {
                     )
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
+                }
+
+                // 휴가 일정에 맞는 액티비티/여행 추천
+                // .used 상태(과거)면 의미 없으므로 숨김, 보너스/병가/공가 등 비차감 유형도 숨김
+                if leaveStatus == .planned, leaveType.deductsFromAnnual, let profile = profile {
+                    Section {
+                        LeaveActivityRecommendations(
+                            leave: record,
+                            originCountry: profile.country
+                        )
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                    }
                 }
             }
             .navigationTitle(Strings.navTitleEditLeave)

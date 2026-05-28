@@ -31,15 +31,16 @@ struct LaunchScreenView: View {
                         .frame(width: 120, height: 120)
 
                     Image(systemName: "calendar.badge.clock")
-                        .font(.system(size: 50, weight: .medium))
+                        .font(.system(.largeTitle, weight: .medium))
                         .foregroundStyle(.white)
                         .scaleEffect(isAnimating ? 1.0 : 0.8)
                         .opacity(isAnimating ? 1.0 : 0.7)
+                        .voDecorative()
                 }
 
                 // 앱 이름
                 Text(Strings.launchTitle)
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
+                    .font(.system(.largeTitle, design: .rounded, weight: .bold))
                     .foregroundStyle(.white)
 
                 // 슬로건

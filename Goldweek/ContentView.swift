@@ -66,12 +66,12 @@ struct ContentView: View {
     private func createDefaultProfile() {
         let country = Country.fromDeviceLocale()
 
-        // 국가에 따라 언어 설정
+        // 국가에 따라 언어 설정 (DE/FR는 UI 번역 추가 전까지 영문)
         switch country {
         case .korea: AppLanguage.current = .korean
         case .japan: AppLanguage.current = .japanese
         case .china: AppLanguage.current = .chinese
-        case .usa: AppLanguage.current = .english
+        case .usa, .germany, .france: AppLanguage.current = .english
         }
 
         let profile = UserProfile(

@@ -114,6 +114,7 @@ struct LeisureStatusHeader: View {
         }
         .padding()
         .background(Color(.systemGroupedBackground))
+        .voCard(VoiceOverLabel.leaveBalance(total: goalDays, used: usedDays, remaining: max(0, goalDays - usedDays)))
     }
 }
 
@@ -122,6 +123,29 @@ struct LeaveStatusHeader: View {
     let remainingLeave: Double
     let bonusLeave: Double
     let totalAvailable: Double
+
+    private func formatD(_ v: Double) -> String {
+        v == v.rounded() ? "\(Int(v))" : String(format: "%.1f", v)
+    }
+
+    private var voLabel: String {
+        let lang = LanguageManager.shared.currentLanguage
+        if bonusLeave > 0 {
+            switch lang {
+            case .korean: return "\(Strings.basicLeave) \(formatD(remainingLeave))일, \(Strings.bonus) \(formatD(bonusLeave))일, \(Strings.totalAvailable) \(formatD(totalAvailable))일"
+            case .english: return "\(Strings.basicLeave) \(formatD(remainingLeave)) days, \(Strings.bonus) \(formatD(bonusLeave)) days, \(Strings.totalAvailable) \(formatD(totalAvailable)) days"
+            case .japanese: return "\(Strings.basicLeave) \(formatD(remainingLeave))日、\(Strings.bonus) \(formatD(bonusLeave))日、\(Strings.totalAvailable) \(formatD(totalAvailable))日"
+            case .chinese: return "\(Strings.basicLeave) \(formatD(remainingLeave))天，\(Strings.bonus) \(formatD(bonusLeave))天，\(Strings.totalAvailable) \(formatD(totalAvailable))天"
+            }
+        } else {
+            switch lang {
+            case .korean: return "\(Strings.totalAvailable) \(formatD(totalAvailable))일"
+            case .english: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) days"
+            case .japanese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))日"
+            case .chinese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))天"
+            }
+        }
+    }
 
     var body: some View {
         HStack(spacing: 16) {
@@ -181,6 +205,7 @@ struct LeaveStatusHeader: View {
         }
         .padding()
         .background(Color(.systemGroupedBackground))
+        .voCard(voLabel)
     }
 }
 
@@ -358,7 +383,8 @@ struct LeaveRegistrationView: View {
                             } label: {
                                 VStack(spacing: 3) {
                                     Text(type == .quarter ? "¼" : type == .half ? "½" : "1")
-                                        .font(.system(size: 22, weight: .black, design: .rounded))
+                                        .font(.system(.title2, design: .rounded, weight: .black))
+                                        .voDecorative()
                                     Text(Strings.unitLabel(type, isLeisure: isLeisureMode))
                                         .font(.caption)
                                         .fontWeight(.semibold)
@@ -373,6 +399,7 @@ struct LeaveRegistrationView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel(Text("\(Strings.unitLabel(type, isLeisure: isLeisureMode)), \(type == .quarter ? "0.25" : type == .half ? "0.5" : "1")\(Strings.dayUnitSuffix)"))
                             .accessibilityAddTraits(leaveType == type ? .isSelected : [])
                         }
                     }
@@ -397,6 +424,7 @@ struct LeaveRegistrationView: View {
                                     VStack(spacing: 3) {
                                         Image(systemName: type.icon)
                                             .font(.subheadline)
+                                            .voDecorative()
                                         Text(Strings.leaveTypeName(type))
                                             .font(.caption2)
                                             .fontWeight(.semibold)
@@ -408,6 +436,7 @@ struct LeaveRegistrationView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
                                 .buttonStyle(.plain)
+                                .accessibilityLabel(Text(Strings.leaveTypeName(type)))
                                 .accessibilityAddTraits(leaveType == type ? .isSelected : [])
                             }
                         }

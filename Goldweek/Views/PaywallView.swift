@@ -67,8 +67,9 @@ struct PaywallView: View {
                     .frame(width: 120, height: 120)
 
                 Image(systemName: "crown.fill")
-                    .font(.system(size: 48))
+                    .font(.system(.largeTitle))
                     .foregroundStyle(.yellow)
+                    .voDecorative()
             }
             .padding(.top, 8)
 
@@ -160,6 +161,16 @@ struct PaywallView: View {
                     icon: "calendar.badge.plus",
                     iconColor: .green,
                     feature: Strings.systemCalendarSync,
+                    freeValue: .supported(false),
+                    proValue: .supported(true)
+                )
+
+                Divider().padding(.leading, 52)
+
+                FeatureRowView(
+                    icon: "sparkles",
+                    iconColor: AppTheme.Colors.bonus,
+                    feature: Strings.proFeatureAIAnnualPlanner,
                     freeValue: .supported(false),
                     proValue: .supported(true)
                 )
@@ -353,8 +364,9 @@ struct FeatureRowView: View {
                         .fill(iconColor.opacity(0.15))
                         .frame(width: 30, height: 30)
                     Image(systemName: icon)
-                        .font(.system(size: 14))
+                        .font(.system(.subheadline))
                         .foregroundColor(iconColor)
+                        .voDecorative()
                 }
 
                 // Feature name
@@ -383,7 +395,8 @@ struct FeatureRowView: View {
             case .supported(let yes):
                 Image(systemName: yes ? "checkmark.circle.fill" : "xmark.circle.fill")
                     .foregroundColor(yes ? .green : Color(.systemGray4))
-                    .font(.system(size: 18))
+                    .font(.system(.body))
+                    .accessibilityLabel(Text(yes ? "Yes" : "No"))
             case .text(let str):
                 Text(str)
                     .font(.caption2)
@@ -418,10 +431,12 @@ struct ProBannerView: View {
                     if let icon = triggerIcon {
                         Text(icon)
                             .font(.subheadline)
+                            .voDecorative()
                     } else {
                         Image(systemName: "crown.fill")
                             .foregroundColor(.yellow)
                             .font(.subheadline)
+                            .voDecorative()
                     }
                     Text(Strings.upgradeToPro)
                         .font(.subheadline)
@@ -433,6 +448,8 @@ struct ProBannerView: View {
                     .foregroundColor(.secondary)
                     .lineLimit(2)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(Text("\(Strings.upgradeToPro), \(displayMessage)"))
 
             Spacer()
 
@@ -448,6 +465,7 @@ struct ProBannerView: View {
                     .foregroundColor(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             }
+            .accessibilityLabel(Text(Strings.upgradeToPro))
         }
         .padding()
         .background(

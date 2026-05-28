@@ -36,13 +36,33 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
     static var current: AppLanguage {
         get {
-            let raw = UserDefaults.standard.string(forKey: "appLanguage") ?? "ko"
-            return AppLanguage(rawValue: raw) ?? .korean
+            if let raw = UserDefaults.standard.string(forKey: "appLanguage"),
+               let lang = AppLanguage(rawValue: raw) {
+                return lang
+            }
+            return AppLanguage.fromDeviceLocale()
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: "appLanguage")
             LanguageManager.shared.currentLanguage = newValue
         }
+    }
+
+    /// 디바이스 선호 언어 → 지원 언어. 미지원이면 영어.
+    /// `Locale.preferredLanguages`는 사용자 우선순위 순서로 정렬되어 있어
+    /// 첫 번째 일치 항목을 사용한다.
+    static func fromDeviceLocale() -> AppLanguage {
+        for code in Locale.preferredLanguages {
+            let prefix = code.split(separator: "-").first.map(String.init) ?? code
+            switch prefix {
+            case "ko": return .korean
+            case "ja": return .japanese
+            case "zh": return .chinese
+            case "en": return .english
+            default: continue
+            }
+        }
+        return .english
     }
 }
 
@@ -53,8 +73,12 @@ class LanguageManager {
     var currentLanguage: AppLanguage
 
     private init() {
-        let raw = UserDefaults.standard.string(forKey: "appLanguage") ?? "ko"
-        self.currentLanguage = AppLanguage(rawValue: raw) ?? .korean
+        if let raw = UserDefaults.standard.string(forKey: "appLanguage"),
+           let lang = AppLanguage(rawValue: raw) {
+            self.currentLanguage = lang
+        } else {
+            self.currentLanguage = AppLanguage.fromDeviceLocale()
+        }
     }
 }
 
@@ -386,6 +410,153 @@ enum Strings {
         case .english: return "Today"
         case .japanese: return "今日"
         case .chinese: return "今天"
+        }
+    }
+
+    static var previousMonth: String {
+        switch lang {
+        case .korean: return "이전 달"
+        case .english: return "Previous month"
+        case .japanese: return "前の月"
+        case .chinese: return "上个月"
+        }
+    }
+
+    // MARK: - 휴가별 액티비티 추천 (EditLeaveSheet)
+    static var leaveActivityTitle: String {
+        switch lang {
+        case .korean: return "이 휴가에 어울리는 여행 추천"
+        case .english: return "Trips that match this leave"
+        case .japanese: return "この休暇に合う旅行のおすすめ"
+        case .chinese: return "适合此假期的旅行推荐"
+        }
+    }
+
+    static var leaveActivitySubtitle: String {
+        switch lang {
+        case .korean: return "기간·계절·출발 국가 기반 큐레이션"
+        case .english: return "Curated by duration, season, and origin"
+        case .japanese: return "期間・季節・出発国に基づく厳選"
+        case .chinese: return "根据时长、季节和出发国精选"
+        }
+    }
+
+    static var leaveActivityLiveTitle: String {
+        switch lang {
+        case .korean: return "이 날짜로 검색한 실시간 항공·숙박"
+        case .english: return "Live flights & stays for these dates"
+        case .japanese: return "この日付のリアルタイム航空券・宿泊"
+        case .chinese: return "针对这些日期的实时机票和住宿"
+        }
+    }
+
+    static var leaveActivityLoading: String {
+        switch lang {
+        case .korean: return "추천 불러오는 중…"
+        case .english: return "Loading recommendations…"
+        case .japanese: return "おすすめを読み込み中…"
+        case .chinese: return "正在加载推荐…"
+        }
+    }
+
+    // MARK: - Pro 가치 제안 (Paywall 비교표)
+    static var proFeatureAIAnnualPlanner: String {
+        switch lang {
+        case .korean: return "최적 연간 휴가 플래너"
+        case .english: return "Optimal annual planner"
+        case .japanese: return "最適な年間プランナー"
+        case .chinese: return "最佳年度规划"
+        }
+    }
+
+    // MARK: - 최적 연간 휴가 플래너
+    static var optimalPlannerTitle: String {
+        switch lang {
+        case .korean: return "한 해 최적 휴가 플랜"
+        case .english: return "Optimal year plan"
+        case .japanese: return "年間最適プラン"
+        case .chinese: return "全年最佳计划"
+        }
+    }
+
+    static var optimalPlannerSubtitle: String {
+        switch lang {
+        case .korean: return "공휴일·주말을 분석해 가장 긴 연휴 조합을 자동으로 계산"
+        case .english: return "Computes the longest break combinations from holidays & weekends"
+        case .japanese: return "祝日・週末を分析して最長の連休組み合わせを自動算出"
+        case .chinese: return "分析公共假日和周末，自动计算最长假期组合"
+        }
+    }
+
+    static func optimalPlannerSummary(totalDays: Int, breaks: Int, leaveUsed: Int) -> String {
+        switch lang {
+        case .korean: return "연차 \(leaveUsed)일로 총 \(totalDays)일 휴식 (\(breaks)개의 연휴)"
+        case .english: return "\(totalDays) days off with \(leaveUsed) PTO (\(breaks) breaks)"
+        case .japanese: return "有給\(leaveUsed)日で計\(totalDays)日休み（\(breaks)回の連休）"
+        case .chinese: return "用\(leaveUsed)天年假休息\(totalDays)天（\(breaks)次假期）"
+        }
+    }
+
+    static var optimalPlannerEmpty: String {
+        switch lang {
+        case .korean: return "추가 연차를 등록하면 더 긴 연휴를 만들 수 있어요"
+        case .english: return "Register more PTO to unlock longer breaks"
+        case .japanese: return "有給を追加すると、より長い連休が作れます"
+        case .chinese: return "添加更多年假可获得更长假期"
+        }
+    }
+
+    static var optimalPlannerProLockedTitle: String {
+        switch lang {
+        case .korean: return "한 해 휴가를 한 번에 최적 배치"
+        case .english: return "Plan your year in one tap"
+        case .japanese: return "1年の休暇を一度に最適配置"
+        case .chinese: return "一键规划全年假期"
+        }
+    }
+
+    static var optimalPlannerProLockedDesc: String {
+        switch lang {
+        case .korean: return "남은 연차를 모든 공휴일에 최적 배치해 최장 연휴 조합을 찾아드려요"
+        case .english: return "Optimally place your remaining PTO around all public holidays for the longest possible breaks"
+        case .japanese: return "残りの有給を公休に最適配置し、最長の連休を計算"
+        case .chinese: return "将剩余年假最佳分配在所有公假周围,获取最长假期"
+        }
+    }
+
+    static var optimalPlannerCTA: String {
+        switch lang {
+        case .korean: return "Pro로 최적 플랜 보기"
+        case .english: return "Unlock optimal plan with Pro"
+        case .japanese: return "Proで最適プランを見る"
+        case .chinese: return "升级 Pro 查看最佳计划"
+        }
+    }
+
+    static var optimalPlannerApplyAll: String {
+        switch lang {
+        case .korean: return "전부 캘린더에 추가"
+        case .english: return "Add all to calendar"
+        case .japanese: return "すべてカレンダーに追加"
+        case .chinese: return "全部添加到日历"
+        }
+    }
+
+    static func breakLabel(_ totalDays: Int, leaveUsed: Int) -> String {
+        switch lang {
+        case .korean: return "\(totalDays)일 연휴 · 연차 \(leaveUsed)일"
+        case .english: return "\(totalDays)-day break · \(leaveUsed) PTO"
+        case .japanese: return "\(totalDays)日連休・有給\(leaveUsed)日"
+        case .chinese: return "\(totalDays)天假期·\(leaveUsed)天年假"
+        }
+    }
+
+    static var nextMonth: String {
+        switch lang {
+        case .korean: return "다음 달"
+        case .english: return "Next month"
+        case .japanese: return "次の月"
+        case .chinese: return "下个月"
         }
     }
 
@@ -2084,7 +2255,160 @@ enum Strings {
         case .korean: return "저장에 실패했습니다. 다시 시도해주세요."
         case .english: return "Save failed. Please try again."
         case .japanese: return "保存に失敗しました。もう一度お試しください。"
-        case .chinese: return "保存失败，请重试。"
+        case .chinese: return "保存失败,请重试。"
+        }
+    }
+
+    // MARK: - 백업 / 복원 / 데이터 알림
+    static var backupSuccessMessage: String {
+        switch lang {
+        case .korean: return "iCloud에 백업되었습니다."
+        case .english: return "Backed up to iCloud."
+        case .japanese: return "iCloudにバックアップしました。"
+        case .chinese: return "已备份到iCloud。"
+        }
+    }
+
+    static var restoreSuccessMessage: String {
+        switch lang {
+        case .korean: return "복원이 완료되었습니다."
+        case .english: return "Restore completed."
+        case .japanese: return "復元が完了しました。"
+        case .chinese: return "恢复已完成。"
+        }
+    }
+
+    static func saveFailedWithReason(_ reason: String) -> String {
+        switch lang {
+        case .korean: return "저장에 실패했습니다: \(reason)"
+        case .english: return "Save failed: \(reason)"
+        case .japanese: return "保存に失敗しました: \(reason)"
+        case .chinese: return "保存失败: \(reason)"
+        }
+    }
+
+    static func resetFailedWithReason(_ reason: String) -> String {
+        switch lang {
+        case .korean: return "초기화에 실패했습니다: \(reason)"
+        case .english: return "Reset failed: \(reason)"
+        case .japanese: return "リセットに失敗しました: \(reason)"
+        case .chinese: return "重置失败: \(reason)"
+        }
+    }
+
+    static var shareSubject: String {
+        switch lang {
+        case .korean: return "Goldweek - 연차 관리 앱"
+        case .english: return "Goldweek - Annual Leave Management"
+        case .japanese: return "Goldweek - 有給管理アプリ"
+        case .chinese: return "Goldweek - 年假管理应用"
+        }
+    }
+
+    // MARK: - 통화 / 가격 표기
+    /// 정수 금액을 현재 언어 로케일에 맞게 통화 표기로 변환.
+    /// 마이리얼트립 API가 KRW를 반환하므로, 한국어가 아닌 경우에도 KRW로 표기.
+    static func currency(_ amount: Int64) -> String {
+        let nf = NumberFormatter()
+        nf.numberStyle = .decimal
+        nf.locale = Locale(identifier: localeIdentifier)
+        let n = nf.string(from: NSNumber(value: amount)) ?? "\(amount)"
+        switch lang {
+        case .korean: return "\(n)원"
+        case .english: return "₩\(n)"
+        case .japanese: return "₩\(n)"
+        case .chinese: return "₩\(n)"
+        }
+    }
+
+    // MARK: - MRT API 에러
+    static var mrtErrorNotConfigured: String {
+        switch lang {
+        case .korean: return "마이리얼트립 API가 설정되지 않았습니다."
+        case .english: return "MyRealTrip API is not configured."
+        case .japanese: return "MyRealTrip APIが設定されていません。"
+        case .chinese: return "MyRealTrip API未配置。"
+        }
+    }
+
+    static var mrtErrorInvalidURL: String {
+        switch lang {
+        case .korean: return "잘못된 URL입니다."
+        case .english: return "Invalid URL."
+        case .japanese: return "無効なURLです。"
+        case .chinese: return "无效的URL。"
+        }
+    }
+
+    static var mrtErrorBadRequest: String {
+        switch lang {
+        case .korean: return "잘못된 요청입니다."
+        case .english: return "Bad request."
+        case .japanese: return "不正なリクエストです。"
+        case .chinese: return "请求无效。"
+        }
+    }
+
+    static var mrtErrorUnauthorized: String {
+        switch lang {
+        case .korean: return "API 키가 유효하지 않습니다."
+        case .english: return "Invalid API key."
+        case .japanese: return "APIキーが無効です。"
+        case .chinese: return "API密钥无效。"
+        }
+    }
+
+    static var mrtErrorForbidden: String {
+        switch lang {
+        case .korean: return "이 API에 대한 접근 권한이 없습니다."
+        case .english: return "Access denied to this API."
+        case .japanese: return "このAPIへのアクセス権限がありません。"
+        case .chinese: return "无权访问此API。"
+        }
+    }
+
+    static var mrtErrorNotFound: String {
+        switch lang {
+        case .korean: return "엔드포인트를 찾을 수 없습니다."
+        case .english: return "Endpoint not found."
+        case .japanese: return "エンドポイントが見つかりません。"
+        case .chinese: return "未找到端点。"
+        }
+    }
+
+    static var mrtErrorRateLimited: String {
+        switch lang {
+        case .korean: return "요청 한도를 초과했습니다."
+        case .english: return "Request rate limit exceeded."
+        case .japanese: return "リクエスト上限を超えました。"
+        case .chinese: return "请求次数超限。"
+        }
+    }
+
+    static func mrtErrorServerError(_ code: Int) -> String {
+        switch lang {
+        case .korean: return "서버 오류 (\(code))"
+        case .english: return "Server error (\(code))"
+        case .japanese: return "サーバーエラー (\(code))"
+        case .chinese: return "服务器错误 (\(code))"
+        }
+    }
+
+    static var mrtErrorDecoding: String {
+        switch lang {
+        case .korean: return "응답 형식 오류"
+        case .english: return "Invalid response format"
+        case .japanese: return "応答形式エラー"
+        case .chinese: return "响应格式错误"
+        }
+    }
+
+    static var mrtErrorMaxRetries: String {
+        switch lang {
+        case .korean: return "재시도 한도를 초과했습니다."
+        case .english: return "Max retries exceeded."
+        case .japanese: return "再試行上限を超えました。"
+        case .chinese: return "重试次数超限。"
         }
     }
 
@@ -2675,10 +2999,10 @@ enum Strings {
     
     static var shareMessage: String {
         switch lang {
-        case .korean: return "연차 관리가 편해지는 앱! 공휴일을 활용한 최적의 휴가 추천까지 받아보세요 🏖️"
-        case .english: return "The easiest way to manage your annual leave! Get AI-powered vacation recommendations 🏖️"
-        case .japanese: return "有給管理が楽になるアプリ！祝日を活用した最適な休暇をおすすめ 🏖️"
-        case .chinese: return "轻松管理年假！获取利用节假日的最佳休假推荐 🏖️"
+        case .korean: return "연차 수당 받지 말고 진짜로 쉬세요. 알고리즘이 최장 연휴 조합 자동 계산 🏖️"
+        case .english: return "Don't take the cash — take the days. Algorithm finds your longest possible breaks 🏖️"
+        case .japanese: return "有給を現金じゃなく、実際の休みに。アルゴリズムが最長の連休を自動算出 🏖️"
+        case .chinese: return "别拿年假补偿，真正去休假吧。算法自动计算最长假期组合 🏖️"
         }
     }
 
@@ -3770,21 +4094,25 @@ enum Strings {
             switch country {
             case .korea: return "한국"; case .japan: return "일본"
             case .china: return "중국"; case .usa: return "미국"
+            case .germany: return "독일"; case .france: return "프랑스"
             }
         case .english:
             switch country {
             case .korea: return "Korea"; case .japan: return "Japan"
             case .china: return "China"; case .usa: return "USA"
+            case .germany: return "Germany"; case .france: return "France"
             }
         case .japanese:
             switch country {
             case .korea: return "韓国"; case .japan: return "日本"
             case .china: return "中国"; case .usa: return "アメリカ"
+            case .germany: return "ドイツ"; case .france: return "フランス"
             }
         case .chinese:
             switch country {
             case .korea: return "韩国"; case .japan: return "日本"
             case .china: return "中国"; case .usa: return "美国"
+            case .germany: return "德国"; case .france: return "法国"
             }
         }
     }

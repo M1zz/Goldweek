@@ -46,6 +46,10 @@ class HolidayService {
                 result = getChineseHolidays(for: year)
             case .usa:
                 result = getUSAHolidays(for: year)
+            case .germany:
+                result = getGermanyHolidays(for: year)
+            case .france:
+                result = getFranceHolidays(for: year)
             }
             baseHolidaysCache[baseKey] = result
         }
@@ -96,7 +100,8 @@ class HolidayService {
                 (6, 3, [.korean: "대통령선거일", .english: "Presidential Election Day", .japanese: "大統領選挙日", .chinese: "总统选举日"])
             ],
             2026: [
-                (6, 4, [.korean: "지방선거일", .english: "Local Election Day", .japanese: "地方選挙日", .chinese: "地方选举日"])
+                // 9회 전국동시지방선거 — 2026-06-03 (수요일) 임시공휴일
+                (6, 3, [.korean: "지방선거일", .english: "Local Election Day", .japanese: "地方選挙日", .chinese: "地方选举日"])
             ]
         ]
 
@@ -612,6 +617,136 @@ class HolidayService {
         }
 
         return observed
+    }
+
+    // MARK: - 독일 공휴일 (Brückentag 최적화 타깃)
+    // 연방 공휴일(federal)만 포함. 주(Bundesland)별 추가 공휴일(Reformation Day 등)은
+    // 사용자가 CustomHoliday로 추가하도록 의도.
+
+    private func getGermanyHolidays(for year: Int) -> [Holiday] {
+        let lang = AppLanguage.current
+        var holidays: [Holiday] = []
+
+        // 고정 공휴일 (연방 단위)
+        let fixed: [(month: Int, day: Int, names: [AppLanguage: String])] = [
+            (1, 1, [.korean: "신정", .english: "New Year's Day",
+                    .japanese: "元日", .chinese: "元旦"]),
+            (5, 1, [.korean: "노동절", .english: "Labour Day",
+                    .japanese: "メーデー", .chinese: "劳动节"]),
+            (10, 3, [.korean: "독일 통일의 날", .english: "German Unity Day",
+                     .japanese: "ドイツ統一の日", .chinese: "德国统一日"]),
+            (12, 25, [.korean: "크리스마스", .english: "Christmas Day",
+                      .japanese: "クリスマス", .chinese: "圣诞节"]),
+            (12, 26, [.korean: "성 슈테판의 날", .english: "St. Stephen's Day",
+                      .japanese: "聖シュテファンの日", .chinese: "圣斯德望日"])
+        ]
+        for fx in fixed {
+            var c = DateComponents()
+            c.year = year; c.month = fx.month; c.day = fx.day
+            if let d = calendar.date(from: c) {
+                let name = fx.names[lang] ?? fx.names[.english]!
+                holidays.append(Holiday(date: d, name: name))
+            }
+        }
+
+        // 부활절 기반 가변 공휴일
+        guard let easter = Self.easterSunday(year: year, calendar: calendar) else { return holidays.sorted { $0.date < $1.date } }
+        let movableNames: [(offsetDays: Int, names: [AppLanguage: String])] = [
+            (-2, [.korean: "성금요일", .english: "Good Friday",
+                  .japanese: "聖金曜日", .chinese: "耶稣受难日"]),                     // 부활절 -2일 (금)
+            (1,  [.korean: "부활절 월요일", .english: "Easter Monday",
+                  .japanese: "イースターマンデー", .chinese: "复活节星期一"]),         // 부활절 +1일 (월)
+            (39, [.korean: "예수 승천일", .english: "Ascension Day",
+                  .japanese: "キリスト昇天祭", .chinese: "耶稣升天节"]),               // 부활절 +39일 (목)
+            (50, [.korean: "성령강림절 월요일", .english: "Whit Monday",
+                  .japanese: "聖霊降臨祭月曜日", .chinese: "圣灵降临节星期一"])         // 부활절 +50일 (월)
+        ]
+        for mv in movableNames {
+            if let d = calendar.date(byAdding: .day, value: mv.offsetDays, to: easter) {
+                let name = mv.names[lang] ?? mv.names[.english]!
+                holidays.append(Holiday(date: d, name: name))
+            }
+        }
+
+        return holidays.sorted { $0.date < $1.date }
+    }
+
+    // MARK: - 프랑스 공휴일 (Faire le pont 최적화 타깃)
+    private func getFranceHolidays(for year: Int) -> [Holiday] {
+        let lang = AppLanguage.current
+        var holidays: [Holiday] = []
+
+        let fixed: [(month: Int, day: Int, names: [AppLanguage: String])] = [
+            (1, 1, [.korean: "신정", .english: "New Year's Day",
+                    .japanese: "元日", .chinese: "元旦"]),
+            (5, 1, [.korean: "노동절", .english: "Labour Day",
+                    .japanese: "メーデー", .chinese: "劳动节"]),
+            (5, 8, [.korean: "전승기념일", .english: "Victory in Europe Day",
+                    .japanese: "戦勝記念日", .chinese: "胜利日"]),
+            (7, 14, [.korean: "혁명기념일", .english: "Bastille Day",
+                     .japanese: "革命記念日", .chinese: "国庆日"]),
+            (8, 15, [.korean: "성모승천일", .english: "Assumption of Mary",
+                     .japanese: "聖母被昇天祭", .chinese: "圣母升天节"]),
+            (11, 1, [.korean: "만성절", .english: "All Saints' Day",
+                     .japanese: "諸聖人の日", .chinese: "诸圣节"]),
+            (11, 11, [.korean: "휴전기념일", .english: "Armistice Day",
+                      .japanese: "休戦記念日", .chinese: "停战日"]),
+            (12, 25, [.korean: "크리스마스", .english: "Christmas Day",
+                      .japanese: "クリスマス", .chinese: "圣诞节"])
+        ]
+        for fx in fixed {
+            var c = DateComponents()
+            c.year = year; c.month = fx.month; c.day = fx.day
+            if let d = calendar.date(from: c) {
+                let name = fx.names[lang] ?? fx.names[.english]!
+                holidays.append(Holiday(date: d, name: name))
+            }
+        }
+
+        // 부활절 기반 — 프랑스는 부활절 월요일·승천일·성령강림절 월요일이 공휴일
+        guard let easter = Self.easterSunday(year: year, calendar: calendar) else { return holidays.sorted { $0.date < $1.date } }
+        let movableNames: [(offsetDays: Int, names: [AppLanguage: String])] = [
+            (1,  [.korean: "부활절 월요일", .english: "Easter Monday",
+                  .japanese: "イースターマンデー", .chinese: "复活节星期一"]),
+            (39, [.korean: "예수 승천일", .english: "Ascension Day",
+                  .japanese: "キリスト昇天祭", .chinese: "耶稣升天节"]),
+            (50, [.korean: "성령강림절 월요일", .english: "Whit Monday",
+                  .japanese: "聖霊降臨祭月曜日", .chinese: "圣灵降临节星期一"])
+        ]
+        for mv in movableNames {
+            if let d = calendar.date(byAdding: .day, value: mv.offsetDays, to: easter) {
+                let name = mv.names[lang] ?? mv.names[.english]!
+                holidays.append(Holiday(date: d, name: name))
+            }
+        }
+
+        return holidays.sorted { $0.date < $1.date }
+    }
+
+    // MARK: - 부활절 계산 (Meeus/Jones/Butcher 알고리즘)
+    // 그레고리안 부활절 (서방 교회) — 독일/프랑스 모두 이 날짜 사용
+
+    private static func easterSunday(year: Int, calendar: Calendar) -> Date? {
+        let a = year % 19
+        let b = year / 100
+        let c = year % 100
+        let d = b / 4
+        let e = b % 4
+        let f = (b + 8) / 25
+        let g = (b - f + 1) / 3
+        let h = (19 * a + b - d - g + 15) % 30
+        let i = c / 4
+        let k = c % 4
+        let l = (32 + 2 * e + 2 * i - h - k) % 7
+        let m = (a + 11 * h + 22 * l) / 451
+        let month = (h + l - 7 * m + 114) / 31
+        let day = ((h + l - 7 * m + 114) % 31) + 1
+
+        var comp = DateComponents()
+        comp.year = year
+        comp.month = month
+        comp.day = day
+        return calendar.date(from: comp)
     }
 
     // MARK: - 유틸리티

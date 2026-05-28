@@ -47,7 +47,15 @@ class ProManager {
 
         updateListenerTask = listenForTransactions()
         Task { await loadProducts() }
+        // DEBUG에서는 UserDefaults에 isPro가 명시적으로 set 되어 있으면 StoreKit 검증을 skip
+        // (시뮬레이터에서 Pro 화면 테스트하기 위함)
+        #if DEBUG
+        if !storedIsPro {
+            Task { await checkEntitlement() }
+        }
+        #else
         Task { await checkEntitlement() }
+        #endif
     }
 
     deinit {
@@ -141,9 +149,15 @@ class ProManager {
 
         // No valid entitlement found
         // TestFlight 빌드는 sandbox에서 자동으로 Pro 부여 (init에서 이미 처리)
+        // DEBUG 빌드는 UserDefaults에 저장된 값 존중 (시뮬레이터 테스트용)
         await MainActor.run {
+            #if DEBUG
+            let storedIsPro = UserDefaults.standard.bool(forKey: "isPro")
+            self.isPro = storedIsPro || isTestFlight
+            #else
             self.isPro = isTestFlight
-            self.purchaseState = isTestFlight ? .purchased : .notPurchased
+            #endif
+            self.purchaseState = self.isPro ? .purchased : .notPurchased
         }
     }
 

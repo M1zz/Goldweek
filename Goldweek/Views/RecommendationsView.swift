@@ -93,6 +93,14 @@ struct RecommendationsView: View {
                     // 남은 연차 정보 — records 기반으로 계산
                     RemainingLeaveInfo(available: availableLeave, total: profile.totalAnnualLeave, committed: committedLeave, hasBonus: activeBonusLeave > 0)
 
+                    // 최적 연간 휴가 플래너 (Pro 기능 — 알고리즘 기반)
+                    OptimalLeavePlannerCard(
+                        profile: profile,
+                        year: selectedYear,
+                        availableLeaveDays: Int(availableLeave),
+                        existingLeaveRecords: allLeaveRecords
+                    )
+
                     // 추천 일정 미리보기 달력
                     if !recommendations.isEmpty && !isLoading {
                         RecommendationCalendarPreview(
@@ -195,9 +203,9 @@ struct YearPicker: View {
 
     var body: some View {
         HStack {
-            Button(action: { 
+            Button(action: {
                 if proManager.isPro || selectedYear > currentYear {
-                    selectedYear -= 1 
+                    selectedYear -= 1
                 } else {
                     showingPaywall = true
                 }
@@ -207,30 +215,33 @@ struct YearPicker: View {
                     .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
             .disabled(selectedYear <= currentYear && proManager.isPro)
+            .accessibilityLabel(Text(Strings.previousMonth))
 
             Spacer()
 
             VStack(spacing: 4) {
                 Text(Strings.yearRecommendation(year: selectedYear))
                     .font(.title2.bold())
-                
+
                 if !proManager.isPro && selectedYear != currentYear {
                     HStack(spacing: 4) {
                         Image(systemName: "crown.fill")
                             .font(.caption2)
                             .foregroundColor(.yellow)
+                            .voDecorative()
                         Text(Strings.currentYearOnly)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
             }
+            .voHeader()
 
             Spacer()
 
-            Button(action: { 
+            Button(action: {
                 if proManager.isPro {
-                    selectedYear += 1 
+                    selectedYear += 1
                 } else {
                     showingPaywall = true
                 }
@@ -240,6 +251,7 @@ struct YearPicker: View {
                     .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
             .disabled(selectedYear >= currentYear + 1 && proManager.isPro)
+            .accessibilityLabel(Text(Strings.nextMonth))
         }
         .padding(.horizontal)
         .sheet(isPresented: $showingPaywall) {
@@ -264,7 +276,7 @@ struct RemainingLeaveInfo: View {
 
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text("\(String(format: "%.1f", available))")
-                        .font(.system(size: 36, weight: .bold))
+                        .font(.system(.largeTitle, weight: .bold))
                         .foregroundStyle(hasBonus ? AppTheme.Colors.bonus : .green)
                     Text(Strings.dayUnitSuffix)
                         .font(.title3)
@@ -505,11 +517,29 @@ struct DetailedRecommendationCard: View {
     var requiresPro: Bool = false
     let onAdd: () -> Void
 
+    private var dateRangeText: String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: Strings.localeIdentifier)
+        f.dateStyle = .medium
+        return "\(f.string(from: recommendation.startDate)) - \(f.string(from: recommendation.endDate))"
+    }
+
+    private var summaryLabel: String {
+        VoiceOverLabel.recommendation(
+            dateRange: dateRangeText,
+            totalDays: recommendation.totalDaysOff,
+            leavesNeeded: Int(recommendation.requiredLeaveDays),
+            score: nil
+        )
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("🎯 \(recommendation.title)")
                     .font(.headline)
+                    .accessibilityLabel(Text(recommendation.title))
+                    .voHeader()
 
                 Spacer()
 
@@ -518,6 +548,7 @@ struct DetailedRecommendationCard: View {
                         Image(systemName: "crown.fill")
                             .font(.caption2)
                             .foregroundStyle(.yellow)
+                            .voDecorative()
                         Text("Pro")
                             .font(.caption2.bold())
                             .foregroundStyle(.secondary)
@@ -526,6 +557,8 @@ struct DetailedRecommendationCard: View {
                     .padding(.vertical, 4)
                     .background(Color.yellow.opacity(0.12))
                     .clipShape(Capsule())
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(Text("Pro"))
                 } else {
                     VStack(alignment: .trailing) {
                         Text(Strings.efficiency)
@@ -534,6 +567,8 @@ struct DetailedRecommendationCard: View {
                         Text(recommendation.efficiencyStars)
                             .font(.caption)
                     }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(Text("\(Strings.efficiency) \(recommendation.efficiencyStars)"))
                 }
             }
 
@@ -590,10 +625,12 @@ struct DetailedRecommendationCard: View {
                     if requiresPro {
                         Image(systemName: "crown.fill")
                             .foregroundStyle(.yellow)
+                            .voDecorative()
                         Text(Strings.addWithPro)
                             .fontWeight(.semibold)
                     } else {
                         Image(systemName: isAdded ? "checkmark.circle.fill" : "plus.circle.fill")
+                            .voDecorative()
                         Text(isAdded ? Strings.addedToScheduleAction : Strings.addToScheduleAction)
                             .fontWeight(.semibold)
                     }
@@ -605,11 +642,14 @@ struct DetailedRecommendationCard: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             .disabled(isAdded && !requiresPro)
+            .accessibilityLabel(Text(requiresPro ? Strings.addWithPro : (isAdded ? Strings.addedToScheduleAction : Strings.addToScheduleAction)))
         }
         .padding()
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text("\(recommendation.title), \(summaryLabel)"))
     }
 }
 
@@ -682,7 +722,7 @@ struct RecommendationDatePreview: View {
                 MiniLegend(color: .red.opacity(0.7), text: Strings.holiday)
                 MiniLegend(color: .blue.opacity(0.7), text: Strings.weekend)
             }
-            .font(.system(size: 10))
+            .font(.caption2)
         }
         .padding(12)
         .background(Color(.secondarySystemBackground))
@@ -751,11 +791,11 @@ struct DatePreviewCell: View {
     var body: some View {
         VStack(spacing: 4) {
             Text(weekdayName)
-                .font(.system(size: 10, weight: .medium))
+                .font(.system(.caption2, weight: .medium))
                 .foregroundStyle(dayType == .holiday ? .red : (dayType == .saturday || dayType == .sunday ? .blue : .secondary))
 
             Text("\(dayNumber)")
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(.footnote, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 28, height: 28)
                 .background(dayType.color)
@@ -785,8 +825,9 @@ struct EmptyRecommendationView: View {
     var body: some View {
         VStack(spacing: 16) {
             Image(systemName: "calendar.badge.exclamationmark")
-                .font(.system(size: 60))
+                .font(.system(.largeTitle))
                 .foregroundStyle(.secondary)
+                .voDecorative()
 
             Text(Strings.noRecommendations)
                 .font(.headline)
@@ -1266,6 +1307,8 @@ struct MyRealTripPromoCard: View {
         case .japan: return "NRT"   // 나리타
         case .china: return "PEK"   // 베이징
         case .usa: return "LAX"     // LA
+        case .germany: return "FRA" // 프랑크푸르트
+        case .france: return "CDG"  // 파리 샤를드골
         }
     }
 
@@ -1598,7 +1641,9 @@ struct MRTFlightCard: View {
     private var dateText: String {
         let f = ISO8601DateFormatter()
         f.formatOptions = [.withFullDate]
-        let out = DateFormatter(); out.dateFormat = "M/d (E)"; out.locale = Locale(identifier: "ko_KR")
+        let out = DateFormatter()
+        out.dateFormat = "M/d (E)"
+        out.locale = Locale(identifier: Strings.localeIdentifier)
         guard let dep = f.date(from: flight.departureDate) else { return flight.departureDate }
         if let retStr = flight.returnDate, let ret = f.date(from: retStr) {
             return "\(out.string(from: dep)) → \(out.string(from: ret))"
@@ -1607,10 +1652,7 @@ struct MRTFlightCard: View {
     }
 
     private var priceText: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        let n = formatter.string(from: NSNumber(value: flight.totalPrice)) ?? "\(flight.totalPrice)"
-        return "\(n)원"
+        Strings.currency(flight.totalPrice)
     }
 
     private var url: URL {
@@ -1627,6 +1669,7 @@ struct MRTFlightCard: View {
                     Image(systemName: "airplane")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                        .voDecorative()
                     Text(flight.toCity)
                         .font(.headline.weight(.bold))
                     Spacer(minLength: 0)
@@ -1690,6 +1733,18 @@ struct MRTFlightCard: View {
         .simultaneousGesture(TapGesture().onEnded {
             AnalyticsService.logMRTCardTap(category: "flight", city: flight.toCity)
         })
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(
+            VoiceOverLabel.flight(
+                origin: flight.fromCity,
+                destination: flight.toCity,
+                dateRange: dateText,
+                airline: flight.airline,
+                direct: flight.transfer == 0,
+                priceText: priceText
+            ) + (showCheapestBadge ? ", \(Strings.mrtFlightReasonCheapest)" : "")
+        ))
+        .accessibilityAddTraits(.isLink)
     }
 }
 
@@ -1700,10 +1755,7 @@ struct MRTAccommodationCard: View {
     var showTopRatedBadge: Bool = false   // "베스트 평점" 라벨
 
     private var priceText: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        let n = formatter.string(from: NSNumber(value: item.salePrice)) ?? "\(item.salePrice)"
-        return "\(n)원"
+        Strings.currency(item.salePrice)
     }
 
     private var url: URL {
@@ -1791,6 +1843,15 @@ struct MRTAccommodationCard: View {
         .simultaneousGesture(TapGesture().onEnded {
             AnalyticsService.logMRTCardTap(category: "stay", city: item.itemName)
         })
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(
+            VoiceOverLabel.accommodation(
+                name: item.itemName,
+                rating: item.reviewScore.flatMap { Double($0) },
+                priceText: priceText
+            ) + (showTopRatedBadge ? ", \(Strings.mrtAccomReasonTopRated)" : "")
+        ))
+        .accessibilityAddTraits(.isLink)
     }
 }
 
@@ -1805,7 +1866,7 @@ struct MRTLiveTnaCard: View {
     }
 
     private var displayPrice: String {
-        product.priceDisplay ?? "\(product.salePrice)원"
+        product.priceDisplay ?? Strings.currency(product.salePrice)
     }
 
     var body: some View {
@@ -1906,6 +1967,15 @@ struct MRTLiveTnaCard: View {
         .simultaneousGesture(TapGesture().onEnded {
             AnalyticsService.logMRTCardTap(category: "tour", city: product.itemName)
         })
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(
+            VoiceOverLabel.accommodation(
+                name: product.itemName,
+                rating: product.reviewScore,
+                priceText: displayPrice
+            ) + (showBestsellerBadge ? ", \(Strings.mrtTourReasonBestseller)" : "")
+        ))
+        .accessibilityAddTraits(.isLink)
     }
 }
 
@@ -1975,9 +2045,10 @@ struct TravelSuggestionCard: View {
 
                     // 좌측 상단: 큰 국기
                     Text(suggestion.countryFlag)
-                        .font(.system(size: 36))
+                        .font(.system(.largeTitle))
                         .padding(.leading, 12)
                         .padding(.top, 10)
+                        .voDecorative()
                 }
                 .clipShape(.rect(topLeadingRadius: 14, topTrailingRadius: 14))
 
@@ -2035,6 +2106,450 @@ struct TravelSuggestionCard: View {
             )
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - 사용자 휴가 기반 액티비티 추천
+// EditLeaveSheet에서 사용. 등록된 LeaveRecord의 날짜·기간·사용자 국가를 기반으로
+// TravelSuggestionEngine으로 도시 후보를 뽑고, MRT 라이브 항공/숙박을 추가로 보여준다.
+// MRT 노출은 무료 — 어필리에이트 수익 채널이라 Pro 게이트 두지 않음.
+
+struct LeaveActivityRecommendations: View {
+    let leave: LeaveRecord
+    let originCountry: Country
+
+    @State private var liveFlights: [MRTFlightItem]?
+    @State private var liveAccommodations: [MRTAccommodationItem]?
+    @State private var isLoading = false
+
+    private var totalDaysOff: Int {
+        let cal = Calendar.current
+        let days = cal.dateComponents([.day], from: leave.startDate, to: leave.endDate).day ?? 0
+        return max(1, days + 1)
+    }
+
+    /// TravelSuggestionEngine이 LeaveRecommendation을 요구하므로 LeaveRecord에서 합성
+    private var syntheticRecommendation: LeaveRecommendation {
+        LeaveRecommendation(
+            title: leave.note.isEmpty ? Strings.leaveActivityTitle : leave.note,
+            description: "",
+            startDate: leave.startDate,
+            endDate: leave.endDate,
+            requiredLeaveDays: leave.effectiveLeaveDays,
+            totalDaysOff: totalDaysOff
+        )
+    }
+
+    private var suggestions: [(TravelSuggestion, String)] {
+        TravelSuggestionEngine.suggest(
+            for: syntheticRecommendation,
+            originCountry: originCountry,
+            daysSinceLastLeave: nil,
+            limit: 6
+        )
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: "sparkles")
+                    .foregroundStyle(AppTheme.Colors.bonus)
+                    .voDecorative()
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(Strings.leaveActivityTitle)
+                        .font(.subheadline.weight(.semibold))
+                    Text(Strings.leaveActivitySubtitle)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+
+            if suggestions.isEmpty {
+                Text(Strings.noRecommendations)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(Array(suggestions.enumerated()), id: \.element.0.id) { _, entry in
+                            TravelSuggestionCard(
+                                suggestion: entry.0,
+                                reasonKey: entry.1,
+                                recommendation: syntheticRecommendation
+                            )
+                        }
+                    }
+                    .padding(.vertical, 2)
+                }
+            }
+
+            liveSection
+        }
+        .padding(14)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color(.systemGray5), lineWidth: 1)
+        )
+        .task {
+            await loadLive()
+        }
+    }
+
+    @ViewBuilder
+    private var liveSection: some View {
+        if isLoading {
+            HStack(spacing: 6) {
+                ProgressView().scaleEffect(0.7)
+                Text(Strings.leaveActivityLoading)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+        } else if (liveFlights?.isEmpty == false) || (liveAccommodations?.isEmpty == false) {
+            Divider().padding(.vertical, 4)
+            Text(Strings.leaveActivityLiveTitle)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    if let flights = liveFlights, !flights.isEmpty {
+                        ForEach(Array(flights.prefix(3))) { f in
+                            MRTFlightCard(flight: f, showCheapestBadge: f.id == flights.first?.id)
+                        }
+                    }
+                    if let stays = liveAccommodations, !stays.isEmpty {
+                        ForEach(Array(stays.prefix(3))) { s in
+                            MRTAccommodationCard(item: s, showTopRatedBadge: s.itemId == stays.first?.itemId)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func loadLive() async {
+        // 비-한국어 사용자 또는 API 키 미설정 시 라이브 결과 노출 안 함 (MRT 한국 시장 한정)
+        guard LanguageManager.shared.currentLanguage == .korean,
+              MRTConfig.apiKey != nil,
+              let primary = suggestions.first?.0 else {
+            return
+        }
+        isLoading = true
+        defer { isLoading = false }
+
+        let cityName = MyRealTripPromoCard.koreanCityName(for: primary.cityKey)
+        let cityIata = MyRealTripPromoCard.iataCode(for: primary.cityKey)
+        let depIata = MyRealTripPromoCard.departureIata(for: originCountry)
+        let nights = max(1, totalDaysOff - 1)
+
+        async let flightTask = fetchFlights(depIata: depIata, arrIata: cityIata, period: nights)
+        async let accomTask = fetchAccommodations(cityName: cityName)
+        let (flights, accoms) = await (flightTask, accomTask)
+
+        guard !Task.isCancelled else { return }
+        liveFlights = flights
+        liveAccommodations = accoms
+    }
+
+    private func fetchFlights(depIata: String, arrIata: String?, period: Int) async -> [MRTFlightItem] {
+        guard let arrIata = arrIata else { return [] }
+        let safePeriod = min(7, max(1, period))
+        do {
+            let items = try await MyRealTripAPIClient.shared.searchFlightCalendar(
+                depCityCd: depIata, arrCityCd: arrIata, period: safePeriod,
+                startDate: leave.startDate, endDate: leave.startDate
+            )
+            return Array(items.sorted { $0.totalPrice < $1.totalPrice }.prefix(4))
+        } catch {
+            return []
+        }
+    }
+
+    private func fetchAccommodations(cityName: String) async -> [MRTAccommodationItem] {
+        do {
+            let r = try await MyRealTripAPIClient.shared.searchAccommodations(
+                keyword: cityName,
+                checkIn: leave.startDate,
+                checkOut: leave.endDate,
+                size: 4
+            )
+            return r.items
+        } catch {
+            return []
+        }
+    }
+}
+
+// MARK: - 최적 연간 휴가 플래너 (Pro 기능)
+// LeavePlanner 알고리즘으로 1년치 최적 연차 배치를 계산해 보여준다.
+// Free: 락된 미리보기 + Pro CTA. Pro: 전체 결과 + 일괄 등록.
+
+struct OptimalLeavePlannerCard: View {
+    @Bindable var profile: UserProfile
+    let year: Int
+    let availableLeaveDays: Int
+    let existingLeaveRecords: [LeaveRecord]
+
+    @Environment(\.modelContext) private var modelContext
+    @State private var plan: OptimalLeavePlan?
+    @State private var isComputing = false
+    @State private var showingPaywall = false
+    @State private var didBatchAdd = false
+
+    private var proManager: ProManager { ProManager.shared }
+
+    private let holidayService = HolidayService()
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: "wand.and.stars")
+                    .foregroundStyle(AppTheme.Colors.bonus)
+                    .voDecorative()
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(Strings.optimalPlannerTitle)
+                        .font(.subheadline.weight(.semibold))
+                    Text(Strings.optimalPlannerSubtitle)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+
+            if !proManager.isPro {
+                proLockedView
+            } else if availableLeaveDays <= 0 {
+                Text(Strings.optimalPlannerEmpty)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            } else if isComputing {
+                HStack(spacing: 6) {
+                    ProgressView().scaleEffect(0.7)
+                    Text(Strings.leaveActivityLoading)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+            } else if let plan = plan {
+                planResultView(plan: plan)
+            }
+        }
+        .padding(14)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(AppTheme.Colors.bonus.opacity(0.25), lineWidth: 1)
+        )
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+        }
+        .task(id: "\(year)-\(availableLeaveDays)") {
+            await computeIfPro()
+        }
+    }
+
+    @ViewBuilder
+    private var proLockedView: some View {
+        Button {
+            AnalyticsService.logPaywallView(source: "optimal_planner")
+            showingPaywall = true
+        } label: {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 6) {
+                    Image(systemName: "crown.fill")
+                        .font(.caption)
+                        .foregroundStyle(.yellow)
+                        .voDecorative()
+                    Text(Strings.optimalPlannerProLockedTitle)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.primary)
+                }
+                Text(Strings.optimalPlannerProLockedDesc)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 4) {
+                    Text(Strings.optimalPlannerCTA)
+                        .font(.caption.weight(.semibold))
+                    Image(systemName: "arrow.right")
+                        .font(.caption2.weight(.bold))
+                        .voDecorative()
+                }
+                .foregroundStyle(AppTheme.Colors.brand)
+                .padding(.top, 2)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(12)
+            .background(AppTheme.Colors.bonus.opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private func planResultView(plan: OptimalLeavePlan) -> some View {
+        if plan.breaks.isEmpty {
+            Text(Strings.optimalPlannerEmpty)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        } else {
+            VStack(alignment: .leading, spacing: 10) {
+                // 요약
+                Text(Strings.optimalPlannerSummary(
+                    totalDays: plan.totalDaysOff,
+                    breaks: plan.breaks.count,
+                    leaveUsed: plan.leaveDaysUsed
+                ))
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(AppTheme.Colors.brand)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(10)
+                .background(AppTheme.Colors.brand.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                // 연휴 리스트
+                ForEach(plan.breaks) { brk in
+                    breakRow(brk: brk)
+                }
+
+                // 일괄 등록 버튼
+                Button {
+                    batchAdd(plan: plan)
+                } label: {
+                    HStack {
+                        Spacer()
+                        if didBatchAdd {
+                            Image(systemName: "checkmark.circle.fill")
+                                .voDecorative()
+                        } else {
+                            Image(systemName: "plus.circle.fill")
+                                .voDecorative()
+                        }
+                        Text(Strings.optimalPlannerApplyAll)
+                            .fontWeight(.semibold)
+                        Spacer()
+                    }
+                    .font(.subheadline)
+                    .padding(.vertical, 10)
+                    .background(didBatchAdd ? Color.green : AppTheme.Colors.bonus)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .disabled(didBatchAdd)
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    private func breakRow(brk: LeaveBreak) -> some View {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: Strings.localeIdentifier)
+        f.dateFormat = "M/d"
+        let dateRange = "\(f.string(from: brk.startDate)) ~ \(f.string(from: brk.endDate))"
+        return HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(dateRange)
+                    .font(.subheadline.weight(.semibold))
+                Text(Strings.breakLabel(brk.totalDays, leaveUsed: brk.leaveCount))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Text(brk.efficiency >= 1.5 ? "✨" : "")
+                .font(.caption)
+                .voDecorative()
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("\(dateRange), \(Strings.breakLabel(brk.totalDays, leaveUsed: brk.leaveCount))"))
+    }
+
+    @MainActor
+    private func computeIfPro() async {
+        guard proManager.isPro, availableLeaveDays > 0 else { return }
+        isComputing = true
+        defer { isComputing = false }
+
+        let holidays = holidayService.getHolidays(for: year, country: profile.country)
+        let holidayDates = holidays.map { $0.date }
+
+        // 이미 등록된 휴가 날짜는 제외 (중복 방지)
+        let cal = Calendar.current
+        var excluded: Set<Date> = []
+        for record in existingLeaveRecords where record.status != .cancelled {
+            var d = cal.startOfDay(for: record.startDate)
+            let end = cal.startOfDay(for: record.endDate)
+            while d <= end {
+                excluded.insert(d)
+                guard let next = cal.date(byAdding: .day, value: 1, to: d) else { break }
+                d = next
+            }
+        }
+
+        // 백그라운드 계산 (DP는 가볍지만 main 스레드 차단 방지)
+        let computed = await Task.detached(priority: .userInitiated) { () -> OptimalLeavePlan in
+            LeavePlanner.optimalPlan(
+                year: year,
+                availableLeaveDays: availableLeaveDays,
+                holidays: holidayDates,
+                excludedDates: excluded,
+                minBreakLength: 3,
+                earliestDate: Date(),
+                calendar: cal
+            )
+        }.value
+
+        plan = computed
+    }
+
+    private func batchAdd(plan: OptimalLeavePlan) {
+        let cal = Calendar.current
+        var addedAny = false
+        for brk in plan.breaks {
+            // 각 연휴마다 1개 LeaveRecord (연속된 leaveDates를 합쳐서)
+            // 단순화: leaveDates를 sorted 후 연속 구간으로 분할
+            let sortedDates = brk.leaveDates.sorted()
+            var segments: [[Date]] = []
+            var current: [Date] = []
+            for d in sortedDates {
+                if let last = current.last,
+                   let next = cal.date(byAdding: .day, value: 1, to: last),
+                   cal.isDate(next, inSameDayAs: d) {
+                    current.append(d)
+                } else {
+                    if !current.isEmpty { segments.append(current) }
+                    current = [d]
+                }
+            }
+            if !current.isEmpty { segments.append(current) }
+
+            for seg in segments {
+                guard let first = seg.first, let last = seg.last else { continue }
+                let record = LeaveRecord(
+                    startDate: first,
+                    endDate: last,
+                    type: .annual,
+                    status: .planned,
+                    note: "",
+                    isRecommended: true
+                )
+                modelContext.insert(record)
+                addedAny = true
+            }
+        }
+        if addedAny {
+            try? modelContext.save()
+            HapticFeedback.success()
+            didBatchAdd = true
+        }
     }
 }
 
@@ -2191,17 +2706,17 @@ actor MyRealTripAPIClient {
 
         var errorDescription: String? {
             switch self {
-            case .notConfigured: return "마이리얼트립 API가 설정되지 않았습니다."
-            case .invalidURL: return "잘못된 URL입니다."
-            case .badRequest(let m): return m ?? "잘못된 요청입니다."
-            case .unauthorized(let m): return m ?? "API 키가 유효하지 않습니다."
-            case .forbidden(let m): return m ?? "이 API에 대한 접근 권한이 없습니다."
-            case .notFound(let m): return m ?? "엔드포인트를 찾을 수 없습니다."
-            case .rateLimited(let m): return m ?? "요청 한도를 초과했습니다."
-            case .serverError(let code, let m): return m ?? "서버 오류 (\(code))"
-            case .decodingError: return "응답 형식 오류"
+            case .notConfigured: return Strings.mrtErrorNotConfigured
+            case .invalidURL: return Strings.mrtErrorInvalidURL
+            case .badRequest(let m): return m ?? Strings.mrtErrorBadRequest
+            case .unauthorized(let m): return m ?? Strings.mrtErrorUnauthorized
+            case .forbidden(let m): return m ?? Strings.mrtErrorForbidden
+            case .notFound(let m): return m ?? Strings.mrtErrorNotFound
+            case .rateLimited(let m): return m ?? Strings.mrtErrorRateLimited
+            case .serverError(let code, let m): return m ?? Strings.mrtErrorServerError(code)
+            case .decodingError: return Strings.mrtErrorDecoding
             case .networkError(let err): return err.localizedDescription
-            case .maxRetriesExceeded: return "재시도 한도를 초과했습니다."
+            case .maxRetriesExceeded: return Strings.mrtErrorMaxRetries
             }
         }
     }

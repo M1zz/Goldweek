@@ -14,6 +14,8 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case japan = "japan"
     case china = "china"
     case usa = "usa"
+    case germany = "germany"   // Brückentag 문화 — Goldweek 핵심 타깃 시장
+    case france = "france"     // Faire le pont 문화 — Goldweek 핵심 타깃 시장
 
     var id: String { rawValue }
 
@@ -27,6 +29,8 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .japan: return "🇯🇵"
         case .china: return "🇨🇳"
         case .usa: return "🇺🇸"
+        case .germany: return "🇩🇪"
+        case .france: return "🇫🇷"
         }
     }
 
@@ -36,6 +40,8 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .japan: return "ja_JP"
         case .china: return "zh_CN"
         case .usa: return "en_US"
+        case .germany: return "de_DE"
+        case .france: return "fr_FR"
         }
     }
 
@@ -45,6 +51,8 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case "ko": return .korea
         case "ja": return .japan
         case "zh": return .china
+        case "de": return .germany
+        case "fr": return .france
         default: return .usa
         }
     }

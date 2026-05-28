@@ -428,6 +428,11 @@ class RecommendationEngine {
         case .usa:
             // Thanksgiving weekend, 4th of July, Memorial/Labor Day
             opportunities.append(contentsOf: findUSAOpportunities(holidays: holidays, year: year))
+
+        case .germany, .france:
+            // 알고리즘 기반 OptimalLeavePlannerCard가 자동 처리 (Brückentag / pont)
+            // 여기서는 일반적인 공휴일 연장만 제공
+            opportunities.append(contentsOf: findMajorHolidayExtensions(holidays: holidays, year: year, country: country))
         }
 
         return opportunities

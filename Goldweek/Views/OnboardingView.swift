@@ -155,7 +155,7 @@ struct OnboardingView: View {
         case .korea: AppLanguage.current = .korean
         case .japan: AppLanguage.current = .japanese
         case .china: AppLanguage.current = .chinese
-        case .usa: AppLanguage.current = .english
+        case .usa, .germany, .france: AppLanguage.current = .english
         }
 
         let profile = UserProfile(
@@ -224,9 +224,10 @@ struct HeroPage: View {
                         .shadow(color: AppTheme.Colors.bonus.opacity(0.4), radius: 24, y: 12)
 
                     Image(systemName: "sun.max.fill")
-                        .font(.system(size: 64, weight: .medium))
+                        .font(.system(.largeTitle, weight: .medium))
                         .foregroundStyle(.white)
                         .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
+                        .voDecorative()
                 }
                 .scaleEffect(animate ? 1.0 : 0.7)
                 .opacity(animate ? 1.0 : 0.0)
@@ -243,7 +244,7 @@ struct HeroPage: View {
                     .clipShape(Capsule())
 
                 Text(Strings.appName)
-                    .font(.system(size: 44, weight: .bold))
+                    .font(.system(.largeTitle, weight: .bold))
                     .foregroundStyle(.primary)
 
                 Text(Strings.onboardingSubtitle)
@@ -303,7 +304,7 @@ struct ValueDemoPage: View {
             // 헤드라인
             VStack(spacing: 8) {
                 Text(Strings.onboardingValueTitle)
-                    .font(.system(size: 40, weight: .bold))
+                    .font(.system(.largeTitle, weight: .bold))
                     .foregroundStyle(AppTheme.Colors.bonus)
                     .multilineTextAlignment(.center)
                     .lineSpacing(2)
@@ -399,7 +400,7 @@ struct FeaturesGridPage: View {
             Spacer().frame(height: 16)
 
             Text(Strings.mainFeatures)
-                .font(.system(size: 32, weight: .bold))
+                .font(.system(.title, weight: .bold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 8)
 
@@ -482,7 +483,7 @@ struct SetupPage: View {
                 // 헤더
                 VStack(spacing: 6) {
                     Text(Strings.leaveSetup)
-                        .font(.system(size: 28, weight: .bold))
+                        .font(.system(.title, weight: .bold))
                     Text(Strings.leaveSetupDesc)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
@@ -525,7 +526,7 @@ struct SetupPage: View {
 
                     HStack(alignment: .lastTextBaseline) {
                         Text("\(Int(totalLeave))")
-                            .font(.system(size: 56, weight: .bold))
+                            .font(.system(.largeTitle, weight: .bold))
                             .foregroundStyle(AppTheme.Colors.bonus)
                             .contentTransition(.numericText())
                             .animation(.snappy, value: totalLeave)
@@ -633,13 +634,14 @@ struct ProShowcasePage: View {
                             .shadow(color: AppTheme.Colors.bonus.opacity(0.4), radius: 16, y: 8)
 
                         Image(systemName: "crown.fill")
-                            .font(.system(size: 38))
+                            .font(.system(.largeTitle))
                             .foregroundStyle(.white)
+                            .voDecorative()
                     }
 
                     VStack(spacing: 6) {
                         Text(Strings.goldweekPro)
-                            .font(.system(size: 28, weight: .bold))
+                            .font(.system(.title, weight: .bold))
                         Text(Strings.proOnboardingSubtitle)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
@@ -723,8 +725,9 @@ private struct ProFeatureRow: View {
                     .fill(accent.opacity(0.15))
                     .frame(width: 40, height: 40)
                 Image(systemName: icon)
-                    .font(.system(size: 18))
+                    .font(.system(.body))
                     .foregroundStyle(accent)
+                    .voDecorative()
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
@@ -736,7 +739,8 @@ private struct ProFeatureRow: View {
             Spacer()
             Image(systemName: "checkmark.circle.fill")
                 .foregroundStyle(accent)
-                .font(.system(size: 20))
+                .font(.system(.title3))
+                .voDecorative()
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)

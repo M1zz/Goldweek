@@ -376,6 +376,7 @@ struct LeaveStatusCard: View {
                     }
                 }
             }
+            .voCard(VoiceOverLabel.leaveBalance(total: totalLeave, used: displayUsed, remaining: effectiveRemaining))
 
             // 보너스 연차 별도 표시 — 직장인 모드 + 미포함 상태에서만
             if !isLeisure, remainingBonusLeave > 0, !includeBonusInStatus {
@@ -384,6 +385,7 @@ struct LeaveStatusCard: View {
                     Image(systemName: "gift.fill")
                         .foregroundStyle(AppTheme.Colors.bonus)
                         .font(.subheadline)
+                        .voDecorative()
                     Text(Strings.bonus)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
@@ -399,6 +401,7 @@ struct LeaveStatusCard: View {
                         .background(AppTheme.Colors.bonus.opacity(0.12))
                         .clipShape(Capsule())
                 }
+                .voCard(VoiceOverLabel.bonus(days: remainingBonusLeave))
             }
 
             // 자유 계획 무제한 안내
@@ -408,6 +411,7 @@ struct LeaveStatusCard: View {
                     Image(systemName: "infinity")
                         .foregroundStyle(.purple)
                         .font(.subheadline)
+                        .voDecorative()
                     Text(Strings.goalNotSetDesc)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -431,6 +435,8 @@ struct UpcomingLeavesSection: View {
             HStack {
                 Text("📅 \(Strings.upcomingLeaves)")
                     .font(.headline)
+                    .accessibilityLabel(Text(Strings.upcomingLeaves))
+                    .voHeader()
                 Spacer()
                 Text(Strings.itemCount(leaves.count))
                     .font(.caption)
@@ -486,6 +492,14 @@ struct UpcomingLeaveRow: View {
         .padding()
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .voCard(
+            VoiceOverLabel.upcomingLeave(
+                dateRange: "\(leave.startDate.formatted(date: .abbreviated, time: .omitted)) - \(leave.endDate.formatted(date: .abbreviated, time: .omitted))",
+                typeLabel: Strings.leaveTypeName(leave.type),
+                days: leave.effectiveLeaveDays,
+                dDay: daysUntil
+            )
+        )
     }
 }
 
@@ -501,6 +515,7 @@ struct LeaveHistoryButton: View {
                     .font(.title2)
                     .foregroundStyle(.blue)
                     .frame(width: 40)
+                    .voDecorative()
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(Strings.leaveHistory)
@@ -527,6 +542,7 @@ struct LeaveHistoryButton: View {
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .voDecorative()
             }
             .padding()
             .background(Color(.systemBackground))
@@ -534,6 +550,8 @@ struct LeaveHistoryButton: View {
             .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(Text("\(Strings.leaveHistory), \(Strings.checkPastRecords)"))
+        .accessibilityValue(usedCount > 0 ? Text(Strings.itemCount(usedCount)) : Text(""))
     }
 }
 
@@ -548,9 +566,11 @@ struct PastLeavePromptBanner: View {
                 HStack(spacing: 6) {
                     Image(systemName: "calendar.badge.exclamationmark")
                         .foregroundStyle(.orange)
+                        .voDecorative()
                     Text(Strings.pastLeavePromptTitle)
                         .font(.subheadline)
                         .fontWeight(.semibold)
+                        .voHeader()
                 }
                 Spacer()
                 Button(action: onDismiss) {
@@ -558,6 +578,7 @@ struct PastLeavePromptBanner: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                .accessibilityLabel(Text(Strings.cancel))
             }
 
             Text(Strings.pastLeavePromptDesc)
@@ -568,6 +589,7 @@ struct PastLeavePromptBanner: View {
             Button(action: onQuickEntry) {
                 HStack(spacing: 6) {
                     Image(systemName: "plus.circle.fill")
+                        .voDecorative()
                     Text(Strings.pastLeaveQuickAdd)
                         .fontWeight(.semibold)
                 }

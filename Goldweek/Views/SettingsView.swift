@@ -222,7 +222,7 @@ struct SettingsView: View {
                             Spacer()
                             VStack(alignment: .trailing, spacing: 2) {
                                 Text("\(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
-                                    .font(.system(size: 36, weight: .bold))
+                                    .font(.system(.largeTitle, weight: .bold))
                                     .foregroundStyle(activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
                                 if activeBonusLeave > 0 {
                                     Text(Strings.baseAndBonus(
@@ -235,6 +235,7 @@ struct SettingsView: View {
                             }
                         }
                         .padding(.vertical, 4)
+                        .voCard("\(Strings.availableLeaveLabel) \(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
                     }
 
                     HStack {
@@ -492,7 +493,7 @@ struct SettingsView: View {
                     // 앱 공유하기
                     ShareLink(
                         item: URL(string: "https://apps.apple.com/app/id6739899592")!,
-                        subject: Text("Goldweek - 연차 관리 앱"),
+                        subject: Text(Strings.shareSubject),
                         message: Text(Strings.shareMessage)
                     ) {
                         HStack {
@@ -582,7 +583,7 @@ struct SettingsView: View {
                 bonusLeaves: Array(bonusLeaves)
             )
             lastBackupDate = Date()
-            backupAlertMessage = "iCloud에 백업되었습니다."
+            backupAlertMessage = Strings.backupSuccessMessage
             logInfo("iCloud 백업 성공", category: .backup)
             await MainActor.run { HapticFeedback.success() }
             showingBackupAlert = true
@@ -608,7 +609,7 @@ struct SettingsView: View {
             let backup = try await BackupService.shared.restoreFromICloud()
             logDebug("백업 데이터 로드 완료 - 연차기록: \(backup.leaveRecords.count)건", category: .backup)
             try BackupService.shared.applyBackup(backup, to: modelContext, existingProfile: profile)
-            backupAlertMessage = "복원이 완료되었습니다."
+            backupAlertMessage = Strings.restoreSuccessMessage
             logInfo("iCloud 복원 성공", category: .backup)
             await MainActor.run { HapticFeedback.success() }
             showingBackupAlert = true
@@ -661,7 +662,7 @@ struct SettingsView: View {
             modelContext.delete(bonus)
             logError("보너스 연차 저장 실패: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
-            backupAlertMessage = "저장에 실패했습니다: \(error.localizedDescription)"
+            backupAlertMessage = Strings.saveFailedWithReason(error.localizedDescription)
             showingBackupAlert = true
         }
     }
@@ -705,7 +706,7 @@ struct SettingsView: View {
         } catch {
             logError("데이터 초기화 실패: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
-            backupAlertMessage = "초기화에 실패했습니다: \(error.localizedDescription)"
+            backupAlertMessage = Strings.resetFailedWithReason(error.localizedDescription)
             showingBackupAlert = true
         }
     }
