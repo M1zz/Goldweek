@@ -497,6 +497,44 @@ enum Strings {
         }
     }
 
+    /// 접힘 상태에서 큰 숫자 옆 단위
+    static var optimalPlannerSummaryUnit: String {
+        switch lang {
+        case .korean: return "일 휴식"
+        case .english: return "days off"
+        case .japanese: return "日休み"
+        case .chinese: return "天假期"
+        }
+    }
+
+    /// 접힘 상태에서 옆에 붙는 보조 정보: "연차 4일 · 5회 연휴"
+    static func optimalPlannerSummaryAside(leaveUsed: Int, breaks: Int) -> String {
+        switch lang {
+        case .korean: return "연차 \(leaveUsed)일 · 연휴 \(breaks)회"
+        case .english: return "\(leaveUsed) PTO · \(breaks) breaks"
+        case .japanese: return "有給\(leaveUsed)日・\(breaks)回"
+        case .chinese: return "年假\(leaveUsed)天·\(breaks)次"
+        }
+    }
+
+    static var optimalPlannerExpandHint: String {
+        switch lang {
+        case .korean: return "이중 탭하여 펼치기"
+        case .english: return "Double-tap to expand"
+        case .japanese: return "ダブルタップで展開"
+        case .chinese: return "双击展开"
+        }
+    }
+
+    static var optimalPlannerCollapseHint: String {
+        switch lang {
+        case .korean: return "이중 탭하여 접기"
+        case .english: return "Double-tap to collapse"
+        case .japanese: return "ダブルタップで折りたたむ"
+        case .chinese: return "双击折叠"
+        }
+    }
+
     static var optimalPlannerEmpty: String {
         switch lang {
         case .korean: return "추가 연차를 등록하면 더 긴 연휴를 만들 수 있어요"

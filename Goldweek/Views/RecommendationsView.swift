@@ -2298,26 +2298,16 @@ struct OptimalLeavePlannerCard: View {
     @State private var isComputing = false
     @State private var showingPaywall = false
     @State private var didBatchAdd = false
+    /// 기본은 접힘. Pro 결과가 길어서 추천 탭을 잠식하지 않도록.
+    @State private var isExpanded = false
 
     private var proManager: ProManager { ProManager.shared }
 
     private let holidayService = HolidayService()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 8) {
-                Image(systemName: "wand.and.stars")
-                    .foregroundStyle(AppTheme.Colors.bonus)
-                    .voDecorative()
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(Strings.optimalPlannerTitle)
-                        .font(.subheadline.weight(.semibold))
-                    Text(Strings.optimalPlannerSubtitle)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-            }
+        VStack(alignment: .leading, spacing: 10) {
+            headerSection
 
             if !proManager.isPro {
                 proLockedView
@@ -2349,6 +2339,47 @@ struct OptimalLeavePlannerCard: View {
         }
         .task(id: "\(year)-\(availableLeaveDays)") {
             await computeIfPro()
+        }
+    }
+
+    /// 헤더 — 비-Pro는 부제 노출, Pro+결과 있으면 펼침 토글 버튼 역할
+    @ViewBuilder
+    private var headerSection: some View {
+        let canToggle = proManager.isPro && (plan?.breaks.isEmpty == false)
+        let header = HStack(spacing: 8) {
+            Image(systemName: "wand.and.stars")
+                .foregroundStyle(AppTheme.Colors.bonus)
+                .voDecorative()
+            VStack(alignment: .leading, spacing: 2) {
+                Text(Strings.optimalPlannerTitle)
+                    .font(.subheadline.weight(.semibold))
+                if !proManager.isPro || plan == nil {
+                    Text(Strings.optimalPlannerSubtitle)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Spacer()
+            if canToggle {
+                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .voDecorative()
+            }
+        }
+
+        if canToggle {
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) { isExpanded.toggle() }
+                HapticFeedback.selection()
+            } label: {
+                header
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text(Strings.optimalPlannerTitle))
+            .accessibilityHint(Text(isExpanded ? Strings.optimalPlannerCollapseHint : Strings.optimalPlannerExpandHint))
+        } else {
+            header
         }
     }
 
@@ -2398,44 +2429,31 @@ struct OptimalLeavePlannerCard: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         } else {
-            VStack(alignment: .leading, spacing: 10) {
-                // 요약
-                Text(Strings.optimalPlannerSummary(
-                    totalDays: plan.totalDaysOff,
-                    breaks: plan.breaks.count,
-                    leaveUsed: plan.leaveDaysUsed
-                ))
-                .font(.subheadline.weight(.bold))
-                .foregroundStyle(AppTheme.Colors.brand)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(10)
-                .background(AppTheme.Colors.brand.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+            // 항상 보이는 요약 (접힘 상태에서도 노출)
+            summaryPill(plan: plan)
 
-                // 연휴 리스트
-                ForEach(plan.breaks) { brk in
-                    breakRow(brk: brk)
+            // 펼침 상태에서만 연휴 리스트 + 일괄 등록
+            if isExpanded {
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(plan.breaks) { brk in
+                        breakRow(brk: brk)
+                    }
                 }
+                .padding(.top, 2)
 
-                // 일괄 등록 버튼
                 Button {
                     batchAdd(plan: plan)
                 } label: {
-                    HStack {
+                    HStack(spacing: 6) {
                         Spacer()
-                        if didBatchAdd {
-                            Image(systemName: "checkmark.circle.fill")
-                                .voDecorative()
-                        } else {
-                            Image(systemName: "plus.circle.fill")
-                                .voDecorative()
-                        }
+                        Image(systemName: didBatchAdd ? "checkmark.circle.fill" : "plus.circle.fill")
+                            .voDecorative()
                         Text(Strings.optimalPlannerApplyAll)
                             .fontWeight(.semibold)
                         Spacer()
                     }
                     .font(.subheadline)
-                    .padding(.vertical, 10)
+                    .padding(.vertical, 9)
                     .background(didBatchAdd ? Color.green : AppTheme.Colors.bonus)
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -2446,25 +2464,58 @@ struct OptimalLeavePlannerCard: View {
         }
     }
 
+    /// 접힘 상태에서도 노출되는 한 줄 요약 — 핵심 숫자를 한눈에
+    private func summaryPill(plan: OptimalLeavePlan) -> some View {
+        HStack(spacing: 8) {
+            // 큰 숫자: 총 휴식일
+            Text("\(plan.totalDaysOff)")
+                .font(.title2.weight(.bold))
+                .foregroundStyle(AppTheme.Colors.brand)
+            Text(Strings.optimalPlannerSummaryUnit)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppTheme.Colors.brand)
+                .padding(.leading, -4)
+            Spacer(minLength: 0)
+            // 보조: 연차 N · M회 연휴
+            Text(Strings.optimalPlannerSummaryAside(leaveUsed: plan.leaveDaysUsed, breaks: plan.breaks.count))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(AppTheme.Colors.brand.opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text(Strings.optimalPlannerSummary(
+            totalDays: plan.totalDaysOff,
+            breaks: plan.breaks.count,
+            leaveUsed: plan.leaveDaysUsed
+        )))
+    }
+
+    /// 한 줄 슬림 카드 — 날짜 · 길이/연차 · 효율 별
     private func breakRow(brk: LeaveBreak) -> some View {
         let f = DateFormatter()
         f.locale = Locale(identifier: Strings.localeIdentifier)
         f.dateFormat = "M/d"
-        let dateRange = "\(f.string(from: brk.startDate)) ~ \(f.string(from: brk.endDate))"
-        return HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(dateRange)
-                    .font(.subheadline.weight(.semibold))
-                Text(Strings.breakLabel(brk.totalDays, leaveUsed: brk.leaveCount))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+        let dateRange = "\(f.string(from: brk.startDate))~\(f.string(from: brk.endDate))"
+        return HStack(spacing: 8) {
+            Text(dateRange)
+                .font(.caption.weight(.semibold))
+                .frame(minWidth: 78, alignment: .leading)
+            Text(Strings.breakLabel(brk.totalDays, leaveUsed: brk.leaveCount))
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
+            Spacer(minLength: 0)
+            if brk.efficiency >= 1.5 {
+                Text("✨")
+                    .font(.caption2)
+                    .voDecorative()
             }
-            Spacer()
-            Text(brk.efficiency >= 1.5 ? "✨" : "")
-                .font(.caption)
-                .voDecorative()
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 5)
         .padding(.horizontal, 10)
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 8))
