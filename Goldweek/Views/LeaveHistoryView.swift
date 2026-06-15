@@ -205,6 +205,8 @@ struct LeaveHistoryView: View {
                                 .foregroundStyle(selectedYear == year ? .white : .primary)
                                 .clipShape(Capsule())
                         }
+                        .voButton(Strings.yearLabel(year))
+                        .voSelected(selectedYear == year)
                     }
                 }
                 .padding(.horizontal)
@@ -463,6 +465,8 @@ struct FilterChip: View {
                         .stroke(isSelected ? color : Color.clear, lineWidth: 1)
                 )
         }
+        .voButton(title)
+        .voSelected(isSelected)
     }
 }
 
@@ -491,6 +495,7 @@ struct StatCard: View {
         .padding(.vertical, 12)
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .voCard("\(title), \(value), \(Strings.casesCount(count))")
     }
 }
 
@@ -553,9 +558,23 @@ struct HistoryRecordRow: View {
                 Image(systemName: "sparkles")
                     .font(.caption)
                     .foregroundStyle(.orange)
+                    .voDecorative()
             }
         }
         .padding(.vertical, 4)
+        .voCard(accessibilityText, hint: Strings.editLeaveHint)
+    }
+
+    private var accessibilityText: String {
+        var parts = [
+            Strings.leaveTypeName(record.type),
+            Strings.leaveStatusName(record.status),
+            dateString,
+            "\(formatLeave(record.effectiveLeaveDays))\(Strings.dayUnitSuffix)"
+        ]
+        if record.isRecommended { parts.append(Strings.recommendedMark) }
+        if !record.note.isEmpty { parts.append(record.note) }
+        return parts.joined(separator: ", ")
     }
 
     private var dateString: String {

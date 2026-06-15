@@ -48,6 +48,7 @@ struct GradientButton: View {
             HStack {
                 if let icon = icon {
                     Image(systemName: icon)
+                        .voDecorative()
                 }
                 Text(title)
                     .fontWeight(.semibold)
@@ -64,6 +65,7 @@ struct GradientButton: View {
             .foregroundStyle(.white)
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
+        .voButton(title)
     }
 }
 
@@ -97,11 +99,13 @@ struct SectionHeader: View {
         HStack(spacing: 8) {
             if let icon = icon {
                 Text(icon)
+                    .voDecorative()
             }
             Text(title)
                 .font(.headline)
             Spacer()
         }
+        .voHeader()
     }
 }
 
@@ -200,6 +204,8 @@ struct ProgressBar: View {
             }
         }
         .frame(height: height)
+        .accessibilityElement(children: .ignore)
+        .accessibilityValue(Text("\(Int(min(max(progress, 0), 1) * 100))%"))
     }
 }
 
@@ -225,6 +231,7 @@ struct DateRangeLabel: View {
             }
         }
         .font(.subheadline)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -244,6 +251,7 @@ struct DDayLabel: View {
             .background(daysRemaining <= 0 ? Color.red : Color.blue)
             .foregroundStyle(.white)
             .clipShape(Capsule())
+            .accessibilityLabel(Text(VoiceOverLabel.dDay(daysRemaining)))
     }
 }
 

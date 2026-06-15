@@ -153,6 +153,35 @@ enum VoiceOverLabel {
         }
     }
 
+    /// D-Day 표시: "오늘", "5일 남음", "3일 지남"
+    static func dDay(_ daysRemaining: Int) -> String {
+        let lang = LanguageManager.shared.currentLanguage
+        if daysRemaining == 0 {
+            switch lang {
+            case .korean: return "오늘"
+            case .english: return "Today"
+            case .japanese: return "今日"
+            case .chinese: return "今天"
+            }
+        }
+        let n = abs(daysRemaining)
+        if daysRemaining > 0 {
+            switch lang {
+            case .korean: return "\(n)일 남음"
+            case .english: return "in \(n) days"
+            case .japanese: return "あと\(n)日"
+            case .chinese: return "还有\(n)天"
+            }
+        } else {
+            switch lang {
+            case .korean: return "\(n)일 지남"
+            case .english: return "\(n) days ago"
+            case .japanese: return "\(n)日経過"
+            case .chinese: return "已过\(n)天"
+            }
+        }
+    }
+
     // MARK: - Helpers
 
     private static func formatDays(_ days: Double) -> String {

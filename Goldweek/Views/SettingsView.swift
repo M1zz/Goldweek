@@ -39,6 +39,9 @@ struct SettingsView: View {
     @State private var showingPaywall = false
     @State private var editingBonus: BonusLeave?
 
+    // 홈 "연차 현황"에 보너스 연차를 합산할지 여부 (홈 화면에서 이 설정을 따른다)
+    @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
+
     // 국가 & 언어
     @State private var selectedCountry: Country
     @State private var selectedLanguage: AppLanguage
@@ -117,6 +120,7 @@ struct SettingsView: View {
                                 .fontWeight(.bold)
                                 .foregroundStyle(.white)
                         }
+                        .accessibilityHidden(true)
 
                         VStack(alignment: .leading, spacing: 4) {
                             if editingName {
@@ -150,6 +154,7 @@ struct SettingsView: View {
                                 .font(.title2)
                                 .foregroundStyle(editingName ? .green : .blue)
                         }
+                        .accessibilityLabel(Text(editingName ? Strings.save : Strings.editName))
                     }
                     .padding(.vertical, 8)
                 }
@@ -184,6 +189,7 @@ struct SettingsView: View {
                             Image(systemName: "calendar.badge.plus")
                                 .foregroundStyle(.orange)
                                 .frame(width: 28)
+                                .voDecorative()
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(Strings.holidayMgmtTitle)
                                 Text(Strings.holidayMgmtSubtitle)
@@ -191,6 +197,7 @@ struct SettingsView: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
+                        .accessibilityElement(children: .combine)
                     }
                 }
 
@@ -276,6 +283,13 @@ struct SettingsView: View {
 
                 // 보너스 연차 관리 (Pro 전용, 직장인 모드만)
                 if !isLeisure { Section {
+                    // 홈 "연차 현황"에 보너스 합산 여부 (예전엔 홈 화면 토글이었음)
+                    Toggle(isOn: $includeBonusInStatus) {
+                        Text(Strings.includeBonus)
+                    }
+                    .tint(AppTheme.Colors.bonus)
+                    .accessibilityHint(Text(Strings.includeBonusHint))
+
                     Button {
                         if ProManager.shared.isPro {
                             showingBonusLeaveSheet = true
@@ -286,6 +300,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: ProManager.shared.isPro ? "plus.circle.fill" : "crown.fill")
                                 .foregroundStyle(ProManager.shared.isPro ? AppTheme.Colors.bonus : .yellow)
+                                .voDecorative()
                             Text(Strings.addBonusLeave)
                                 .foregroundStyle(ProManager.shared.isPro ? .primary : .secondary)
                             Spacer()
@@ -293,6 +308,7 @@ struct SettingsView: View {
                                 Image(systemName: "chevron.right")
                                     .foregroundStyle(.secondary)
                                     .font(.caption)
+                                    .voDecorative()
                             } else {
                                 Text("Pro")
                                     .font(.caption)
@@ -304,6 +320,7 @@ struct SettingsView: View {
                                     .cornerRadius(4)
                             }
                         }
+                        .accessibilityElement(children: .combine)
                     }
 
                     // 활성 보너스 연차 목록
@@ -312,6 +329,7 @@ struct SettingsView: View {
                             Image(systemName: bonus.type.icon)
                                 .foregroundStyle(AppTheme.Colors.bonus)
                                 .frame(width: 24)
+                                .voDecorative()
 
                             VStack(alignment: .leading, spacing: 2) {
                                 HStack {
@@ -339,9 +357,11 @@ struct SettingsView: View {
                             Image(systemName: "pencil.circle")
                                 .foregroundStyle(.secondary)
                                 .font(.subheadline)
+                                .voDecorative()
                         }
                         .contentShape(Rectangle())
                         .onTapGesture { editingBonus = bonus }
+                        .voButton(bonusRowAccessibilityLabel(bonus), hint: Strings.editLeaveHint)
                     }
                     .onDelete(perform: deleteBonusLeave)
                 } header: {
@@ -357,10 +377,12 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "slider.horizontal.3")
                                 .foregroundStyle(.blue)
+                                .voDecorative()
                             Text(Strings.preferencesSettings)
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.secondary)
+                                .voDecorative()
                         }
                     }
                     .foregroundStyle(.primary)
@@ -377,7 +399,8 @@ struct SettingsView: View {
                             PreferenceSummaryRow(
                                 icon: "leaf",
                                 title: Strings.preferredSeason,
-                                value: profile.preferredSeasons.map { $0.icon }.joined(separator: " ")
+                                value: profile.preferredSeasons.map { $0.icon }.joined(separator: " "),
+                                accessibilityValue: profile.preferredSeasons.map { Strings.seasonName($0) }.joined(separator: ", ")
                             )
                         }
 
@@ -385,7 +408,8 @@ struct SettingsView: View {
                             PreferenceSummaryRow(
                                 icon: "star",
                                 title: Strings.preferredActivity,
-                                value: profile.priorityActivities.map { $0.icon }.joined(separator: " ")
+                                value: profile.priorityActivities.map { $0.icon }.joined(separator: " "),
+                                accessibilityValue: profile.priorityActivities.map { Strings.activityName($0) }.joined(separator: ", ")
                             )
                         }
                     }
@@ -667,6 +691,19 @@ struct SettingsView: View {
         }
     }
 
+    /// 보너스 연차 행을 한 문장으로 읽어주는 VoiceOver 라벨
+    private func bonusRowAccessibilityLabel(_ bonus: BonusLeave) -> String {
+        var parts = [
+            Strings.bonusLeaveTypeName(bonus.type),
+            "\(formatLeave(bonus.remainingDays))/\(formatLeave(bonus.days))\(Strings.dayUnitSuffix)"
+        ]
+        if !bonus.reason.isEmpty { parts.append(bonus.reason) }
+        if let expiration = bonus.expirationDate {
+            parts.append(expiration.formatted(.dateTime.month().day()))
+        }
+        return parts.joined(separator: ", ")
+    }
+
     private func deleteBonusLeave(at offsets: IndexSet) {
         let activeLeaves = bonusLeaves.filter { !$0.isUsed }
         for index in offsets {
@@ -717,15 +754,21 @@ struct PreferenceSummaryRow: View {
     let icon: String
     let title: String
     let value: String
+    /// 화면에 이모지를 쓰는 경우 VoiceOver용 자연어 값(이름)을 별도 지정
+    var accessibilityValue: String? = nil
 
     var body: some View {
         HStack {
             Image(systemName: icon)
                 .frame(width: 20)
+                .voDecorative()
             Text(title)
             Spacer()
             Text(value)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(title))
+        .accessibilityValue(Text(accessibilityValue ?? value))
     }
 }
 
@@ -741,11 +784,15 @@ struct StatRow: View {
             Image(systemName: icon)
                 .foregroundStyle(iconColor)
                 .frame(width: 24)
+                .voDecorative()
             Text(title)
             Spacer()
             Text(value)
                 .fontWeight(.medium)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(title))
+        .accessibilityValue(Text(value))
     }
 }
 

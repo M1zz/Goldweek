@@ -11,6 +11,7 @@ import SwiftData
 struct AddLeaveView: View {
     @Bindable var profile: UserProfile
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     @Query(sort: \LeaveRecord.startDate, order: .reverse) private var leaveRecords: [LeaveRecord]
     @Query(sort: \BonusLeave.grantedDate, order: .reverse) private var bonusLeaves: [BonusLeave]
 
@@ -44,14 +45,12 @@ struct AddLeaveView: View {
                         usedDays: committedLeave,
                         goalDays: profile.totalAnnualLeave
                     )
-                    .accessibilityElement(children: .combine)
                 } else {
                     LeaveStatusHeader(
                         remainingLeave: max(0, profile.totalAnnualLeave - committedLeave),
                         bonusLeave: totalBonusLeave,
                         totalAvailable: totalAvailableLeave
                     )
-                    .accessibilityElement(children: .combine)
                 }
 
                 // 탭 선택 — 직장인 모드만 보너스 탭 노출
@@ -79,6 +78,11 @@ struct AddLeaveView: View {
             }
             .navigationTitle(isLeisure ? Strings.registerLeave : Strings.navTitleLeaveManagement)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(Strings.close) { dismiss() }
+                }
+            }
         }
     }
 }
@@ -149,21 +153,22 @@ struct LeaveStatusHeader: View {
 
     var body: some View {
         HStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(Strings.basicLeave)
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .fixedSize(horizontal: true, vertical: false)
-                Text("\(formatLeave(remainingLeave))\(Strings.dayUnitSuffix)")
-                    .font(.title3.bold())
-                    .foregroundStyle(AppTheme.Colors.brand)
-                    .lineLimit(1)
-                    .fixedSize(horizontal: true, vertical: false)
-            }
-
             if bonusLeave > 0 {
+                // 보너스가 있을 때만 "기본 + 보너스 = 총" 분해를 보여준다.
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(Strings.basicLeave)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                    Text("\(formatLeave(remainingLeave))\(Strings.dayUnitSuffix)")
+                        .font(.title3.bold())
+                        .foregroundStyle(AppTheme.Colors.brand)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+
                 Text("+")
                     .font(.title2.bold())
                     .foregroundStyle(.secondary)
@@ -185,22 +190,34 @@ struct LeaveStatusHeader: View {
                 Text("=")
                     .font(.title2.bold())
                     .foregroundStyle(.secondary)
-            }
 
-            Spacer()
+                Spacer()
 
-            VStack(alignment: .trailing, spacing: 4) {
-                Text(Strings.totalAvailable)
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .fixedSize(horizontal: true, vertical: false)
-                Text("\(formatLeave(totalAvailable))\(Strings.dayUnitSuffix)")
-                    .font(.title2.bold())
-                    .foregroundStyle(AppTheme.Colors.success)
-                    .lineLimit(1)
-                    .fixedSize(horizontal: true, vertical: false)
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text(Strings.totalAvailable)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                    Text("\(formatLeave(totalAvailable))\(Strings.dayUnitSuffix)")
+                        .font(.title2.bold())
+                        .foregroundStyle(AppTheme.Colors.success)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+            } else {
+                // 보너스가 없으면 기본연차 == 총 사용가능이라 한 번만 보여준다.
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(Strings.availableLeave)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                    Text("\(formatLeave(totalAvailable))\(Strings.dayUnitSuffix)")
+                        .font(.title2.bold())
+                        .foregroundStyle(AppTheme.Colors.success)
+                }
+                Spacer()
             }
         }
         .padding()
@@ -312,6 +329,7 @@ struct LeaveRegistrationView: View {
                                     .font(.title3)
                                     .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white : AppTheme.Colors.bonus)
                                     .frame(width: 32)
+                                    .voDecorative()
 
                                 VStack(alignment: .leading, spacing: 3) {
                                     Text(Strings.bonusLeaveTypeName(bonus.type))
@@ -340,6 +358,7 @@ struct LeaveRegistrationView: View {
                                 Image(systemName: selectedBonusLeave?.id == bonus.id ? "checkmark.circle.fill" : "circle")
                                     .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white : Color(.systemGray3))
                                     .font(.title3)
+                                    .voDecorative()
                             }
                             .padding(.vertical, 4)
                             .contentShape(Rectangle())
@@ -350,6 +369,9 @@ struct LeaveRegistrationView: View {
                                 ? AppTheme.Colors.bonus.opacity(0.85)
                                 : Color(.systemBackground)
                         )
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(Text(bonusSelectLabel(bonus)))
+                        .accessibilityAddTraits(selectedBonusLeave?.id == bonus.id ? .isSelected : [])
                     }
                 } header: {
                     HStack(spacing: 4) {
@@ -415,6 +437,7 @@ struct LeaveRegistrationView: View {
                             .font(.caption)
                             .fontWeight(.semibold)
                             .foregroundStyle(.secondary)
+                            .voHeader()
                         HStack(spacing: 6) {
                             ForEach([LeaveType.compensatory, .official, .sick, .special, .businessTrip], id: \.self) { type in
                                 Button {
@@ -560,6 +583,19 @@ struct LeaveRegistrationView: View {
                 }
             }
         }
+    }
+
+    /// 보너스 선택 버튼을 한 문장으로 읽어주는 VoiceOver 라벨
+    private func bonusSelectLabel(_ bonus: BonusLeave) -> String {
+        var parts = [
+            Strings.bonusLeaveTypeName(bonus.type),
+            Strings.availableDays(formatLeave(bonus.remainingDays))
+        ]
+        if !bonus.reason.isEmpty { parts.append(bonus.reason) }
+        if let exp = bonus.expirationDate {
+            parts.append(Strings.expiresBy(exp.formatted(.dateTime.month().day())))
+        }
+        return parts.joined(separator: ", ")
     }
 
     private func addLeave() {
@@ -891,6 +927,8 @@ struct AddBonusLeaveSheet: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel(Text("\(formatLeave(days))\(Strings.dayUnitSuffix)"))
+                            .accessibilityAddTraits(bonusDays == days ? .isSelected : [])
                         }
                     }
                 }
@@ -969,8 +1007,12 @@ struct EditBonusLeaveSheet: View {
                         Text("\(String(format: editedDays == Double(Int(editedDays)) ? "%.0f" : "%.2g", editedDays))\(Strings.dayUnitSuffix)")
                             .fontWeight(.semibold)
                             .foregroundStyle(.blue)
-                        Stepper("", value: $editedDays, in: max(bonus.usedDays, 0.25)...365, step: 0.25)
-                            .labelsHidden()
+                        Stepper(value: $editedDays, in: max(bonus.usedDays, 0.25)...365, step: 0.25) {
+                            Text(Strings.daysToAdd)
+                        }
+                        .labelsHidden()
+                        .accessibilityLabel(Text(Strings.daysToAdd))
+                        .accessibilityValue(Text("\(formatLeave(editedDays))\(Strings.dayUnitSuffix)"))
                     }
                     HStack(spacing: 8) {
                         ForEach([0.25, 0.5, 1.0, 2.0, 3.0], id: \.self) { d in
@@ -987,6 +1029,8 @@ struct EditBonusLeaveSheet: View {
                             }
                             .buttonStyle(.plain)
                             .disabled(d < bonus.usedDays)
+                            .accessibilityLabel(Text("\(formatLeave(d))\(Strings.dayUnitSuffix)"))
+                            .accessibilityAddTraits(editedDays == d ? .isSelected : [])
                         }
                     }
 

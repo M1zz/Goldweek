@@ -145,6 +145,7 @@ struct DurationButton: View {
             VStack(spacing: 8) {
                 Text(duration.icon)
                     .font(.title)
+                    .voDecorative()
                 Text(Strings.durationName(duration))
                     .font(.caption)
             }
@@ -155,6 +156,8 @@ struct DurationButton: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
+        .voButton(Strings.durationName(duration))
+        .voSelected(isSelected)
     }
 }
 
@@ -168,6 +171,7 @@ struct SeasonButton: View {
             VStack(spacing: 4) {
                 Text(season.icon)
                     .font(.title2)
+                    .voDecorative()
                 Text(Strings.seasonName(season))
                     .font(.caption)
             }
@@ -178,6 +182,8 @@ struct SeasonButton: View {
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .buttonStyle(.plain)
+        .voButton(Strings.seasonName(season))
+        .voSelected(isSelected)
     }
 }
 
@@ -191,6 +197,7 @@ struct ActivityButton: View {
             VStack(spacing: 4) {
                 Text(activity.icon)
                     .font(.title3)
+                    .voDecorative()
                 Text(Strings.activityName(activity))
                     .font(.caption2)
             }
@@ -201,6 +208,8 @@ struct ActivityButton: View {
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .buttonStyle(.plain)
+        .voButton(Strings.activityName(activity))
+        .voSelected(isSelected)
     }
 }
 

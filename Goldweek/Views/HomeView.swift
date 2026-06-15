@@ -143,16 +143,16 @@ struct HomeView: View {
                         )
                     }
 
-                    // 휴가 사용 내역 버튼
-                    LeaveHistoryButton(
-                        usedCount: usedLeavesCount,
-                        action: { showingHistory = true }
-                    )
-
                     // 다가오는 휴가
                     if !upcomingLeaves.isEmpty {
                         UpcomingLeavesSection(leaves: upcomingLeaves)
                     }
+
+                    // 휴가 사용 내역 버튼 (맨 아래)
+                    LeaveHistoryButton(
+                        usedCount: usedLeavesCount,
+                        action: { showingHistory = true }
+                    )
 
                 }
                 .padding()
@@ -178,6 +178,7 @@ struct LeaveStatusCard: View {
     @Query private var allBonusLeaves: [BonusLeave]
     @Query private var allLeaveRecords: [LeaveRecord]
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
+    @State private var showingAddLeave = false
 
     /// 연차 기준 연도의 시작일 (yearStartMonth 기준)
     var annualYearStart: Date {
@@ -267,33 +268,25 @@ struct LeaveStatusCard: View {
 
     private var isLeisure: Bool { profile.userType == .leisure }
     private var hasGoal: Bool { profile.totalAnnualLeave > 0 }
-    private var year: Int { Calendar.current.component(.year, from: Date()) }
 
     var body: some View {
         VStack(spacing: 16) {
-            // 헤더
+            // 헤더 — 보너스 포함 여부는 설정 화면에서 제어한다.
             HStack {
-                Text(isLeisure ? Strings.leisureYearVacationPlan(year: year) : Strings.annualLeaveStatus(year: year))
+                Text(isLeisure ? Strings.leisureVacationPlanTitle : Strings.annualLeaveStatusTitle)
                     .font(.headline)
                 Spacer()
-                // 보너스 포함 토글 — 직장인 모드에서만
-                if !isLeisure, remainingBonusLeave > 0 {
-                    Button {
-                        includeBonusInStatus.toggle()
-                    } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: includeBonusInStatus ? "gift.fill" : "gift")
-                                .font(.caption)
-                            Text(Strings.includeBonus)
-                                .font(.caption)
-                        }
-                        .foregroundStyle(includeBonusInStatus ? AppTheme.Colors.bonus : .secondary)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(includeBonusInStatus ? AppTheme.Colors.bonus.opacity(0.12) : Color.gray.opacity(0.1))
-                        .clipShape(Capsule())
-                    }
+                Button {
+                    showingAddLeave = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(.blue)
+                        .frame(width: 32, height: 32)
+                        .background(Color.blue.opacity(0.1))
+                        .clipShape(Circle())
                 }
+                .accessibilityLabel(Text(Strings.registerLeave))
             }
 
             // 프로그레스 바 — 완료(파랑) / 예정(시안) / 남은(초록) 3분할
@@ -422,6 +415,9 @@ struct LeaveStatusCard: View {
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
+        .sheet(isPresented: $showingAddLeave) {
+            AddLeaveView(profile: profile)
+        }
     }
 
 }
@@ -432,15 +428,11 @@ struct UpcomingLeavesSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("📅 \(Strings.upcomingLeaves)")
+            HStack(spacing: 8) {
+                Text(Strings.upcomingLeaves)
                     .font(.headline)
-                    .accessibilityLabel(Text(Strings.upcomingLeaves))
                     .voHeader()
                 Spacer()
-                Text(Strings.itemCount(leaves.count))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
 
             ForEach(leaves) { leave in
@@ -448,6 +440,10 @@ struct UpcomingLeavesSection: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
     }
 }
 
@@ -511,12 +507,6 @@ struct LeaveHistoryButton: View {
     var body: some View {
         Button(action: action) {
             HStack {
-                Image(systemName: "list.bullet.clipboard")
-                    .font(.title2)
-                    .foregroundStyle(.blue)
-                    .frame(width: 40)
-                    .voDecorative()
-
                 VStack(alignment: .leading, spacing: 2) {
                     Text(Strings.leaveHistory)
                         .font(.subheadline.weight(.semibold))
@@ -528,16 +518,6 @@ struct LeaveHistoryButton: View {
                 }
 
                 Spacer()
-
-                if usedCount > 0 {
-                    Text(Strings.itemCount(usedCount))
-                        .font(.caption.weight(.medium))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Color.blue.opacity(0.1))
-                        .foregroundStyle(.blue)
-                        .clipShape(Capsule())
-                }
 
                 Image(systemName: "chevron.right")
                     .font(.caption)
@@ -815,14 +795,6 @@ struct BurnoutPaceCard: View {
         case .veryFast: return Strings.paceLabelVeryFast
         }
     }
-    private var paceMessage: String {
-        switch paceCategory {
-        case .slow: return Strings.paceMessageSlow
-        case .healthy: return Strings.paceMessageHealthy
-        case .fast: return Strings.paceMessageFast
-        case .veryFast: return Strings.paceMessageVeryFast
-        }
-    }
     private var paceColor: Color {
         switch paceCategory {
         case .slow: return AppTheme.Colors.brand
@@ -888,39 +860,14 @@ struct BurnoutPaceCard: View {
         case .risky: return AppTheme.Colors.error
         }
     }
-    private var burnoutIcon: String {
-        switch burnoutRisk {
-        case .healthy: return "heart.fill"
-        case .plannedAhead: return "sparkles"
-        case .warning: return "moon.zzz.fill"
-        case .risky: return "exclamationmark.bubble.fill"
-        }
-    }
-    private var burnoutMessage: String {
-        switch burnoutRisk {
-        case .healthy: return Strings.burnoutMsgHealthy
-        case .plannedAhead: return Strings.burnoutMsgPlannedAhead
-        case .warning: return Strings.burnoutMsgWarning
-        case .risky: return Strings.burnoutMsgRisky
-        }
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             // 헤더
             HStack(spacing: 8) {
-                Image(systemName: "speedometer")
-                    .foregroundStyle(paceColor)
                 Text(Strings.paceCardTitle)
                     .font(.headline)
                 Spacer()
-                Text(paceLabel)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(paceColor)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(paceColor.opacity(0.12))
-                    .clipShape(Capsule())
             }
 
             // Section 1: 진행률 vs 사용률 비교
@@ -937,120 +884,186 @@ struct BurnoutPaceCard: View {
         .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
     }
 
-    // MARK: - 페이스 섹션
-    private var paceSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            // 올해 진행
-            comparisonBar(
-                label: Strings.paceYearProgressLabel,
-                value: yearProgress,
-                color: Color(.systemGray2),
-                trailing: "\(Int(yearProgress * 100))%"
-            )
-            // 연차 사용
-            comparisonBar(
-                label: Strings.paceUsageLabel,
-                value: usageProgress,
-                color: paceColor,
-                trailing: "\(Int(usageProgress * 100))%"
-            )
-
-            Text(paceMessage)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .lineSpacing(2)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, 2)
+    private var paceMessage: String {
+        switch paceCategory {
+        case .slow: return Strings.paceMessageSlow
+        case .healthy: return Strings.paceMessageHealthy
+        case .fast: return Strings.paceMessageFast
+        case .veryFast: return Strings.paceMessageVeryFast
         }
     }
 
-    private func comparisonBar(label: String, value: Double, color: Color, trailing: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(label)
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text(trailing)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(color)
-                    .monospacedDigit()
-            }
+    // MARK: - 페이스 섹션 (하나의 축 + 두 개의 핀)
+    private var paceSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
             GeometryReader { geo in
-                ZStack(alignment: .leading) {
+                let w = max(geo.size.width, 1)
+                let trackY: CGFloat = 42
+                let yearX = min(max(w * CGFloat(yearProgress), 0), w)
+                let usageX = min(max(w * CGFloat(usageProgress), 0), w)
+                let labelW: CGFloat = 108
+                let ahead = usageProgress >= yearProgress  // 사용이 진행보다 앞서면 빠른 페이스
+
+                ZStack(alignment: .topLeading) {
+                    // 연간 축 트랙
                     Capsule()
                         .fill(Color(.systemGray6))
+                        .frame(width: w, height: 8)
+                        .position(x: w / 2, y: trackY)
+
+                    // 두 핀 사이 구간 강조 (페이스 갭)
                     Capsule()
-                        .fill(color)
-                        .frame(width: max(0, geo.size.width * CGFloat(value)))
+                        .fill(paceColor.opacity(ahead ? 0.35 : 0.18))
+                        .frame(width: abs(usageX - yearX), height: 8)
+                        .position(x: (usageX + yearX) / 2, y: trackY)
+
+                    // 올해 진행 핀 (라벨 위)
+                    pinStem(color: Color(.systemGray))
+                        .position(x: yearX, y: trackY - 11)
+                    pacePinLabel(label: Strings.paceYearProgressLabel,
+                                 value: "\(Int(yearProgress * 100))%",
+                                 color: Color(.systemGray))
+                        .frame(width: labelW)
+                        .position(x: min(max(yearX, labelW / 2), w - labelW / 2), y: trackY - 26)
+
+                    // 연차 사용 핀 (라벨 아래)
+                    pinStem(color: paceColor)
+                        .position(x: usageX, y: trackY + 11)
+                    pacePinLabel(label: Strings.paceUsageLabel,
+                                 value: "\(Int(usageProgress * 100))%",
+                                 color: paceColor)
+                        .frame(width: labelW)
+                        .position(x: min(max(usageX, labelW / 2), w - labelW / 2), y: trackY + 26)
+
+                    // 트랙 위 핀 헤드
+                    pinHead(color: Color(.systemGray)).position(x: yearX, y: trackY)
+                    pinHead(color: paceColor).position(x: usageX, y: trackY)
                 }
             }
-            .frame(height: 8)
+            .frame(height: 84)
+
+            // 한 줄 해설
+            Text(paceMessage)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
+    }
+
+    private func pacePinLabel(label: String, value: String, color: Color) -> some View {
+        VStack(spacing: 1) {
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.caption.weight(.bold))
+                .foregroundStyle(color)
+                .monospacedDigit()
+        }
+        .lineLimit(1)
+        .minimumScaleFactor(0.7)
+    }
+
+    private func pinStem(color: Color) -> some View {
+        Capsule()
+            .fill(color.opacity(0.5))
+            .frame(width: 2, height: 14)
+    }
+
+    private func pinHead(color: Color) -> some View {
+        Circle()
+            .fill(color)
+            .frame(width: 13, height: 13)
+            .overlay(Circle().stroke(Color(.systemBackground), lineWidth: 2))
     }
 
     // MARK: - 번아웃 섹션
     private var burnoutSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
-                Image(systemName: burnoutIcon)
-                    .foregroundStyle(burnoutColor)
-                    .font(.subheadline)
                 Text(Strings.burnoutSectionTitle)
                     .font(.subheadline.weight(.semibold))
                 Spacer()
             }
 
             timelineRow
+        }
+    }
 
-            Text(burnoutMessage)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .lineSpacing(2)
-                .fixedSize(horizontal: false, vertical: true)
+    /// 오늘의 가로 위치 비율 (0 = 지난 휴가 쪽 끝, 1 = 다음 휴가 쪽 끝)
+    /// 실제 일수 비율을 그대로 쓰면 한쪽이 찌그러지므로 0.5 기준으로 완화하고
+    /// [0.25, 0.75] 범위로 클램프해 "어느 쪽이 더 가까운지"만 직관적으로 드러낸다.
+    private var todayFraction: CGFloat {
+        guard let since = daysSinceLastLeave, let until = daysUntilNextLeave else { return 0.5 }
+        let s = Double(max(since, 0))
+        let u = Double(max(until, 0))
+        let total = s + u
+        guard total > 0 else { return 0.5 }
+        let raw = s / total                  // since가 클수록(지난 휴가가 멀수록) 오늘은 오른쪽
+        let soft = 0.5 + (raw - 0.5) * 0.6   // 비율 완화
+        return CGFloat(min(max(soft, 0.25), 0.75))
+    }
+
+    private var todayNode: some View {
+        VStack(spacing: 4) {
+            ZStack {
+                Circle()
+                    .fill(burnoutColor)
+                    .frame(width: 14, height: 14)
+                Circle()
+                    .stroke(burnoutColor.opacity(0.3), lineWidth: 4)
+                    .frame(width: 22, height: 22)
+            }
+            Text(Strings.burnoutToday)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.primary)
         }
     }
 
     private var timelineRow: some View {
-        HStack(spacing: 0) {
-            // 지난 휴가
-            timelineCell(
-                title: Strings.burnoutLast,
-                value: daysSinceLastLeave.map { Strings.burnoutDaysAgo($0) } ?? Strings.burnoutNoLast,
-                hasData: daysSinceLastLeave != nil,
-                color: lastLeaveColor
-            )
+        GeometryReader { geo in
+            let w = geo.size.width
+            let nodeW: CGFloat = 56
+            let cellW: CGFloat = 72
+            let budget = max(w - nodeW - cellW * 2, 0)
+            let frac = todayFraction
+            let leftW = budget * frac          // 지난 휴가 ~ 오늘 사이
+            let rightW = budget * (1 - frac)   // 오늘 ~ 다음 휴가 사이
 
-            // 연결선 (왼쪽)
-            connector(filled: daysSinceLastLeave != nil, color: lastLeaveColor)
+            HStack(spacing: 0) {
+                // 지난 휴가
+                timelineCell(
+                    title: Strings.burnoutLast,
+                    value: daysSinceLastLeave.map { Strings.burnoutDaysAgo($0) } ?? Strings.burnoutNoLast,
+                    hasData: daysSinceLastLeave != nil,
+                    color: lastLeaveColor
+                )
+                .frame(width: cellW)
 
-            // 오늘 (중앙)
-            VStack(spacing: 4) {
-                ZStack {
-                    Circle()
-                        .fill(burnoutColor)
-                        .frame(width: 14, height: 14)
-                    Circle()
-                        .stroke(burnoutColor.opacity(0.3), lineWidth: 4)
-                        .frame(width: 22, height: 22)
-                }
-                Text(Strings.burnoutToday)
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.primary)
+                // 연결선 (왼쪽) — 멀수록 길어진다
+                connector(filled: daysSinceLastLeave != nil, color: lastLeaveColor)
+                    .frame(width: leftW)
+
+                // 오늘 (비율에 따라 좌우로 이동)
+                todayNode
+                    .frame(width: nodeW)
+
+                // 연결선 (오른쪽) — 가까울수록 짧아진다
+                connector(filled: nextPlannedLeave != nil, color: AppTheme.Colors.brand)
+                    .frame(width: rightW)
+
+                // 다음 휴가
+                timelineCell(
+                    title: Strings.burnoutNext,
+                    value: daysUntilNextLeave.map { Strings.burnoutDaysAhead($0) } ?? Strings.burnoutNoNext,
+                    hasData: daysUntilNextLeave != nil,
+                    color: AppTheme.Colors.brand
+                )
+                .frame(width: cellW)
             }
-            .frame(width: 56)
-
-            // 연결선 (오른쪽)
-            connector(filled: nextPlannedLeave != nil, color: AppTheme.Colors.brand)
-
-            // 다음 휴가
-            timelineCell(
-                title: Strings.burnoutNext,
-                value: daysUntilNextLeave.map { Strings.burnoutDaysAhead($0) } ?? Strings.burnoutNoNext,
-                hasData: daysUntilNextLeave != nil,
-                color: AppTheme.Colors.brand
-            )
+            .frame(width: w)
         }
+        .frame(height: 52)
     }
 
     private var lastLeaveColor: Color {

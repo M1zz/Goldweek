@@ -160,6 +160,26 @@ enum Strings {
         }
     }
 
+    /// 연도 없는 연차 현황 제목
+    static var annualLeaveStatusTitle: String {
+        switch lang {
+        case .korean: return "연차 현황"
+        case .english: return "Annual Leave"
+        case .japanese: return "有給休暇"
+        case .chinese: return "年假概况"
+        }
+    }
+
+    /// 연도 없는 자유 계획 제목
+    static var leisureVacationPlanTitle: String {
+        switch lang {
+        case .korean: return "휴가 계획"
+        case .english: return "Vacation Plan"
+        case .japanese: return "休暇計画"
+        case .chinese: return "休假计划"
+        }
+    }
+
     static var used: String {
         switch lang {
         case .korean: return "사용"
@@ -775,6 +795,16 @@ enum Strings {
         case .english: return "Name"
         case .japanese: return "名前"
         case .chinese: return "姓名"
+        }
+    }
+
+    /// 이름 수정 버튼 VoiceOver 라벨
+    static var editName: String {
+        switch lang {
+        case .korean: return "이름 수정"
+        case .english: return "Edit name"
+        case .japanese: return "名前を編集"
+        case .chinese: return "编辑姓名"
         }
     }
 
@@ -3354,6 +3384,16 @@ enum Strings {
         }
     }
 
+    /// 보너스 포함 토글 VoiceOver 힌트
+    static var includeBonusHint: String {
+        switch lang {
+        case .korean: return "켜면 보너스 연차가 잔여 일수에 합산됩니다"
+        case .english: return "When on, bonus leave is added to your remaining days"
+        case .japanese: return "オンにするとボーナス休暇が残日数に合算されます"
+        case .chinese: return "开启后奖励假期将计入剩余天数"
+        }
+    }
+
     static var statRemainingGoal: String {
         switch lang {
         case .korean: return "남은 목표"
@@ -3982,6 +4022,55 @@ enum Strings {
         case .english: return "Added by me"
         case .japanese: return "自分で追加"
         case .chinese: return "我添加的"
+        }
+    }
+
+    /// 펼침/접힘 상태 (VoiceOver accessibilityValue)
+    static var a11yExpanded: String {
+        switch lang {
+        case .korean: return "펼침"
+        case .english: return "Expanded"
+        case .japanese: return "展開"
+        case .chinese: return "已展开"
+        }
+    }
+
+    static var a11yCollapsed: String {
+        switch lang {
+        case .korean: return "접힘"
+        case .english: return "Collapsed"
+        case .japanese: return "折りたたみ"
+        case .chinese: return "已折叠"
+        }
+    }
+
+    /// 휴가 기록 행 VoiceOver 힌트
+    static var editLeaveHint: String {
+        switch lang {
+        case .korean: return "이중 탭하여 수정"
+        case .english: return "Double tap to edit"
+        case .japanese: return "ダブルタップで編集"
+        case .chinese: return "双击以编辑"
+        }
+    }
+
+    /// 추천 황금연휴로 등록된 휴가 표식 (VoiceOver)
+    static var recommendedMark: String {
+        switch lang {
+        case .korean: return "추천 황금연휴"
+        case .english: return "Recommended holiday"
+        case .japanese: return "おすすめの連休"
+        case .chinese: return "推荐黄金假期"
+        }
+    }
+
+    /// 공휴일 표시 토글 VoiceOver 힌트
+    static var holidayVisibilityHint: String {
+        switch lang {
+        case .korean: return "끄면 달력에서 숨겨집니다"
+        case .english: return "Turn off to hide it from the calendar"
+        case .japanese: return "オフにするとカレンダーから非表示になります"
+        case .chinese: return "关闭后将从日历中隐藏"
         }
     }
 

@@ -572,6 +572,8 @@ struct SetupPage: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             .buttonStyle(.plain)
+                            .voButton(Strings.monthShort(month))
+                            .voSelected(yearStartMonth == month)
                         }
                     }
                 }

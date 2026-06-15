@@ -119,7 +119,7 @@ class HolidayService {
 
     private func getKoreanFixedHolidays(for year: Int) -> [Holiday] {
         let lang = AppLanguage.current
-        let fixedDates: [(month: Int, day: Int, names: [AppLanguage: String])] = [
+        var fixedDates: [(month: Int, day: Int, names: [AppLanguage: String])] = [
             (1, 1, [.korean: "신정", .english: "New Year's Day", .japanese: "元日", .chinese: "元旦"]),
             (3, 1, [.korean: "삼일절", .english: "Independence Movement Day", .japanese: "三一節", .chinese: "三一节"]),
             (5, 1, [.korean: "근로자의 날", .english: "Workers' Day", .japanese: "労働者の日", .chinese: "劳动节"]),
@@ -130,6 +130,12 @@ class HolidayService {
             (10, 9, [.korean: "한글날", .english: "Hangul Day", .japanese: "ハングルの日", .chinese: "韩文日"]),
             (12, 25, [.korean: "크리스마스", .english: "Christmas", .japanese: "クリスマス", .chinese: "圣诞节"])
         ]
+
+        // 제헌절(7/17): 2008년 주5일제 도입으로 공휴일에서 제외됐다가
+        // 2025-01-29 공휴일법 개정안 통과로 2026년부터 18년 만에 공휴일 재지정.
+        if year >= 2026 {
+            fixedDates.append((7, 17, [.korean: "제헌절", .english: "Constitution Day", .japanese: "制憲節", .chinese: "制宪节"]))
+        }
 
         return fixedDates.compactMap { fixed in
             var components = DateComponents()
@@ -246,22 +252,25 @@ class HolidayService {
         var substituteHolidays: [Holiday] = []
         let lang = AppLanguage.current
 
-        let substituteEligibleKR = ["어린이날", "근로자의 날", "설날", "설날 연휴", "추석", "추석 연휴",
-                                     "삼일절", "광복절", "개천절", "한글날", "크리스마스", "부처님오신날"]
-        let substituteEligibleEN = ["Children's Day", "Workers' Day", "Seollal", "Seollal Holiday", "Chuseok", "Chuseok Holiday",
-                                     "Independence Movement Day", "Liberation Day", "National Foundation Day", "Hangul Day", "Christmas", "Buddha's Birthday"]
-        let substituteEligibleJP = ["こどもの日", "労働者の日", "ソルラル", "ソルラル連休", "秋夕", "秋夕連休",
-                                     "三一節", "光復節", "開天節", "ハングルの日", "クリスマス", "釈迦誕生日"]
-        let substituteEligibleZH = ["儿童节", "劳动节", "春节", "春节假期", "中秋节", "中秋节假期",
-                                     "三一节", "光复节", "开天节", "韩文日", "圣诞节", "佛诞日"]
+        // 「관공서의 공휴일에 관한 규정」 제3조 대체공휴일 기준
+        // - 토요일·일요일 모두 적용: 삼일절·광복절·개천절·한글날·어린이날·부처님오신날·제헌절
+        // - 일요일에만 적용: 설날 연휴·추석 연휴·크리스마스(기독탄신일)
+        // - 적용 제외: 신정·현충일·근로자의 날(관공서 공휴일 아님)
+        let weekendEligible: [AppLanguage: [String]] = [
+            .korean:   ["삼일절", "광복절", "개천절", "한글날", "어린이날", "부처님오신날", "제헌절"],
+            .english:  ["Independence Movement Day", "Liberation Day", "National Foundation Day", "Hangul Day", "Children's Day", "Buddha's Birthday", "Constitution Day"],
+            .japanese: ["三一節", "光復節", "開天節", "ハングルの日", "こどもの日", "釈迦誕生日", "制憲節"],
+            .chinese:  ["三一节", "光复节", "开天节", "韩文日", "儿童节", "佛诞日", "制宪节"]
+        ]
+        let sundayOnlyEligible: [AppLanguage: [String]] = [
+            .korean:   ["설날", "설날 연휴", "추석", "추석 연휴", "크리스마스"],
+            .english:  ["Seollal", "Seollal Holiday", "Chuseok", "Chuseok Holiday", "Christmas"],
+            .japanese: ["ソルラル", "ソルラル連休", "秋夕", "秋夕連休", "クリスマス"],
+            .chinese:  ["春节", "春节假期", "中秋节", "中秋节假期", "圣诞节"]
+        ]
 
-        let substituteEligible: [String]
-        switch lang {
-        case .korean: substituteEligible = substituteEligibleKR
-        case .english: substituteEligible = substituteEligibleEN
-        case .japanese: substituteEligible = substituteEligibleJP
-        case .chinese: substituteEligible = substituteEligibleZH
-        }
+        let weekendNames = weekendEligible[lang] ?? weekendEligible[.korean]!
+        let sundayNames = sundayOnlyEligible[lang] ?? sundayOnlyEligible[.korean]!
 
         let subLabel: String
         switch lang {
@@ -273,27 +282,37 @@ class HolidayService {
 
         for holiday in holidays {
             let weekday = calendar.component(.weekday, from: holiday.date)
-            let isWeekend = weekday == 1 || weekday == 7
+            let isSunday = weekday == 1
+            let isSaturday = weekday == 7
 
-            if isWeekend && substituteEligible.contains(where: { holiday.name.contains($0) }) {
-                var nextDay = calendar.date(byAdding: .day, value: 1, to: holiday.date)!
+            // 토·일 적용 대상은 주말 전체, 일요일 전용 대상은 일요일에만 트리거
+            let triggers: Bool
+            if weekendNames.contains(where: { holiday.name.contains($0) }) {
+                triggers = isSunday || isSaturday
+            } else if sundayNames.contains(where: { holiday.name.contains($0) }) {
+                triggers = isSunday
+            } else {
+                triggers = false
+            }
+            guard triggers else { continue }
 
-                while true {
-                    let nextWeekday = calendar.component(.weekday, from: nextDay)
-                    let isAlreadyHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: nextDay) }
-                    let isAlreadySubstitute = substituteHolidays.contains { calendar.isDate($0.date, inSameDayAs: nextDay) }
+            // 겹치지 않는 첫 평일을 대체공휴일로 지정
+            var nextDay = calendar.date(byAdding: .day, value: 1, to: holiday.date)!
+            while true {
+                let nextWeekday = calendar.component(.weekday, from: nextDay)
+                let isAlreadyHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: nextDay) }
+                let isAlreadySubstitute = substituteHolidays.contains { calendar.isDate($0.date, inSameDayAs: nextDay) }
 
-                    if nextWeekday != 1 && nextWeekday != 7 && !isAlreadyHoliday && !isAlreadySubstitute {
-                        substituteHolidays.append(Holiday(
-                            date: nextDay,
-                            name: "\(holiday.name) \(subLabel)",
-                            isSubstitute: true
-                        ))
-                        break
-                    }
-
-                    nextDay = calendar.date(byAdding: .day, value: 1, to: nextDay)!
+                if nextWeekday != 1 && nextWeekday != 7 && !isAlreadyHoliday && !isAlreadySubstitute {
+                    substituteHolidays.append(Holiday(
+                        date: nextDay,
+                        name: "\(holiday.name) \(subLabel)",
+                        isSubstitute: true
+                    ))
+                    break
                 }
+
+                nextDay = calendar.date(byAdding: .day, value: 1, to: nextDay)!
             }
         }
 

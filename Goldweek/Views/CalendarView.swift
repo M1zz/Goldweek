@@ -240,6 +240,10 @@ struct CalendarGrid: View {
                                 isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
                                 isHoliday: isHoliday(date),
                                 isLeave: isLeave(date),
+                                barVisible: showsRestBar(date),
+                                barColor: restBarColor(date),
+                                leaveConnectsLeft: restConnectsLeft(date),
+                                leaveConnectsRight: restConnectsRight(date),
                                 isToday: calendar.isDateInToday(date)
                             )
                         }
@@ -270,6 +274,78 @@ struct CalendarGrid: View {
             return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
         }
     }
+
+    private func isWeekendDate(_ date: Date) -> Bool {
+        let wd = calendar.component(.weekday, from: date)
+        return wd == 1 || wd == 7
+    }
+
+    /// 평일 쉬는 날(휴가·공휴일) — 주말 브릿지의 앵커
+    private func isRestAnchor(_ date: Date) -> Bool {
+        isLeave(date) || isHoliday(date)
+    }
+
+    /// 주말 블록의 앞(금) 또는 뒤(월) 평일이 쉬는 날이면 그 주말도 선으로 이어준다.
+    /// 한쪽만 휴가/공휴일이어도 적용 → 금(휴/공)요일이면 토·일, 월(휴/공)요일이면 토·일이 이어짐.
+    private func isBridgedWeekend(_ date: Date) -> Bool {
+        guard isWeekendDate(date) else { return false }
+        var start = date
+        while let p = calendar.date(byAdding: .day, value: -1, to: start), isWeekendDate(p) {
+            start = p
+        }
+        var end = date
+        while let n = calendar.date(byAdding: .day, value: 1, to: end), isWeekendDate(n) {
+            end = n
+        }
+        let before = calendar.date(byAdding: .day, value: -1, to: start)
+        let after = calendar.date(byAdding: .day, value: 1, to: end)
+        return (before.map(isRestAnchor) ?? false) || (after.map(isRestAnchor) ?? false)
+    }
+
+    /// 선(막대) 후보 — 휴가·공휴일·브릿지 주말
+    private func baseCovered(_ date: Date) -> Bool {
+        isLeave(date) || isHoliday(date) || isBridgedWeekend(date)
+    }
+
+    /// 실제로 막대를 그릴지 — 휴가는 단독도 표시, 공휴일·주말은 인접한 쉬는 날과 이어질 때만.
+    /// (외톨이 공휴일은 기존처럼 점으로 표시)
+    private func showsRestBar(_ date: Date) -> Bool {
+        if isLeave(date) { return true }
+        guard baseCovered(date) else { return false }
+        let prev = calendar.date(byAdding: .day, value: -1, to: date)
+        let next = calendar.date(byAdding: .day, value: 1, to: date)
+        return (prev.map(baseCovered) ?? false) || (next.map(baseCovered) ?? false)
+    }
+
+    /// 막대 색 — 휴가색/공휴일색, 브릿지 주말은 인접 앵커 기준(휴가 우선)
+    private func restBarColor(_ date: Date) -> Color {
+        if isLeave(date) { return AppTheme.Colors.leave }
+        if isHoliday(date) { return AppTheme.Colors.holiday }
+        var start = date
+        while let p = calendar.date(byAdding: .day, value: -1, to: start), isWeekendDate(p) { start = p }
+        var end = date
+        while let n = calendar.date(byAdding: .day, value: 1, to: end), isWeekendDate(n) { end = n }
+        let before = calendar.date(byAdding: .day, value: -1, to: start)
+        let after = calendar.date(byAdding: .day, value: 1, to: end)
+        let nearLeave = (before.map(isLeave) ?? false) || (after.map(isLeave) ?? false)
+        return nearLeave ? AppTheme.Colors.leave : AppTheme.Colors.holiday
+    }
+
+    /// 전날도 막대이고 같은 주 안에서 이어지는 경우 (일요일=첫 열은 좌측 연결 없음)
+    private func restConnectsLeft(_ date: Date) -> Bool {
+        guard showsRestBar(date) else { return false }
+        if calendar.component(.weekday, from: date) == 1 { return false }
+        guard let prev = calendar.date(byAdding: .day, value: -1, to: date) else { return false }
+        return showsRestBar(prev)
+    }
+
+    /// 다음날도 막대이고 같은 주 안에서 이어지는 경우 (토요일=마지막 열은 우측 연결 없음)
+    private func restConnectsRight(_ date: Date) -> Bool {
+        guard showsRestBar(date) else { return false }
+        if calendar.component(.weekday, from: date) == 7 { return false }
+        guard let next = calendar.date(byAdding: .day, value: 1, to: date) else { return false }
+        return showsRestBar(next)
+    }
 }
 
 // MARK: - 날짜 셀
@@ -278,6 +354,10 @@ struct DayCell: View {
     let isSelected: Bool
     let isHoliday: Bool
     let isLeave: Bool
+    var barVisible: Bool = false
+    var barColor: Color = AppTheme.Colors.leave
+    var leaveConnectsLeft: Bool = false
+    var leaveConnectsRight: Bool = false
     let isToday: Bool
 
     private let calendar = Calendar.current
@@ -316,14 +396,13 @@ struct DayCell: View {
                 .font(.system(.subheadline, weight: isToday ? .bold : .regular))
                 .foregroundStyle(textColor)
 
-            if isLeave && !isSelected {
-                Circle()
-                    .fill(AppTheme.Colors.leave)
-                    .frame(width: 6, height: 6)
-                    .offset(y: 14)
+            // 휴가·공휴일: 연속된 쉬는 날(+인접 주말)은 칸 사이를 메워 하나의 선으로 표현
+            if barVisible {
+                leaveBar
             }
 
-            if isHoliday && !isSelected && !isLeave {
+            // 외톨이 공휴일은 점으로 표시
+            if isHoliday && !isSelected && !barVisible {
                 Circle()
                     .fill(AppTheme.Colors.holiday)
                     .frame(width: 6, height: 6)
@@ -334,6 +413,27 @@ struct DayCell: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Strings.accessibilityDayLabel(day: dayNumber, isToday: isToday, isHoliday: isHoliday, isLeave: isLeave, isSelected: isSelected))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    /// 휴가·공휴일 막대 — 양 끝(고립/시작/끝)은 둥글게, 이어지는 쪽은 칸 사이 간격(8pt)을
+    /// 음수 패딩으로 메워 옆 칸 막대와 하나의 선처럼 연결된다.
+    private var leaveBar: some View {
+        let r: CGFloat = 3
+        // 선택된 날은 브랜드 원 위에 올라가므로 흰색으로 대비를 준다.
+        let fill = isSelected ? Color.white : barColor
+        return fill
+            .frame(maxWidth: .infinity, minHeight: 6, maxHeight: 6)
+            .clipShape(
+                .rect(
+                    topLeadingRadius: leaveConnectsLeft ? 0 : r,
+                    bottomLeadingRadius: leaveConnectsLeft ? 0 : r,
+                    bottomTrailingRadius: leaveConnectsRight ? 0 : r,
+                    topTrailingRadius: leaveConnectsRight ? 0 : r
+                )
+            )
+            .padding(.leading, leaveConnectsLeft ? -5 : 0)
+            .padding(.trailing, leaveConnectsRight ? -5 : 0)
+            .offset(y: 14)
     }
 }
 
@@ -391,29 +491,34 @@ struct SelectedDateInfo: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(date.formatted(date: .complete, time: .omitted))
                 .font(.headline)
+                .voHeader()
 
             if let holiday = holidayOnDate {
                 HStack {
                     Image(systemName: "flag.fill")
                         .foregroundStyle(.red)
+                        .voDecorative()
                     Text(holiday.name)
                     if holiday.isSubstitute {
                         Text("(\(Strings.substituteHoliday))")
                             .foregroundStyle(.secondary)
                     }
                 }
+                .accessibilityElement(children: .combine)
             }
 
             if let leave = leaveOnDate {
                 HStack {
                     Image(systemName: "calendar.badge.checkmark")
                         .foregroundStyle(.green)
+                        .voDecorative()
                     Text(Strings.leaveTypeName(leave.type))
                     if !leave.note.isEmpty {
                         Text("- \(leave.note)")
                             .foregroundStyle(.secondary)
                     }
                 }
+                .accessibilityElement(children: .combine)
             }
 
             if holidayOnDate == nil && leaveOnDate == nil {
@@ -509,6 +614,7 @@ struct MyLeaveListView: View {
                                 Image(systemName: showPastLeaves ? "chevron.up" : "chevron.down")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+                                    .voDecorative()
                                 Spacer()
                                 Text(Strings.itemCount(pastLeaves.count))
                                     .font(.caption)
@@ -520,6 +626,8 @@ struct MyLeaveListView: View {
                             .clipShape(Capsule())
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel(Text("\(Strings.pastSchedule), \(Strings.itemCount(pastLeaves.count))"))
+                        .accessibilityValue(Text(showPastLeaves ? Strings.a11yExpanded : Strings.a11yCollapsed))
 
                         if showPastLeaves {
                             ForEach(pastLeaves.prefix(10)) { leave in

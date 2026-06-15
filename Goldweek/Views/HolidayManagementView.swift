@@ -138,6 +138,8 @@ struct HolidayManagementView: View {
                 .foregroundStyle(isSelected ? .white : .primary)
                 .clipShape(Capsule())
         }
+        .voButton(label)
+        .voSelected(isSelected)
     }
 
     private var builtInSection: some View {
@@ -147,6 +149,7 @@ struct HolidayManagementView: View {
                 Text(Strings.holidayDefaultSection)
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.secondary)
+                    .voHeader()
                 Spacer()
                 Text(Strings.itemCount(builtInHolidays.count))
                     .font(.footnote)
@@ -186,17 +189,20 @@ struct HolidayManagementView: View {
                 Text(Strings.holidayCustomSection)
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.secondary)
+                    .voHeader()
                 Spacer()
                 Button {
                     showingAddSheet = true
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "plus.circle.fill")
+                            .voDecorative()
                         Text(Strings.commonAdd)
                     }
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.purple)
                 }
+                .voButton(Strings.commonAdd)
             }
             .padding(.horizontal)
             .padding(.top, 20)
@@ -208,6 +214,7 @@ struct HolidayManagementView: View {
                         Image(systemName: "plus.circle.dashed")
                             .font(.title3)
                             .foregroundStyle(.secondary)
+                            .voDecorative()
                         Text(Strings.holidayCustomEmpty)
                             .foregroundStyle(.secondary)
                             .font(.subheadline)
@@ -250,36 +257,41 @@ private struct BuiltInHolidayRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            // 날짜 컬럼
-            VStack(alignment: .center, spacing: 1) {
-                Text(holiday.date, format: .dateTime.month(.abbreviated))
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                Text(holiday.date, format: .dateTime.day())
-                    .font(.headline)
-                    .foregroundStyle(isHidden ? Color.secondary : Color.red)
-            }
-            .frame(width: 36)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(holiday.name)
-                    .font(.subheadline)
-                    .foregroundStyle(isHidden ? Color.secondary : Color.primary)
-                    .strikethrough(isHidden, color: .secondary)
-                if holiday.isSubstitute {
-                    Text(Strings.holidaySubstitute)
+            HStack(spacing: 12) {
+                // 날짜 컬럼
+                VStack(alignment: .center, spacing: 1) {
+                    Text(holiday.date, format: .dateTime.month(.abbreviated))
                         .font(.caption2)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(.secondary)
+                    Text(holiday.date, format: .dateTime.day())
+                        .font(.headline)
+                        .foregroundStyle(isHidden ? Color.secondary : Color.red)
                 }
-            }
+                .frame(width: 36)
 
-            Spacer()
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(holiday.name)
+                        .font(.subheadline)
+                        .foregroundStyle(isHidden ? Color.secondary : Color.primary)
+                        .strikethrough(isHidden, color: .secondary)
+                    if holiday.isSubstitute {
+                        Text(Strings.holidaySubstitute)
+                            .font(.caption2)
+                            .foregroundStyle(.orange)
+                    }
+                }
+
+                Spacer()
+            }
+            .accessibilityElement(children: .combine)
 
             Toggle("", isOn: Binding(
                 get: { !isHidden },
                 set: { _ in onToggle() }
             ))
             .labelsHidden()
+            .accessibilityLabel(Text(holiday.name))
+            .accessibilityHint(Text(Strings.holidayVisibilityHint))
         }
         .padding(.horizontal)
         .padding(.vertical, 10)
@@ -293,29 +305,33 @@ private struct CustomHolidayRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            VStack(alignment: .center, spacing: 1) {
-                Text(holiday.date, format: .dateTime.month(.abbreviated))
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                Text(holiday.date, format: .dateTime.day())
-                    .font(.headline)
-                    .foregroundStyle(.purple)
-            }
-            .frame(width: 36)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(holiday.name)
-                    .font(.subheadline)
-                HStack(spacing: 4) {
-                    Image(systemName: "person.fill")
+            HStack(spacing: 12) {
+                VStack(alignment: .center, spacing: 1) {
+                    Text(holiday.date, format: .dateTime.month(.abbreviated))
                         .font(.caption2)
-                    Text(Strings.holidayAddedByMe)
-                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    Text(holiday.date, format: .dateTime.day())
+                        .font(.headline)
+                        .foregroundStyle(.purple)
                 }
-                .foregroundStyle(.purple)
-            }
+                .frame(width: 36)
 
-            Spacer()
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(holiday.name)
+                        .font(.subheadline)
+                    HStack(spacing: 4) {
+                        Image(systemName: "person.fill")
+                            .font(.caption2)
+                            .voDecorative()
+                        Text(Strings.holidayAddedByMe)
+                            .font(.caption2)
+                    }
+                    .foregroundStyle(.purple)
+                }
+
+                Spacer()
+            }
+            .accessibilityElement(children: .combine)
 
             Button(role: .destructive, action: onDelete) {
                 Image(systemName: "trash")
@@ -323,6 +339,7 @@ private struct CustomHolidayRow: View {
                     .font(.subheadline)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(Text(Strings.commonDelete))
         }
         .padding(.horizontal)
         .padding(.vertical, 10)

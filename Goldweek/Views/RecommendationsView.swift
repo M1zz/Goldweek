@@ -291,11 +291,13 @@ struct RemainingLeaveInfo: View {
                 lineWidth: 8
             )
             .frame(width: 60, height: 60)
+            .voDecorative()
         }
         .padding()
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.05), radius: 5)
+        .voCard(VoiceOverLabel.leaveBalance(total: total, used: committed, remaining: available))
     }
 }
 
