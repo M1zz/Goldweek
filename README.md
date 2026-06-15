@@ -103,14 +103,24 @@
 
 **옵션 B — GoldweekSecrets.swift 파일** (배포 빌드용)
 
-1. `Goldweek/GoldweekSecrets.swift` 파일 생성 (`.gitignore` 처리됨)
-2. 다음 코드 작성:
-   ```swift
-   enum GoldweekSecrets {
-       static let mrtAPIKey = "<발급받은_키>"
-   }
+> ⚠️ 이 파일은 Xcode 빌드 소스에 등록돼 있어, **없으면 빌드가 실패**합니다.
+> 클론 직후 아래 한 줄로 템플릿을 복사하면 키 없이도 빌드됩니다.
+
+1. 템플릿을 복사:
+   ```bash
+   cp Goldweek/GoldweekSecrets.example.swift Goldweek/GoldweekSecrets.swift
    ```
-3. `RecommendationsView.swift`의 `MRTConfig.apiKey`에서 fallback 라인 주석 해제
+2. (키가 있으면) 복사본 `GoldweekSecrets.swift`의 `mrtAPIKey` 값만 교체
+   - 키가 없으면 그대로 둬도 됨 → 플레이스홀더는 자동으로 `nil` 처리되어 MRT 추천만 비활성화
+   - 복사본은 `.gitignore` 처리되어 커밋되지 않음 (실제 키는 example 파일에 넣지 말 것)
+
+**시크릿 실수 커밋 방지 (권장)**
+
+저장소당 1회 pre-commit 훅을 활성화하세요:
+```bash
+git config core.hooksPath .githooks
+brew install gitleaks   # 선택 — 있으면 정밀 스캔, 없으면 기본 검사로 폴백
+```
 
 ### API 명세 통합 (받으면 채울 위치)
 
