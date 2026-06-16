@@ -20,9 +20,14 @@ struct CalendarView: View {
     @State private var recordToDelete: LeaveRecord?
 
     @Query private var customHolidays: [CustomHoliday]
+    @Query private var allBonusLeaves: [BonusLeave]
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
 
+    /// 추천 탭과 동일한 추천 일정(공휴일 포함, 연차 필요) — 캘린더 노란색 표시 + 상세정보용
+    @State private var recommendations: [LeaveRecommendation] = []
+
     private let holidayService = HolidayService()
+    private let recommendationEngine = RecommendationEngine()
     private let calendar = Calendar.current
 
     private var hiddenDates: Set<String> {
@@ -41,6 +46,81 @@ struct CalendarView: View {
         return leaveRecords
             .filter { $0.status != .cancelled && $0.endDate >= today }
             .sorted { $0.startDate < $1.startDate }
+    }
+
+    // MARK: 추천 일정 계산 입력값
+    private var committedLeave: Double {
+        leaveRecords
+            .filter { ($0.status == .used || $0.status == .planned) && $0.deductsFromAnnualLeave }
+            .reduce(0.0) { $0 + $1.effectiveLeaveDays }
+    }
+    private var activeBonusLeave: Double {
+        let now = Date()
+        return allBonusLeaves
+            .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > now) }
+            .reduce(0) { $0 + $1.remainingDays }
+    }
+    private var availableLeave: Double {
+        max(0, profile.totalAnnualLeave - committedLeave) + activeBonusLeave
+    }
+
+    /// 추천 일정 중 노란색으로 표시할 "연차일" — 범위 내 평일(주말·공휴일 제외)
+    private var recommendedDates: Set<Date> {
+        let holidaySet = Set(holidays.map { calendar.startOfDay(for: $0.date) })
+        var set: Set<Date> = []
+        for rec in recommendations {
+            var d = calendar.startOfDay(for: rec.startDate)
+            let end = calendar.startOfDay(for: rec.endDate)
+            while d <= end {
+                let wd = calendar.component(.weekday, from: d)
+                if wd != 1 && wd != 7 && !holidaySet.contains(d) {
+                    set.insert(d)
+                }
+                guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+                d = next
+            }
+        }
+        return set
+    }
+
+    /// 이미 잡힌 휴가/휴식 날짜 (번아웃 텀 계산용)
+    private var existingLeaveDates: [Date] {
+        var dates: [Date] = []
+        for record in leaveRecords where record.status != .cancelled {
+            var d = calendar.startOfDay(for: record.startDate)
+            let end = calendar.startOfDay(for: record.endDate)
+            while d <= end {
+                dates.append(d)
+                guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+                d = next
+            }
+        }
+        return dates
+    }
+
+    /// 추천 탭과 동일한 엔진으로 추천을 만들고, 공휴일이 포함되고 연차가 필요한 일정만 남긴다.
+    private func computeRecommendations(year: Int) {
+        let recs = recommendationEngine.generateRecommendations(
+            for: profile,
+            remainingLeave: availableLeave,
+            year: year,
+            country: profile.country,
+            includePast: false,
+            existingLeaveDates: existingLeaveDates
+        )
+        let holidaySet = Set(holidays.map { calendar.startOfDay(for: $0.date) })
+        recommendations = recs.filter { rec in
+            guard rec.requiredLeaveDays > 0 else { return false }
+            // 범위 안에 공휴일이 하나라도 포함된 추천만
+            var d = calendar.startOfDay(for: rec.startDate)
+            let end = calendar.startOfDay(for: rec.endDate)
+            while d <= end {
+                if holidaySet.contains(d) { return true }
+                guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+                d = next
+            }
+            return false
+        }
     }
 
     var pastLeaves: [LeaveRecord] {
@@ -62,17 +142,19 @@ struct CalendarView: View {
                         currentMonth: currentMonth,
                         selectedDate: $selectedDate,
                         holidays: holidays,
-                        leaveRecords: leaveRecords
+                        leaveRecords: leaveRecords,
+                        recommendedDates: recommendedDates
                     )
 
                     // 범례
-                    LegendView()
+                    LegendView(showsRecommendation: !recommendedDates.isEmpty)
 
                     // 선택된 날짜 정보
                     SelectedDateInfo(
                         date: selectedDate,
                         holidays: holidays,
-                        leaveRecords: leaveRecords
+                        leaveRecords: leaveRecords,
+                        recommendations: recommendations
                     )
 
                     // 나의 연차 일정
@@ -92,6 +174,9 @@ struct CalendarView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .navigationBar)
+            .task(id: "\(calendar.component(.year, from: currentMonth))-\(Int(availableLeave))-\(leaveRecords.count)-\(profile.preferredDurationRaw)-\(profile.preferLongWeekend)-\(profile.preferConsecutive)-\(profile.avoidPeakSeason)") {
+                computeRecommendations(year: calendar.component(.year, from: currentMonth))
+            }
             .sheet(item: $recordToEdit) { record in
                 EditLeaveSheet(record: record, profile: profile) {
                     recordToEdit = nil
@@ -191,6 +276,7 @@ struct CalendarGrid: View {
     @Binding var selectedDate: Date
     let holidays: [Holiday]
     let leaveRecords: [LeaveRecord]
+    var recommendedDates: Set<Date> = []
 
     private let calendar = Calendar.current
 
@@ -244,6 +330,7 @@ struct CalendarGrid: View {
                                 barColor: restBarColor(date),
                                 leaveConnectsLeft: restConnectsLeft(date),
                                 leaveConnectsRight: restConnectsRight(date),
+                                isRecommended: recommendedDates.contains(calendar.startOfDay(for: date)),
                                 isToday: calendar.isDateInToday(date)
                             )
                         }
@@ -358,6 +445,7 @@ struct DayCell: View {
     var barColor: Color = AppTheme.Colors.leave
     var leaveConnectsLeft: Bool = false
     var leaveConnectsRight: Bool = false
+    var isRecommended: Bool = false
     let isToday: Bool
 
     private let calendar = Calendar.current
@@ -392,8 +480,15 @@ struct DayCell: View {
                     .stroke(AppTheme.Colors.brand, lineWidth: 2)
             }
 
+            // 추천: 최적 플랜이 제안하는 연차일 — 노란 배경으로 강조
+            if isRecommended && !isSelected {
+                Circle()
+                    .fill(Color.yellow.opacity(0.3))
+                    .padding(3)
+            }
+
             Text("\(dayNumber)")
-                .font(.system(.subheadline, weight: isToday ? .bold : .regular))
+                .font(.system(.subheadline, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
 
             // 휴가·공휴일: 연속된 쉬는 날(+인접 주말)은 칸 사이를 메워 하나의 선으로 표현
@@ -412,6 +507,7 @@ struct DayCell: View {
         .frame(height: 40)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Strings.accessibilityDayLabel(day: dayNumber, isToday: isToday, isHoliday: isHoliday, isLeave: isLeave, isSelected: isSelected))
+        .accessibilityHint(isRecommended ? Text(Strings.recommendedSchedule) : Text(""))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
@@ -439,11 +535,16 @@ struct DayCell: View {
 
 // MARK: - 범례
 struct LegendView: View {
+    var showsRecommendation: Bool = false
+
     var body: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: 16) {
             LegendItem(color: AppTheme.Colors.holiday, text: Strings.holiday)
             LegendItem(color: AppTheme.Colors.leave, text: Strings.annualLeave)
             LegendItem(color: AppTheme.Colors.weekend, text: Strings.weekend)
+            if showsRecommendation {
+                LegendItem(color: .yellow, text: Strings.tabRecommendations)
+            }
         }
         .font(.caption)
         .accessibilityElement(children: .combine)
@@ -471,6 +572,7 @@ struct SelectedDateInfo: View {
     let date: Date
     let holidays: [Holiday]
     let leaveRecords: [LeaveRecord]
+    var recommendations: [LeaveRecommendation] = []
 
     private let calendar = Calendar.current
 
@@ -484,6 +586,16 @@ struct SelectedDateInfo: View {
             let recordStart = calendar.startOfDay(for: record.startDate)
             let recordEnd = calendar.startOfDay(for: record.endDate)
             return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
+        }
+    }
+
+    /// 선택일이 포함된 추천 일정 (있으면 상세 표시)
+    var recommendationOnDate: LeaveRecommendation? {
+        let dayStart = calendar.startOfDay(for: date)
+        return recommendations.first { rec in
+            let s = calendar.startOfDay(for: rec.startDate)
+            let e = calendar.startOfDay(for: rec.endDate)
+            return dayStart >= s && dayStart <= e
         }
     }
 
@@ -521,7 +633,12 @@ struct SelectedDateInfo: View {
                 .accessibilityElement(children: .combine)
             }
 
-            if holidayOnDate == nil && leaveOnDate == nil {
+            // 추천 일정 상세 (실제 등록 휴가가 없을 때) — "일정 없음" 대신 표시
+            if leaveOnDate == nil, let rec = recommendationOnDate {
+                recommendationDetail(rec)
+            }
+
+            if holidayOnDate == nil && leaveOnDate == nil && recommendationOnDate == nil {
                 Text(Strings.noSchedule)
                     .foregroundStyle(.secondary)
             }
@@ -530,6 +647,63 @@ struct SelectedDateInfo: View {
         .padding()
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func recRangeText(_ rec: LeaveRecommendation) -> String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: Strings.localeIdentifier)
+        f.dateFormat = "M/d (E)"
+        return "\(f.string(from: rec.startDate)) ~ \(f.string(from: rec.endDate))"
+    }
+
+    @ViewBuilder
+    private func recommendationDetail(_ rec: LeaveRecommendation) -> some View {
+        let dateRange = recRangeText(rec)
+
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: "lightbulb.fill")
+                    .foregroundStyle(.yellow)
+                    .voDecorative()
+                Text(Strings.recommendedSchedule)
+                    .font(.subheadline.weight(.semibold))
+                Spacer(minLength: 0)
+                if !rec.efficiencyStars.isEmpty {
+                    Text(rec.efficiencyStars)
+                        .font(.caption2)
+                }
+            }
+
+            if !rec.title.isEmpty {
+                Text(rec.title)
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(AppTheme.Colors.brand)
+            }
+
+            // 핵심 숫자: 기간 · 총 휴식 · 필요한 연차
+            HStack(spacing: 6) {
+                Label(dateRange, systemImage: "calendar")
+                    .labelStyle(.titleAndIcon)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Text(Strings.breakLabel(rec.totalDaysOff, leaveUsed: Int(rec.requiredLeaveDays)))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.primary)
+
+            if !rec.description.isEmpty {
+                Text(rec.description)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(Color.yellow.opacity(0.12))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("\(Strings.recommendedSchedule), \(rec.title), \(Strings.breakLabel(rec.totalDaysOff, leaveUsed: Int(rec.requiredLeaveDays)))"))
     }
 }
 

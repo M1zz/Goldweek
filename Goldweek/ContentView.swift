@@ -115,19 +115,12 @@ struct MainTabView: View {
                 }
                 .tag(1)
 
-            RecommendationsView(profile: profile)
-                .tabItem {
-                    Image(systemName: "lightbulb.fill")
-                    Text(Strings.tabRecommendations)
-                }
-                .tag(2)
-
             SettingsView(profile: profile)
                 .tabItem {
                     Image(systemName: "gearshape.fill")
                     Text(Strings.tabSettings)
                 }
-                .tag(3)
+                .tag(2)
         }
         .tint(Color(red: 0.0, green: 0.4, blue: 0.9))
     }

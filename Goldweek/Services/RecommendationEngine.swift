@@ -25,13 +25,15 @@ class RecommendationEngine {
         remainingLeave: Double,
         year: Int,
         country: Country? = nil,
-        includePast: Bool = false   // true면 현재 날짜 이전 황금연휴도 함께 노출 (한 해 전체 보기)
+        includePast: Bool = false,  // true면 현재 날짜 이전 황금연휴도 함께 노출 (한 해 전체 보기)
+        existingLeaveDates: [Date] = []  // 번아웃 텀 고려용 — 이미 잡힌 휴가/휴식일
     ) -> [LeaveRecommendation] {
         let targetCountry = country ?? profile.country
         logDebug("추천 생성 시작 - 연도: \(year), 잔여연차: \(remainingLeave), 국가: \(targetCountry.rawValue), includePast: \(includePast)", category: .recommendation)
 
-        // 캐시 키 생성 — includePast도 키에 포함 (토글하면 캐시 무효화 효과)
-        let newCacheKey = "\(year)-\(remainingLeave)-\(profile.preferredDurationRaw)-\(profile.preferredSeasonsRaw)-\(profile.preferLongWeekend)-\(profile.avoidPeakSeason)-\(targetCountry.rawValue)-past:\(includePast)"
+        // 캐시 키 생성 — includePast·기존휴가도 키에 포함 (변경 시 캐시 무효화)
+        let leaveKey = "\(existingLeaveDates.count):\(existingLeaveDates.map { Int($0.timeIntervalSince1970 / 86400) }.max() ?? 0)"
+        let newCacheKey = "\(year)-\(remainingLeave)-\(profile.preferredDurationRaw)-\(profile.preferredSeasonsRaw)-\(profile.preferLongWeekend)-\(profile.preferConsecutive)-\(profile.avoidPeakSeason)-\(targetCountry.rawValue)-past:\(includePast)-leave:\(leaveKey)"
 
         // 캐시 유효성 확인
         if let timestamp = cacheTimestamp,
@@ -64,6 +66,10 @@ class RecommendationEngine {
         let consecutiveDays = findConsecutiveOpportunities(holidays: holidays, year: year)
         recommendations.append(contentsOf: consecutiveDays)
 
+        // 4-1. 선호 기간 기반 — 공휴일에 연차를 며칠 붙여 선호 길이만큼 만드는 추천
+        let preferredLength = findPreferredLengthOpportunities(holidays: holidays, year: year, profile: profile)
+        recommendations.append(contentsOf: preferredLength)
+
         // 5. 선호도 기반 필터링 및 점수 계산
         var scoredRecommendations = recommendations.map { recommendation in
             var scored = recommendation
@@ -76,6 +82,14 @@ class RecommendationEngine {
 
         // 6. 남은 연차 기준 필터링
         scoredRecommendations = scoredRecommendations.filter { $0.requiredLeaveDays <= remainingLeave }
+
+        // 6-1. 이미 등록된 휴가와 겹치는 추천 제거 (중복 제안 방지)
+        if !existingLeaveDates.isEmpty {
+            let existingDays = Set(existingLeaveDates.map { calendar.startOfDay(for: $0) })
+            scoredRecommendations = scoredRecommendations.filter { rec in
+                !rangeContainsAnyDay(start: rec.startDate, end: rec.endDate, days: existingDays)
+            }
+        }
 
         // 7. 현재 날짜 이후만 (includePast가 false일 때) — true면 한 해 전체 노출
         if !includePast {
@@ -117,6 +131,9 @@ class RecommendationEngine {
 
         // 10. 중복 제거
         scoredRecommendations = removeDuplicateRecommendations(scoredRecommendations)
+
+        // 10-1. 번아웃 텀 반영 — 직전 휴식 이후 공백이 길수록 가산, 너무 붙으면 감산
+        scoredRecommendations = applyBurnoutSpacing(scoredRecommendations, existingLeaveDates: existingLeaveDates)
 
         // 11. 효율성 + 매칭점수로 정렬 (각 월 내부 우선순위)
         scoredRecommendations.sort { ($0.efficiency + $0.matchScore) > ($1.efficiency + $1.matchScore) }
@@ -860,6 +877,156 @@ class RecommendationEngine {
         return opportunities
     }
 
+    // MARK: - 선호 기간 기반 추천 (공휴일 + 연차 N일 → 선호 길이)
+
+    /// 선호 휴가 길이(일) 목표값
+    private func idealLength(_ pref: PreferredDuration) -> Int {
+        switch pref {
+        case .short:  return 3
+        case .medium: return 5
+        case .long:   return 7
+        case .mixed:  return 5
+        }
+    }
+
+    /// 각 공휴일을 중심으로, 선호 길이에 도달하도록 연차를 며칠 붙이는 추천을 만든다.
+    /// (가까운 주말·공휴일 쪽으로 먼저 다리를 놓아 효율을 높임 = 일반화된 징검다리)
+    private func findPreferredLengthOpportunities(holidays: [Holiday], year: Int, profile: UserProfile) -> [LeaveRecommendation] {
+        let target = idealLength(profile.preferredDuration)
+        let maxLeave = 5
+        var result: [LeaveRecommendation] = []
+        var seenBlocks: Set<Date> = []
+
+        for holiday in holidays {
+            // 1) 공휴일이 속한 최대 연속 휴무 블록
+            var bStart = calendar.startOfDay(for: holiday.date)
+            var bEnd = bStart
+            while let p = calendar.date(byAdding: .day, value: -1, to: bStart), isNonWorkingDay(p, holidays: holidays) { bStart = p }
+            while let n = calendar.date(byAdding: .day, value: 1, to: bEnd), isNonWorkingDay(n, holidays: holidays) { bEnd = n }
+
+            // 같은 블록은 한 번만
+            if seenBlocks.contains(bStart) { continue }
+            seenBlocks.insert(bStart)
+
+            // 2) 선호 길이까지 연차를 붙여 확장 (가까운 쪽 우선)
+            var start = bStart, end = bEnd
+            var total = (calendar.dateComponents([.day], from: start, to: end).day ?? 0) + 1
+            var leaveUsed = 0
+            var guardCount = 0
+            while total < target && leaveUsed < maxLeave && guardCount < 60 {
+                guardCount += 1
+                let leftGap = workdayGap(before: start, holidays: holidays)
+                let rightGap = workdayGap(after: end, holidays: holidays)
+                let goRight = rightGap <= leftGap
+                if goRight, let n = calendar.date(byAdding: .day, value: 1, to: end) {
+                    end = n; leaveUsed += 1; total += 1
+                    while let nn = calendar.date(byAdding: .day, value: 1, to: end), isNonWorkingDay(nn, holidays: holidays) { end = nn; total += 1 }
+                } else if let p = calendar.date(byAdding: .day, value: -1, to: start) {
+                    start = p; leaveUsed += 1; total += 1
+                    while let pp = calendar.date(byAdding: .day, value: -1, to: start), isNonWorkingDay(pp, holidays: holidays) { start = pp; total += 1 }
+                } else { break }
+            }
+
+            // 3) 연차를 써야 의미 있는 추천만 (연차 0이면 무료 황금연휴 generator가 담당)
+            guard leaveUsed >= 1, total >= 3 else { continue }
+            let efficiency = Double(total) / Double(leaveUsed)
+            guard efficiency >= 1.4 else { continue }
+
+            let names = holidayNamesInRange(start: start, end: end, holidays: holidays)
+            let primaryName = names.first ?? holiday.name
+            let month = calendar.component(.month, from: start)
+            var tags = [leaveUsed <= 1 ? Strings.bridgeDay : Strings.consecutiveLeave, Strings.seasonTag(for: month)]
+            tags.append(contentsOf: names.prefix(1))
+
+            result.append(LeaveRecommendation(
+                title: Strings.connectedLeaveTitle(holidayName: primaryName),
+                description: Strings.connectedLeaveDesc(holidayName: primaryName, leaveDays: leaveUsed, totalDays: total),
+                startDate: start,
+                endDate: end,
+                requiredLeaveDays: Double(leaveUsed),
+                totalDaysOff: total,
+                tags: tags,
+                reason: "선호 길이 \(target)일 맞춤"
+            ))
+        }
+
+        return result
+    }
+
+    /// `from` 바로 다음(after)/이전(before) 평일이 몇 개 연속인지 (다음 휴무일까지의 거리)
+    private func workdayGap(after end: Date, holidays: [Holiday]) -> Int {
+        var gap = 0
+        var d = end
+        while gap < 14 {
+            guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+            if isNonWorkingDay(next, holidays: holidays) { break }
+            gap += 1; d = next
+        }
+        return max(gap, 1)
+    }
+    private func workdayGap(before start: Date, holidays: [Holiday]) -> Int {
+        var gap = 0
+        var d = start
+        while gap < 14 {
+            guard let prev = calendar.date(byAdding: .day, value: -1, to: d) else { break }
+            if isNonWorkingDay(prev, holidays: holidays) { break }
+            gap += 1; d = prev
+        }
+        return max(gap, 1)
+    }
+
+    /// 범위 내 공휴일 이름들 (대체공휴일 라벨 제외, 중복 제거)
+    private func holidayNamesInRange(start: Date, end: Date, holidays: [Holiday]) -> [String] {
+        var names: [String] = []
+        for h in holidays where h.date >= start && h.date <= end {
+            if h.name.contains(Strings.substituteHoliday) { continue }
+            if !names.contains(h.name) { names.append(h.name) }
+        }
+        return names
+    }
+
+    private func rangeContainsAnyDay(start: Date, end: Date, days: Set<Date>) -> Bool {
+        var d = calendar.startOfDay(for: start)
+        let e = calendar.startOfDay(for: end)
+        while d <= e {
+            if days.contains(d) { return true }
+            guard let n = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+            d = n
+        }
+        return false
+    }
+
+    // MARK: - 번아웃 텀 점수
+
+    /// 직전/직후 휴식과의 간격을 보고 추천 점수를 조정한다.
+    /// 오래 못 쉬었으면(공백이 길면) 가산, 기존 휴가와 너무 붙으면 감산.
+    private func applyBurnoutSpacing(_ recs: [LeaveRecommendation], existingLeaveDates: [Date]) -> [LeaveRecommendation] {
+        guard !recs.isEmpty else { return recs }
+        let restDays = existingLeaveDates.map { calendar.startOfDay(for: $0) }.sorted()
+
+        return recs.map { rec in
+            var r = rec
+            let recStart = calendar.startOfDay(for: rec.startDate)
+
+            if let prev = restDays.last(where: { $0 < recStart }) {
+                let gap = calendar.dateComponents([.day], from: prev, to: recStart).day ?? 0
+                if gap >= 60 { r.matchScore += 0.3 }
+                else if gap >= 40 { r.matchScore += 0.15 }
+                else if gap < 21 { r.matchScore -= 0.25 }
+            } else {
+                r.matchScore += 0.1  // 직전 휴식 기록 없음 — 가볍게 가산
+            }
+
+            if let next = restDays.first(where: { $0 > recStart }) {
+                let gap = calendar.dateComponents([.day], from: recStart, to: next).day ?? 0
+                if gap < 21 { r.matchScore -= 0.15 }
+            }
+
+            r.matchScore = max(0, min(r.matchScore, 1.3))
+            return r
+        }
+    }
+
     // MARK: - 선호도 매칭 점수 계산
 
     private func calculateMatchScore(recommendation: LeaveRecommendation, profile: UserProfile) -> Double {
@@ -877,16 +1044,19 @@ class RecommendationEngine {
             score += 0.1
         }
 
+        // 선호 길이 일치 — 추천이 선호 기간에 맞을수록 강하게 가산
         switch profile.preferredDuration {
         case .short:
-            if recommendation.totalDaysOff <= 3 { score += 0.25 }
-            else if recommendation.totalDaysOff <= 4 { score += 0.1 }
+            if recommendation.totalDaysOff <= 3 { score += 0.45 }
+            else if recommendation.totalDaysOff <= 4 { score += 0.2 }
+            else { score -= 0.1 }   // 너무 길면 선호와 어긋남
         case .medium:
-            if recommendation.totalDaysOff >= 3 && recommendation.totalDaysOff <= 5 { score += 0.25 }
-            else if recommendation.totalDaysOff >= 2 && recommendation.totalDaysOff <= 6 { score += 0.1 }
+            if recommendation.totalDaysOff >= 4 && recommendation.totalDaysOff <= 5 { score += 0.45 }
+            else if recommendation.totalDaysOff >= 3 && recommendation.totalDaysOff <= 6 { score += 0.2 }
         case .long:
-            if recommendation.totalDaysOff >= 5 { score += 0.25 }
-            else if recommendation.totalDaysOff >= 4 { score += 0.1 }
+            if recommendation.totalDaysOff >= 7 { score += 0.45 }
+            else if recommendation.totalDaysOff >= 5 { score += 0.25 }
+            else { score -= 0.1 }   // 짧으면 선호와 어긋남
         case .mixed:
             score += 0.15
         }

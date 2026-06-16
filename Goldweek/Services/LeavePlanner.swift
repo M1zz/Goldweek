@@ -100,6 +100,10 @@ enum LeavePlanner {
         // 4. minBreakLength 필터링
         candidates = candidates.filter { $0.gain >= minBreakLength }
 
+        // 4-1. 사소한 연휴 제외 — 연차 1일로 단순히 3일(금 또는 월 + 주말)만 만드는 후보 제거.
+        //      너무 뻔해서 추천 가치가 낮다는 사용자 피드백 반영.
+        candidates = candidates.filter { !($0.cost == 1 && $0.gain == 3) }
+
         // 5. 0/1 knapsack DP — 다리들끼리는 시간상 겹치지 않는다
         //    (한 다리 = 1개 연속 휴식 블록, 다음 다리는 그 뒤 워크데이부터 시작)
         //    → 부분집합 선택 자유. 단 같은 워크데이가 두 다리에 중복 안 되게 보장 필요.

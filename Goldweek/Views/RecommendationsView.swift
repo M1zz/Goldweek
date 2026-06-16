@@ -2434,14 +2434,14 @@ struct OptimalLeavePlannerCard: View {
             // 항상 보이는 요약 (접힘 상태에서도 노출)
             summaryPill(plan: plan)
 
-            // 펼침 상태에서만 연휴 리스트 + 일괄 등록
+            // 펼침 상태에서만 연휴 카드 + 일괄 등록
             if isExpanded {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 10) {
                     ForEach(plan.breaks) { brk in
-                        breakRow(brk: brk)
+                        breakCard(brk: brk)
                     }
                 }
-                .padding(.top, 2)
+                .padding(.top, 4)
 
                 Button {
                     batchAdd(plan: plan)
@@ -2495,34 +2495,112 @@ struct OptimalLeavePlannerCard: View {
         )))
     }
 
-    /// 한 줄 슬림 카드 — 날짜 · 길이/연차 · 효율 별
-    private func breakRow(brk: LeaveBreak) -> some View {
+    /// 연휴 1건을 시각화한 카드 — 날짜 · 총 휴식일 · 구성(주말/공휴일/연차) 막대 · 포함 공휴일
+    private func breakCard(brk: LeaveBreak) -> some View {
+        let cal = Calendar.current
+        let start = cal.startOfDay(for: brk.startDate)
+        let leaveSet = Set(brk.leaveDates.map { cal.startOfDay(for: $0) })
+        let days = (0..<max(brk.totalDays, 1)).compactMap {
+            cal.date(byAdding: .day, value: $0, to: start)
+        }
+        var leaveN = 0, weekendN = 0, holidayN = 0
+        for d in days {
+            let wd = cal.component(.weekday, from: d)
+            if leaveSet.contains(cal.startOfDay(for: d)) { leaveN += 1 }
+            else if wd == 1 || wd == 7 { weekendN += 1 }
+            else { holidayN += 1 }  // 주말도 연차도 아닌 휴일 = 공휴일
+        }
+
         let f = DateFormatter()
         f.locale = Locale(identifier: Strings.localeIdentifier)
-        f.dateFormat = "M/d"
-        let dateRange = "\(f.string(from: brk.startDate))~\(f.string(from: brk.endDate))"
-        return HStack(spacing: 8) {
-            Text(dateRange)
-                .font(.caption.weight(.semibold))
-                .frame(minWidth: 78, alignment: .leading)
-            Text(Strings.breakLabel(brk.totalDays, leaveUsed: brk.leaveCount))
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.85)
-            Spacer(minLength: 0)
-            if brk.efficiency >= 1.5 {
-                Text("✨")
+        f.dateFormat = "M/d (E)"
+        let dateRange = "\(f.string(from: brk.startDate)) ~ \(f.string(from: brk.endDate))"
+
+        return VStack(alignment: .leading, spacing: 10) {
+            // 날짜 + 효율 배지
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(dateRange)
+                    .font(.subheadline.weight(.bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                Spacer(minLength: 0)
+                if brk.efficiency >= 1.5 {
+                    HStack(spacing: 2) {
+                        Text("✨").font(.caption2).voDecorative()
+                        Text(String(format: "%.1f×", brk.efficiency))
+                            .font(.caption2.weight(.bold))
+                    }
+                    .foregroundStyle(AppTheme.Colors.bonus)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(AppTheme.Colors.bonus.opacity(0.12))
+                    .clipShape(Capsule())
+                }
+            }
+
+            // 큰 숫자: 총 휴식일
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Text("\(brk.totalDays)")
+                    .font(.title.weight(.bold))
+                    .foregroundStyle(AppTheme.Colors.brand)
+                Text(Strings.optimalPlannerSummaryUnit)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppTheme.Colors.brand)
+            }
+
+            // 구성 막대 — 주말 / 공휴일 / 연차
+            GeometryReader { geo in
+                let total = CGFloat(max(brk.totalDays, 1))
+                let w = geo.size.width
+                HStack(spacing: 1.5) {
+                    if weekendN > 0 {
+                        Color(.systemGray3).frame(width: w * CGFloat(weekendN) / total)
+                    }
+                    if holidayN > 0 {
+                        AppTheme.Colors.holiday.frame(width: w * CGFloat(holidayN) / total)
+                    }
+                    if leaveN > 0 {
+                        AppTheme.Colors.leave.frame(width: w * CGFloat(leaveN) / total)
+                    }
+                }
+                .clipShape(Capsule())
+            }
+            .frame(height: 10)
+
+            // 구성 범례
+            HStack(spacing: 12) {
+                if leaveN > 0 { compChip(color: AppTheme.Colors.leave, text: "\(Strings.annualLeave) \(leaveN)\(Strings.dayUnitSuffix)") }
+                if holidayN > 0 { compChip(color: AppTheme.Colors.holiday, text: "\(Strings.holiday) \(holidayN)\(Strings.dayUnitSuffix)") }
+                if weekendN > 0 { compChip(color: Color(.systemGray3), text: "\(Strings.weekend) \(weekendN)\(Strings.dayUnitSuffix)") }
+                Spacer(minLength: 0)
+            }
+
+            // 포함 공휴일
+            if !brk.holidaysIncluded.isEmpty {
+                Text(brk.holidaysIncluded.joined(separator: " · "))
                     .font(.caption2)
-                    .voDecorative()
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(.vertical, 5)
-        .padding(.horizontal, 10)
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text("\(dateRange), \(Strings.breakLabel(brk.totalDays, leaveUsed: brk.leaveCount))"))
+    }
+
+    private func compChip(color: Color, text: String) -> some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(color)
+                .frame(width: 7, height: 7)
+            Text(text)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
     }
 
     @MainActor

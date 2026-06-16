@@ -884,24 +884,27 @@ struct BurnoutPaceCard: View {
         .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
     }
 
-    private var paceMessage: String {
-        switch paceCategory {
-        case .slow: return Strings.paceMessageSlow
-        case .healthy: return Strings.paceMessageHealthy
-        case .fast: return Strings.paceMessageFast
-        case .veryFast: return Strings.paceMessageVeryFast
-        }
-    }
-
     // MARK: - 페이스 섹션 (하나의 축 + 두 개의 핀)
     private var paceSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
+            // 범례 — 라벨/값은 트랙에서 분리해 좌·우로 배치(겹침 방지)
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                paceLegend(label: Strings.paceYearProgressLabel,
+                           value: "\(Int(yearProgress * 100))%",
+                           color: Color(.systemGray),
+                           usesNowMarker: true)
+                Spacer(minLength: 12)
+                paceLegend(label: Strings.paceUsageLabel,
+                           value: "\(Int(usageProgress * 100))%",
+                           color: paceColor)
+            }
+
+            // 단일 연간 축 + 두 핀 (텍스트 없이 마커만)
             GeometryReader { geo in
                 let w = max(geo.size.width, 1)
-                let trackY: CGFloat = 42
+                let trackY: CGFloat = 11
                 let yearX = min(max(w * CGFloat(yearProgress), 0), w)
                 let usageX = min(max(w * CGFloat(usageProgress), 0), w)
-                let labelW: CGFloat = 108
                 let ahead = usageProgress >= yearProgress  // 사용이 진행보다 앞서면 빠른 페이스
 
                 ZStack(alignment: .topLeading) {
@@ -917,43 +920,29 @@ struct BurnoutPaceCard: View {
                         .frame(width: abs(usageX - yearX), height: 8)
                         .position(x: (usageX + yearX) / 2, y: trackY)
 
-                    // 올해 진행 핀 (라벨 위)
-                    pinStem(color: Color(.systemGray))
-                        .position(x: yearX, y: trackY - 11)
-                    pacePinLabel(label: Strings.paceYearProgressLabel,
-                                 value: "\(Int(yearProgress * 100))%",
-                                 color: Color(.systemGray))
-                        .frame(width: labelW)
-                        .position(x: min(max(yearX, labelW / 2), w - labelW / 2), y: trackY - 26)
-
-                    // 연차 사용 핀 (라벨 아래)
-                    pinStem(color: paceColor)
-                        .position(x: usageX, y: trackY + 11)
-                    pacePinLabel(label: Strings.paceUsageLabel,
-                                 value: "\(Int(usageProgress * 100))%",
-                                 color: paceColor)
-                        .frame(width: labelW)
-                        .position(x: min(max(usageX, labelW / 2), w - labelW / 2), y: trackY + 26)
-
-                    // 트랙 위 핀 헤드
-                    pinHead(color: Color(.systemGray)).position(x: yearX, y: trackY)
+                    // 올해 진행: '지금'을 가리키는 세로선 마커 (시간의 흐름 — 의지와 무관)
+                    nowMarker.position(x: yearX, y: trackY)
+                    // 연차 사용: 내 행동을 나타내는 핀 헤드
                     pinHead(color: paceColor).position(x: usageX, y: trackY)
                 }
             }
-            .frame(height: 84)
-
-            // 한 줄 해설
-            Text(paceMessage)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            .frame(height: 22)
         }
     }
 
-    private func pacePinLabel(label: String, value: String, color: Color) -> some View {
-        VStack(spacing: 1) {
+    private func paceLegend(label: String, value: String, color: Color, usesNowMarker: Bool = false) -> some View {
+        HStack(spacing: 6) {
+            if usesNowMarker {
+                Capsule()
+                    .fill(color)
+                    .frame(width: 3, height: 12)
+            } else {
+                Circle()
+                    .fill(color)
+                    .frame(width: 9, height: 9)
+            }
             Text(label)
-                .font(.caption2)
+                .font(.caption)
                 .foregroundStyle(.secondary)
             Text(value)
                 .font(.caption.weight(.bold))
@@ -964,10 +953,12 @@ struct BurnoutPaceCard: View {
         .minimumScaleFactor(0.7)
     }
 
-    private func pinStem(color: Color) -> some View {
+    /// '지금'을 가리키는 세로선 — 트랙을 가로지르는 재생 헤드 느낌
+    private var nowMarker: some View {
         Capsule()
-            .fill(color.opacity(0.5))
-            .frame(width: 2, height: 14)
+            .fill(Color(.systemGray))
+            .frame(width: 3, height: 20)
+            .overlay(Capsule().stroke(Color(.systemBackground), lineWidth: 1.5))
     }
 
     private func pinHead(color: Color) -> some View {
