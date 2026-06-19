@@ -64,6 +64,21 @@ enum AnalyticsService {
         log("leave_deleted", ["type": type])
     }
 
+    /// 추천 노출 (사용자에게 추천 목록이 보여짐) — 채택률의 분모.
+    /// - source: "list"(추천 화면) | "calendar"(캘린더 통합)
+    /// - count: 이번에 노출된 추천 개수
+    /// - avgEfficiency: 노출된 추천들의 평균 효율(연차당 휴식 배수)
+    /// 한 번의 추천 생성당 1회 호출. 재렌더링으로 중복 발화할 수 있으므로
+    /// 분석 시 (user_id, day) 단위로 dedupe하거나 session_id로 묶어 집계할 것.
+    static func logRecommendationShown(count: Int, avgEfficiency: Double, source: String) {
+        guard count > 0 else { return }
+        log("recommendation_shown", [
+            "count": count,
+            "avg_efficiency": avgEfficiency,
+            "source": source
+        ])
+    }
+
     /// 추천 일정 추가 (사용자가 추천을 받아들임)
     static func logRecommendationAdded(days: Int, efficiency: Double) {
         log("recommendation_added", [

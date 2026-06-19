@@ -161,6 +161,15 @@ struct RecommendationsView: View {
                 includePast: includePast
             )
             isLoading = false
+
+            // 노출 측정 — 채택률(recommendation_added / shown)의 분모
+            let avgEff = recommendations.isEmpty ? 0 :
+                recommendations.map { $0.efficiency }.reduce(0, +) / Double(recommendations.count)
+            AnalyticsService.logRecommendationShown(
+                count: recommendations.count,
+                avgEfficiency: avgEff,
+                source: "list"
+            )
         }
     }
 
