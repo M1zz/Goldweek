@@ -1083,62 +1083,8 @@ struct BurnoutPaceCard: View {
                 }
             }
 
-            recoveryReserveRow
-            forecastRow
-
             timelineRow
         }
-    }
-
-    /// 회복 잔량 게이지 — 과거 휴식이 준 회복을 fade-out으로 적분한 현재 잔량
-    private var recoveryReserveRow: some View {
-        let ratio = assessment.recoveryReserveRatio
-        return VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(Strings.recoveryReserveLabel)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text("\(Int(ratio * 100))%")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(burnoutColor)
-                    .monospacedDigit()
-            }
-            GeometryReader { geo in
-                let w = max(geo.size.width, 1)
-                ZStack(alignment: .leading) {
-                    Capsule().fill(Color(.systemGray6)).frame(height: 8)
-                    Capsule().fill(burnoutColor)
-                        .frame(width: w * CGFloat(ratio), height: 8)
-                }
-            }
-            .frame(height: 8)
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(Strings.recoveryReserveLabel)
-        .accessibilityValue("\(Int(ratio * 100))%")
-    }
-
-    /// 번아웃 예측 라인 — 현 속도면 위험 진입 예상 시점 (또는 안정/지금)
-    private var forecastRow: some View {
-        HStack(spacing: 6) {
-            Image(systemName: "waveform.path.ecg")
-                .font(.caption)
-                .foregroundStyle(burnoutColor)
-            Text(forecastText)
-                .font(.caption)
-                .foregroundStyle(.primary)
-            Spacer(minLength: 0)
-        }
-    }
-
-    private var forecastText: String {
-        if assessment.level == .critical { return Strings.burnoutForecastNow }
-        guard let date = assessment.predictedRiskDate else { return Strings.burnoutForecastClear }
-        let fmt = DateFormatter()
-        fmt.locale = Locale(identifier: Strings.localeIdentifier)
-        fmt.setLocalizedDateFormatFromTemplate("yMMM")
-        return Strings.burnoutForecast(fmt.string(from: date))
     }
 
     /// 오늘의 가로 위치 비율 (0 = 지난 휴가 쪽 끝, 1 = 다음 휴가 쪽 끝)

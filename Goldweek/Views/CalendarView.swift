@@ -105,6 +105,45 @@ struct CalendarView: View {
         return dates
     }
 
+    // MARK: 번아웃 주의 구간 (홈에서 이동) — 손으로 못 푸는 예측을 캘린더에 시각화
+    private var burnoutAssessment: BurnoutAssessment {
+        BurnoutEngine().assess(
+            breaks: BurnoutEngine.restBlocks(from: leaveRecords),
+            asOf: Date(),
+            subjectiveFatigue: FatigueCheckIn.recentValue
+        )
+    }
+
+    /// 캘린더에 주황 링으로 표시할 "번아웃 주의 구간" (예측일부터 1주). 없으면 빈 셋.
+    private var burnoutWarningDates: Set<Date> {
+        let a = burnoutAssessment
+        let anchor: Date?
+        if a.level == .critical {
+            anchor = calendar.startOfDay(for: Date())   // 이미 위험 → 지금부터
+        } else {
+            anchor = a.predictedRiskDate                  // 예측 진입일부터
+        }
+        guard let start = anchor else { return [] }
+        var set: Set<Date> = []
+        for offset in 0..<7 {
+            if let d = calendar.date(byAdding: .day, value: offset, to: start) {
+                set.insert(calendar.startOfDay(for: d))
+            }
+        }
+        return set
+    }
+
+    /// 주의 구간 안내 문구. 안정적이면 nil (카드 숨김).
+    private var burnoutForecastText: String? {
+        let a = burnoutAssessment
+        if a.level == .critical { return Strings.burnoutForecastNow }
+        guard let date = a.predictedRiskDate else { return nil }
+        let fmt = DateFormatter()
+        fmt.locale = Locale(identifier: Strings.localeIdentifier)
+        fmt.setLocalizedDateFormatFromTemplate("yMMM")
+        return Strings.burnoutForecast(fmt.string(from: date))
+    }
+
     /// 추천 탭과 동일한 엔진으로 추천을 만들고, 공휴일이 포함되고 연차가 필요한 일정만 남긴다.
     private func computeRecommendations(year: Int) {
         let recs = recommendationEngine.generateRecommendations(
@@ -153,17 +192,24 @@ struct CalendarView: View {
                     // 월 네비게이션
                     MonthNavigator(currentMonth: $currentMonth)
 
+                    // 번아웃 주의 구간 안내 (예측 있을 때만)
+                    if let forecast = burnoutForecastText {
+                        BurnoutForecastCard(text: forecast)
+                    }
+
                     // 캘린더 그리드
                     CalendarGrid(
                         currentMonth: currentMonth,
                         selectedDate: $selectedDate,
                         holidays: holidays,
                         leaveRecords: leaveRecords,
-                        recommendedDates: recommendedDates
+                        recommendedDates: recommendedDates,
+                        warningDates: burnoutWarningDates
                     )
 
                     // 범례
-                    LegendView(showsRecommendation: !recommendedDates.isEmpty)
+                    LegendView(showsRecommendation: !recommendedDates.isEmpty,
+                               showsWarning: !burnoutWarningDates.isEmpty)
 
                     // 선택된 날짜 정보
                     SelectedDateInfo(
@@ -295,6 +341,7 @@ struct CalendarGrid: View {
     let holidays: [Holiday]
     let leaveRecords: [LeaveRecord]
     var recommendedDates: Set<Date> = []
+    var warningDates: Set<Date> = []
 
     private let calendar = Calendar.current
 
@@ -349,6 +396,7 @@ struct CalendarGrid: View {
                                 leaveConnectsLeft: restConnectsLeft(date),
                                 leaveConnectsRight: restConnectsRight(date),
                                 isRecommended: recommendedDates.contains(calendar.startOfDay(for: date)),
+                                isBurnoutWarning: warningDates.contains(calendar.startOfDay(for: date)),
                                 isToday: calendar.isDateInToday(date)
                             )
                         }
@@ -464,6 +512,7 @@ struct DayCell: View {
     var leaveConnectsLeft: Bool = false
     var leaveConnectsRight: Bool = false
     var isRecommended: Bool = false
+    var isBurnoutWarning: Bool = false
     let isToday: Bool
 
     private let calendar = Calendar.current
@@ -513,6 +562,14 @@ struct DayCell: View {
                     .frame(width: 34, height: 34)
             }
 
+            // 번아웃 주의 구간 — 주황 점선 링으로 "구간" 강조 (배경 칠 X, 다른 표식과 겹쳐도 구분)
+            if isBurnoutWarning && !isSelected {
+                Circle()
+                    .stroke(AppTheme.Colors.compensatory.opacity(0.7),
+                            style: StrokeStyle(lineWidth: 1.5, dash: [3, 2]))
+                    .frame(width: 30, height: 30)
+            }
+
             // 외톨이 공휴일은 점으로 표시
             if isHoliday && !isSelected && !barVisible {
                 Circle()
@@ -557,6 +614,7 @@ struct DayCell: View {
 // MARK: - 범례
 struct LegendView: View {
     var showsRecommendation: Bool = false
+    var showsWarning: Bool = false
 
     var body: some View {
         HStack(spacing: 16) {
@@ -566,10 +624,35 @@ struct LegendView: View {
             if showsRecommendation {
                 LegendItem(color: .yellow, text: Strings.tabRecommendations)
             }
+            if showsWarning {
+                LegendItem(color: AppTheme.Colors.compensatory, text: Strings.burnoutWarningLegend)
+            }
         }
         .font(.caption)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Strings.legendAccessibility)
+    }
+}
+
+// MARK: - 번아웃 주의 구간 카드
+struct BurnoutForecastCard: View {
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(AppTheme.Colors.compensatory)
+                .voDecorative()
+            Text(text)
+                .font(.subheadline)
+                .foregroundStyle(.primary)
+            Spacer(minLength: 0)
+        }
+        .padding(12)
+        .background(AppTheme.Colors.compensatory.opacity(0.12))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(text)
     }
 }
 

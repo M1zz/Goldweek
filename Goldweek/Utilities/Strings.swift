@@ -3376,16 +3376,6 @@ enum Strings {
 
     // MARK: - 회복 잔량 / 번아웃 예측 (Rest Radar)
 
-    /// 회복 잔량 게이지 라벨
-    static var recoveryReserveLabel: String {
-        switch lang {
-        case .korean: return "회복 잔량"
-        case .english: return "Recovery reserve"
-        case .japanese: return "回復残量"
-        case .chinese: return "恢复余量"
-        }
-    }
-
     /// 내 평소 휴식 주기 — 개인화됐을 때
     static func personalCycleLabel(_ days: Int) -> String {
         switch lang {
@@ -3423,6 +3413,16 @@ enum Strings {
         case .english: return "Now is the time to rest"
         case .japanese: return "今が休む時です"
         case .chinese: return "现在该休息了"
+        }
+    }
+
+    /// 캘린더 범례 — 번아웃 주의 구간
+    static var burnoutWarningLegend: String {
+        switch lang {
+        case .korean: return "번아웃 주의"
+        case .english: return "Burnout risk"
+        case .japanese: return "バーンアウト注意"
+        case .chinese: return "倦怠风险"
         }
     }
 
