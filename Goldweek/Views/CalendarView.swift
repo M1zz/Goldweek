@@ -64,6 +64,13 @@ struct CalendarView: View {
         max(0, profile.totalAnnualLeave - committedLeave) + activeBonusLeave
     }
 
+    /// MRT 여행 큐레이션 노출 조건: 한국어 + 한국 거주 + 직장인 (마이리얼트립은 한국 시장 위주)
+    private var showsMRTSuggestions: Bool {
+        LanguageManager.shared.currentLanguage == .korean
+            && profile.country == .korea
+            && profile.userType == .employee
+    }
+
     /// 추천 일정 중 노란색으로 표시할 "연차일" — 범위 내 평일(주말·공휴일 제외)
     private var recommendedDates: Set<Date> {
         let holidaySet = Set(holidays.map { calendar.startOfDay(for: $0.date) })
@@ -163,7 +170,9 @@ struct CalendarView: View {
                         date: selectedDate,
                         holidays: holidays,
                         leaveRecords: leaveRecords,
-                        recommendations: recommendations
+                        recommendations: recommendations,
+                        showsTravelSuggestions: showsMRTSuggestions,
+                        originCountry: profile.country
                     )
 
                     // 나의 연차 일정
@@ -481,28 +490,27 @@ struct DayCell: View {
 
     var body: some View {
         ZStack {
+            // 휴가·공휴일: 연속된 쉬는 날(+인접 주말)은 칸 사이를 메워 하나의 선으로 표현.
+            // 선택 원보다 먼저(뒤에) 깔아 원이 막대에 잘리지 않게 한다 — 막대는 원 양옆으로만 보인다.
+            if barVisible {
+                leaveBar
+            }
+
             if isSelected {
                 Circle()
                     .fill(AppTheme.Colors.brand)
+                    .frame(width: 34, height: 34)
             } else if isToday {
                 Circle()
                     .stroke(AppTheme.Colors.brand, lineWidth: 2)
+                    .frame(width: 34, height: 34)
             }
 
             // 추천: 최적 플랜이 제안하는 연차일 — 노란 배경으로 강조
             if isRecommended && !isSelected {
                 Circle()
                     .fill(Color.yellow.opacity(0.3))
-                    .padding(3)
-            }
-
-            Text("\(dayNumber)")
-                .font(.system(.subheadline, weight: (isToday || isRecommended) ? .bold : .regular))
-                .foregroundStyle(textColor)
-
-            // 휴가·공휴일: 연속된 쉬는 날(+인접 주말)은 칸 사이를 메워 하나의 선으로 표현
-            if barVisible {
-                leaveBar
+                    .frame(width: 34, height: 34)
             }
 
             // 외톨이 공휴일은 점으로 표시
@@ -512,6 +520,10 @@ struct DayCell: View {
                     .frame(width: 6, height: 6)
                     .offset(y: 14)
             }
+
+            Text("\(dayNumber)")
+                .font(.system(.subheadline, weight: (isToday || isRecommended) ? .bold : .regular))
+                .foregroundStyle(textColor)
         }
         .frame(height: 40)
         .accessibilityElement(children: .ignore)
@@ -524,8 +536,8 @@ struct DayCell: View {
     /// 음수 패딩으로 메워 옆 칸 막대와 하나의 선처럼 연결된다.
     private var leaveBar: some View {
         let r: CGFloat = 3
-        // 선택된 날은 브랜드 원 위에 올라가므로 흰색으로 대비를 준다.
-        let fill = isSelected ? Color.white : barColor
+        // 막대는 선택 원 뒤에 깔리므로 항상 본래 색을 써서 양옆 칸과 하나의 선으로 이어진다.
+        let fill = barColor
         return fill
             .frame(maxWidth: .infinity, minHeight: 6, maxHeight: 6)
             .clipShape(
@@ -582,6 +594,9 @@ struct SelectedDateInfo: View {
     let holidays: [Holiday]
     let leaveRecords: [LeaveRecord]
     var recommendations: [LeaveRecommendation] = []
+    /// MRT 여행 큐레이션 카드 노출 여부 (한국어 + 한국 거주 + 직장인일 때만)
+    var showsTravelSuggestions: Bool = false
+    var originCountry: Country = .korea
 
     private let calendar = Calendar.current
 
@@ -669,50 +684,36 @@ struct SelectedDateInfo: View {
     private func recommendationDetail(_ rec: LeaveRecommendation) -> some View {
         let dateRange = recRangeText(rec)
 
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 6) {
-                Image(systemName: "lightbulb.fill")
-                    .foregroundStyle(.yellow)
-                    .voDecorative()
-                Text(Strings.recommendedSchedule)
-                    .font(.subheadline.weight(.semibold))
-                Spacer(minLength: 0)
-                if !rec.efficiencyStars.isEmpty {
-                    Text(rec.efficiencyStars)
-                        .font(.caption2)
-                }
-            }
-
+        VStack(alignment: .leading, spacing: 6) {
             if !rec.title.isEmpty {
                 Text(rec.title)
                     .font(.subheadline.weight(.bold))
                     .foregroundStyle(AppTheme.Colors.brand)
             }
 
-            // 핵심 숫자: 기간 · 총 휴식 · 필요한 연차
-            HStack(spacing: 6) {
-                Label(dateRange, systemImage: "calendar")
-                    .labelStyle(.titleAndIcon)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+            Text(dateRange)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
             Text(Strings.breakLabel(rec.totalDaysOff, leaveUsed: Int(rec.requiredLeaveDays)))
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.primary)
-
-            if !rec.description.isEmpty {
-                Text(rec.description)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(Color.yellow.opacity(0.12))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .padding(12)
+        .background(Color.yellow.opacity(0.10))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text("\(Strings.recommendedSchedule), \(rec.title), \(Strings.breakLabel(rec.totalDaysOff, leaveUsed: Int(rec.requiredLeaveDays)))"))
+
+        // 추천 일정에 맞춘 마이리얼트립 여행 큐레이션 (한국 직장인 한정)
+        if showsTravelSuggestions {
+            MyRealTripPromoCard(
+                recommendation: rec,
+                originCountry: originCountry,
+                allLeaveRecords: leaveRecords
+            )
+        }
     }
 }
 

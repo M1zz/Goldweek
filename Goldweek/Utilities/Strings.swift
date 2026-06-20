@@ -602,10 +602,10 @@ enum Strings {
 
     static func breakLabel(_ totalDays: Int, leaveUsed: Int) -> String {
         switch lang {
-        case .korean: return "\(totalDays)일 연휴 · 연차 \(leaveUsed)일"
-        case .english: return "\(totalDays)-day break · \(leaveUsed) PTO"
-        case .japanese: return "\(totalDays)日連休・有給\(leaveUsed)日"
-        case .chinese: return "\(totalDays)天假期·\(leaveUsed)天年假"
+        case .korean: return "연차 \(leaveUsed)일 · \(totalDays)일 연휴"
+        case .english: return "\(leaveUsed) PTO · \(totalDays)-day break"
+        case .japanese: return "有給\(leaveUsed)日・\(totalDays)日連休"
+        case .chinese: return "\(leaveUsed)天年假·\(totalDays)天假期"
         }
     }
 

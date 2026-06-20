@@ -1339,8 +1339,6 @@ struct MyRealTripPromoCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 // 헤더 — 펼친 상태에선 "접기" 버튼 제공
                 HStack(spacing: 8) {
-                    Image(systemName: "airplane.departure")
-                        .foregroundStyle(AppTheme.Colors.bonus)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(Strings.travelSuggestionsHeader)
                             .font(.headline)
@@ -1464,9 +1462,6 @@ struct MyRealTripPromoCard: View {
             didOptIn = true
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: "airplane.departure")
-                    .foregroundStyle(AppTheme.Colors.bonus)
-                    .font(.subheadline)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(Strings.travelSuggestionsHeader)
                         .font(.subheadline.weight(.semibold))
