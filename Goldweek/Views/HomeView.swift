@@ -187,65 +187,67 @@ struct FatigueCheckInView: View {
     @State private var value: Double = 5
 
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer(minLength: 8)
-
-            Image(systemName: "heart.text.square.fill")
-                .font(.system(size: 44))
-                .foregroundStyle(AppTheme.Colors.brand)
-                .voDecorative()
-
-            Text(Strings.fatigueCheckInTitle)
-                .font(.title3.weight(.bold))
-                .multilineTextAlignment(.center)
-
-            Text(Strings.fatigueCheckInSubtitle)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-
-            VStack(spacing: 8) {
-                Text("\(Int(value))")
-                    .font(.system(size: 40, weight: .bold, design: .rounded))
+        ScrollView {
+            VStack(spacing: 20) {
+                Image(systemName: "heart.text.square.fill")
+                    .font(.system(size: 40))
                     .foregroundStyle(AppTheme.Colors.brand)
-                    .monospacedDigit()
-                Slider(value: $value, in: 0...10, step: 1)
-                    .tint(AppTheme.Colors.brand)
-                    .accessibilityLabel(Strings.fatigueCheckInTitle)
-                    .accessibilityValue("\(Int(value))")
-                HStack {
-                    Text(Strings.fatigueLow).font(.caption).foregroundStyle(.secondary)
-                    Spacer()
-                    Text(Strings.fatigueHigh).font(.caption).foregroundStyle(.secondary)
-                }
-            }
-            .padding(.horizontal, 8)
+                    .voDecorative()
 
-            Spacer(minLength: 8)
+                Text(Strings.fatigueCheckInTitle)
+                    .font(.title3.weight(.bold))
+                    .multilineTextAlignment(.center)
 
-            VStack(spacing: 12) {
-                Button {
-                    FatigueCheckIn.record(Int(value))
-                    dismiss()
-                } label: {
-                    Text(Strings.fatigueSubmit)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(AppTheme.Colors.brand)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                Text(Strings.fatigueCheckInSubtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+
+                VStack(spacing: 8) {
+                    Text("\(Int(value))")
+                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.Colors.brand)
+                        .monospacedDigit()
+                    Slider(value: $value, in: 0...10, step: 1)
+                        .tint(AppTheme.Colors.brand)
+                        .accessibilityLabel(Strings.fatigueCheckInTitle)
+                        .accessibilityValue("\(Int(value))")
+                    HStack {
+                        Text(Strings.fatigueLow).font(.caption).foregroundStyle(.secondary)
+                        Spacer()
+                        Text(Strings.fatigueHigh).font(.caption).foregroundStyle(.secondary)
+                    }
                 }
-                Button {
-                    FatigueCheckIn.skip()
-                    dismiss()
-                } label: {
-                    Text(Strings.fatigueSkip)
-                        .foregroundStyle(.secondary)
+                .padding(.horizontal, 8)
+
+                VStack(spacing: 12) {
+                    Button {
+                        FatigueCheckIn.record(Int(value))
+                        dismiss()
+                    } label: {
+                        Text(Strings.fatigueSubmit)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(AppTheme.Colors.brand)
+                            .foregroundStyle(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    Button {
+                        FatigueCheckIn.skip()
+                        dismiss()
+                    } label: {
+                        Text(Strings.fatigueSkip)
+                            .foregroundStyle(.secondary)
+                    }
                 }
+                .padding(.top, 4)
             }
+            .padding(.horizontal, 24)
+            .padding(.top, 28)   // 드래그 인디케이터 + 상단 모서리와 간격 (심볼 잘림 방지)
+            .padding(.bottom, 24)
         }
-        .padding(24)
-        .presentationDetents([.medium])
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
     }
 }
 
