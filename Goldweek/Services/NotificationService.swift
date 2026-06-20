@@ -20,6 +20,50 @@ import Foundation
 import UserNotifications
 #endif
 
+/// 단일문항 번아웃 체크인 (SIB, 0~10). 검증된 저마찰 측정 — docs/rest-radar-research.md 근거 E.
+/// 가끔 사용자에게 물어 모델을 주관 상태로 보정한다. 묻는 빈도는 최소화.
+enum FatigueCheckIn {
+    private static let valueKey = "sib_value"          // 마지막 답변값 (0~10)
+    private static let answeredKey = "sib_answered_at"  // 마지막 답변 시각
+    private static let promptKey = "sib_prompted_at"    // 마지막 노출/스누즈 시각
+
+    /// 답변값이 유효하다고 볼 기간 (이후엔 만료 — 상태는 변하므로)
+    static let recencyDays = 14
+    /// 체크인을 다시 물어보기까지의 최소 간격
+    static let promptIntervalDays = 21
+
+    /// 최근(유효 기간 내) 답변값. 없거나 만료면 nil → 엔진에서 미사용.
+    static var recentValue: Int? {
+        guard UserDefaults.standard.object(forKey: valueKey) != nil,
+              let answered = UserDefaults.standard.object(forKey: answeredKey) as? Date else { return nil }
+        let days = Calendar.current.dateComponents([.day], from: answered, to: Date()).day ?? 999
+        guard days <= recencyDays else { return nil }
+        return UserDefaults.standard.integer(forKey: valueKey)
+    }
+
+    /// 지금 체크인을 물어볼 때인가. 이력이 있고, 최근 답변이 없고, 쿨다운이 지났을 때.
+    static func isDue(hasHistory: Bool) -> Bool {
+        guard hasHistory, recentValue == nil else { return false }
+        guard let prompted = UserDefaults.standard.object(forKey: promptKey) as? Date else { return true }
+        let days = Calendar.current.dateComponents([.day], from: prompted, to: Date()).day ?? 999
+        return days >= promptIntervalDays
+    }
+
+    /// 답변 기록.
+    static func record(_ value: Int) {
+        let v = max(0, min(10, value))
+        UserDefaults.standard.set(v, forKey: valueKey)
+        UserDefaults.standard.set(Date(), forKey: answeredKey)
+        UserDefaults.standard.set(Date(), forKey: promptKey)
+        logInfo("피로 체크인 기록: \(v)/10", category: .app)
+    }
+
+    /// "나중에" — 노출 시각만 갱신해 쿨다운 시작.
+    static func skip() {
+        UserDefaults.standard.set(Date(), forKey: promptKey)
+    }
+}
+
 /// 알림 동행으로 전달할 "저비용 휴식 창" (LeavePlanner/RecommendationEngine에서 생성).
 struct RestWindowHint {
     let startDate: Date

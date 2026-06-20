@@ -101,7 +101,10 @@ struct ContentView: View {
     /// 휴식 이력으로 번아웃을 평가하고, overdue 이상이면 가까운 저비용 휴식 창과 함께 알림 예약.
     private func refreshRestRadar(profile: UserProfile) {
         let blocks = BurnoutEngine.restBlocks(from: leaveRecords)
-        let assessment = BurnoutEngine().assess(breaks: blocks, asOf: Date())
+        let assessment = BurnoutEngine().assess(
+            breaks: blocks, asOf: Date(),
+            subjectiveFatigue: FatigueCheckIn.recentValue
+        )
         let window = (assessment.level >= .overdue)
             ? bestRestWindow(profile: profile) : nil
         Task {

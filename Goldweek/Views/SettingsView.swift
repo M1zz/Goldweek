@@ -41,6 +41,7 @@ struct SettingsView: View {
 
     // 홈 "연차 현황"에 보너스 연차를 합산할지 여부 (홈 화면에서 이 설정을 따른다)
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
+    @AppStorage("rest_radar_enabled") private var restRadarEnabled: Bool = true
 
     // 국가 & 언어
     @State private var selectedCountry: Country
@@ -415,6 +416,23 @@ struct SettingsView: View {
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                }
+
+                // 휴식 알림 (Rest Radar)
+                if !isLeisure {
+                    Section {
+                        Toggle(isOn: $restRadarEnabled) {
+                            Label(Strings.restRadarToggle, systemImage: "bell.badge")
+                        }
+                        .tint(AppTheme.Colors.brand)
+                        .onChange(of: restRadarEnabled) { _, enabled in
+                            if !enabled { NotificationService.cancelPending() }
+                        }
+                    } header: {
+                        Text(Strings.restRadarSection)
+                    } footer: {
+                        Text(Strings.restRadarFooter)
+                    }
                 }
 
                 // 통계

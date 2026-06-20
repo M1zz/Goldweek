@@ -3426,6 +3426,91 @@ enum Strings {
         }
     }
 
+    // MARK: - 피로 체크인 (단일문항 SIB)
+
+    static var fatigueCheckInTitle: String {
+        switch lang {
+        case .korean: return "요즘 얼마나 지치셨나요?"
+        case .english: return "How drained do you feel lately?"
+        case .japanese: return "最近どれくらい疲れていますか?"
+        case .chinese: return "最近你有多疲惫?"
+        }
+    }
+
+    static var fatigueCheckInSubtitle: String {
+        switch lang {
+        case .korean: return "한 번의 답이 휴식 추천을 더 정확하게 만들어요."
+        case .english: return "One quick answer sharpens your rest suggestions."
+        case .japanese: return "ひとつの回答で休息提案がより正確になります。"
+        case .chinese: return "一个简单的回答能让休息建议更准确。"
+        }
+    }
+
+    static var fatigueLow: String {
+        switch lang {
+        case .korean: return "괜찮아요"
+        case .english: return "Fine"
+        case .japanese: return "元気"
+        case .chinese: return "还好"
+        }
+    }
+
+    static var fatigueHigh: String {
+        switch lang {
+        case .korean: return "완전 지침"
+        case .english: return "Exhausted"
+        case .japanese: return "限界"
+        case .chinese: return "精疲力竭"
+        }
+    }
+
+    static var fatigueSubmit: String {
+        switch lang {
+        case .korean: return "기록하기"
+        case .english: return "Submit"
+        case .japanese: return "記録する"
+        case .chinese: return "提交"
+        }
+    }
+
+    static var fatigueSkip: String {
+        switch lang {
+        case .korean: return "나중에"
+        case .english: return "Later"
+        case .japanese: return "あとで"
+        case .chinese: return "稍后"
+        }
+    }
+
+    // MARK: - 휴식 알림 설정 (Rest Radar)
+
+    static var restRadarSection: String {
+        switch lang {
+        case .korean: return "휴식 알림"
+        case .english: return "Rest reminders"
+        case .japanese: return "休息リマインダー"
+        case .chinese: return "休息提醒"
+        }
+    }
+
+    static var restRadarToggle: String {
+        switch lang {
+        case .korean: return "휴식 레이더"
+        case .english: return "Rest Radar"
+        case .japanese: return "レストレーダー"
+        case .chinese: return "休息雷达"
+        }
+    }
+
+    static var restRadarFooter: String {
+        switch lang {
+        case .korean: return "오래 쉬지 못했을 때, 가까운 저비용 연휴와 함께 쉬어갈 때를 알려드려요."
+        case .english: return "When you've gone too long without a break, we'll nudge you with a nearby low-cost getaway."
+        case .japanese: return "長く休めていないとき、近くの低コストな連休とともにお知らせします。"
+        case .chinese: return "当你太久没休息时,会结合就近的低成本假期提醒你。"
+        }
+    }
+
     // MARK: - 홈 카드 라벨 (LeaveStatusCard)
     static var includeBonus: String {
         switch lang {
