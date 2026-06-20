@@ -29,6 +29,9 @@
 		A1000009 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000009 /* SettingsView.swift */; };
 		A1000010 /* LeaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010 /* LeaveManager.swift */; };
 		A1000011 /* RecommendationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000011 /* RecommendationEngine.swift */; };
+		A1000060 /* BurnoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000060 /* BurnoutEngine.swift */; };
+		A1000061 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000061 /* NotificationService.swift */; };
+		A1000062 /* BurnoutEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000062 /* BurnoutEngineTests.swift */; };
 		A1000012 /* HolidayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* HolidayService.swift */; };
 		A1000013 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000013 /* Components.swift */; };
 		A1000014 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000014 /* Extensions.swift */; };
@@ -107,6 +110,9 @@
 		A2000009 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A2000010 /* LeaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveManager.swift; sourceTree = "<group>"; };
 		A2000011 /* RecommendationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationEngine.swift; sourceTree = "<group>"; };
+		A2000060 /* BurnoutEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngine.swift; sourceTree = "<group>"; };
+		A2000061 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		A2000062 /* BurnoutEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngineTests.swift; sourceTree = "<group>"; };
 		A2000012 /* HolidayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayService.swift; sourceTree = "<group>"; };
 		A2000013 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		A2000014 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -217,6 +223,7 @@
 				A4000007 /* Theme */,
 				A2000003 /* Assets.xcassets */,
 				A2000036 /* LeaveCalculationTests.swift */,
+				A2000062 /* BurnoutEngineTests.swift */,
 			);
 			path = Goldweek;
 			sourceTree = "<group>";
@@ -265,6 +272,8 @@
 				9C5397B82F4E825600905CF0 /* ReviewManager.swift */,
 				A2000010 /* LeaveManager.swift */,
 				A2000011 /* RecommendationEngine.swift */,
+				A2000060 /* BurnoutEngine.swift */,
+				A2000061 /* NotificationService.swift */,
 				A2000012 /* HolidayService.swift */,
 				A2000017 /* WidgetService.swift */,
 				A2000018 /* BackupService.swift */,
@@ -457,6 +466,8 @@
 				A1000009 /* SettingsView.swift in Sources */,
 				A1000010 /* LeaveManager.swift in Sources */,
 				A1000011 /* RecommendationEngine.swift in Sources */,
+				A1000060 /* BurnoutEngine.swift in Sources */,
+				A1000061 /* NotificationService.swift in Sources */,
 				A1000012 /* HolidayService.swift in Sources */,
 				A1000013 /* Components.swift in Sources */,
 				A1000014 /* Extensions.swift in Sources */,
@@ -487,6 +498,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1000036 /* LeaveCalculationTests.swift in Sources */,
+				A1000062 /* BurnoutEngineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

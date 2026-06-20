@@ -87,6 +87,24 @@ enum AnalyticsService {
         ])
     }
 
+    // MARK: - 휴식 레이더 (번아웃 알림)
+
+    /// 휴식 레이더 알림 노출 — 리텐션 훅 효과 측정용.
+    /// - level: BurnoutLevel.rawValue (2=overdue, 3=critical)
+    /// - hasWindow: 저비용 휴식 창을 함께 제시했는지
+    static func logRestRadarShown(level: Int, hasWindow: Bool) {
+        log("rest_radar_shown", [
+            "level": level,
+            "has_window": hasWindow ? 1 : 0
+        ])
+    }
+
+    /// 휴식 레이더 알림 → 앱 진입 (행동 전환)
+    static func logRestRadarOpened() { log("rest_radar_opened", [:]) }
+
+    /// 휴식 레이더 스누즈("나중에")
+    static func logRestRadarSnoozed(days: Int) { log("rest_radar_snoozed", ["days": days]) }
+
     // MARK: - 마이리얼트립
 
     static func logMRTOptInShow() { log("mrt_optin_show", [:]) }
