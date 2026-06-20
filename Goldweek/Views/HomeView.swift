@@ -185,6 +185,8 @@ struct HomeView: View {
 struct FatigueCheckInView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var value: Double = 5
+    /// 콘텐츠 실제 높이 — 시트를 콘텐츠에 딱 맞춰 여백을 균형 있게 (버튼이 아래로 뜨지 않게)
+    @State private var contentHeight: CGFloat = 0
 
     var body: some View {
         ScrollView {
@@ -194,14 +196,16 @@ struct FatigueCheckInView: View {
                     .foregroundStyle(AppTheme.Colors.brand)
                     .voDecorative()
 
-                Text(Strings.fatigueCheckInTitle)
-                    .font(.title3.weight(.bold))
-                    .multilineTextAlignment(.center)
+                VStack(spacing: 8) {
+                    Text(Strings.fatigueCheckInTitle)
+                        .font(.title3.weight(.bold))
+                        .multilineTextAlignment(.center)
 
-                Text(Strings.fatigueCheckInSubtitle)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+                    Text(Strings.fatigueCheckInSubtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
 
                 VStack(spacing: 8) {
                     Text("\(Int(value))")
@@ -219,34 +223,40 @@ struct FatigueCheckInView: View {
                     }
                 }
                 .padding(.horizontal, 8)
+                .padding(.top, 4)
 
-                VStack(spacing: 12) {
+                VStack(spacing: 4) {
                     Button {
                         FatigueCheckIn.record(Int(value))
                         dismiss()
                     } label: {
                         Text(Strings.fatigueSubmit)
+                            .font(.headline)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
+                            .padding(.vertical, 15)
                             .background(AppTheme.Colors.brand)
                             .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
                     Button {
                         FatigueCheckIn.skip()
                         dismiss()
                     } label: {
                         Text(Strings.fatigueSkip)
+                            .font(.subheadline)
                             .foregroundStyle(.secondary)
+                            .padding(.vertical, 10)
                     }
                 }
-                .padding(.top, 4)
+                .padding(.top, 8)
             }
             .padding(.horizontal, 24)
-            .padding(.top, 28)   // 드래그 인디케이터 + 상단 모서리와 간격 (심볼 잘림 방지)
-            .padding(.bottom, 24)
+            .padding(.top, 28)   // 드래그 인디케이터와 간격
+            .padding(.bottom, 20)
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
         }
-        .presentationDetents([.medium, .large])
+        .scrollBounceBehavior(.basedOnSize)
+        .presentationDetents(contentHeight > 0 ? [.height(contentHeight)] : [.medium])
         .presentationDragIndicator(.visible)
     }
 }
