@@ -80,6 +80,12 @@ enum NotificationService {
     private static let lastShownKey = "rest_radar_last_shown"
     private static let enabledKey = "rest_radar_enabled"
 
+    /// 알림 카테고리/액션 식별자 (델리게이트에서 탭/스누즈 구분용)
+    static let categoryID = "rest_radar_category"
+    static let snoozeActionID = "rest_radar_snooze_action"
+    /// 알림 내 스누즈 액션 누름 시 보류 기간
+    static let snoozeDays = 14
+
     /// 같은 알림을 다시 보내기까지의 최소 간격(쿨다운).
     private static let cooldownDays = 7
 
@@ -144,6 +150,28 @@ enum NotificationService {
         #endif
     }
 
+    /// 델리게이트 + 카테고리(스누즈 액션) 등록. 앱 시작 시 1회 호출.
+    /// 포그라운드 배너 표시 + 탭/스누즈 추적을 가능하게 한다.
+    static func registerDelegate() {
+        #if canImport(UserNotifications)
+        let center = UNUserNotificationCenter.current()
+        center.delegate = RestRadarNotificationDelegate.shared
+
+        let snooze = UNNotificationAction(
+            identifier: snoozeActionID,
+            title: Strings.restRadarSnoozeAction,
+            options: []
+        )
+        let category = UNNotificationCategory(
+            identifier: categoryID,
+            actions: [snooze],
+            intentIdentifiers: [],
+            options: []
+        )
+        center.setNotificationCategories([category])
+        #endif
+    }
+
     // MARK: - 휴식 레이더 메인 진입점
 
     /// 번아웃 평가 + 저비용 창을 받아 필요 시 알림 예약.
@@ -178,6 +206,7 @@ enum NotificationService {
         content.title = title
         content.body = body
         content.sound = .default
+        content.categoryIdentifier = categoryID
         content.userInfo = ["type": "rest_radar"]
 
         // 내일 오전 10시 — 업무 시작 직후, 휴식 계획에 적당한 시간
@@ -291,3 +320,40 @@ enum NotificationService {
         }
     }
 }
+
+// MARK: - 알림 델리게이트
+
+#if canImport(UserNotifications)
+/// 포그라운드 배너 표시 + 탭/스누즈 추적. 앱 시작 시 registerDelegate()로 연결.
+final class RestRadarNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+    static let shared = RestRadarNotificationDelegate()
+
+    /// 앱이 열려 있을 때도 배너로 표시 (기본은 억제됨)
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .list, .sound])
+    }
+
+    /// 알림 탭(앱 진입) / 스누즈 액션 처리
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        switch response.actionIdentifier {
+        case NotificationService.snoozeActionID:
+            NotificationService.snooze(days: NotificationService.snoozeDays)
+            AnalyticsService.logRestRadarSnoozed(days: NotificationService.snoozeDays)
+        case UNNotificationDefaultActionIdentifier:
+            // 본문 탭 → 앱 진입 (행동 전환)
+            AnalyticsService.logRestRadarOpened()
+        default:
+            break
+        }
+        completionHandler()
+    }
+}
+#endif

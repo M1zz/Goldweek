@@ -3511,6 +3511,16 @@ enum Strings {
         }
     }
 
+    /// 알림 내 스누즈 액션 버튼
+    static var restRadarSnoozeAction: String {
+        switch lang {
+        case .korean: return "2주 뒤에 다시"
+        case .english: return "Remind in 2 weeks"
+        case .japanese: return "2週間後に再通知"
+        case .chinese: return "两周后再提醒"
+        }
+    }
+
     // MARK: - 홈 카드 라벨 (LeaveStatusCard)
     static var includeBonus: String {
         switch lang {

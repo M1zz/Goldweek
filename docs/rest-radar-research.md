@@ -104,17 +104,21 @@ burnout_risk   = w1·(1 − reserve) + w2·max(0, overdue_ratio − 1)
 
 ---
 
-## 4. 구현 선행 조건 / 갭
+## 4. 구현 현황 (2026-06 기준)
 
-| 필요 | 현황 |
+| 항목 | 현황 |
 |---|---|
-| 로컬 알림 (UNUserNotification) | **미구현** — "지금 쉬어라" 푸시의 유일한 미싱 피스. 우선 추가. |
-| 휴식 이력 통계 | `LeaveRecord` 존재 → 즉시 가능 |
-| 저비용 휴식 창 | `LeavePlanner.optimalPlan` 재사용 |
-| 워크로드 신호 | `CalendarService`(EventKit) 연동됨 → 읽기만 추가 |
-| 주관 보정 | 단일문항 모달 1개 신규 |
-| 패시브 생체신호 | HealthKit 미연동 — 옵트인 로드맵 |
-| 측정 | recommendation_shown/added 이벤트 기반(이미 추가). rest_alert_shown/acted 신규 필요 |
+| 번아웃 엔진 (잔량·주기·예측) | ✅ `BurnoutEngine` + 11개 단위 테스트 |
+| 로컬 알림 (UNUserNotification) | ✅ `NotificationService` — 권한/스누즈/쿨다운/4개국어 |
+| 알림 델리게이트 (포그라운드 표시·탭·스누즈 액션) | ✅ `RestRadarNotificationDelegate`, 앱 시작 시 등록 |
+| 홈 카드 (잔량 게이지·예측 라인·개인 주기) | ✅ `BurnoutPaceCard` 엔진 기반 격상 |
+| 저비용 휴식 창 | ✅ `LeavePlanner.optimalPlan` 재사용 (`bestRestWindow`) |
+| 주관 보정 (단일문항 SIB) | ✅ `FatigueCheckIn` + `FatigueCheckInView` 모달 |
+| 설정 on/off | ✅ SettingsView 휴식 레이더 토글 |
+| 측정 | ✅ recommendation_shown/added, rest_radar_shown/opened/snoozed |
+| 워크로드 신호 (EventKit 일정 밀도) | ◻️ 로드맵 — `CalendarService` 연동됨, 읽기 추가 필요 |
+| 패시브 생체신호 (HealthKit 수면·HRV) | ◻️ 옵트인 로드맵 — 미연동 |
+| 가중치/임계값 튜닝 | ◻️ 실데이터 수집 후 `BurnoutEngine.Config` 보정 |
 
 ---
 
