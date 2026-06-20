@@ -133,17 +133,6 @@ struct CalendarView: View {
         return set
     }
 
-    /// 주의 구간 안내 문구. 안정적이면 nil (카드 숨김).
-    private var burnoutForecastText: String? {
-        let a = burnoutAssessment
-        if a.level == .critical { return Strings.burnoutForecastNow }
-        guard let date = a.predictedRiskDate else { return nil }
-        let fmt = DateFormatter()
-        fmt.locale = Locale(identifier: Strings.localeIdentifier)
-        fmt.setLocalizedDateFormatFromTemplate("yMMM")
-        return Strings.burnoutForecast(fmt.string(from: date))
-    }
-
     /// 추천 탭과 동일한 엔진으로 추천을 만들고, 공휴일이 포함되고 연차가 필요한 일정만 남긴다.
     private func computeRecommendations(year: Int) {
         let recs = recommendationEngine.generateRecommendations(
@@ -191,11 +180,6 @@ struct CalendarView: View {
                 VStack(spacing: 20) {
                     // 월 네비게이션
                     MonthNavigator(currentMonth: $currentMonth)
-
-                    // 번아웃 주의 구간 안내 (예측 있을 때만)
-                    if let forecast = burnoutForecastText {
-                        BurnoutForecastCard(text: forecast)
-                    }
 
                     // 캘린더 그리드
                     CalendarGrid(
@@ -631,28 +615,6 @@ struct LegendView: View {
         .font(.caption)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Strings.legendAccessibility)
-    }
-}
-
-// MARK: - 번아웃 주의 구간 카드
-struct BurnoutForecastCard: View {
-    let text: String
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundStyle(AppTheme.Colors.compensatory)
-                .voDecorative()
-            Text(text)
-                .font(.subheadline)
-                .foregroundStyle(.primary)
-            Spacer(minLength: 0)
-        }
-        .padding(12)
-        .background(AppTheme.Colors.compensatory.opacity(0.12))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(text)
     }
 }
 

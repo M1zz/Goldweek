@@ -3386,36 +3386,6 @@ enum Strings {
         }
     }
 
-    /// 번아웃 예측 — 위험 진입 예상 (월 단위 근사 표기)
-    static func burnoutForecast(_ dateText: String) -> String {
-        switch lang {
-        case .korean: return "이대로면 \(dateText)쯤 번아웃 주의 구간"
-        case .english: return "At this pace, burnout risk around \(dateText)"
-        case .japanese: return "このままだと\(dateText)頃に注意ゾーン"
-        case .chinese: return "照此节奏,\(dateText)前后进入倦怠风险区"
-        }
-    }
-
-    /// 번아웃 예측 — 당분간 안전
-    static var burnoutForecastClear: String {
-        switch lang {
-        case .korean: return "당분간 회복 흐름이 안정적이에요"
-        case .english: return "Your recovery looks stable for now"
-        case .japanese: return "当面は回復が安定しています"
-        case .chinese: return "近期恢复状态稳定"
-        }
-    }
-
-    /// 번아웃 예측 — 이미 위험 (지금 쉬어야)
-    static var burnoutForecastNow: String {
-        switch lang {
-        case .korean: return "지금이 쉬어갈 때예요"
-        case .english: return "Now is the time to rest"
-        case .japanese: return "今が休む時です"
-        case .chinese: return "现在该休息了"
-        }
-    }
-
     /// 캘린더 범례 — 번아웃 주의 구간
     static var burnoutWarningLegend: String {
         switch lang {
