@@ -3374,6 +3374,58 @@ enum Strings {
         }
     }
 
+    // MARK: - 회복 잔량 / 번아웃 예측 (Rest Radar)
+
+    /// 회복 잔량 게이지 라벨
+    static var recoveryReserveLabel: String {
+        switch lang {
+        case .korean: return "회복 잔량"
+        case .english: return "Recovery reserve"
+        case .japanese: return "回復残量"
+        case .chinese: return "恢复余量"
+        }
+    }
+
+    /// 내 평소 휴식 주기 — 개인화됐을 때
+    static func personalCycleLabel(_ days: Int) -> String {
+        switch lang {
+        case .korean: return "평소 주기 \(days)일"
+        case .english: return "Your usual cycle: \(days) days"
+        case .japanese: return "いつもの周期\(days)日"
+        case .chinese: return "你通常的周期为\(days)天"
+        }
+    }
+
+    /// 번아웃 예측 — 위험 진입 예상 (월 단위 근사 표기)
+    static func burnoutForecast(_ dateText: String) -> String {
+        switch lang {
+        case .korean: return "이대로면 \(dateText)쯤 번아웃 주의 구간"
+        case .english: return "At this pace, burnout risk around \(dateText)"
+        case .japanese: return "このままだと\(dateText)頃に注意ゾーン"
+        case .chinese: return "照此节奏,\(dateText)前后进入倦怠风险区"
+        }
+    }
+
+    /// 번아웃 예측 — 당분간 안전
+    static var burnoutForecastClear: String {
+        switch lang {
+        case .korean: return "당분간 회복 흐름이 안정적이에요"
+        case .english: return "Your recovery looks stable for now"
+        case .japanese: return "当面は回復が安定しています"
+        case .chinese: return "近期恢复状态稳定"
+        }
+    }
+
+    /// 번아웃 예측 — 이미 위험 (지금 쉬어야)
+    static var burnoutForecastNow: String {
+        switch lang {
+        case .korean: return "지금이 쉬어갈 때예요"
+        case .english: return "Now is the time to rest"
+        case .japanese: return "今が休む時です"
+        case .chinese: return "现在该休息了"
+        }
+    }
+
     // MARK: - 홈 카드 라벨 (LeaveStatusCard)
     static var includeBonus: String {
         switch lang {
