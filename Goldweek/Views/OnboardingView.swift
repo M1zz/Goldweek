@@ -16,6 +16,7 @@ struct OnboardingView: View {
     @State private var userName = ""
     @State private var totalLeave: Double = 15
     @State private var yearStartMonth = 1
+    @State private var showingSaveError = false
     @FocusState private var isNameFieldFocused: Bool
 
     private let totalPages = 5
@@ -76,6 +77,12 @@ struct OnboardingView: View {
             if newPage != 3 {
                 isNameFieldFocused = false
             }
+        }
+        .alert(Strings.alert, isPresented: $showingSaveError) {
+            Button(Strings.retry) { completeOnboarding() }
+            Button(Strings.cancel, role: .cancel) { }
+        } message: {
+            Text(Strings.saveFailed)
         }
     }
 
@@ -166,7 +173,16 @@ struct OnboardingView: View {
             country: country
         )
         modelContext.insert(profile)
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            // 프로필 없이 온보딩이 끝나면 앱이 깨진 상태가 되므로 완료를 막는다
+            modelContext.delete(profile)
+            logError("온보딩 프로필 저장 실패: \(error.localizedDescription)", category: .data)
+            HapticFeedback.error()
+            showingSaveError = true
+            return
+        }
 
         WidgetService.shared.updateWidgetData(
             profile: profile,

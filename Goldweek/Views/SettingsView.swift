@@ -38,6 +38,11 @@ struct SettingsView: View {
     @State private var showingRestoreConfirm = false
     @State private var showingPaywall = false
     @State private var editingBonus: BonusLeave?
+    @State private var pendingBonusDeleteOffsets: IndexSet?
+    @State private var showingBonusDeleteConfirm = false
+    @State private var restoreResultMessage = ""
+    @State private var showingRestoreResult = false
+    @State private var showingCalendarImport = false
 
     // 홈 "연차 현황"에 보너스 연차를 합산할지 여부 (홈 화면에서 이 설정을 따른다)
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
@@ -426,6 +431,28 @@ struct SettingsView: View {
 
                 // 데이터 관리
                 Section {
+                    // 캘린더에서 휴가 가져오기 (제안 후 확인)
+                    Button {
+                        showingCalendarImport = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "calendar.badge.plus")
+                                .foregroundStyle(.green)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.importFromCalendar)
+                                    .foregroundStyle(.primary)
+                                Text(Strings.importFromCalendarDescription)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+
                     // iCloud 백업
                     Button {
                         Task { await backupToICloud() }
@@ -481,7 +508,18 @@ struct SettingsView: View {
                     if !ProManager.shared.isPro {
                         Button {
                             Task {
-                                await ProManager.shared.restorePurchases()
+                                let result = await ProManager.shared.restorePurchases()
+                                switch result {
+                                case .restored:
+                                    restoreResultMessage = Strings.restorePurchasesSuccess
+                                    HapticFeedback.success()
+                                case .nothingToRestore:
+                                    restoreResultMessage = Strings.restorePurchasesNone
+                                case .failed(let reason):
+                                    restoreResultMessage = Strings.restorePurchasesFailed(reason)
+                                    HapticFeedback.error()
+                                }
+                                showingRestoreResult = true
                             }
                         } label: {
                             HStack {
@@ -546,6 +584,9 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+
+                // 개발자 문의
+                DeveloperContactSection()
             }
             .navigationTitle(Strings.navTitleSettings)
             .sheet(isPresented: $showingPreferences) {
@@ -567,6 +608,9 @@ struct SettingsView: View {
             .sheet(isPresented: $showingPaywall) {
                 PaywallView()
             }
+            .sheet(isPresented: $showingCalendarImport) {
+                CalendarImportSheet(existingRecords: Array(leaveRecords))
+            }
             .alert(Strings.resetDataTitle, isPresented: $showingResetAlert) {
                 Button(Strings.cancel, role: .cancel) { }
                 Button(Strings.reset, role: .destructive) {
@@ -587,6 +631,17 @@ struct SettingsView: View {
                 }
             } message: {
                 Text(Strings.restoreConfirmMessage)
+            }
+            .alert(Strings.deleteBonusLeaveTitle, isPresented: $showingBonusDeleteConfirm) {
+                Button(Strings.cancel, role: .cancel) { pendingBonusDeleteOffsets = nil }
+                Button(Strings.delete, role: .destructive) { performDeleteBonusLeave() }
+            } message: {
+                Text(Strings.deleteBonusLeaveConfirm)
+            }
+            .alert(Strings.alert, isPresented: $showingRestoreResult) {
+                Button(Strings.confirm, role: .cancel) { }
+            } message: {
+                Text(restoreResultMessage)
             }
             .task {
                 await checkLastBackup()
@@ -705,6 +760,13 @@ struct SettingsView: View {
     }
 
     private func deleteBonusLeave(at offsets: IndexSet) {
+        pendingBonusDeleteOffsets = offsets
+        showingBonusDeleteConfirm = true
+    }
+
+    private func performDeleteBonusLeave() {
+        guard let offsets = pendingBonusDeleteOffsets else { return }
+        pendingBonusDeleteOffsets = nil
         let activeLeaves = bonusLeaves.filter { !$0.isUsed }
         for index in offsets {
             let bonus = activeLeaves[index]
@@ -718,6 +780,8 @@ struct SettingsView: View {
         } catch {
             logError("보너스 연차 삭제 실패: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
+            backupAlertMessage = Strings.deleteFailed
+            showingBackupAlert = true
         }
     }
 
@@ -745,6 +809,48 @@ struct SettingsView: View {
             HapticFeedback.error()
             backupAlertMessage = Strings.resetFailedWithReason(error.localizedDescription)
             showingBackupAlert = true
+        }
+    }
+}
+
+// MARK: - 개발자 문의
+struct DeveloperContactSection: View {
+    var body: some View {
+        Section {
+            Link(destination: URL(string: "mailto:leeo@kakao.com")!) {
+                HStack {
+                    Image(systemName: "envelope")
+                        .foregroundStyle(.blue)
+                        .frame(width: 24)
+                        .voDecorative()
+                    Text(Strings.contactByEmail)
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    Image(systemName: "arrow.up.right.square")
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                        .voDecorative()
+                }
+            }
+            Link(destination: URL(string: "https://instagram.com/lee25_ios")!) {
+                HStack {
+                    Image(systemName: "paperplane")
+                        .foregroundStyle(.purple)
+                        .frame(width: 24)
+                        .voDecorative()
+                    Text(Strings.contactByInstagram)
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    Image(systemName: "arrow.up.right.square")
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                        .voDecorative()
+                }
+            }
+        } header: {
+            Text(Strings.contactDeveloperSection)
+        } footer: {
+            Text(Strings.contactDeveloperFooter)
         }
     }
 }
@@ -793,6 +899,228 @@ struct StatRow: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(title))
         .accessibilityValue(Text(value))
+    }
+}
+
+// MARK: - 캘린더 휴가 가져오기 시트 (제안 후 확인)
+struct CalendarImportSheet: View {
+    let existingRecords: [LeaveRecord]
+
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+
+    @State private var isScanning = true
+    @State private var candidates: [DetectedLeaveCandidate] = []
+    @State private var selectedIDs: Set<UUID> = []
+    @State private var scanErrorMessage: String?
+    @State private var isSaving = false
+    @State private var resultMessage = ""
+    @State private var showingResultAlert = false
+    @State private var importSucceeded = false
+
+    private let calendar = Calendar.current
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if isScanning {
+                    VStack(spacing: 12) {
+                        ProgressView()
+                        Text(Strings.scanningCalendar)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if let errorMessage = scanErrorMessage {
+                    VStack(spacing: 12) {
+                        Image(systemName: "calendar.badge.exclamationmark")
+                            .font(.largeTitle)
+                            .foregroundStyle(.orange)
+                            .voDecorative()
+                        Text(errorMessage)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 32)
+                        HStack(spacing: 12) {
+                            Button(Strings.retry) {
+                                Task { await scan() }
+                            }
+                            .buttonStyle(.bordered)
+
+                            // 권한이 거부된 상태면 재시도로 해결되지 않으므로 설정으로 안내
+                            Button(Strings.openSettings) {
+                                if let url = URL(string: UIApplication.openSettingsURLString) {
+                                    UIApplication.shared.open(url)
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if candidates.isEmpty {
+                    VStack(spacing: 12) {
+                        Image(systemName: "checkmark.circle")
+                            .font(.largeTitle)
+                            .foregroundStyle(.secondary)
+                            .voDecorative()
+                        Text(Strings.noLeaveCandidatesFound)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    List {
+                        Section {
+                            ForEach(candidates) { candidate in
+                                Button {
+                                    toggleSelection(candidate.id)
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: selectedIDs.contains(candidate.id)
+                                              ? "checkmark.circle.fill" : "circle")
+                                            .font(.title3)
+                                            .foregroundStyle(selectedIDs.contains(candidate.id)
+                                                             ? AppTheme.Colors.brand : Color(.systemGray3))
+                                            .voDecorative()
+
+                                        VStack(alignment: .leading, spacing: 3) {
+                                            Text(candidate.title)
+                                                .fontWeight(.medium)
+                                                .foregroundStyle(.primary)
+                                                .lineLimit(1)
+                                            HStack(spacing: 6) {
+                                                // 추론된 휴가 유형 배지
+                                                Text(Strings.leaveTypeName(candidate.suggestedType))
+                                                    .font(.caption2.weight(.semibold))
+                                                    .padding(.horizontal, 6)
+                                                    .padding(.vertical, 2)
+                                                    .background(candidate.suggestedType.themeColor.opacity(0.15))
+                                                    .foregroundStyle(candidate.suggestedType.themeColor)
+                                                    .clipShape(Capsule())
+                                                Text("\(dateRangeText(candidate)) · \(formatLeave(candidate.effectiveDays))\(Strings.dayUnitSuffix)")
+                                                    .font(.caption)
+                                                    .foregroundStyle(.secondary)
+                                            }
+                                        }
+                                        Spacer()
+                                    }
+                                    .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityElement(children: .ignore)
+                                .accessibilityLabel(Text("\(candidate.title), \(Strings.leaveTypeName(candidate.suggestedType)), \(dateRangeText(candidate)), \(formatLeave(candidate.effectiveDays))\(Strings.dayUnitSuffix)"))
+                                .accessibilityAddTraits(selectedIDs.contains(candidate.id) ? .isSelected : [])
+                            }
+                        } header: {
+                            Text(Strings.detectedLeaveCandidates)
+                        } footer: {
+                            Text(Strings.importFromCalendarDescription)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(Strings.importFromCalendar)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(Strings.cancel) { dismiss() }
+                }
+                if !candidates.isEmpty && scanErrorMessage == nil && !isScanning {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button {
+                            importSelected()
+                        } label: {
+                            if isSaving {
+                                ProgressView().scaleEffect(0.8)
+                            } else {
+                                Text(Strings.importSelectedLeaves(selectedIDs.count))
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                        .disabled(selectedIDs.isEmpty || isSaving)
+                    }
+                }
+            }
+            .task { await scan() }
+            .alert(Strings.alert, isPresented: $showingResultAlert) {
+                Button(Strings.confirm, role: .cancel) {
+                    if importSucceeded { dismiss() }
+                }
+            } message: {
+                Text(resultMessage)
+            }
+        }
+    }
+
+    private func toggleSelection(_ id: UUID) {
+        HapticFeedback.selection()
+        if selectedIDs.contains(id) {
+            selectedIDs.remove(id)
+        } else {
+            selectedIDs.insert(id)
+        }
+    }
+
+    private func dateRangeText(_ candidate: DetectedLeaveCandidate) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: Strings.localeIdentifier)
+        formatter.dateFormat = Strings.dateRangeFormat
+        if calendar.isDate(candidate.startDate, inSameDayAs: candidate.endDate) {
+            return formatter.string(from: candidate.startDate)
+        }
+        return "\(formatter.string(from: candidate.startDate)) ~ \(formatter.string(from: candidate.endDate))"
+    }
+
+    private func scan() async {
+        isScanning = true
+        scanErrorMessage = nil
+        do {
+            let found = try await CalendarService.shared.scanForLeaveCandidates(
+                existingRecords: existingRecords
+            )
+            candidates = found
+            selectedIDs = Set(found.map(\.id))  // 기본 전체 선택
+        } catch {
+            scanErrorMessage = error.localizedDescription
+        }
+        isScanning = false
+    }
+
+    private func importSelected() {
+        let selected = candidates.filter { selectedIDs.contains($0.id) }
+        guard !selected.isEmpty else { return }
+        isSaving = true
+
+        let today = calendar.startOfDay(for: Date())
+        var inserted: [LeaveRecord] = []
+        for candidate in selected {
+            let record = LeaveRecord(
+                startDate: candidate.startDate,
+                endDate: candidate.endDate,
+                type: candidate.suggestedType,
+                status: candidate.endDate < today ? .used : .planned,
+                note: candidate.title
+            )
+            modelContext.insert(record)
+            inserted.append(record)
+        }
+
+        do {
+            try modelContext.save()
+            HapticFeedback.success()
+            importSucceeded = true
+            resultMessage = Strings.leavesImported(inserted.count)
+            AnalyticsService.logLeaveAdded(type: "calendar_import", days: Double(inserted.count), isRecommended: false)
+        } catch {
+            inserted.forEach { modelContext.delete($0) }
+            HapticFeedback.error()
+            importSucceeded = false
+            resultMessage = Strings.saveFailed
+        }
+        isSaving = false
+        showingResultAlert = true
     }
 }
 

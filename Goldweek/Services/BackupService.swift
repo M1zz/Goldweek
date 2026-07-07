@@ -197,7 +197,7 @@ class BackupService {
         let encryptedData = try encrypt(jsonData)
         logDebug("암호화된 데이터 크기: \(encryptedData.count) bytes", category: .backup)
 
-        try encryptedData.write(to: url)
+        try encryptedData.write(to: url, options: .atomic)
         logInfo("iCloud 백업 완료: \(url.lastPathComponent)", category: .backup)
 
         // 기존 평문 백업 파일 삭제 (보안)
@@ -219,7 +219,7 @@ class BackupService {
         }
 
         let data = try createBackup(profile: profile, leaveRecords: leaveRecords, bonusLeaves: bonusLeaves)
-        try data.write(to: url)
+        try data.write(to: url, options: .atomic)
         return url
     }
 
@@ -241,7 +241,31 @@ class BackupService {
 
         logDebug("iCloud 백업 URL 확인: \(url.path)", category: .iCloud)
 
-        // 새 암호화 백업 확인
+        // 1) 타임스탬프(로테이션) 백업 중 무결성 검증된 최신본 우선
+        //    자동 백업이 단일 파일을 정리하므로 이 경로가 없으면 복원 자체가 불가능하다
+        if let verifiedURL = await getVerifiedLatestICloudBackup() {
+            logInfo("검증된 로테이션 백업 사용: \(verifiedURL.lastPathComponent)", category: .backup)
+            let encryptedData = try Data(contentsOf: verifiedURL)
+            let decryptedData = try decrypt(encryptedData)
+            let backup = try parseBackup(from: decryptedData)
+            logInfo("iCloud 복원 완료 - 연차기록: \(backup.leaveRecords.count)건, 보너스: \(backup.bonusLeaves.count)건", category: .backup)
+            return backup
+        }
+
+        // 1-1) 체크섬 기록이 없어 검증 불가한 로테이션 백업(기기 교체 등)은 최신본을 복호화 시도
+        //      복호화/파싱 실패는 그대로 throw되어 사용자에게 전달된다
+        if let latestBackup = getTimestampedICloudBackups().max(by: {
+            extractTimestamp(from: $0) < extractTimestamp(from: $1)
+        }) {
+            logWarning("무결성 미검증 로테이션 백업으로 복원 시도: \(latestBackup.lastPathComponent)", category: .backup)
+            let encryptedData = try Data(contentsOf: latestBackup)
+            let decryptedData = try decrypt(encryptedData)
+            let backup = try parseBackup(from: decryptedData)
+            logInfo("iCloud 복원 완료 - 연차기록: \(backup.leaveRecords.count)건, 보너스: \(backup.bonusLeaves.count)건", category: .backup)
+            return backup
+        }
+
+        // 2) 기존 단일 암호화 백업 확인
         if fileManager.fileExists(atPath: url.path) {
             logInfo("암호화된 백업 파일 발견", category: .backup)
             let encryptedData = try Data(contentsOf: url)
@@ -323,9 +347,9 @@ class BackupService {
             modelContext.insert(newProfile)
         }
 
-        // 기존 연차 기록 삭제
-        let existingRecords = try? modelContext.fetch(FetchDescriptor<LeaveRecord>())
-        existingRecords?.forEach { modelContext.delete($0) }
+        // 기존 연차 기록 삭제 — fetch 실패 시 중복 삽입을 막기 위해 복원을 중단한다
+        let existingRecords = try modelContext.fetch(FetchDescriptor<LeaveRecord>())
+        existingRecords.forEach { modelContext.delete($0) }
 
         // 연차 기록 복원
         for record in backup.leaveRecords {
@@ -340,9 +364,9 @@ class BackupService {
             modelContext.insert(newRecord)
         }
 
-        // 기존 보너스 연차 삭제
-        let existingBonus = try? modelContext.fetch(FetchDescriptor<BonusLeave>())
-        existingBonus?.forEach { modelContext.delete($0) }
+        // 기존 보너스 연차 삭제 — fetch 실패 시 중복 삽입을 막기 위해 복원을 중단한다
+        let existingBonus = try modelContext.fetch(FetchDescriptor<BonusLeave>())
+        existingBonus.forEach { modelContext.delete($0) }
 
         // 보너스 연차 복원
         for bonus in backup.bonusLeaves {
@@ -418,7 +442,7 @@ class BackupService {
         try? fileManager.createDirectory(at: containerURL, withIntermediateDirectories: true)
         
         // 새 백업 저장
-        try encryptedData.write(to: newBackupURL)
+        try encryptedData.write(to: newBackupURL, options: .atomic)
         
         // 체크섬 저장
         UserDefaults.standard.set(checksum, forKey: "\(backupChecksumKey)_\(timestamp)")
@@ -612,25 +636,55 @@ enum BackupError: LocalizedError {
     case checksumMismatch
 
     var errorDescription: String? {
-        switch self {
-        case .iCloudNotAvailable:
-            return "iCloud를 사용할 수 없습니다. 설정에서 iCloud Drive를 활성화해주세요."
-        case .localPathNotAvailable:
-            return "로컬 저장 경로에 접근할 수 없습니다."
-        case .backupNotFound:
-            return "백업 파일을 찾을 수 없습니다."
-        case .invalidBackupData:
-            return "백업 데이터를 읽을 수 없습니다."
-        case .encryptionFailed:
-            return "백업 암호화에 실패했습니다."
-        case .decryptionFailed:
-            return "백업 복호화에 실패했습니다. 다른 기기의 백업일 수 있습니다."
-        case .integrityVerificationFailed:
-            return "백업 파일 무결성 검증에 실패했습니다."
-        case .backupRotationFailed:
-            return "백업 파일 로테이션에 실패했습니다."
-        case .checksumMismatch:
-            return "백업 파일이 손상되었습니다. (체크섬 불일치)"
+        switch LanguageManager.shared.currentLanguage {
+        case .korean:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud를 사용할 수 없습니다. 설정에서 iCloud Drive를 활성화해주세요."
+            case .localPathNotAvailable: return "로컬 저장 경로에 접근할 수 없습니다."
+            case .backupNotFound: return "백업 파일을 찾을 수 없습니다."
+            case .invalidBackupData: return "백업 데이터를 읽을 수 없습니다."
+            case .encryptionFailed: return "백업 암호화에 실패했습니다."
+            case .decryptionFailed: return "백업 복호화에 실패했습니다. 다른 기기의 백업일 수 있습니다."
+            case .integrityVerificationFailed: return "백업 파일 무결성 검증에 실패했습니다."
+            case .backupRotationFailed: return "백업 파일 로테이션에 실패했습니다."
+            case .checksumMismatch: return "백업 파일이 손상되었습니다. (체크섬 불일치)"
+            }
+        case .english:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud is unavailable. Please enable iCloud Drive in Settings."
+            case .localPathNotAvailable: return "Cannot access local storage path."
+            case .backupNotFound: return "Backup file not found."
+            case .invalidBackupData: return "Cannot read backup data."
+            case .encryptionFailed: return "Backup encryption failed."
+            case .decryptionFailed: return "Backup decryption failed. It may be a backup from another device."
+            case .integrityVerificationFailed: return "Backup integrity verification failed."
+            case .backupRotationFailed: return "Backup file rotation failed."
+            case .checksumMismatch: return "Backup file is corrupted. (Checksum mismatch)"
+            }
+        case .japanese:
+            switch self {
+            case .iCloudNotAvailable: return "iCloudを使用できません。設定でiCloud Driveを有効にしてください。"
+            case .localPathNotAvailable: return "ローカル保存パスにアクセスできません。"
+            case .backupNotFound: return "バックアップファイルが見つかりません。"
+            case .invalidBackupData: return "バックアップデータを読み込めません。"
+            case .encryptionFailed: return "バックアップの暗号化に失敗しました。"
+            case .decryptionFailed: return "バックアップの復号に失敗しました。他のデバイスのバックアップの可能性があります。"
+            case .integrityVerificationFailed: return "バックアップファイルの整合性検証に失敗しました。"
+            case .backupRotationFailed: return "バックアップファイルのローテーションに失敗しました。"
+            case .checksumMismatch: return "バックアップファイルが破損しています。(チェックサム不一致)"
+            }
+        case .chinese:
+            switch self {
+            case .iCloudNotAvailable: return "无法使用iCloud,请在设置中启用iCloud Drive。"
+            case .localPathNotAvailable: return "无法访问本地存储路径。"
+            case .backupNotFound: return "找不到备份文件。"
+            case .invalidBackupData: return "无法读取备份数据。"
+            case .encryptionFailed: return "备份加密失败。"
+            case .decryptionFailed: return "备份解密失败,可能是其他设备的备份。"
+            case .integrityVerificationFailed: return "备份文件完整性验证失败。"
+            case .backupRotationFailed: return "备份文件轮换失败。"
+            case .checksumMismatch: return "备份文件已损坏。(校验和不匹配)"
+            }
         }
     }
 }

@@ -216,8 +216,149 @@ class CalendarService {
         }
     }
     
+    // MARK: - 휴가 자동 탐지 (제안 후 확인)
+
+    /// 캘린더에서 휴가로 보이는 이벤트를 탐지할 때 쓰는 키워드 (소문자 비교)
+    /// 종일 이벤트에만 적용되고 사용자 확인을 거치므로 다소 넓게 잡아도 안전하다
+    private static let leaveKeywords: [String] = [
+        // 한국어
+        "연차", "휴가", "반차", "반반차", "월차", "연가", "휴무",
+        "대휴", "대체휴무", "보상휴가", "포상휴가", "리프레시",
+        "병가", "경조사", "공가",
+        // 일본어
+        "休暇", "有給", "有休", "年休", "半休", "全休", "休み",
+        "代休", "振替休日", "振休", "夏季休暇", "特休", "特別休暇",
+        // 중국어 (간체)
+        "年假", "休假", "请假", "调休", "补休", "倒休",
+        "事假", "病假", "婚假", "产假", "探亲假",
+        // 영어
+        "vacation", "annual leave", "paid leave", "sick leave", "family leave",
+        "parental leave", "maternity", "paternity", "leave",
+        "day off", "time off", "half day", "personal day",
+        "pto", "ooo", "out of office",
+        // 출장
+        "출장", "出張", "出差", "business trip",
+        // 독일어/프랑스어 (Country 지원 국가)
+        "urlaub", "congé", "congés", "vacances", "rtt"
+    ]
+
+    /// 이벤트 제목에서 휴가 유형을 추론한다 (구체적인 유형 → 일반 유형 순서로 검사)
+    /// 반차/반반차는 단일 일자 이벤트일 때만 적용 — 여러 날짜에 걸친 "반차"는 신뢰할 수 없어 연차로 폴백
+    private static func inferLeaveType(from title: String, isSingleDay: Bool) -> LeaveType {
+        let t = title.lowercased()
+
+        if isSingleDay {
+            // 반반차 (0.25일) — "반차"보다 먼저 검사해야 함
+            if t.contains("반반차") { return .quarter }
+            // 반차 (0.5일)
+            if t.contains("반차") || t.contains("半休") || t.contains("half day") { return .half }
+        }
+        // 병가
+        if t.contains("병가") || t.contains("病欠") || t.contains("病假") || t.contains("sick") {
+            return .sick
+        }
+        // 대체휴무/보상휴가
+        if t.contains("대휴") || t.contains("대체휴무") || t.contains("보상휴가")
+            || t.contains("代休") || t.contains("振替休日") || t.contains("振休")
+            || t.contains("补休") || t.contains("倒休") || t.contains("comp day") {
+            return .compensatory
+        }
+        // 특별휴가 (경조사, 출산 등)
+        if t.contains("경조사") || t.contains("특별휴가") || t.contains("特別休暇") || t.contains("特休")
+            || t.contains("婚假") || t.contains("产假") || t.contains("探亲假")
+            || t.contains("maternity") || t.contains("paternity")
+            || t.contains("family leave") || t.contains("parental leave") {
+            return .special
+        }
+        // 공가
+        if t.contains("공가") { return .official }
+        // 출장
+        if t.contains("출장") || t.contains("出張") || t.contains("出差") || t.contains("business trip") {
+            return .businessTrip
+        }
+        // 기본: 연차
+        return .annual
+    }
+
+    /// 캘린더에서 휴가로 보이는 종일 이벤트를 찾아 후보로 반환한다.
+    /// - Goldweek이 직접 내보낸 캘린더는 제외 (자기 이벤트 재수입 방지)
+    /// - 이미 등록된 휴가와 날짜가 겹치는 이벤트는 제외
+    /// - 자동 추가하지 않고 후보만 반환 — 사용자 확인 후 등록할 것
+    func scanForLeaveCandidates(
+        existingRecords: [LeaveRecord],
+        monthsBack: Int = 3,
+        monthsAhead: Int = 6
+    ) async throws -> [DetectedLeaveCandidate] {
+        if !isAuthorized {
+            let granted = try await requestCalendarAccess()
+            guard granted else { throw CalendarError.permissionDenied }
+        }
+
+        let cal = Calendar.current
+        let now = Date()
+        let scanStart = cal.date(byAdding: .month, value: -monthsBack, to: now) ?? now
+        let scanEnd = cal.date(byAdding: .month, value: monthsAhead, to: now) ?? now
+
+        // 제외 대상: Goldweek 전용 캘린더(자기 이벤트 재수입 방지),
+        // 구독 캘린더(공휴일 캘린더의 "Bank Holiday" 등은 개인 휴가가 아님), 생일 캘린더
+        let goldweekIdentifier = UserDefaults.standard.string(forKey: calendarIdentifierKey)
+        let calendars = eventStore.calendars(for: .event).filter { c in
+            c.calendarIdentifier != goldweekIdentifier
+                && c.title != calendarTitle
+                && c.title != legacyCalendarTitle
+                && c.type != .subscription
+                && c.type != .birthday
+        }
+        guard !calendars.isEmpty else { return [] }
+
+        let predicate = eventStore.predicateForEvents(
+            withStart: scanStart, end: scanEnd, calendars: calendars
+        )
+        let events = eventStore.events(matching: predicate)
+
+        let activeRecords = existingRecords.filter { $0.status != .cancelled }
+
+        var seen = Set<String>()
+        var candidates: [DetectedLeaveCandidate] = []
+
+        for event in events {
+            guard event.isAllDay else { continue }
+            let lowerTitle = (event.title ?? "").lowercased()
+            guard Self.leaveKeywords.contains(where: { lowerTitle.contains($0) }) else { continue }
+
+            let start = cal.startOfDay(for: event.startDate)
+            // 종일 이벤트의 endDate는 다음 날 자정 → 포함 종료일로 환산
+            let inclusiveEnd = cal.startOfDay(
+                for: cal.date(byAdding: .second, value: -1, to: event.endDate) ?? event.endDate
+            )
+            let end = max(start, inclusiveEnd)
+
+            // 이미 등록된 휴가와 겹치면 제외
+            let overlaps = activeRecords.contains { record in
+                start <= cal.startOfDay(for: record.endDate)
+                    && end >= cal.startOfDay(for: record.startDate)
+            }
+            if overlaps { continue }
+
+            // 반복 이벤트 등으로 인한 중복 제거
+            let key = "\(event.title ?? "")|\(start.timeIntervalSince1970)|\(end.timeIntervalSince1970)"
+            guard seen.insert(key).inserted else { continue }
+
+            let isSingleDay = cal.isDate(start, inSameDayAs: end)
+            candidates.append(DetectedLeaveCandidate(
+                title: event.title ?? "",
+                startDate: start,
+                endDate: end,
+                suggestedType: Self.inferLeaveType(from: event.title ?? "", isSingleDay: isSingleDay)
+            ))
+        }
+
+        logInfo("캘린더 휴가 후보 탐지: \(candidates.count)건 (\(events.count)개 이벤트 중)", category: .app)
+        return candidates.sorted { $0.startDate < $1.startDate }
+    }
+
     // MARK: - Utility Methods
-    
+
     /// 연차 타입에 따른 이벤트 제목 생성
     private func generateEventTitle(for leaveRecord: LeaveRecord) -> String {
         let typeString = Strings.leaveTypeName(leaveRecord.type)
@@ -279,6 +420,32 @@ class CalendarService {
             return .permissionRequired
         @unknown default:
             return .error
+        }
+    }
+}
+
+// MARK: - 탐지된 휴가 후보
+
+struct DetectedLeaveCandidate: Identifiable {
+    let id = UUID()
+    let title: String
+    /// 시작일 (자정 기준)
+    let startDate: Date
+    /// 포함 종료일 (자정 기준)
+    let endDate: Date
+    /// 제목에서 추론한 휴가 유형 (반차 0.5일, 반반차 0.25일 등)
+    let suggestedType: LeaveType
+
+    var daysCount: Int {
+        (Calendar.current.dateComponents([.day], from: startDate, to: endDate).day ?? 0) + 1
+    }
+
+    /// 유형을 반영한 실제 차감 일수
+    var effectiveDays: Double {
+        switch suggestedType {
+        case .half: return 0.5
+        case .quarter: return 0.25
+        default: return Double(daysCount)
         }
     }
 }

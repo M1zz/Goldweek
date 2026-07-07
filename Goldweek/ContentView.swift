@@ -28,6 +28,7 @@ struct ContentView: View {
             if let profile = currentProfile {
                 MainTabView(profile: profile)
                     .onAppear {
+                        LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                         updateWidget()
                         ReviewManager.shared.recordLaunch()
                         if !hasCompletedOnboarding {
@@ -36,6 +37,7 @@ struct ContentView: View {
                     }
                     .onChange(of: scenePhase) { _, newPhase in
                         if newPhase == .active {
+                            LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                             updateWidget()
                         }
                     }
@@ -82,7 +84,11 @@ struct ContentView: View {
             country: country
         )
         modelContext.insert(profile)
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            logError("기본 프로필 저장 실패: \(error.localizedDescription)", category: .data)
+        }
     }
 
     private func updateWidget() {

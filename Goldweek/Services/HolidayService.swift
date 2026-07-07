@@ -11,6 +11,15 @@ class HolidayService {
 
     private let calendar = Calendar.current
 
+    /// 음력 공휴일 테이블(한국 설날/추석, 중국 춘절 등)이 정확하게 수록된 마지막 연도.
+    /// 이후 연도는 근사치 폴백이라 실제 날짜와 다를 수 있다 — 테이블 확장 시 함께 갱신할 것.
+    static let reliableDataLastYear = 2030
+
+    /// 해당 연도의 공휴일 데이터가 정확한 테이블 범위 안에 있는지
+    func isHolidayDataReliable(for year: Int) -> Bool {
+        year <= Self.reliableDataLastYear
+    }
+
     // MARK: - 공휴일 데이터 (국가별)
 
     private let holidayDateFormatter: DateFormatter = {

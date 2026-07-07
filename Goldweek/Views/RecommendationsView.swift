@@ -18,6 +18,7 @@ struct RecommendationsView: View {
     @State private var selectedYear: Int
     @State private var isLoading = true
     @State private var addedRecommendations: Set<UUID> = []
+    @State private var showingAddError = false
     /// 한 해의 황금연휴 전체 보기 (지난 휴가 포함). 사용자 요청 — 회고용/계획용 양쪽 활용.
     @State private var showAllYear = false
 
@@ -140,6 +141,11 @@ struct RecommendationsView: View {
             .onAppear {
                 loadRecommendations()
             }
+            .alert(Strings.alert, isPresented: $showingAddError) {
+                Button(Strings.confirm, role: .cancel) { }
+            } message: {
+                Text(Strings.saveFailed)
+            }
         }
     }
 
@@ -189,6 +195,7 @@ struct RecommendationsView: View {
             addedRecommendations.remove(recommendation.id)
             modelContext.delete(record)
             HapticFeedback.error()
+            showingAddError = true
         }
     }
 }
@@ -215,7 +222,7 @@ struct YearPicker: View {
                     .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
             .disabled(selectedYear <= currentYear && proManager.isPro)
-            .accessibilityLabel(Text(Strings.previousMonth))
+            .accessibilityLabel(Text(Strings.previousYear))
 
             Spacer()
 
@@ -251,7 +258,7 @@ struct YearPicker: View {
                     .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
             .disabled(selectedYear >= currentYear + 1 && proManager.isPro)
-            .accessibilityLabel(Text(Strings.nextMonth))
+            .accessibilityLabel(Text(Strings.nextYear))
         }
         .padding(.horizontal)
         .sheet(isPresented: $showingPaywall) {

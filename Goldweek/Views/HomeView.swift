@@ -17,6 +17,7 @@ struct HomeView: View {
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
     @State private var showingHistory = false
     @State private var showingPastLeaveEntry = false
+    @State private var showingAddLeave = false
     @AppStorage("hasSeenPastLeavePrompt") private var hasSeenPastLeavePrompt = false
     @AppStorage("lastProBannerShownAt") private var lastProBannerShownAt: Double = 0
 
@@ -134,6 +135,11 @@ struct HomeView: View {
                         )
                     }
 
+                    // 신규 사용자 빈 상태 — 기록이 하나도 없으면 첫 등록을 유도
+                    if leaveRecords.isEmpty && !shouldShowPastLeavePrompt {
+                        EmptyHomeCard(onAddLeave: { showingAddLeave = true })
+                    }
+
                     // Pro 업그레이드 배너 (스마트 트리거: 쿨다운 + 의미 있는 상황일 때만)
                     if let context = proBannerContext {
                         ProBannerView(
@@ -165,9 +171,57 @@ struct HomeView: View {
                 PastLeaveQuickEntrySheet(profile: profile)
                     .onDisappear { hasSeenPastLeavePrompt = true }
             }
+            .sheet(isPresented: $showingAddLeave) {
+                AddLeaveView(profile: profile)
+            }
         }
     }
 
+}
+
+// MARK: - 신규 사용자 빈 상태 카드
+struct EmptyHomeCard: View {
+    let onAddLeave: () -> Void
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "sun.max.fill")
+                .font(.largeTitle)
+                .foregroundStyle(.yellow)
+                .voDecorative()
+
+            Text(Strings.emptyHomeTitle)
+                .font(.headline)
+                .voHeader()
+
+            Text(Strings.emptyHomeMessage)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Button(action: onAddLeave) {
+                HStack(spacing: 6) {
+                    Image(systemName: "plus.circle.fill")
+                        .voDecorative()
+                    Text(Strings.emptyHomeCTA)
+                        .fontWeight(.semibold)
+                }
+                .font(.subheadline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(AppTheme.Colors.brand)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
 }
 
 // MARK: - 연차 현황 카드
@@ -602,6 +656,7 @@ struct PastLeaveQuickEntrySheet: View {
 
     @State private var daysUsed: Double = 1.0
     @State private var isSaving = false
+    @State private var showingSaveError = false
 
     private let calendar = Calendar.current
 
@@ -692,6 +747,11 @@ struct PastLeaveQuickEntrySheet: View {
             }
         }
         .presentationDetents([.medium])
+        .alert(Strings.alert, isPresented: $showingSaveError) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(Strings.saveFailed)
+        }
     }
 
     private func saveEntry() {
@@ -717,6 +777,7 @@ struct PastLeaveQuickEntrySheet: View {
         } catch {
             modelContext.delete(record)
             HapticFeedback.error()
+            showingSaveError = true
         }
         isSaving = false
     }

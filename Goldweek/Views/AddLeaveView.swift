@@ -10,6 +10,7 @@ import SwiftData
 
 struct AddLeaveView: View {
     @Bindable var profile: UserProfile
+    var initialDate: Date? = nil
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \LeaveRecord.startDate, order: .reverse) private var leaveRecords: [LeaveRecord]
@@ -70,7 +71,8 @@ struct AddLeaveView: View {
                     LeaveRegistrationView(
                         profile: profile,
                         totalAvailableLeave: totalAvailableLeave,
-                        leaveRecords: Array(leaveRecords.prefix(5))
+                        leaveRecords: Array(leaveRecords.prefix(5)),
+                        initialDate: initialDate
                     )
                 } else {
                     BonusLeaveView(bonusLeaves: bonusLeaves)
@@ -231,6 +233,7 @@ struct LeaveRegistrationView: View {
     @Bindable var profile: UserProfile
     let totalAvailableLeave: Double
     let leaveRecords: [LeaveRecord]
+    var initialDate: Date? = nil
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.requestReview) private var requestReview
@@ -293,18 +296,24 @@ struct LeaveRegistrationView: View {
     }
 
     var canAddLeave: Bool {
-        guard startDate <= endDate else { return false }
+        addDisabledReason == nil
+    }
+
+    /// 등록 버튼이 비활성일 때 그 이유. nil이면 등록 가능.
+    var addDisabledReason: String? {
+        guard startDate <= endDate else { return Strings.reasonEndBeforeStart }
         // 보너스 연차 사용 시: 잔여 보너스 초과 불가
         if let bonus = selectedBonusLeave {
-            return leaveDays <= bonus.remainingDays
+            return leaveDays <= bonus.remainingDays ? nil : Strings.insufficientLeave
         }
         // 자유 계획 모드: 한도 없음
-        if profile.userType == .leisure { return true }
+        if profile.userType == .leisure { return nil }
         // 직장인: 연차 차감 유형이면 잔여 연차 초과 불가
         if leaveType.deductsFromAnnual {
             return max(0, profile.totalAnnualLeave - committedLeave) >= leaveDays
+                ? nil : Strings.insufficientLeave
         }
-        return true
+        return nil
     }
 
     var body: some View {
@@ -544,6 +553,16 @@ struct LeaveRegistrationView: View {
                 .disabled(!canAddLeave || isSaving)
                 .foregroundStyle(canAddLeave ? .white : .gray)
                 .listRowBackground(canAddLeave ? AppTheme.Colors.brand : Color.gray.opacity(0.3))
+            } footer: {
+                // 비활성 사유를 버튼 바로 아래에 보여준다
+                if let reason = addDisabledReason {
+                    HStack(spacing: 4) {
+                        Image(systemName: "exclamationmark.circle.fill")
+                            .foregroundStyle(.orange)
+                            .voDecorative()
+                        Text(reason)
+                    }
+                }
             }
 
             // 최근 등록 내역
@@ -567,6 +586,12 @@ struct LeaveRegistrationView: View {
         .onChange(of: leaveType) { _, newValue in
             if newValue == .half || newValue == .quarter {
                 endDate = startDate
+            }
+        }
+        .onAppear {
+            if let date = initialDate {
+                startDate = date
+                endDate = date
             }
         }
         .alert(Strings.alert, isPresented: $showingAlert) {
@@ -600,7 +625,7 @@ struct LeaveRegistrationView: View {
 
     private func addLeave() {
         guard canAddLeave else {
-            alertMessage = Strings.insufficientLeave
+            alertMessage = addDisabledReason ?? Strings.insufficientLeave
             isSuccess = false
             showingAlert = true
             HapticFeedback.error()
@@ -742,6 +767,10 @@ struct BonusLeaveView: View {
     @State private var bonusReason = ""
     @State private var hasExpiration = false
     @State private var expirationDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())!
+    @State private var pendingDeleteOffsets: IndexSet?
+    @State private var showingDeleteConfirm = false
+    @State private var errorMessage = ""
+    @State private var showingErrorAlert = false
 
     private var isPro: Bool { ProManager.shared.isPro }
 
@@ -842,9 +871,27 @@ struct BonusLeaveView: View {
         .sheet(isPresented: $showingPaywall) {
             PaywallView()
         }
+        .alert(Strings.deleteBonusLeaveTitle, isPresented: $showingDeleteConfirm) {
+            Button(Strings.cancel, role: .cancel) { pendingDeleteOffsets = nil }
+            Button(Strings.delete, role: .destructive) { performDeleteActiveBonus() }
+        } message: {
+            Text(Strings.deleteBonusLeaveConfirm)
+        }
+        .alert(Strings.alert, isPresented: $showingErrorAlert) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(errorMessage)
+        }
     }
 
     private func deleteActiveBonus(at offsets: IndexSet) {
+        pendingDeleteOffsets = offsets
+        showingDeleteConfirm = true
+    }
+
+    private func performDeleteActiveBonus() {
+        guard let offsets = pendingDeleteOffsets else { return }
+        pendingDeleteOffsets = nil
         for index in offsets {
             modelContext.delete(activeBonusLeaves[index])
         }
@@ -853,6 +900,8 @@ struct BonusLeaveView: View {
             HapticFeedback.success()
         } catch {
             HapticFeedback.error()
+            errorMessage = Strings.deleteFailed
+            showingErrorAlert = true
         }
     }
 
@@ -881,6 +930,8 @@ struct BonusLeaveView: View {
         } catch {
             modelContext.delete(bonus)
             HapticFeedback.error()
+            errorMessage = Strings.saveFailed
+            showingErrorAlert = true
         }
     }
 }
@@ -987,6 +1038,7 @@ struct EditBonusLeaveSheet: View {
     @State private var editedReason: String
     @State private var editedHasExpiration: Bool
     @State private var editedExpirationDate: Date
+    @State private var showingSaveError = false
 
     init(bonus: BonusLeave) {
         self.bonus = bonus
@@ -1087,6 +1139,11 @@ struct EditBonusLeaveSheet: View {
             }
         }
         .presentationDetents([.medium])
+        .alert(Strings.alert, isPresented: $showingSaveError) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(Strings.saveFailed)
+        }
     }
 
     private func saveEdit() {
@@ -1095,9 +1152,14 @@ struct EditBonusLeaveSheet: View {
         bonus.reason = editedReason
         bonus.expirationDate = editedHasExpiration ? editedExpirationDate : nil
         if bonus.remainingDays > 0 { bonus.isUsed = false }
-        try? modelContext.save()
-        HapticFeedback.success()
-        dismiss()
+        do {
+            try modelContext.save()
+            HapticFeedback.success()
+            dismiss()
+        } catch {
+            HapticFeedback.error()
+            showingSaveError = true
+        }
     }
 }
 
