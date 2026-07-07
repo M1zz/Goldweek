@@ -2612,6 +2612,89 @@ enum Strings {
         }
     }
 
+    // MARK: - 캘린더 자동 감지 (Pro)
+    static var autoDetectBannerTitle: String {
+        switch lang {
+        case .korean: return "캘린더에서 휴가 발견"
+        case .english: return "Leaves found in your calendar"
+        case .japanese: return "カレンダーで休暇を発見"
+        case .chinese: return "在日历中发现休假"
+        }
+    }
+
+    static func autoDetectBannerMessage(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "휴가로 보이는 일정 \(count)건을 찾았어요. 확인 후 한 번에 추가할 수 있어요."
+        case .english: return "Found \(count) event(s) that look like leaves. Review and add them in one tap."
+        case .japanese: return "休暇と思われる予定を\(count)件見つけました。確認してまとめて追加できます。"
+        case .chinese: return "找到\(count)项疑似休假的日程,确认后可一键添加。"
+        }
+    }
+
+    static var autoDetectReview: String {
+        switch lang {
+        case .korean: return "확인하기"
+        case .english: return "Review"
+        case .japanese: return "確認する"
+        case .chinese: return "查看"
+        }
+    }
+
+    static var autoDetectSettingTitle: String {
+        switch lang {
+        case .korean: return "캘린더 자동 감지"
+        case .english: return "Auto-Detect from Calendar"
+        case .japanese: return "カレンダー自動検出"
+        case .chinese: return "日历自动检测"
+        }
+    }
+
+    static var autoDetectSettingDescription: String {
+        switch lang {
+        case .korean: return "앱을 열 때 캘린더에서 새 휴가 일정을 자동으로 찾아 알려드려요."
+        case .english: return "Automatically finds new leave events in your calendar when you open the app."
+        case .japanese: return "アプリを開くとカレンダーから新しい休暇予定を自動で見つけてお知らせします。"
+        case .chinese: return "打开应用时自动从日历中查找新的休假日程并提醒您。"
+        }
+    }
+
+    static var proBannerAutoDetect: String {
+        switch lang {
+        case .korean: return "캘린더 속 휴가 일정, Pro가 자동으로 찾아드려요"
+        case .english: return "Pro automatically finds leave events in your calendar"
+        case .japanese: return "カレンダーの休暇予定、Proが自動で見つけます"
+        case .chinese: return "Pro自动为您查找日历中的休假日程"
+        }
+    }
+
+    // MARK: - 연차 플랜 공유
+    static var sharePlan: String {
+        switch lang {
+        case .korean: return "연차 플랜 공유"
+        case .english: return "Share Leave Plan"
+        case .japanese: return "休暇プランを共有"
+        case .chinese: return "分享休假计划"
+        }
+    }
+
+    static var shareCardTitle: String {
+        switch lang {
+        case .korean: return "나의 연차 현황"
+        case .english: return "My Leave Status"
+        case .japanese: return "私の休暇状況"
+        case .chinese: return "我的年假概览"
+        }
+    }
+
+    static var shareCardFooter: String {
+        switch lang {
+        case .korean: return "Goldweek — 연차를 황금연휴로"
+        case .english: return "Goldweek — Turn your leaves into golden weeks"
+        case .japanese: return "Goldweek — 有給をゴールデンウィークに"
+        case .chinese: return "Goldweek — 把年假变成黄金周"
+        }
+    }
+
     static var openSettings: String {
         switch lang {
         case .korean: return "설정 열기"

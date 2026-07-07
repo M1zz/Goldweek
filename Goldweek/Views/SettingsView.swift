@@ -43,6 +43,7 @@ struct SettingsView: View {
     @State private var restoreResultMessage = ""
     @State private var showingRestoreResult = false
     @State private var showingCalendarImport = false
+    @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
 
     // 홈 "연차 현황"에 보너스 연차를 합산할지 여부 (홈 화면에서 이 설정을 따른다)
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
@@ -451,6 +452,44 @@ struct SettingsView: View {
                                 .font(.caption)
                         }
                         .accessibilityElement(children: .combine)
+                    }
+
+                    // 캘린더 자동 감지 (Pro)
+                    if ProManager.shared.isPro {
+                        Toggle(isOn: $autoDetectEnabled) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.autoDetectSettingTitle)
+                                Text(Strings.autoDetectSettingDescription)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .tint(.green)
+                    } else {
+                        Button {
+                            AnalyticsService.logPaywallView(source: "auto_detect_setting")
+                            showingPaywall = true
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(Strings.autoDetectSettingTitle)
+                                        .foregroundStyle(.primary)
+                                    Text(Strings.autoDetectSettingDescription)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                Text("Pro")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.yellow)
+                                    .foregroundColor(.black)
+                                    .cornerRadius(4)
+                            }
+                            .accessibilityElement(children: .combine)
+                        }
                     }
 
                     // iCloud 백업

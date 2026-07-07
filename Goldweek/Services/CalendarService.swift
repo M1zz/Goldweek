@@ -448,6 +448,11 @@ struct DetectedLeaveCandidate: Identifiable {
         default: return Double(daysCount)
         }
     }
+
+    /// 자동 감지에서 "이미 본 후보" 판별용 안정 키 (id는 스캔마다 새로 생성되므로 사용 불가)
+    var dedupKey: String {
+        "\(title)|\(Int(startDate.timeIntervalSince1970))|\(Int(endDate.timeIntervalSince1970))"
+    }
 }
 
 // MARK: - Sync Status

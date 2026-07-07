@@ -1737,6 +1737,9 @@ struct MRTFlightCard: View {
         .simultaneousGesture(TapGesture().onEnded {
             AnalyticsService.logMRTCardTap(category: "flight", city: flight.toCity)
         })
+        .onAppear {
+            AnalyticsService.logMRTCardImpression(category: "flight", city: flight.toCity)
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
             VoiceOverLabel.flight(
@@ -1847,6 +1850,9 @@ struct MRTAccommodationCard: View {
         .simultaneousGesture(TapGesture().onEnded {
             AnalyticsService.logMRTCardTap(category: "stay", city: item.itemName)
         })
+        .onAppear {
+            AnalyticsService.logMRTCardImpression(category: "stay", city: item.itemName)
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
             VoiceOverLabel.accommodation(
@@ -1971,6 +1977,9 @@ struct MRTLiveTnaCard: View {
         .simultaneousGesture(TapGesture().onEnded {
             AnalyticsService.logMRTCardTap(category: "tour", city: product.itemName)
         })
+        .onAppear {
+            AnalyticsService.logMRTCardImpression(category: "tour", city: product.itemName)
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
             VoiceOverLabel.accommodation(
