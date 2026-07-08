@@ -5,94 +5,106 @@
 
 ---
 
-## 1. App Store 릴리즈 노트 (What's New)
+## 1. App Store 릴리즈 노트 (What's New) — 이모지 없음
 
-### 🇰🇷 한국어
+### 한국어
 ```
-✨ 캘린더에서 휴가 가져오기
+[새로운 기능]
+
+캘린더에서 휴가 가져오기
 캘린더에 적어둔 "연차", "반차", "휴가" 일정을 자동으로 찾아 확인 후 한 번에 등록할 수 있어요. 반차는 0.5일, 반반차는 0.25일로 정확하게 계산됩니다.
 
-⚡ Pro: 자동 감지
+자동 감지 (Pro)
 앱을 열 때마다 새 휴가 일정을 자동으로 찾아 알려드려요.
 
-📤 연차 플랜 공유
-남은 연차와 다가오는 휴가를 예쁜 이미지로 공유해보세요.
+연차 플랜 공유
+남은 연차와 다가오는 휴가를 이미지로 만들어 공유해보세요.
 
-🗓 캘린더에서 날짜를 탭하면 그 날짜로 바로 휴가를 등록할 수 있어요.
+캘린더에서 날짜를 탭하면 그 날짜로 바로 휴가를 등록할 수 있어요.
 
-🛠 개선 사항
-• 저장·삭제가 실패하면 조용히 넘어가지 않고 알려드려요.
-• 등록 버튼이 눌리지 않을 때 이유(연차 부족 등)를 바로 보여드려요.
-• 보너스 연차 삭제 전 확인 단계를 추가했어요.
-• iCloud 백업/복원 안정성을 크게 강화했어요.
-• 지난 휴가가 자동으로 '사용 완료' 처리되지 않던 문제를 고쳤어요.
-• 구매 복원 결과 안내, 구매 취소 시 잘못된 알림 수정, VoiceOver 개선.
+[개선 사항]
+
+- 저장이나 삭제가 실패하면 조용히 넘어가지 않고 알려드려요.
+- 등록 버튼이 눌리지 않을 때 이유(연차 부족 등)를 바로 보여드려요.
+- 보너스 연차 삭제 전 확인 단계를 추가했어요.
+- iCloud 백업/복원 안정성을 크게 강화했어요.
+- 지난 휴가가 자동으로 '사용 완료' 처리되지 않던 문제를 고쳤어요.
+- 구매 복원 결과 안내, 구매 취소 시 잘못된 알림 수정, VoiceOver 개선.
 ```
 
-### 🇺🇸 English
+### English
 ```
-✨ Import Leaves from Calendar
+[What's New]
+
+Import Leaves from Calendar
 Goldweek now finds leave events ("vacation", "PTO", "day off"...) in your calendar and adds them in one tap after your review. Half days are counted precisely as 0.5 days.
 
-⚡ Pro: Auto-Detect
+Auto-Detect (Pro)
 Pro automatically spots new leave events every time you open the app.
 
-📤 Share Your Leave Plan
-Share your remaining days and upcoming leaves as a beautiful image.
+Share Your Leave Plan
+Share your remaining days and upcoming leaves as an image.
 
-🗓 Tap any date on the calendar to register a leave for that day instantly.
+Tap any date on the calendar to register a leave for that day instantly.
 
-🛠 Improvements
-• You'll now be notified if saving or deleting ever fails.
-• The register button explains why it's disabled (e.g., not enough days).
-• Added a confirmation step before deleting bonus leave.
-• Significantly improved iCloud backup & restore reliability.
-• Fixed past leaves not being automatically marked as used.
-• Clear restore-purchase feedback, fixed a false alert on canceled purchases, better VoiceOver.
+[Improvements]
+
+- You'll now be notified if saving or deleting ever fails.
+- The register button explains why it's disabled (e.g., not enough days).
+- Added a confirmation step before deleting bonus leave.
+- Significantly improved iCloud backup & restore reliability.
+- Fixed past leaves not being automatically marked as used.
+- Clear restore-purchase feedback, fixed a false alert on canceled purchases, better VoiceOver.
 ```
 
-### 🇯🇵 日本語
+### 日本語
 ```
-✨ カレンダーから休暇を取り込み
+[新機能]
+
+カレンダーから休暇を取り込み
 カレンダーの「有給」「半休」「休暇」予定を自動で見つけて、確認後まとめて登録できます。半休は0.5日として正確に計算されます。
 
-⚡ Pro: 自動検出
+自動検出 (Pro)
 アプリを開くたびに新しい休暇予定を自動でお知らせします。
 
-📤 休暇プランを共有
-残りの有給と今後の休暇をきれいな画像で共有できます。
+休暇プランを共有
+残りの有給と今後の休暇を画像にして共有できます。
 
-🗓 カレンダーで日付をタップすると、その日付ですぐに休暇を登録できます。
+カレンダーで日付をタップすると、その日付ですぐに休暇を登録できます。
 
-🛠 改善点
-• 保存・削除に失敗した場合、お知らせするようになりました。
-• 登録ボタンが押せない理由(有給不足など)をその場で表示します。
-• ボーナス休暇の削除前に確認ステップを追加しました。
-• iCloudバックアップ/復元の安定性を大幅に強化しました。
-• 過去の休暇が自動的に「使用済み」にならない問題を修正しました。
-• 購入復元の結果表示、購入キャンセル時の誤通知修正、VoiceOver改善。
+[改善点]
+
+- 保存・削除に失敗した場合、お知らせするようになりました。
+- 登録ボタンが押せない理由(有給不足など)をその場で表示します。
+- ボーナス休暇の削除前に確認ステップを追加しました。
+- iCloudバックアップ/復元の安定性を大幅に強化しました。
+- 過去の休暇が自動的に「使用済み」にならない問題を修正しました。
+- 購入復元の結果表示、購入キャンセル時の誤通知修正、VoiceOver改善。
 ```
 
-### 🇨🇳 简体中文
+### 简体中文
 ```
-✨ 从日历导入休假
+[新功能]
+
+从日历导入休假
 自动查找日历中的"年假""请假""休假"日程,确认后一键登记。半天假精确按0.5天计算。
 
-⚡ Pro: 自动检测
+自动检测 (Pro)
 每次打开应用时自动发现新的休假日程。
 
-📤 分享休假计划
-将剩余年假和即将到来的休假生成精美图片分享。
+分享休假计划
+将剩余年假和即将到来的休假生成图片分享。
 
-🗓 在日历上点按日期,即可立即为该日期登记休假。
+在日历上点按日期,即可立即为该日期登记休假。
 
-🛠 改进
-• 保存或删除失败时会及时提醒,不再静默失败。
-• 登记按钮不可用时会显示原因(如年假不足)。
-• 删除奖励年假前增加确认步骤。
-• 大幅增强iCloud备份/恢复的稳定性。
-• 修复过去的休假未自动标记为"已使用"的问题。
-• 恢复购买结果提示、修复取消购买时的错误提醒、改进VoiceOver。
+[改进]
+
+- 保存或删除失败时会及时提醒,不再静默失败。
+- 登记按钮不可用时会显示原因(如年假不足)。
+- 删除奖励年假前增加确认步骤。
+- 大幅增强iCloud备份/恢复的稳定性。
+- 修复过去的休假未自动标记为"已使用"的问题。
+- 恢复购买结果提示、修复取消购买时的错误提醒、改进VoiceOver。
 ```
 
 ---
@@ -102,27 +114,27 @@ Share your remaining days and upcoming leaves as a beautiful image.
 > App Store Connect → 각 로컬라이제이션의 Promotional Text에 붙여넣기.
 > 색인은 안 되지만 스토어 첫인상 전환에 중요. 시즌마다 갱신 권장.
 
-**🇰🇷:**
+**한국어 (ko):**
 ```
 NEW: 캘린더 속 "연차·반차" 일정을 자동으로 찾아 등록해드려요. 남은 연차는 황금연휴로 — 최적의 연차 조합을 Goldweek이 계산합니다.
 ```
 
-**🇺🇸:**
+**English (en-US):**
 ```
 NEW: Goldweek finds "PTO" and "vacation" events in your calendar and imports them automatically. Turn your remaining days into the longest possible break.
 ```
 
-**🇯🇵:**
+**日本語 (ja):**
 ```
 NEW: カレンダーの「有給・半休」予定を自動で見つけて登録。残りの有給を最長の連休に変える最適な組み合わせをGoldweekが計算します。
 ```
 
-**🇩🇪:**
+**Deutsch (de-DE):**
 ```
 NEU: Goldweek erkennt „Urlaub"-Termine in deinem Kalender automatisch. Verwandle deine Resturlaubstage in die längste Auszeit des Jahres 2026.
 ```
 
-**🇫🇷:**
+**Français (fr-FR):**
 ```
 NOUVEAU : Goldweek détecte vos « congés » dans votre calendrier et les importe automatiquement. Transformez vos jours restants en ponts maximisés.
 ```

@@ -100,8 +100,32 @@ struct SettingsView: View {
             .reduce(0) { $0 + $1.remainingDays }
     }
 
+    /// 보너스 합산 여부는 홈 카드와 동일하게 includeBonusInStatus 토글을 따른다
     var totalAvailableLeave: Double {
-        max(0, profile.totalAnnualLeave - committedLeave) + activeBonusLeave
+        let base = max(0, profile.totalAnnualLeave - committedLeave)
+        return includeBonusInStatus ? base + activeBonusLeave : base
+    }
+
+    /// 부여된 보너스 전체 (사용률 분모용 — LeaveStatusCard와 동일 계산)
+    var grantedBonusLeave: Double {
+        bonusLeaves.reduce(0) { $0 + $1.days }
+    }
+
+    /// 사용된 보너스 (사용률 분자용)
+    var usedBonusLeave: Double {
+        bonusLeaves.reduce(0) { $0 + $1.usedDays }
+    }
+
+    /// 사용률 — 토글 ON이면 보너스를 분모(부여량)와 분자(사용량)에 모두 반영
+    var usageRateText: String {
+        let total = includeBonusInStatus
+            ? profile.totalAnnualLeave + grantedBonusLeave
+            : profile.totalAnnualLeave
+        guard total > 0 else { return "0%" }
+        let used = includeBonusInStatus
+            ? committedLeave + usedBonusLeave
+            : committedLeave
+        return "\(Int((used / total) * 100))%"
     }
 
     var body: some View {
@@ -236,8 +260,8 @@ struct SettingsView: View {
                             VStack(alignment: .trailing, spacing: 2) {
                                 Text("\(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
                                     .font(.system(.largeTitle, weight: .bold))
-                                    .foregroundStyle(activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
-                                if activeBonusLeave > 0 {
+                                    .foregroundStyle(includeBonusInStatus && activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
+                                if includeBonusInStatus && activeBonusLeave > 0 {
                                     Text(Strings.baseAndBonus(
                                         base: formatLeave(max(0, profile.totalAnnualLeave - committedLeave)),
                                         bonus: formatLeave(activeBonusLeave)
@@ -427,7 +451,7 @@ struct SettingsView: View {
                 Section(Strings.usageStats) {
                     StatRow(icon: "checkmark.circle.fill", iconColor: .green, title: Strings.completed, value: Strings.itemCount(usedLeaveCount))
                     StatRow(icon: "calendar.badge.clock", iconColor: .blue, title: Strings.plannedLeave, value: Strings.itemCount(plannedLeaveCount))
-                    StatRow(icon: "chart.pie.fill", iconColor: .orange, title: Strings.leaveUsageRate, value: profile.totalAnnualLeave > 0 ? "\(Int((committedLeave / profile.totalAnnualLeave) * 100))%" : "0%")
+                    StatRow(icon: "chart.pie.fill", iconColor: .orange, title: Strings.leaveUsageRate, value: usageRateText)
                 }
 
                 // 데이터 관리
