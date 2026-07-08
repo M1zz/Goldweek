@@ -5217,4 +5217,41 @@ enum Strings {
         case .chinese: return "仅共享休假日期和类型，备注不会被共享。"
         }
     }
+
+    // MARK: - 가족 탭
+    static var tabFamily: String {
+        switch lang {
+        case .korean: return "가족"
+        case .english: return "Family"
+        case .japanese: return "家族"
+        case .chinese: return "家人"
+        }
+    }
+
+    static var familyNavTitle: String {
+        switch lang {
+        case .korean: return "가족 일정"
+        case .english: return "Family Schedules"
+        case .japanese: return "家族の予定"
+        case .chinese: return "家人日程"
+        }
+    }
+
+    static var familyOnLeave: String {
+        switch lang {
+        case .korean: return "휴가 중"
+        case .english: return "On Leave"
+        case .japanese: return "休暇中"
+        case .chinese: return "休假中"
+        }
+    }
+
+    static func familyDday(_ days: Int) -> String {
+        switch lang {
+        case .korean: return "D-\(days)"
+        case .english: return days == 1 ? "in 1 day" : "in \(days) days"
+        case .japanese: return "あと\(days)日"
+        case .chinese: return "还有\(days)天"
+        }
+    }
 }

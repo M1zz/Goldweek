@@ -135,6 +135,11 @@ struct MainTabView: View {
     @Bindable var profile: UserProfile
     @State private var selectedTab = 0
 
+    // 공유받은 일정이 있으면 가족 탭 표시 (@Observable — body에서 읽으면 자동 갱신)
+    private var hasSharedSchedules: Bool {
+        !ShareSyncService.shared.sharedSchedules.isEmpty
+    }
+
     var body: some View {
         TabView(selection: $selectedTab) {
             HomeView(profile: profile)
@@ -151,12 +156,21 @@ struct MainTabView: View {
                 }
                 .tag(1)
 
+            if hasSharedSchedules {
+                FamilyView(profile: profile)
+                    .tabItem {
+                        Image(systemName: "person.2.fill")
+                        Text(Strings.tabFamily)
+                    }
+                    .tag(2)
+            }
+
             SettingsView(profile: profile)
                 .tabItem {
                     Image(systemName: "gearshape.fill")
                     Text(Strings.tabSettings)
                 }
-                .tag(2)
+                .tag(3)
         }
         .tint(Color(red: 0.0, green: 0.4, blue: 0.9))
     }

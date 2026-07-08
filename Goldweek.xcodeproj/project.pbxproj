@@ -55,6 +55,7 @@
 		A1000051 /* LeavePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000051 /* LeavePlanner.swift */; };
 		A1000052 /* ShareSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000052 /* ShareSyncService.swift */; };
 		A1000053 /* ShareScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000053 /* ShareScheduleView.swift */; };
+		A1000054 /* FamilyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000054 /* FamilyView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +137,7 @@
 		A2000051 /* LeavePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavePlanner.swift; sourceTree = "<group>"; };
 		A2000052 /* ShareSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSyncService.swift; sourceTree = "<group>"; };
 		A2000053 /* ShareScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareScheduleView.swift; sourceTree = "<group>"; };
+		A2000054 /* FamilyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -260,6 +262,7 @@
 				A2000034 /* PaywallView.swift */,
 				A2000035 /* HolidayManagementView.swift */,
 				A2000053 /* ShareScheduleView.swift */,
+				A2000054 /* FamilyView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -483,6 +486,7 @@
 				A1000035 /* HolidayManagementView.swift in Sources */,
 				A1000052 /* ShareSyncService.swift in Sources */,
 				A1000053 /* ShareScheduleView.swift in Sources */,
+				A1000054 /* FamilyView.swift in Sources */,
 				A1000041 /* GoldweekSecrets.swift in Sources */,
 				A1000042 /* AnalyticsService.swift in Sources */,
 				A1000050 /* Accessibility.swift in Sources */,
