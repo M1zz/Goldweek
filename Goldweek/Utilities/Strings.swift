@@ -4991,4 +4991,230 @@ enum Strings {
         case .chinese: return "升级Pro版即可添加所有推荐到日程"
         }
     }
+
+    // MARK: - 일정 공유 (CloudKit CKShare)
+    static var shareScheduleTitle: String {
+        switch lang {
+        case .korean: return "일정 공유"
+        case .english: return "Schedule Sharing"
+        case .japanese: return "スケジュール共有"
+        case .chinese: return "日程共享"
+        }
+    }
+
+    static var shareScheduleSubtitle: String {
+        switch lang {
+        case .korean: return "가족·친구와 휴가 일정을 실시간으로 공유"
+        case .english: return "Share your leave schedule with family & friends in real time"
+        case .japanese: return "家族や友達と休暇予定をリアルタイムで共有"
+        case .chinese: return "与家人朋友实时共享休假日程"
+        }
+    }
+
+    static var shareMySection: String {
+        switch lang {
+        case .korean: return "내 일정 공유"
+        case .english: return "Share My Schedule"
+        case .japanese: return "自分の予定を共有"
+        case .chinese: return "共享我的日程"
+        }
+    }
+
+    static var shareStartButton: String {
+        switch lang {
+        case .korean: return "공유 시작하기"
+        case .english: return "Start Sharing"
+        case .japanese: return "共有を開始"
+        case .chinese: return "开始共享"
+        }
+    }
+
+    static var shareInviteLink: String {
+        switch lang {
+        case .korean: return "초대 링크 보내기"
+        case .english: return "Send Invite Link"
+        case .japanese: return "招待リンクを送る"
+        case .chinese: return "发送邀请链接"
+        }
+    }
+
+    static var shareStatusActive: String {
+        switch lang {
+        case .korean: return "공유 중"
+        case .english: return "Sharing Active"
+        case .japanese: return "共有中"
+        case .chinese: return "共享中"
+        }
+    }
+
+    static func shareParticipants(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "참여자 \(count)명"
+        case .english: return count == 1 ? "1 participant" : "\(count) participants"
+        case .japanese: return "参加者\(count)人"
+        case .chinese: return "\(count)位参与者"
+        }
+    }
+
+    static var shareNoParticipants: String {
+        switch lang {
+        case .korean: return "아직 참여자가 없어요. 초대 링크를 보내보세요."
+        case .english: return "No participants yet. Send an invite link."
+        case .japanese: return "まだ参加者がいません。招待リンクを送ってみましょう。"
+        case .chinese: return "还没有参与者。发送邀请链接试试吧。"
+        }
+    }
+
+    static var shareSyncNow: String {
+        switch lang {
+        case .korean: return "지금 동기화"
+        case .english: return "Sync Now"
+        case .japanese: return "今すぐ同期"
+        case .chinese: return "立即同步"
+        }
+    }
+
+    static func shareLastSync(_ date: String) -> String {
+        switch lang {
+        case .korean: return "마지막 동기화: \(date)"
+        case .english: return "Last synced: \(date)"
+        case .japanese: return "最終同期: \(date)"
+        case .chinese: return "上次同步: \(date)"
+        }
+    }
+
+    static var shareStop: String {
+        switch lang {
+        case .korean: return "공유 중지"
+        case .english: return "Stop Sharing"
+        case .japanese: return "共有を停止"
+        case .chinese: return "停止共享"
+        }
+    }
+
+    static var shareStopConfirmTitle: String {
+        switch lang {
+        case .korean: return "공유를 중지할까요?"
+        case .english: return "Stop sharing?"
+        case .japanese: return "共有を停止しますか?"
+        case .chinese: return "要停止共享吗?"
+        }
+    }
+
+    static var shareStopConfirmMessage: String {
+        switch lang {
+        case .korean: return "공유된 일정이 모든 참여자의 기기에서 제거됩니다. 내 기기의 데이터는 그대로 유지됩니다."
+        case .english: return "Your shared schedule will be removed from all participants' devices. Data on your device stays intact."
+        case .japanese: return "共有された予定はすべての参加者のデバイスから削除されます。自分のデバイスのデータはそのまま残ります。"
+        case .chinese: return "共享的日程将从所有参与者的设备中移除。您设备上的数据保持不变。"
+        }
+    }
+
+    static var shareReceivedSection: String {
+        switch lang {
+        case .korean: return "공유받은 일정"
+        case .english: return "Shared With Me"
+        case .japanese: return "共有された予定"
+        case .chinese: return "收到的共享"
+        }
+    }
+
+    static var shareReceivedEmpty: String {
+        switch lang {
+        case .korean: return "아직 공유받은 일정이 없어요.\n가족이나 친구가 보낸 초대 링크를 열면 여기에 표시됩니다."
+        case .english: return "No shared schedules yet.\nOpen an invite link from family or friends and it will appear here."
+        case .japanese: return "まだ共有された予定がありません。\n家族や友達からの招待リンクを開くとここに表示されます。"
+        case .chinese: return "还没有收到共享的日程。\n打开家人或朋友发送的邀请链接后会显示在这里。"
+        }
+    }
+
+    static var shareLeaveButton: String {
+        switch lang {
+        case .korean: return "공유 나가기"
+        case .english: return "Leave Share"
+        case .japanese: return "共有から退出"
+        case .chinese: return "退出共享"
+        }
+    }
+
+    static func shareLeaveConfirmMessage(_ name: String) -> String {
+        switch lang {
+        case .korean: return "\(name)님의 일정 공유에서 나갑니다. 다시 보려면 새 초대 링크가 필요합니다."
+        case .english: return "You will leave \(name)'s shared schedule. You'll need a new invite link to see it again."
+        case .japanese: return "\(name)さんの予定共有から退出します。再度見るには新しい招待リンクが必要です。"
+        case .chinese: return "您将退出\(name)的日程共享。再次查看需要新的邀请链接。"
+        }
+    }
+
+    static var shareICloudRequired: String {
+        switch lang {
+        case .korean: return "iCloud 로그인이 필요합니다. 설정 앱에서 iCloud에 로그인해주세요."
+        case .english: return "iCloud sign-in required. Please sign in to iCloud in the Settings app."
+        case .japanese: return "iCloudへのサインインが必要です。設定アプリでiCloudにサインインしてください。"
+        case .chinese: return "需要登录iCloud。请在设置应用中登录iCloud。"
+        }
+    }
+
+    static func shareCKTitle(_ name: String) -> String {
+        switch lang {
+        case .korean: return "\(name)님의 휴가 일정"
+        case .english: return "\(name)'s Leave Schedule"
+        case .japanese: return "\(name)さんの休暇予定"
+        case .chinese: return "\(name)的休假日程"
+        }
+    }
+
+    static var shareOwnerFallback: String {
+        switch lang {
+        case .korean: return "이름 없는 사용자"
+        case .english: return "Unknown User"
+        case .japanese: return "名前のないユーザー"
+        case .chinese: return "未知用户"
+        }
+    }
+
+    static var shareNoUpcoming: String {
+        switch lang {
+        case .korean: return "예정된 휴가가 없어요"
+        case .english: return "No upcoming leaves"
+        case .japanese: return "予定されている休暇はありません"
+        case .chinese: return "没有即将到来的休假"
+        }
+    }
+
+    static func shareUpcomingCount(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "다가오는 휴가 \(count)건"
+        case .english: return count == 1 ? "1 upcoming leave" : "\(count) upcoming leaves"
+        case .japanese: return "今後の休暇\(count)件"
+        case .chinese: return "\(count)个即将到来的休假"
+        }
+    }
+
+    static var shareErrorTitle: String {
+        switch lang {
+        case .korean: return "공유 오류"
+        case .english: return "Sharing Error"
+        case .japanese: return "共有エラー"
+        case .chinese: return "共享错误"
+        }
+    }
+
+    static func shareErrorGeneric(_ message: String) -> String {
+        switch lang {
+        case .korean: return "공유 작업에 실패했습니다: \(message)"
+        case .english: return "Sharing operation failed: \(message)"
+        case .japanese: return "共有操作に失敗しました: \(message)"
+        case .chinese: return "共享操作失败: \(message)"
+        }
+    }
+
+    static var shareFooterPrivacy: String {
+        switch lang {
+        case .korean: return "휴가 날짜와 종류만 공유되며, 메모는 공유되지 않습니다."
+        case .english: return "Only leave dates and types are shared. Notes are never shared."
+        case .japanese: return "休暇の日付と種類のみ共有され、メモは共有されません。"
+        case .chinese: return "仅共享休假日期和类型，备注不会被共享。"
+        }
+    }
 }

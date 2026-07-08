@@ -34,11 +34,13 @@ struct ContentView: View {
                         if !hasCompletedOnboarding {
                             hasCompletedOnboarding = true
                         }
+                        syncSharedSchedules(profile: profile)
                     }
                     .onChange(of: scenePhase) { _, newPhase in
                         if newPhase == .active {
                             LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                             updateWidget()
+                            syncSharedSchedules(profile: profile)
                         }
                     }
                     .onChange(of: profile.usedLeave) { _, _ in
@@ -49,6 +51,13 @@ struct ContentView: View {
                     }
                     .onChange(of: leaveRecords.count) { _, _ in
                         updateWidget()
+                    }
+                    .onChange(of: leaveSyncFingerprint) { _, _ in
+                        // 공유 중이면 변경사항을 CloudKit에 미러링 (디바운스됨)
+                        ShareSyncService.shared.scheduleMirror(
+                            profile: ProfileSnapshot(profile: profile),
+                            leaves: leaveRecords.map(LeaveSnapshot.init)
+                        )
                     }
                     .onChange(of: bonusLeaves.count) { _, _ in
                         updateWidget()
@@ -88,6 +97,27 @@ struct ContentView: View {
             try modelContext.save()
         } catch {
             logError("기본 프로필 저장 실패: \(error.localizedDescription)", category: .data)
+        }
+    }
+
+    /// 휴가 기록의 공유 관련 필드 변화 감지용 (개수뿐 아니라 날짜/상태 수정도 포착)
+    private var leaveSyncFingerprint: Int {
+        var hasher = Hasher()
+        for record in leaveRecords {
+            hasher.combine(record.id)
+            hasher.combine(record.startDate)
+            hasher.combine(record.endDate)
+            hasher.combine(record.typeRaw)
+            hasher.combine(record.statusRaw)
+        }
+        return hasher.finalize()
+    }
+
+    private func syncSharedSchedules(profile: UserProfile) {
+        let snapshot = ProfileSnapshot(profile: profile)
+        let leaves = leaveRecords.map(LeaveSnapshot.init)
+        Task {
+            await ShareSyncService.shared.onAppActive(profile: snapshot, leaves: leaves)
         }
     }
 

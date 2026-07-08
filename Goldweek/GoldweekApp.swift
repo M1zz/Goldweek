@@ -7,9 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import CloudKit
+import UIKit
 
 @main
 struct GoldweekApp: App {
+    @UIApplicationDelegateAdaptor(GoldweekAppDelegate.self) private var appDelegate
     let sharedModelContainer: ModelContainer
 
     init() {
@@ -133,5 +136,65 @@ struct GoldweekApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+// MARK: - 앱 델리게이트 (CloudKit 공유 수락 + silent push)
+final class GoldweekAppDelegate: NSObject, UIApplicationDelegate {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        // CloudKit 구독 silent push 수신용 (사용자 알림 권한 불필요)
+        application.registerForRemoteNotifications()
+        return true
+    }
+
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let config = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        config.delegateClass = GoldweekSceneDelegate.self
+        return config
+    }
+
+    func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+        logWarning("원격 알림 등록 실패: \(error.localizedDescription)", category: .share)
+    }
+
+    func application(
+        _ application: UIApplication,
+        didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
+    ) {
+        let handled = ShareSyncService.shared.handleRemoteNotification(userInfo)
+        completionHandler(handled ? .newData : .noData)
+    }
+}
+
+// MARK: - 씬 델리게이트 (공유 초대 링크 수락)
+final class GoldweekSceneDelegate: NSObject, UIWindowSceneDelegate {
+    // 앱이 초대 링크로 콜드 런칭된 경우
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
+        if let metadata = connectionOptions.cloudKitShareMetadata {
+            ShareSyncService.shared.acceptShare(metadata: metadata)
+        }
+    }
+
+    // 앱 실행 중 초대 링크를 연 경우
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata
+    ) {
+        ShareSyncService.shared.acceptShare(metadata: cloudKitShareMetadata)
     }
 }

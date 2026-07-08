@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import CryptoKit
+import Security
 
 // MARK: - 백업 데이터 구조
 struct BackupData: Codable {
@@ -64,12 +65,18 @@ class BackupService {
     private let dailyBackupHour = 2  // 새벽 2시에 자동 백업
     private let backupChecksumKey = "icloudBackupChecksum"
 
-    // 암호화 키 (앱 고유 식별자 기반)
-    private var encryptionKey: SymmetricKey {
-        // 번들 ID + 기기 고유 정보를 조합한 키 생성
+    // 레거시 암호화 키 (v1 — 앱 전체 고정 키, 기존 백업 복호화 폴백 전용)
+    private var legacyEncryptionKey: SymmetricKey {
         let keyMaterial = "com.Ysoup.LeaveWise.backup.key.v1"
         let keyData = SHA256.hash(data: Data(keyMaterial.utf8))
         return SymmetricKey(data: keyData)
+    }
+
+    // 개인 백업 키 (v2 — Keychain에 저장된 사용자별 랜덤 키)
+    // iCloud Keychain으로 동기화되어 기기를 바꿔도 본인 백업을 복원할 수 있고,
+    // 다른 사용자는 복호화할 수 없다. 일정 공유(CKShare)와는 완전히 분리된 용도.
+    private var personalEncryptionKey: SymmetricKey? {
+        BackupKeychain.loadOrCreateKey()
     }
 
     private init() {}
@@ -99,7 +106,9 @@ class BackupService {
 
     // MARK: - 암호화/복호화
     private func encrypt(_ data: Data) throws -> Data {
-        let sealedBox = try AES.GCM.seal(data, using: encryptionKey)
+        // Keychain 접근이 불가한 예외 상황에서만 레거시 키로 저장 (백업 실패 방지)
+        let key = personalEncryptionKey ?? legacyEncryptionKey
+        let sealedBox = try AES.GCM.seal(data, using: key)
         guard let combined = sealedBox.combined else {
             throw BackupError.encryptionFailed
         }
@@ -108,7 +117,12 @@ class BackupService {
 
     private func decrypt(_ data: Data) throws -> Data {
         let sealedBox = try AES.GCM.SealedBox(combined: data)
-        return try AES.GCM.open(sealedBox, using: encryptionKey)
+        // 개인 키 우선, 실패하면 레거시 키로 폴백 (v1 시절 백업 호환)
+        if let personalKey = personalEncryptionKey,
+           let plaintext = try? AES.GCM.open(sealedBox, using: personalKey) {
+            return plaintext
+        }
+        return try AES.GCM.open(sealedBox, using: legacyEncryptionKey)
     }
 
     // MARK: - 백업
@@ -620,6 +634,65 @@ class BackupService {
         }
         
         return result.sorted { $0.date ?? Date.distantPast > $1.date ?? Date.distantPast }
+    }
+}
+
+// MARK: - 백업 키 Keychain 저장소
+/// 개인 백업 암호화 키를 Keychain에 보관한다.
+/// kSecAttrSynchronizable로 iCloud Keychain에 동기화되어 기기 교체 시에도 복원 가능.
+enum BackupKeychain {
+    private static let service = "com.Ysoup.LeaveWise.backup"
+    private static let account = "personal-backup-key.v2"
+
+    static func loadOrCreateKey() -> SymmetricKey? {
+        if let existing = loadKey() {
+            return existing
+        }
+        return createKey()
+    }
+
+    private static func loadKey() -> SymmetricKey? {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account,
+            kSecAttrSynchronizable as String: kSecAttrSynchronizableAny,
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ]
+
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        guard status == errSecSuccess, let data = result as? Data, data.count == 32 else {
+            return nil
+        }
+        return SymmetricKey(data: data)
+    }
+
+    private static func createKey() -> SymmetricKey? {
+        let key = SymmetricKey(size: .bits256)
+        let keyData = key.withUnsafeBytes { Data($0) }
+
+        let attributes: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account,
+            kSecAttrSynchronizable as String: kCFBooleanTrue!,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock,
+            kSecValueData as String: keyData
+        ]
+
+        let status = SecItemAdd(attributes as CFDictionary, nil)
+        if status == errSecSuccess {
+            logInfo("개인 백업 키 생성 완료 (Keychain)", category: .backup)
+            return key
+        }
+        // 동시 생성 등으로 이미 존재하면 다시 읽는다
+        if status == errSecDuplicateItem {
+            return loadKey()
+        }
+        logWarning("개인 백업 키 저장 실패 (status: \(status)) — 레거시 키로 동작", category: .backup)
+        return nil
     }
 }
 

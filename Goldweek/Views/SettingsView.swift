@@ -231,6 +231,25 @@ struct SettingsView: View {
                     }
                 }
 
+                // 일정 공유 (가족·친구와 실시간 공유)
+                Section {
+                    NavigationLink(destination: ShareScheduleView(profile: profile)) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "person.2.fill")
+                                .foregroundStyle(.blue)
+                                .frame(width: 28)
+                                .voDecorative()
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.shareScheduleTitle)
+                                Text(Strings.shareScheduleSubtitle)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                }
+
                 // 사용자 유형
                 Section(Strings.userTypeSection) {
                     Picker(Strings.userTypeMode, selection: $profile.userType) {
