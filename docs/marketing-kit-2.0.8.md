@@ -1,6 +1,6 @@
-# Goldweek 2.0.9 마케팅 킷
+# Goldweek 2.0.8 마케팅 킷
 
-버전 2.0.9 출시에 맞춰 바로 복사-붙여넣기 할 수 있는 실행 패키지.
+버전 2.0.8 출시(2.0.6 이후 변경 전체 포함)에 맞춰 바로 복사-붙여넣기 할 수 있는 실행 패키지.
 간판 기능: **캘린더 휴가 자동 감지 + 가져오기** (반차/연차/병가 유형 자동 인식).
 
 ---
@@ -18,7 +18,15 @@
 📤 연차 플랜 공유
 남은 연차와 다가오는 휴가를 예쁜 이미지로 공유해보세요.
 
-그 외 저장 실패 알림, 백업 안정성, 접근성 등 30여 가지가 개선됐어요.
+🗓 캘린더에서 날짜를 탭하면 그 날짜로 바로 휴가를 등록할 수 있어요.
+
+🛠 개선 사항
+• 저장·삭제가 실패하면 조용히 넘어가지 않고 알려드려요.
+• 등록 버튼이 눌리지 않을 때 이유(연차 부족 등)를 바로 보여드려요.
+• 보너스 연차 삭제 전 확인 단계를 추가했어요.
+• iCloud 백업/복원 안정성을 크게 강화했어요.
+• 지난 휴가가 자동으로 '사용 완료' 처리되지 않던 문제를 고쳤어요.
+• 구매 복원 결과 안내, 구매 취소 시 잘못된 알림 수정, VoiceOver 개선.
 ```
 
 ### 🇺🇸 English
@@ -32,7 +40,15 @@ Pro automatically spots new leave events every time you open the app.
 📤 Share Your Leave Plan
 Share your remaining days and upcoming leaves as a beautiful image.
 
-Plus 30+ improvements to reliability, backup, and accessibility.
+🗓 Tap any date on the calendar to register a leave for that day instantly.
+
+🛠 Improvements
+• You'll now be notified if saving or deleting ever fails.
+• The register button explains why it's disabled (e.g., not enough days).
+• Added a confirmation step before deleting bonus leave.
+• Significantly improved iCloud backup & restore reliability.
+• Fixed past leaves not being automatically marked as used.
+• Clear restore-purchase feedback, fixed a false alert on canceled purchases, better VoiceOver.
 ```
 
 ### 🇯🇵 日本語
@@ -46,7 +62,15 @@ Plus 30+ improvements to reliability, backup, and accessibility.
 📤 休暇プランを共有
 残りの有給と今後の休暇をきれいな画像で共有できます。
 
-その他、保存エラー通知・バックアップの安定性・アクセシビリティなど30以上の改善。
+🗓 カレンダーで日付をタップすると、その日付ですぐに休暇を登録できます。
+
+🛠 改善点
+• 保存・削除に失敗した場合、お知らせするようになりました。
+• 登録ボタンが押せない理由(有給不足など)をその場で表示します。
+• ボーナス休暇の削除前に確認ステップを追加しました。
+• iCloudバックアップ/復元の安定性を大幅に強化しました。
+• 過去の休暇が自動的に「使用済み」にならない問題を修正しました。
+• 購入復元の結果表示、購入キャンセル時の誤通知修正、VoiceOver改善。
 ```
 
 ### 🇨🇳 简体中文
@@ -60,7 +84,15 @@ Plus 30+ improvements to reliability, backup, and accessibility.
 📤 分享休假计划
 将剩余年假和即将到来的休假生成精美图片分享。
 
-另有30多项稳定性、备份与无障碍改进。
+🗓 在日历上点按日期,即可立即为该日期登记休假。
+
+🛠 改进
+• 保存或删除失败时会及时提醒,不再静默失败。
+• 登记按钮不可用时会显示原因(如年假不足)。
+• 删除奖励年假前增加确认步骤。
+• 大幅增强iCloud备份/恢复的稳定性。
+• 修复过去的休假未自动标记为"已使用"的问题。
+• 恢复购买结果提示、修复取消购买时的错误提醒、改进VoiceOver。
 ```
 
 ---
