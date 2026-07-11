@@ -214,7 +214,7 @@ struct ActivityButton: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
     let container = try! ModelContainer(for: UserProfile.self, configurations: config)
 
     let profile = UserProfile(name: "홍길동", yearStartMonth: 1, totalAnnualLeave: 15)

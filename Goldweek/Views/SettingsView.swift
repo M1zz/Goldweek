@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import StoreKit
+import TipKit
 
 struct SettingsView: View {
     @Bindable var profile: UserProfile
@@ -43,6 +44,7 @@ struct SettingsView: View {
     @State private var restoreResultMessage = ""
     @State private var showingRestoreResult = false
     @State private var showingCalendarImport = false
+    @State private var showingPhotoImport = false
     @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
 
     // 홈 "연차 현황"에 보너스 연차를 합산할지 여부 (홈 화면에서 이 설정을 따른다)
@@ -233,7 +235,9 @@ struct SettingsView: View {
 
                 // 일정 공유 (가족·친구와 실시간 공유)
                 Section {
-                    NavigationLink(destination: ShareScheduleView(profile: profile)) {
+                    NavigationLink(destination: ShareScheduleView(profile: profile)
+                        .onAppear { AppTips.familyShare.invalidate(reason: .actionPerformed) }
+                    ) {
                         HStack(spacing: 12) {
                             Image(systemName: "person.2.fill")
                                 .foregroundStyle(.blue)
@@ -475,6 +479,28 @@ struct SettingsView: View {
 
                 // 데이터 관리
                 Section {
+                    // 사진에서 휴가 가져오기 (OCR)
+                    Button {
+                        showingPhotoImport = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "doc.text.viewfinder")
+                                .foregroundStyle(.blue)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.importFromPhoto)
+                                    .foregroundStyle(.primary)
+                                Text(Strings.importFromPhotoDescription)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+
                     // 캘린더에서 휴가 가져오기 (제안 후 확인)
                     Button {
                         showingCalendarImport = true
@@ -534,6 +560,19 @@ struct SettingsView: View {
                             .accessibilityElement(children: .combine)
                         }
                     }
+
+                    // 타임머신 (시점별 스냅샷 복원)
+                    NavigationLink {
+                        TimeMachineView()
+                    } label: {
+                        HStack {
+                            Image(systemName: "clock.arrow.circlepath")
+                                .foregroundStyle(.purple)
+                            Text(Strings.timeMachine)
+                                .foregroundStyle(.primary)
+                        }
+                    }
+                    .popoverTip(AppTips.timeMachine)
 
                     // iCloud 백업
                     Button {
@@ -692,6 +731,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingCalendarImport) {
                 CalendarImportSheet(existingRecords: Array(leaveRecords))
+            }
+            .sheet(isPresented: $showingPhotoImport) {
+                PhotoImportSheet()
             }
             .alert(Strings.resetDataTitle, isPresented: $showingResetAlert) {
                 Button(Strings.cancel, role: .cancel) { }

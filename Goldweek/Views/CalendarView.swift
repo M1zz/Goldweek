@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct CalendarView: View {
     @Bindable var profile: UserProfile
@@ -146,6 +147,9 @@ struct CalendarView: View {
                     // 월 네비게이션
                     MonthNavigator(currentMonth: $currentMonth)
 
+                    // 날짜 탭 등록 팁
+                    TipView(AppTips.calendarTap)
+
                     // 공휴일 데이터 신뢰 범위를 벗어난 연도 안내
                     if !holidayService.isHolidayDataReliable(for: calendar.component(.year, from: currentMonth)) {
                         HolidayDataNoticeBanner(year: calendar.component(.year, from: currentMonth))
@@ -171,7 +175,10 @@ struct CalendarView: View {
                         recommendations: recommendations,
                         showsTravelSuggestions: showsMRTSuggestions,
                         originCountry: profile.country,
-                        onAddLeave: { showingAddLeave = true }
+                        onAddLeave: {
+                            AppTips.calendarTap.invalidate(reason: .actionPerformed)
+                            showingAddLeave = true
+                        }
                     )
 
                     // 나의 연차 일정
@@ -1064,7 +1071,7 @@ struct LeaveListRow: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
     let container = try! ModelContainer(for: UserProfile.self, LeaveRecord.self, configurations: config)
 
     let profile = UserProfile(name: "홍길동", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 5)

@@ -1051,6 +1051,336 @@ enum Strings {
         }
     }
 
+    // MARK: - 기능 팁 (TipKit)
+
+    static var tipPhotoImportTitle: String {
+        switch lang {
+        case .korean: return "사진으로 휴가 등록"
+        case .english: return "Add Leaves from a Photo"
+        case .japanese: return "写真で休暇を登録"
+        case .chinese: return "用照片登记休假"
+        }
+    }
+
+    static var tipPhotoImportMessage: String {
+        switch lang {
+        case .korean: return "회사 시스템의 휴가 신청 내역을 찍으면 자동으로 인식해서 등록해드려요."
+        case .english: return "Snap your company's leave request history and it's recognized and added automatically."
+        case .japanese: return "会社システムの休暇申請履歴を撮影すると、自動で認識して登録します。"
+        case .chinese: return "拍摄公司系统的休假申请记录，即可自动识别并登记。"
+        }
+    }
+
+    static var tipFamilyShareTitle: String {
+        switch lang {
+        case .korean: return "가족에게 일정을 공유해보세요"
+        case .english: return "Share Your Schedule with Family"
+        case .japanese: return "家族に予定を共有してみましょう"
+        case .chinese: return "与家人共享日程"
+        }
+    }
+
+    static var tipFamilyShareMessage: String {
+        switch lang {
+        case .korean: return "설정 → 일정 공유에서 초대 링크를 보내면, 가족의 휴가 일정을 가족 탭에서 함께 볼 수 있어요."
+        case .english: return "Send an invite from Settings → Share Schedule to see each other's leaves in the Family tab."
+        case .japanese: return "設定 → 予定の共有から招待リンクを送ると、家族の休暇予定を「家族」タブで一緒に見られます。"
+        case .chinese: return "在设置 → 日程共享中发送邀请链接，即可在\"家人\"标签页中查看彼此的休假日程。"
+        }
+    }
+
+    static var tipTimeMachineTitle: String {
+        switch lang {
+        case .korean: return "타임머신이 지켜드려요"
+        case .english: return "Time Machine Has Your Back"
+        case .japanese: return "タイムマシンが守ります"
+        case .chinese: return "时光机为您保驾护航"
+        }
+    }
+
+    static var tipTimeMachineMessage: String {
+        switch lang {
+        case .korean: return "데이터가 바뀔 때마다 자동으로 스냅샷이 저장돼요. 실수해도 원하는 시점으로 되돌릴 수 있어요."
+        case .english: return "A snapshot is saved automatically whenever your data changes, so you can always roll back."
+        case .japanese: return "データが変更されるたびに自動でスナップショットを保存。いつでも元に戻せます。"
+        case .chinese: return "每当数据变化时都会自动保存快照，随时可以恢复到任意时间点。"
+        }
+    }
+
+    static var tipCalendarTapTitle: String {
+        switch lang {
+        case .korean: return "날짜를 탭해서 바로 등록"
+        case .english: return "Tap a Date to Register"
+        case .japanese: return "日付をタップしてすぐ登録"
+        case .chinese: return "点按日期即可登记"
+        }
+    }
+
+    static var tipCalendarTapMessage: String {
+        switch lang {
+        case .korean: return "캘린더에서 날짜를 선택하면 그 날짜로 휴가를 바로 등록할 수 있어요."
+        case .english: return "Select any date on the calendar to register a leave for that day instantly."
+        case .japanese: return "カレンダーで日付を選ぶと、その日の休暇をすぐに登録できます。"
+        case .chinese: return "在日历上选择日期，即可立即为该日期登记休假。"
+        }
+    }
+
+    // MARK: - 사진에서 가져오기
+
+    static var importFromPhoto: String {
+        switch lang {
+        case .korean: return "사진에서 가져오기"
+        case .english: return "Import from Photo"
+        case .japanese: return "写真から取り込む"
+        case .chinese: return "从照片导入"
+        }
+    }
+
+    static var importFromPhotoDescription: String {
+        switch lang {
+        case .korean: return "휴가 신청 내역 화면을 찍으면 자동으로 인식해요"
+        case .english: return "Snap your leave request history to import it automatically"
+        case .japanese: return "休暇申請履歴の画面を撮影すると自動で認識します"
+        case .chinese: return "拍摄休假申请记录页面即可自动识别"
+        }
+    }
+
+    static var photoImportGuide: String {
+        switch lang {
+        case .korean: return "회사 시스템의 휴가 신청 내역 화면을 촬영하거나 스크린샷을 선택하세요.\n날짜·유형·차감 일수를 자동으로 인식합니다."
+        case .english: return "Take a photo or choose a screenshot of your company's leave request history.\nDates, types, and deductions are recognized automatically."
+        case .japanese: return "会社システムの休暇申請履歴画面を撮影するか、スクリーンショットを選択してください。\n日付・種類・控除日数を自動で認識します。"
+        case .chinese: return "拍摄或选择公司系统的休假申请记录截图。\n将自动识别日期、类型和扣除天数。"
+        }
+    }
+
+    static var takePhoto: String {
+        switch lang {
+        case .korean: return "카메라로 촬영"
+        case .english: return "Take Photo"
+        case .japanese: return "カメラで撮影"
+        case .chinese: return "用相机拍摄"
+        }
+    }
+
+    static var choosePhoto: String {
+        switch lang {
+        case .korean: return "사진 보관함에서 선택"
+        case .english: return "Choose from Library"
+        case .japanese: return "写真ライブラリから選択"
+        case .chinese: return "从相册选择"
+        }
+    }
+
+    static var chooseAnotherPhoto: String {
+        switch lang {
+        case .korean: return "다른 사진 선택"
+        case .english: return "Choose Another Photo"
+        case .japanese: return "別の写真を選択"
+        case .chinese: return "选择其他照片"
+        }
+    }
+
+    static var scanningPhoto: String {
+        switch lang {
+        case .korean: return "사진에서 휴가 내역을 인식하는 중..."
+        case .english: return "Recognizing leave records in photo..."
+        case .japanese: return "写真から休暇履歴を認識中..."
+        case .chinese: return "正在识别照片中的休假记录..."
+        }
+    }
+
+    static var noLeaveFoundInPhoto: String {
+        switch lang {
+        case .korean: return "사진에서 휴가 내역을 찾지 못했습니다.\n표가 선명하게 나오도록 다시 촬영해 주세요."
+        case .english: return "No leave records found in the photo.\nPlease retake it so the table is clearly visible."
+        case .japanese: return "写真から休暇履歴が見つかりませんでした。\n表が鮮明に写るように撮り直してください。"
+        case .chinese: return "未能在照片中找到休假记录。\n请重新拍摄，确保表格清晰可见。"
+        }
+    }
+
+    static func photoImportAllDuplicates(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "인식된 \(count)건이 모두 이미 등록되어 있어요."
+        case .english: return "All \(count) recognized records are already registered."
+        case .japanese: return "認識された\(count)件はすべて登録済みです。"
+        case .chinese: return "识别出的\(count)条记录均已登记。"
+        }
+    }
+
+    static func duplicatesExcluded(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "이미 등록된 \(count)건은 제외했습니다."
+        case .english: return "\(count) already-registered records were excluded."
+        case .japanese: return "登録済みの\(count)件は除外しました。"
+        case .chinese: return "已排除\(count)条已登记的记录。"
+        }
+    }
+
+    static var photoImportFooter: String {
+        switch lang {
+        case .korean: return "실공제수가 없는 대체휴가·자녀돌봄 등은 연차 차감 없이 등록됩니다."
+        case .english: return "Records without a deduction (compensatory leave, family care, etc.) are added without reducing your annual leave."
+        case .japanese: return "控除のない代替休暇・子育て休暇などは、年休を減らさずに登録されます。"
+        case .chinese: return "无扣除天数的调休、育儿假等将在不扣减年假的情况下登记。"
+        }
+    }
+
+    static var noDeduction: String {
+        switch lang {
+        case .korean: return "연차 차감 없음"
+        case .english: return "No deduction"
+        case .japanese: return "年休控除なし"
+        case .chinese: return "不扣年假"
+        }
+    }
+
+    static var photoImportInvalidImage: String {
+        switch lang {
+        case .korean: return "사진을 불러올 수 없습니다."
+        case .english: return "Unable to load the photo."
+        case .japanese: return "写真を読み込めません。"
+        case .chinese: return "无法加载照片。"
+        }
+    }
+
+    // MARK: - 타임머신
+
+    static var timeMachine: String {
+        switch lang {
+        case .korean: return "타임머신"
+        case .english: return "Time Machine"
+        case .japanese: return "タイムマシン"
+        case .chinese: return "时光机"
+        }
+    }
+
+    static var timeMachineFooter: String {
+        switch lang {
+        case .korean: return "데이터가 바뀔 때마다 자동으로 스냅샷이 저장됩니다. 원하는 시점을 선택하면 그때의 데이터로 되돌릴 수 있습니다."
+        case .english: return "A snapshot is saved automatically whenever your data changes. Select a point in time to restore your data to that moment."
+        case .japanese: return "データが変更されるたびにスナップショットが自動保存されます。時点を選択すると、その時のデータに戻せます。"
+        case .chinese: return "每当数据发生变化时都会自动保存快照。选择一个时间点即可将数据恢复到当时的状态。"
+        }
+    }
+
+    static var snapshotNow: String {
+        switch lang {
+        case .korean: return "지금 스냅샷 만들기"
+        case .english: return "Create Snapshot Now"
+        case .japanese: return "今すぐスナップショットを作成"
+        case .chinese: return "立即创建快照"
+        }
+    }
+
+    static var snapshotList: String {
+        switch lang {
+        case .korean: return "저장된 시점"
+        case .english: return "Saved Points"
+        case .japanese: return "保存された時点"
+        case .chinese: return "已保存的时间点"
+        }
+    }
+
+    static var noSnapshots: String {
+        switch lang {
+        case .korean: return "저장된 스냅샷이 없습니다"
+        case .english: return "No snapshots saved yet"
+        case .japanese: return "保存されたスナップショットはありません"
+        case .chinese: return "尚无已保存的快照"
+        }
+    }
+
+    static var restoreSnapshotTitle: String {
+        switch lang {
+        case .korean: return "이 시점으로 복원"
+        case .english: return "Restore This Point"
+        case .japanese: return "この時点に復元"
+        case .chinese: return "恢复到此时间点"
+        }
+    }
+
+    static func restoreSnapshotMessage(_ date: String) -> String {
+        switch lang {
+        case .korean: return "\(date) 시점의 데이터로 되돌립니다. 복원 직전 상태도 자동으로 저장되므로 언제든 다시 되돌릴 수 있습니다."
+        case .english: return "Your data will be restored to \(date). The current state is saved automatically before restoring, so you can always go back."
+        case .japanese: return "\(date) 時点のデータに戻します。復元直前の状態も自動保存されるため、いつでも元に戻せます。"
+        case .chinese: return "数据将恢复到 \(date)。恢复前会自动保存当前状态，因此您随时可以撤销。"
+        }
+    }
+
+    static func snapshotSummary(leaves: Int, bonuses: Int) -> String {
+        switch lang {
+        case .korean: return "연차 \(leaves)건 · 보너스 \(bonuses)건"
+        case .english: return "\(leaves) leaves · \(bonuses) bonuses"
+        case .japanese: return "休暇 \(leaves)件 · ボーナス \(bonuses)件"
+        case .chinese: return "休假 \(leaves)条 · 奖励 \(bonuses)条"
+        }
+    }
+
+    static var snapshotCreated: String {
+        switch lang {
+        case .korean: return "스냅샷이 저장되었습니다."
+        case .english: return "Snapshot saved."
+        case .japanese: return "スナップショットを保存しました。"
+        case .chinese: return "快照已保存。"
+        }
+    }
+
+    static var snapshotFailed: String {
+        switch lang {
+        case .korean: return "스냅샷 저장에 실패했습니다."
+        case .english: return "Failed to save snapshot."
+        case .japanese: return "スナップショットの保存に失敗しました。"
+        case .chinese: return "快照保存失败。"
+        }
+    }
+
+    static var snapshotChecksumMismatch: String {
+        switch lang {
+        case .korean: return "스냅샷 데이터 무결성 검증에 실패했습니다."
+        case .english: return "Snapshot integrity check failed."
+        case .japanese: return "スナップショットの整合性検証に失敗しました。"
+        case .chinese: return "快照完整性校验失败。"
+        }
+    }
+
+    static var snapshotReasonAuto: String {
+        switch lang {
+        case .korean: return "자동"
+        case .english: return "Auto"
+        case .japanese: return "自動"
+        case .chinese: return "自动"
+        }
+    }
+
+    static var snapshotReasonBackground: String {
+        switch lang {
+        case .korean: return "앱 전환"
+        case .english: return "App switch"
+        case .japanese: return "アプリ切替"
+        case .chinese: return "应用切换"
+        }
+    }
+
+    static var snapshotReasonManual: String {
+        switch lang {
+        case .korean: return "수동"
+        case .english: return "Manual"
+        case .japanese: return "手動"
+        case .chinese: return "手动"
+        }
+    }
+
+    static var snapshotReasonPreRestore: String {
+        switch lang {
+        case .korean: return "복원 전 저장"
+        case .english: return "Pre-restore"
+        case .japanese: return "復元前の保存"
+        case .chinese: return "恢复前保存"
+        }
+    }
+
     static var resetData: String {
         switch lang {
         case .korean: return "연차 데이터 초기화"

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct HomeView: View {
     @Bindable var profile: UserProfile
@@ -132,6 +133,11 @@ struct HomeView: View {
                 VStack(spacing: 20) {
                     // 연차 현황 카드
                     LeaveStatusCard(profile: profile)
+
+                    // 가족 일정 공유 팁 (기록이 좀 쌓인 뒤에 노출)
+                    if !leaveRecords.isEmpty {
+                        TipView(AppTips.familyShare)
+                    }
 
                     // 휴가 페이스 (소진 속도 + 번아웃 신호) — 직장인 모드 + 데이터 충분 시
                     if profile.userType == .employee, profile.totalAnnualLeave > 0, !leaveRecords.isEmpty {
@@ -354,6 +360,7 @@ struct LeaveStatusCard: View {
     @Query private var allLeaveRecords: [LeaveRecord]
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
     @State private var showingAddLeave = false
+    @State private var showingPhotoImport = false
     @State private var shareImage: UIImage?
     @State private var showingShareSheet = false
 
@@ -468,6 +475,20 @@ struct LeaveStatusCard: View {
                         .clipShape(Circle())
                 }
                 .accessibilityLabel(Text(Strings.sharePlan))
+
+                Button {
+                    AppTips.photoImport.invalidate(reason: .actionPerformed)
+                    showingPhotoImport = true
+                } label: {
+                    Image(systemName: "doc.text.viewfinder")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.blue)
+                        .frame(width: 32, height: 32)
+                        .background(Color.blue.opacity(0.1))
+                        .clipShape(Circle())
+                }
+                .popoverTip(AppTips.photoImport)
+                .accessibilityLabel(Text(Strings.importFromPhoto))
 
                 Button {
                     showingAddLeave = true
@@ -610,6 +631,9 @@ struct LeaveStatusCard: View {
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
         .sheet(isPresented: $showingAddLeave) {
             AddLeaveView(profile: profile)
+        }
+        .sheet(isPresented: $showingPhotoImport) {
+            PhotoImportSheet()
         }
         .sheet(isPresented: $showingShareSheet) {
             if let image = shareImage {
@@ -1429,7 +1453,7 @@ struct BurnoutPaceCard: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
     let container = try! ModelContainer(for: UserProfile.self, LeaveRecord.self, configurations: config)
 
     let profile = UserProfile(name: "홍길동", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 5)
