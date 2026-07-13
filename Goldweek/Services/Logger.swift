@@ -14,6 +14,7 @@ enum LogCategory: String {
     case data = "Data"
     case iCloud = "iCloud"
     case backup = "Backup"
+    case share = "Share"
     case widget = "Widget"
     case recommendation = "Recommendation"
     case ui = "UI"
@@ -54,7 +55,7 @@ final class AppLogger {
 
     private init() {
         // 각 카테고리별 Logger 초기화
-        for category in [LogCategory.app, .data, .iCloud, .backup, .widget, .recommendation, .ui] {
+        for category in [LogCategory.app, .data, .iCloud, .backup, .share, .widget, .recommendation, .ui] {
             loggers[category] = Logger(subsystem: subsystem, category: category.rawValue)
         }
     }

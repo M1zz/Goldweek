@@ -1,64 +1,123 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "CFBundleDisplayName" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Goldweek"
+  "sourceLanguage": "en",
+  "strings": {
+    "CFBundleDisplayName": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ゴールドウィーク"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ゴールドウィーク"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "골드위크"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "골드위크"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Goldweek"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
           }
         }
       }
     },
-    "CFBundleName" : {
-      "comment" : "Bundle name",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Goldweek"
+    "CFBundleName": {
+      "comment": "Bundle name",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ゴールドウィーク"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ゴールドウィーク"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "골드위크"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "골드위크"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Goldweek"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        }
+      }
+    },
+    "NSCalendarsFullAccessUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek needs calendar access to find leave-like events you can import and to sync your registered leaves to your calendar."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カレンダーから休暇と思われる予定を見つけて取り込み、登録した休暇をカレンダーに同期するためにアクセス権限が必要です。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "캘린더에서 휴가로 보이는 일정을 찾아 가져오고, 등록한 휴가를 캘린더에 동기화하기 위해 접근 권한이 필요합니다."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要日历访问权限,以便从日历中查找疑似休假的日程并导入,以及将已登记的休假同步到日历。"
+          }
+        }
+      }
+    },
+    "NSCameraUsageDescription": {
+      "comment": "Privacy - Camera Usage Description",
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "휴가 신청 내역 화면을 촬영해 휴가 기록을 자동으로 등록하기 위해 카메라 접근 권한이 필요합니다."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera access is needed to photograph your leave request history and register your leaves automatically."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休暇申請履歴の画面を撮影し、休暇記録を自動で登録するためにカメラへのアクセスが必要です。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要相机权限以拍摄休假申请记录页面并自动登记休假。"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

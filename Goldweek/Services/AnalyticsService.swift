@@ -119,6 +119,32 @@ enum AnalyticsService {
         ])
     }
 
+    /// 마이리얼트립 카드 노출 — 탭과 함께 CTR 퍼널의 분모
+    /// - category: "flight" | "stay" | "tour"
+    static func logMRTCardImpression(category: String, city: String) {
+        log("mrt_card_impression", [
+            "category": category,
+            "city": city
+        ])
+    }
+
+    // MARK: - 캘린더 자동 탐지
+
+    /// 자동 탐지 배너 노출 (isPro에 따라 가져오기/페이월 유도로 분기)
+    static func logAutoDetectBanner(count: Int, isPro: Bool) {
+        log("auto_detect_banner", [
+            "count": count,
+            "is_pro": isPro ? 1 : 0
+        ])
+    }
+
+    // MARK: - 공유
+
+    /// 연차 플랜 이미지 공유
+    static func logPlanShared() {
+        log("plan_shared", [:])
+    }
+
     // MARK: - Paywall / Pro
 
     static func logPaywallView(source: String) {

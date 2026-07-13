@@ -188,7 +188,42 @@ struct PaywallView: View {
 
     private var pricingSection: some View {
         VStack(spacing: 10) {
-            if !proManager.proPrice.isEmpty {
+            if proManager.proPrice.isEmpty {
+                // 가격 로드 실패/로딩 중 — 빈칸 대신 상태를 보여준다
+                VStack(spacing: 10) {
+                    if proManager.productLoadFailed {
+                        HStack(spacing: 6) {
+                            Image(systemName: "wifi.exclamationmark")
+                                .foregroundColor(.orange)
+                                .voDecorative()
+                            Text(Strings.priceLoadFailed)
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        Button {
+                            Task { await proManager.loadProducts() }
+                        } label: {
+                            Text(Strings.retry)
+                                .font(.subheadline.weight(.semibold))
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 8)
+                                .background(Color.accentColor.opacity(0.12))
+                                .foregroundColor(.accentColor)
+                                .clipShape(Capsule())
+                        }
+                    } else {
+                        ProgressView()
+                            .padding(.vertical, 8)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Color(.systemGray6))
+                )
+            } else {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(Strings.goldweekPro)
@@ -247,11 +282,12 @@ struct PaywallView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 52)
-                .background(proManager.isLoading ? Color.gray : Color.accentColor)
+                .background(proManager.isLoading || proManager.proPrice.isEmpty ? Color.gray : Color.accentColor)
                 .foregroundColor(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
             }
-            .disabled(proManager.isLoading)
+            // 가격을 확인할 수 없는 상태에서는 구매를 막는다
+            .disabled(proManager.isLoading || proManager.proPrice.isEmpty)
 
             Button(action: restorePurchases) {
                 Text(Strings.restorePurchase)
@@ -266,10 +302,21 @@ struct PaywallView: View {
     // MARK: - Footer Section
 
     private var footerSection: some View {
-        Text(Strings.oneTimePurchase)
+        VStack(spacing: 10) {
+            Text(Strings.oneTimePurchase)
+                .font(.caption)
+                .foregroundColor(Color(.systemGray3))
+                .multilineTextAlignment(.center)
+
+            HStack(spacing: 16) {
+                Link(Strings.termsOfService,
+                     destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                Link(Strings.privacyPolicy,
+                     destination: URL(string: "https://m1zz.github.io/Goldweek/support.html")!)
+            }
             .font(.caption)
-            .foregroundColor(Color(.systemGray3))
-            .multilineTextAlignment(.center)
+            .foregroundColor(.secondary)
+        }
     }
 
     // MARK: - Actions
@@ -278,6 +325,9 @@ struct PaywallView: View {
         Task {
             do {
                 try await proManager.purchase()
+                // 사용자가 취소한 경우 purchase()는 에러 없이 리턴되므로
+                // 실제 Pro가 됐을 때만 성공 알림을 띄운다
+                guard proManager.isPro else { return }
                 await MainActor.run {
                     AnalyticsService.logPaywallPurchase(success: true, productId: "pro")
                     isSuccess = true
@@ -288,6 +338,10 @@ struct PaywallView: View {
                 try? await Task.sleep(for: .seconds(1.5))
                 await ReviewManager.shared.requestReviewAfterPurchase(using: requestReview)
             } catch {
+                // 사용자 취소는 에러가 아니므로 알림을 띄우지 않는다
+                if let skError = error as? StoreKitError, case .userCancelled = skError {
+                    return
+                }
                 await MainActor.run {
                     AnalyticsService.logPaywallPurchase(success: false, productId: "pro")
                     AnalyticsService.recordError(error, context: ["op": "pro_purchase"])

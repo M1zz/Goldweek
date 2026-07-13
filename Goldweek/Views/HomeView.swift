@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct HomeView: View {
     @Bindable var profile: UserProfile
@@ -18,8 +19,15 @@ struct HomeView: View {
     @State private var showingHistory = false
     @State private var showingPastLeaveEntry = false
     @State private var showingFatigueCheckIn = false
+    @State private var showingAddLeave = false
     @AppStorage("hasSeenPastLeavePrompt") private var hasSeenPastLeavePrompt = false
     @AppStorage("lastProBannerShownAt") private var lastProBannerShownAt: Double = 0
+
+    // 캘린더 자동 감지 (Pro)
+    @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
+    @AppStorage("autoDetectSeenKeys") private var autoDetectSeenKeysRaw = ""
+    @State private var autoDetectedCandidates: [DetectedLeaveCandidate] = []
+    @State private var showingCalendarImport = false
 
     private let holidayService = HolidayService()
 
@@ -40,6 +48,11 @@ struct HomeView: View {
         guard !ProManager.shared.isPro else { return nil }
         let cooldown: Double = 7 * 24 * 3600
         guard Date().timeIntervalSince1970 - lastProBannerShownAt >= cooldown else { return nil }
+
+        // 0. 캘린더 자동 감지 프로모 — 캘린더 권한이 있고 기록이 있는(활성) 사용자에게 최우선 노출
+        if CalendarService.shared.isAuthorized, !leaveRecords.isEmpty {
+            return ("📅", Strings.proBannerAutoDetect)
+        }
 
         let cal = Calendar.current
         let now = Date()
@@ -122,6 +135,11 @@ struct HomeView: View {
                     // 연차 현황 카드
                     LeaveStatusCard(profile: profile)
 
+                    // 가족 일정 공유 팁 (기록이 좀 쌓인 뒤에 노출)
+                    if !leaveRecords.isEmpty {
+                        TipView(AppTips.familyShare)
+                    }
+
                     // 휴가 페이스 (소진 속도 + 번아웃 신호) — 직장인 모드 + 데이터 충분 시
                     if profile.userType == .employee, profile.totalAnnualLeave > 0, !leaveRecords.isEmpty {
                         BurnoutPaceCard(profile: profile, allLeaveRecords: leaveRecords)
@@ -132,6 +150,20 @@ struct HomeView: View {
                         PastLeavePromptBanner(
                             onQuickEntry: { showingPastLeaveEntry = true },
                             onDismiss: { hasSeenPastLeavePrompt = true }
+                        )
+                    }
+
+                    // 신규 사용자 빈 상태 — 기록이 하나도 없으면 첫 등록을 유도
+                    if leaveRecords.isEmpty && !shouldShowPastLeavePrompt {
+                        EmptyHomeCard(onAddLeave: { showingAddLeave = true })
+                    }
+
+                    // 캘린더 자동 감지 결과 배너 (Pro)
+                    if !autoDetectedCandidates.isEmpty {
+                        AutoDetectBanner(
+                            count: autoDetectedCandidates.count,
+                            onReview: { showingCalendarImport = true },
+                            onDismiss: { dismissAutoDetectBanner() }
                         )
                     }
 
@@ -169,6 +201,12 @@ struct HomeView: View {
             .sheet(isPresented: $showingFatigueCheckIn) {
                 FatigueCheckInView()
             }
+            .sheet(isPresented: $showingAddLeave) {
+                AddLeaveView(profile: profile)
+            }
+            .sheet(isPresented: $showingCalendarImport, onDismiss: { dismissAutoDetectBanner() }) {
+                CalendarImportSheet(existingRecords: Array(leaveRecords))
+            }
             .onAppear {
                 // 가끔(쿨다운 후) 단일문항 피로 체크인 — 모델을 주관 상태로 보정
                 if profile.userType == .employee, !leaveRecords.isEmpty,
@@ -176,9 +214,152 @@ struct HomeView: View {
                     showingFatigueCheckIn = true
                 }
             }
+            .task {
+                await autoScanCalendar()
+            }
         }
     }
 
+    // MARK: - 캘린더 자동 감지 (Pro)
+
+    /// Pro 사용자 대상 자동 스캔 — 권한을 새로 요청하지는 않고, 이미 허용된 경우에만 조용히 탐색
+    private func autoScanCalendar() async {
+        guard ProManager.shared.isPro, autoDetectEnabled else { return }
+        guard CalendarService.shared.isAuthorized else { return }
+
+        do {
+            let found = try await CalendarService.shared.scanForLeaveCandidates(
+                existingRecords: Array(leaveRecords)
+            )
+            let seen = Set(autoDetectSeenKeysRaw.split(separator: ",").map(String.init))
+            let fresh = found.filter { !seen.contains($0.dedupKey) }
+            if !fresh.isEmpty {
+                autoDetectedCandidates = fresh
+                AnalyticsService.logAutoDetectBanner(count: fresh.count, isPro: true)
+            }
+        } catch {
+            // 자동 스캔 실패는 사용자를 방해하지 않는다 — 수동 가져오기 경로가 별도로 존재
+            logDebug("캘린더 자동 스캔 실패: \(error.localizedDescription)", category: .app)
+        }
+    }
+
+    /// 배너를 닫거나 가져오기를 마치면 현재 후보들을 "본 것"으로 기록해 재노출을 막는다
+    private func dismissAutoDetectBanner() {
+        guard !autoDetectedCandidates.isEmpty else { return }
+        var seen = Set(autoDetectSeenKeysRaw.split(separator: ",").map(String.init))
+        autoDetectedCandidates.forEach { seen.insert($0.dedupKey) }
+        // 무한히 자라지 않도록 상한 유지 (오래된 키가 밀려나도 스캔 범위 밖이라 무해)
+        autoDetectSeenKeysRaw = Array(seen).suffix(300).joined(separator: ",")
+        autoDetectedCandidates = []
+    }
+
+}
+
+// MARK: - 캘린더 자동 감지 배너
+struct AutoDetectBanner: View {
+    let count: Int
+    let onReview: () -> Void
+    let onDismiss: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                HStack(spacing: 6) {
+                    Image(systemName: "calendar.badge.plus")
+                        .foregroundStyle(.green)
+                        .voDecorative()
+                    Text(Strings.autoDetectBannerTitle)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .voHeader()
+                }
+                Spacer()
+                Button(action: onDismiss) {
+                    Image(systemName: "xmark")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 28, height: 28)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel(Text(Strings.close))
+            }
+
+            Text(Strings.autoDetectBannerMessage(count))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Button(action: onReview) {
+                HStack(spacing: 6) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .voDecorative()
+                    Text(Strings.autoDetectReview)
+                        .fontWeight(.semibold)
+                }
+                .font(.subheadline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color.green)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color.green.opacity(0.08))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Color.green.opacity(0.3), lineWidth: 1)
+                )
+        )
+    }
+}
+
+// MARK: - 신규 사용자 빈 상태 카드
+struct EmptyHomeCard: View {
+    let onAddLeave: () -> Void
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "sun.max.fill")
+                .font(.largeTitle)
+                .foregroundStyle(.yellow)
+                .voDecorative()
+
+            Text(Strings.emptyHomeTitle)
+                .font(.headline)
+                .voHeader()
+
+            Text(Strings.emptyHomeMessage)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Button(action: onAddLeave) {
+                HStack(spacing: 6) {
+                    Image(systemName: "plus.circle.fill")
+                        .voDecorative()
+                    Text(Strings.emptyHomeCTA)
+                        .fontWeight(.semibold)
+                }
+                .font(.subheadline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(AppTheme.Colors.brand)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
 }
 
 // MARK: - 단일문항 피로 체크인 (SIB 0~10)
@@ -270,6 +451,9 @@ struct LeaveStatusCard: View {
     @Query private var allLeaveRecords: [LeaveRecord]
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
     @State private var showingAddLeave = false
+    @State private var showingPhotoImport = false
+    @State private var shareImage: UIImage?
+    @State private var showingShareSheet = false
 
     /// 연차 기준 연도의 시작일 (yearStartMonth 기준)
     var annualYearStart: Date {
@@ -367,6 +551,36 @@ struct LeaveStatusCard: View {
                 Text(isLeisure ? Strings.leisureVacationPlanTitle : Strings.annualLeaveStatusTitle)
                     .font(.headline)
                 Spacer()
+                Button {
+                    if let image = renderShareImage() {
+                        shareImage = image
+                        AnalyticsService.logPlanShared()
+                        showingShareSheet = true
+                    }
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.blue)
+                        .frame(width: 32, height: 32)
+                        .background(Color.blue.opacity(0.1))
+                        .clipShape(Circle())
+                }
+                .accessibilityLabel(Text(Strings.sharePlan))
+
+                Button {
+                    AppTips.photoImport.invalidate(reason: .actionPerformed)
+                    showingPhotoImport = true
+                } label: {
+                    Image(systemName: "doc.text.viewfinder")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.blue)
+                        .frame(width: 32, height: 32)
+                        .background(Color.blue.opacity(0.1))
+                        .clipShape(Circle())
+                }
+                .popoverTip(AppTips.photoImport)
+                .accessibilityLabel(Text(Strings.importFromPhoto))
+
                 Button {
                     showingAddLeave = true
                 } label: {
@@ -509,8 +723,149 @@ struct LeaveStatusCard: View {
         .sheet(isPresented: $showingAddLeave) {
             AddLeaveView(profile: profile)
         }
+        .sheet(isPresented: $showingPhotoImport) {
+            PhotoImportSheet()
+        }
+        .sheet(isPresented: $showingShareSheet) {
+            if let image = shareImage {
+                ActivityShareSheet(items: [image])
+                    .presentationDetents([.medium, .large])
+            }
+        }
     }
 
+    /// 연차 현황 + 다가오는 휴가를 담은 공유용 이미지 렌더링
+    @MainActor
+    private func renderShareImage() -> UIImage? {
+        let today = Calendar.current.startOfDay(for: Date())
+        let upcoming = allLeaveRecords
+            .filter { $0.status == .planned && $0.startDate >= today }
+            .sorted { $0.startDate < $1.startDate }
+            .prefix(3)
+
+        let renderer = ImageRenderer(content: ShareableLeavePlanView(
+            remaining: effectiveRemaining,
+            used: displayUsed,
+            total: totalLeave,
+            upcoming: Array(upcoming)
+        ))
+        renderer.scale = 3
+        renderer.proposedSize = ProposedViewSize(width: 360, height: nil)
+        return renderer.uiImage
+    }
+
+}
+
+// MARK: - 공유용 연차 플랜 카드 (ImageRenderer 전용 — 화면에 직접 표시되지 않음)
+struct ShareableLeavePlanView: View {
+    let remaining: Double
+    let used: Double
+    let total: Double
+    let upcoming: [LeaveRecord]
+
+    // 이미지로 렌더링되므로 다크모드와 무관하게 색을 고정한다
+    private let cardBackground = Color.white
+    private let primaryText = Color(red: 0.1, green: 0.12, blue: 0.15)
+    private let secondaryText = Color(red: 0.45, green: 0.48, blue: 0.52)
+
+    private var dateFormatter: DateFormatter {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: Strings.localeIdentifier)
+        f.dateFormat = Strings.dateRangeFormat
+        return f
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // 헤더
+            HStack(spacing: 8) {
+                Text("🏖")
+                    .font(.title2)
+                Text(Strings.shareCardTitle)
+                    .font(.headline.weight(.bold))
+                    .foregroundStyle(primaryText)
+                Spacer()
+            }
+
+            // 남은 연차 강조
+            HStack(alignment: .lastTextBaseline, spacing: 6) {
+                Text(formatLeave(remaining))
+                    .font(.system(size: 44, weight: .black, design: .rounded))
+                    .foregroundStyle(AppTheme.Colors.brand)
+                Text(Strings.dayUnitSuffix)
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(secondaryText)
+                Text(Strings.remaining)
+                    .font(.subheadline)
+                    .foregroundStyle(secondaryText)
+                Spacer()
+            }
+
+            // 사용/총 요약
+            HStack(spacing: 16) {
+                Text("\(Strings.statUsed) \(formatLeave(used))\(Strings.dayUnitSuffix)")
+                Text("\(Strings.total) \(formatLeave(total))\(Strings.dayUnitSuffix)")
+            }
+            .font(.caption.weight(.medium))
+            .foregroundStyle(secondaryText)
+
+            // 다가오는 휴가
+            if !upcoming.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(Strings.upcomingLeaves)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(secondaryText)
+                    ForEach(upcoming) { leave in
+                        HStack(spacing: 8) {
+                            Circle()
+                                .fill(AppTheme.Colors.brand)
+                                .frame(width: 6, height: 6)
+                            Text(leave.startDate == leave.endDate
+                                 ? dateFormatter.string(from: leave.startDate)
+                                 : "\(dateFormatter.string(from: leave.startDate)) ~ \(dateFormatter.string(from: leave.endDate))")
+                                .font(.subheadline.weight(.medium))
+                                .foregroundStyle(primaryText)
+                            if !leave.note.isEmpty {
+                                Text(leave.note)
+                                    .font(.caption)
+                                    .foregroundStyle(secondaryText)
+                                    .lineLimit(1)
+                            }
+                        }
+                    }
+                }
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(AppTheme.Colors.brand.opacity(0.06))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+
+            // 푸터 (앱 브랜딩)
+            HStack(spacing: 6) {
+                Image(systemName: "calendar.badge.checkmark")
+                    .font(.caption)
+                    .foregroundStyle(AppTheme.Colors.brand)
+                Text(Strings.shareCardFooter)
+                    .font(.caption2.weight(.medium))
+                    .foregroundStyle(secondaryText)
+                Spacer()
+            }
+        }
+        .padding(24)
+        .frame(width: 360)
+        .background(cardBackground)
+    }
+}
+
+// MARK: - UIActivityViewController 래퍼
+struct ActivityShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - 다가오는 휴가 섹션
@@ -693,6 +1048,7 @@ struct PastLeaveQuickEntrySheet: View {
 
     @State private var daysUsed: Double = 1.0
     @State private var isSaving = false
+    @State private var showingSaveError = false
 
     private let calendar = Calendar.current
 
@@ -783,6 +1139,11 @@ struct PastLeaveQuickEntrySheet: View {
             }
         }
         .presentationDetents([.medium])
+        .alert(Strings.alert, isPresented: $showingSaveError) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(Strings.saveFailed)
+        }
     }
 
     private func saveEntry() {
@@ -808,6 +1169,7 @@ struct PastLeaveQuickEntrySheet: View {
         } catch {
             modelContext.delete(record)
             HapticFeedback.error()
+            showingSaveError = true
         }
         isSaving = false
     }
@@ -1197,7 +1559,7 @@ struct BurnoutPaceCard: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
     let container = try! ModelContainer(for: UserProfile.self, LeaveRecord.self, configurations: config)
 
     let profile = UserProfile(name: "홍길동", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 5)

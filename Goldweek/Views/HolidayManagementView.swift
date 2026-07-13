@@ -18,6 +18,8 @@ struct HolidayManagementView: View {
     @State private var showingAddSheet = false
     @State private var holidayToDelete: CustomHoliday?
     @State private var showingDeleteAlert = false
+    @State private var errorMessage = ""
+    @State private var showingErrorAlert = false
 
     private let holidayService = HolidayService()
     private let calendar = Calendar.current
@@ -93,7 +95,14 @@ struct HolidayManagementView: View {
             AddCustomHolidaySheet(defaultYear: selectedYear) { date, name in
                 let holiday = CustomHoliday(date: date, name: name)
                 modelContext.insert(holiday)
-                try? modelContext.save()
+                do {
+                    try modelContext.save()
+                } catch {
+                    modelContext.delete(holiday)
+                    errorMessage = Strings.saveFailed
+                    showingErrorAlert = true
+                    HapticFeedback.error()
+                }
             }
         }
         .alert(Strings.holidayDeleteAlertTitle, isPresented: $showingDeleteAlert) {
@@ -101,12 +110,23 @@ struct HolidayManagementView: View {
             Button(Strings.commonDelete, role: .destructive) {
                 if let h = holidayToDelete {
                     modelContext.delete(h)
-                    try? modelContext.save()
+                    do {
+                        try modelContext.save()
+                    } catch {
+                        errorMessage = Strings.deleteFailed
+                        showingErrorAlert = true
+                        HapticFeedback.error()
+                    }
                     holidayToDelete = nil
                 }
             }
         } message: {
             Text(Strings.holidayDeleteAlertMessage)
+        }
+        .alert(Strings.alert, isPresented: $showingErrorAlert) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(errorMessage)
         }
     }
 

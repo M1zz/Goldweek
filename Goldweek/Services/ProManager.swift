@@ -16,6 +16,8 @@ class ProManager {
     private(set) var products: [Product] = []
     private(set) var purchaseState: PurchaseState = .notPurchased
     private(set) var isLoading = false
+    /// 상품 로드 실패 여부 — Paywall에서 재시도 UI 노출에 사용
+    private(set) var productLoadFailed = false
 
     private let productID = "com.Ysoup.LeaveWise.pro"
     private var updateListenerTask: Task<Void, Never>?
@@ -66,12 +68,14 @@ class ProManager {
 
     func loadProducts() async {
         isLoading = true
+        productLoadFailed = false
         defer { isLoading = false }
 
         do {
             products = try await Product.products(for: [productID])
             logDebug("StoreKit 제품 로드 완료: \(products.count)개", category: .app)
         } catch {
+            productLoadFailed = true
             logError("StoreKit 제품 로드 실패: \(error.localizedDescription)", category: .app)
         }
     }
@@ -119,7 +123,15 @@ class ProManager {
 
     // MARK: - Restore Purchases
 
-    func restorePurchases() async {
+    enum RestoreResult {
+        case restored
+        case nothingToRestore
+        case failed(String)
+    }
+
+    /// 구매 복원 후 결과를 반환한다 — 호출부는 이 결과로 사용자에게 피드백을 보여줄 것
+    @discardableResult
+    func restorePurchases() async -> RestoreResult {
         isLoading = true
         defer { isLoading = false }
 
@@ -127,8 +139,10 @@ class ProManager {
             try await AppStore.sync()
             await checkEntitlement()
             logInfo("구매 복원 완료", category: .app)
+            return isPro ? .restored : .nothingToRestore
         } catch {
             logError("구매 복원 실패: \(error.localizedDescription)", category: .app)
+            return .failed(error.localizedDescription)
         }
     }
 
@@ -205,10 +219,31 @@ enum ProPurchaseError: LocalizedError {
     case purchaseFailed
 
     var errorDescription: String? {
-        switch self {
-        case .productNotFound: return "제품을 찾을 수 없습니다."
-        case .verificationFailed: return "구매 검증에 실패했습니다."
-        case .purchaseFailed: return "구매에 실패했습니다."
+        switch LanguageManager.shared.currentLanguage {
+        case .korean:
+            switch self {
+            case .productNotFound: return "제품을 찾을 수 없습니다."
+            case .verificationFailed: return "구매 검증에 실패했습니다."
+            case .purchaseFailed: return "구매에 실패했습니다."
+            }
+        case .english:
+            switch self {
+            case .productNotFound: return "Product not found."
+            case .verificationFailed: return "Purchase verification failed."
+            case .purchaseFailed: return "Purchase failed."
+            }
+        case .japanese:
+            switch self {
+            case .productNotFound: return "製品が見つかりません。"
+            case .verificationFailed: return "購入の検証に失敗しました。"
+            case .purchaseFailed: return "購入に失敗しました。"
+            }
+        case .chinese:
+            switch self {
+            case .productNotFound: return "找不到产品。"
+            case .verificationFailed: return "购买验证失败。"
+            case .purchaseFailed: return "购买失败。"
+            }
         }
     }
 }

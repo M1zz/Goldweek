@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct CalendarView: View {
     @Bindable var profile: UserProfile
@@ -18,6 +19,8 @@ struct CalendarView: View {
     @State private var recordToEdit: LeaveRecord?
     @State private var showingDeleteAlert = false
     @State private var recordToDelete: LeaveRecord?
+    @State private var showingDeleteError = false
+    @State private var showingAddLeave = false
 
     @Query private var customHolidays: [CustomHoliday]
     @Query private var allBonusLeaves: [BonusLeave]
@@ -181,6 +184,14 @@ struct CalendarView: View {
                     // 월 네비게이션
                     MonthNavigator(currentMonth: $currentMonth)
 
+                    // 날짜 탭 등록 팁
+                    TipView(AppTips.calendarTap)
+
+                    // 공휴일 데이터 신뢰 범위를 벗어난 연도 안내
+                    if !holidayService.isHolidayDataReliable(for: calendar.component(.year, from: currentMonth)) {
+                        HolidayDataNoticeBanner(year: calendar.component(.year, from: currentMonth))
+                    }
+
                     // 캘린더 그리드
                     CalendarGrid(
                         currentMonth: currentMonth,
@@ -202,7 +213,11 @@ struct CalendarView: View {
                         leaveRecords: leaveRecords,
                         recommendations: recommendations,
                         showsTravelSuggestions: showsMRTSuggestions,
-                        originCountry: profile.country
+                        originCountry: profile.country,
+                        onAddLeave: {
+                            AppTips.calendarTap.invalidate(reason: .actionPerformed)
+                            showingAddLeave = true
+                        }
                     )
 
                     // 나의 연차 일정
@@ -240,6 +255,14 @@ struct CalendarView: View {
             } message: {
                 Text(Strings.deleteLeaveConfirm)
             }
+            .alert(Strings.alert, isPresented: $showingDeleteError) {
+                Button(Strings.confirm, role: .cancel) { }
+            } message: {
+                Text(Strings.deleteFailed)
+            }
+            .sheet(isPresented: $showingAddLeave) {
+                AddLeaveView(profile: profile, initialDate: selectedDate)
+            }
         }
     }
 
@@ -259,9 +282,32 @@ struct CalendarView: View {
                 profile.usedLeave += days
             }
             HapticFeedback.error()
+            showingDeleteError = true
         }
     }
 
+}
+
+// MARK: - 공휴일 데이터 만료 안내 배너
+struct HolidayDataNoticeBanner: View {
+    let year: Int
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+                .voDecorative()
+            Text(Strings.holidayDataMayBeInaccurate(year))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(Color.orange.opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .accessibilityElement(children: .combine)
+    }
 }
 
 // MARK: - 월 네비게이터
@@ -642,6 +688,8 @@ struct SelectedDateInfo: View {
     /// MRT 여행 큐레이션 카드 노출 여부 (한국어 + 한국 거주 + 직장인일 때만)
     var showsTravelSuggestions: Bool = false
     var originCountry: Country = .korea
+    /// 선택한 날짜로 바로 휴가를 등록하는 액션 (등록된 휴가가 없는 날짜에만 노출)
+    var onAddLeave: (() -> Void)? = nil
 
     private let calendar = Calendar.current
 
@@ -710,6 +758,25 @@ struct SelectedDateInfo: View {
             if holidayOnDate == nil && leaveOnDate == nil && recommendationOnDate == nil {
                 Text(Strings.noSchedule)
                     .foregroundStyle(.secondary)
+            }
+
+            // 선택한 날짜로 바로 등록 — 이미 휴가가 있는 날은 숨긴다
+            if leaveOnDate == nil, let onAddLeave {
+                Button(action: onAddLeave) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "plus.circle.fill")
+                            .voDecorative()
+                        Text(Strings.addLeaveOnThisDate)
+                            .fontWeight(.semibold)
+                    }
+                    .font(.subheadline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(AppTheme.Colors.brand.opacity(0.12))
+                    .foregroundStyle(AppTheme.Colors.brand)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .buttonStyle(.plain)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1058,7 +1125,7 @@ struct LeaveListRow: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
     let container = try! ModelContainer(for: UserProfile.self, LeaveRecord.self, configurations: config)
 
     let profile = UserProfile(name: "홍길동", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 5)

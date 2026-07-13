@@ -18,6 +18,7 @@ struct RecommendationsView: View {
     @State private var selectedYear: Int
     @State private var isLoading = true
     @State private var addedRecommendations: Set<UUID> = []
+    @State private var showingAddError = false
     /// 한 해의 황금연휴 전체 보기 (지난 휴가 포함). 사용자 요청 — 회고용/계획용 양쪽 활용.
     @State private var showAllYear = false
 
@@ -140,6 +141,11 @@ struct RecommendationsView: View {
             .onAppear {
                 loadRecommendations()
             }
+            .alert(Strings.alert, isPresented: $showingAddError) {
+                Button(Strings.confirm, role: .cancel) { }
+            } message: {
+                Text(Strings.saveFailed)
+            }
         }
     }
 
@@ -198,6 +204,7 @@ struct RecommendationsView: View {
             addedRecommendations.remove(recommendation.id)
             modelContext.delete(record)
             HapticFeedback.error()
+            showingAddError = true
         }
     }
 }
@@ -224,7 +231,7 @@ struct YearPicker: View {
                     .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
             .disabled(selectedYear <= currentYear && proManager.isPro)
-            .accessibilityLabel(Text(Strings.previousMonth))
+            .accessibilityLabel(Text(Strings.previousYear))
 
             Spacer()
 
@@ -260,7 +267,7 @@ struct YearPicker: View {
                     .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
             .disabled(selectedYear >= currentYear + 1 && proManager.isPro)
-            .accessibilityLabel(Text(Strings.nextMonth))
+            .accessibilityLabel(Text(Strings.nextYear))
         }
         .padding(.horizontal)
         .sheet(isPresented: $showingPaywall) {
@@ -1739,6 +1746,9 @@ struct MRTFlightCard: View {
         .simultaneousGesture(TapGesture().onEnded {
             AnalyticsService.logMRTCardTap(category: "flight", city: flight.toCity)
         })
+        .onAppear {
+            AnalyticsService.logMRTCardImpression(category: "flight", city: flight.toCity)
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
             VoiceOverLabel.flight(
@@ -1849,6 +1859,9 @@ struct MRTAccommodationCard: View {
         .simultaneousGesture(TapGesture().onEnded {
             AnalyticsService.logMRTCardTap(category: "stay", city: item.itemName)
         })
+        .onAppear {
+            AnalyticsService.logMRTCardImpression(category: "stay", city: item.itemName)
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
             VoiceOverLabel.accommodation(
@@ -1973,6 +1986,9 @@ struct MRTLiveTnaCard: View {
         .simultaneousGesture(TapGesture().onEnded {
             AnalyticsService.logMRTCardTap(category: "tour", city: product.itemName)
         })
+        .onAppear {
+            AnalyticsService.logMRTCardImpression(category: "tour", city: product.itemName)
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
             VoiceOverLabel.accommodation(
@@ -2689,7 +2705,7 @@ struct OptimalLeavePlannerCard: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
     let container = try! ModelContainer(for: UserProfile.self, LeaveRecord.self, configurations: config)
 
     let profile = UserProfile(name: "홍길동", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 3)

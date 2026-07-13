@@ -442,6 +442,24 @@ enum Strings {
         }
     }
 
+    static var previousYear: String {
+        switch lang {
+        case .korean: return "이전 연도"
+        case .english: return "Previous year"
+        case .japanese: return "前の年"
+        case .chinese: return "上一年"
+        }
+    }
+
+    static var nextYear: String {
+        switch lang {
+        case .korean: return "다음 연도"
+        case .english: return "Next year"
+        case .japanese: return "次の年"
+        case .chinese: return "下一年"
+        }
+    }
+
     // MARK: - 휴가별 액티비티 추천 (EditLeaveSheet)
     static var leaveActivityTitle: String {
         switch lang {
@@ -1033,6 +1051,336 @@ enum Strings {
         }
     }
 
+    // MARK: - 기능 팁 (TipKit)
+
+    static var tipPhotoImportTitle: String {
+        switch lang {
+        case .korean: return "사진으로 휴가 등록"
+        case .english: return "Add Leaves from a Photo"
+        case .japanese: return "写真で休暇を登録"
+        case .chinese: return "用照片登记休假"
+        }
+    }
+
+    static var tipPhotoImportMessage: String {
+        switch lang {
+        case .korean: return "회사 시스템의 휴가 신청 내역을 찍으면 자동으로 인식해서 등록해드려요."
+        case .english: return "Snap your company's leave request history and it's recognized and added automatically."
+        case .japanese: return "会社システムの休暇申請履歴を撮影すると、自動で認識して登録します。"
+        case .chinese: return "拍摄公司系统的休假申请记录，即可自动识别并登记。"
+        }
+    }
+
+    static var tipFamilyShareTitle: String {
+        switch lang {
+        case .korean: return "가족에게 일정을 공유해보세요"
+        case .english: return "Share Your Schedule with Family"
+        case .japanese: return "家族に予定を共有してみましょう"
+        case .chinese: return "与家人共享日程"
+        }
+    }
+
+    static var tipFamilyShareMessage: String {
+        switch lang {
+        case .korean: return "설정 → 일정 공유에서 초대 링크를 보내면, 가족의 휴가 일정을 가족 탭에서 함께 볼 수 있어요."
+        case .english: return "Send an invite from Settings → Share Schedule to see each other's leaves in the Family tab."
+        case .japanese: return "設定 → 予定の共有から招待リンクを送ると、家族の休暇予定を「家族」タブで一緒に見られます。"
+        case .chinese: return "在设置 → 日程共享中发送邀请链接，即可在\"家人\"标签页中查看彼此的休假日程。"
+        }
+    }
+
+    static var tipTimeMachineTitle: String {
+        switch lang {
+        case .korean: return "타임머신이 지켜드려요"
+        case .english: return "Time Machine Has Your Back"
+        case .japanese: return "タイムマシンが守ります"
+        case .chinese: return "时光机为您保驾护航"
+        }
+    }
+
+    static var tipTimeMachineMessage: String {
+        switch lang {
+        case .korean: return "데이터가 바뀔 때마다 자동으로 스냅샷이 저장돼요. 실수해도 원하는 시점으로 되돌릴 수 있어요."
+        case .english: return "A snapshot is saved automatically whenever your data changes, so you can always roll back."
+        case .japanese: return "データが変更されるたびに自動でスナップショットを保存。いつでも元に戻せます。"
+        case .chinese: return "每当数据变化时都会自动保存快照，随时可以恢复到任意时间点。"
+        }
+    }
+
+    static var tipCalendarTapTitle: String {
+        switch lang {
+        case .korean: return "날짜를 탭해서 바로 등록"
+        case .english: return "Tap a Date to Register"
+        case .japanese: return "日付をタップしてすぐ登録"
+        case .chinese: return "点按日期即可登记"
+        }
+    }
+
+    static var tipCalendarTapMessage: String {
+        switch lang {
+        case .korean: return "캘린더에서 날짜를 선택하면 그 날짜로 휴가를 바로 등록할 수 있어요."
+        case .english: return "Select any date on the calendar to register a leave for that day instantly."
+        case .japanese: return "カレンダーで日付を選ぶと、その日の休暇をすぐに登録できます。"
+        case .chinese: return "在日历上选择日期，即可立即为该日期登记休假。"
+        }
+    }
+
+    // MARK: - 사진에서 가져오기
+
+    static var importFromPhoto: String {
+        switch lang {
+        case .korean: return "사진에서 가져오기"
+        case .english: return "Import from Photo"
+        case .japanese: return "写真から取り込む"
+        case .chinese: return "从照片导入"
+        }
+    }
+
+    static var importFromPhotoDescription: String {
+        switch lang {
+        case .korean: return "휴가 신청 내역 화면을 찍으면 자동으로 인식해요"
+        case .english: return "Snap your leave request history to import it automatically"
+        case .japanese: return "休暇申請履歴の画面を撮影すると自動で認識します"
+        case .chinese: return "拍摄休假申请记录页面即可自动识别"
+        }
+    }
+
+    static var photoImportGuide: String {
+        switch lang {
+        case .korean: return "회사 시스템의 휴가 신청 내역 화면을 촬영하거나 스크린샷을 선택하세요.\n날짜·유형·차감 일수를 자동으로 인식합니다."
+        case .english: return "Take a photo or choose a screenshot of your company's leave request history.\nDates, types, and deductions are recognized automatically."
+        case .japanese: return "会社システムの休暇申請履歴画面を撮影するか、スクリーンショットを選択してください。\n日付・種類・控除日数を自動で認識します。"
+        case .chinese: return "拍摄或选择公司系统的休假申请记录截图。\n将自动识别日期、类型和扣除天数。"
+        }
+    }
+
+    static var takePhoto: String {
+        switch lang {
+        case .korean: return "카메라로 촬영"
+        case .english: return "Take Photo"
+        case .japanese: return "カメラで撮影"
+        case .chinese: return "用相机拍摄"
+        }
+    }
+
+    static var choosePhoto: String {
+        switch lang {
+        case .korean: return "사진 보관함에서 선택"
+        case .english: return "Choose from Library"
+        case .japanese: return "写真ライブラリから選択"
+        case .chinese: return "从相册选择"
+        }
+    }
+
+    static var chooseAnotherPhoto: String {
+        switch lang {
+        case .korean: return "다른 사진 선택"
+        case .english: return "Choose Another Photo"
+        case .japanese: return "別の写真を選択"
+        case .chinese: return "选择其他照片"
+        }
+    }
+
+    static var scanningPhoto: String {
+        switch lang {
+        case .korean: return "사진에서 휴가 내역을 인식하는 중..."
+        case .english: return "Recognizing leave records in photo..."
+        case .japanese: return "写真から休暇履歴を認識中..."
+        case .chinese: return "正在识别照片中的休假记录..."
+        }
+    }
+
+    static var noLeaveFoundInPhoto: String {
+        switch lang {
+        case .korean: return "사진에서 휴가 내역을 찾지 못했습니다.\n표가 선명하게 나오도록 다시 촬영해 주세요."
+        case .english: return "No leave records found in the photo.\nPlease retake it so the table is clearly visible."
+        case .japanese: return "写真から休暇履歴が見つかりませんでした。\n表が鮮明に写るように撮り直してください。"
+        case .chinese: return "未能在照片中找到休假记录。\n请重新拍摄，确保表格清晰可见。"
+        }
+    }
+
+    static func photoImportAllDuplicates(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "인식된 \(count)건이 모두 이미 등록되어 있어요."
+        case .english: return "All \(count) recognized records are already registered."
+        case .japanese: return "認識された\(count)件はすべて登録済みです。"
+        case .chinese: return "识别出的\(count)条记录均已登记。"
+        }
+    }
+
+    static func duplicatesExcluded(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "이미 등록된 \(count)건은 제외했습니다."
+        case .english: return "\(count) already-registered records were excluded."
+        case .japanese: return "登録済みの\(count)件は除外しました。"
+        case .chinese: return "已排除\(count)条已登记的记录。"
+        }
+    }
+
+    static var photoImportFooter: String {
+        switch lang {
+        case .korean: return "실공제수가 없는 대체휴가·자녀돌봄 등은 연차 차감 없이 등록됩니다."
+        case .english: return "Records without a deduction (compensatory leave, family care, etc.) are added without reducing your annual leave."
+        case .japanese: return "控除のない代替休暇・子育て休暇などは、年休を減らさずに登録されます。"
+        case .chinese: return "无扣除天数的调休、育儿假等将在不扣减年假的情况下登记。"
+        }
+    }
+
+    static var noDeduction: String {
+        switch lang {
+        case .korean: return "연차 차감 없음"
+        case .english: return "No deduction"
+        case .japanese: return "年休控除なし"
+        case .chinese: return "不扣年假"
+        }
+    }
+
+    static var photoImportInvalidImage: String {
+        switch lang {
+        case .korean: return "사진을 불러올 수 없습니다."
+        case .english: return "Unable to load the photo."
+        case .japanese: return "写真を読み込めません。"
+        case .chinese: return "无法加载照片。"
+        }
+    }
+
+    // MARK: - 타임머신
+
+    static var timeMachine: String {
+        switch lang {
+        case .korean: return "타임머신"
+        case .english: return "Time Machine"
+        case .japanese: return "タイムマシン"
+        case .chinese: return "时光机"
+        }
+    }
+
+    static var timeMachineFooter: String {
+        switch lang {
+        case .korean: return "데이터가 바뀔 때마다 자동으로 스냅샷이 저장됩니다. 원하는 시점을 선택하면 그때의 데이터로 되돌릴 수 있습니다."
+        case .english: return "A snapshot is saved automatically whenever your data changes. Select a point in time to restore your data to that moment."
+        case .japanese: return "データが変更されるたびにスナップショットが自動保存されます。時点を選択すると、その時のデータに戻せます。"
+        case .chinese: return "每当数据发生变化时都会自动保存快照。选择一个时间点即可将数据恢复到当时的状态。"
+        }
+    }
+
+    static var snapshotNow: String {
+        switch lang {
+        case .korean: return "지금 스냅샷 만들기"
+        case .english: return "Create Snapshot Now"
+        case .japanese: return "今すぐスナップショットを作成"
+        case .chinese: return "立即创建快照"
+        }
+    }
+
+    static var snapshotList: String {
+        switch lang {
+        case .korean: return "저장된 시점"
+        case .english: return "Saved Points"
+        case .japanese: return "保存された時点"
+        case .chinese: return "已保存的时间点"
+        }
+    }
+
+    static var noSnapshots: String {
+        switch lang {
+        case .korean: return "저장된 스냅샷이 없습니다"
+        case .english: return "No snapshots saved yet"
+        case .japanese: return "保存されたスナップショットはありません"
+        case .chinese: return "尚无已保存的快照"
+        }
+    }
+
+    static var restoreSnapshotTitle: String {
+        switch lang {
+        case .korean: return "이 시점으로 복원"
+        case .english: return "Restore This Point"
+        case .japanese: return "この時点に復元"
+        case .chinese: return "恢复到此时间点"
+        }
+    }
+
+    static func restoreSnapshotMessage(_ date: String) -> String {
+        switch lang {
+        case .korean: return "\(date) 시점의 데이터로 되돌립니다. 복원 직전 상태도 자동으로 저장되므로 언제든 다시 되돌릴 수 있습니다."
+        case .english: return "Your data will be restored to \(date). The current state is saved automatically before restoring, so you can always go back."
+        case .japanese: return "\(date) 時点のデータに戻します。復元直前の状態も自動保存されるため、いつでも元に戻せます。"
+        case .chinese: return "数据将恢复到 \(date)。恢复前会自动保存当前状态，因此您随时可以撤销。"
+        }
+    }
+
+    static func snapshotSummary(leaves: Int, bonuses: Int) -> String {
+        switch lang {
+        case .korean: return "연차 \(leaves)건 · 보너스 \(bonuses)건"
+        case .english: return "\(leaves) leaves · \(bonuses) bonuses"
+        case .japanese: return "休暇 \(leaves)件 · ボーナス \(bonuses)件"
+        case .chinese: return "休假 \(leaves)条 · 奖励 \(bonuses)条"
+        }
+    }
+
+    static var snapshotCreated: String {
+        switch lang {
+        case .korean: return "스냅샷이 저장되었습니다."
+        case .english: return "Snapshot saved."
+        case .japanese: return "スナップショットを保存しました。"
+        case .chinese: return "快照已保存。"
+        }
+    }
+
+    static var snapshotFailed: String {
+        switch lang {
+        case .korean: return "스냅샷 저장에 실패했습니다."
+        case .english: return "Failed to save snapshot."
+        case .japanese: return "スナップショットの保存に失敗しました。"
+        case .chinese: return "快照保存失败。"
+        }
+    }
+
+    static var snapshotChecksumMismatch: String {
+        switch lang {
+        case .korean: return "스냅샷 데이터 무결성 검증에 실패했습니다."
+        case .english: return "Snapshot integrity check failed."
+        case .japanese: return "スナップショットの整合性検証に失敗しました。"
+        case .chinese: return "快照完整性校验失败。"
+        }
+    }
+
+    static var snapshotReasonAuto: String {
+        switch lang {
+        case .korean: return "자동"
+        case .english: return "Auto"
+        case .japanese: return "自動"
+        case .chinese: return "自动"
+        }
+    }
+
+    static var snapshotReasonBackground: String {
+        switch lang {
+        case .korean: return "앱 전환"
+        case .english: return "App switch"
+        case .japanese: return "アプリ切替"
+        case .chinese: return "应用切换"
+        }
+    }
+
+    static var snapshotReasonManual: String {
+        switch lang {
+        case .korean: return "수동"
+        case .english: return "Manual"
+        case .japanese: return "手動"
+        case .chinese: return "手动"
+        }
+    }
+
+    static var snapshotReasonPreRestore: String {
+        switch lang {
+        case .korean: return "복원 전 저장"
+        case .english: return "Pre-restore"
+        case .japanese: return "復元前の保存"
+        case .chinese: return "恢复前保存"
+        }
+    }
+
     static var resetData: String {
         switch lang {
         case .korean: return "연차 데이터 초기화"
@@ -1102,6 +1450,42 @@ enum Strings {
         case .english: return "Rate This App"
         case .japanese: return "アプリを評価"
         case .chinese: return "评价应用"
+        }
+    }
+
+    static var contactDeveloperSection: String {
+        switch lang {
+        case .korean: return "개발자에게 문의"
+        case .english: return "Contact the Developer"
+        case .japanese: return "開発者に問い合わせ"
+        case .chinese: return "联系开发者"
+        }
+    }
+
+    static var contactByEmail: String {
+        switch lang {
+        case .korean: return "이메일로 문의하기"
+        case .english: return "Contact via Email"
+        case .japanese: return "メールで問い合わせ"
+        case .chinese: return "通过邮件联系"
+        }
+    }
+
+    static var contactByInstagram: String {
+        switch lang {
+        case .korean: return "인스타그램 DM (@lee25_ios)"
+        case .english: return "Instagram DM (@lee25_ios)"
+        case .japanese: return "Instagram DM (@lee25_ios)"
+        case .chinese: return "Instagram 私信 (@lee25_ios)"
+        }
+    }
+
+    static var contactDeveloperFooter: String {
+        switch lang {
+        case .korean: return "버그 제보와 기능 제안을 환영합니다."
+        case .english: return "Bug reports and feature suggestions are welcome."
+        case .japanese: return "バグ報告や機能提案を歓迎します。"
+        case .chinese: return "欢迎反馈问题和提出功能建议。"
         }
     }
 
@@ -2361,6 +2745,320 @@ enum Strings {
         case .english: return "Reset failed: \(reason)"
         case .japanese: return "リセットに失敗しました: \(reason)"
         case .chinese: return "重置失败: \(reason)"
+        }
+    }
+
+    static var deleteFailed: String {
+        switch lang {
+        case .korean: return "삭제에 실패했습니다. 다시 시도해주세요."
+        case .english: return "Delete failed. Please try again."
+        case .japanese: return "削除に失敗しました。もう一度お試しください。"
+        case .chinese: return "删除失败,请重试。"
+        }
+    }
+
+    static var deleteBonusLeaveTitle: String {
+        switch lang {
+        case .korean: return "보너스 연차 삭제"
+        case .english: return "Delete Bonus Leave"
+        case .japanese: return "ボーナス休暇を削除"
+        case .chinese: return "删除奖励年假"
+        }
+    }
+
+    static var deleteBonusLeaveConfirm: String {
+        switch lang {
+        case .korean: return "이 보너스 연차를 삭제하시겠습니까?"
+        case .english: return "Delete this bonus leave?"
+        case .japanese: return "このボーナス休暇を削除しますか？"
+        case .chinese: return "确定删除此奖励年假吗？"
+        }
+    }
+
+    static var retry: String {
+        switch lang {
+        case .korean: return "다시 시도"
+        case .english: return "Retry"
+        case .japanese: return "再試行"
+        case .chinese: return "重试"
+        }
+    }
+
+    // MARK: - 캘린더 → 등록 연동
+    static var addLeaveOnThisDate: String {
+        switch lang {
+        case .korean: return "이 날짜로 휴가 등록"
+        case .english: return "Add leave on this date"
+        case .japanese: return "この日付で休暇を登録"
+        case .chinese: return "在此日期登记休假"
+        }
+    }
+
+    // MARK: - 홈 빈 상태
+    static var emptyHomeTitle: String {
+        switch lang {
+        case .korean: return "첫 휴가를 계획해보세요"
+        case .english: return "Plan your first leave"
+        case .japanese: return "最初の休暇を計画しましょう"
+        case .chinese: return "计划您的第一个假期"
+        }
+    }
+
+    static var emptyHomeMessage: String {
+        switch lang {
+        case .korean: return "휴가를 등록하면 잔여 연차와 다가오는 일정을 한눈에 볼 수 있어요."
+        case .english: return "Register a leave to see your remaining days and upcoming plans at a glance."
+        case .japanese: return "休暇を登録すると、残りの有給と今後の予定が一目でわかります。"
+        case .chinese: return "登记休假后,可一目了然地查看剩余年假和即将到来的日程。"
+        }
+    }
+
+    static var emptyHomeCTA: String {
+        switch lang {
+        case .korean: return "휴가 등록하기"
+        case .english: return "Add Leave"
+        case .japanese: return "休暇を登録"
+        case .chinese: return "登记休假"
+        }
+    }
+
+    // MARK: - 공휴일 데이터 만료 안내
+    static func holidayDataMayBeInaccurate(_ year: Int) -> String {
+        switch lang {
+        case .korean: return "\(year)년 공휴일 정보는 정확하지 않을 수 있어요. 앱을 최신 버전으로 업데이트해주세요."
+        case .english: return "Holiday data for \(year) may be inaccurate. Please update the app to the latest version."
+        case .japanese: return "\(year)年の祝日情報は正確でない可能性があります。アプリを最新版に更新してください。"
+        case .chinese: return "\(year)年的节假日信息可能不准确,请将应用更新到最新版本。"
+        }
+    }
+
+    // MARK: - 구매 복원 결과
+    static var restorePurchasesSuccess: String {
+        switch lang {
+        case .korean: return "구매가 복원되었습니다."
+        case .english: return "Purchases restored."
+        case .japanese: return "購入が復元されました。"
+        case .chinese: return "购买已恢复。"
+        }
+    }
+
+    static var restorePurchasesNone: String {
+        switch lang {
+        case .korean: return "복원할 구매 내역이 없습니다."
+        case .english: return "No purchases to restore."
+        case .japanese: return "復元できる購入履歴がありません。"
+        case .chinese: return "没有可恢复的购买记录。"
+        }
+    }
+
+    static func restorePurchasesFailed(_ reason: String) -> String {
+        switch lang {
+        case .korean: return "구매 복원에 실패했습니다: \(reason)"
+        case .english: return "Restore failed: \(reason)"
+        case .japanese: return "購入の復元に失敗しました: \(reason)"
+        case .chinese: return "恢复购买失败: \(reason)"
+        }
+    }
+
+    static var priceLoadFailed: String {
+        switch lang {
+        case .korean: return "가격 정보를 불러오지 못했어요. 네트워크 연결을 확인해주세요."
+        case .english: return "Couldn't load price info. Please check your network connection."
+        case .japanese: return "価格情報を読み込めませんでした。ネットワーク接続をご確認ください。"
+        case .chinese: return "无法加载价格信息,请检查网络连接。"
+        }
+    }
+
+    static var termsOfService: String {
+        switch lang {
+        case .korean: return "이용약관"
+        case .english: return "Terms of Service"
+        case .japanese: return "利用規約"
+        case .chinese: return "服务条款"
+        }
+    }
+
+    static var privacyPolicy: String {
+        switch lang {
+        case .korean: return "개인정보처리방침"
+        case .english: return "Privacy Policy"
+        case .japanese: return "プライバシーポリシー"
+        case .chinese: return "隐私政策"
+        }
+    }
+
+    // MARK: - 캘린더 휴가 가져오기
+    static var importFromCalendar: String {
+        switch lang {
+        case .korean: return "캘린더에서 휴가 가져오기"
+        case .english: return "Import Leaves from Calendar"
+        case .japanese: return "カレンダーから休暇を取り込む"
+        case .chinese: return "从日历导入休假"
+        }
+    }
+
+    static var importFromCalendarDescription: String {
+        switch lang {
+        case .korean: return "캘린더에서 휴가로 보이는 일정을 찾아 추가할 수 있어요."
+        case .english: return "Find calendar events that look like leaves and add them."
+        case .japanese: return "カレンダーから休暇と思われる予定を見つけて追加できます。"
+        case .chinese: return "从日历中查找疑似休假的日程并添加。"
+        }
+    }
+
+    static var detectedLeaveCandidates: String {
+        switch lang {
+        case .korean: return "휴가로 보이는 일정"
+        case .english: return "Events that look like leaves"
+        case .japanese: return "休暇と思われる予定"
+        case .chinese: return "疑似休假的日程"
+        }
+    }
+
+    static var noLeaveCandidatesFound: String {
+        switch lang {
+        case .korean: return "휴가로 보이는 일정을 찾지 못했어요.\n(이미 등록된 휴가는 제외돼요)"
+        case .english: return "No leave-like events found.\n(Already-registered leaves are excluded)"
+        case .japanese: return "休暇と思われる予定が見つかりませんでした。\n(登録済みの休暇は除外されます)"
+        case .chinese: return "未找到疑似休假的日程。\n(已登记的休假会被排除)"
+        }
+    }
+
+    static func importSelectedLeaves(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "\(count)건 추가"
+        case .english: return "Add \(count)"
+        case .japanese: return "\(count)件を追加"
+        case .chinese: return "添加\(count)项"
+        }
+    }
+
+    static func leavesImported(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "휴가 \(count)건을 추가했어요."
+        case .english: return "Added \(count) leave(s)."
+        case .japanese: return "休暇\(count)件を追加しました。"
+        case .chinese: return "已添加\(count)项休假。"
+        }
+    }
+
+    // MARK: - 캘린더 자동 감지 (Pro)
+    static var autoDetectBannerTitle: String {
+        switch lang {
+        case .korean: return "캘린더에서 휴가 발견"
+        case .english: return "Leaves found in your calendar"
+        case .japanese: return "カレンダーで休暇を発見"
+        case .chinese: return "在日历中发现休假"
+        }
+    }
+
+    static func autoDetectBannerMessage(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "휴가로 보이는 일정 \(count)건을 찾았어요. 확인 후 한 번에 추가할 수 있어요."
+        case .english: return "Found \(count) event(s) that look like leaves. Review and add them in one tap."
+        case .japanese: return "休暇と思われる予定を\(count)件見つけました。確認してまとめて追加できます。"
+        case .chinese: return "找到\(count)项疑似休假的日程,确认后可一键添加。"
+        }
+    }
+
+    static var autoDetectReview: String {
+        switch lang {
+        case .korean: return "확인하기"
+        case .english: return "Review"
+        case .japanese: return "確認する"
+        case .chinese: return "查看"
+        }
+    }
+
+    static var autoDetectSettingTitle: String {
+        switch lang {
+        case .korean: return "캘린더 자동 감지"
+        case .english: return "Auto-Detect from Calendar"
+        case .japanese: return "カレンダー自動検出"
+        case .chinese: return "日历自动检测"
+        }
+    }
+
+    static var autoDetectSettingDescription: String {
+        switch lang {
+        case .korean: return "앱을 열 때 캘린더에서 새 휴가 일정을 자동으로 찾아 알려드려요."
+        case .english: return "Automatically finds new leave events in your calendar when you open the app."
+        case .japanese: return "アプリを開くとカレンダーから新しい休暇予定を自動で見つけてお知らせします。"
+        case .chinese: return "打开应用时自动从日历中查找新的休假日程并提醒您。"
+        }
+    }
+
+    static var proBannerAutoDetect: String {
+        switch lang {
+        case .korean: return "캘린더 속 휴가 일정, Pro가 자동으로 찾아드려요"
+        case .english: return "Pro automatically finds leave events in your calendar"
+        case .japanese: return "カレンダーの休暇予定、Proが自動で見つけます"
+        case .chinese: return "Pro自动为您查找日历中的休假日程"
+        }
+    }
+
+    // MARK: - 연차 플랜 공유
+    static var sharePlan: String {
+        switch lang {
+        case .korean: return "연차 플랜 공유"
+        case .english: return "Share Leave Plan"
+        case .japanese: return "休暇プランを共有"
+        case .chinese: return "分享休假计划"
+        }
+    }
+
+    static var shareCardTitle: String {
+        switch lang {
+        case .korean: return "나의 연차 현황"
+        case .english: return "My Leave Status"
+        case .japanese: return "私の休暇状況"
+        case .chinese: return "我的年假概览"
+        }
+    }
+
+    static var shareCardFooter: String {
+        switch lang {
+        case .korean: return "Goldweek — 연차를 황금연휴로"
+        case .english: return "Goldweek — Turn your leaves into golden weeks"
+        case .japanese: return "Goldweek — 有給をゴールデンウィークに"
+        case .chinese: return "Goldweek — 把年假变成黄金周"
+        }
+    }
+
+    static var openSettings: String {
+        switch lang {
+        case .korean: return "설정 열기"
+        case .english: return "Open Settings"
+        case .japanese: return "設定を開く"
+        case .chinese: return "打开设置"
+        }
+    }
+
+    static var scanningCalendar: String {
+        switch lang {
+        case .korean: return "캘린더를 확인하는 중..."
+        case .english: return "Scanning calendar..."
+        case .japanese: return "カレンダーを確認中..."
+        case .chinese: return "正在检查日历..."
+        }
+    }
+
+    // MARK: - 등록 불가 사유
+    static var reasonEndBeforeStart: String {
+        switch lang {
+        case .korean: return "종료일이 시작일보다 빠릅니다."
+        case .english: return "End date is before start date."
+        case .japanese: return "終了日が開始日より前です。"
+        case .chinese: return "结束日期早于开始日期。"
+        }
+    }
+
+    static var reasonOverlappingLeave: String {
+        switch lang {
+        case .korean: return "이미 등록된 연차와 겹치는 기간입니다."
+        case .english: return "This period overlaps with an existing leave."
+        case .japanese: return "登録済みの休暇と期間が重なっています。"
+        case .chinese: return "该时间段与已登记的休假重叠。"
         }
     }
 
@@ -4738,6 +5436,269 @@ enum Strings {
         case .english: return "Upgrade to Pro to add all recommendations to your schedule"
         case .japanese: return "Proにアップグレードしてすべての推薦を追加できます"
         case .chinese: return "升级Pro版即可添加所有推荐到日程"
+        }
+    }
+
+    // MARK: - 일정 공유 (CloudKit CKShare)
+    static var shareScheduleTitle: String {
+        switch lang {
+        case .korean: return "일정 공유"
+        case .english: return "Schedule Sharing"
+        case .japanese: return "スケジュール共有"
+        case .chinese: return "日程共享"
+        }
+    }
+
+    static var shareScheduleSubtitle: String {
+        switch lang {
+        case .korean: return "가족·친구와 휴가 일정을 실시간으로 공유"
+        case .english: return "Share your leave schedule with family & friends in real time"
+        case .japanese: return "家族や友達と休暇予定をリアルタイムで共有"
+        case .chinese: return "与家人朋友实时共享休假日程"
+        }
+    }
+
+    static var shareMySection: String {
+        switch lang {
+        case .korean: return "내 일정 공유"
+        case .english: return "Share My Schedule"
+        case .japanese: return "自分の予定を共有"
+        case .chinese: return "共享我的日程"
+        }
+    }
+
+    static var shareStartButton: String {
+        switch lang {
+        case .korean: return "공유 시작하기"
+        case .english: return "Start Sharing"
+        case .japanese: return "共有を開始"
+        case .chinese: return "开始共享"
+        }
+    }
+
+    static var shareInviteLink: String {
+        switch lang {
+        case .korean: return "초대 링크 보내기"
+        case .english: return "Send Invite Link"
+        case .japanese: return "招待リンクを送る"
+        case .chinese: return "发送邀请链接"
+        }
+    }
+
+    static var shareStatusActive: String {
+        switch lang {
+        case .korean: return "공유 중"
+        case .english: return "Sharing Active"
+        case .japanese: return "共有中"
+        case .chinese: return "共享中"
+        }
+    }
+
+    static func shareParticipants(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "참여자 \(count)명"
+        case .english: return count == 1 ? "1 participant" : "\(count) participants"
+        case .japanese: return "参加者\(count)人"
+        case .chinese: return "\(count)位参与者"
+        }
+    }
+
+    static var shareNoParticipants: String {
+        switch lang {
+        case .korean: return "아직 참여자가 없어요. 초대 링크를 보내보세요."
+        case .english: return "No participants yet. Send an invite link."
+        case .japanese: return "まだ参加者がいません。招待リンクを送ってみましょう。"
+        case .chinese: return "还没有参与者。发送邀请链接试试吧。"
+        }
+    }
+
+    static var shareSyncNow: String {
+        switch lang {
+        case .korean: return "지금 동기화"
+        case .english: return "Sync Now"
+        case .japanese: return "今すぐ同期"
+        case .chinese: return "立即同步"
+        }
+    }
+
+    static func shareLastSync(_ date: String) -> String {
+        switch lang {
+        case .korean: return "마지막 동기화: \(date)"
+        case .english: return "Last synced: \(date)"
+        case .japanese: return "最終同期: \(date)"
+        case .chinese: return "上次同步: \(date)"
+        }
+    }
+
+    static var shareStop: String {
+        switch lang {
+        case .korean: return "공유 중지"
+        case .english: return "Stop Sharing"
+        case .japanese: return "共有を停止"
+        case .chinese: return "停止共享"
+        }
+    }
+
+    static var shareStopConfirmTitle: String {
+        switch lang {
+        case .korean: return "공유를 중지할까요?"
+        case .english: return "Stop sharing?"
+        case .japanese: return "共有を停止しますか?"
+        case .chinese: return "要停止共享吗?"
+        }
+    }
+
+    static var shareStopConfirmMessage: String {
+        switch lang {
+        case .korean: return "공유된 일정이 모든 참여자의 기기에서 제거됩니다. 내 기기의 데이터는 그대로 유지됩니다."
+        case .english: return "Your shared schedule will be removed from all participants' devices. Data on your device stays intact."
+        case .japanese: return "共有された予定はすべての参加者のデバイスから削除されます。自分のデバイスのデータはそのまま残ります。"
+        case .chinese: return "共享的日程将从所有参与者的设备中移除。您设备上的数据保持不变。"
+        }
+    }
+
+    static var shareReceivedSection: String {
+        switch lang {
+        case .korean: return "공유받은 일정"
+        case .english: return "Shared With Me"
+        case .japanese: return "共有された予定"
+        case .chinese: return "收到的共享"
+        }
+    }
+
+    static var shareReceivedEmpty: String {
+        switch lang {
+        case .korean: return "아직 공유받은 일정이 없어요.\n가족이나 친구가 보낸 초대 링크를 열면 여기에 표시됩니다."
+        case .english: return "No shared schedules yet.\nOpen an invite link from family or friends and it will appear here."
+        case .japanese: return "まだ共有された予定がありません。\n家族や友達からの招待リンクを開くとここに表示されます。"
+        case .chinese: return "还没有收到共享的日程。\n打开家人或朋友发送的邀请链接后会显示在这里。"
+        }
+    }
+
+    static var shareLeaveButton: String {
+        switch lang {
+        case .korean: return "공유 나가기"
+        case .english: return "Leave Share"
+        case .japanese: return "共有から退出"
+        case .chinese: return "退出共享"
+        }
+    }
+
+    static func shareLeaveConfirmMessage(_ name: String) -> String {
+        switch lang {
+        case .korean: return "\(name)님의 일정 공유에서 나갑니다. 다시 보려면 새 초대 링크가 필요합니다."
+        case .english: return "You will leave \(name)'s shared schedule. You'll need a new invite link to see it again."
+        case .japanese: return "\(name)さんの予定共有から退出します。再度見るには新しい招待リンクが必要です。"
+        case .chinese: return "您将退出\(name)的日程共享。再次查看需要新的邀请链接。"
+        }
+    }
+
+    static var shareICloudRequired: String {
+        switch lang {
+        case .korean: return "iCloud 로그인이 필요합니다. 설정 앱에서 iCloud에 로그인해주세요."
+        case .english: return "iCloud sign-in required. Please sign in to iCloud in the Settings app."
+        case .japanese: return "iCloudへのサインインが必要です。設定アプリでiCloudにサインインしてください。"
+        case .chinese: return "需要登录iCloud。请在设置应用中登录iCloud。"
+        }
+    }
+
+    static func shareCKTitle(_ name: String) -> String {
+        switch lang {
+        case .korean: return "\(name)님의 휴가 일정"
+        case .english: return "\(name)'s Leave Schedule"
+        case .japanese: return "\(name)さんの休暇予定"
+        case .chinese: return "\(name)的休假日程"
+        }
+    }
+
+    static var shareOwnerFallback: String {
+        switch lang {
+        case .korean: return "이름 없는 사용자"
+        case .english: return "Unknown User"
+        case .japanese: return "名前のないユーザー"
+        case .chinese: return "未知用户"
+        }
+    }
+
+    static var shareNoUpcoming: String {
+        switch lang {
+        case .korean: return "예정된 휴가가 없어요"
+        case .english: return "No upcoming leaves"
+        case .japanese: return "予定されている休暇はありません"
+        case .chinese: return "没有即将到来的休假"
+        }
+    }
+
+    static func shareUpcomingCount(_ count: Int) -> String {
+        switch lang {
+        case .korean: return "다가오는 휴가 \(count)건"
+        case .english: return count == 1 ? "1 upcoming leave" : "\(count) upcoming leaves"
+        case .japanese: return "今後の休暇\(count)件"
+        case .chinese: return "\(count)个即将到来的休假"
+        }
+    }
+
+    static var shareErrorTitle: String {
+        switch lang {
+        case .korean: return "공유 오류"
+        case .english: return "Sharing Error"
+        case .japanese: return "共有エラー"
+        case .chinese: return "共享错误"
+        }
+    }
+
+    static func shareErrorGeneric(_ message: String) -> String {
+        switch lang {
+        case .korean: return "공유 작업에 실패했습니다: \(message)"
+        case .english: return "Sharing operation failed: \(message)"
+        case .japanese: return "共有操作に失敗しました: \(message)"
+        case .chinese: return "共享操作失败: \(message)"
+        }
+    }
+
+    static var shareFooterPrivacy: String {
+        switch lang {
+        case .korean: return "휴가 날짜와 종류만 공유되며, 메모는 공유되지 않습니다."
+        case .english: return "Only leave dates and types are shared. Notes are never shared."
+        case .japanese: return "休暇の日付と種類のみ共有され、メモは共有されません。"
+        case .chinese: return "仅共享休假日期和类型，备注不会被共享。"
+        }
+    }
+
+    // MARK: - 가족 탭
+    static var tabFamily: String {
+        switch lang {
+        case .korean: return "가족"
+        case .english: return "Family"
+        case .japanese: return "家族"
+        case .chinese: return "家人"
+        }
+    }
+
+    static var familyNavTitle: String {
+        switch lang {
+        case .korean: return "가족 일정"
+        case .english: return "Family Schedules"
+        case .japanese: return "家族の予定"
+        case .chinese: return "家人日程"
+        }
+    }
+
+    static var familyOnLeave: String {
+        switch lang {
+        case .korean: return "휴가 중"
+        case .english: return "On Leave"
+        case .japanese: return "休暇中"
+        case .chinese: return "休假中"
+        }
+    }
+
+    static func familyDday(_ days: Int) -> String {
+        switch lang {
+        case .korean: return "D-\(days)"
+        case .english: return days == 1 ? "in 1 day" : "in \(days) days"
+        case .japanese: return "あと\(days)日"
+        case .chinese: return "还有\(days)天"
         }
     }
 }

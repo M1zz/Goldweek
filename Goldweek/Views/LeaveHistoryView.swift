@@ -21,6 +21,7 @@ struct LeaveHistoryView: View {
     @State private var showingDeleteAlert = false
     @State private var recordToDelete: LeaveRecord?
     @State private var recordToEdit: LeaveRecord?
+    @State private var showingDeleteError = false
 
     private let calendar = Calendar.current
     private let initYearStartMonth: Int
@@ -180,6 +181,11 @@ struct LeaveHistoryView: View {
                 }
             } message: {
                 Text(Strings.deleteLeaveConfirm)
+            }
+            .alert(Strings.alert, isPresented: $showingDeleteError) {
+                Button(Strings.confirm, role: .cancel) { }
+            } message: {
+                Text(Strings.deleteFailed)
             }
             .onAppear {
                 repairBonusLeaveUsage()
@@ -386,6 +392,7 @@ struct LeaveHistoryView: View {
             AnalyticsService.recordError(error, context: ["op": "leave_delete"])
             logError("Failed to delete leave record: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
+            showingDeleteError = true
         }
     }
 
