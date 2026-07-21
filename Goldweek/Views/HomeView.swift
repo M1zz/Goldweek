@@ -676,30 +676,42 @@ struct LeaveStatusCard: View {
             }
             .voCard(VoiceOverLabel.leaveBalance(total: totalLeave, used: displayUsed, remaining: effectiveRemaining))
 
-            // 보너스 연차 별도 표시 — 직장인 모드 + 미포함 상태에서만
-            if !isLeisure, remainingBonusLeave > 0, !includeBonusInStatus {
+            // 보너스 연차 사용 현황 — 부여받은 보너스가 있으면 항상 표시
+            if !isLeisure, grantedBonusLeave > 0 {
                 Divider()
-                HStack(spacing: 6) {
-                    Image(systemName: "gift.fill")
-                        .foregroundStyle(AppTheme.Colors.bonus)
-                        .font(.subheadline)
-                        .voDecorative()
-                    Text(Strings.bonus)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text("+\(formatLeave(remainingBonusLeave))\(Strings.dayUnitSuffix)")
-                        .font(.title3.bold())
-                        .foregroundStyle(AppTheme.Colors.bonus)
-                    Text(Strings.usable)
+                VStack(spacing: 8) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "gift.fill")
+                            .foregroundStyle(AppTheme.Colors.bonus)
+                            .font(.subheadline)
+                            .voDecorative()
+                        Text(Strings.bonus)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text(Strings.bonusUsedOfGranted(
+                            used: formatLeave(usedBonusLeave),
+                            granted: formatLeave(grantedBonusLeave)
+                        ))
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(AppTheme.Colors.bonus.opacity(0.12))
-                        .clipShape(Capsule())
+                        Text("+\(formatLeave(remainingBonusLeave))\(Strings.dayUnitSuffix)")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(AppTheme.Colors.bonus)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(AppTheme.Colors.bonus.opacity(0.12))
+                            .clipShape(Capsule())
+                    }
+                    // 사용 진행률 바
+                    ProgressView(value: min(usedBonusLeave, grantedBonusLeave), total: grantedBonusLeave)
+                        .tint(AppTheme.Colors.bonus)
+                        .voDecorative()
                 }
-                .voCard(VoiceOverLabel.bonus(days: remainingBonusLeave))
+                .voCard(Strings.bonusUsedOfGranted(
+                    used: formatLeave(usedBonusLeave),
+                    granted: formatLeave(grantedBonusLeave)
+                ) + ", " + VoiceOverLabel.bonus(days: remainingBonusLeave))
             }
 
             // 자유 계획 무제한 안내
