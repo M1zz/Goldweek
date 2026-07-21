@@ -450,6 +450,59 @@ final class BonusLeave {
     }
 }
 
+// MARK: - 보너스 연차 사용량 재계산
+/// 휴가 사용 내역(LeaveRecord)을 근거로 보너스 연차의 사용량을 재산정한다.
+/// 저장된 `usedDays` 카운터가 실제 기록과 어긋나거나, 보너스 유형에 해당하는
+/// 특별휴가 기록이 보너스에 연결(`bonusLeaveId`)되지 않은 과거 데이터를 함께 보정한다.
+enum BonusLeaveReconciler {
+    /// 1) 연차를 차감하지 않는 미연결 특별휴가 기록을, 유형(이름)이 맞고 잔여가 충분한 보너스에 자동 연결
+    /// 2) 모든 보너스의 `usedDays`/`isUsed`를 연결된 기록 기준으로 재산정
+    /// - Returns: 데이터가 실제로 변경되면 true (호출 측에서 save 트리거용)
+    @discardableResult
+    static func reconcile(records: [LeaveRecord], bonuses: [BonusLeave]) -> Bool {
+        guard !bonuses.isEmpty else { return false }
+        var changed = false
+
+        // 잔여 추적 — 이미 연결된 기록부터 차감
+        var remaining: [UUID: Double] = [:]
+        for b in bonuses { remaining[b.id] = b.days }
+        for r in records {
+            guard let id = r.bonusLeaveId, remaining[id] != nil else { continue }
+            remaining[id]! -= r.effectiveLeaveDays
+        }
+
+        // 1단계: 미연결 특별휴가 → 유형 매칭 보너스 자동 연결 (오래된 기록부터 안정적으로)
+        for r in records.sorted(by: { $0.startDate < $1.startDate }) {
+            guard r.bonusLeaveId == nil, !r.type.deductsFromAnnual else { continue }
+            guard let matchType = BonusLeaveType.matching(r.note) else { continue }
+            let days = r.effectiveLeaveDays
+            guard let target = bonuses.first(where: {
+                $0.type == matchType && (remaining[$0.id] ?? 0) >= days
+            }) else { continue }
+            r.bonusLeaveId = target.id
+            remaining[target.id]! -= days
+            changed = true
+        }
+
+        // 2단계: usedDays / isUsed 재산정
+        for b in bonuses {
+            let used = records
+                .filter { $0.bonusLeaveId == b.id }
+                .reduce(0.0) { $0 + $1.effectiveLeaveDays }
+            if abs(used - b.usedDays) > 0.001 {
+                b.usedDays = used
+                changed = true
+            }
+            let shouldBeUsed = b.remainingDays <= 0
+            if b.isUsed != shouldBeUsed {
+                b.isUsed = shouldBeUsed
+                changed = true
+            }
+        }
+        return changed
+    }
+}
+
 enum BonusLeaveType: String, Codable, CaseIterable, Identifiable {
     case compensatory = "대체휴무"       // 휴일 근무 대체
     case reward = "포상휴가"            // 성과 포상

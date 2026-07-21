@@ -2,6 +2,14 @@
 
 ## 진행 중
 
+## 완료 (보너스 사용량 기록 기준 재계산 세션 2026-07-21)
+- [x] BonusLeaveReconciler 추가 (Models.swift) — 휴가 사용 내역 기준으로 보너스 usedDays 재산정
+  - 연차 비차감 미연결 특별휴가(자녀돌봄 등)를 유형·잔여 맞는 보너스에 자동 연결(bonusLeaveId)
+  - 모든 보너스 usedDays/isUsed를 연결 기록 기준으로 재산정
+- [x] LeaveHistoryView.repairBonusLeaveUsage → 리컨실러 호출로 교체
+- [x] HomeView 현황 카드 onAppear에서도 리컨실 실행 → 홈에서 바로 반영
+- [x] 주의: 자녀돌봄은 보너스 유형이 "일가정균형"으로 등록돼 있어야 자동 연결됨
+
 ## 완료 (보너스 사용 현황 노출 세션 2026-07-21)
 - [x] 설정 화면 보너스 연차 행에 "N일 중 M일 사용" 캡션 추가 (Strings.bonusUsedOfGranted, 4개 언어)
 - [x] 홈 현황 카드에 보너스 사용 현황 표시 — 부여 대비 사용량 + 진행률 바 + 잔여 강조 (부여받은 보너스가 있으면 항상 노출)

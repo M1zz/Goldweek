@@ -449,6 +449,7 @@ struct LeaveStatusCard: View {
     private var activeBonusLeaves: [BonusLeave]
     @Query private var allBonusLeaves: [BonusLeave]
     @Query private var allLeaveRecords: [LeaveRecord]
+    @Environment(\.modelContext) private var modelContext
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
     @State private var showingAddLeave = false
     @State private var showingPhotoImport = false
@@ -732,6 +733,12 @@ struct LeaveStatusCard: View {
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
+        .onAppear {
+            // 휴가 사용 내역 기준으로 보너스 사용량 재산정 (미연결 특별휴가 자동 연결)
+            if BonusLeaveReconciler.reconcile(records: allLeaveRecords, bonuses: allBonusLeaves) {
+                try? modelContext.save()
+            }
+        }
         .sheet(isPresented: $showingAddLeave) {
             AddLeaveView(profile: profile)
         }

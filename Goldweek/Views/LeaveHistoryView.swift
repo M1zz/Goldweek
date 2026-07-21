@@ -396,25 +396,9 @@ struct LeaveHistoryView: View {
         }
     }
 
-    /// 보너스 연차 usedDays와 실제 LeaveRecord가 불일치하는 깨진 데이터 복구
+    /// 휴가 사용 내역을 기준으로 보너스 연차 사용량을 재산정 (미연결 특별휴가 자동 연결 포함)
     private func repairBonusLeaveUsage() {
-        var needsSave = false
-        for bonus in allBonusLeaves {
-            guard bonus.usedDays > 0 else { continue }
-            // 이 보너스에 연결된 레코드의 실제 사용 일수 합산
-            let linkedDays = allRecords
-                .filter { $0.bonusLeaveId == bonus.id }
-                .reduce(0.0) { $0 + $1.effectiveLeaveDays }
-            // 불일치 시 레코드 기준으로 교정
-            if abs(linkedDays - bonus.usedDays) > 0.001 {
-                bonus.usedDays = linkedDays
-                if bonus.isUsed && bonus.remainingDays > 0 {
-                    bonus.isUsed = false
-                }
-                needsSave = true
-            }
-        }
-        if needsSave {
+        if BonusLeaveReconciler.reconcile(records: allRecords, bonuses: allBonusLeaves) {
             try? modelContext.save()
         }
     }
