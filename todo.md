@@ -2,6 +2,22 @@
 
 ## 진행 중
 
+## 완료 (특별휴가-보너스 연결 세션 2026-07-13)
+- [x] 버전 2.1.0으로 업데이트 (MARKETING_VERSION, 앱+위젯 전 타깃)
+- [x] 릴리즈 노트 작성 (docs/release-notes.md v2.1.0 — App Store 4개 언어 + 내부 체인지로그)
+- [x] 사진 가져오기(OCR): 특별휴가류(자녀돌봄 등)가 아무 차감 없이 등록되던 갭 해소
+  - 자동 매칭: 연차 차감 없는 후보의 유형명(돌봄/포상/리프레시 등)을 BonusLeaveType.matching으로 추론해 유형·잔여가 맞는 보너스 연차에 자동 연결 (잔여 누적 추적으로 과할당 방지)
+  - 확인 화면 UI: 후보별 "보너스에서 차감" 메뉴 추가 — 자동 매칭 결과 표시, 사용자가 행별로 변경/해제 가능
+  - 저장 시 bonusLeaveId 연결 + usedDays 차감, 잔여 부족 시 등록 차단, 저장 실패 시 롤백. 삭제 시 복원은 기존 LeaveHistoryView 로직 재사용
+  - 신규 문자열 3개(4개 언어), 빌드·전체 테스트 통과
+
+## 완료 (브랜치 정리 세션 2026-07-13)
+- [x] dev ↔ origin/dev 분기 해소: 멈춰 있던 머지 충돌 3파일 해결 후 머지 커밋(eb299e4) + push
+  - ContentView: refreshRestRadar(로컬 번아웃) + syncSharedSchedules/타임머신 백그라운드 캡처(원격) 모두 유지
+  - HomeView: 피로 체크인 시트(로컬) + AddLeave/캘린더 가져오기 시트(원격) 모두 유지
+  - pbxproj: ID 충돌 수정 — 원격의 LeaveTableParserTests/AppTips가 로컬의 BurnoutEngine/NotificationService와 같은 ID(A…60/61) 사용 → A…63/64로 재번호. MARKETING_VERSION은 2.0.9 채택
+  - 시뮬레이터 빌드 검증 통과
+
 ## 완료 (개인화 추천 세션)
 - [x] 추천 탭 제거 (홈·캘린더·설정 3탭). 추천 기능은 캘린더에 통합 유지
 - [x] 선호 기간 기반 추천: 공휴일에 연차를 며칠 붙여 선호 길이(짧음3/보통5/김7)에 맞춰 확장(일반화된 징검다리), 기간 매칭 가중치 강화

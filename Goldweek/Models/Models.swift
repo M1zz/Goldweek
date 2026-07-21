@@ -464,6 +464,23 @@ enum BonusLeaveType: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
+    /// 휴가 유형명 원문(예: "자녀돌봄(1/2)", "포상휴가")에서 대응하는 보너스 유형을 추론.
+    /// 사진 가져오기에서 특별휴가류를 보너스 연차와 자동 연결할 때 사용.
+    static func matching(_ text: String) -> BonusLeaveType? {
+        let table: [(keyword: String, type: BonusLeaveType)] = [
+            ("대체", .compensatory), ("보상", .compensatory),
+            ("포상", .reward),
+            ("리프레시", .refresh), ("안식", .refresh),
+            ("결혼", .marriage),
+            ("조의", .bereavement), ("사망", .bereavement), ("장례", .bereavement),
+            ("병가", .sick), ("병휴", .sick),
+            ("임신", .maternity), ("출산", .maternity), ("육아", .maternity),
+            ("돌봄", .familyBalance), ("일가정", .familyBalance), ("가족", .familyBalance),
+            ("공가", .official),
+        ]
+        return table.first { text.contains($0.keyword) }?.type
+    }
+
     var icon: String {
         switch self {
         case .compensatory: return "arrow.triangle.2.circlepath"

@@ -4953,6 +4953,33 @@ enum Strings {
         }
     }
 
+    static var bonusDeductNone: String {
+        switch lang {
+        case .korean: return "보너스 차감 안 함"
+        case .english: return "No bonus deduction"
+        case .japanese: return "ボーナス差引なし"
+        case .chinese: return "不扣除奖励年假"
+        }
+    }
+
+    static func bonusDeductionSummary(name: String, daysText: String) -> String {
+        switch lang {
+        case .korean: return "\(name)에서 \(daysText)\(dayUnitSuffix) 차감"
+        case .english: return "Deduct \(daysText)\(dayUnitSuffix) from \(name)"
+        case .japanese: return "\(name)から\(daysText)日差引"
+        case .chinese: return "从\(name)扣除\(daysText)天"
+        }
+    }
+
+    static func insufficientBonus(_ name: String) -> String {
+        switch lang {
+        case .korean: return "'\(name)' 보너스의 잔여 일수가 부족합니다."
+        case .english: return "Not enough remaining days in '\(name)' bonus."
+        case .japanese: return "「\(name)」ボーナスの残日数が不足しています。"
+        case .chinese: return "「\(name)」奖励年假剩余天数不足。"
+        }
+    }
+
     // MARK: - 섹션 헤더 (마이리얼트립)
     static var sectionFlight: String {
         switch lang {

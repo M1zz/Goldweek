@@ -15,6 +15,10 @@ struct PhotoImportSheet: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var existingRecords: [LeaveRecord]
 
+    // 사용 가능한 보너스 연차 (미사용 + 미만료) — 특별휴가류 후보를 보너스에서 차감할 때 사용
+    @Query(filter: #Predicate<BonusLeave> { $0.isUsed == false })
+    private var unusedBonusLeaves: [BonusLeave]
+
     @State private var pickedItem: PhotosPickerItem?
     @State private var showingCamera = false
     @State private var isScanning = false
@@ -22,6 +26,8 @@ struct PhotoImportSheet: View {
     @State private var candidates: [DetectedLeaveCandidate] = []
     @State private var duplicateCount = 0
     @State private var selectedIDs: Set<UUID> = []
+    /// 후보 id → 차감할 보너스 연차 id (자동 매칭 후 사용자가 행별로 변경 가능)
+    @State private var bonusAssignments: [UUID: UUID] = [:]
     @State private var scanErrorMessage: String?
     @State private var isSaving = false
     @State private var resultMessage = ""
@@ -167,46 +173,53 @@ struct PhotoImportSheet: View {
         List {
             Section {
                 ForEach(candidates) { candidate in
-                    Button {
-                        toggleSelection(candidate.id)
-                    } label: {
-                        HStack(spacing: 12) {
-                            Image(systemName: selectedIDs.contains(candidate.id)
-                                  ? "checkmark.circle.fill" : "circle")
-                                .font(.title3)
-                                .foregroundStyle(selectedIDs.contains(candidate.id)
-                                                 ? AppTheme.Colors.brand : Color(.systemGray3))
-                                .voDecorative()
+                    VStack(alignment: .leading, spacing: 8) {
+                        Button {
+                            toggleSelection(candidate.id)
+                        } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: selectedIDs.contains(candidate.id)
+                                      ? "checkmark.circle.fill" : "circle")
+                                    .font(.title3)
+                                    .foregroundStyle(selectedIDs.contains(candidate.id)
+                                                     ? AppTheme.Colors.brand : Color(.systemGray3))
+                                    .voDecorative()
 
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(candidate.title)
-                                    .fontWeight(.medium)
-                                    .foregroundStyle(.primary)
-                                    .lineLimit(1)
-                                HStack(spacing: 6) {
-                                    Text(Strings.leaveTypeName(candidate.suggestedType))
-                                        .font(.caption2.weight(.semibold))
-                                        .padding(.horizontal, 6)
-                                        .padding(.vertical, 2)
-                                        .background(candidate.suggestedType.themeColor.opacity(0.15))
-                                        .foregroundStyle(candidate.suggestedType.themeColor)
-                                        .clipShape(Capsule())
-                                    Text(deductionText(candidate))
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(candidate.title)
+                                        .fontWeight(.medium)
+                                        .foregroundStyle(.primary)
+                                        .lineLimit(1)
+                                    HStack(spacing: 6) {
+                                        Text(Strings.leaveTypeName(candidate.suggestedType))
+                                            .font(.caption2.weight(.semibold))
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 2)
+                                            .background(candidate.suggestedType.themeColor.opacity(0.15))
+                                            .foregroundStyle(candidate.suggestedType.themeColor)
+                                            .clipShape(Capsule())
+                                        Text(deductionText(candidate))
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    Text(dateRangeText(candidate))
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
-                                Text(dateRangeText(candidate))
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                Spacer()
                             }
-                            Spacer()
+                            .contentShape(Rectangle())
                         }
-                        .contentShape(Rectangle())
+                        .buttonStyle(.plain)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(Text("\(candidate.title), \(Strings.leaveTypeName(candidate.suggestedType)), \(dateRangeText(candidate)), \(deductionText(candidate))"))
+                        .accessibilityAddTraits(selectedIDs.contains(candidate.id) ? .isSelected : [])
+
+                        if !availableBonusLeaves.isEmpty {
+                            bonusMenu(for: candidate)
+                                .padding(.leading, 34)  // 체크 아이콘 폭만큼 들여쓰기
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel(Text("\(candidate.title), \(Strings.leaveTypeName(candidate.suggestedType)), \(dateRangeText(candidate)), \(deductionText(candidate))"))
-                    .accessibilityAddTraits(selectedIDs.contains(candidate.id) ? .isSelected : [])
                 }
             } header: {
                 Text(Strings.detectedLeaveCandidates)
@@ -227,6 +240,87 @@ struct PhotoImportSheet: View {
         }
     }
 
+    // MARK: - 보너스 연차 연결
+
+    /// 만료되지 않은 보너스 연차
+    private var availableBonusLeaves: [BonusLeave] {
+        let now = Date()
+        return unusedBonusLeaves.filter {
+            $0.expirationDate == nil || $0.expirationDate! > now
+        }
+    }
+
+    private func assignedBonus(for candidate: DetectedLeaveCandidate) -> BonusLeave? {
+        guard let bonusID = bonusAssignments[candidate.id] else { return nil }
+        return availableBonusLeaves.first { $0.id == bonusID }
+    }
+
+    /// 연차 차감 없는 후보(자녀돌봄, 포상 등)를 유형이 맞는 보너스 연차에 자동 연결.
+    /// 잔여 일수를 누적 추적해 같은 보너스에 과할당하지 않는다.
+    private func autoAssignBonuses() {
+        var remaining: [UUID: Double] = [:]
+        for bonus in availableBonusLeaves {
+            remaining[bonus.id] = bonus.remainingDays
+        }
+
+        var assignments: [UUID: UUID] = [:]
+        for candidate in candidates {
+            guard !candidate.suggestedType.deductsFromAnnual,
+                  let bonusType = BonusLeaveType.matching(candidate.title) else { continue }
+            guard let bonus = availableBonusLeaves.first(where: {
+                $0.type == bonusType && (remaining[$0.id] ?? 0) >= candidate.effectiveDays
+            }) else { continue }
+            assignments[candidate.id] = bonus.id
+            remaining[bonus.id]! -= candidate.effectiveDays
+        }
+        bonusAssignments = assignments
+    }
+
+    /// 후보별 차감 보너스 선택 메뉴
+    private func bonusMenu(for candidate: DetectedLeaveCandidate) -> some View {
+        Menu {
+            Button {
+                bonusAssignments[candidate.id] = nil
+            } label: {
+                if bonusAssignments[candidate.id] == nil {
+                    Label(Strings.bonusDeductNone, systemImage: "checkmark")
+                } else {
+                    Text(Strings.bonusDeductNone)
+                }
+            }
+            ForEach(availableBonusLeaves) { bonus in
+                Button {
+                    bonusAssignments[candidate.id] = bonus.id
+                } label: {
+                    let title = "\(Strings.bonusLeaveTypeName(bonus.type)) · \(Strings.availableDays(formatLeave(bonus.remainingDays)))"
+                    if bonusAssignments[candidate.id] == bonus.id {
+                        Label(title, systemImage: "checkmark")
+                    } else {
+                        Text(title)
+                    }
+                }
+            }
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: "gift.fill")
+                    .font(.caption2)
+                if let bonus = assignedBonus(for: candidate) {
+                    Text(Strings.bonusDeductionSummary(
+                        name: Strings.bonusLeaveTypeName(bonus.type),
+                        daysText: formatLeave(candidate.effectiveDays)
+                    ))
+                } else {
+                    Text(Strings.bonusDeductNone)
+                }
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.caption2)
+            }
+            .font(.caption)
+            .foregroundStyle(assignedBonus(for: candidate) != nil ? AppTheme.Colors.bonus : .secondary)
+        }
+        .buttonStyle(.borderless)
+    }
+
     // MARK: - 동작
 
     private func toggleSelection(_ id: UUID) {
@@ -239,7 +333,10 @@ struct PhotoImportSheet: View {
     }
 
     private func deductionText(_ candidate: DetectedLeaveCandidate) -> String {
-        candidate.suggestedType.deductsFromAnnual
+        if assignedBonus(for: candidate) != nil {
+            return "\(formatLeave(candidate.effectiveDays))\(Strings.dayUnitSuffix)"
+        }
+        return candidate.suggestedType.deductsFromAnnual
             ? "\(formatLeave(candidate.effectiveDays))\(Strings.dayUnitSuffix)"
             : Strings.noDeduction
     }
@@ -258,6 +355,7 @@ struct PhotoImportSheet: View {
         hasScanned = false
         candidates = []
         selectedIDs = []
+        bonusAssignments = [:]
         duplicateCount = 0
         pickedItem = nil
         scanErrorMessage = nil
@@ -286,6 +384,7 @@ struct PhotoImportSheet: View {
             candidates = result.candidates
             duplicateCount = result.duplicateCount
             selectedIDs = Set(result.candidates.map(\.id))  // 기본 전체 선택
+            autoAssignBonuses()
             hasScanned = true
         } catch {
             scanErrorMessage = error.localizedDescription
@@ -298,6 +397,25 @@ struct PhotoImportSheet: View {
     private func importSelected() {
         let selected = candidates.filter { selectedIDs.contains($0.id) }
         guard !selected.isEmpty else { return }
+
+        // 보너스별 차감 예정 일수 합산 후 잔여 검증 (여러 후보가 같은 보너스를 쓸 수 있음)
+        var pendingDeductions: [UUID: Double] = [:]
+        for candidate in selected {
+            if let bonus = assignedBonus(for: candidate) {
+                pendingDeductions[bonus.id, default: 0] += candidate.effectiveDays
+            }
+        }
+        for (bonusID, days) in pendingDeductions {
+            guard let bonus = availableBonusLeaves.first(where: { $0.id == bonusID }) else { continue }
+            if days > bonus.remainingDays {
+                HapticFeedback.error()
+                importSucceeded = false
+                resultMessage = Strings.insufficientBonus(Strings.bonusLeaveTypeName(bonus.type))
+                showingResultAlert = true
+                return
+            }
+        }
+
         isSaving = true
 
         let today = calendar.startOfDay(for: Date())
@@ -308,10 +426,22 @@ struct PhotoImportSheet: View {
                 endDate: candidate.endDate,
                 type: candidate.suggestedType,
                 status: candidate.endDate < today ? .used : .planned,
-                note: candidate.title
+                note: candidate.title,
+                bonusLeaveId: assignedBonus(for: candidate)?.id  // 보너스 연결 — 삭제 시 usedDays 복원에 사용
             )
             modelContext.insert(record)
             inserted.append(record)
+        }
+
+        // 보너스 연차 차감
+        var deducted: [(bonus: BonusLeave, days: Double, wasUsed: Bool)] = []
+        for (bonusID, days) in pendingDeductions {
+            guard let bonus = availableBonusLeaves.first(where: { $0.id == bonusID }) else { continue }
+            deducted.append((bonus, days, bonus.isUsed))
+            bonus.usedDays += days
+            if bonus.remainingDays <= 0 {
+                bonus.isUsed = true
+            }
         }
 
         do {
@@ -321,6 +451,11 @@ struct PhotoImportSheet: View {
             resultMessage = Strings.leavesImported(inserted.count)
             AnalyticsService.logLeaveAdded(type: "photo_import", days: Double(inserted.count), isRecommended: false)
         } catch {
+            // 롤백
+            for entry in deducted {
+                entry.bonus.usedDays -= entry.days
+                entry.bonus.isUsed = entry.wasUsed
+            }
             inserted.forEach { modelContext.delete($0) }
             HapticFeedback.error()
             importSucceeded = false
