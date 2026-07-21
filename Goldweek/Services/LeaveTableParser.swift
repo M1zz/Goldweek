@@ -140,7 +140,8 @@ enum LeaveTableParser {
     private static let fractionRegex = try! NSRegularExpression(pattern: #"\(\s*(\d)\s*/\s*(\d)\s*\)"#)
 
     /// 텍스트에서 하루 대비 사용 비율 추출 ("(1/2)"→0.5, "½"→0.5, "(1/4)"→0.25). 없으면 nil.
-    private static func fractionalDay(in text: String) -> Double? {
+    /// 기존 기록 마이그레이션(note에서 길이 보정)에서도 재사용한다.
+    static func fractionalDay(in text: String) -> Double? {
         if text.contains("½") { return 0.5 }
         if text.contains("¼") { return 0.25 }
         if text.contains("¾") { return 0.75 }

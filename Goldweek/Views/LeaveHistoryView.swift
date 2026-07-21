@@ -396,11 +396,11 @@ struct LeaveHistoryView: View {
         }
     }
 
-    /// 휴가 사용 내역을 기준으로 보너스 연차 사용량을 재산정 (미연결 특별휴가 자동 연결 포함)
+    /// 과거 기록 길이 보정 + 휴가 사용 내역 기준 보너스 사용량 재산정 (미연결 특별휴가 자동 연결 포함)
     private func repairBonusLeaveUsage() {
-        if BonusLeaveReconciler.reconcile(records: allRecords, bonuses: allBonusLeaves) {
-            try? modelContext.save()
-        }
+        var changed = LeaveRecordMaintenance.backfillLengths(records: allRecords)
+        if BonusLeaveReconciler.reconcile(records: allRecords, bonuses: allBonusLeaves) { changed = true }
+        if changed { try? modelContext.save() }
     }
 
     // MARK: - Helpers

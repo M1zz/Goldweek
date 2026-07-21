@@ -503,6 +503,29 @@ final class BonusLeave {
     }
 }
 
+// MARK: - 기존 기록 길이 보정 (마이그레이션)
+/// 파서 개선 이전에 저장된 기록을 보정한다.
+/// note에 "(1/2)"·"½" 같은 분수 표기가 있는데 길이가 종일(1일)로 남아 있으면 실제 길이(반차/반반차)로 교정.
+/// 예) "자녀돌봄(1/2)"이 1일로 저장된 과거 데이터를 0.5일로 되돌린다.
+enum LeaveRecordMaintenance {
+    @discardableResult
+    static func backfillLengths(records: [LeaveRecord]) -> Bool {
+        var changed = false
+        let cal = Calendar.current
+        for r in records {
+            // 이미 반차/반반차로 지정된 기록·다일 기간은 건드리지 않는다
+            guard r.length == .full,
+                  cal.isDate(r.startDate, inSameDayAs: r.endDate),
+                  let frac = LeaveTableParser.fractionalDay(in: r.note) else { continue }
+            let newLength: LeaveLength = frac <= 0.3 ? .quarter : (frac < 1.0 ? .half : .full)
+            guard newLength != .full else { continue }
+            r.length = newLength
+            changed = true
+        }
+        return changed
+    }
+}
+
 // MARK: - 보너스 연차 사용량 재계산
 /// 휴가 사용 내역(LeaveRecord)을 근거로 보너스 연차의 사용량을 재산정한다.
 /// 저장된 `usedDays` 카운터가 실제 기록과 어긋나거나, 보너스 유형에 해당하는

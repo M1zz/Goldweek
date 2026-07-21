@@ -734,10 +734,11 @@ struct LeaveStatusCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
         .onAppear {
-            // 휴가 사용 내역 기준으로 보너스 사용량 재산정 (미연결 특별휴가 자동 연결)
-            if BonusLeaveReconciler.reconcile(records: allLeaveRecords, bonuses: allBonusLeaves) {
-                try? modelContext.save()
-            }
+            // 1) 과거 기록 길이 보정 (자녀돌봄(1/2) 등이 1일로 저장된 데이터 → 0.5일)
+            var changed = LeaveRecordMaintenance.backfillLengths(records: allLeaveRecords)
+            // 2) 휴가 사용 내역 기준으로 보너스 사용량 재산정 (미연결 특별휴가 자동 연결)
+            if BonusLeaveReconciler.reconcile(records: allLeaveRecords, bonuses: allBonusLeaves) { changed = true }
+            if changed { try? modelContext.save() }
         }
         .sheet(isPresented: $showingAddLeave) {
             AddLeaveView(profile: profile)

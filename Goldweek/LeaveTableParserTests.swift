@@ -58,6 +58,39 @@ final class LeaveTableParserTests: XCTestCase {
         XCTAssertEqual(result[0].suggestedLength, .quarter)
     }
 
+    // MARK: - 기존 기록 길이 보정 (마이그레이션)
+
+    func testBackfillLength_singleDaySpecialWithFractionNote() {
+        // 파서 개선 전 1일로 저장된 "자녀돌봄(1/2)" → 반차(0.5)로 보정
+        let day = calendar.startOfDay(for: Date())
+        let record = LeaveRecord(startDate: day, endDate: day, type: .special, note: "자녀돌봄(1/2)")
+        XCTAssertEqual(record.effectiveLeaveDays, 1.0, accuracy: 0.001)
+
+        let changed = LeaveRecordMaintenance.backfillLengths(records: [record])
+        XCTAssertTrue(changed)
+        XCTAssertEqual(record.length, .half)
+        XCTAssertEqual(record.effectiveLeaveDays, 0.5, accuracy: 0.001)
+    }
+
+    func testBackfillLength_ignoresMultiDay() {
+        // 다일 기간은 분수 표기가 있어도 건드리지 않는다
+        let start = calendar.startOfDay(for: Date())
+        let end = calendar.date(byAdding: .day, value: 2, to: start)!
+        let record = LeaveRecord(startDate: start, endDate: end, type: .special, note: "특별휴가(1/2)")
+        let changed = LeaveRecordMaintenance.backfillLengths(records: [record])
+        XCTAssertFalse(changed)
+        XCTAssertEqual(record.length, .full)
+    }
+
+    func testBackfillLength_ignoresPlainNote() {
+        // 분수 표기 없는 기록은 그대로
+        let day = calendar.startOfDay(for: Date())
+        let record = LeaveRecord(startDate: day, endDate: day, type: .special, note: "자녀돌봄")
+        let changed = LeaveRecordMaintenance.backfillLengths(records: [record])
+        XCTAssertFalse(changed)
+        XCTAssertEqual(record.length, .full)
+    }
+
     func testDateSlashNotMisreadAsFraction() {
         // 날짜의 슬래시(2026/08/02)를 분수로 오인하지 않아야 한다 (괄호 없는 슬래시)
         let result = LeaveTableParser.parseRows([
