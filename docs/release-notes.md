@@ -1,9 +1,9 @@
 # Release Notes
 
-## v2.1.1 — 보너스 연차 사용 현황 한눈에
+## v2.1.1 — 휴가 종류 × 길이 조합, 보너스 사용 현황
 
 > 이전 출시: v2.1.0
-> 핵심: 홈 현황과 설정에서 보너스 연차를 얼마나 썼는지(부여 대비 사용량)를 바로 볼 수 있습니다.
+> 핵심: 어떤 휴가든(특별휴가·자녀돌봄·병가 등) 종일/반차/반반차를 골라 쓸 수 있고, 사진으로 가져온 "자녀돌봄(1/2)" 같은 반일 휴가도 0.5일로 정확히 잡힙니다. 보너스 연차 사용 현황도 홈에서 한눈에 볼 수 있습니다.
 
 ---
 
@@ -11,40 +11,52 @@
 
 #### 🇰🇷 한국어
 ```
-보너스 연차, 이제 얼마나 썼는지 한눈에.
+휴가 종류와 길이를 따로 고를 수 있어요.
 
-• 홈 현황 카드에 보너스 연차 사용 현황 추가 — 부여받은 일수 중 사용량과 진행률, 남은 일수를 함께 표시해요
-• 설정 화면 보너스 연차 목록에도 "N일 중 M일 사용" 표시를 추가했어요
+• 이제 특별휴가·자녀돌봄·병가 등 어떤 휴가든 종일/반차/반반차를 조합해 등록할 수 있어요
+• 사진 가져오기: "자녀돌봄(1/2)"처럼 반일 표기가 있는 휴가를 0.5일로 정확히 인식해요
+• 예전에 하루로 잘못 저장된 반일 휴가는 앱을 열면 자동으로 바로잡아 드려요
+• 보너스 연차에서 차감되는 반차·반반차도 그대로 반영돼요
+• 홈 현황에 보너스 연차 사용 현황(부여 대비 사용량·진행률·잔여)을 추가했어요
 
 소소한 버그 수정과 안정성 개선도 함께 했습니다.
 ```
 
 #### 🇺🇸 English
 ```
-See exactly how much bonus leave you've used.
+Pick leave type and length independently.
 
-• The home summary now shows bonus-leave usage — days used out of granted, a progress bar, and days remaining
-• The bonus-leave list in Settings now shows "M of N days used" too
+• Any leave — special, child-care, sick, and more — can now be logged as full, half, or quarter day
+• Photo import now reads half-day notations like "child-care (1/2)" correctly as 0.5 days
+• Half-day leaves that were previously saved as a full day are fixed automatically when you open the app
+• Half/quarter days deducted from bonus leave are reflected accurately too
+• The home summary now shows bonus-leave usage — used vs. granted, a progress bar, and days remaining
 
 Plus minor bug fixes and stability improvements.
 ```
 
 #### 🇯🇵 日本語
 ```
-ボーナス休暇の使用状況がひと目でわかるように。
+休暇の種類と長さを別々に選べます。
 
-• ホームのサマリーにボーナス休暇の使用状況を追加 — 付与日数のうち使用分・進捗・残日数をまとめて表示します
-• 設定のボーナス休暇一覧にも「N日中M日使用」を表示するようにしました
+• 特別休暇・子の看護・病気など、どの休暇でも終日/半休/四半休を組み合わせて登録できます
+• 写真から取り込み：「子の看護(1/2)」のような半日表記を0.5日として正しく認識します
+• 以前に1日として保存された半日休暇は、アプリを開くと自動で修正されます
+• ボーナス休暇から差し引く半休・四半休も正確に反映されます
+• ホームのサマリーにボーナス休暇の使用状況(付与に対する使用分・進捗・残日数)を追加しました
 
 軽微な不具合修正と安定性の改善も行いました。
 ```
 
 #### 🇨🇳 中文(简体)
 ```
-奖励年假用了多少,一目了然。
+休假类型和长度可分开选择。
 
-• 首页概览新增奖励年假使用情况 — 显示已授予天数中的使用量、进度条和剩余天数
-• 设置页的奖励年假列表也会显示“N天中已用M天”
+• 现在特别休假、子女照护、病假等任意休假都能按全天/半天/四分之一天登记
+• 照片导入:能将“子女照护(1/2)”这类半天标记正确识别为0.5天
+• 之前被误存为一整天的半天休假,打开应用时会自动修正
+• 从奖励年假中扣除的半天/四分之一天也会准确反映
+• 首页概览新增奖励年假使用情况(已用与已授予、进度条、剩余天数)
 
 同时修复了一些小问题并提升了稳定性。
 ```
@@ -53,18 +65,40 @@ Plus minor bug fixes and stability improvements.
 
 ### 변경 사항 (내부 체인지로그)
 
+**신규 — 휴가 = 카테고리 × 길이 (직교 구조)**
+- LeaveLength(종일 1.0 / 반차 0.5 / 반반차 0.25) 축을 카테고리와 분리 → "특별휴가 반차", "자녀돌봄 반차" 등 n×n 조합 지원
+- LeaveRecord에 length(lengthRaw) 추가, effectiveLeaveDays·deductsFromAnnualLeave를 길이·카테고리 기반으로 재정의
+- 레거시 반차/반반차 기록은 연차+길이로 자동 흡수 (스키마는 옵셔널 추가라 마이그레이션 불필요)
+- LeaveType.categories로 입력 UI용 순수 카테고리 노출
+
+**개선 — 사진 가져오기(OCR) 길이 인식**
+- 유형명의 "(1/2)"·"½"·"(1/4)" 분수 표기를 길이로 추론 (자녀돌봄(1/2)=0.5일). 날짜 슬래시 오인 방지(괄호 요구)
+- DetectedLeaveCandidate.suggestedLength → LeaveRecord.length 파이프라인 연결
+
+**마이그레이션 — 기존 데이터 보정**
+- LeaveRecordMaintenance.backfillLengths: 파서 개선 이전에 1일로 저장된 단일일 기록을 note의 분수 표기로 반차/반반차 보정
+- 홈/사용내역 진입 시 길이 보정 → 보너스 usedDays 재산정 순으로 자동 실행
+
 **개선 — 보너스 연차 사용 현황 노출**
 - 홈 현황 카드: 부여받은 보너스가 있으면 항상 "N일 중 M일 사용" + 사용 진행률 바 + 잔여 강조 표시 (기존엔 보너스 미포함 설정일 때 잔여만 표시)
 - 설정 보너스 연차 행: 사용량 > 0이면 "N일 중 M일 사용" 캡션 추가, VoiceOver 라벨에도 포함
+- 휴가 사용 내역 기준으로 보너스 usedDays 재산정 + 미연결 특별휴가 자동 연결(BonusLeaveReconciler)
 - 신규 문자열 bonusUsedOfGranted (4개 언어)
-- AddLeave(+ 탭)는 기존 보너스 선택 차감 기능 그대로 사용 (별도 변경 없음)
-- 스키마 변경 없음 — 마이그레이션 불필요
+
+**UI**
+- AddLeave/편집 화면을 카테고리 + 길이 2축 선택으로 재구성
+- 사용 내역 행에 길이 배지(반차/반반차) 표시
+- 신규 문자열(길이 이름/섹션 헤더) 4개 언어
+
+**테스트**
+- 파서 분수 인식 3개 + 길이 마이그레이션 3개 추가, 전체 그린
 
 ---
 
 ### 빌드 체크리스트
 - [x] MARKETING_VERSION 2.1.0 → 2.1.1 (모든 타깃: Goldweek, widgetExtension)
 - [ ] CURRENT_PROJECT_VERSION(빌드 번호) 증가
+- [x] 단위 테스트 그린 (LeaveTableParserTests 등)
 - [ ] 아카이브 빌드 확인
 
 ---
