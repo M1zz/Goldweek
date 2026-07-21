@@ -658,7 +658,6 @@ struct LeaveRegistrationView: View {
                 : Strings.leaveTypeName(category)
             alertMessage = Strings.leaveRegistered(typeName)
             isSuccess = true
-            AnalyticsService.logLeaveAdded(type: category.rawValue, days: leaveDays, isRecommended: false)
             // 초기화
             note = ""
             startDate = Date()
@@ -668,7 +667,6 @@ struct LeaveRegistrationView: View {
             ReviewManager.shared.recordLeaveRegistration()
             shouldPromptReview = true
         } catch {
-            AnalyticsService.recordError(error, context: ["op": "leave_add"])
             alertMessage = Strings.saveFailed
             isSuccess = false
             HapticFeedback.error()

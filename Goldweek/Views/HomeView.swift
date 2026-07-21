@@ -235,7 +235,6 @@ struct HomeView: View {
             let fresh = found.filter { !seen.contains($0.dedupKey) }
             if !fresh.isEmpty {
                 autoDetectedCandidates = fresh
-                AnalyticsService.logAutoDetectBanner(count: fresh.count, isPro: true)
             }
         } catch {
             // 자동 스캔 실패는 사용자를 방해하지 않는다 — 수동 가져오기 경로가 별도로 존재
@@ -555,7 +554,6 @@ struct LeaveStatusCard: View {
                 Button {
                     if let image = renderShareImage() {
                         shareImage = image
-                        AnalyticsService.logPlanShared()
                         showingShareSheet = true
                     }
                 } label: {

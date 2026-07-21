@@ -2,6 +2,13 @@
 
 ## 진행 중
 
+## 완료 (Firebase/GA 완전 제거 세션 2026-07-21)
+- [x] AnalyticsService.swift 삭제 + 전 화면 호출부(~35곳) 제거 (온보딩·휴가등록/삭제·추천·MRT·페이월·휴식레이더·공유 등)
+- [x] GoogleService-Info.plist 삭제
+- [x] pbxproj에서 firebase-ios-sdk SPM 패키지·5개 product(Firebase Analytics/Core/IdentitySupport/Core/Crashlytics)·빌드파일·리소스 참조 전부 제거
+- [x] GoldweekApp.configure() 호출 제거
+- [x] 빌드·전체 테스트 통과, 스테일 Firebase 프레임워크 정리됨
+
 ## 완료 (휴가 = 카테고리 × 길이 직교 구조 세션 2026-07-21)
 - [x] LeaveLength enum 추가 (종일 1.0 / 반차 0.5 / 반반차 0.25) — 카테고리와 직교
 - [x] LeaveRecord: lengthRaw 저장 + length/category 계산 속성, effectiveLeaveDays·deductsFromAnnualLeave 길이 기반으로 변경 (레거시 반차/반반차 자동 흡수, 마이그레이션 불필요)

@@ -167,15 +167,6 @@ struct RecommendationsView: View {
                 includePast: includePast
             )
             isLoading = false
-
-            // 노출 측정 — 채택률(recommendation_added / shown)의 분모
-            let avgEff = recommendations.isEmpty ? 0 :
-                recommendations.map { $0.efficiency }.reduce(0, +) / Double(recommendations.count)
-            AnalyticsService.logRecommendationShown(
-                count: recommendations.count,
-                avgEfficiency: avgEff,
-                source: "list"
-            )
         }
     }
 
@@ -194,13 +185,8 @@ struct RecommendationsView: View {
 
         do {
             try modelContext.save()
-            AnalyticsService.logRecommendationAdded(
-                days: recommendation.totalDaysOff,
-                efficiency: recommendation.efficiency
-            )
             HapticFeedback.success()
         } catch {
-            AnalyticsService.recordError(error, context: ["op": "recommendation_add"])
             addedRecommendations.remove(recommendation.id)
             modelContext.delete(record)
             HapticFeedback.error()
@@ -1465,7 +1451,6 @@ struct MyRealTripPromoCard: View {
     // MARK: - 접힌 카드 (기본 상태) — 본질은 연차 추천. MRT는 사용자가 원할 때만 펼침.
     private var collapsedCard: some View {
         Button {
-            AnalyticsService.logMRTOptInShow()
             didOptIn = true
         } label: {
             HStack(spacing: 12) {
@@ -1743,12 +1728,6 @@ struct MRTFlightCard: View {
             )
         }
         .buttonStyle(.plain)
-        .simultaneousGesture(TapGesture().onEnded {
-            AnalyticsService.logMRTCardTap(category: "flight", city: flight.toCity)
-        })
-        .onAppear {
-            AnalyticsService.logMRTCardImpression(category: "flight", city: flight.toCity)
-        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
             VoiceOverLabel.flight(
@@ -1856,12 +1835,6 @@ struct MRTAccommodationCard: View {
             )
         }
         .buttonStyle(.plain)
-        .simultaneousGesture(TapGesture().onEnded {
-            AnalyticsService.logMRTCardTap(category: "stay", city: item.itemName)
-        })
-        .onAppear {
-            AnalyticsService.logMRTCardImpression(category: "stay", city: item.itemName)
-        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
             VoiceOverLabel.accommodation(
@@ -1983,12 +1956,6 @@ struct MRTLiveTnaCard: View {
             )
         }
         .buttonStyle(.plain)
-        .simultaneousGesture(TapGesture().onEnded {
-            AnalyticsService.logMRTCardTap(category: "tour", city: product.itemName)
-        })
-        .onAppear {
-            AnalyticsService.logMRTCardImpression(category: "tour", city: product.itemName)
-        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
             VoiceOverLabel.accommodation(
@@ -2408,7 +2375,6 @@ struct OptimalLeavePlannerCard: View {
     @ViewBuilder
     private var proLockedView: some View {
         Button {
-            AnalyticsService.logPaywallView(source: "optimal_planner")
             showingPaywall = true
         } label: {
             VStack(alignment: .leading, spacing: 8) {

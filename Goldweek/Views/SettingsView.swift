@@ -562,7 +562,6 @@ struct SettingsView: View {
                         .tint(.green)
                     } else {
                         Button {
-                            AnalyticsService.logPaywallView(source: "auto_detect_setting")
                             showingPaywall = true
                         } label: {
                             HStack {
@@ -1268,7 +1267,6 @@ struct CalendarImportSheet: View {
             HapticFeedback.success()
             importSucceeded = true
             resultMessage = Strings.leavesImported(inserted.count)
-            AnalyticsService.logLeaveAdded(type: "calendar_import", days: Double(inserted.count), isRecommended: false)
         } catch {
             inserted.forEach { modelContext.delete($0) }
             HapticFeedback.error()

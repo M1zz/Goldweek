@@ -450,7 +450,6 @@ struct PhotoImportSheet: View {
             HapticFeedback.success()
             importSucceeded = true
             resultMessage = Strings.leavesImported(inserted.count)
-            AnalyticsService.logLeaveAdded(type: "photo_import", days: Double(inserted.count), isRecommended: false)
         } catch {
             // 롤백
             for entry in deducted {

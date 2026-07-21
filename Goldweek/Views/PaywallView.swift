@@ -26,7 +26,6 @@ struct PaywallView: View {
                     purchaseButtons
                     footerSection
                 }
-                .onAppear { AnalyticsService.logPaywallView(source: "direct") }
                 .padding(.horizontal)
                 .padding(.bottom, 32)
             }
@@ -329,7 +328,6 @@ struct PaywallView: View {
                 // 실제 Pro가 됐을 때만 성공 알림을 띄운다
                 guard proManager.isPro else { return }
                 await MainActor.run {
-                    AnalyticsService.logPaywallPurchase(success: true, productId: "pro")
                     isSuccess = true
                     alertMessage = Strings.youArePro
                     showingAlert = true
@@ -343,8 +341,6 @@ struct PaywallView: View {
                     return
                 }
                 await MainActor.run {
-                    AnalyticsService.logPaywallPurchase(success: false, productId: "pro")
-                    AnalyticsService.recordError(error, context: ["op": "pro_purchase"])
                     isSuccess = false
                     alertMessage = error.localizedDescription
                     showingAlert = true

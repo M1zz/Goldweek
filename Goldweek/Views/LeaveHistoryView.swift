@@ -382,14 +382,11 @@ struct LeaveHistoryView: View {
             }
         }
 
-        let typeRaw = record.type.rawValue
         modelContext.delete(record)
         do {
             try modelContext.save()
-            AnalyticsService.logLeaveDeleted(type: typeRaw)
             HapticFeedback.success()
         } catch {
-            AnalyticsService.recordError(error, context: ["op": "leave_delete"])
             logError("Failed to delete leave record: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
             showingDeleteError = true

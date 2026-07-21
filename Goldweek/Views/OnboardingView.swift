@@ -190,10 +190,6 @@ struct OnboardingView: View {
             leaveRecords: []
         )
 
-        AnalyticsService.logOnboardingComplete(country: country.rawValue, totalLeave: totalLeave)
-        AnalyticsService.setUser(country: country.rawValue, userType: profile.userType.rawValue,
-                                  language: AppLanguage.current.rawValue)
-
         HapticFeedback.success()
         withAnimation {
             isOnboardingComplete = true

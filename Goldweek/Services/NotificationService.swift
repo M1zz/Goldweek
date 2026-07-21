@@ -194,8 +194,6 @@ enum NotificationService {
         await schedule(title: title, body: body)
 
         UserDefaults.standard.set(Date(), forKey: lastShownKey)
-        AnalyticsService.logRestRadarShown(level: assessment.level.rawValue,
-                                           hasWindow: window != nil)
     }
 
     // MARK: - 예약/취소
@@ -346,10 +344,6 @@ final class RestRadarNotificationDelegate: NSObject, UNUserNotificationCenterDel
         switch response.actionIdentifier {
         case NotificationService.snoozeActionID:
             NotificationService.snooze(days: NotificationService.snoozeDays)
-            AnalyticsService.logRestRadarSnoozed(days: NotificationService.snoozeDays)
-        case UNNotificationDefaultActionIdentifier:
-            // 본문 탭 → 앱 진입 (행동 전환)
-            AnalyticsService.logRestRadarOpened()
         default:
             break
         }

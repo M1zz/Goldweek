@@ -19,9 +19,6 @@ struct GoldweekApp: App {
     init() {
         AppLogger.shared.info("Goldweek 앱 초기화 시작", category: .app)
 
-        // Firebase Analytics + Crashlytics 초기화 (SDK 미설치 시 no-op)
-        AnalyticsService.configure()
-
         // 휴식 레이더 알림 델리게이트 등록 (포그라운드 표시 + 탭/스누즈 추적)
         NotificationService.registerDelegate()
 

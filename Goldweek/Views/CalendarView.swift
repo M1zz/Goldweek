@@ -159,15 +159,6 @@ struct CalendarView: View {
             }
             return false
         }
-
-        // 노출 측정 — 캘린더에 실제로 표시되는 (공휴일+연차) 추천만 카운트
-        let avgEff = recommendations.isEmpty ? 0 :
-            recommendations.map { $0.efficiency }.reduce(0, +) / Double(recommendations.count)
-        AnalyticsService.logRecommendationShown(
-            count: recommendations.count,
-            avgEfficiency: avgEff,
-            source: "calendar"
-        )
     }
 
     var pastLeaves: [LeaveRecord] {
