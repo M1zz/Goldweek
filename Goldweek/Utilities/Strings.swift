@@ -4466,6 +4466,16 @@ enum Strings {
         }
     }
 
+    /// 부여 일수 중 사용량 표시 (예: "3일 중 1일 사용")
+    static func bonusUsedOfGranted(used: String, granted: String) -> String {
+        switch lang {
+        case .korean: return "\(granted)\(dayUnitSuffix) 중 \(used)\(dayUnitSuffix) 사용"
+        case .english: return "\(used) of \(granted) days used"
+        case .japanese: return "\(granted)日中\(used)日使用"
+        case .chinese: return "\(granted)天中已用\(used)天"
+        }
+    }
+
     static func bonusEditUsedRemaining(used: String, remaining: String) -> String {
         switch lang {
         case .korean: return "이미 \(used)일 사용됨 · 잔여 \(remaining)일"

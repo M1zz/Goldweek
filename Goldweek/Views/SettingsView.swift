@@ -393,6 +393,14 @@ struct SettingsView: View {
                                         .font(.subheadline)
                                         .foregroundStyle(AppTheme.Colors.bonus)
                                 }
+                                if bonus.usedDays > 0 {
+                                    Text(Strings.bonusUsedOfGranted(
+                                        used: formatLeave(bonus.usedDays),
+                                        granted: formatLeave(bonus.days)
+                                    ))
+                                    .font(.caption)
+                                    .foregroundStyle(AppTheme.Colors.bonus)
+                                }
                                 if !bonus.reason.isEmpty {
                                     Text(bonus.reason)
                                         .font(.caption)
@@ -894,6 +902,12 @@ struct SettingsView: View {
             Strings.bonusLeaveTypeName(bonus.type),
             "\(formatLeave(bonus.remainingDays))/\(formatLeave(bonus.days))\(Strings.dayUnitSuffix)"
         ]
+        if bonus.usedDays > 0 {
+            parts.append(Strings.bonusUsedOfGranted(
+                used: formatLeave(bonus.usedDays),
+                granted: formatLeave(bonus.days)
+            ))
+        }
         if !bonus.reason.isEmpty { parts.append(bonus.reason) }
         if let expiration = bonus.expirationDate {
             parts.append(expiration.formatted(.dateTime.month().day()))
