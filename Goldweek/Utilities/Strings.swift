@@ -4448,6 +4448,56 @@ enum Strings {
         }
     }
 
+    /// 길이(종일/반차/반반차) 이름
+    static func leaveLengthName(_ length: LeaveLength) -> String {
+        switch lang {
+        case .korean:
+            switch length {
+            case .full: return "종일"
+            case .half: return "반차"
+            case .quarter: return "반반차"
+            }
+        case .english:
+            switch length {
+            case .full: return "Full day"
+            case .half: return "Half day"
+            case .quarter: return "Quarter day"
+            }
+        case .japanese:
+            switch length {
+            case .full: return "終日"
+            case .half: return "半休"
+            case .quarter: return "四半休"
+            }
+        case .chinese:
+            switch length {
+            case .full: return "全天"
+            case .half: return "半天"
+            case .quarter: return "四分之一天"
+            }
+        }
+    }
+
+    /// "휴가 종류" 섹션 헤더
+    static var leaveCategorySectionHeader: String {
+        switch lang {
+        case .korean: return "휴가 종류"
+        case .english: return "Leave type"
+        case .japanese: return "休暇の種類"
+        case .chinese: return "休假类型"
+        }
+    }
+
+    /// "사용 길이" 섹션 헤더
+    static var leaveLengthSectionHeader: String {
+        switch lang {
+        case .korean: return "사용 길이"
+        case .english: return "Length"
+        case .japanese: return "使用単位"
+        case .chinese: return "使用长度"
+        }
+    }
+
     static var otherTypesSectionHeader: String {
         switch lang {
         case .korean: return "기타 (연차 미차감)"

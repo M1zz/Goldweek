@@ -2,6 +2,16 @@
 
 ## 진행 중
 
+## 완료 (휴가 = 카테고리 × 길이 직교 구조 세션 2026-07-21)
+- [x] LeaveLength enum 추가 (종일 1.0 / 반차 0.5 / 반반차 0.25) — 카테고리와 직교
+- [x] LeaveRecord: lengthRaw 저장 + length/category 계산 속성, effectiveLeaveDays·deductsFromAnnualLeave 길이 기반으로 변경 (레거시 반차/반반차 자동 흡수, 마이그레이션 불필요)
+- [x] LeaveType.categories (연차·대체휴무·공가·병가·특별휴가·출장) — 입력 UI용 순수 카테고리
+- [x] 파서: 유형명 "(1/2)"·"½" 등 분수 → suggestedLength(반차/반반차)로 추론. 날짜 슬래시 오인 방지(괄호 요구). 테스트 3개 추가
+- [x] PhotoImport 파이프라인: DetectedLeaveCandidate.suggestedLength → LeaveRecord.length 전달, effectiveDays 반영
+- [x] AddLeaveView: 길이 선택 + 카테고리 선택 2축으로 재구성 (특별휴가·반차, 자녀돌봄·반차 등 n×n 조합 가능)
+- [x] EditLeaveSheet: 카테고리 Picker + 길이 세그먼트 추가 → 기존 기록 재분류 가능
+- [x] 사용 내역 행에 길이 배지 표시, 전체 테스트 통과
+
 ## 완료 (보너스 사용량 기록 기준 재계산 세션 2026-07-21)
 - [x] BonusLeaveReconciler 추가 (Models.swift) — 휴가 사용 내역 기준으로 보너스 usedDays 재산정
   - 연차 비차감 미연결 특별휴가(자녀돌봄 등)를 유형·잔여 맞는 보너스에 자동 연결(bonusLeaveId)

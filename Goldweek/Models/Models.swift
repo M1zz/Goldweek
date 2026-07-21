@@ -177,6 +177,8 @@ final class LeaveRecord {
     var isRecommended: Bool
     /// 보너스 연차 사용 시 연결된 BonusLeave.id (일반 연차는 nil)
     var bonusLeaveId: UUID?
+    /// 휴가 길이(종일/반차/반반차). nil이면 레거시 기록으로, typeRaw의 반차/반반차에서 추론한다.
+    var lengthRaw: String?
 
     init(
         startDate: Date,
@@ -185,6 +187,7 @@ final class LeaveRecord {
         status: LeaveStatus = .planned,
         note: String = "",
         isRecommended: Bool = false,
+        length: LeaveLength? = nil,
         bonusLeaveId: UUID? = nil
     ) {
         self.id = UUID()
@@ -193,39 +196,57 @@ final class LeaveRecord {
         self.typeRaw = type.rawValue
         self.statusRaw = status.rawValue
         self.bonusLeaveId = bonusLeaveId
+        self.lengthRaw = length?.rawValue
         self.note = note
         self.isRecommended = isRecommended
     }
-    
+
     var type: LeaveType {
         get { LeaveType(rawValue: typeRaw) ?? .annual }
         set { typeRaw = newValue.rawValue }
     }
-    
+
+    /// 휴가 길이 — 신규 기록은 lengthRaw에 저장, 레거시(type이 반차/반반차) 기록은 유형에서 추론
+    var length: LeaveLength {
+        get {
+            if let lengthRaw, let l = LeaveLength(rawValue: lengthRaw) { return l }
+            switch type {
+            case .half: return .half
+            case .quarter: return .quarter
+            default: return .full
+            }
+        }
+        set { lengthRaw = newValue.rawValue }
+    }
+
+    /// 휴가 카테고리 — 레거시 반차/반반차는 연차 카테고리로 정규화 (길이는 length가 담당)
+    var category: LeaveType {
+        switch type {
+        case .half, .quarter: return .annual
+        default: return type
+        }
+    }
+
     var status: LeaveStatus {
         get { LeaveStatus(rawValue: statusRaw) ?? .planned }
         set { statusRaw = newValue.rawValue }
     }
-    
+
     var daysCount: Int {
         let components = Calendar.current.dateComponents([.day], from: startDate, to: endDate)
         return (components.day ?? 0) + 1
     }
 
-    /// 연차 차감 일수 (반차 0.5, 반반차 0.25, 그 외 달력 일수)
+    /// 실제 차감 일수 — 반차/반반차 길이는 하루 비율, 종일은 달력 일수
     var effectiveLeaveDays: Double {
-        switch type {
-        case .half: return 0.5
-        case .quarter: return 0.25
-        default:
-            let days = Calendar.current.dateComponents([.day], from: startDate, to: endDate).day ?? 0
-            return Double(days + 1)
-        }
+        if length != .full { return length.fraction }
+        let days = Calendar.current.dateComponents([.day], from: startDate, to: endDate).day ?? 0
+        return Double(days + 1)
     }
 
     /// 실제 연차 차감 여부 — bonusLeaveId가 있으면 보너스 차감이므로 연차 차감 아님
     var deductsFromAnnualLeave: Bool {
-        type.deductsFromAnnual && bonusLeaveId == nil
+        category.deductsFromAnnual && bonusLeaveId == nil
     }
 }
 
@@ -307,6 +328,11 @@ enum LeaveType: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
+    /// 순수 카테고리 목록 — 길이 축 분리 후 입력 UI에 노출한다. 레거시 반차/반반차는 길이로 흡수되므로 제외.
+    static var categories: [LeaveType] {
+        [.annual, .compensatory, .official, .sick, .special, .businessTrip]
+    }
+
     /// 연차 차감 여부 (true면 연차에서 차감)
     var deductsFromAnnual: Bool {
         switch self {
@@ -347,6 +373,33 @@ enum LeaveType: String, Codable, CaseIterable, Identifiable {
         case .sick: return "red"
         case .special: return "yellow"
         case .businessTrip: return "brown"
+        }
+    }
+}
+
+/// 휴가 길이(사용 단위) — 휴가 카테고리와 직교하는 축.
+/// 어떤 휴가 종류(연차·특별휴가·병가 등)든 종일/반차/반반차로 사용할 수 있어 카테고리 n × 길이 3 조합이 성립한다.
+enum LeaveLength: String, Codable, CaseIterable, Identifiable {
+    case full = "종일"
+    case half = "반차"
+    case quarter = "반반차"
+
+    var id: String { rawValue }
+
+    /// 하루 대비 사용 비율 (종일 1.0, 반차 0.5, 반반차 0.25)
+    var fraction: Double {
+        switch self {
+        case .full: return 1.0
+        case .half: return 0.5
+        case .quarter: return 0.25
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .full: return "sun.max"
+        case .half: return "clock.badge"
+        case .quarter: return "clock"
         }
     }
 }

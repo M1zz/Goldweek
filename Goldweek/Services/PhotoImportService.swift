@@ -48,7 +48,8 @@ final class PhotoImportService {
                 title: leave.noteText,
                 startDate: leave.startDate,
                 endDate: leave.endDate,
-                suggestedType: type
+                suggestedType: type,
+                suggestedLength: leave.suggestedLength
             ))
         }
         return ScanResult(candidates: candidates, duplicateCount: duplicateCount)

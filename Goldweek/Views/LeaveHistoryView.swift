@@ -517,9 +517,19 @@ struct HistoryRecordRow: View {
 
             // 정보
             VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(Strings.leaveTypeName(record.type))
+                HStack(spacing: 6) {
+                    Text(Strings.leaveTypeName(record.category))
                         .font(.subheadline.weight(.semibold))
+
+                    if record.length != .full {
+                        Text(Strings.leaveLengthName(record.length))
+                            .font(.caption2.weight(.semibold))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(AppTheme.Colors.brand.opacity(0.15))
+                            .foregroundStyle(AppTheme.Colors.brand)
+                            .clipShape(Capsule())
+                    }
 
                     Spacer()
 
@@ -558,7 +568,9 @@ struct HistoryRecordRow: View {
 
     private var accessibilityText: String {
         var parts = [
-            Strings.leaveTypeName(record.type),
+            record.length != .full
+                ? "\(Strings.leaveTypeName(record.category)) \(Strings.leaveLengthName(record.length))"
+                : Strings.leaveTypeName(record.category),
             Strings.leaveStatusName(record.status),
             dateString,
             "\(formatLeave(record.effectiveLeaveDays))\(Strings.dayUnitSuffix)"
@@ -622,6 +634,7 @@ struct EditLeaveSheet: View {
     @State private var startDate: Date
     @State private var endDate: Date
     @State private var leaveType: LeaveType
+    @State private var length: LeaveLength
     @State private var leaveStatus: LeaveStatus
     @State private var note: String
     @State private var showingAlert = false
@@ -635,21 +648,18 @@ struct EditLeaveSheet: View {
         self.onSave = onSave
         _startDate = State(initialValue: record.startDate)
         _endDate = State(initialValue: record.endDate)
-        _leaveType = State(initialValue: record.type)
+        _leaveType = State(initialValue: record.category)
+        _length = State(initialValue: record.length)
         _leaveStatus = State(initialValue: record.status)
         _note = State(initialValue: record.note)
     }
 
     var originalLeaveDays: Double {
-        if record.type == .half { return 0.5 }
-        if record.type == .quarter { return 0.25 }
-        let days = calendar.dateComponents([.day], from: record.startDate, to: record.endDate).day ?? 0
-        return Double(max(days + 1, 1))
+        record.effectiveLeaveDays
     }
 
     var newLeaveDays: Double {
-        if leaveType == .half { return 0.5 }
-        if leaveType == .quarter { return 0.25 }
+        if length != .full { return length.fraction }
         let days = calendar.dateComponents([.day], from: startDate, to: endDate).day ?? 0
         return Double(max(days + 1, 1))
     }
@@ -681,10 +691,10 @@ struct EditLeaveSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                // 휴가 유형
-                Section(Strings.leaveTypeSection) {
+                // 휴가 종류 (카테고리)
+                Section(Strings.leaveCategorySectionHeader) {
                     Picker(Strings.typeSection, selection: $leaveType) {
-                        ForEach(LeaveType.allCases) { type in
+                        ForEach(LeaveType.categories) { type in
                             HStack {
                                 Image(systemName: type.icon)
                                 Text(Strings.leaveTypeName(type))
@@ -692,6 +702,16 @@ struct EditLeaveSheet: View {
                             .tag(type)
                         }
                     }
+                }
+
+                // 사용 길이
+                Section(Strings.leaveLengthSectionHeader) {
+                    Picker(Strings.leaveLengthSectionHeader, selection: $length) {
+                        ForEach(LeaveLength.allCases) { len in
+                            Text(Strings.leaveLengthName(len)).tag(len)
+                        }
+                    }
+                    .pickerStyle(.segmented)
                 }
 
                 // 상태
@@ -708,7 +728,7 @@ struct EditLeaveSheet: View {
                 Section(Strings.dateSection) {
                     DatePicker(Strings.startDate, selection: $startDate, displayedComponents: .date)
 
-                    if leaveType != .half && leaveType != .quarter {
+                    if length == .full {
                         DatePicker(Strings.endDate, selection: $endDate, in: startDate..., displayedComponents: .date)
                     }
 
@@ -742,7 +762,7 @@ struct EditLeaveSheet: View {
                 Section(Strings.schedulePreview) {
                     RecommendationDatePreview(
                         startDate: startDate,
-                        endDate: leaveType == .half || leaveType == .quarter ? startDate : endDate
+                        endDate: length != .full ? startDate : endDate
                     )
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
@@ -771,8 +791,8 @@ struct EditLeaveSheet: View {
                     Button(Strings.save) { saveChanges() }
                 }
             }
-            .onChange(of: leaveType) { _, newValue in
-                if newValue == .half || newValue == .quarter {
+            .onChange(of: length) { _, newValue in
+                if newValue != .full {
                     endDate = startDate
                 }
             }
@@ -789,7 +809,7 @@ struct EditLeaveSheet: View {
         let isLeisure = profile?.userType == .leisure
         let newDeductsFromAnnual = leaveType.deductsFromAnnual && record.bonusLeaveId == nil
         if !isLeisure, newDeductsFromAnnual {
-            let needed = leaveType == .half ? 0.5 : leaveType == .quarter ? 0.25 : newLeaveDays
+            let needed = newLeaveDays
             if needed > availableForEdit {
                 alertMessage = Strings.insufficientLeave
                 showingAlert = true
@@ -810,8 +830,9 @@ struct EditLeaveSheet: View {
 
         // 기록 업데이트 (records가 source of truth이므로 profile.usedLeave 조정 불필요)
         record.startDate = startDate
-        record.endDate = leaveType == .half || leaveType == .quarter ? startDate : endDate
+        record.endDate = length != .full ? startDate : endDate
         record.type = leaveType
+        record.length = length
         record.status = leaveStatus
         record.note = note
 

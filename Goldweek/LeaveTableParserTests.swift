@@ -39,6 +39,34 @@ final class LeaveTableParserTests: XCTestCase {
         XCTAssertEqual(result.map(\.suggestedTypeRaw), ["연차", "특별휴가"])
     }
 
+    func testFractionInTypeName_ParsedAsHalfLength() {
+        // "자녀돌봄(1/2)" → 카테고리는 특별휴가, 길이는 반차(0.5)로 인식돼야 한다
+        let result = LeaveTableParser.parseRows([
+            "2026.08.02 2026.08.02 자녀돌봄(1/2) 승인",
+        ])
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result[0].suggestedTypeRaw, "특별휴가")
+        XCTAssertEqual(result[0].suggestedLength, .half)
+    }
+
+    func testQuarterFractionInTypeName() {
+        // "(1/4)" → 반반차(0.25)
+        let result = LeaveTableParser.parseRows([
+            "2026.08.03 2026.08.03 특별휴가(1/4) 승인",
+        ])
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result[0].suggestedLength, .quarter)
+    }
+
+    func testDateSlashNotMisreadAsFraction() {
+        // 날짜의 슬래시(2026/08/02)를 분수로 오인하지 않아야 한다 (괄호 없는 슬래시)
+        let result = LeaveTableParser.parseRows([
+            "2026/08/02 2026/08/02 연차 1.00일 승인",
+        ])
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result[0].suggestedLength, .full)
+    }
+
     func testCompensatoryNeverDeducts() {
         // 대체휴가는 다른 날 근무의 보상 — 항상 연차 차감 없음
         let result = LeaveTableParser.parseRows([

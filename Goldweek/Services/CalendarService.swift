@@ -433,15 +433,19 @@ struct DetectedLeaveCandidate: Identifiable {
     let startDate: Date
     /// 포함 종료일 (자정 기준)
     let endDate: Date
-    /// 제목에서 추론한 휴가 유형 (반차 0.5일, 반반차 0.25일 등)
+    /// 제목에서 추론한 휴가 유형(카테고리)
     let suggestedType: LeaveType
+    /// 제목에서 추론한 길이 (종일/반차/반반차) — "(1/2)" 같은 표기 반영
+    var suggestedLength: LeaveLength = .full
 
     var daysCount: Int {
         (Calendar.current.dateComponents([.day], from: startDate, to: endDate).day ?? 0) + 1
     }
 
-    /// 유형을 반영한 실제 차감 일수
+    /// 유형·길이를 반영한 실제 차감 일수
     var effectiveDays: Double {
+        // 길이(반차/반반차)가 지정되면 하루 비율, 아니면 레거시 유형/기간으로 계산
+        if suggestedLength != .full { return suggestedLength.fraction }
         switch suggestedType {
         case .half: return 0.5
         case .quarter: return 0.25

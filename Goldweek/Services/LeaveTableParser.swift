@@ -31,8 +31,10 @@ enum LeaveTableParser {
         let timeInfo: String
         /// 실공제수 (없으면 nil)
         let deductionDays: Double?
-        /// LeaveType.rawValue 로 매핑된 추천 유형
+        /// LeaveType.rawValue 로 매핑된 추천 유형(카테고리)
         let suggestedTypeRaw: String
+        /// 추천 길이 — 유형명의 "(1/2)" 등에서 추론 (기본 종일)
+        let suggestedLength: LeaveLength
 
         /// 기록의 note 로 쓸 원문 요약
         var noteText: String {
@@ -134,6 +136,31 @@ enum LeaveTableParser {
     private static let timeRangeRegex = try! NSRegularExpression(
         pattern: #"(\d{1,2}):(\d{2})\s*[~\-–]\s*(\d{1,2}):(\d{2})"#
     )
+    /// 유형명 안의 분수 표기 "(1/2)", "(1/4)" — 날짜의 슬래시(2026/07/03)와 혼동하지 않도록 괄호를 요구
+    private static let fractionRegex = try! NSRegularExpression(pattern: #"\(\s*(\d)\s*/\s*(\d)\s*\)"#)
+
+    /// 텍스트에서 하루 대비 사용 비율 추출 ("(1/2)"→0.5, "½"→0.5, "(1/4)"→0.25). 없으면 nil.
+    private static func fractionalDay(in text: String) -> Double? {
+        if text.contains("½") { return 0.5 }
+        if text.contains("¼") { return 0.25 }
+        if text.contains("¾") { return 0.75 }
+        let range = NSRange(text.startIndex..., in: text)
+        guard let m = fractionRegex.firstMatch(in: text, range: range),
+              let num = int(m, 1, text), let den = int(m, 2, text), den > 0 else { return nil }
+        let v = Double(num) / Double(den)
+        return (v > 0 && v <= 1) ? v : nil
+    }
+
+    /// 유형(카테고리)과 분수 표기로 최종 길이 결정
+    private static func length(forSuggested raw: String, fraction: Double?, isMultiDay: Bool) -> LeaveLength {
+        if raw == LeaveType.half.rawValue { return .half }
+        if raw == LeaveType.quarter.rawValue { return .quarter }
+        // 다일 기간엔 길이(반차/반반차) 개념이 없음
+        guard !isMultiDay, let f = fraction else { return .full }
+        if f <= 0.3 { return .quarter }
+        if f < 1.0 { return .half }
+        return .full
+    }
 
     /// 시작~종료가 이 일수를 넘으면 두 번째 날짜를 종료일이 아닌 다른 열(신청일 등)로 간주
     private static let maxRangeDays = 60
@@ -149,6 +176,7 @@ enum LeaveTableParser {
         let timeInfo: String
         let timeRangeHours: Double?
         let deduction: Double?
+        let fraction: Double?          // 유형명의 "(1/2)" 등에서 추출한 하루 대비 비율
 
         var isMultiDay: Bool {
             !Calendar.current.isDate(startDate, inSameDayAs: endDate)
@@ -164,13 +192,15 @@ enum LeaveTableParser {
         var results: [ParsedLeave] = []
         var seenKeys = Set<String>()
         for raw in raws {
+            let suggested = suggestType(raw, tableHasDeduction: tableHasDeduction)
             let leave = ParsedLeave(
                 startDate: raw.startDate,
                 endDate: raw.endDate,
                 rawTypeName: raw.rawTypeName,
                 timeInfo: raw.timeInfo,
                 deductionDays: raw.deduction,
-                suggestedTypeRaw: suggestType(raw, tableHasDeduction: tableHasDeduction)
+                suggestedTypeRaw: suggested,
+                suggestedLength: length(forSuggested: suggested, fraction: raw.fraction, isMultiDay: raw.isMultiDay)
             )
             let key = "\(leave.startDate.timeIntervalSince1970)|\(leave.endDate.timeIntervalSince1970)|\(leave.rawTypeName)|\(leave.timeInfo)"
             guard seenKeys.insert(key).inserted else { continue }
@@ -260,7 +290,8 @@ enum LeaveTableParser {
             rawTypeName: rawTypeName,
             timeInfo: timeInfo,
             timeRangeHours: timeRangeHours,
-            deduction: deduction
+            deduction: deduction,
+            fraction: fractionalDay(in: row)
         )
     }
 

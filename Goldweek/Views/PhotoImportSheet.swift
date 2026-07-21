@@ -427,6 +427,7 @@ struct PhotoImportSheet: View {
                 type: candidate.suggestedType,
                 status: candidate.endDate < today ? .used : .planned,
                 note: candidate.title,
+                length: candidate.suggestedLength,  // 종일/반차/반반차 — "(1/2)" 등 반영
                 bonusLeaveId: assignedBonus(for: candidate)?.id  // 보너스 연결 — 삭제 시 usedDays 복원에 사용
             )
             modelContext.insert(record)
