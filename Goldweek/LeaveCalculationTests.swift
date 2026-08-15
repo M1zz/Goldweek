@@ -278,7 +278,7 @@ final class LeaveCalculationTests: XCTestCase {
     }
 
     // 보너스 연차 레코드: 현황(연차차감)에서는 0, 내역(전체휴가)에서는 실제 일수 표시
-    func testSync_BonusRecord_HomeZero_HistoryNonZero() {
+    func testSync_BonusRecord_CountsInNeitherAnnualTotal() {
         let bonusId = UUID()
         let pastDate = makeDate(daysFromNow: -2)
         let futureDate = makeDate(daysFromNow: 5)
@@ -294,15 +294,18 @@ final class LeaveCalculationTests: XCTestCase {
         XCTAssertEqual(calcPlannedLeave(records: records), 0.0,
                        "현황: 보너스 예정도 연차 차감 0")
 
-        // 내역(LeaveHistoryView): 모든 휴가 표시 → 실제 일수
-        XCTAssertEqual(calcHistoryTotalUsed(records: records, yearStartMonth: 1), 0.5,
-                       "내역: 보너스 반차 0.5일 사용 표시")
-        XCTAssertEqual(calcHistoryTotalPlanned(records: records, yearStartMonth: 1), 1.0,
-                       "내역: 보너스 연차 1일 예정 표시")
+        // 내역 카드도 같은 정의를 쓴다 — 보너스 연결 기록은 연차를 깎지 않으므로 양쪽 다 0.
+        XCTAssertEqual(calcHistoryTotalUsed(records: records, yearStartMonth: 1), 0.0,
+                       "내역 카드: 보너스 사용분은 연차 사용이 아니다")
+        XCTAssertEqual(calcHistoryTotalPlanned(records: records, yearStartMonth: 1), 0.0,
+                       "내역 카드: 보너스 예정도 연차 예정이 아니다")
+        // 쉰 날로 세면 보이는 값 (보너스 반차 0.5 + 보너스 연차 예정 1.0은 예정이라 제외)
+        XCTAssertEqual(calcAllTypesUsed(records: records, yearStartMonth: 1), 0.5,
+                       "쉰 날: 보너스 반차 0.5일")
     }
 
     // 비차감 유형(.sick, .compensatory 등): 현황은 0, 내역은 실제 일수 — 핵심 버그 재현
-    func testSync_NonDeductingTypes_HomeZero_HistoryNonZero() {
+    func testSync_NonDeductingTypes_CountAsRestNotAnnual() {
         let past = makeDate(daysFromNow: -1)
         let future = makeDate(daysFromNow: 3)
         let records: [LeaveRecord] = [
@@ -317,11 +320,14 @@ final class LeaveCalculationTests: XCTestCase {
         XCTAssertEqual(calcPlannedLeave(records: records), 0.0,
                        "현황: 비차감 예정도 연차 차감 0")
 
-        // 내역: 모든 유형의 실제 일수 표시 → '1건인데 0으로 나와' 버그 수정 검증
-        XCTAssertEqual(calcHistoryTotalUsed(records: records, yearStartMonth: 1), 2.0,
-                       "내역: 병가+대체휴무 각 1일 = 2.0일 (버그수정: 0이 아님)")
-        XCTAssertEqual(calcHistoryTotalPlanned(records: records, yearStartMonth: 1), 1.0,
-                       "내역: 공가 예정 1.0일 표시")
+        // 내역 카드도 이제 홈과 같은 정의(연차 차감분)를 쓴다 — 두 화면이 같은 숫자를 보여야 한다.
+        XCTAssertEqual(calcHistoryTotalUsed(records: records, yearStartMonth: 1), 0.0,
+                       "내역 카드: 비차감 유형은 연차 사용 0")
+        XCTAssertEqual(calcHistoryTotalPlanned(records: records, yearStartMonth: 1), 0.0,
+                       "내역 카드: 비차감 예정도 0")
+        // "며칠 쉬었나"는 여전히 셀 수 있다 — 다만 연차 옆에 놓는 숫자가 아니다.
+        XCTAssertEqual(calcAllTypesUsed(records: records, yearStartMonth: 1), 2.0,
+                       "병가 1일 + 대체휴무 1일 = 쉰 날 2일")
     }
 
     // 취소된 레코드는 양쪽 모두 집계에서 제외
@@ -394,7 +400,7 @@ final class LeaveCalculationTests: XCTestCase {
     }
 
     // 비차감 유형 추가 시: 내역이 현황보다 더 큰 값 (비차감 일수만큼 차이)
-    func testHomeVsHistory_WithNonDeducting_HistoryLarger() {
+    func testHomeAndHistoryMatch_WithNonDeductingTypes() {
         let past = makeDate(daysFromNow: -3)
         let records: [LeaveRecord] = [
             LeaveRecord(startDate: past, endDate: past, type: .annual,       status: .used), // 차감 1.0
@@ -404,20 +410,19 @@ final class LeaveCalculationTests: XCTestCase {
 
         let homeUsed = calcActualUsed(records: records)
         let histUsed = calcHistoryTotalUsed(records: records, yearStartMonth: 1)
+        let allTypes = calcAllTypesUsed(records: records, yearStartMonth: 1)
         let nonDeductingUsed = calcNonDeductingUsed(records: records)
 
-        XCTAssertEqual(homeUsed, 1.0,
-                       "현황: 연차 차감분만 1.0일")
-        XCTAssertEqual(histUsed, 3.0,
-                       "내역: 연차+병가+대체휴무 = 3.0일")
-        XCTAssertGreaterThan(histUsed, homeUsed,
-                             "비차감 유형이 있을 때 내역 > 현황")
-        XCTAssertEqual(homeUsed + nonDeductingUsed, histUsed, accuracy: 0.001,
-                       "산술 관계: 내역 = 현황 + 비차감분")
+        XCTAssertEqual(homeUsed, 1.0, "현황: 연차 차감분만 1.0일")
+        XCTAssertEqual(histUsed, homeUsed, accuracy: 0.001,
+                       "내역 카드와 홈은 같은 숫자여야 한다 (병가·대체휴무는 연차를 깎지 않는다)")
+        XCTAssertEqual(allTypes, 3.0, "쉰 날: 연차+병가+대체휴무 = 3.0일")
+        XCTAssertEqual(homeUsed + nonDeductingUsed, allTypes, accuracy: 0.001,
+                       "산술 관계: 쉰 날 = 연차 차감분 + 비차감분")
     }
 
     // 보너스 연차 사용 시: 내역에는 보너스 일수 포함, 현황에는 미포함
-    func testHomeVsHistory_WithBonusLeave_HistoryLarger() {
+    func testHomeAndHistoryMatch_WithBonusLeave() {
         let bonusId = UUID()
         let past = makeDate(daysFromNow: -4)
         let records: [LeaveRecord] = [
@@ -427,14 +432,14 @@ final class LeaveCalculationTests: XCTestCase {
 
         let homeUsed = calcActualUsed(records: records)
         let histUsed = calcHistoryTotalUsed(records: records, yearStartMonth: 1)
+        let allTypes = calcAllTypesUsed(records: records, yearStartMonth: 1)
         let nonDeductingUsed = calcNonDeductingUsed(records: records)
 
-        XCTAssertEqual(homeUsed, 1.0,
-                       "현황: 일반 연차 1.0일 (보너스 제외)")
-        XCTAssertEqual(histUsed, 1.5,
-                       "내역: 연차 1.0 + 보너스 반차 0.5 = 1.5일")
-        XCTAssertEqual(homeUsed + nonDeductingUsed, histUsed, accuracy: 0.001,
-                       "산술 관계: 내역 = 현황 + 비차감(보너스)분")
+        XCTAssertEqual(homeUsed, 1.0, "현황: 일반 연차 1.0일 (보너스 제외)")
+        XCTAssertEqual(histUsed, homeUsed, accuracy: 0.001, "내역 카드와 홈은 같은 숫자")
+        XCTAssertEqual(allTypes, 1.5, "쉰 날: 연차 1.0 + 보너스 반차 0.5 = 1.5일")
+        XCTAssertEqual(homeUsed + nonDeductingUsed, allTypes, accuracy: 0.001,
+                       "산술 관계: 쉰 날 = 연차 차감분 + 비차감(보너스)분")
     }
 
     // 복합 시나리오: 연차+반차+병가+보너스 혼합
@@ -450,14 +455,17 @@ final class LeaveCalculationTests: XCTestCase {
 
         let homeUsed         = calcActualUsed(records: records)
         let histUsed         = calcHistoryTotalUsed(records: records, yearStartMonth: 1)
+        let allTypes         = calcAllTypesUsed(records: records, yearStartMonth: 1)
         let nonDeductingUsed = calcNonDeductingUsed(records: records)
 
         XCTAssertEqual(homeUsed, 1.5, accuracy: 0.001,
                        "현황: 차감분 연차 1.0 + 반차 0.5 = 1.5")
-        XCTAssertEqual(histUsed, 2.75, accuracy: 0.001,
-                       "내역: 1.0 + 0.5 + 1.0(병가) + 0.25(보너스반반차) = 2.75")
-        XCTAssertEqual(homeUsed + nonDeductingUsed, histUsed, accuracy: 0.001,
-                       "항등식: 내역 총합 = 현황 차감분 + 비차감분 (항상 성립)")
+        XCTAssertEqual(histUsed, homeUsed, accuracy: 0.001,
+                       "내역 카드와 홈은 같은 숫자")
+        XCTAssertEqual(allTypes, 2.75, accuracy: 0.001,
+                       "쉰 날: 1.0 + 0.5 + 1.0(병가) + 0.25(보너스반반차) = 2.75")
+        XCTAssertEqual(homeUsed + nonDeductingUsed, allTypes, accuracy: 0.001,
+                       "항등식: 쉰 날 = 연차 차감분 + 비차감분 (항상 성립)")
     }
 
     // 현황 완료 일수는 총 연차를 초과할 수 없음
@@ -572,21 +580,16 @@ final class LeaveCalculationTests: XCTestCase {
 
     // MARK: - 테스트 헬퍼 (LeaveStatusCard 로직 복제)
 
+    // ⚠️ 화면 공식을 테스트에 **복제하지 않는다.** 예전엔 여기서 따로 구현해 두는 바람에
+    //    화면 쪽 정의가 바뀌어도 테스트는 옛 공식을 통과시켰고, 홈과 내역이 갈라진 걸 못 잡았다.
+    //    이제 전부 `LeaveUsageCalculator`(= 화면이 쓰는 그 코드)를 호출한다.
+
     private func calcActualUsed(records: [LeaveRecord]) -> Double {
-        let today = Calendar.current.startOfDay(for: Date())
-        return records.filter { record in
-            guard record.deductsFromAnnualLeave else { return false }
-            return record.status == .used ||
-                   (record.status == .planned && Calendar.current.startOfDay(for: record.endDate) < today)
-        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: records, startMonth: 1).annualUsed
     }
 
     private func calcPlannedLeave(records: [LeaveRecord]) -> Double {
-        let today = Calendar.current.startOfDay(for: Date())
-        return records.filter { record in
-            guard record.deductsFromAnnualLeave else { return false }
-            return record.status == .planned && Calendar.current.startOfDay(for: record.endDate) >= today
-        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: records, startMonth: 1).annualPlanned
     }
 
     // HomeView.LeaveStatusCard.displayUsed 로직 복제
@@ -608,21 +611,19 @@ final class LeaveCalculationTests: XCTestCase {
     }
 
     // LeaveHistoryView.yearStats 로직 복제 — 모든 휴가 유형 포함 (연차 차감 여부 무관)
+    /// 내역 화면이 카드에 띄우는 값 — 이제 홈과 같은 정의(연차 차감분)다.
     private func calcHistoryTotalUsed(records: [LeaveRecord], yearStartMonth: Int) -> Double {
-        let cal = Calendar.current
-        let today = cal.startOfDay(for: Date())
-        return records.filter { record in
-            record.status == .used ||
-            (record.status == .planned && cal.startOfDay(for: record.endDate) < today)
-        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: records, startMonth: yearStartMonth)
+            .used(includingBonus: false)
     }
 
     private func calcHistoryTotalPlanned(records: [LeaveRecord], yearStartMonth: Int) -> Double {
-        let cal = Calendar.current
-        let today = cal.startOfDay(for: Date())
-        return records.filter { record in
-            record.status == .planned && cal.startOfDay(for: record.endDate) >= today
-        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: records, startMonth: yearStartMonth).annualPlanned
+    }
+
+    /// "며칠 쉬었나"(출장·병가 포함) — 내역 카드가 아니라 별도 지표로만 쓰는 값.
+    private func calcAllTypesUsed(records: [LeaveRecord], yearStartMonth: Int) -> Double {
+        LeaveUsageCalculator.currentSummary(records: records, startMonth: yearStartMonth).allTypesUsed
     }
 
     // MARK: - 캘린더 날짜 하이라이트 로직 복제 (CalendarGrid.isLeave 수정 후 버전)

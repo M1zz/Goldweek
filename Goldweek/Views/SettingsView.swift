@@ -22,7 +22,7 @@ struct SettingsView: View {
     /// 켜지면 접수된 피드백(인박스)·사용 통계·안정성 화면이 보인다.
     @AppStorage("dev.masterMode") private var masterModeEnabled = false
 
-    /// "2.1.1 (1)" — 지원 섹션의 버전 행 표시용
+    /// "2.1.2 (1)" — 지원 섹션의 버전 행 표시용
     private var appVersionText: String {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?"
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "?"
@@ -75,6 +75,16 @@ struct SettingsView: View {
         self.profile = profile
         _selectedCountry = State(initialValue: profile.country)
         _selectedLanguage = State(initialValue: AppLanguage.current)
+    }
+
+    /// 프로필 편집을 즉시 저장한다. 실패해도 화면을 막지 않고 로그만 남긴다
+    /// (다음 자동 저장이나 타임머신 스냅샷이 받아 준다).
+    private func persistProfile() {
+        do {
+            try modelContext.save()
+        } catch {
+            logError("프로필 저장 실패: \(error.localizedDescription)", category: .data)
+        }
     }
 
     var usedLeaveCount: Int {
@@ -793,6 +803,14 @@ struct SettingsView: View {
                 // 개발자 문의
                 DeveloperContactSection()
             }
+            // 프로필 값은 @Bindable 바인딩이라 SwiftData 자동 저장에 맡겨져 있었다.
+            // 자동 저장은 "곧" 저장할 뿐 그 시점을 보장하지 않는다 — 총 연차처럼 잔여 계산의
+            // 근거가 되는 값은 바뀐 즉시 디스크에 있어야 한다(강제 종료·크래시 대비).
+            .onChange(of: profile.totalAnnualLeave) { _, _ in persistProfile() }
+            .onChange(of: profile.yearStartMonth) { _, _ in persistProfile() }
+            .onChange(of: profile.name) { _, _ in persistProfile() }
+            .onChange(of: profile.userTypeRaw) { _, _ in persistProfile() }
+            .onChange(of: profile.countryRaw) { _, _ in persistProfile() }
             .navigationTitle(Strings.navTitleSettings)
             .sheet(isPresented: $showingPreferences) {
                 PreferencesView(profile: profile)
