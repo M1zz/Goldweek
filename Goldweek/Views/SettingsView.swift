@@ -414,12 +414,9 @@ struct SettingsView: View {
                                 HStack {
                                     Text(Strings.bonusLeaveTypeName(bonus.type))
                                         .font(.body)
-                                    Text("\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
-                                        .font(.body)
-                                        .foregroundStyle(AppTheme.Colors.bonus)
-                                }
-                                if bonus.usedDays > 0 {
-                                    Text(Strings.bonusUsedOfGranted(
+                                    // 홈 카드와 같은 뜻의 분수(사용/부여) — 화면마다 분모·분자가 다르면 헷갈린다.
+                                    // 문장형 "3일 중 1.5일 사용"은 아래 VoiceOver 라벨이 대신 읽어 준다.
+                                    Text(Strings.bonusUsedFraction(
                                         used: formatLeave(bonus.usedDays),
                                         granted: formatLeave(bonus.days)
                                     ))
@@ -964,14 +961,12 @@ struct SettingsView: View {
     private func bonusRowAccessibilityLabel(_ bonus: BonusLeave) -> String {
         var parts = [
             Strings.bonusLeaveTypeName(bonus.type),
-            "\(formatLeave(bonus.remainingDays))/\(Strings.dayCount(bonus.days))"
-        ]
-        if bonus.usedDays > 0 {
-            parts.append(Strings.bonusUsedOfGranted(
+            // 화면의 분수("1.5/3일")를 귀로는 문장으로 읽어 준다 — 분수는 낭독하면 뜻이 흐리다.
+            Strings.bonusUsedOfGranted(
                 used: formatLeave(bonus.usedDays),
                 granted: formatLeave(bonus.days)
-            ))
-        }
+            )
+        ]
         if !bonus.reason.isEmpty { parts.append(bonus.reason) }
         if let expiration = bonus.expirationDate {
             parts.append(expiration.appMonthDay)

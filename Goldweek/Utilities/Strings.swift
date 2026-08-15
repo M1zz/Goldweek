@@ -4638,6 +4638,18 @@ enum Strings {
         }
     }
 
+    /// 부여 일수 대비 사용량을 짧게 (예: "1.5/3일").
+    /// 화면에는 이걸 쓰고, 문장형(`bonusUsedOfGranted`)은 VoiceOver 낭독에만 쓴다 —
+    /// 눈으로는 분수가 빠르고, 귀로는 문장이 알아듣기 쉽다.
+    static func bonusUsedFraction(used: String, granted: String) -> String {
+        switch lang {
+        case .korean: return "\(used)/\(granted)일"
+        case .english: return "\(used)/\(granted) days"
+        case .japanese: return "\(used)/\(granted)日"
+        case .chinese: return "\(used)/\(granted)天"
+        }
+    }
+
     /// 부여 일수 중 사용량 표시 (예: "3일 중 1일 사용")
     static func bonusUsedOfGranted(used: String, granted: String) -> String {
         switch lang {

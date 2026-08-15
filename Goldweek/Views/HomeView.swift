@@ -740,19 +740,14 @@ struct LeaveStatusCard: View {
                             .font(.body)
                             .foregroundStyle(.secondary)
                         Spacer()
-                        Text(Strings.bonusUsedOfGranted(
+                        // "3일 중 1.5일 사용 +1.5일"은 같은 사실을 두 번 말한다.
+                        // 아래 진행률 바가 이미 비율을 보여주므로 분수 하나면 충분하다.
+                        Text(Strings.bonusUsedFraction(
                             used: formatLeave(usedBonusLeave),
                             granted: formatLeave(grantedBonusLeave)
                         ))
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        Text("+\(Strings.dayCount(remainingBonusLeave))")
-                            .font(.body.bold())
-                            .foregroundStyle(AppTheme.Colors.bonus)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(AppTheme.Colors.bonus.opacity(0.12))
-                            .clipShape(Capsule())
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(AppTheme.Colors.bonus)
                     }
                     // 사용 진행률 바
                     ProgressView(value: min(usedBonusLeave, grantedBonusLeave), total: grantedBonusLeave)
