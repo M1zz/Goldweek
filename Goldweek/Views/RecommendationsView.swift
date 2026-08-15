@@ -29,11 +29,10 @@ struct RecommendationsView: View {
         _selectedYear = State(initialValue: Calendar.current.component(.year, from: Date()))
     }
 
-    /// Records 기반 사용 확정 연차 (현황·설정과 동일한 공식)
+    /// 사용 확정 연차 — 홈·설정과 **같은 계산기**를 쓴다.
     private var committedLeave: Double {
-        let active = allLeaveRecords.filter { $0.status == .used || $0.status == .planned }
-        let deducting = active.filter { $0.deductsFromAnnualLeave }
-        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords),
+                                            startMonth: profile.yearStartMonth).annualCommitted
     }
 
     private var activeBonusLeave: Double {

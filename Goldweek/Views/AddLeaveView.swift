@@ -18,10 +18,10 @@ struct AddLeaveView: View {
 
     @State private var selectedTab = 0
 
+    /// 계산은 `LeaveUsageCalculator` 한 곳에서 (회계연도 기준도 여기서 맞춰진다)
     var committedLeave: Double {
-        let active = leaveRecords.filter { $0.status == .used || $0.status == .planned }
-        let deducting = active.filter { $0.deductsFromAnnualLeave }
-        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
+                                            startMonth: profile.yearStartMonth).annualCommitted
     }
 
     var totalBonusLeave: Double {
@@ -257,9 +257,8 @@ struct LeaveRegistrationView: View {
     @FocusState private var isNoteFocused: Bool
 
     var committedLeave: Double {
-        let active = allLeaveRecords.filter { $0.status == .used || $0.status == .planned }
-        let deducting = active.filter { $0.deductsFromAnnualLeave }
-        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords),
+                                            startMonth: profile.yearStartMonth).annualCommitted
     }
 
     /// 만료되지 않은 보너스 연차

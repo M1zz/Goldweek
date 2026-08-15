@@ -100,14 +100,11 @@ struct SettingsView: View {
         Calendar.current.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
     }
 
+    /// 계산은 `LeaveUsageCalculator` 한 곳에서 — 화면마다 세면 숫자가 어긋난다.
     var committedLeave: Double {
-        // 현재 회계연도에 속한 기록만 합산 (LeaveStatusCard와 동일 — 화면 일관성)
-        let inYear = leaveRecords.filter {
-            $0.startDate >= annualYearStart && $0.startDate <= annualYearEnd
-        }
-        let active = inYear.filter { $0.status == .used || $0.status == .planned }
-        let deducting = active.filter { $0.deductsFromAnnualLeave }
-        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
+                                            bonuses: Array(bonusLeaves),
+                                            startMonth: profile.yearStartMonth).annualCommitted
     }
 
     var activeBonusLeave: Double {

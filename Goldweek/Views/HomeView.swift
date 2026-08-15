@@ -38,10 +38,10 @@ struct HomeView: View {
         Set(hiddenHolidayDatesRaw.split(separator: ",").map(String.init).filter { !$0.isEmpty })
     }
 
+    /// 계산은 `LeaveUsageCalculator` 한 곳에서 — 화면마다 세면 숫자가 어긋난다.
     var committedLeave: Double {
-        let active = leaveRecords.filter { $0.status == .used || $0.status == .planned }
-        let deducting = active.filter { $0.deductsFromAnnualLeave }
-        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
+                                            startMonth: profile.yearStartMonth).annualCommitted
     }
 
     // MARK: - Pro 배너 트리거
@@ -509,26 +509,20 @@ struct LeaveStatusCard: View {
     @State private var showingPhotoImport = false
     @State private var showingShareSheet = false
 
-    /// 연차 기준 연도의 시작일 (yearStartMonth 기준)
-    var annualYearStart: Date {
-        let cal = Calendar.current
-        let now = Date()
-        let year = cal.component(.year, from: now)
-        let month = cal.component(.month, from: now)
-        let sm = profile.yearStartMonth
-        let startYear = month >= sm ? year : year - 1
-        return cal.date(from: DateComponents(year: startYear, month: sm, day: 1)) ?? now
-    }
-
-    /// 연차 기준 연도의 종료일
-    var annualYearEnd: Date {
-        let cal = Calendar.current
-        return cal.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
+    /// 이 화면이 쓰는 모든 숫자의 출처 — 계산은 `LeaveUsageCalculator`가 한다.
+    /// 화면에서 직접 세면 다른 화면(휴가 사용 내역)과 숫자가 어긋난다.
+    var usage: LeaveUsageCalculator.Summary {
+        LeaveUsageCalculator.currentSummary(records: allLeaveRecords,
+                                            bonuses: allBonusLeaves,
+                                            startMonth: profile.yearStartMonth)
     }
 
     /// 현재 연차 연도에 해당하는 레코드만 필터
     var currentYearRecords: [LeaveRecord] {
-        allLeaveRecords.filter { $0.startDate >= annualYearStart && $0.startDate <= annualYearEnd }
+        LeaveUsageCalculator.records(allLeaveRecords,
+                                     inFiscalYear: LeaveUsageCalculator.fiscalYear(for: Date(),
+                                                                                   startMonth: profile.yearStartMonth),
+                                     startMonth: profile.yearStartMonth)
     }
 
     /// 잔여 보너스 (미만료 + 미사용, remainingDays 기준)
@@ -540,54 +534,33 @@ struct LeaveStatusCard: View {
     }
 
     /// 최초 부여된 보너스 전체
-    var grantedBonusLeave: Double {
-        allBonusLeaves.reduce(0) { $0 + $1.days }
-    }
+    var grantedBonusLeave: Double { usage.grantedBonus }
 
-    /// 사용된 보너스 (usedDays 합산)
-    var usedBonusLeave: Double {
-        allBonusLeaves.reduce(0) { $0 + $1.usedDays }
-    }
+    /// 사용된 보너스
+    var usedBonusLeave: Double { usage.usedBonus }
 
-    /// 사용완료 연차 — 현재 연차 연도 기준
-    /// status == .used 이거나, .planned이지만 endDate가 이미 지난 경우 포함
-    var actualUsed: Double {
-        let today = Calendar.current.startOfDay(for: Date())
-        let records = currentYearRecords.filter { record in
-            guard record.deductsFromAnnualLeave else { return false }
-            return record.status == .used ||
-                   (record.status == .planned && Calendar.current.startOfDay(for: record.endDate) < today)
-        }
-        return records.reduce(0.0) { $0 + $1.effectiveLeaveDays }
-    }
+    /// 사용완료 연차 (연차에서 차감되는 것만)
+    var actualUsed: Double { usage.annualUsed }
 
-    /// 예정 연차 — 현재 연차 연도 기준 (endDate가 오늘 이후인 .planned만)
-    var plannedLeave: Double {
-        let today = Calendar.current.startOfDay(for: Date())
-        let records = currentYearRecords.filter { record in
-            guard record.deductsFromAnnualLeave else { return false }
-            return record.status == .planned && Calendar.current.startOfDay(for: record.endDate) >= today
-        }
-        return records.reduce(0.0) { $0 + $1.effectiveLeaveDays }
-    }
+    /// 예정 연차
+    var plannedLeave: Double { usage.annualPlanned }
 
     /// 확정 연차 총합 (used + planned) — 잔여 계산용
-    var committedLeave: Double { actualUsed + plannedLeave }
+    var committedLeave: Double { usage.annualCommitted }
 
     /// "총" — 보너스 포함 시 부여량 기준
     var totalLeave: Double {
-        includeBonusInStatus ? profile.totalAnnualLeave + grantedBonusLeave : profile.totalAnnualLeave
+        usage.total(annualGrant: profile.totalAnnualLeave, includingBonus: includeBonusInStatus)
     }
 
     /// "완료" 표시값 — 보너스 포함 ON 시 사용된 보너스도 합산 (보존 법칙 유지)
     var displayUsed: Double {
-        includeBonusInStatus ? actualUsed + usedBonusLeave : actualUsed
+        usage.used(includingBonus: includeBonusInStatus)
     }
 
     /// "남은" — 남은 annual + 잔여 보너스
     var effectiveRemaining: Double {
-        let annualRemaining = max(0, profile.totalAnnualLeave - committedLeave)
-        return includeBonusInStatus ? annualRemaining + remainingBonusLeave : annualRemaining
+        usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: includeBonusInStatus)
     }
 
     var remainingPercentage: Double {

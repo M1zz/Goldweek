@@ -14,6 +14,8 @@ struct LeaveHistoryView: View {
     @Query(sort: \LeaveRecord.startDate, order: .reverse) private var allRecords: [LeaveRecord]
     @Query private var profiles: [UserProfile]
     @Query private var allBonusLeaves: [BonusLeave]
+    /// 홈 카드와 같은 설정을 본다 — 이 값이 다르면 같은 "사용 완료"가 화면마다 달라진다.
+    @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
 
     @State private var selectedYear: Int
     @State private var selectedStatus: LeaveStatus?
@@ -85,40 +87,14 @@ struct LeaveHistoryView: View {
         }
     }
 
-    // 연도별 통계 (회계연도 기준)
-    var yearStats: YearStats {
-        let start = fiscalYearStart(for: selectedYear)
-        let end = fiscalYearEnd(for: selectedYear)
-        let records = allRecords.filter { $0.startDate >= start && $0.startDate <= end }
-        let today = calendar.startOfDay(for: Date())
-
-        // 내역은 모든 휴가 유형의 일수를 합산 (연차 차감 여부 무관)
-        // endDate가 지난 .planned도 완료로 집계
-        let totalUsed = records.filter { record in
-            record.status == .used ||
-            (record.status == .planned && calendar.startOfDay(for: record.endDate) < today)
-        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
-
-        let totalPlanned = records.filter { record in
-            record.status == .planned && calendar.startOfDay(for: record.endDate) >= today
-        }.reduce(0.0) { $0 + $1.effectiveLeaveDays }
-
-        let usedCount = records.filter { record in
-            record.status == .used ||
-            (record.status == .planned && calendar.startOfDay(for: record.endDate) < today)
-        }.count
-        let plannedCount = records.filter { record in
-            record.status == .planned && calendar.startOfDay(for: record.endDate) >= today
-        }.count
-        let cancelledCount = records.filter { $0.status == .cancelled }.count
-
-        return YearStats(
-            totalUsed: totalUsed,
-            totalPlanned: totalPlanned,
-            usedCount: usedCount,
-            plannedCount: plannedCount,
-            cancelledCount: cancelledCount
-        )
+    /// 연도별 통계 — 계산은 `LeaveUsageCalculator` 한 곳에서만 한다.
+    /// (예전엔 여기서 따로 세느라 홈 카드와 "사용 완료" 숫자가 어긋났다)
+    var yearStats: LeaveUsageCalculator.Summary {
+        LeaveUsageCalculator.summary(records: allRecords,
+                                     bonuses: allBonusLeaves,
+                                     year: selectedYear,
+                                     startMonth: yearStartMonth,
+                                     calendar: calendar)
     }
 
     // 월별 그룹화
@@ -279,15 +255,15 @@ struct LeaveHistoryView: View {
         HStack(spacing: 16) {
             StatCard(
                 title: Strings.statUsed,
-                value: String(format: "%.1f\(Strings.dayUnitSuffix)", yearStats.totalUsed),
-                count: yearStats.usedCount,
+                value: Strings.dayCount(yearStats.used(includingBonus: includeBonusInStatus)),
+                count: yearStats.annualUsedCount,
                 color: .green
             )
 
             StatCard(
                 title: Strings.statPlanned,
-                value: String(format: "%.1f\(Strings.dayUnitSuffix)", yearStats.totalPlanned),
-                count: yearStats.plannedCount,
+                value: Strings.dayCount(yearStats.annualPlanned),
+                count: yearStats.annualPlannedCount,
                 color: .blue
             )
 
@@ -425,14 +401,6 @@ struct LeaveHistoryView: View {
 }
 
 // MARK: - 연간 통계 구조체
-struct YearStats {
-    let totalUsed: Double
-    let totalPlanned: Double
-    let usedCount: Int
-    let plannedCount: Int
-    let cancelledCount: Int
-}
-
 // MARK: - 필터 칩
 struct FilterChip: View {
     let title: String
@@ -673,12 +641,10 @@ struct EditLeaveSheet: View {
         return newDeduction - originalDeduction
     }
 
-    // 현재 레코드를 제외한 다른 레코드들의 committed leave
+    /// 현재 레코드를 제외한 다른 기록들의 확정 연차 — 편집 중인 값과 비교하려고 자기 자신만 뺀다.
     var committedExcludingSelf: Double {
-        let others = allLeaveRecords.filter { $0.id != record.id }
-        let active = others.filter { $0.status == .used || $0.status == .planned }
-        let deducting = active.filter { $0.deductsFromAnnualLeave }
-        return deducting.reduce(0.0) { $0 + $1.effectiveLeaveDays }
+        LeaveUsageCalculator.currentSummary(records: allLeaveRecords.filter { $0.id != record.id },
+                                            startMonth: profile?.yearStartMonth ?? 1).annualCommitted
     }
 
     var availableForEdit: Double {

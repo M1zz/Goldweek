@@ -870,4 +870,100 @@ final class LeaveCalculationTests: XCTestCase {
         XCTAssertEqual(homeRemaining, recoAvailable, "현황탭 == 추천탭")
         XCTAssertEqual(recoAvailable, settAvailable, "추천탭 == 설정")
     }
+
+    // MARK: - LeaveUsageCalculator — 화면 간 숫자 일치
+
+    /// 홈 카드와 휴가 사용 내역이 **같은 값**을 보여야 한다.
+    /// (예전엔 내역이 출장·병가까지 더해 홈보다 큰 "사용 완료"를 띄웠다)
+    func testHomeAndHistoryShareTheSameUsedNumber() {
+        let past = makeDate(daysFromNow: -10)
+        let records = [
+            LeaveRecord(startDate: past, endDate: past, type: .annual, status: .used),
+            LeaveRecord(startDate: past, endDate: past, type: .sick, status: .used),        // 연차 차감 아님
+            LeaveRecord(startDate: past, endDate: past, type: .businessTrip, status: .used) // 연차 차감 아님
+        ]
+        let summary = LeaveUsageCalculator.currentSummary(records: records, startMonth: 1)
+
+        XCTAssertEqual(summary.annualUsed, 1.0, "연차에서 깎인 건 1일뿐")
+        XCTAssertEqual(summary.allTypesUsed, 3.0, "쉰 날로 세면 3일 — 두 숫자는 뜻이 다르다")
+        XCTAssertEqual(summary.used(includingBonus: false), summary.annualUsed,
+                       "화면이 '총 연차' 옆에 놓는 값은 언제나 연차 차감분")
+    }
+
+    func testPastPlannedCountsAsUsed() {
+        let past = makeDate(daysFromNow: -3)
+        let future = makeDate(daysFromNow: 5)
+        let records = [
+            LeaveRecord(startDate: past, endDate: past, type: .annual, status: .planned),   // 지나간 예정
+            LeaveRecord(startDate: future, endDate: future, type: .annual, status: .planned)
+        ]
+        let summary = LeaveUsageCalculator.currentSummary(records: records, startMonth: 1)
+
+        XCTAssertEqual(summary.annualUsed, 1.0, "종료일이 지난 예정은 사용으로 센다")
+        XCTAssertEqual(summary.annualPlanned, 1.0)
+        XCTAssertEqual(summary.annualCommitted, 2.0)
+    }
+
+    func testCancelledIsCountedNowhere() {
+        let past = makeDate(daysFromNow: -3)
+        let records = [LeaveRecord(startDate: past, endDate: past, type: .annual, status: .cancelled)]
+        let summary = LeaveUsageCalculator.currentSummary(records: records, startMonth: 1)
+
+        XCTAssertEqual(summary.annualUsed, 0)
+        XCTAssertEqual(summary.annualPlanned, 0)
+        XCTAssertEqual(summary.cancelledCount, 1)
+    }
+
+    /// 기준월이 1월이 아니면 회계연도 경계가 달라진다 — 경계 기록이 엉뚱한 해에 붙으면 안 된다.
+    func testFiscalYearBoundaryWithAprilStart() {
+        let calendar = Calendar.current
+        let march = calendar.date(from: DateComponents(year: 2026, month: 3, day: 31))!
+        let april = calendar.date(from: DateComponents(year: 2026, month: 4, day: 1))!
+
+        XCTAssertEqual(LeaveUsageCalculator.fiscalYear(for: march, startMonth: 4), 2025)
+        XCTAssertEqual(LeaveUsageCalculator.fiscalYear(for: april, startMonth: 4), 2026)
+
+        let records = [
+            LeaveRecord(startDate: march, endDate: march, type: .annual, status: .used),
+            LeaveRecord(startDate: april, endDate: april, type: .annual, status: .used)
+        ]
+        let y2025 = LeaveUsageCalculator.summary(records: records, year: 2025, startMonth: 4,
+                                                 asOf: makeDate(daysFromNow: 0))
+        let y2026 = LeaveUsageCalculator.summary(records: records, year: 2026, startMonth: 4,
+                                                 asOf: makeDate(daysFromNow: 0))
+        XCTAssertEqual(y2025.annualUsed, 1.0)
+        XCTAssertEqual(y2026.annualUsed, 1.0)
+    }
+
+    /// 지난 해 내역을 볼 때 올해 받은 보너스가 끼어들면 안 된다.
+    func testBonusIsScopedToItsFiscalYear() {
+        let calendar = Calendar.current
+        let thisYear = calendar.component(.year, from: Date())
+        let grantedNow = BonusLeave(days: 3, type: .compensatory)
+        let summaryThisYear = LeaveUsageCalculator.summary(records: [], bonuses: [grantedNow],
+                                                           year: thisYear, startMonth: 1)
+        let summaryLastYear = LeaveUsageCalculator.summary(records: [], bonuses: [grantedNow],
+                                                           year: thisYear - 1, startMonth: 1)
+
+        XCTAssertEqual(summaryThisYear.grantedBonus, 3)
+        XCTAssertEqual(summaryLastYear.grantedBonus, 0, "작년 요약에 올해 보너스가 들어가면 안 된다")
+    }
+
+    /// 보너스 포함 토글이 켜지면 총·사용·남음이 함께 움직여야 한다(총 = 사용 + 남음).
+    func testBonusToggleKeepsTotalConsistent() {
+        let past = makeDate(daysFromNow: -5)
+        let bonus = BonusLeave(days: 2, type: .compensatory)
+        bonus.usedDays = 1
+        let records = [LeaveRecord(startDate: past, endDate: past, type: .annual, status: .used)]
+        let summary = LeaveUsageCalculator.currentSummary(records: records, bonuses: [bonus], startMonth: 1)
+
+        let grant = 15.0
+        let total = summary.total(annualGrant: grant, includingBonus: true)
+        let used = summary.used(includingBonus: true)
+        let remaining = summary.remaining(annualGrant: grant, includingBonus: true)
+
+        XCTAssertEqual(total, 17.0)
+        XCTAssertEqual(used, 2.0, "연차 1일 + 보너스 1일")
+        XCTAssertEqual(used + remaining, total, accuracy: 0.001, "총 = 사용 + 남음이 깨지면 안 된다")
+    }
 }
