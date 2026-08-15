@@ -116,7 +116,11 @@ struct HomeView: View {
         .sorted { $0.startDate < $1.startDate }
     }
 
-    /// 올해 남은 공휴일 — **붙어 있는 날은 한 줄로 묶는다**(추석 3일이 세 줄로 늘어나지 않게).
+    /// 카드에 띄울 공휴일 개수 — 남은 공휴일을 다 늘어놓으면 내 휴가가 그 사이에 묻힌다.
+    /// 주인공은 내가 등록한 휴가이고, 공휴일은 "곧 뭐가 있나" 정도의 곁눈질이면 충분하다.
+    private static let upcomingHolidayLimit = 3
+
+    /// 올해 남은 공휴일 중 가까운 몇 개 — **붙어 있는 날은 한 줄로 묶는다**(추석 3일이 세 줄로 늘어나지 않게).
     /// 숨긴 공휴일(설정 > 공휴일 관리)은 캘린더와 마찬가지로 여기서도 빠진다.
     private var upcomingHolidayBlocks: [UpcomingItem] {
         guard showHolidaysInUpcoming else { return [] }
@@ -149,11 +153,13 @@ struct HomeView: View {
                 run.append(holiday)
             } else {
                 flush()
+                // 필요한 개수를 채웠으면 나머지는 볼 것도 없다(연휴 묶음이 끊긴 지점에서만 센다)
+                if blocks.count >= Self.upcomingHolidayLimit { return blocks }
                 run = [holiday]
             }
         }
         flush()
-        return blocks
+        return Array(blocks.prefix(Self.upcomingHolidayLimit))
     }
 
     /// 카드에 그릴 최종 목록 — 내 휴가와 공휴일을 날짜순으로 섞는다.
@@ -1685,13 +1691,13 @@ struct BurnoutPaceCard: View {
     private var timelineRow: some View {
         GeometryReader { geo in
             let w = geo.size.width
-            let nodeW: CGFloat = 56
-            // 본문 크기 글자를 담아야 해서 칸을 넓혔다 — 좁으면 "Last br..."처럼 잘린다.
-            let cellW: CGFloat = 104
-            let budget = max(w - nodeW - cellW * 2, 0)
+            // 양 끝 칸은 본문 크기 글자를 담아야 하지만, **선이 들어갈 자리를 먼저 확보한다.**
+            // (칸을 고정으로 넓히면 화면이 좁을 때 연결선이 몇 pt로 줄어 사라져 버린다)
+            let cellW = min(104, max(72, (w - minTrackWidth) / 2))
+            let trackW = max(w - cellW * 2, minTrackWidth)
             let frac = todayFraction
-            let leftW = budget * frac          // 지난 휴가 ~ 오늘 사이
-            let rightW = budget * (1 - frac)   // 오늘 ~ 다음 휴가 사이
+            // '오늘' 표식이 트랙 밖으로 밀려나지 않게 가장자리에서 멈춘다
+            let nodeX = min(max(trackW * frac, todayNodeWidth / 2), trackW - todayNodeWidth / 2)
 
             HStack(spacing: 0) {
                 // 지난 휴가
@@ -1703,17 +1709,23 @@ struct BurnoutPaceCard: View {
                 )
                 .frame(width: cellW)
 
-                // 연결선 (왼쪽) — 멀수록 길어진다
-                connector(filled: daysSinceLastLeave != nil, color: lastLeaveColor)
-                    .frame(width: leftW)
+                // 연결선은 **끊기지 않는 하나의 트랙**이고, '오늘'이 그 위를 타고 움직인다.
+                // 예전처럼 선을 좌/우 두 칸으로 나눠 넣으면 한쪽 폭이 0에 수렴해 선이 사라진다.
+                ZStack(alignment: .topLeading) {
+                    connectorLine(filled: daysSinceLastLeave != nil, color: lastLeaveColor)
+                        .frame(width: nodeX, height: 2)
+                        .position(x: nodeX / 2, y: trackDotY)
 
-                // 오늘 (비율에 따라 좌우로 이동)
-                todayNode
-                    .frame(width: nodeW)
+                    connectorLine(filled: nextPlannedLeave != nil, color: AppTheme.Colors.brand)
+                        .frame(width: max(trackW - nodeX, 0), height: 2)
+                        .position(x: nodeX + (trackW - nodeX) / 2, y: trackDotY)
 
-                // 연결선 (오른쪽) — 가까울수록 짧아진다
-                connector(filled: nextPlannedLeave != nil, color: AppTheme.Colors.brand)
-                    .frame(width: rightW)
+                    todayNode
+                        .frame(width: todayNodeWidth)
+                        // 동그라미 중심을 선과 같은 높이에 — 노드는 원(22) + 간격(4) + 글자라 중심이 아래로 치우친다
+                        .position(x: nodeX, y: trackDotY + 12)
+                }
+                .frame(width: trackW)
 
                 // 다음 휴가
                 timelineCell(
@@ -1728,6 +1740,13 @@ struct BurnoutPaceCard: View {
         }
         .frame(height: 68)
     }
+
+    /// 연결선이 선으로 보이려면 최소 이만큼은 있어야 한다 — 이보다 좁아지면 양 끝 칸을 줄인다.
+    private var minTrackWidth: CGFloat { 120 }
+    /// '오늘' 표식(동그라미 + 글자)의 폭 — 트랙 가장자리에서 멈추는 기준.
+    private var todayNodeWidth: CGFloat { 64 }
+    /// 양 끝 칸의 점 중심 높이 — 선을 그 점들과 같은 높이에 맞춘다.
+    private var trackDotY: CGFloat { 5 }
 
     private var lastLeaveColor: Color {
         guard let since = daysSinceLastLeave else { return .secondary }
@@ -1756,12 +1775,10 @@ struct BurnoutPaceCard: View {
         .frame(maxWidth: .infinity)
     }
 
-    private func connector(filled: Bool, color: Color) -> some View {
-        Rectangle()
+    /// 트랙 위 선 한 도막 — 길이·위치는 부르는 쪽이 정한다(점과 같은 높이에 놓기 위해).
+    private func connectorLine(filled: Bool, color: Color) -> some View {
+        Capsule()
             .fill(filled ? color.opacity(0.4) : Color(.systemGray5))
-            .frame(height: 2)
-            .frame(maxWidth: .infinity)
-            .padding(.bottom, 28)
     }
 }
 
