@@ -10,6 +10,7 @@ import SwiftData
 import CloudKit
 import UIKit
 import TipKit
+import LeeoKit
 
 @main
 struct GoldweekApp: App {
@@ -21,6 +22,30 @@ struct GoldweekApp: App {
 
         // 휴식 레이더 알림 델리게이트 등록 (포그라운드 표시 + 탭/스누즈 추적)
         NotificationService.registerDelegate()
+
+        // 앱 소유 사용 통계·피드백 허브 (CloudKit, 외부 SDK 없음).
+        // Firebase를 걷어낸 뒤로 이 경로가 유일한 분석 수단이다 — 이벤트는 각 화면에서
+        // `UsageReportingService.record(event:)`로 직접 남긴다(이벤트 사전: docs/analytics-impact.md).
+
+        // LeeoKit 내부(페이월·피드백·리뷰) 이벤트도 같은 경로로 모은다.
+        LeeoAnalyticsCenter.register(GoldweekSpec.self)
+
+        // 원격 킬스위치 캐시 갱신 (6시간 쓰로틀, 실패해도 조용히 넘어간다 — 읽기는 항상 캐시).
+        LeeoRemoteFlags(spec: GoldweekSpec.self).refreshInBackground(GoldweekFlag.self)
+
+        // 크래시·멈춤 진단 (MetricKit) → 허브. 구독만 하고 즉시 반환한다(런치 비용 없음).
+        LeeoDiagnostics.shared.start(spec: GoldweekSpec.self) {
+            LeeoRemoteFlags.isEnabled(GoldweekFlag.usageReportingEnabled)
+        }
+
+        // ⚠️ `LeeoKit.bootstrap`을 쓰지 않는 이유
+        //   · registerLaunch: 이 앱은 공유 일정 silent push·알림으로도 프로세스가 뜬다. 여기서 세면
+        //     열지도 않은 실행이 실행 횟수로 잡혀 만족도 프롬프트가 앞당겨진다
+        //     → 화면이 실제로 뜨는 ContentView에서 센다.
+        //   · 사용 스냅샷: 지표(SwiftData)를 실어야 의미가 있어 ContentView에서 보낸다.
+        #if DEBUG
+        LeeoPreflight.report(GoldweekSpec.self)
+        #endif
 
         let schema = Schema([
             UserProfile.self,

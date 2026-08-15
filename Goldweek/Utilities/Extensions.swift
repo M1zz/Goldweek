@@ -12,18 +12,24 @@ import SwiftUI
 
 extension Date {
     
-    /// 한국어 날짜 포맷
-    var koreanFormatted: String {
+    /// **앱 언어 설정**을 따르는 날짜 문자열.
+    ///
+    /// ⚠️ `Date.formatted(...)`를 그냥 쓰면 안 된다 — 그건 **기기 언어**를 따라간다.
+    ///    이 앱은 설정에서 언어를 따로 고를 수 있어서, 기기가 한국어인 채 앱만 영어로 바꾸면
+    ///    "Joined: 2026년 8월 15일"처럼 한 줄에 두 언어가 섞인다.
+    func appFormatted(date: DateFormatter.Style = .medium, time: DateFormatter.Style = .none) -> String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "M월 d일 (E)"
+        formatter.locale = Locale(identifier: Strings.localeIdentifier)
+        formatter.dateStyle = date
+        formatter.timeStyle = time
         return formatter.string(from: self)
     }
-    
-    /// 짧은 날짜 포맷
-    var shortFormatted: String {
+
+    /// 연도 없는 짧은 날짜 ("8월 15일" / "Aug 15") — 앱 언어를 따른다.
+    var appMonthDay: String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "M/d"
+        formatter.locale = Locale(identifier: Strings.localeIdentifier)
+        formatter.setLocalizedDateFormatFromTemplate("MMMd")
         return formatter.string(from: self)
     }
     
@@ -191,9 +197,9 @@ extension Array where Element == LeaveRecord {
         filter { $0.startDate >= start && $0.endDate <= end }
     }
     
-    /// 총 사용 일수 계산
+    /// 총 사용 일수 계산 (길이 축 반영 — 반차 0.5, 반반차 0.25)
     var totalDays: Double {
-        reduce(0) { $0 + ($1.type == .half ? 0.5 : Double($1.daysCount)) }
+        reduce(0) { $0 + $1.effectiveLeaveDays }
     }
 }
 

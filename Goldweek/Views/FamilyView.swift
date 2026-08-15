@@ -76,7 +76,8 @@ struct FamilyLeaveRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(dateRangeText)
                     .font(.subheadline)
-                Text(leave.type.rawValue)
+                // rawValue는 한국어 고정값이다 — 앱 언어를 따르는 이름으로 그린다
+                Text(Strings.leaveTypeName(leave.type))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -114,11 +115,11 @@ struct FamilyLeaveRow: View {
     }
 
     private var dateRangeText: String {
-        let start = leave.startDate.formatted(date: .abbreviated, time: .omitted)
+        let start = leave.startDate.appFormatted()
         if Calendar.current.isDate(leave.startDate, inSameDayAs: leave.endDate) {
             return start
         }
-        let end = leave.endDate.formatted(date: .abbreviated, time: .omitted)
+        let end = leave.endDate.appFormatted()
         return "\(start) ~ \(end)"
     }
 }

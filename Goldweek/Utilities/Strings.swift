@@ -34,6 +34,17 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
+    /// 번들 리소스(문자열 카탈로그·LeeoKit)를 고를 때 쓰는 코드.
+    /// ⚠️ 중국어는 `zh`가 아니라 `zh-Hans`여야 카탈로그가 매칭된다.
+    var bundleLanguageCode: String {
+        switch self {
+        case .korean: return "ko"
+        case .english: return "en"
+        case .japanese: return "ja"
+        case .chinese: return "zh-Hans"
+        }
+    }
+
     static var current: AppLanguage {
         get {
             if let raw = UserDefaults.standard.string(forKey: "appLanguage"),
@@ -44,6 +55,14 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: "appLanguage")
+            // 앱 번들 문구(LeeoKit 피드백 화면, 시스템 공유 시트 등)는 이 앱의 언어 설정이 아니라
+            // **번들 언어**를 따른다. 이 값을 같이 써 둬야 기기 언어가 한국어인 사용자가 앱만
+            // 영어로 바꿨을 때 그 화면들까지 따라온다.
+            // ⚠️ 번들 문구는 **다음 실행부터** 반영된다(이미 로드된 번들 캐시는 안 바뀐다).
+            //    설정 화면의 행 이름들은 Strings 를 쓰므로 즉시 바뀐다.
+            // 지원하지 않는 언어에서 개발 언어(한국어)로 떨어지지 않도록 영어를 뒤에 둔다.
+            let fallback = newValue == .english ? [] : ["en"]
+            UserDefaults.standard.set([newValue.bundleLanguageCode] + fallback, forKey: "AppleLanguages")
             LanguageManager.shared.currentLanguage = newValue
         }
     }
@@ -1426,6 +1445,64 @@ enum Strings {
         }
     }
 
+    /// 설정 > 지원 섹션 (피드백·리뷰·법적 링크·버전).
+    static var supportSection: String {
+        switch lang {
+        case .korean: return "지원"
+        case .english: return "Support"
+        case .japanese: return "サポート"
+        case .chinese: return "支持"
+        }
+    }
+
+    static var sendFeedback: String {
+        switch lang {
+        case .korean: return "피드백 보내기"
+        case .english: return "Send Feedback"
+        case .japanese: return "フィードバックを送る"
+        case .chinese: return "发送反馈"
+        }
+    }
+
+    static var supportPage: String {
+        switch lang {
+        case .korean: return "지원 페이지"
+        case .english: return "Support Page"
+        case .japanese: return "サポートページ"
+        case .chinese: return "支持页面"
+        }
+    }
+
+    /// 마스터 모드에서만 보이는 개발자 행들.
+    /// 화면 안쪽은 개발자용이라 번역하지 않지만, **설정 목록에 한국어가 섞여 보이면 안 되므로**
+    /// 행 이름은 다른 행들과 같은 언어를 따른다.
+    static var devFeedbackInbox: String {
+        switch lang {
+        case .korean: return "접수된 피드백 (개발자)"
+        case .english: return "Feedback Inbox (Developer)"
+        case .japanese: return "受信フィードバック（開発者）"
+        case .chinese: return "收到的反馈（开发者）"
+        }
+    }
+
+    static var devUsageStats: String {
+        switch lang {
+        case .korean: return "사용 통계 (개발자)"
+        case .english: return "Usage Stats (Developer)"
+        case .japanese: return "利用統計（開発者）"
+        case .chinese: return "使用统计（开发者）"
+        }
+    }
+
+    static var devCrashReports: String {
+        switch lang {
+        case .korean: return "안정성 (개발자)"
+        case .english: return "Stability (Developer)"
+        case .japanese: return "安定性（開発者）"
+        case .chinese: return "稳定性（开发者）"
+        }
+    }
+
     static var version: String {
         switch lang {
         case .korean: return "버전"
@@ -1895,6 +1972,11 @@ enum Strings {
         case .chinese: return "用户"
         }
     }
+
+    /// 모든 언어의 기본 이름 — "이 이름을 아직 안 바꿨다"를 알아보는 데 쓴다.
+    /// 기본 이름은 프로필을 만든 시점의 언어로 저장돼 굳기 때문에, 나중에 언어를 바꾸면
+    /// 영어 화면에 "사용자"만 혼자 한국어로 남는다.
+    static let defaultUserNames: Set<String> = ["사용자", "User", "ユーザー", "用户"]
 
     // MARK: - 열거형 표시 이름
 

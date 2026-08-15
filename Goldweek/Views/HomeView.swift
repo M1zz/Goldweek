@@ -932,7 +932,7 @@ struct UpcomingLeaveRow: View {
                 Text(leave.note.isEmpty ? defaultTitle : leave.note)
                     .font(.subheadline.bold())
 
-                Text("\(leave.startDate.formatted(date: .abbreviated, time: .omitted)) - \(leave.endDate.formatted(date: .abbreviated, time: .omitted))")
+                Text("\(leave.startDate.appFormatted()) - \(leave.endDate.appFormatted())")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -954,7 +954,7 @@ struct UpcomingLeaveRow: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .voCard(
             VoiceOverLabel.upcomingLeave(
-                dateRange: "\(leave.startDate.formatted(date: .abbreviated, time: .omitted)) - \(leave.endDate.formatted(date: .abbreviated, time: .omitted))",
+                dateRange: "\(leave.startDate.appFormatted()) - \(leave.endDate.appFormatted())",
                 typeLabel: Strings.leaveTypeName(leave.type),
                 days: leave.effectiveLeaveDays,
                 dDay: daysUntil
@@ -1130,7 +1130,7 @@ struct PastLeaveQuickEntrySheet: View {
                     HStack {
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.blue)
-                        Text("\(yearStartDate.formatted(.dateTime.month().day()))  →  \(yesterday.formatted(.dateTime.month().day()))")
+                        Text("\(yearStartDate.appMonthDay)  →  \(yesterday.appMonthDay)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }

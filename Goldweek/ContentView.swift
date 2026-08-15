@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import WidgetKit
+import LeeoKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -28,10 +29,16 @@ struct ContentView: View {
         Group {
             if let profile = currentProfile {
                 MainTabView(profile: profile)
+                    // 만족도 프롬프트 — 조건이 맞으면 "즐겁게 쓰고 계신가요?"를 묻고,
+                    // 좋다면 App Store 리뷰로, 아쉽다면 피드백 화면으로 보낸다.
+                    // 불만인 사람을 별점 대신 피드백으로 흡수하는 게 이 프롬프트의 목적이다.
+                    .leeoSatisfactionCheck(GoldweekSpec.self)
                     .onAppear {
                         LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                         updateWidget()
                         ReviewManager.shared.recordLaunch()
+                        // 사람이 앱을 실제로 연 순간 — 실행 횟수·활동일·설치 스냅샷이 여기서 나간다.
+                        UsageReportingService.reportForegroundOpen(context: modelContext)
                         if !hasCompletedOnboarding {
                             hasCompletedOnboarding = true
                         }
@@ -42,6 +49,7 @@ struct ContentView: View {
                         if newPhase == .active {
                             LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                             updateWidget()
+                            UsageReportingService.reportForegroundOpen(context: modelContext)
                             refreshRestRadar(profile: profile)
                             syncSharedSchedules(profile: profile)
                         } else if newPhase == .background {

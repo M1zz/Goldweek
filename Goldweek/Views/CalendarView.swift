@@ -709,7 +709,7 @@ struct SelectedDateInfo: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(date.formatted(date: .complete, time: .omitted))
+            Text(date.appFormatted(date: .full))
                 .font(.headline)
                 .voHeader()
 

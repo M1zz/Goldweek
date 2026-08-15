@@ -382,6 +382,7 @@ struct LeaveHistoryView: View {
             }
         }
 
+        UsageReportingService.record(event: "leave_deleted:\(record.type.rawValue)")
         modelContext.delete(record)
         do {
             try modelContext.save()

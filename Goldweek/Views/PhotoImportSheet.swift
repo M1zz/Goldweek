@@ -447,6 +447,7 @@ struct PhotoImportSheet: View {
 
         do {
             try modelContext.save()
+            UsageReportingService.record(event: "leave_added:photo_import")
             HapticFeedback.success()
             importSucceeded = true
             resultMessage = Strings.leavesImported(inserted.count)

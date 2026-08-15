@@ -31,6 +31,7 @@ struct PaywallView: View {
             }
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear { UsageReportingService.record(event: "paywall_view") }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(Strings.cancel) {
@@ -327,6 +328,7 @@ struct PaywallView: View {
                 // 사용자가 취소한 경우 purchase()는 에러 없이 리턴되므로
                 // 실제 Pro가 됐을 때만 성공 알림을 띄운다
                 guard proManager.isPro else { return }
+                UsageReportingService.record(event: "paywall_purchase:success")
                 await MainActor.run {
                     isSuccess = true
                     alertMessage = Strings.youArePro

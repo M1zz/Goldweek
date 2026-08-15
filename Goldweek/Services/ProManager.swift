@@ -19,7 +19,10 @@ class ProManager {
     /// 상품 로드 실패 여부 — Paywall에서 재시도 UI 노출에 사용
     private(set) var productLoadFailed = false
 
-    private let productID = "com.Ysoup.LeaveWise.pro"
+    /// App Store Connect·기존 사용자 영수증과의 계약 — 변경 금지.
+    /// GoldweekSpec(LeeoKit 계약)도 이 값을 참조한다.
+    static let proProductID = "com.Ysoup.LeaveWise.pro"
+    private let productID = ProManager.proProductID
     private var updateListenerTask: Task<Void, Never>?
 
     // TestFlight 빌드는 sandbox receipt을 사용

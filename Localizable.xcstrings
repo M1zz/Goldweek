@@ -1,569 +1,967 @@
 {
-  "sourceLanguage" : "ko",
-  "strings" : {
-    "%@ · 연차 %@일" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ · 연차 %2$@일"
+  "sourceLanguage": "ko",
+  "strings": {
+    "%@ · 연차 %@일": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ · 연차 %2$@일"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@ days leave"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · 有給%2$@日"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · 年假%2$@天"
           }
         }
       }
     },
-    "%@일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ days"
+    "%@일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@日"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@日"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@天"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@天"
           }
         }
       }
     },
-    "%@일 남음" : {
-
-    },
-    "%lld" : {
-
-    },
-    "%lld%%" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%%"
+    "%@일 남음": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days left"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%%"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残り%@日"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%%"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剩余%@天"
           }
         }
       }
     },
-    "%lld%% 남음" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%% left"
+    "%lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%%残り"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "剩余%lld%%"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
           }
         }
       }
     },
-    "%lld일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld days"
+    "%lld%%": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld日"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld天"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
           }
         }
       }
     },
-    "%lld일간" : {
-
-    },
-    "+%@일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+%@ days"
+    "%lld%% 남음": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%% left"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+%@日"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%残り"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+%@天"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剩余%lld%%"
           }
         }
       }
     },
-    "D-" : {
-
-    },
-    "DAY" : {
-
-    },
-    "Goldweek" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Goldweek"
+    "%lld일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Goldweek"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld日"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "골드위크"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Goldweek"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld天"
           }
         }
       }
     },
-    "갱신까지" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Until Reset"
+    "%lld일간": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "更新まで"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld日間"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "距重置"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld天"
           }
         }
       }
     },
-    "갱신까지 %lld일" : {
-
-    },
-    "기준" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expected"
+    "+%@일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ days"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "基準"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@日"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "基准"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@天"
           }
         }
       }
     },
-    "남은 연차" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remaining Leave"
+    "D-": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "残り有給"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "剩余年假"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
           }
         }
       }
     },
-    "남은 연차 %@일" : {
-
-    },
-    "남은 연차와 다가오는 휴가를 확인하세요" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check your remaining leave and upcoming vacations"
+    "DAY": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DAY"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "残りの有給と今後の休暇を確認しましょう"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DAY"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "查看剩余年假和即将到来的假期"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DAY"
           }
         }
       }
     },
-    "다가오는 휴가" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Upcoming Leave"
+    "Goldweek": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今後の休暇"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "即将到来的假期"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "골드위크"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
           }
         }
       }
     },
-    "다음 휴가" : {
-
-    },
-    "다음 휴가까지 남은 날을 카운트다운으로 확인하세요" : {
-
-    },
-    "보너스" : {
-
-    },
-    "소진 속도" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Burn Rate"
+    "갱신까지": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Until Reset"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "消化ペース"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新まで"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "消耗速度"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "距重置"
           }
         }
       }
     },
-    "소진 속도: %@" : {
-
-    },
-    "실제" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Actual"
+    "갱신까지 %lld일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days until reset"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "実際"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新まで%lld日"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "实际"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "距重置%lld天"
           }
         }
       }
     },
-    "앱에서 휴가 계획을 추가해보세요" : {
-
-    },
-    "연차" : {
-
-    },
-    "연차 %@일" : {
-
-    },
-    "연차 %@일 남음" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ days of leave remaining"
+    "기준": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "有給残り%@日"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "基準"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "剩余年假%@天"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "基准"
           }
         }
       }
     },
-    "연차 갱신일까지 소진 속도를 확인하세요" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check your leave burn rate until the next reset date"
+    "남은 연차": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remaining Leave"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "更新日までの有給消化ペースを確認しましょう"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残り有給"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "查看到重置日期前的年假消耗速度"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剩余年假"
           }
         }
       }
     },
-    "연차 소진 속도" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leave Burn Rate"
+    "남은 연차 %@일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days of leave left"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "有給消化ペース"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残り有給%@日"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "年假消耗速度"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剩余年假%@天"
           }
         }
       }
     },
-    "연차 현황" : {
-
-    },
-    "일" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "days"
+    "남은 연차와 다가오는 휴가를 확인하세요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your remaining leave and upcoming vacations"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "日"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残りの有給と今後の休暇を確認しましょう"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "天"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看剩余年假和即将到来的假期"
           }
         }
       }
     },
-    "잔여율" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remaining"
+    "다가오는 휴가": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upcoming Leave"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "残率"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今後の休暇"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "剩余率"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "即将到来的假期"
           }
         }
       }
     },
-    "잠금화면에서 D-day와 남은 연차를 확인하세요" : {
-
-    },
-    "잠금화면에서 남은 연차 확인" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check remaining leave on lock screen"
+    "다음 휴가": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next Leave"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ロック画面で残り有給を確認"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次の休暇"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在锁屏上查看剩余年假"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下次假期"
           }
         }
       }
     },
-    "총 연차" : {
-
-    },
-    "휴가" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leave"
+    "다음 휴가까지 남은 날을 카운트다운으로 확인하세요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Count down the days until your next time off"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "休暇"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次の休暇までの残り日数をカウントダウンで確認しましょう"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "假期"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "倒数距离下次休假还有多少天"
           }
         }
       }
     },
-    "휴가 D-Day" : {
-
-    },
-    "휴가 계획을 세워볼까요?" : {
-
-    },
-    "휴가 미정" : {
-
-    },
-    "휴가 없음" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Leave"
+    "보너스": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonus"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "休暇なし"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ボーナス"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无假期"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "奖励假"
           }
         }
       }
     },
-    "휴가캘린더" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leave Calendar"
+    "소진 속도": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Burn Rate"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "休暇カレンダー"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "消化ペース"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "假期日历"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "消耗速度"
+          }
+        }
+      }
+    },
+    "소진 속도: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Burn rate: %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "消化ペース：%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "消耗速度：%@"
+          }
+        }
+      }
+    },
+    "실제": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actual"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "実際"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "实际"
+          }
+        }
+      }
+    },
+    "앱에서 휴가 계획을 추가해보세요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a leave plan in the app"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アプリで休暇の予定を追加しましょう"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在应用中添加休假计划"
+          }
+        }
+      }
+    },
+    "연차": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有給"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "年假"
+          }
+        }
+      }
+    },
+    "연차 %@일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days of leave"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有給%@日"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "年假%@天"
+          }
+        }
+      }
+    },
+    "연차 %@일 남음": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days of leave remaining"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有給残り%@日"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剩余年假%@天"
+          }
+        }
+      }
+    },
+    "연차 갱신일까지 소진 속도를 확인하세요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your leave burn rate until the next reset date"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新日までの有給消化ペースを確認しましょう"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看到重置日期前的年假消耗速度"
+          }
+        }
+      }
+    },
+    "연차 소진 속도": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave Burn Rate"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有給消化ペース"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "年假消耗速度"
+          }
+        }
+      }
+    },
+    "연차 현황": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave Status"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有給の状況"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "年假状况"
+          }
+        }
+      }
+    },
+    "일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "days"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "天"
+          }
+        }
+      }
+    },
+    "잔여율": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remaining"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残率"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剩余率"
+          }
+        }
+      }
+    },
+    "잠금화면에서 D-day와 남은 연차를 확인하세요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your D-day and remaining leave on the lock screen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ロック画面でD-dayと残り有給を確認"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在锁屏上查看倒数与剩余年假"
+          }
+        }
+      }
+    },
+    "잠금화면에서 남은 연차 확인": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check remaining leave on lock screen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ロック画面で残り有給を確認"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在锁屏上查看剩余年假"
+          }
+        }
+      }
+    },
+    "총 연차": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Leave"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有給合計"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "年假总数"
+          }
+        }
+      }
+    },
+    "휴가": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休暇"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "假期"
+          }
+        }
+      }
+    },
+    "휴가 D-Day": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave D-Day"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休暇D-Day"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休假倒数"
+          }
+        }
+      }
+    },
+    "휴가 계획을 세워볼까요?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan your next time off"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休暇の計画を立てませんか？"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "来规划一次休假吧"
+          }
+        }
+      }
+    },
+    "휴가 미정": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Leave Planned"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休暇の予定なし"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无休假计划"
+          }
+        }
+      }
+    },
+    "휴가 없음": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Leave"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休暇なし"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无假期"
+          }
+        }
+      }
+    },
+    "휴가캘린더": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave Calendar"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "休暇カレンダー"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "假期日历"
           }
         }
       }
     }
   },
-  "version" : "1.1"
+  "version": "1.1"
 }

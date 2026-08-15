@@ -253,7 +253,6 @@ struct LeaveRegistrationView: View {
     @State private var alertMessage = ""
     @State private var isSuccess = false
     @State private var isSaving = false
-    @State private var shouldPromptReview = false
     @State private var selectedBonusLeave: BonusLeave?
     @FocusState private var isNoteFocused: Bool
 
@@ -348,7 +347,7 @@ struct LeaveRegistrationView: View {
                                         }
                                     }
                                     if let exp = bonus.expirationDate {
-                                        Text(Strings.expiresBy(exp.formatted(.dateTime.month().day())))
+                                        Text(Strings.expiresBy(exp.appMonthDay))
                                             .font(.caption2)
                                             .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.7) : AppTheme.Colors.bonus)
                                     }
@@ -591,15 +590,10 @@ struct LeaveRegistrationView: View {
         } message: {
             Text(alertMessage)
         }
-        .onChange(of: shouldPromptReview) { _, newValue in
-            if newValue {
-                shouldPromptReview = false
-                // 약간의 딜레이 후 리뷰 요청 (UX 개선)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    ReviewManager.shared.requestReviewAfterPositiveAction(using: requestReview)
-                }
-            }
-        }
+        // ⚠️ 여기서 별점 프롬프트를 직접 띄우지 않는다. 자동 리뷰 요청은 만족도 프롬프트
+        //    (`ContentView`의 `.leeoSatisfactionCheck`)가 맡는다 — 먼저 물어보고 아쉬운
+        //    사람은 피드백으로 보내기 위해서다. 둘 다 두면 한 세션에 두 번 뜬다.
+        //    등록 횟수는 계속 세 둔다(구매 후 요청 조건이 참조).
     }
 
     /// 보너스 선택 버튼을 한 문장으로 읽어주는 VoiceOver 라벨
@@ -610,7 +604,7 @@ struct LeaveRegistrationView: View {
         ]
         if !bonus.reason.isEmpty { parts.append(bonus.reason) }
         if let exp = bonus.expirationDate {
-            parts.append(Strings.expiresBy(exp.formatted(.dateTime.month().day())))
+            parts.append(Strings.expiresBy(exp.appMonthDay))
         }
         return parts.joined(separator: ", ")
     }
@@ -664,8 +658,8 @@ struct LeaveRegistrationView: View {
             endDate = Date()
             selectedBonusLeave = nil
             HapticFeedback.success()
+            UsageReportingService.record(event: "leave_added:\(category.rawValue)")
             ReviewManager.shared.recordLeaveRegistration()
-            shouldPromptReview = true
         } catch {
             alertMessage = Strings.saveFailed
             isSuccess = false

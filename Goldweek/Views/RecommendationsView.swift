@@ -185,6 +185,7 @@ struct RecommendationsView: View {
 
         do {
             try modelContext.save()
+            UsageReportingService.record(event: "recommendation_added")
             HapticFeedback.success()
         } catch {
             addedRecommendations.remove(recommendation.id)

@@ -129,6 +129,15 @@ final class UserProfile {
         totalAnnualLeave - usedLeave
     }
 
+    /// 화면에 보여줄 이름.
+    ///
+    /// 기본 이름("사용자")은 프로필을 만든 시점의 언어로 저장돼 굳는다. 나중에 앱 언어를 바꾸면
+    /// 영어 화면에 그 이름만 한국어로 남아 언어가 섞여 보인다 → 안 바꾼 기본 이름이면 지금 언어로 보여준다.
+    /// (사용자가 직접 지은 이름은 당연히 그대로 둔다.)
+    var displayName: String {
+        Strings.defaultUserNames.contains(name) ? Strings.defaultUser : name
+    }
+
     var country: Country {
         get { Country(rawValue: countryRaw) ?? .korea }
         set { countryRaw = newValue.rawValue }

@@ -99,7 +99,7 @@ struct TimeMachineView: View {
     }
 
     private func formatted(_ date: Date) -> String {
-        date.formatted(date: .abbreviated, time: .shortened)
+        date.appFormatted(time: .short)
     }
 
     private func reload() {

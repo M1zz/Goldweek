@@ -2,6 +2,30 @@
 
 ## 진행 중
 
+### 사용 통계·피드백 허브 — 남은 운영 작업 (코드는 끝, 대시보드가 남음)
+- [ ] Apple Developer 포털: App ID `com.Ysoup.LeaveWise`에 iCloud 컨테이너
+      `iCloud.com.Ysoup.FeedbackHub` 추가 + 프로비저닝 프로파일 갱신
+      (안 하면 "Invalid bundle ID for container" 오류로 조회가 실패한다)
+- [ ] CloudKit Dashboard(FeedbackHub): Development에서 스키마 생성(UsageSnapshot·UsageEvent·
+      Feedback·CrashReport) → 인덱스 → Security Roles(admin read + 내 userRecordName) → Production 배포
+- [ ] App Store Connect 개인정보(App Privacy) 설문 갱신:
+      Product Interaction(Analytics, 미연결) + Contact Info(피드백) + Crash Data(MetricKit)
+- [ ] 절차 전문: `docs/USAGE_STATS_HUB.md`
+
+## 완료 (사용 통계·피드백 허브 + 다국어 정리)
+- [x] LeeoKit 3.2.0 도입 + GoldweekSpec 계약, 원격 킬스위치(GoldweekFlag)
+- [x] 익명 스냅샷(효용 지표) + 주요 행동 이벤트 — Firebase 제거로 비어 있던 분석 경로를 대체
+      (onboarding_complete / leave_added / leave_deleted / recommendation_added / paywall_* / app_open)
+- [x] 마스터 모드(버전 7탭): 접수된 피드백 · 사용 통계 · 안정성(MetricKit 크래시)
+- [x] 만족도 프롬프트 — 좋으면 리뷰, 아쉬우면 피드백. 휴가 등록 후 자동 별점 요청은 제거(중복 방지)
+- [x] 위젯 문자열 21개 미번역 → en/ja/zh-Hans 채움
+- [x] 공유·가족 화면의 enum rawValue 직접 표시 3곳 수정
+- [x] 날짜 18곳: `Date.formatted()`(기기 언어) → `appFormatted()`(앱 언어 설정)
+- [x] 기본 이름("사용자")이 만든 시점 언어로 굳던 문제 — `UserProfile.displayName`
+- [x] 설정 > 지원 섹션을 직접 그려 앱 언어를 따르게 + `AppleLanguages` 동기화
+- [x] 개인정보 처리방침 4개 언어 갱신 (익명 통계·크래시 진단 고지, Firebase 문구 정리)
+- [x] 집계 로직 유닛 테스트 9개
+
 ## 완료 (Firebase/GA 완전 제거 세션 2026-07-21)
 - [x] AnalyticsService.swift 삭제 + 전 화면 호출부(~35곳) 제거 (온보딩·휴가등록/삭제·추천·MRT·페이월·휴식레이더·공유 등)
 - [x] GoogleService-Info.plist 삭제

@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import StoreKit
 import TipKit
+import LeeoKit
 
 struct SettingsView: View {
     @Bindable var profile: UserProfile
@@ -16,6 +17,17 @@ struct SettingsView: View {
     @Environment(\.requestReview) private var requestReview
     @Query private var leaveRecords: [LeaveRecord]
     @Query(sort: \BonusLeave.grantedDate, order: .reverse) private var bonusLeaves: [BonusLeave]
+
+    /// 개발자 모드 — 지원 섹션의 버전 행을 7번 탭하면 켜진다(키는 LeeoKit과 공유).
+    /// 켜지면 접수된 피드백(인박스)·사용 통계·안정성 화면이 보인다.
+    @AppStorage("dev.masterMode") private var masterModeEnabled = false
+
+    /// "2.1.1 (1)" — 지원 섹션의 버전 행 표시용
+    private var appVersionText: String {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?"
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "?"
+        return "\(version) (\(build))"
+    }
 
     @State private var showingPreferences = false
     @State private var showingResetAlert = false
@@ -148,7 +160,7 @@ struct SettingsView: View {
                                 )
                                 .frame(width: 70, height: 70)
 
-                            Text(String(profile.name.prefix(1)))
+                            Text(String(profile.displayName.prefix(1)))
                                 .font(.title)
                                 .fontWeight(.bold)
                                 .foregroundStyle(.white)
@@ -164,11 +176,11 @@ struct SettingsView: View {
                                         editingName = false
                                     }
                             } else {
-                                Text(profile.name)
+                                Text(profile.displayName)
                                     .font(.title2.bold())
                             }
 
-                            Text(Strings.joinDate(profile.createdAt.formatted(date: .abbreviated, time: .omitted)))
+                            Text(Strings.joinDate(profile.createdAt.appFormatted()))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -179,7 +191,7 @@ struct SettingsView: View {
                             if editingName {
                                 profile.name = tempName
                             } else {
-                                tempName = profile.name
+                                tempName = profile.displayName
                             }
                             editingName.toggle()
                         }) {
@@ -644,7 +656,7 @@ struct SettingsView: View {
                     Text(Strings.dataManagement)
                 } footer: {
                     if let lastBackup = lastBackupDate {
-                        Text(Strings.lastBackup(lastBackup.formatted(date: .abbreviated, time: .shortened)))
+                        Text(Strings.lastBackup(lastBackup.appFormatted(time: .short)))
                     }
                 }
 
@@ -682,22 +694,6 @@ struct SettingsView: View {
                         .disabled(ProManager.shared.isLoading)
                     }
 
-                    // 앱 평가하기 (App Store 직접 열기)
-                    Button {
-                        ReviewManager.shared.openAppStoreForReview()
-                    } label: {
-                        HStack {
-                            Image(systemName: "star.fill")
-                                .foregroundStyle(.yellow)
-                            Text(Strings.rateApp)
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            Image(systemName: "arrow.up.right.square")
-                                .foregroundStyle(.secondary)
-                                .font(.caption)
-                        }
-                    }
-                    
                     // 앱 공유하기
                     ShareLink(
                         item: URL(string: "https://apps.apple.com/app/id6739899592")!,
@@ -717,18 +713,74 @@ struct SettingsView: View {
                     }
 
                     HStack {
-                        Text(Strings.version)
-                        Spacer()
-                        Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "-")
-                            .foregroundStyle(.secondary)
-                    }
-
-                    HStack {
                         Text(Strings.developer)
                         Spacer()
                         Text("Goldweek Team")
                             .foregroundStyle(.secondary)
                     }
+                }
+
+                // 지원 — 피드백 보내기·리뷰 남기기·법적 링크·버전.
+                // 버전 행을 7번 탭하면 개발자 모드가 켜지고, 접수된 피드백·사용 통계·안정성이 보인다.
+                //
+                // ⚠️ LeeoKit의 `LeeoSupportSection`을 쓰지 않고 행을 직접 그린다 —
+                //    그쪽 문구는 **기기 언어**를 따라서, 기기가 한국어인 사용자가 앱만 영어로 바꾸면
+                //    이 섹션만 한국어로 남는다. 화면 안쪽(피드백 폼)은 LeeoKit 것을 그대로 쓰고,
+                //    번들 언어는 `AppLanguage.current` 설정이 함께 맞춰 준다(다음 실행부터).
+                Section {
+                    NavigationLink(destination: LeeoFeedbackView<GoldweekSpec>()) {
+                        Label(Strings.sendFeedback, systemImage: "envelope.badge")
+                    }
+
+                    Button {
+                        if let id = GoldweekSpec.appStoreID {
+                            LeeoReviewRequest.openWriteReview(appStoreID: id)
+                        } else {
+                            LeeoReviewRequest.markRequested()
+                            requestReview()
+                        }
+                    } label: {
+                        Label(Strings.rateApp, systemImage: "star.bubble")
+                    }
+
+                    Link(destination: GoldweekSpec.legal.privacyURL) {
+                        Label(Strings.privacyPolicy, systemImage: "arrow.up.forward.square")
+                    }
+                    Link(destination: GoldweekSpec.legal.supportURL) {
+                        Label(Strings.supportPage, systemImage: "arrow.up.forward.square")
+                    }
+                    if let termsURL = GoldweekSpec.legal.termsURL {
+                        Link(destination: termsURL) {
+                            Label(Strings.termsOfService, systemImage: "arrow.up.forward.square")
+                        }
+                    }
+
+                    if masterModeEnabled {
+                        NavigationLink(destination: LeeoFeedbackInboxView<GoldweekSpec>()) {
+                            Label(Strings.devFeedbackInbox, systemImage: "tray.full")
+                        }
+                        NavigationLink(destination: UsageStatsView()) {
+                            Label(Strings.devUsageStats, systemImage: "chart.bar.xaxis")
+                        }
+                        NavigationLink(destination: CrashReportsView()) {
+                            Label(Strings.devCrashReports, systemImage: "ladybug")
+                        }
+                    }
+
+                    // 버전 — 7번 탭하면 개발자 모드 토글 (LeeoKit과 같은 키를 쓴다)
+                    HStack {
+                        Label(Strings.version, systemImage: "info.circle")
+                        Spacer()
+                        Text(appVersionText)
+                            .foregroundStyle(.secondary)
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture(count: 7) {
+                        masterModeEnabled.toggle()
+                        HapticFeedback.success()
+                    }
+                } header: {
+                    Text(Strings.supportSection)
                 }
 
                 // 개발자 문의
@@ -909,7 +961,7 @@ struct SettingsView: View {
         }
         if !bonus.reason.isEmpty { parts.append(bonus.reason) }
         if let expiration = bonus.expirationDate {
-            parts.append(expiration.formatted(.dateTime.month().day()))
+            parts.append(expiration.appMonthDay)
         }
         return parts.joined(separator: ", ")
     }
@@ -1264,6 +1316,7 @@ struct CalendarImportSheet: View {
 
         do {
             try modelContext.save()
+            UsageReportingService.record(event: "leave_added:calendar_import")
             HapticFeedback.success()
             importSucceeded = true
             resultMessage = Strings.leavesImported(inserted.count)

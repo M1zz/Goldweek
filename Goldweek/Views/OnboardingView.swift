@@ -157,6 +157,7 @@ struct OnboardingView: View {
 
     // MARK: - 완료 처리
     private func completeOnboarding() {
+        UsageReportingService.record(event: "onboarding_complete")
         let country = Country.fromDeviceLocale()
         switch country {
         case .korea: AppLanguage.current = .korean
