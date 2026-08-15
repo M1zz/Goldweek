@@ -66,7 +66,7 @@ struct CrashReportsView: View {
         .overlay(alignment: .bottom) {
             if let copiedNotice {
                 Text(verbatim: copiedNotice)
-                    .font(.footnote.weight(.medium))
+                    .font(.body.weight(.medium))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)
@@ -114,24 +114,24 @@ struct CrashReportsView: View {
                             .fontWeight(.medium)
                         Spacer()
                         Text(verbatim: report.appVersion)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                         // 이 진단 하나만 복사 — 콜스택을 펼쳐 손으로 긁지 않아도 된다.
                         Button {
                             copy(copyText(report), label: "복사")
                         } label: {
                             Image(systemName: "doc.on.doc")
-                                .font(.caption)
+                                .font(.body)
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(Text(verbatim: "이 진단 복사"))
                     }
                     Text(verbatim: "\(report.deviceType) · iOS \(report.osVersion)")
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                     if !report.detail.isEmpty, report.detail != "-" {
                         Text(verbatim: report.detail)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                     // 콜스택은 길어서 접어둔다 — 필요할 때만 펼쳐 본다.
@@ -142,7 +142,7 @@ struct CrashReportsView: View {
                             .textSelection(.enabled)
                     } label: {
                         Text(verbatim: "콜스택")
-                            .font(.caption)
+                            .font(.body)
                     }
                 }
                 .padding(.vertical, 2)

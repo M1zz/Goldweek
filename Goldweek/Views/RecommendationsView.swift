@@ -79,7 +79,7 @@ struct RecommendationsView: View {
                             Image(systemName: "calendar.circle")
                                 .foregroundStyle(.blue)
                             Text(Strings.showAllYearToggle)
-                                .font(.subheadline)
+                                .font(.body)
                         }
                     }
                     .toggleStyle(.switch)
@@ -229,11 +229,11 @@ struct YearPicker: View {
                 if !proManager.isPro && selectedYear != currentYear {
                     HStack(spacing: 4) {
                         Image(systemName: "crown.fill")
-                            .font(.caption2)
+                            .font(.body)
                             .foregroundColor(.yellow)
                             .voDecorative()
                         Text(Strings.currentYearOnly)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundColor(.secondary)
                     }
                 }
@@ -274,7 +274,7 @@ struct RemainingLeaveInfo: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(Strings.availableLeave)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
 
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -327,7 +327,7 @@ struct CircularProgressView: View {
                 .rotationEffect(.degrees(-90))
 
             Text("\(Int(progress * 100))%")
-                .font(.caption.bold())
+                .font(.body.bold())
         }
     }
 }
@@ -379,7 +379,7 @@ struct RecommendationList: View {
             // Pro 힌트: 무료 사용자이고 추천이 freeAddLimit 초과일 때만
             if !proManager.isPro && recommendations.count > freeAddLimit {
                 Text(Strings.proUnlockHint)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
@@ -412,7 +412,7 @@ struct UpcomingHolidaysSection: View {
                             .font(.headline)
                     }
                     Text(Strings.upcomingHolidaysSectionSubtitle)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -472,12 +472,12 @@ struct HolidayInfoCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(holiday.title)
-                .font(.subheadline.bold())
+                .font(.body.bold())
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
 
             Text("\(formatter.string(from: holiday.startDate)) – \(formatter.string(from: holiday.endDate))")
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
 
             // 요일 동그라미 미리보기 — 추천 카드와 동일한 시각 언어
@@ -489,15 +489,15 @@ struct HolidayInfoCard: View {
 
             HStack(spacing: 4) {
                 Image(systemName: "sun.max.fill")
-                    .font(.caption2)
+                    .font(.body)
                     .foregroundStyle(.orange)
                 Text(Strings.daysOff(holiday.totalDaysOff))
-                    .font(.caption.bold())
+                    .font(.body.bold())
                     .foregroundStyle(.orange)
             }
 
             Text(Strings.noLeaveRequired)
-                .font(.caption2)
+                .font(.body)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
                 .background(Color.orange.opacity(0.12))
@@ -551,11 +551,11 @@ struct DetailedRecommendationCard: View {
                 if requiresPro {
                     HStack(spacing: 3) {
                         Image(systemName: "crown.fill")
-                            .font(.caption2)
+                            .font(.body)
                             .foregroundStyle(.yellow)
                             .voDecorative()
                         Text("Pro")
-                            .font(.caption2.bold())
+                            .font(.body.bold())
                             .foregroundStyle(.secondary)
                     }
                     .padding(.horizontal, 8)
@@ -567,10 +567,10 @@ struct DetailedRecommendationCard: View {
                 } else {
                     VStack(alignment: .trailing) {
                         Text(Strings.efficiency)
-                            .font(.caption2)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                         Text(recommendation.efficiencyStars)
-                            .font(.caption)
+                            .font(.body)
                     }
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel(Text("\(Strings.efficiency) \(recommendation.efficiencyStars)"))
@@ -589,14 +589,14 @@ struct DetailedRecommendationCard: View {
             HStack(spacing: 0) {
                 Spacer()
                 Label(Strings.leaveRequired(Int(recommendation.requiredLeaveDays)), systemImage: "briefcase.fill")
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.blue)
                 Spacer()
                 Text("→")
                     .foregroundStyle(.secondary)
                 Spacer()
                 Label(Strings.daysOff(recommendation.totalDaysOff), systemImage: "sun.max.fill")
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.green)
                 Spacer()
             }
@@ -605,7 +605,7 @@ struct DetailedRecommendationCard: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
 
             Text(recommendation.description)
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
 
             if !recommendation.tags.isEmpty {
@@ -613,7 +613,7 @@ struct DetailedRecommendationCard: View {
                     HStack(spacing: 8) {
                         ForEach(recommendation.tags, id: \.self) { tag in
                             Text(tag)
-                                .font(.caption2)
+                                .font(.body)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 5)
                                 .background(Color.blue.opacity(0.1))
@@ -698,12 +698,12 @@ struct RecommendationDatePreview: View {
             HStack {
                 if startMonth == endMonth {
                     Text(Strings.monthShort(startMonth))
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                 } else {
                     Text("\(Strings.monthShort(startMonth)) → \(Strings.monthShort(endMonth))")
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                 }
@@ -727,7 +727,7 @@ struct RecommendationDatePreview: View {
                 MiniLegend(color: .red.opacity(0.7), text: Strings.holiday)
                 MiniLegend(color: .blue.opacity(0.7), text: Strings.weekend)
             }
-            .font(.caption2)
+            .font(.body)
         }
         .padding(12)
         .background(Color(.secondarySystemBackground))
@@ -796,11 +796,11 @@ struct DatePreviewCell: View {
     var body: some View {
         VStack(spacing: 4) {
             Text(weekdayName)
-                .font(.system(.caption2, weight: .medium))
+                .font(.system(.body, weight: .medium))
                 .foregroundStyle(dayType == .holiday ? .red : (dayType == .saturday || dayType == .sunday ? .blue : .secondary))
 
             Text("\(dayNumber)")
-                .font(.system(.footnote, weight: .semibold))
+                .font(.system(.body, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 28, height: 28)
                 .background(dayType.color)
@@ -838,7 +838,7 @@ struct EmptyRecommendationView: View {
                 .font(.headline)
 
             Text(Strings.noRecommendationsHint)
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
@@ -862,7 +862,7 @@ struct RecommendationCalendarPreview: View {
                     .font(.headline)
                 Spacer()
                 Text(Strings.itemCountUnit(recommendations.count))
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
 
@@ -882,7 +882,7 @@ struct RecommendationCalendarPreview: View {
                 LegendDot(color: .green, text: Strings.bridgeDayLegend)
                 LegendDot(color: .blue, text: Strings.consecutiveLeaveLegend)
             }
-            .font(.caption2)
+            .font(.body)
             .frame(maxWidth: .infinity)
         }
         .padding()
@@ -920,9 +920,11 @@ struct MonthPreviewCell: View {
     var body: some View {
         VStack(spacing: 2) {
             Text(monthName)
-                .font(.caption2)
+                .font(.body)
                 .fontWeight(.medium)
                 .foregroundStyle(isPastMonth ? .secondary : .primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)   // 6열 그리드라 칸이 좁다 — 넘칠 때만 줄어든다
 
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
@@ -938,7 +940,7 @@ struct MonthPreviewCell: View {
                         }
                         if recommendations.count > 3 {
                             Text("+")
-                                .font(.system(size: 8))
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -947,11 +949,13 @@ struct MonthPreviewCell: View {
 
             if !recommendations.isEmpty && !isPastMonth {
                 Text(Strings.itemCountUnit(recommendations.count))
-                    .font(.system(size: 9))
+                    .font(.body)
                     .foregroundStyle(.blue)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             } else {
                 Text(" ")
-                    .font(.system(size: 9))
+                    .font(.body)
             }
         }
         .opacity(isPastMonth ? 0.5 : 1)
@@ -1337,7 +1341,7 @@ struct MyRealTripPromoCard: View {
                         Text(Strings.travelSuggestionsHeader)
                             .font(.headline)
                         Text("\(dateRangeText) · \(recommendation.totalDaysOff)\(Strings.dayUnitSuffix)")
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
@@ -1457,15 +1461,15 @@ struct MyRealTripPromoCard: View {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(Strings.travelSuggestionsHeader)
-                        .font(.subheadline.weight(.semibold))
+                        .font(.body.weight(.semibold))
                         .foregroundStyle(.primary)
                     Text("\(dateRangeText) · \(recommendation.totalDaysOff)\(Strings.dayUnitSuffix)")
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Text(Strings.mrtOptInShow)
-                    .font(.caption.weight(.semibold))
+                    .font(.body.weight(.semibold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
@@ -1494,13 +1498,13 @@ struct MyRealTripPromoCard: View {
                 .font(.title2)
             VStack(alignment: .leading, spacing: 2) {
                 Text(cityDisplay)
-                    .font(.subheadline.weight(.bold))
+                    .font(.body.weight(.bold))
                 Text(Strings.mrtCityReason(
                     city: cityDisplay,
                     season: reasonText,
                     days: recommendation.totalDaysOff
                 ))
-                .font(.caption2)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
@@ -1620,10 +1624,10 @@ extension MyRealTripPromoCard {
     func sectionHeader(icon: String, title: String, color: Color) -> some View {
         HStack(spacing: 6) {
             Image(systemName: icon)
-                .font(.caption.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .foregroundStyle(color)
             Text(title)
-                .font(.subheadline.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .foregroundStyle(.primary)
             Spacer()
         }
@@ -1666,7 +1670,7 @@ struct MRTFlightCard: View {
                     Text(flight.fromCity)
                         .font(.headline.weight(.bold))
                     Image(systemName: "airplane")
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                         .voDecorative()
                     Text(flight.toCity)
@@ -1676,7 +1680,7 @@ struct MRTFlightCard: View {
 
                 // 날짜
                 Text(dateText)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
 
@@ -1684,7 +1688,7 @@ struct MRTFlightCard: View {
                 HStack(spacing: 6) {
                     if let airline = flight.airline {
                         Text(airline)
-                            .font(.caption2.weight(.semibold))
+                            .font(.body.weight(.semibold))
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(AppTheme.Colors.brand.opacity(0.15))
@@ -1693,7 +1697,7 @@ struct MRTFlightCard: View {
                     }
                     if let stops = flight.transfer, stops == 0 {
                         Text(Strings.mrtFlightReasonDirect)
-                            .font(.caption2.weight(.semibold))
+                            .font(.body.weight(.semibold))
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(AppTheme.Colors.success.opacity(0.15))
@@ -1702,7 +1706,7 @@ struct MRTFlightCard: View {
                     }
                     if showCheapestBadge {
                         Text(Strings.mrtFlightReasonCheapest)
-                            .font(.caption2.weight(.semibold))
+                            .font(.body.weight(.semibold))
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(AppTheme.Colors.bonus.opacity(0.15))
@@ -1716,7 +1720,7 @@ struct MRTFlightCard: View {
 
                 // 가격
                 Text(priceText)
-                    .font(.subheadline.weight(.bold))
+                    .font(.body.weight(.bold))
                     .foregroundStyle(AppTheme.Colors.brand)
             }
             .padding(12)
@@ -1784,7 +1788,7 @@ struct MRTAccommodationCard: View {
 
                     if showTopRatedBadge {
                         Text(Strings.mrtAccomReasonTopRated)
-                            .font(.caption2.weight(.semibold))
+                            .font(.body.weight(.semibold))
                             .foregroundStyle(.white)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
@@ -1796,7 +1800,7 @@ struct MRTAccommodationCard: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(item.itemName)
-                        .font(.caption.weight(.semibold))
+                        .font(.body.weight(.semibold))
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
@@ -1806,14 +1810,14 @@ struct MRTAccommodationCard: View {
                             HStack(spacing: 1) {
                                 ForEach(0..<min(star, 5), id: \.self) { _ in
                                     Image(systemName: "star.fill")
-                                        .font(.system(size: 7))
+                                        .font(.body)
                                         .foregroundStyle(.yellow)
                                 }
                             }
                         }
                         if let score = item.reviewScore, let count = item.reviewCount, count > 0 {
                             Text("\(score) (\(count))")
-                                .font(.caption2)
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -1821,7 +1825,7 @@ struct MRTAccommodationCard: View {
                     Spacer(minLength: 4)
 
                     Text(priceText)
-                        .font(.subheadline.weight(.bold))
+                        .font(.body.weight(.bold))
                         .foregroundStyle(AppTheme.Colors.success)
                 }
                 .padding(.horizontal, 10)
@@ -1903,7 +1907,7 @@ struct MRTLiveTnaCard: View {
                     }()
                     if let tag = displayTag {
                         Text(tag)
-                            .font(.caption2.weight(.semibold))
+                            .font(.body.weight(.semibold))
                             .foregroundStyle(.white)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
@@ -1917,7 +1921,7 @@ struct MRTLiveTnaCard: View {
                 // 정보
                 VStack(alignment: .leading, spacing: 4) {
                     Text(product.itemName)
-                        .font(.caption.weight(.semibold))
+                        .font(.body.weight(.semibold))
                         .foregroundStyle(.primary)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
@@ -1927,12 +1931,12 @@ struct MRTLiveTnaCard: View {
                     if let score = product.reviewScore, let count = product.reviewCount, count > 0 {
                         HStack(spacing: 3) {
                             Image(systemName: "star.fill")
-                                .font(.system(size: 9))
+                                .font(.body)
                                 .foregroundStyle(.yellow)
                             Text(String(format: "%.2f", score))
-                                .font(.caption2.weight(.semibold))
+                                .font(.body.weight(.semibold))
                             Text("(\(count))")
-                                .font(.caption2)
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -1940,7 +1944,7 @@ struct MRTLiveTnaCard: View {
                     Spacer(minLength: 4)
 
                     Text(displayPrice)
-                        .font(.subheadline.weight(.bold))
+                        .font(.body.weight(.bold))
                         .foregroundStyle(AppTheme.Colors.bonus)
                 }
                 .padding(.horizontal, 10)
@@ -2025,7 +2029,7 @@ struct TravelSuggestionCard: View {
 
                     // 우측 상단: 가격대 배지
                     Text(Strings.priceTierLabel(suggestion.priceTierKey))
-                        .font(.caption2.weight(.semibold))
+                        .font(.body.weight(.semibold))
                         .foregroundStyle(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
@@ -2049,7 +2053,7 @@ struct TravelSuggestionCard: View {
                         .foregroundStyle(.primary)
 
                     Text(Strings.travelThemeName(suggestion.themeKey))
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
 
                     // 추천 이유 배지 (컨텍스트 기반)
@@ -2058,7 +2062,7 @@ struct TravelSuggestionCard: View {
                             Image(systemName: reasonIcon)
                                 .font(.system(size: 9, weight: .bold))
                             Text(Strings.travelReasonLabel(reasonKey))
-                                .font(.caption2.weight(.semibold))
+                                .font(.body.weight(.semibold))
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.85)
                         }
@@ -2071,13 +2075,13 @@ struct TravelSuggestionCard: View {
                     }
 
                     Text(dateRangeText)
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                         .padding(.top, 2)
 
                     HStack(spacing: 3) {
                         Text(Strings.mrtPromoCTA)
-                            .font(.caption2.weight(.semibold))
+                            .font(.body.weight(.semibold))
                         Image(systemName: "arrow.up.right")
                             .font(.system(size: 9, weight: .bold))
                     }
@@ -2147,9 +2151,9 @@ struct LeaveActivityRecommendations: View {
                     .voDecorative()
                 VStack(alignment: .leading, spacing: 2) {
                     Text(Strings.leaveActivityTitle)
-                        .font(.subheadline.weight(.semibold))
+                        .font(.body.weight(.semibold))
                     Text(Strings.leaveActivitySubtitle)
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -2157,7 +2161,7 @@ struct LeaveActivityRecommendations: View {
 
             if suggestions.isEmpty {
                 Text(Strings.noRecommendations)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             } else {
@@ -2195,13 +2199,13 @@ struct LeaveActivityRecommendations: View {
             HStack(spacing: 6) {
                 ProgressView().scaleEffect(0.7)
                 Text(Strings.leaveActivityLoading)
-                    .font(.caption2)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
         } else if (liveFlights?.isEmpty == false) || (liveAccommodations?.isEmpty == false) {
             Divider().padding(.vertical, 4)
             Text(Strings.leaveActivityLiveTitle)
-                .font(.caption.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .foregroundStyle(.secondary)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
@@ -2303,14 +2307,14 @@ struct OptimalLeavePlannerCard: View {
                 proLockedView
             } else if availableLeaveDays <= 0 {
                 Text(Strings.optimalPlannerEmpty)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             } else if isComputing {
                 HStack(spacing: 6) {
                     ProgressView().scaleEffect(0.7)
                     Text(Strings.leaveActivityLoading)
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
             } else if let plan = plan {
@@ -2342,17 +2346,17 @@ struct OptimalLeavePlannerCard: View {
                 .voDecorative()
             VStack(alignment: .leading, spacing: 2) {
                 Text(Strings.optimalPlannerTitle)
-                    .font(.subheadline.weight(.semibold))
+                    .font(.body.weight(.semibold))
                 if !proManager.isPro || plan == nil {
                     Text(Strings.optimalPlannerSubtitle)
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
             }
             Spacer()
             if canToggle {
                 Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                    .font(.caption.weight(.semibold))
+                    .font(.body.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .voDecorative()
             }
@@ -2381,23 +2385,23 @@ struct OptimalLeavePlannerCard: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 6) {
                     Image(systemName: "crown.fill")
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.yellow)
                         .voDecorative()
                     Text(Strings.optimalPlannerProLockedTitle)
-                        .font(.caption.weight(.semibold))
+                        .font(.body.weight(.semibold))
                         .foregroundStyle(.primary)
                 }
                 Text(Strings.optimalPlannerProLockedDesc)
-                    .font(.caption2)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: 4) {
                     Text(Strings.optimalPlannerCTA)
-                        .font(.caption.weight(.semibold))
+                        .font(.body.weight(.semibold))
                     Image(systemName: "arrow.right")
-                        .font(.caption2.weight(.bold))
+                        .font(.body.weight(.bold))
                         .voDecorative()
                 }
                 .foregroundStyle(AppTheme.Colors.brand)
@@ -2415,7 +2419,7 @@ struct OptimalLeavePlannerCard: View {
     private func planResultView(plan: OptimalLeavePlan) -> some View {
         if plan.breaks.isEmpty {
             Text(Strings.optimalPlannerEmpty)
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
         } else {
             // 항상 보이는 요약 (접힘 상태에서도 노출)
@@ -2441,7 +2445,7 @@ struct OptimalLeavePlannerCard: View {
                             .fontWeight(.semibold)
                         Spacer()
                     }
-                    .font(.subheadline)
+                    .font(.body)
                     .padding(.vertical, 9)
                     .background(didBatchAdd ? Color.green : AppTheme.Colors.bonus)
                     .foregroundStyle(.white)
@@ -2461,13 +2465,13 @@ struct OptimalLeavePlannerCard: View {
                 .font(.title2.weight(.bold))
                 .foregroundStyle(AppTheme.Colors.brand)
             Text(Strings.optimalPlannerSummaryUnit)
-                .font(.caption.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .foregroundStyle(AppTheme.Colors.brand)
                 .padding(.leading, -4)
             Spacer(minLength: 0)
             // 보조: 연차 N · M회 연휴
             Text(Strings.optimalPlannerSummaryAside(leaveUsed: plan.leaveDaysUsed, breaks: plan.breaks.count))
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
         }
         .padding(.horizontal, 12)
@@ -2507,15 +2511,15 @@ struct OptimalLeavePlannerCard: View {
             // 날짜 + 효율 배지
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text(dateRange)
-                    .font(.subheadline.weight(.bold))
+                    .font(.body.weight(.bold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                 Spacer(minLength: 0)
                 if brk.efficiency >= 1.5 {
                     HStack(spacing: 2) {
-                        Text("✨").font(.caption2).voDecorative()
+                        Text("✨").font(.body).voDecorative()
                         Text(String(format: "%.1f×", brk.efficiency))
-                            .font(.caption2.weight(.bold))
+                            .font(.body.weight(.bold))
                     }
                     .foregroundStyle(AppTheme.Colors.bonus)
                     .padding(.horizontal, 7)
@@ -2531,7 +2535,7 @@ struct OptimalLeavePlannerCard: View {
                     .font(.title.weight(.bold))
                     .foregroundStyle(AppTheme.Colors.brand)
                 Text(Strings.optimalPlannerSummaryUnit)
-                    .font(.caption.weight(.semibold))
+                    .font(.body.weight(.semibold))
                     .foregroundStyle(AppTheme.Colors.brand)
             }
 
@@ -2565,7 +2569,7 @@ struct OptimalLeavePlannerCard: View {
             // 포함 공휴일
             if !brk.holidaysIncluded.isEmpty {
                 Text(brk.holidaysIncluded.joined(separator: " · "))
-                    .font(.caption2)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
@@ -2585,7 +2589,7 @@ struct OptimalLeavePlannerCard: View {
                 .fill(color)
                 .frame(width: 7, height: 7)
             Text(text)
-                .font(.caption2)
+                .font(.body)
                 .foregroundStyle(.secondary)
         }
     }

@@ -21,7 +21,7 @@ struct FamilyView: View {
                         let upcoming = schedule.upcomingLeaves
                         if upcoming.isEmpty {
                             Text(Strings.shareNoUpcoming)
-                                .font(.subheadline)
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                         } else {
                             ForEach(upcoming) { leave in
@@ -36,7 +36,7 @@ struct FamilyView: View {
                             Text(schedule.ownerName)
                             Spacer()
                             Text(Strings.shareUpcomingCount(schedule.upcomingLeaves.count))
-                                .font(.caption)
+                                .font(.body)
                                 .textCase(nil)
                                 .foregroundStyle(.secondary)
                         }
@@ -75,10 +75,10 @@ struct FamilyLeaveRow: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(dateRangeText)
-                    .font(.subheadline)
+                    .font(.body)
                 // rawValue는 한국어 고정값이다 — 앱 언어를 따르는 이름으로 그린다
                 Text(Strings.leaveTypeName(leave.type))
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
 
@@ -97,7 +97,7 @@ struct FamilyLeaveRow: View {
 
         if start <= today && leave.endDate >= today {
             Text(Strings.familyOnLeave)
-                .font(.caption.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
                 .background(Color.green.opacity(0.15))
@@ -105,7 +105,7 @@ struct FamilyLeaveRow: View {
                 .clipShape(Capsule())
         } else if let days = Calendar.current.dateComponents([.day], from: today, to: start).day, days > 0 {
             Text(Strings.familyDday(days))
-                .font(.caption.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
                 .background(Color.blue.opacity(0.12))

@@ -101,14 +101,14 @@ struct PhotoImportSheet: View {
                 .voDecorative()
 
             Text(Strings.photoImportGuide)
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
 
             if let errorMessage = scanErrorMessage {
                 Text(errorMessage)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.orange)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
@@ -140,7 +140,7 @@ struct PhotoImportSheet: View {
         VStack(spacing: 12) {
             ProgressView()
             Text(Strings.scanningPhoto)
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -155,7 +155,7 @@ struct PhotoImportSheet: View {
             Text(duplicateCount > 0
                  ? Strings.photoImportAllDuplicates(duplicateCount)
                  : Strings.noLeaveFoundInPhoto)
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
@@ -192,18 +192,18 @@ struct PhotoImportSheet: View {
                                         .lineLimit(1)
                                     HStack(spacing: 6) {
                                         Text(Strings.leaveTypeName(candidate.suggestedType))
-                                            .font(.caption2.weight(.semibold))
+                                            .font(.body.weight(.semibold))
                                             .padding(.horizontal, 6)
                                             .padding(.vertical, 2)
                                             .background(candidate.suggestedType.themeColor.opacity(0.15))
                                             .foregroundStyle(candidate.suggestedType.themeColor)
                                             .clipShape(Capsule())
                                         Text(deductionText(candidate))
-                                            .font(.caption)
+                                            .font(.body)
                                             .foregroundStyle(.secondary)
                                     }
                                     Text(dateRangeText(candidate))
-                                        .font(.caption)
+                                        .font(.body)
                                         .foregroundStyle(.secondary)
                                 }
                                 Spacer()
@@ -303,7 +303,7 @@ struct PhotoImportSheet: View {
         } label: {
             HStack(spacing: 4) {
                 Image(systemName: "gift.fill")
-                    .font(.caption2)
+                    .font(.body)
                 if let bonus = assignedBonus(for: candidate) {
                     Text(Strings.bonusDeductionSummary(
                         name: Strings.bonusLeaveTypeName(bonus.type),
@@ -313,9 +313,9 @@ struct PhotoImportSheet: View {
                     Text(Strings.bonusDeductNone)
                 }
                 Image(systemName: "chevron.up.chevron.down")
-                    .font(.caption2)
+                    .font(.body)
             }
-            .font(.caption)
+            .font(.body)
             .foregroundStyle(assignedBonus(for: candidate) != nil ? AppTheme.Colors.bonus : .secondary)
         }
         .buttonStyle(.borderless)
@@ -334,10 +334,10 @@ struct PhotoImportSheet: View {
 
     private func deductionText(_ candidate: DetectedLeaveCandidate) -> String {
         if assignedBonus(for: candidate) != nil {
-            return "\(formatLeave(candidate.effectiveDays))\(Strings.dayUnitSuffix)"
+            return "\(Strings.dayCount(candidate.effectiveDays))"
         }
         return candidate.suggestedType.deductsFromAnnual
-            ? "\(formatLeave(candidate.effectiveDays))\(Strings.dayUnitSuffix)"
+            ? "\(Strings.dayCount(candidate.effectiveDays))"
             : Strings.noDeduction
     }
 

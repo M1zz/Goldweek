@@ -147,7 +147,7 @@ struct DurationButton: View {
                     .font(.title)
                     .voDecorative()
                 Text(Strings.durationName(duration))
-                    .font(.caption)
+                    .font(.body)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
@@ -173,7 +173,7 @@ struct SeasonButton: View {
                     .font(.title2)
                     .voDecorative()
                 Text(Strings.seasonName(season))
-                    .font(.caption)
+                    .font(.body)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
@@ -199,7 +199,7 @@ struct ActivityButton: View {
                     .font(.title3)
                     .voDecorative()
                 Text(Strings.activityName(activity))
-                    .font(.caption2)
+                    .font(.body)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 10)

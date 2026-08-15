@@ -58,6 +58,8 @@ struct SettingsView: View {
     @State private var showingCalendarImport = false
     @State private var showingPhotoImport = false
     @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
+    /// 홈 "다가오는 휴가" 카드에 공휴일도 함께 보여줄지 (HomeView와 같은 키를 공유)
+    @AppStorage("showHolidaysInUpcoming") private var showHolidaysInUpcoming = true
 
     // 홈 "연차 현황"에 보너스 연차를 합산할지 여부 (홈 화면에서 이 설정을 따른다)
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
@@ -181,7 +183,7 @@ struct SettingsView: View {
                             }
 
                             Text(Strings.joinDate(profile.createdAt.appFormatted()))
-                                .font(.caption)
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                         }
 
@@ -238,12 +240,23 @@ struct SettingsView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(Strings.holidayMgmtTitle)
                                 Text(Strings.holidayMgmtSubtitle)
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                             }
                         }
                         .accessibilityElement(children: .combine)
                     }
+
+                    // 홈의 "다가오는 휴가" 카드에 공휴일을 섞을지 — 내 휴가만 보고 싶은 사람을 위한 스위치
+                    Toggle(isOn: $showHolidaysInUpcoming) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.showHolidaysInUpcomingTitle)
+                            Text(Strings.showHolidaysInUpcomingDescription)
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .tint(.orange)
                 }
 
                 // 일정 공유 (가족·친구와 실시간 공유)
@@ -259,7 +272,7 @@ struct SettingsView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(Strings.shareScheduleTitle)
                                 Text(Strings.shareScheduleSubtitle)
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                             }
                         }
@@ -279,7 +292,7 @@ struct SettingsView: View {
 
                     if profile.userType == .leisure {
                         Text(Strings.userTypeLeisureDesc)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -291,10 +304,10 @@ struct SettingsView: View {
                     if !isLeisure {
                         HStack(alignment: .center) {
                             Text(Strings.availableLeaveLabel)
-                                .font(.subheadline)
+                                .font(.body)
                             Spacer()
                             VStack(alignment: .trailing, spacing: 2) {
-                                Text("\(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
+                                Text("\(Strings.dayCount(totalAvailableLeave))")
                                     .font(.system(.largeTitle, weight: .bold))
                                     .foregroundStyle(includeBonusInStatus && activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
                                 if includeBonusInStatus && activeBonusLeave > 0 {
@@ -302,13 +315,13 @@ struct SettingsView: View {
                                         base: formatLeave(max(0, profile.totalAnnualLeave - committedLeave)),
                                         bonus: formatLeave(activeBonusLeave)
                                     ))
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                                 }
                             }
                         }
                         .padding(.vertical, 4)
-                        .voCard("\(Strings.availableLeaveLabel) \(formatLeave(totalAvailableLeave))\(Strings.dayUnitSuffix)")
+                        .voCard("\(Strings.availableLeaveLabel) \(Strings.dayCount(totalAvailableLeave))")
                     }
 
                     HStack {
@@ -318,14 +331,14 @@ struct SettingsView: View {
                             Stepper(
                                 profile.totalAnnualLeave == 0
                                     ? Strings.leisureUnlimited
-                                    : "\(Int(profile.totalAnnualLeave))\(Strings.dayUnitSuffix)",
+                                    : "\(Strings.dayCount(Double(profile.totalAnnualLeave)))",
                                 value: $profile.totalAnnualLeave,
                                 in: 0...365,
                                 step: 1
                             )
                         } else {
                             Stepper(
-                                "\(Int(profile.totalAnnualLeave))\(Strings.dayUnitSuffix)",
+                                "\(Strings.dayCount(Double(profile.totalAnnualLeave)))",
                                 value: $profile.totalAnnualLeave,
                                 in: max(committedLeave, 1)...365,
                                 step: 1
@@ -336,7 +349,7 @@ struct SettingsView: View {
                     HStack {
                         Text(isLeisure ? Strings.leisurePlannedLeave : Strings.usedLeave)
                         Spacer()
-                        Text("\(formatLeave(committedLeave))\(Strings.dayUnitSuffix)")
+                        Text("\(Strings.dayCount(committedLeave))")
                             .foregroundStyle(.secondary)
                     }
 
@@ -373,11 +386,11 @@ struct SettingsView: View {
                             if ProManager.shared.isPro {
                                 Image(systemName: "chevron.right")
                                     .foregroundStyle(.secondary)
-                                    .font(.caption)
+                                    .font(.body)
                                     .voDecorative()
                             } else {
                                 Text("Pro")
-                                    .font(.caption)
+                                    .font(.body)
                                     .fontWeight(.semibold)
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 2)
@@ -400,9 +413,9 @@ struct SettingsView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 HStack {
                                     Text(Strings.bonusLeaveTypeName(bonus.type))
-                                        .font(.subheadline)
+                                        .font(.body)
                                     Text("\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
-                                        .font(.subheadline)
+                                        .font(.body)
                                         .foregroundStyle(AppTheme.Colors.bonus)
                                 }
                                 if bonus.usedDays > 0 {
@@ -410,12 +423,12 @@ struct SettingsView: View {
                                         used: formatLeave(bonus.usedDays),
                                         granted: formatLeave(bonus.days)
                                     ))
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(AppTheme.Colors.bonus)
                                 }
                                 if !bonus.reason.isEmpty {
                                     Text(bonus.reason)
-                                        .font(.caption)
+                                        .font(.body)
                                         .foregroundStyle(.secondary)
                                 }
                             }
@@ -424,13 +437,13 @@ struct SettingsView: View {
 
                             if let expiration = bonus.expirationDate {
                                 Text(expiration, format: .dateTime.month().day())
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(expiration < Date() ? .red : .secondary)
                             }
 
                             Image(systemName: "pencil.circle")
                                 .foregroundStyle(.secondary)
-                                .font(.subheadline)
+                                .font(.body)
                                 .voDecorative()
                         }
                         .contentShape(Rectangle())
@@ -487,7 +500,7 @@ struct SettingsView: View {
                             )
                         }
                     }
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                 }
 
@@ -528,13 +541,13 @@ struct SettingsView: View {
                                 Text(Strings.importFromPhoto)
                                     .foregroundStyle(.primary)
                                 Text(Strings.importFromPhotoDescription)
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                             }
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.secondary)
-                                .font(.caption)
+                                .font(.body)
                         }
                         .accessibilityElement(children: .combine)
                     }
@@ -550,13 +563,13 @@ struct SettingsView: View {
                                 Text(Strings.importFromCalendar)
                                     .foregroundStyle(.primary)
                                 Text(Strings.importFromCalendarDescription)
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                             }
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.secondary)
-                                .font(.caption)
+                                .font(.body)
                         }
                         .accessibilityElement(children: .combine)
                     }
@@ -567,7 +580,7 @@ struct SettingsView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(Strings.autoDetectSettingTitle)
                                 Text(Strings.autoDetectSettingDescription)
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                             }
                         }
@@ -581,12 +594,12 @@ struct SettingsView: View {
                                     Text(Strings.autoDetectSettingTitle)
                                         .foregroundStyle(.primary)
                                     Text(Strings.autoDetectSettingDescription)
-                                        .font(.caption)
+                                        .font(.body)
                                         .foregroundStyle(.secondary)
                                 }
                                 Spacer()
                                 Text("Pro")
-                                    .font(.caption)
+                                    .font(.body)
                                     .fontWeight(.semibold)
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 2)
@@ -708,7 +721,7 @@ struct SettingsView: View {
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.secondary)
-                                .font(.caption)
+                                .font(.body)
                         }
                     }
 
@@ -951,7 +964,7 @@ struct SettingsView: View {
     private func bonusRowAccessibilityLabel(_ bonus: BonusLeave) -> String {
         var parts = [
             Strings.bonusLeaveTypeName(bonus.type),
-            "\(formatLeave(bonus.remainingDays))/\(formatLeave(bonus.days))\(Strings.dayUnitSuffix)"
+            "\(formatLeave(bonus.remainingDays))/\(Strings.dayCount(bonus.days))"
         ]
         if bonus.usedDays > 0 {
             parts.append(Strings.bonusUsedOfGranted(
@@ -1035,7 +1048,7 @@ struct DeveloperContactSection: View {
                     Spacer()
                     Image(systemName: "arrow.up.right.square")
                         .foregroundStyle(.secondary)
-                        .font(.caption)
+                        .font(.body)
                         .voDecorative()
                 }
             }
@@ -1050,7 +1063,7 @@ struct DeveloperContactSection: View {
                     Spacer()
                     Image(systemName: "arrow.up.right.square")
                         .foregroundStyle(.secondary)
-                        .font(.caption)
+                        .font(.body)
                         .voDecorative()
                 }
             }
@@ -1134,7 +1147,7 @@ struct CalendarImportSheet: View {
                     VStack(spacing: 12) {
                         ProgressView()
                         Text(Strings.scanningCalendar)
-                            .font(.subheadline)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -1145,7 +1158,7 @@ struct CalendarImportSheet: View {
                             .foregroundStyle(.orange)
                             .voDecorative()
                         Text(errorMessage)
-                            .font(.subheadline)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 32)
@@ -1172,7 +1185,7 @@ struct CalendarImportSheet: View {
                             .foregroundStyle(.secondary)
                             .voDecorative()
                         Text(Strings.noLeaveCandidatesFound)
-                            .font(.subheadline)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                     }
@@ -1200,14 +1213,14 @@ struct CalendarImportSheet: View {
                                             HStack(spacing: 6) {
                                                 // 추론된 휴가 유형 배지
                                                 Text(Strings.leaveTypeName(candidate.suggestedType))
-                                                    .font(.caption2.weight(.semibold))
+                                                    .font(.body.weight(.semibold))
                                                     .padding(.horizontal, 6)
                                                     .padding(.vertical, 2)
                                                     .background(candidate.suggestedType.themeColor.opacity(0.15))
                                                     .foregroundStyle(candidate.suggestedType.themeColor)
                                                     .clipShape(Capsule())
-                                                Text("\(dateRangeText(candidate)) · \(formatLeave(candidate.effectiveDays))\(Strings.dayUnitSuffix)")
-                                                    .font(.caption)
+                                                Text("\(dateRangeText(candidate)) · \(Strings.dayCount(candidate.effectiveDays))")
+                                                    .font(.body)
                                                     .foregroundStyle(.secondary)
                                             }
                                         }
@@ -1217,7 +1230,7 @@ struct CalendarImportSheet: View {
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityElement(children: .ignore)
-                                .accessibilityLabel(Text("\(candidate.title), \(Strings.leaveTypeName(candidate.suggestedType)), \(dateRangeText(candidate)), \(formatLeave(candidate.effectiveDays))\(Strings.dayUnitSuffix)"))
+                                .accessibilityLabel(Text("\(candidate.title), \(Strings.leaveTypeName(candidate.suggestedType)), \(dateRangeText(candidate)), \(Strings.dayCount(candidate.effectiveDays))"))
                                 .accessibilityAddTraits(selectedIDs.contains(candidate.id) ? .isSelected : [])
                             }
                         } header: {

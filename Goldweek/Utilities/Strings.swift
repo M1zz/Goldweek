@@ -706,6 +706,18 @@ enum Strings {
         }
     }
 
+    /// 일수 표기 — 영어의 "1 days"를 막는다.
+    /// (`dayUnitSuffix`는 숫자에 그냥 붙이는 접미사라 단수를 구분하지 못한다)
+    static func dayCount(_ value: Double) -> String {
+        let text = formatLeave(value)
+        switch lang {
+        case .korean: return "\(text)일"
+        case .english: return value == 1 ? "1 day" : "\(text) days"
+        case .japanese: return "\(text)日"
+        case .chinese: return "\(text)天"
+        }
+    }
+
     // MARK: - 추천 화면
     static var navTitleRecommendations: String {
         switch lang {
@@ -3089,6 +3101,34 @@ enum Strings {
         }
     }
 
+    /// 공유 미리보기 시트
+    static var sharePreviewTitle: String {
+        switch lang {
+        case .korean: return "공유 미리보기"
+        case .english: return "Share Preview"
+        case .japanese: return "共有プレビュー"
+        case .chinese: return "分享预览"
+        }
+    }
+
+    static var sharePreviewHint: String {
+        switch lang {
+        case .korean: return "이 이미지가 공유돼요"
+        case .english: return "This image will be shared"
+        case .japanese: return "この画像が共有されます"
+        case .chinese: return "将分享这张图片"
+        }
+    }
+
+    static var shareNow: String {
+        switch lang {
+        case .korean: return "공유하기"
+        case .english: return "Share"
+        case .japanese: return "共有する"
+        case .chinese: return "分享"
+        }
+    }
+
     static var shareCardTitle: String {
         switch lang {
         case .korean: return "나의 연차 현황"
@@ -4871,6 +4911,25 @@ enum Strings {
         case .english: return "Add or hide holidays"
         case .japanese: return "祝日の追加・非表示"
         case .chinese: return "添加·隐藏假日"
+        }
+    }
+
+    /// 설정 > 공휴일 — 홈의 "다가오는 휴가" 카드에 공휴일을 함께 보여줄지
+    static var showHolidaysInUpcomingTitle: String {
+        switch lang {
+        case .korean: return "다가오는 휴가에 공휴일 표시"
+        case .english: return "Show Holidays in Upcoming"
+        case .japanese: return "「今後の休暇」に祝日を表示"
+        case .chinese: return "在即将到来的假期中显示节假日"
+        }
+    }
+
+    static var showHolidaysInUpcomingDescription: String {
+        switch lang {
+        case .korean: return "홈 화면 카드에 다가오는 공휴일도 함께 보여줘요"
+        case .english: return "Also list upcoming public holidays on the home card"
+        case .japanese: return "ホームのカードに今後の祝日も表示します"
+        case .chinese: return "在主页卡片中一并显示即将到来的节假日"
         }
     }
 

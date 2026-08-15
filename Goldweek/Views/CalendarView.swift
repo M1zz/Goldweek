@@ -289,7 +289,7 @@ struct HolidayDataNoticeBanner: View {
                 .foregroundStyle(.orange)
                 .voDecorative()
             Text(Strings.holidayDataMayBeInaccurate(year))
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -394,7 +394,7 @@ struct CalendarGrid: View {
             HStack {
                 ForEach(Array(Strings.weekdays.enumerated()), id: \.offset) { index, day in
                     Text(day)
-                        .font(.caption.bold())
+                        .font(.body.bold())
                         .foregroundStyle(index == 0 ? .red : (index == 6 ? .blue : .primary))
                         .frame(maxWidth: .infinity)
                 }
@@ -600,7 +600,7 @@ struct DayCell: View {
             }
 
             Text("\(dayNumber)")
-                .font(.system(.subheadline, weight: (isToday || isRecommended) ? .bold : .regular))
+                .font(.system(.body, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
         }
         .frame(height: 40)
@@ -638,7 +638,9 @@ struct LegendView: View {
     var showsWarning: Bool = false
 
     var body: some View {
-        HStack(spacing: 16) {
+        // 본문 크기 글자로는 5개가 한 줄에 안 들어간다 — 한 줄을 고집하면 "Holid/ay"처럼
+        // 단어가 잘린다. 자리가 모자라면 다음 줄로 흐르게 둔다.
+        LeaveFlowLayout(spacing: 16, lineSpacing: 6) {
             LegendItem(color: AppTheme.Colors.holiday, text: Strings.holiday)
             LegendItem(color: AppTheme.Colors.leave, text: Strings.annualLeave)
             LegendItem(color: AppTheme.Colors.weekend, text: Strings.weekend)
@@ -649,7 +651,7 @@ struct LegendView: View {
                 LegendItem(color: AppTheme.Colors.compensatory, text: Strings.burnoutWarningLegend)
             }
         }
-        .font(.caption)
+        .font(.body)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Strings.legendAccessibility)
     }
@@ -666,6 +668,59 @@ struct LegendItem: View {
                 .frame(width: 8, height: 8)
             Text(text)
                 .foregroundStyle(.secondary)
+                .lineLimit(1)   // 항목 안에서는 줄을 바꾸지 않는다 — 줄바꿈은 레이아웃이 항목 단위로 한다
+                .fixedSize()
+        }
+    }
+}
+
+/// 가로로 채우다 자리가 모자라면 다음 줄로 넘기는 단순 흐름 레이아웃.
+///
+/// 글자를 본문 크기 이상으로 키우면서 한 줄 HStack을 유지하면 단어가 잘린다.
+/// SwiftUI 기본 스택에는 "넘치면 줄바꿈"이 없어서 최소한으로 직접 만든다.
+struct LeaveFlowLayout: Layout {
+    var spacing: CGFloat = 8
+    var lineSpacing: CGFloat = 6
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let maxWidth = proposal.width ?? .infinity
+        var lineWidth: CGFloat = 0
+        var lineHeight: CGFloat = 0
+        var totalHeight: CGFloat = 0
+        var maxLineWidth: CGFloat = 0
+
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+            if lineWidth > 0, lineWidth + spacing + size.width > maxWidth {
+                totalHeight += lineHeight + lineSpacing
+                maxLineWidth = max(maxLineWidth, lineWidth)
+                lineWidth = size.width
+                lineHeight = size.height
+            } else {
+                lineWidth += (lineWidth > 0 ? spacing : 0) + size.width
+                lineHeight = max(lineHeight, size.height)
+            }
+        }
+        maxLineWidth = max(maxLineWidth, lineWidth)
+        totalHeight += lineHeight
+        return CGSize(width: min(maxLineWidth, maxWidth), height: totalHeight)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var x = bounds.minX
+        var y = bounds.minY
+        var lineHeight: CGFloat = 0
+
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+            if x > bounds.minX, x + size.width > bounds.maxX {
+                x = bounds.minX
+                y += lineHeight + lineSpacing
+                lineHeight = 0
+            }
+            subview.place(at: CGPoint(x: x, y: y), anchor: .topLeading, proposal: ProposedViewSize(size))
+            x += size.width + spacing
+            lineHeight = max(lineHeight, size.height)
         }
     }
 }
@@ -760,7 +815,7 @@ struct SelectedDateInfo: View {
                         Text(Strings.addLeaveOnThisDate)
                             .fontWeight(.semibold)
                     }
-                    .font(.subheadline)
+                    .font(.body)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(AppTheme.Colors.brand.opacity(0.12))
@@ -790,16 +845,16 @@ struct SelectedDateInfo: View {
         VStack(alignment: .leading, spacing: 6) {
             if !rec.title.isEmpty {
                 Text(rec.title)
-                    .font(.subheadline.weight(.bold))
+                    .font(.body.weight(.bold))
                     .foregroundStyle(AppTheme.Colors.brand)
             }
 
             Text(dateRange)
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
 
             Text(Strings.breakLabel(rec.totalDaysOff, leaveUsed: Int(rec.requiredLeaveDays)))
-                .font(.caption.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .foregroundStyle(.primary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -836,7 +891,7 @@ struct MyLeaveListView: View {
                     .font(.title3.bold())
                 Spacer()
                 Text(Strings.itemCount(upcomingLeaves.count + pastLeaves.count))
-                    .font(.subheadline)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
 
@@ -846,7 +901,7 @@ struct MyLeaveListView: View {
                         .font(.largeTitle)
                         .foregroundStyle(.secondary)
                     Text(Strings.noLeaveRegistered)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)
@@ -855,9 +910,9 @@ struct MyLeaveListView: View {
                 if onEdit != nil {
                     HStack(spacing: 4) {
                         Image(systemName: "hand.tap")
-                            .font(.caption2)
+                            .font(.body)
                         Text(Strings.tapToEditSwipeToDelete)
-                            .font(.caption2)
+                            .font(.body)
                     }
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -866,7 +921,7 @@ struct MyLeaveListView: View {
                 if !upcomingLeaves.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(Strings.upcomingSchedule)
-                            .font(.caption)
+                            .font(.body)
                             .fontWeight(.semibold)
                             .foregroundStyle(AppTheme.Colors.brand)
                             .padding(.horizontal, 8)
@@ -895,16 +950,16 @@ struct MyLeaveListView: View {
                         } label: {
                             HStack {
                                 Text(Strings.pastSchedule)
-                                    .font(.caption)
+                                    .font(.body)
                                     .fontWeight(.semibold)
                                     .foregroundStyle(.secondary)
                                 Image(systemName: showPastLeaves ? "chevron.up" : "chevron.down")
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                                     .voDecorative()
                                 Spacer()
                                 Text(Strings.itemCount(pastLeaves.count))
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                             }
                             .padding(.horizontal, 8)
@@ -928,7 +983,7 @@ struct MyLeaveListView: View {
 
                             if pastLeaves.count > 10 {
                                 Text(Strings.moreItems(pastLeaves.count - 10))
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                                     .frame(maxWidth: .infinity)
                                     .padding(.top, 4)
@@ -965,7 +1020,7 @@ struct LeaveListRowInteractive: View {
                     VStack(spacing: 4) {
                         Image(systemName: "trash.fill")
                         Text(Strings.delete)
-                            .font(.caption2)
+                            .font(.body)
                     }
                     .foregroundStyle(.white)
                     .frame(width: 70)
@@ -1066,23 +1121,23 @@ struct LeaveListRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Text(Strings.leaveTypeName(leave.type))
-                        .font(.subheadline)
+                        .font(.body)
                         .fontWeight(.semibold)
 
                     if leave.type == .annual && daysCount > 1 {
                         Text(Strings.dayUnit(daysCount))
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                 }
 
                 Text(dateText)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
 
                 if !leave.note.isEmpty {
                     Text(leave.note)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
@@ -1092,7 +1147,7 @@ struct LeaveListRow: View {
 
             if let dDay = dDayText {
                 Text(dDay)
-                    .font(.caption)
+                    .font(.body)
                     .fontWeight(.bold)
                     .foregroundStyle(dDay == Strings.today ? .white : AppTheme.Colors.brand)
                     .padding(.horizontal, 8)
@@ -1101,7 +1156,7 @@ struct LeaveListRow: View {
                     .clipShape(Capsule())
             } else if !isUpcoming {
                 Text(Strings.leaveStatusName(leave.status))
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
         }

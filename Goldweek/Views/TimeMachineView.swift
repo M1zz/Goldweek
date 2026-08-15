@@ -79,16 +79,16 @@ struct TimeMachineView: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(formatted(info.createdAt))
-                    .font(.subheadline)
+                    .font(.body)
                     .fontWeight(.medium)
                     .foregroundStyle(.primary)
                 Text(Strings.snapshotSummary(leaves: info.leaveCount, bonuses: info.bonusCount))
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
             Spacer()
             Text(info.reason.displayName)
-                .font(.caption2)
+                .font(.body)
                 .padding(.horizontal, 6)
                 .padding(.vertical, 2)
                 .background(Color.purple.opacity(0.12))

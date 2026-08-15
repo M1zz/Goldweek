@@ -113,7 +113,7 @@ struct UsageStatsView: View {
                                 .font(.body.monospacedDigit().weight(.semibold))
                         }
                         Text(verbatim: signal.hint)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                     .padding(.vertical, 1)
@@ -175,7 +175,7 @@ struct UsageStatsView: View {
             }
             .frame(height: 6)
             Text(verbatim: "전체 대비 \(percent(stage.rateFromTop)) · 직전 단계 대비 \(percent(stage.rateFromPrevious))")
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
         }
         .padding(.vertical, 2)
@@ -196,7 +196,7 @@ struct UsageStatsView: View {
                                 .fontWeight(.medium)
                             Spacer()
                             Text(verbatim: "설치 \(row.size)곳")
-                                .font(.caption)
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                         }
                         HStack(spacing: 14) {
@@ -219,7 +219,7 @@ struct UsageStatsView: View {
     private func retentionCell(_ label: String, _ rate: Double) -> some View {
         VStack(spacing: 2) {
             Text(verbatim: label)
-                .font(.caption2)
+                .font(.body)
                 .foregroundStyle(.secondary)
             Text(verbatim: percent(rate))
                 .font(.body.monospacedDigit().weight(.medium))
@@ -239,7 +239,7 @@ struct UsageStatsView: View {
                         Text(verbatim: event.name)
                             .fontWeight(.medium)
                         Text(verbatim: "\(event.count)건 · 설치 \(event.installs)곳")
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                     .accessibilityElement(children: .combine)
@@ -573,10 +573,10 @@ struct UsageTrendChart: View {
     private func readout(for point: UsageReportingService.TrendPoint) -> some View {
         VStack(alignment: .leading, spacing: 1) {
             Text(verbatim: Self.fullLabel(point.date, unit: unit))
-                .font(.caption2)
+                .font(.body)
                 .foregroundStyle(.secondary)
             Text(verbatim: "\(metric.localizedName) \(metric.value(point))")
-                .font(.caption.weight(.semibold))
+                .font(.body.weight(.semibold))
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 5)
@@ -601,7 +601,7 @@ struct UsageTrendChart: View {
     private var summary: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(verbatim: visibleRangeText)
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
             Text(verbatim: "이 구간 합계 \(metric.localizedName) \(visiblePoints.reduce(0) { $0 + metric.value($1) })")
                 .font(.body.weight(.semibold))

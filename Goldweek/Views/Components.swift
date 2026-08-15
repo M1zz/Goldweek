@@ -76,7 +76,7 @@ struct InfoBadge: View {
     
     var body: some View {
         Text(text)
-            .font(.caption2.bold())
+            .font(.body.bold())
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(color.opacity(0.15))
@@ -142,7 +142,7 @@ struct EmptyStateView: View {
                 .font(.headline)
             
             Text(message)
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             
@@ -166,7 +166,7 @@ struct LoadingView: View {
                 .scaleEffect(1.5)
             
             Text(message)
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(.secondary)
         }
         .padding(40)
@@ -230,7 +230,7 @@ struct DateRangeLabel: View {
                 Text(formatter.string(from: endDate))
             }
         }
-        .font(.subheadline)
+        .font(.body)
         .accessibilityElement(children: .combine)
     }
 }
@@ -245,7 +245,7 @@ struct DDayLabel: View {
     
     var body: some View {
         Text(daysRemaining == 0 ? "D-Day" : (daysRemaining > 0 ? "D-\(daysRemaining)" : "D+\(abs(daysRemaining))"))
-            .font(.caption.bold())
+            .font(.body.bold())
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(daysRemaining <= 0 ? Color.red : Color.blue)

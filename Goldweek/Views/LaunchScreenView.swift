@@ -45,7 +45,7 @@ struct LaunchScreenView: View {
 
                 // 슬로건
                 Text(Strings.launchSubtitle)
-                    .font(.subheadline)
+                    .font(.body)
                     .foregroundStyle(.white.opacity(0.8))
             }
         }

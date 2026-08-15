@@ -23,6 +23,9 @@ struct HomeView: View {
     @AppStorage("hasSeenPastLeavePrompt") private var hasSeenPastLeavePrompt = false
     @AppStorage("lastProBannerShownAt") private var lastProBannerShownAt: Double = 0
 
+    /// 다가오는 휴가 카드에 공휴일도 함께 보여줄지 (설정 > 공휴일 관리에서 끌 수 있다)
+    @AppStorage("showHolidaysInUpcoming") private var showHolidaysInUpcoming = true
+
     // 캘린더 자동 감지 (Pro)
     @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
     @AppStorage("autoDetectSeenKeys") private var autoDetectSeenKeysRaw = ""
@@ -113,6 +116,52 @@ struct HomeView: View {
         .sorted { $0.startDate < $1.startDate }
     }
 
+    /// 올해 남은 공휴일 — **붙어 있는 날은 한 줄로 묶는다**(추석 3일이 세 줄로 늘어나지 않게).
+    /// 숨긴 공휴일(설정 > 공휴일 관리)은 캘린더와 마찬가지로 여기서도 빠진다.
+    private var upcomingHolidayBlocks: [UpcomingItem] {
+        guard showHolidaysInUpcoming else { return [] }
+
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let year = calendar.component(.year, from: today)
+        let holidays = holidayService.getHolidays(for: year, country: profile.country,
+                                                  customHolidays: customHolidays,
+                                                  hiddenDates: hiddenDates)
+            .filter { calendar.startOfDay(for: $0.date) >= today }
+            .sorted { $0.date < $1.date }
+
+        var blocks: [UpcomingItem] = []
+        var run: [Holiday] = []
+
+        func flush() {
+            guard let first = run.first, let last = run.last else { return }
+            // 이름은 연휴의 주인공(대체공휴일·"연휴"가 아닌 것)을 우선 — "추석 연휴"보다 "추석"
+            let title = run.first(where: { !$0.isSubstitute })?.name ?? first.name
+            blocks.append(UpcomingItem(kind: .holiday, title: title,
+                                       startDate: first.date, endDate: last.date))
+            run = []
+        }
+
+        for holiday in holidays {
+            if let previous = run.last,
+               let nextDay = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: previous.date)),
+               calendar.isDate(holiday.date, inSameDayAs: nextDay) {
+                run.append(holiday)
+            } else {
+                flush()
+                run = [holiday]
+            }
+        }
+        flush()
+        return blocks
+    }
+
+    /// 카드에 그릴 최종 목록 — 내 휴가와 공휴일을 날짜순으로 섞는다.
+    var upcomingItems: [UpcomingItem] {
+        (upcomingLeaves.map(UpcomingItem.init(leave:)) + upcomingHolidayBlocks)
+            .sorted { $0.startDate < $1.startDate }
+    }
+
     var usedLeavesCount: Int {
         leaveRecords.filter { $0.status == .used || $0.status == .planned }.count
     }
@@ -176,9 +225,9 @@ struct HomeView: View {
                         )
                     }
 
-                    // 다가오는 휴가
-                    if !upcomingLeaves.isEmpty {
-                        UpcomingLeavesSection(leaves: upcomingLeaves)
+                    // 다가오는 휴가 (설정에 따라 공휴일 포함)
+                    if !upcomingItems.isEmpty {
+                        UpcomingLeavesSection(items: upcomingItems)
                     }
 
                     // 휴가 사용 내역 버튼 (맨 아래)
@@ -268,14 +317,14 @@ struct AutoDetectBanner: View {
                         .foregroundStyle(.green)
                         .voDecorative()
                     Text(Strings.autoDetectBannerTitle)
-                        .font(.subheadline)
+                        .font(.body)
                         .fontWeight(.semibold)
                         .voHeader()
                 }
                 Spacer()
                 Button(action: onDismiss) {
                     Image(systemName: "xmark")
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                         .frame(width: 28, height: 28)
                         .contentShape(Rectangle())
@@ -284,7 +333,7 @@ struct AutoDetectBanner: View {
             }
 
             Text(Strings.autoDetectBannerMessage(count))
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -295,7 +344,7 @@ struct AutoDetectBanner: View {
                     Text(Strings.autoDetectReview)
                         .fontWeight(.semibold)
                 }
-                .font(.subheadline)
+                .font(.body)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
                 .background(Color.green)
@@ -332,7 +381,7 @@ struct EmptyHomeCard: View {
                 .voHeader()
 
             Text(Strings.emptyHomeMessage)
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
@@ -344,7 +393,7 @@ struct EmptyHomeCard: View {
                     Text(Strings.emptyHomeCTA)
                         .fontWeight(.semibold)
                 }
-                .font(.subheadline)
+                .font(.body)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .background(AppTheme.Colors.brand)
@@ -382,7 +431,7 @@ struct FatigueCheckInView: View {
                         .multilineTextAlignment(.center)
 
                     Text(Strings.fatigueCheckInSubtitle)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
@@ -397,9 +446,9 @@ struct FatigueCheckInView: View {
                         .accessibilityLabel(Strings.fatigueCheckInTitle)
                         .accessibilityValue("\(Int(value))")
                     HStack {
-                        Text(Strings.fatigueLow).font(.caption).foregroundStyle(.secondary)
+                        Text(Strings.fatigueLow).font(.body).foregroundStyle(.secondary)
                         Spacer()
-                        Text(Strings.fatigueHigh).font(.caption).foregroundStyle(.secondary)
+                        Text(Strings.fatigueHigh).font(.body).foregroundStyle(.secondary)
                     }
                 }
                 .padding(.horizontal, 8)
@@ -423,7 +472,7 @@ struct FatigueCheckInView: View {
                         dismiss()
                     } label: {
                         Text(Strings.fatigueSkip)
-                            .font(.subheadline)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                             .padding(.vertical, 10)
                     }
@@ -452,7 +501,6 @@ struct LeaveStatusCard: View {
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
     @State private var showingAddLeave = false
     @State private var showingPhotoImport = false
-    @State private var shareImage: UIImage?
     @State private var showingShareSheet = false
 
     /// 연차 기준 연도의 시작일 (yearStartMonth 기준)
@@ -552,13 +600,11 @@ struct LeaveStatusCard: View {
                     .font(.headline)
                 Spacer()
                 Button {
-                    if let image = renderShareImage() {
-                        shareImage = image
-                        showingShareSheet = true
-                    }
+                    // 렌더는 시트 안에서 한다 — 여기서 실패하면 버튼이 죽은 것처럼 보인다.
+                    showingShareSheet = true
                 } label: {
                     Image(systemName: "square.and.arrow.up")
-                        .font(.subheadline.weight(.semibold))
+                        .font(.body.weight(.semibold))
                         .foregroundStyle(.blue)
                         .frame(width: 32, height: 32)
                         .background(Color.blue.opacity(0.1))
@@ -571,7 +617,7 @@ struct LeaveStatusCard: View {
                     showingPhotoImport = true
                 } label: {
                     Image(systemName: "doc.text.viewfinder")
-                        .font(.subheadline.weight(.semibold))
+                        .font(.body.weight(.semibold))
                         .foregroundStyle(.blue)
                         .frame(width: 32, height: 32)
                         .background(Color.blue.opacity(0.1))
@@ -634,9 +680,9 @@ struct LeaveStatusCard: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(Strings.statUsed)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
-                    Text("\(formatLeave(displayUsed))\(Strings.dayUnitSuffix)")
+                    Text("\(Strings.dayCount(displayUsed))")
                         .font(.title2.bold())
                         .foregroundStyle(.blue)
                 }
@@ -645,9 +691,9 @@ struct LeaveStatusCard: View {
 
                 VStack {
                     Text(Strings.statPlanned)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
-                    Text("\(formatLeave(plannedLeave))\(Strings.dayUnitSuffix)")
+                    Text("\(Strings.dayCount(plannedLeave))")
                         .font(.title2.bold())
                         .foregroundStyle(.cyan)
                 }
@@ -656,15 +702,15 @@ struct LeaveStatusCard: View {
 
                 VStack(alignment: .trailing) {
                     Text(isLeisure ? (hasGoal ? Strings.statRemainingGoal : Strings.statPlanned) : Strings.remaining)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                     if isLeisure && !hasGoal {
                         // 무제한 모드: 총 계획/완료일 표시
-                        Text("\(formatLeave(actualUsed + plannedLeave))\(Strings.dayUnitSuffix)")
+                        Text("\(Strings.dayCount(actualUsed + plannedLeave))")
                             .font(.title2.bold())
                             .foregroundStyle(.purple)
                     } else {
-                        Text("\(formatLeave(effectiveRemaining))\(Strings.dayUnitSuffix)")
+                        Text("\(Strings.dayCount(effectiveRemaining))")
                             .font(.title2.bold())
                             .foregroundStyle(
                                 isLeisure ? .purple
@@ -682,20 +728,20 @@ struct LeaveStatusCard: View {
                     HStack(spacing: 6) {
                         Image(systemName: "gift.fill")
                             .foregroundStyle(AppTheme.Colors.bonus)
-                            .font(.subheadline)
+                            .font(.body)
                             .voDecorative()
                         Text(Strings.bonus)
-                            .font(.subheadline)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                         Spacer()
                         Text(Strings.bonusUsedOfGranted(
                             used: formatLeave(usedBonusLeave),
                             granted: formatLeave(grantedBonusLeave)
                         ))
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
-                        Text("+\(formatLeave(remainingBonusLeave))\(Strings.dayUnitSuffix)")
-                            .font(.subheadline.bold())
+                        Text("+\(Strings.dayCount(remainingBonusLeave))")
+                            .font(.body.bold())
                             .foregroundStyle(AppTheme.Colors.bonus)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
@@ -719,10 +765,10 @@ struct LeaveStatusCard: View {
                 HStack(spacing: 6) {
                     Image(systemName: "infinity")
                         .foregroundStyle(.purple)
-                        .font(.subheadline)
+                        .font(.body)
                         .voDecorative()
                     Text(Strings.goalNotSetDesc)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -744,12 +790,12 @@ struct LeaveStatusCard: View {
         .sheet(isPresented: $showingPhotoImport) {
             PhotoImportSheet()
         }
+        // 바로 공유 시트를 띄우지 않는다 — 무엇이 나가는지 먼저 보여주고,
+        // 받는 사람은 그 다음에 고르게 한다.
         .sheet(isPresented: $showingShareSheet) {
-            if let image = shareImage {
-                ActivityShareSheet(items: [image])
-                    .presentationDetents([.medium, .large])
-            }
+            SharePlanPreviewSheet(render: renderShareImage)
         }
+
     }
 
     /// 연차 현황 + 다가오는 휴가를 담은 공유용 이미지 렌더링
@@ -772,6 +818,72 @@ struct LeaveStatusCard: View {
         return renderer.uiImage
     }
 
+}
+
+// MARK: - 공유 미리보기 시트
+
+/// 공유 전에 **나갈 이미지를 그대로** 보여주고, 받는 사람은 그 다음에 고르게 한다.
+/// 곧바로 공유 시트를 띄우면 무엇이 나가는지 모른 채 상대를 고르게 되고,
+/// 이미지가 마음에 안 들어도 되돌릴 방법이 없다.
+struct SharePlanPreviewSheet: View {
+    /// 시트가 뜬 뒤에 그린다 — 버튼을 누른 즉시 그리면 실패했을 때 아무 일도 안 일어난 것처럼 보인다.
+    let render: () -> UIImage?
+
+    @State private var image: UIImage?
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 16) {
+                ScrollView {
+                    if let image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .shadow(color: .black.opacity(0.12), radius: 10, y: 4)
+                            .padding(.horizontal)
+                            .padding(.top, 8)
+                            .accessibilityLabel(Text(Strings.sharePreviewHint))
+                    } else {
+                        ProgressView()
+                            .padding(.top, 60)
+                    }
+                }
+
+                Text(Strings.sharePreviewHint)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+
+                if let image {
+                    ShareLink(item: Image(uiImage: image),
+                              preview: SharePreview(Strings.shareCardTitle, image: Image(uiImage: image))) {
+                        Text(Strings.shareNow)
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(AppTheme.Colors.brand)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 12)
+                }
+            }
+            .task {
+                // 이미 그렸으면 다시 그리지 않는다(시트 재구성 시 깜빡임 방지)
+                if image == nil { image = render() }
+            }
+            .background(Color(.systemGroupedBackground))
+            .navigationTitle(Strings.sharePreviewTitle)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(Strings.close) { dismiss() }
+                }
+            }
+        }
+    }
 }
 
 // MARK: - 공유용 연차 플랜 카드 (ImageRenderer 전용 — 화면에 직접 표시되지 않음)
@@ -814,24 +926,24 @@ struct ShareableLeavePlanView: View {
                     .font(.title3.weight(.semibold))
                     .foregroundStyle(secondaryText)
                 Text(Strings.remaining)
-                    .font(.subheadline)
+                    .font(.body)
                     .foregroundStyle(secondaryText)
                 Spacer()
             }
 
             // 사용/총 요약
             HStack(spacing: 16) {
-                Text("\(Strings.statUsed) \(formatLeave(used))\(Strings.dayUnitSuffix)")
-                Text("\(Strings.total) \(formatLeave(total))\(Strings.dayUnitSuffix)")
+                Text("\(Strings.statUsed) \(Strings.dayCount(used))")
+                Text("\(Strings.total) \(Strings.dayCount(total))")
             }
-            .font(.caption.weight(.medium))
+            .font(.body.weight(.medium))
             .foregroundStyle(secondaryText)
 
             // 다가오는 휴가
             if !upcoming.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(Strings.upcomingLeaves)
-                        .font(.caption.weight(.semibold))
+                        .font(.body.weight(.semibold))
                         .foregroundStyle(secondaryText)
                     ForEach(upcoming) { leave in
                         HStack(spacing: 8) {
@@ -841,11 +953,11 @@ struct ShareableLeavePlanView: View {
                             Text(leave.startDate == leave.endDate
                                  ? dateFormatter.string(from: leave.startDate)
                                  : "\(dateFormatter.string(from: leave.startDate)) ~ \(dateFormatter.string(from: leave.endDate))")
-                                .font(.subheadline.weight(.medium))
+                                .font(.body.weight(.medium))
                                 .foregroundStyle(primaryText)
                             if !leave.note.isEmpty {
                                 Text(leave.note)
-                                    .font(.caption)
+                                    .font(.body)
                                     .foregroundStyle(secondaryText)
                                     .lineLimit(1)
                             }
@@ -861,10 +973,10 @@ struct ShareableLeavePlanView: View {
             // 푸터 (앱 브랜딩)
             HStack(spacing: 6) {
                 Image(systemName: "calendar.badge.checkmark")
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(AppTheme.Colors.brand)
                 Text(Strings.shareCardFooter)
-                    .font(.caption2.weight(.medium))
+                    .font(.body.weight(.medium))
                     .foregroundStyle(secondaryText)
                 Spacer()
             }
@@ -886,9 +998,50 @@ struct ActivityShareSheet: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
-// MARK: - 다가오는 휴가 섹션
+// MARK: - 다가오는 일정 (내 휴가 + 공휴일)
+
+/// 다가오는 휴가 카드의 한 줄 — 내가 등록한 휴가이거나 공휴일.
+/// 둘을 한 줄 타입으로 합치는 이유: 카드가 **날짜순 한 흐름**으로 읽혀야 하기 때문이다.
+struct UpcomingItem: Identifiable {
+    enum Kind { case leave, holiday }
+
+    let id = UUID()
+    let kind: Kind
+    let title: String
+    let startDate: Date
+    let endDate: Date
+    /// 휴가일 때만 — 유형 이름과 차감 일수 표시에 쓴다.
+    var typeLabel: String?
+    var days: Double?
+
+    init(kind: Kind, title: String, startDate: Date, endDate: Date,
+         typeLabel: String? = nil, days: Double? = nil) {
+        self.kind = kind
+        self.title = title
+        self.startDate = startDate
+        self.endDate = endDate
+        self.typeLabel = typeLabel
+        self.days = days
+    }
+
+    init(leave: LeaveRecord) {
+        // 노트가 비어 있으면 연차 계열은 "휴가", 그 외(출장·병가 등)는 유형명을 제목으로 쓴다.
+        let fallbackTitle: String
+        switch leave.type {
+        case .annual, .half, .quarter: fallbackTitle = Strings.vacation
+        default: fallbackTitle = Strings.leaveTypeName(leave.type)
+        }
+        self.init(kind: .leave,
+                  title: leave.note.isEmpty ? fallbackTitle : leave.note,
+                  startDate: leave.startDate,
+                  endDate: leave.endDate,
+                  typeLabel: Strings.leaveTypeName(leave.type),
+                  days: leave.effectiveLeaveDays)
+    }
+}
+
 struct UpcomingLeavesSection: View {
-    let leaves: [LeaveRecord]
+    let items: [UpcomingItem]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -899,8 +1052,8 @@ struct UpcomingLeavesSection: View {
                 Spacer()
             }
 
-            ForEach(leaves) { leave in
-                UpcomingLeaveRow(leave: leave)
+            ForEach(items) { item in
+                UpcomingLeaveRow(item: item)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -912,28 +1065,59 @@ struct UpcomingLeavesSection: View {
 }
 
 struct UpcomingLeaveRow: View {
-    let leave: LeaveRecord
+    let item: UpcomingItem
 
     var daysUntil: Int {
-        Calendar.current.dateComponents([.day], from: Date(), to: leave.startDate).day ?? 0
+        let calendar = Calendar.current
+        return calendar.dateComponents([.day],
+                                       from: calendar.startOfDay(for: Date()),
+                                       to: calendar.startOfDay(for: item.startDate)).day ?? 0
     }
 
-    /// 노트가 비어있을 때 표시할 제목 — 연차 계열은 "휴가", 그 외(출장·병가·공가 등)는 타입명 그대로 노출
-    private var defaultTitle: String {
-        switch leave.type {
-        case .annual, .half, .quarter: return Strings.vacation
-        default: return Strings.leaveTypeName(leave.type)
+    /// 올해 일정이면 연도를 뺀다 — "Sep 24, 2026 - Sep 26, 2026"은 한 줄에 안 들어가 두 줄로 접힌다.
+    private var dateRangeText: String {
+        let calendar = Calendar.current
+        let thisYear = calendar.component(.year, from: Date())
+        let sameYear = calendar.component(.year, from: item.startDate) == thisYear
+            && calendar.component(.year, from: item.endDate) == thisYear
+
+        let start = sameYear ? item.startDate.appMonthDay : item.startDate.appFormatted()
+        if calendar.isDate(item.startDate, inSameDayAs: item.endDate) { return start }
+        let end = sameYear ? item.endDate.appMonthDay : item.endDate.appFormatted()
+        return "\(start) - \(end)"
+    }
+
+    /// 공휴일은 며칠짜리 연휴인지가 정보다 — 휴가는 차감 일수, 공휴일은 달력 일수.
+    private var trailingText: String {
+        switch item.kind {
+        case .leave:
+            let days = item.days.map { Strings.dayCount($0) } ?? ""
+            return [item.typeLabel, days].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " ")
+        case .holiday:
+            let count = (Calendar.current.dateComponents([.day],
+                                                         from: Calendar.current.startOfDay(for: item.startDate),
+                                                         to: Calendar.current.startOfDay(for: item.endDate)).day ?? 0) + 1
+            return "\(Strings.holiday) \(Strings.dayCount(Double(count)))"
         }
     }
 
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(leave.note.isEmpty ? defaultTitle : leave.note)
-                    .font(.subheadline.bold())
+                HStack(spacing: 6) {
+                    // 공휴일은 내가 만든 일정이 아니라는 걸 아이콘 하나로 구분한다.
+                    if item.kind == .holiday {
+                        Image(systemName: "flag.fill")
+                            .font(.body)
+                            .foregroundStyle(.red)
+                            .voDecorative()
+                    }
+                    Text(item.title)
+                        .font(.body.bold())
+                }
 
-                Text("\(leave.startDate.appFormatted()) - \(leave.endDate.appFormatted())")
-                    .font(.caption)
+                Text(dateRangeText)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
 
@@ -942,24 +1126,17 @@ struct UpcomingLeaveRow: View {
             VStack(alignment: .trailing) {
                 Text("D-\(daysUntil)")
                     .font(.headline)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(item.kind == .holiday ? .red : .blue)
 
-                Text("\(Strings.leaveTypeName(leave.type)) \(formatLeave(leave.effectiveLeaveDays))\(Strings.dayUnitSuffix)")
-                    .font(.caption)
+                Text(trailingText)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
         }
         .padding()
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .voCard(
-            VoiceOverLabel.upcomingLeave(
-                dateRange: "\(leave.startDate.appFormatted()) - \(leave.endDate.appFormatted())",
-                typeLabel: Strings.leaveTypeName(leave.type),
-                days: leave.effectiveLeaveDays,
-                dDay: daysUntil
-            )
-        )
+        .voCard("\(item.title), \(dateRangeText), \(trailingText), D-\(daysUntil)")
     }
 }
 
@@ -973,18 +1150,18 @@ struct LeaveHistoryButton: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(Strings.leaveHistory)
-                        .font(.subheadline.weight(.semibold))
+                        .font(.body.weight(.semibold))
                         .foregroundStyle(.primary)
 
                     Text(Strings.checkPastRecords)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .voDecorative()
             }
@@ -1012,21 +1189,21 @@ struct PastLeavePromptBanner: View {
                         .foregroundStyle(.orange)
                         .voDecorative()
                     Text(Strings.pastLeavePromptTitle)
-                        .font(.subheadline)
+                        .font(.body)
                         .fontWeight(.semibold)
                         .voHeader()
                 }
                 Spacer()
                 Button(action: onDismiss) {
                     Image(systemName: "xmark")
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
                 .accessibilityLabel(Text(Strings.cancel))
             }
 
             Text(Strings.pastLeavePromptDesc)
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -1037,7 +1214,7 @@ struct PastLeavePromptBanner: View {
                     Text(Strings.pastLeaveQuickAdd)
                         .fontWeight(.semibold)
                 }
-                .font(.subheadline)
+                .font(.body)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
                 .background(Color.orange)
@@ -1092,7 +1269,7 @@ struct PastLeaveQuickEntrySheet: View {
             Form {
                 Section {
                     Text(Strings.pastLeaveSheetDesc)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                         .listRowBackground(Color.clear)
                 }
@@ -1113,7 +1290,7 @@ struct PastLeaveQuickEntrySheet: View {
                                 daysUsed = days
                             } label: {
                                 Text("\(Int(days))")
-                                    .font(.subheadline)
+                                    .font(.body)
                                     .fontWeight(.medium)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 7)
@@ -1131,7 +1308,7 @@ struct PastLeaveQuickEntrySheet: View {
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.blue)
                         Text("\(yearStartDate.appMonthDay)  →  \(yesterday.appMonthDay)")
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                 } footer: {
@@ -1389,11 +1566,19 @@ struct BurnoutPaceCard: View {
                 let ahead = usageProgress >= yearProgress  // 사용이 진행보다 앞서면 빠른 페이스
 
                 ZStack(alignment: .topLeading) {
-                    // 연간 축 트랙
+                    // 연간 축 트랙 (아직 오지 않은 시간)
                     Capsule()
                         .fill(Color(.systemGray6))
                         .frame(width: w, height: 8)
                         .position(x: w / 2, y: trackY)
+
+                    // 올해 진행: 지나온 시간을 회색으로 채운다.
+                    // 마커만 있으면 왼쪽이 빈 채로 남아 "그래프가 잘렸나" 싶게 보인다.
+                    // 색은 트랙보다 진하되 연차 사용(컬러)보다는 물러서게 — 시간은 배경, 내 사용이 주인공.
+                    Capsule()
+                        .fill(Color(.systemGray3))
+                        .frame(width: yearX, height: 8)
+                        .position(x: yearX / 2, y: trackY)
 
                     // 두 핀 사이 구간 강조 (페이스 갭)
                     Capsule()
@@ -1423,10 +1608,10 @@ struct BurnoutPaceCard: View {
                     .frame(width: 9, height: 9)
             }
             Text(label)
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
             Text(value)
-                .font(.caption.weight(.bold))
+                .font(.body.weight(.bold))
                 .foregroundStyle(color)
                 .monospacedDigit()
         }
@@ -1454,11 +1639,11 @@ struct BurnoutPaceCard: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Text(Strings.burnoutSectionTitle)
-                    .font(.subheadline.weight(.semibold))
+                    .font(.body.weight(.semibold))
                 Spacer()
                 if assessment.cycleIsPersonalized {
                     Text(Strings.personalCycleLabel(assessment.personalCycleDays))
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -1492,7 +1677,7 @@ struct BurnoutPaceCard: View {
                     .frame(width: 22, height: 22)
             }
             Text(Strings.burnoutToday)
-                .font(.caption2.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .foregroundStyle(.primary)
         }
     }
@@ -1501,7 +1686,8 @@ struct BurnoutPaceCard: View {
         GeometryReader { geo in
             let w = geo.size.width
             let nodeW: CGFloat = 56
-            let cellW: CGFloat = 72
+            // 본문 크기 글자를 담아야 해서 칸을 넓혔다 — 좁으면 "Last br..."처럼 잘린다.
+            let cellW: CGFloat = 104
             let budget = max(w - nodeW - cellW * 2, 0)
             let frac = todayFraction
             let leftW = budget * frac          // 지난 휴가 ~ 오늘 사이
@@ -1540,7 +1726,7 @@ struct BurnoutPaceCard: View {
             }
             .frame(width: w)
         }
-        .frame(height: 52)
+        .frame(height: 68)
     }
 
     private var lastLeaveColor: Color {
@@ -1556,12 +1742,15 @@ struct BurnoutPaceCard: View {
                 .fill(hasData ? color : Color(.systemGray4))
                 .frame(width: 10, height: 10)
             Text(title)
-                .font(.caption2)
+                .font(.body)
                 .foregroundStyle(.secondary)
+                .lineLimit(2)
+                .multilineTextAlignment(.center)
             Text(value)
-                .font(.caption.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .foregroundStyle(hasData ? .primary : .secondary)
-                .lineLimit(1)
+                .lineLimit(2)
+                .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity)

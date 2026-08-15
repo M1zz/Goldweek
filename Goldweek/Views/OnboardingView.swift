@@ -249,7 +249,7 @@ struct HeroPage: View {
             VStack(spacing: 14) {
                 // 배지
                 Text(Strings.onboardingHeroBadge)
-                    .font(.caption.weight(.semibold))
+                    .font(.body.weight(.semibold))
                     .foregroundStyle(AppTheme.Colors.bonus)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
@@ -323,7 +323,7 @@ struct ValueDemoPage: View {
                     .lineSpacing(2)
 
                 Text(Strings.onboardingValueDesc)
-                    .font(.subheadline)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
@@ -334,7 +334,7 @@ struct ValueDemoPage: View {
                 ForEach(Array(dayLabels.enumerated()), id: \.offset) { index, day in
                     VStack(spacing: 6) {
                         Text(day.label)
-                            .font(.caption2.weight(.semibold))
+                            .font(.body.weight(.semibold))
                             .foregroundStyle(.secondary)
 
                         ZStack {
@@ -344,7 +344,7 @@ struct ValueDemoPage: View {
 
                             if day.type == .leave && revealedDays.contains(index) {
                                 Image(systemName: "checkmark")
-                                    .font(.caption.bold())
+                                    .font(.body.bold())
                                     .foregroundStyle(.white)
                             }
                         }
@@ -389,7 +389,7 @@ private struct OnboardingLegendItem: View {
                 .fill(color)
                 .frame(width: 12, height: 12)
             Text(label)
-                .font(.caption.weight(.medium))
+                .font(.body.weight(.medium))
                 .foregroundStyle(.secondary)
         }
     }
@@ -463,7 +463,7 @@ private struct FeatureCard: View {
                     .font(.headline)
                     .foregroundStyle(.primary)
                 Text(description)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .lineSpacing(2)
                     .multilineTextAlignment(.leading)
@@ -498,7 +498,7 @@ struct SetupPage: View {
                     Text(Strings.leaveSetup)
                         .font(.system(.title, weight: .bold))
                     Text(Strings.leaveSetupDesc)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -511,7 +511,7 @@ struct SetupPage: View {
                             .font(.headline)
                         Spacer()
                         Text(Strings.onboardingNameOptional)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
@@ -567,7 +567,7 @@ struct SetupPage: View {
                     }
 
                     Text(Strings.yearStartMonthDesc)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
 
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 6), spacing: 6) {
@@ -577,7 +577,7 @@ struct SetupPage: View {
                                 yearStartMonth = month
                             } label: {
                                 Text(Strings.monthShort(month))
-                                    .font(.caption.weight(yearStartMonth == month ? .bold : .medium))
+                                    .font(.body.weight(yearStartMonth == month ? .bold : .medium))
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 10)
                                     .background(yearStartMonth == month ? AppTheme.Colors.bonus : Color(.systemGray6))
@@ -658,7 +658,7 @@ struct ProShowcasePage: View {
                         Text(Strings.goldweekPro)
                             .font(.system(.title, weight: .bold))
                         Text(Strings.proOnboardingSubtitle)
-                            .font(.subheadline)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 24)
@@ -685,7 +685,7 @@ struct ProShowcasePage: View {
                             .font(.title2.bold())
                             .foregroundStyle(AppTheme.Colors.bonus)
                         Text(Strings.oneTimePurchase)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                     .padding(.top, 4)
@@ -712,7 +712,7 @@ struct ProShowcasePage: View {
 
                     Button(action: onComplete) {
                         Text(Strings.proOnboardingSkip)
-                            .font(.subheadline)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                             .padding(.vertical, 8)
                     }
@@ -746,9 +746,9 @@ private struct ProFeatureRow: View {
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.subheadline.weight(.semibold))
+                    .font(.body.weight(.semibold))
                 Text(description)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
             Spacer()

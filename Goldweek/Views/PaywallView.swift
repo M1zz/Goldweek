@@ -79,7 +79,7 @@ struct PaywallView: View {
                     .fontWeight(.bold)
 
                 Text(Strings.unlockAllFeatures)
-                    .font(.subheadline)
+                    .font(.body)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -197,7 +197,7 @@ struct PaywallView: View {
                                 .foregroundColor(.orange)
                                 .voDecorative()
                             Text(Strings.priceLoadFailed)
-                                .font(.footnote)
+                                .font(.body)
                                 .foregroundColor(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
@@ -205,7 +205,7 @@ struct PaywallView: View {
                             Task { await proManager.loadProducts() }
                         } label: {
                             Text(Strings.retry)
-                                .font(.subheadline.weight(.semibold))
+                                .font(.body.weight(.semibold))
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 8)
                                 .background(Color.accentColor.opacity(0.12))
@@ -231,7 +231,7 @@ struct PaywallView: View {
                             .fontWeight(.semibold)
 
                         Text(Strings.oneTimePurchase)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundColor(.secondary)
                     }
 
@@ -256,9 +256,9 @@ struct PaywallView: View {
             HStack(spacing: 6) {
                 Image(systemName: "checkmark.seal.fill")
                     .foregroundColor(.green)
-                    .font(.footnote)
+                    .font(.body)
                 Text(Strings.noSubscription)
-                    .font(.footnote)
+                    .font(.body)
                     .foregroundColor(.secondary)
             }
         }
@@ -304,7 +304,7 @@ struct PaywallView: View {
     private var footerSection: some View {
         VStack(spacing: 10) {
             Text(Strings.oneTimePurchase)
-                .font(.caption)
+                .font(.body)
                 .foregroundColor(Color(.systemGray3))
                 .multilineTextAlignment(.center)
 
@@ -314,7 +314,7 @@ struct PaywallView: View {
                 Link(Strings.privacyPolicy,
                      destination: URL(string: "https://m1zz.github.io/Goldweek/support.html")!)
             }
-            .font(.caption)
+            .font(.body)
             .foregroundColor(.secondary)
         }
     }
@@ -391,20 +391,20 @@ struct FeatureRowView: View {
             if isHeader {
                 // Header row
                 Text(Strings.paywallFeaturesHeader)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 40)
 
                 if let free = freeLabel, let pro = proLabel {
                     Text(free)
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.medium)
                         .foregroundColor(.secondary)
                         .frame(width: 64, alignment: .center)
 
                     Text(pro)
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.semibold)
                         .foregroundColor(.accentColor)
                         .frame(width: 64, alignment: .center)
@@ -416,14 +416,14 @@ struct FeatureRowView: View {
                         .fill(iconColor.opacity(0.15))
                         .frame(width: 30, height: 30)
                     Image(systemName: icon)
-                        .font(.system(.subheadline))
+                        .font(.system(.body))
                         .foregroundColor(iconColor)
                         .voDecorative()
                 }
 
                 // Feature name
                 Text(feature)
-                    .font(.subheadline)
+                    .font(.body)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 // Free cell
@@ -451,7 +451,7 @@ struct FeatureRowView: View {
                     .accessibilityLabel(Text(yes ? "Yes" : "No"))
             case .text(let str):
                 Text(str)
-                    .font(.caption2)
+                    .font(.body)
                     .fontWeight(isPro ? .semibold : .regular)
                     .foregroundColor(isPro ? .primary : .secondary)
                     .multilineTextAlignment(.center)
@@ -482,21 +482,21 @@ struct ProBannerView: View {
                 HStack(spacing: 6) {
                     if let icon = triggerIcon {
                         Text(icon)
-                            .font(.subheadline)
+                            .font(.body)
                             .voDecorative()
                     } else {
                         Image(systemName: "crown.fill")
                             .foregroundColor(.yellow)
-                            .font(.subheadline)
+                            .font(.body)
                             .voDecorative()
                     }
                     Text(Strings.upgradeToPro)
-                        .font(.subheadline)
+                        .font(.body)
                         .fontWeight(.semibold)
                 }
 
                 Text(displayMessage)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundColor(.secondary)
                     .lineLimit(2)
             }
@@ -509,7 +509,7 @@ struct ProBannerView: View {
                 showingPaywall = true
             }) {
                 Text(Strings.upgradeToPro)
-                    .font(.caption)
+                    .font(.body)
                     .fontWeight(.semibold)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)

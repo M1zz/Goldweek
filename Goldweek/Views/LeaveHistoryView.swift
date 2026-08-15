@@ -204,7 +204,7 @@ struct LeaveHistoryView: View {
                             withAnimation { selectedYear = year }
                         } label: {
                             Text(verbatim: Strings.yearLabel(year))
-                                .font(.subheadline.weight(selectedYear == year ? .semibold : .regular))
+                                .font(.body.weight(selectedYear == year ? .semibold : .regular))
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
                                 .background(selectedYear == year ? Color.blue : Color(.systemGray6))
@@ -359,7 +359,7 @@ struct LeaveHistoryView: View {
                 .font(.headline)
 
             Text(Strings.noLeaveForYear(selectedYear))
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
@@ -443,7 +443,7 @@ struct FilterChip: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.caption.weight(isSelected ? .semibold : .regular))
+                .font(.body.weight(isSelected ? .semibold : .regular))
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
                 .background(isSelected ? color.opacity(0.2) : Color(.systemGray6))
@@ -469,7 +469,7 @@ struct StatCard: View {
     var body: some View {
         VStack(spacing: 4) {
             Text(title)
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
 
             Text(value)
@@ -477,7 +477,7 @@ struct StatCard: View {
                 .foregroundStyle(color)
 
             Text(Strings.casesCount(count))
-                .font(.caption2)
+                .font(.body)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
@@ -517,11 +517,11 @@ struct HistoryRecordRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Text(Strings.leaveTypeName(record.category))
-                        .font(.subheadline.weight(.semibold))
+                        .font(.body.weight(.semibold))
 
                     if record.length != .full {
                         Text(Strings.leaveLengthName(record.length))
-                            .font(.caption2.weight(.semibold))
+                            .font(.body.weight(.semibold))
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(AppTheme.Colors.brand.opacity(0.15))
@@ -536,17 +536,17 @@ struct HistoryRecordRow: View {
 
                 HStack {
                     Text(dateString)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
 
-                    Text("\(formatLeave(record.effectiveLeaveDays))\(Strings.dayUnitSuffix)")
-                        .font(.caption)
+                    Text("\(Strings.dayCount(record.effectiveLeaveDays))")
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
 
                 if !record.note.isEmpty {
                     Text(record.note)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
@@ -555,7 +555,7 @@ struct HistoryRecordRow: View {
             // 추천 배지
             if record.isRecommended {
                 Image(systemName: "sparkles")
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.orange)
                     .voDecorative()
             }
@@ -571,7 +571,7 @@ struct HistoryRecordRow: View {
                 : Strings.leaveTypeName(record.category),
             Strings.leaveStatusName(record.status),
             dateString,
-            "\(formatLeave(record.effectiveLeaveDays))\(Strings.dayUnitSuffix)"
+            "\(Strings.dayCount(record.effectiveLeaveDays))"
         ]
         if record.isRecommended { parts.append(Strings.recommendedMark) }
         if !record.note.isEmpty { parts.append(record.note) }
@@ -601,7 +601,7 @@ struct StatusBadge: View {
 
     var body: some View {
         Text(Strings.leaveStatusName(status))
-            .font(.caption2.weight(.medium))
+            .font(.body.weight(.medium))
             .padding(.horizontal, 8)
             .padding(.vertical, 2)
             .background(color.opacity(0.2))
@@ -745,7 +745,7 @@ struct EditLeaveSheet: View {
                             Text(leaveDaysDifference > 0
                                  ? Strings.additionalLeaveUsed(String(format: "%.1f", leaveDaysDifference))
                                  : Strings.leaveRestored(String(format: "%.1f", abs(leaveDaysDifference))))
-                                .font(.caption)
+                                .font(.body)
                                 .foregroundStyle(leaveDaysDifference > 0 ? .red : .green)
                         }
                     }

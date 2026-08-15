@@ -39,7 +39,7 @@ struct ShareScheduleView: View {
                 Section {
                     Label(Strings.shareICloudRequired, systemImage: "exclamationmark.icloud")
                         .foregroundStyle(.orange)
-                        .font(.subheadline)
+                        .font(.body)
                 }
             }
 
@@ -53,17 +53,17 @@ struct ShareScheduleView: View {
                         Spacer()
                         Text(Strings.shareParticipants(service.participantNames.count))
                             .foregroundStyle(.secondary)
-                            .font(.subheadline)
+                            .font(.body)
                     }
 
                     if service.participantNames.isEmpty {
                         Text(Strings.shareNoParticipants)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     } else {
                         ForEach(service.participantNames, id: \.self) { name in
                             Label(name, systemImage: "person.fill")
-                                .font(.subheadline)
+                                .font(.body)
                         }
                     }
 
@@ -133,7 +133,7 @@ struct ShareScheduleView: View {
             Section(Strings.shareReceivedSection) {
                 if service.sharedSchedules.isEmpty {
                     Text(Strings.shareReceivedEmpty)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                         .padding(.vertical, 4)
                 } else {
@@ -229,7 +229,7 @@ struct SharedScheduleRow: View {
             let upcoming = schedule.upcomingLeaves
             if upcoming.isEmpty {
                 Text(Strings.shareNoUpcoming)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(upcoming.prefix(10)) { leave in
@@ -240,15 +240,15 @@ struct SharedScheduleRow: View {
                             .voDecorative()
                         VStack(alignment: .leading, spacing: 2) {
                             Text(dateRangeText(leave))
-                                .font(.subheadline)
+                                .font(.body)
                             // rawValue는 한국어 고정값이다 — 앱 언어를 따르는 이름으로 그린다
                             Text(Strings.leaveTypeName(leave.type))
-                                .font(.caption)
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
                         Text(Strings.leaveStatusName(leave.status))
-                            .font(.caption2)
+                            .font(.body)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(leave.status == .used ? Color.green.opacity(0.15) : Color.blue.opacity(0.15))
@@ -267,7 +267,7 @@ struct SharedScheduleRow: View {
                     Text(schedule.ownerName)
                         .font(.body.weight(.medium))
                     Text(Strings.shareUpcomingCount(schedule.upcomingLeaves.count))
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
             }

@@ -151,7 +151,7 @@ struct HolidayManagementView: View {
             withAnimation(.easeInOut(duration: 0.2)) { selectedYear = year }
         } label: {
             Text(label)
-                .font(.subheadline.weight(isSelected ? .semibold : .regular))
+                .font(.body.weight(isSelected ? .semibold : .regular))
                 .padding(.horizontal, 14)
                 .padding(.vertical, 7)
                 .background(isSelected ? Color.blue : Color(.systemGray5))
@@ -167,12 +167,12 @@ struct HolidayManagementView: View {
             // 헤더
             HStack {
                 Text(Strings.holidayDefaultSection)
-                    .font(.footnote.weight(.semibold))
+                    .font(.body.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .voHeader()
                 Spacer()
                 Text(Strings.itemCount(builtInHolidays.count))
-                    .font(.footnote)
+                    .font(.body)
                     .foregroundStyle(.secondary)
             }
             .padding(.horizontal)
@@ -195,7 +195,7 @@ struct HolidayManagementView: View {
             .padding(.horizontal)
 
             Text(Strings.holidayDefaultFooter)
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
                 .padding(.top, 6)
@@ -207,7 +207,7 @@ struct HolidayManagementView: View {
             // 헤더
             HStack {
                 Text(Strings.holidayCustomSection)
-                    .font(.footnote.weight(.semibold))
+                    .font(.body.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .voHeader()
                 Spacer()
@@ -219,7 +219,7 @@ struct HolidayManagementView: View {
                             .voDecorative()
                         Text(Strings.commonAdd)
                     }
-                    .font(.footnote.weight(.semibold))
+                    .font(.body.weight(.semibold))
                     .foregroundStyle(.purple)
                 }
                 .voButton(Strings.commonAdd)
@@ -237,7 +237,7 @@ struct HolidayManagementView: View {
                             .voDecorative()
                         Text(Strings.holidayCustomEmpty)
                             .foregroundStyle(.secondary)
-                            .font(.subheadline)
+                            .font(.body)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
@@ -261,7 +261,7 @@ struct HolidayManagementView: View {
             .padding(.horizontal)
 
             Text(Strings.holidayCustomFooter)
-                .font(.caption)
+                .font(.body)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
                 .padding(.top, 6)
@@ -281,7 +281,7 @@ private struct BuiltInHolidayRow: View {
                 // 날짜 컬럼
                 VStack(alignment: .center, spacing: 1) {
                     Text(holiday.date, format: .dateTime.month(.abbreviated))
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                     Text(holiday.date, format: .dateTime.day())
                         .font(.headline)
@@ -291,12 +291,12 @@ private struct BuiltInHolidayRow: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(holiday.name)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(isHidden ? Color.secondary : Color.primary)
                         .strikethrough(isHidden, color: .secondary)
                     if holiday.isSubstitute {
                         Text(Strings.holidaySubstitute)
-                            .font(.caption2)
+                            .font(.body)
                             .foregroundStyle(.orange)
                     }
                 }
@@ -328,7 +328,7 @@ private struct CustomHolidayRow: View {
             HStack(spacing: 12) {
                 VStack(alignment: .center, spacing: 1) {
                     Text(holiday.date, format: .dateTime.month(.abbreviated))
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                     Text(holiday.date, format: .dateTime.day())
                         .font(.headline)
@@ -338,13 +338,13 @@ private struct CustomHolidayRow: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(holiday.name)
-                        .font(.subheadline)
+                        .font(.body)
                     HStack(spacing: 4) {
                         Image(systemName: "person.fill")
-                            .font(.caption2)
+                            .font(.body)
                             .voDecorative()
                         Text(Strings.holidayAddedByMe)
-                            .font(.caption2)
+                            .font(.body)
                     }
                     .foregroundStyle(.purple)
                 }
@@ -356,7 +356,7 @@ private struct CustomHolidayRow: View {
             Button(role: .destructive, action: onDelete) {
                 Image(systemName: "trash")
                     .foregroundStyle(.red)
-                    .font(.subheadline)
+                    .font(.body)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text(Strings.commonDelete))

@@ -98,10 +98,10 @@ struct LeisureStatusHeader: View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(Strings.statUsed)
-                    .font(.caption)
+                    .font(.body)
                     .fontWeight(.medium)
                     .foregroundStyle(.secondary)
-                Text("\(formatLeave(usedDays))\(Strings.dayUnitSuffix)")
+                Text("\(Strings.dayCount(usedDays))")
                     .font(.title3.bold())
                     .foregroundStyle(.blue)
             }
@@ -110,10 +110,10 @@ struct LeisureStatusHeader: View {
 
             VStack(alignment: .trailing, spacing: 4) {
                 Text(goalDays > 0 ? Strings.leisureGoalRemaining : Strings.leisureTotalPlan)
-                    .font(.caption)
+                    .font(.body)
                     .fontWeight(.medium)
                     .foregroundStyle(.secondary)
-                Text(goalDays > 0 ? "\(formatLeave(max(0, goalDays - usedDays)))\(Strings.dayUnitSuffix)" : "\(formatLeave(usedDays))\(Strings.dayUnitSuffix)")
+                Text(goalDays > 0 ? "\(Strings.dayCount(max(0, goalDays - usedDays)))" : "\(Strings.dayCount(usedDays))")
                     .font(.title2.bold())
                     .foregroundStyle(.purple)
             }
@@ -159,12 +159,12 @@ struct LeaveStatusHeader: View {
                 // 보너스가 있을 때만 "기본 + 보너스 = 총" 분해를 보여준다.
                 VStack(alignment: .leading, spacing: 4) {
                     Text(Strings.basicLeave)
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.medium)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .fixedSize(horizontal: true, vertical: false)
-                    Text("\(formatLeave(remainingLeave))\(Strings.dayUnitSuffix)")
+                    Text("\(Strings.dayCount(remainingLeave))")
                         .font(.title3.bold())
                         .foregroundStyle(AppTheme.Colors.brand)
                         .lineLimit(1)
@@ -177,12 +177,12 @@ struct LeaveStatusHeader: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(Strings.bonus)
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.medium)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .fixedSize(horizontal: true, vertical: false)
-                    Text("\(formatLeave(bonusLeave))\(Strings.dayUnitSuffix)")
+                    Text("\(Strings.dayCount(bonusLeave))")
                         .font(.title3.bold())
                         .foregroundStyle(AppTheme.Colors.compensatory)
                         .lineLimit(1)
@@ -197,12 +197,12 @@ struct LeaveStatusHeader: View {
 
                 VStack(alignment: .trailing, spacing: 4) {
                     Text(Strings.totalAvailable)
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.medium)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .fixedSize(horizontal: true, vertical: false)
-                    Text("\(formatLeave(totalAvailable))\(Strings.dayUnitSuffix)")
+                    Text("\(Strings.dayCount(totalAvailable))")
                         .font(.title2.bold())
                         .foregroundStyle(AppTheme.Colors.success)
                         .lineLimit(1)
@@ -212,10 +212,10 @@ struct LeaveStatusHeader: View {
                 // 보너스가 없으면 기본연차 == 총 사용가능이라 한 번만 보여준다.
                 VStack(alignment: .leading, spacing: 4) {
                     Text(Strings.availableLeave)
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.medium)
                         .foregroundStyle(.secondary)
-                    Text("\(formatLeave(totalAvailable))\(Strings.dayUnitSuffix)")
+                    Text("\(Strings.dayCount(totalAvailable))")
                         .font(.title2.bold())
                         .foregroundStyle(AppTheme.Colors.success)
                 }
@@ -337,18 +337,18 @@ struct LeaveRegistrationView: View {
                                         .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white : .primary)
                                     HStack(spacing: 4) {
                                         Text(Strings.availableDays(formatLeave(bonus.remainingDays)))
-                                            .font(.caption)
+                                            .font(.body)
                                             .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.85) : .secondary)
                                         if !bonus.reason.isEmpty {
                                             Text("· \(bonus.reason)")
-                                                .font(.caption)
+                                                .font(.body)
                                                 .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.85) : .secondary)
                                                 .lineLimit(1)
                                         }
                                     }
                                     if let exp = bonus.expirationDate {
                                         Text(Strings.expiresBy(exp.appMonthDay))
-                                            .font(.caption2)
+                                            .font(.body)
                                             .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.7) : AppTheme.Colors.bonus)
                                     }
                                 }
@@ -393,7 +393,7 @@ struct LeaveRegistrationView: View {
                 // 1) 길이 (종일/반차/반반차) — 항상 표시
                 VStack(alignment: .leading, spacing: 8) {
                     Text(Strings.leaveLengthSectionHeader)
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                         .voHeader()
@@ -408,10 +408,10 @@ struct LeaveRegistrationView: View {
                                         .font(.system(.title2, design: .rounded, weight: .black))
                                         .voDecorative()
                                     Text(Strings.leaveLengthName(len))
-                                        .font(.caption)
+                                        .font(.body)
                                         .fontWeight(.semibold)
                                     Text(len == .quarter ? "0.25\(Strings.dayUnitSuffix)" : len == .half ? "0.5\(Strings.dayUnitSuffix)" : "1\(Strings.dayUnitSuffix)~")
-                                        .font(.caption2)
+                                        .font(.body)
                                         .opacity(0.8)
                                 }
                                 .frame(maxWidth: .infinity)
@@ -434,7 +434,7 @@ struct LeaveRegistrationView: View {
 
                     VStack(alignment: .leading, spacing: 8) {
                         Text(Strings.leaveCategorySectionHeader)
-                            .font(.caption)
+                            .font(.body)
                             .fontWeight(.semibold)
                             .foregroundStyle(.secondary)
                             .voHeader()
@@ -446,10 +446,10 @@ struct LeaveRegistrationView: View {
                                 } label: {
                                     VStack(spacing: 3) {
                                         Image(systemName: cat.icon)
-                                            .font(.subheadline)
+                                            .font(.body)
                                             .voDecorative()
                                         Text(Strings.leaveTypeName(cat))
-                                            .font(.caption2)
+                                            .font(.body)
                                             .fontWeight(.semibold)
                                     }
                                     .frame(maxWidth: .infinity)
@@ -491,7 +491,7 @@ struct LeaveRegistrationView: View {
                     Spacer()
                     HStack(spacing: 4) {
                         Text(Strings.leaveLengthName(length))
-                            .font(.caption)
+                            .font(.body)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(AppTheme.Colors.brand.opacity(0.15))
@@ -507,9 +507,9 @@ struct LeaveRegistrationView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
-                            .font(.caption)
+                            .font(.body)
                         Text(Strings.pastLeaveAutoUsed)
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -717,7 +717,7 @@ struct LeaveTypeButton: View {
                     .font(.title3)
                     .fontWeight(.semibold)
                 Text(Strings.leaveTypeName(type))
-                    .font(.caption2)
+                    .font(.body)
                     .fontWeight(.semibold)
             }
             .frame(maxWidth: .infinity)
@@ -783,7 +783,7 @@ struct BonusLeaveView: View {
                         Spacer()
                         if !isPro {
                             Text("Pro")
-                                .font(.caption)
+                                .font(.body)
                                 .fontWeight(.bold)
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 8)
@@ -793,7 +793,7 @@ struct BonusLeaveView: View {
                         } else {
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.secondary)
-                                .font(.caption)
+                                .font(.body)
                         }
                     }
                 }
@@ -951,7 +951,7 @@ struct AddBonusLeaveSheet: View {
                                 bonusDays = days
                             } label: {
                                 Text(days < 1 ? String(format: "%.2g", days) : "\(Int(days))")
-                                    .font(.subheadline)
+                                    .font(.body)
                                     .fontWeight(.medium)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 8)
@@ -960,7 +960,7 @@ struct AddBonusLeaveSheet: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             .buttonStyle(.plain)
-                            .accessibilityLabel(Text("\(formatLeave(days))\(Strings.dayUnitSuffix)"))
+                            .accessibilityLabel(Text("\(Strings.dayCount(days))"))
                             .accessibilityAddTraits(bonusDays == days ? .isSelected : [])
                         }
                     }
@@ -1046,7 +1046,7 @@ struct EditBonusLeaveSheet: View {
                         }
                         .labelsHidden()
                         .accessibilityLabel(Text(Strings.daysToAdd))
-                        .accessibilityValue(Text("\(formatLeave(editedDays))\(Strings.dayUnitSuffix)"))
+                        .accessibilityValue(Text("\(Strings.dayCount(editedDays))"))
                     }
                     HStack(spacing: 8) {
                         ForEach([0.25, 0.5, 1.0, 2.0, 3.0], id: \.self) { d in
@@ -1054,7 +1054,7 @@ struct EditBonusLeaveSheet: View {
                                 editedDays = d
                             } label: {
                                 Text(d < 1 ? String(format: "%.2g", d) : "\(Int(d))")
-                                    .font(.subheadline).fontWeight(.medium)
+                                    .font(.body).fontWeight(.medium)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 8)
                                     .background(editedDays == d ? Color.blue : Color(.systemGray5))
@@ -1063,7 +1063,7 @@ struct EditBonusLeaveSheet: View {
                             }
                             .buttonStyle(.plain)
                             .disabled(d < bonus.usedDays)
-                            .accessibilityLabel(Text("\(formatLeave(d))\(Strings.dayUnitSuffix)"))
+                            .accessibilityLabel(Text("\(Strings.dayCount(d))"))
                             .accessibilityAddTraits(editedDays == d ? .isSelected : [])
                         }
                     }
@@ -1072,12 +1072,12 @@ struct EditBonusLeaveSheet: View {
                         HStack {
                             Image(systemName: "info.circle")
                                 .foregroundStyle(.blue)
-                                .font(.caption)
+                                .font(.body)
                             Text(Strings.bonusEditUsedRemaining(
                                 used: String(format: "%.2g", bonus.usedDays),
                                 remaining: String(format: "%.2g", max(0, editedDays - bonus.usedDays))
                             ))
-                                .font(.caption)
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -1159,30 +1159,30 @@ struct BonusLeaveRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Text(Strings.bonusLeaveTypeName(bonus.type))
-                        .font(.subheadline)
+                        .font(.body)
                         .fontWeight(.medium)
                     Text("\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(AppTheme.Colors.bonus)
                 }
 
                 if !bonus.reason.isEmpty {
                     Text(bonus.reason)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
 
                 HStack {
                     Text(bonus.grantedDate, format: .dateTime.month().day())
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(.secondary)
 
                     if let expiration = bonus.expirationDate {
                         Text("~")
-                            .font(.caption2)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                         Text(expiration, format: .dateTime.month().day())
-                            .font(.caption2)
+                            .font(.body)
                             .foregroundStyle(expiration < Date() ? .red : .secondary)
                     }
                 }
@@ -1192,7 +1192,7 @@ struct BonusLeaveRow: View {
 
             if bonus.isUsed {
                 Text(Strings.usedComplete)
-                    .font(.caption)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
@@ -1201,7 +1201,7 @@ struct BonusLeaveRow: View {
             } else if editable {
                 Image(systemName: "pencil.circle")
                     .foregroundStyle(.secondary)
-                    .font(.subheadline)
+                    .font(.body)
             }
         }
         .padding(.vertical, 4)
@@ -1228,10 +1228,10 @@ struct LeaveRecordRow: View {
                 HStack {
                     HStack(spacing: 4) {
                         Image(systemName: record.type.icon)
-                            .font(.caption)
+                            .font(.body)
                         Text(Strings.leaveTypeName(record.type))
                     }
-                    .font(.caption)
+                    .font(.body)
                     .fontWeight(.medium)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
@@ -1240,7 +1240,7 @@ struct LeaveRecordRow: View {
                     .clipShape(Capsule())
 
                     Text(Strings.leaveStatusName(record.status))
-                        .font(.caption)
+                        .font(.body)
                         .fontWeight(.medium)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
@@ -1250,11 +1250,11 @@ struct LeaveRecordRow: View {
                 }
 
                 Text(dateRangeText)
-                    .font(.subheadline.bold())
+                    .font(.body.bold())
 
                 if !record.note.isEmpty {
                     Text(record.note)
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
             }
