@@ -110,45 +110,36 @@ struct SettingsView: View {
         Calendar.current.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
     }
 
-    /// 계산은 `LeaveUsageCalculator` 한 곳에서 — 화면마다 세면 숫자가 어긋난다.
-    var committedLeave: Double {
+    /// 이 화면이 쓰는 모든 숫자의 출처 — 홈 카드와 같은 계산기, 같은 입력.
+    var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
                                             bonuses: Array(bonusLeaves),
-                                            startMonth: profile.yearStartMonth).annualCommitted
+                                            startMonth: profile.yearStartMonth)
     }
 
-    var activeBonusLeave: Double {
-        let now = Date()
-        return bonusLeaves
-            .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > now) }
-            .reduce(0) { $0 + $1.remainingDays }
-    }
+    var committedLeave: Double { usage.annualCommitted }
+
+    /// 아직 쓸 수 있는 보너스 (만료분 제외) — 홈 카드와 **같은 계산기**를 쓴다
+    var activeBonusLeave: Double { usage.remainingBonus }
 
     /// 보너스 합산 여부는 홈 카드와 동일하게 includeBonusInStatus 토글을 따른다
     var totalAvailableLeave: Double {
-        let base = max(0, profile.totalAnnualLeave - committedLeave)
-        return includeBonusInStatus ? base + activeBonusLeave : base
+        usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: includeBonusInStatus)
     }
 
-    /// 부여된 보너스 전체 (사용률 분모용 — LeaveStatusCard와 동일 계산)
-    var grantedBonusLeave: Double {
-        bonusLeaves.reduce(0) { $0 + $1.days }
-    }
+    /// 부여된 보너스 전체 (사용률 분모용)
+    var grantedBonusLeave: Double { usage.grantedBonus }
 
     /// 사용된 보너스 (사용률 분자용)
-    var usedBonusLeave: Double {
-        bonusLeaves.reduce(0) { $0 + $1.usedDays }
-    }
+    var usedBonusLeave: Double { usage.usedBonus }
 
-    /// 사용률 — 토글 ON이면 보너스를 분모(부여량)와 분자(사용량)에 모두 반영
+    /// 사용률 — 토글 ON이면 보너스를 분모(부여량)와 분자(사용량)에 모두 반영.
+    /// ⚠️ 분자는 확정치(사용 + 예정)다. 홈 카드의 "사용 완료"(예정 제외)와는 뜻이 다르므로
+    ///    같은 값이 아니어도 정상이다 — 이름표가 "사용률"인 이유.
     var usageRateText: String {
-        let total = includeBonusInStatus
-            ? profile.totalAnnualLeave + grantedBonusLeave
-            : profile.totalAnnualLeave
+        let total = usage.total(annualGrant: profile.totalAnnualLeave, includingBonus: includeBonusInStatus)
         guard total > 0 else { return "0%" }
-        let used = includeBonusInStatus
-            ? committedLeave + usedBonusLeave
-            : committedLeave
+        let used = includeBonusInStatus ? committedLeave + usage.usedBonus : committedLeave
         return "\(Int((used / total) * 100))%"
     }
 

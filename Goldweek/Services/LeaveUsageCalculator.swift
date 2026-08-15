@@ -98,11 +98,14 @@ enum LeaveUsageCalculator {
         /// 부여받은 보너스 총합 / 사용된 보너스.
         let grantedBonus: Double
         let usedBonus: Double
+        /// **아직 쓸 수 있는** 보너스 — 만료된 건 빠진다.
+        /// ⚠️ `grantedBonus - usedBonus`로 계산하면 만료돼 사라진 날을 남은 것처럼 보여 준다.
+        let remainingBonus: Double
 
         /// 연차에서 이미 나갔거나 나갈 예정인 총량 — 잔여 계산의 분자.
         var annualCommitted: Double { annualUsed + annualPlanned }
-        /// 남은 보너스.
-        var remainingBonus: Double { max(0, grantedBonus - usedBonus) }
+        /// 못 쓰고 만료된 보너스 — "총 = 사용 + 남음"이 안 맞을 때 그 차이가 이것이다.
+        var expiredBonus: Double { max(0, grantedBonus - usedBonus - remainingBonus) }
 
         /// 화면에 "사용 완료"로 띄우는 값.
         /// 보너스 포함 설정이 켜져 있으면 쓴 보너스도 더한다 — 그래야 "총 = 사용 + 남음"이 맞는다.
@@ -160,7 +163,11 @@ enum LeaveUsageCalculator {
             annualPlannedCount: upcoming.filter(\.deductsFromAnnualLeave).count,
             cancelledCount: scoped.filter { $0.status == .cancelled }.count,
             grantedBonus: scopedBonuses.reduce(0) { $0 + $1.days },
-            usedBonus: scopedBonuses.reduce(0) { $0 + $1.usedDays }
+            usedBonus: scopedBonuses.reduce(0) { $0 + $1.usedDays },
+            // 만료일이 지난 보너스는 남은 것으로 세지 않는다 — 쓸 수 없는 날이다.
+            remainingBonus: scopedBonuses
+                .filter { $0.expirationDate == nil || $0.expirationDate! > now }
+                .reduce(0) { $0 + $1.remainingDays }
         )
     }
 

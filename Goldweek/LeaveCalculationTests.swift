@@ -967,4 +967,40 @@ final class LeaveCalculationTests: XCTestCase {
         XCTAssertEqual(used, 2.0, "연차 1일 + 보너스 1일")
         XCTAssertEqual(used + remaining, total, accuracy: 0.001, "총 = 사용 + 남음이 깨지면 안 된다")
     }
+
+    // MARK: - 보너스 포함 토글 · 만료 처리
+
+    /// 만료된 보너스는 "남음"에 세지 않는다 — 쓸 수 없는 날이기 때문.
+    func testExpiredBonusIsNotCountedAsRemaining() {
+        let expired = BonusLeave(days: 2, type: .compensatory)
+        expired.expirationDate = makeDate(daysFromNow: -1)   // 어제 만료
+        let alive = BonusLeave(days: 3, type: .compensatory)
+        alive.expirationDate = makeDate(daysFromNow: 30)
+
+        let summary = LeaveUsageCalculator.currentSummary(records: [], bonuses: [expired, alive], startMonth: 1)
+
+        XCTAssertEqual(summary.grantedBonus, 5, "부여량은 만료와 무관하게 5일")
+        XCTAssertEqual(summary.remainingBonus, 3, "쓸 수 있는 건 만료 안 된 3일뿐")
+        XCTAssertEqual(summary.expiredBonus, 2, "만료로 사라진 2일")
+    }
+
+    /// 토글을 켜고 끌 때 홈과 설정이 **같은 값**을 내야 한다 (같은 계산기를 쓰므로).
+    func testBonusToggleMovesTotalUsedRemainingTogether() {
+        let past = makeDate(daysFromNow: -5)
+        let bonus = BonusLeave(days: 2, type: .compensatory)
+        bonus.usedDays = 0.5
+        let records = [LeaveRecord(startDate: past, endDate: past, type: .annual, status: .used)]
+        let summary = LeaveUsageCalculator.currentSummary(records: records, bonuses: [bonus], startMonth: 1)
+        let grant = 15.0
+
+        // 토글 OFF — 순수 연차만
+        XCTAssertEqual(summary.total(annualGrant: grant, includingBonus: false), 15)
+        XCTAssertEqual(summary.used(includingBonus: false), 1.0)
+        XCTAssertEqual(summary.remaining(annualGrant: grant, includingBonus: false), 14)
+
+        // 토글 ON — 총·사용·남음이 함께 움직인다
+        XCTAssertEqual(summary.total(annualGrant: grant, includingBonus: true), 17)
+        XCTAssertEqual(summary.used(includingBonus: true), 1.5)
+        XCTAssertEqual(summary.remaining(annualGrant: grant, includingBonus: true), 15.5)
+    }
 }

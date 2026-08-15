@@ -525,13 +525,8 @@ struct LeaveStatusCard: View {
                                      startMonth: profile.yearStartMonth)
     }
 
-    /// 잔여 보너스 (미만료 + 미사용, remainingDays 기준)
-    var remainingBonusLeave: Double {
-        let now = Date()
-        return activeBonusLeaves
-            .filter { $0.expirationDate == nil || $0.expirationDate! > now }
-            .reduce(0) { $0 + $1.remainingDays }
-    }
+    /// 잔여 보너스 (미만료 기준) — 설정 화면과 같은 값을 쓰려고 계산기를 거친다
+    var remainingBonusLeave: Double { usage.remainingBonus }
 
     /// 최초 부여된 보너스 전체
     var grantedBonusLeave: Double { usage.grantedBonus }
