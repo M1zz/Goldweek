@@ -63,6 +63,8 @@ struct GoldweekApp: App {
             Tips.showAllTipsForTesting()
         }
         #endif
+        // "기능 팁 다시 보기"를 눌렀다면 여기서 되돌린다 — configure 전에만 유효하다
+        AppTips.performPendingResetIfNeeded()
         try? Tips.configure([.displayFrequency(.daily)])
 
         checkICloudStatus()

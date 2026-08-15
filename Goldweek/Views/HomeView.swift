@@ -585,6 +585,7 @@ struct LeaveStatusCard: View {
                         .clipShape(Circle())
                 }
                 .accessibilityLabel(Text(Strings.sharePlan))
+                .popoverTip(AppTips.sharePlan)
 
                 Button {
                     AppTips.photoImport.invalidate(reason: .actionPerformed)
@@ -1115,7 +1116,10 @@ struct LeaveHistoryButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            AppTips.leaveHistory.invalidate(reason: .actionPerformed)
+            action()
+        } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(Strings.leaveHistory)
@@ -1140,6 +1144,7 @@ struct LeaveHistoryButton: View {
             .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
         }
         .buttonStyle(.plain)
+        .popoverTip(AppTips.leaveHistory)
         .accessibilityLabel(Text("\(Strings.leaveHistory), \(Strings.checkPastRecords)"))
         .accessibilityValue(usedCount > 0 ? Text(Strings.itemCount(usedCount)) : Text(""))
     }

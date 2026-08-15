@@ -19,6 +19,10 @@ struct ContentView: View {
     @Query private var customHolidays: [CustomHoliday]
 
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    /// 사용법 시트를 이미 봤는지 — 온보딩 직후 딱 한 번 자동으로 띄운다.
+    /// (그 뒤로는 설정 > 도움말에서 사용자가 원할 때만 연다)
+    @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
+    @State private var showingTutorial = false
 
     var currentProfile: UserProfile? {
         profiles.first
@@ -29,6 +33,18 @@ struct ContentView: View {
         Group {
             if let profile = currentProfile {
                 MainTabView(profile: profile)
+                    // 온보딩을 막 마쳤다면 "어디를 눌러야 하는지"를 한 번 보여준다.
+                    // 온보딩에 더 끼워 넣지 않는 이유: 설득과 사용법은 읽는 마음가짐이 다르다.
+                    .sheet(isPresented: $showingTutorial) {
+                        TutorialView()
+                    }
+                    .task {
+                        guard !hasSeenTutorial else { return }
+                        hasSeenTutorial = true
+                        // 화면이 자리 잡은 뒤에 — 첫 프레임과 겹치면 놀란다
+                        try? await Task.sleep(nanoseconds: 700_000_000)
+                        showingTutorial = true
+                    }
                     // 만족도 프롬프트 — 조건이 맞으면 "즐겁게 쓰고 계신가요?"를 묻고,
                     // 좋다면 App Store 리뷰로, 아쉽다면 피드백 화면으로 보낸다.
                     // 불만인 사람을 별점 대신 피드백으로 흡수하는 게 이 프롬프트의 목적이다.

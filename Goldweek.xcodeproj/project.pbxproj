@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B1000021 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000021 /* TutorialView.swift */; };
 		B1000020 /* LeaveUsageCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000020 /* LeaveUsageCalculator.swift */; };
 		B1000001 /* GoldweekSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000001 /* GoldweekSpec.swift */; };
 		B1000002 /* UsageReportingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000002 /* UsageReportingService.swift */; };
@@ -101,6 +102,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B2000021 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		B2000020 /* LeaveUsageCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveUsageCalculator.swift; sourceTree = "<group>"; };
 		B2000001 /* GoldweekSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldweekSpec.swift; sourceTree = "<group>"; };
 		B2000002 /* UsageReportingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageReportingService.swift; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 				A2000056 /* TimeMachineView.swift */,
 				A2000059 /* PhotoImportSheet.swift */,
 				B2000004 /* UsageStatsView.swift */,
+				B2000021 /* TutorialView.swift */,
 				B2000006 /* CrashReportsView.swift */,
 			);
 			path = Views;
@@ -491,6 +494,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1000021 /* TutorialView.swift in Sources */,
 				B1000020 /* LeaveUsageCalculator.swift in Sources */,
 				B1000001 /* GoldweekSpec.swift in Sources */,
 				B1000002 /* UsageReportingService.swift in Sources */,

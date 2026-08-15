@@ -1448,6 +1448,261 @@ enum Strings {
         }
     }
 
+    // MARK: - 사용법 튜토리얼 · 도움말
+
+    /// 설정 > 도움말 · 온보딩 직후 1회 노출되는 사용법 시트
+    static var tutorialTitle: String {
+        switch lang {
+        case .korean: return "골드위크 사용법"
+        case .english: return "How to Use Goldweek"
+        case .japanese: return "Goldweekの使い方"
+        case .chinese: return "Goldweek 使用方法"
+        }
+    }
+
+    static var tutorialDone: String {
+        switch lang {
+        case .korean: return "시작하기"
+        case .english: return "Get Started"
+        case .japanese: return "はじめる"
+        case .chinese: return "开始使用"
+        }
+    }
+
+    static var tutorialSkip: String {
+        switch lang {
+        case .korean: return "건너뛰기"
+        case .english: return "Skip"
+        case .japanese: return "スキップ"
+        case .chinese: return "跳过"
+        }
+    }
+
+    static var tutorialAddTitle: String {
+        switch lang {
+        case .korean: return "휴가는 이렇게 등록해요"
+        case .english: return "Adding a Leave"
+        case .japanese: return "休暇の登録"
+        case .chinese: return "登记休假"
+        }
+    }
+
+    static var tutorialAddMessage: String {
+        switch lang {
+        case .korean: return "홈의 + 버튼이나 캘린더에서 날짜를 눌러 등록하세요. 반차·반반차는 길이만 골라 주면 돼요."
+        case .english: return "Tap + on the home card, or pick a date on the calendar. For half days, just choose the length."
+        case .japanese: return "ホームの＋、またはカレンダーで日付をタップ。半休は長さを選ぶだけです。"
+        case .chinese: return "点击主页的 +，或在日历上选择日期。半天假只需选择时长。"
+        }
+    }
+
+    static var tutorialPhotoTitle: String {
+        switch lang {
+        case .korean: return "사진 한 장이면 끝"
+        case .english: return "One Photo Is Enough"
+        case .japanese: return "写真1枚でOK"
+        case .chinese: return "一张照片就够了"
+        }
+    }
+
+    static var tutorialPhotoMessage: String {
+        switch lang {
+        case .korean: return "회사 시스템의 휴가 내역을 찍으면 날짜와 종류를 알아서 읽어 등록해요."
+        case .english: return "Snap your company's leave history and the dates and types are read for you."
+        case .japanese: return "社内システムの休暇履歴を撮ると、日付と種類を読み取って登録します。"
+        case .chinese: return "拍下公司系统的休假记录，应用会自动读取日期与类型。"
+        }
+    }
+
+    static var tutorialRecommendTitle: String {
+        switch lang {
+        case .korean: return "연차 1일로 며칠 쉴까"
+        case .english: return "Stretch One Day Off"
+        case .japanese: return "有給1日で何日休む"
+        case .chinese: return "用1天年假休几天"
+        }
+    }
+
+    static var tutorialRecommendMessage: String {
+        switch lang {
+        case .korean: return "캘린더의 노란 표시는 공휴일에 연차를 붙여 만든 연휴예요. 눌러서 그대로 등록하세요."
+        case .english: return "Yellow marks on the calendar are breaks built by attaching leave to holidays. Tap to add one."
+        case .japanese: return "カレンダーの黄色は祝日に有給をつなげた連休です。タップでそのまま登録できます。"
+        case .chinese: return "日历上的黄色标记是把年假接在节假日上的连休。点击即可直接登记。"
+        }
+    }
+
+    static var tutorialBonusTitle: String {
+        switch lang {
+        case .korean: return "대체휴무는 따로 관리"
+        case .english: return "Bonus Leave Stays Separate"
+        case .japanese: return "代休は別で管理"
+        case .chinese: return "补休单独管理"
+        }
+    }
+
+    static var tutorialBonusMessage: String {
+        switch lang {
+        case .korean: return "보너스 연차로 등록하면 연차를 깎지 않고 따로 세요. 만료일도 함께 챙겨 줘요."
+        case .english: return "Logged as bonus leave, it never eats into your annual days — and expiry dates are tracked."
+        case .japanese: return "ボーナス休暇として登録すれば有給を減らさず別に管理され、有効期限も追えます。"
+        case .chinese: return "登记为奖励假后不会占用年假，并会一并跟踪有效期。"
+        }
+    }
+
+    static var tutorialShareTitle: String {
+        switch lang {
+        case .korean: return "가족과 일정 맞추기"
+        case .english: return "Line Up with Family"
+        case .japanese: return "家族と予定を合わせる"
+        case .chinese: return "与家人对好行程"
+        }
+    }
+
+    static var tutorialShareMessage: String {
+        switch lang {
+        case .korean: return "일정을 공유하면 가족 탭에서 서로의 휴가를 한눈에 볼 수 있어요."
+        case .english: return "Share your schedule and see each other's time off in the Family tab."
+        case .japanese: return "予定を共有すると、家族タブでお互いの休暇を一覧できます。"
+        case .chinese: return "共享日程后，可在家庭标签中一览彼此的假期。"
+        }
+    }
+
+    static var tutorialWidgetTitle: String {
+        switch lang {
+        case .korean: return "홈 화면에서 바로 확인"
+        case .english: return "Right on Your Home Screen"
+        case .japanese: return "ホーム画面でひと目"
+        case .chinese: return "在主屏幕上一眼看到"
+        }
+    }
+
+    static var tutorialWidgetMessage: String {
+        switch lang {
+        case .korean: return "위젯을 추가하면 남은 연차와 다음 휴가가 잠금화면에서도 보여요. 기록은 iCloud로 백업돼요."
+        case .english: return "Add a widget to see remaining leave and your next break, even on the Lock Screen. Records back up to iCloud."
+        case .japanese: return "ウィジェットを追加すると、残りの有給と次の休暇をロック画面でも確認できます。記録はiCloudにバックアップされます。"
+        case .chinese: return "添加小组件后，在锁定屏幕也能看到剩余年假和下次休假。记录会备份到 iCloud。"
+        }
+    }
+
+    static var helpSection: String {
+        switch lang {
+        case .korean: return "도움말"
+        case .english: return "Help"
+        case .japanese: return "ヘルプ"
+        case .chinese: return "帮助"
+        }
+    }
+
+    static var helpTutorial: String {
+        switch lang {
+        case .korean: return "사용법 다시 보기"
+        case .english: return "How to Use Goldweek"
+        case .japanese: return "使い方をもう一度見る"
+        case .chinese: return "重看使用方法"
+        }
+    }
+
+    static var helpOnboarding: String {
+        switch lang {
+        case .korean: return "처음 안내 다시 보기"
+        case .english: return "Replay Intro"
+        case .japanese: return "初回案内をもう一度"
+        case .chinese: return "重看初次引导"
+        }
+    }
+
+    static var helpResetTips: String {
+        switch lang {
+        case .korean: return "기능 팁 다시 보기"
+        case .english: return "Show Feature Tips Again"
+        case .japanese: return "機能のヒントを再表示"
+        case .chinese: return "重新显示功能提示"
+        }
+    }
+
+    static var helpResetTipsDone: String {
+        switch lang {
+        case .korean: return "앱을 다시 실행하면 기능 팁이 처음부터 다시 나타나요."
+        case .english: return "Feature tips will appear again the next time you open the app."
+        case .japanese: return "アプリを開き直すと、機能のヒントが最初から表示されます。"
+        case .chinese: return "下次打开应用时，功能提示会重新出现。"
+        }
+    }
+
+    static var tipRecommendTitle: String {
+        switch lang {
+        case .korean: return "추천 연휴를 눌러 보세요"
+        case .english: return "Tap a Suggested Break"
+        case .japanese: return "おすすめの連休をタップ"
+        case .chinese: return "点点推荐的连休"
+        }
+    }
+
+    static var tipRecommendMessage: String {
+        switch lang {
+        case .korean: return "노란 표시는 연차를 조금 써서 만든 연휴예요. 눌러 바로 등록할 수 있어요."
+        case .english: return "Yellow marks are breaks made with just a day or two of leave. Tap to add one."
+        case .japanese: return "黄色の印は少ない有給で作った連休です。タップして登録できます。"
+        case .chinese: return "黄色标记是只用一两天年假拼出的连休，点击即可登记。"
+        }
+    }
+
+    static var tipSharePlanTitle: String {
+        switch lang {
+        case .korean: return "연차 현황을 이미지로"
+        case .english: return "Share Your Leave Status"
+        case .japanese: return "有給の状況を画像で"
+        case .chinese: return "把年假状况变成图片"
+        }
+    }
+
+    static var tipSharePlanMessage: String {
+        switch lang {
+        case .korean: return "공유 버튼을 누르면 카드 이미지를 만들어 친구·가족에게 보낼 수 있어요."
+        case .english: return "Tap share to turn your status into a card you can send to family or friends."
+        case .japanese: return "共有ボタンでカード画像を作り、家族や友人に送れます。"
+        case .chinese: return "点击分享，即可生成卡片图片发给家人或朋友。"
+        }
+    }
+
+    static var tipBonusLeaveTitle: String {
+        switch lang {
+        case .korean: return "대체휴무·포상휴가는 여기"
+        case .english: return "Bonus Leave Goes Here"
+        case .japanese: return "代休・特別休暇はこちら"
+        case .chinese: return "补休和奖励假在这里"
+        }
+    }
+
+    static var tipBonusLeaveMessage: String {
+        switch lang {
+        case .korean: return "보너스 연차로 등록하면 연차와 따로 관리되고 만료일도 챙겨 줘요."
+        case .english: return "Add it as bonus leave — it's tracked separately from annual days, expiry included."
+        case .japanese: return "ボーナス休暇として登録すると有給とは別に管理され、期限も追えます。"
+        case .chinese: return "登记为奖励假后与年假分开管理，并会跟踪有效期。"
+        }
+    }
+
+    static var tipLeaveHistoryTitle: String {
+        switch lang {
+        case .korean: return "지난 휴가 돌아보기"
+        case .english: return "Look Back at Your Leave"
+        case .japanese: return "これまでの休暇をふり返る"
+        case .chinese: return "回顾过往假期"
+        }
+    }
+
+    static var tipLeaveHistoryMessage: String {
+        switch lang {
+        case .korean: return "연도별로 얼마나 썼는지, 어떤 휴가를 썼는지 한 번에 볼 수 있어요."
+        case .english: return "See how much you used each year, and which kinds of leave they were."
+        case .japanese: return "年ごとの使用日数と休暇の種類をまとめて確認できます。"
+        case .chinese: return "可以按年份查看用了多少天、用的是哪类假期。"
+        }
+    }
+
     static var appInfo: String {
         switch lang {
         case .korean: return "앱 정보"

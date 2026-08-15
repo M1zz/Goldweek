@@ -166,19 +166,31 @@ struct OnboardingView: View {
         case .usa, .germany, .france: AppLanguage.current = .english
         }
 
-        let profile = UserProfile(
-            name: userName.isEmpty ? Strings.defaultUser : userName,
-            yearStartMonth: yearStartMonth,
-            totalAnnualLeave: totalLeave,
-            usedLeave: 0,
-            country: country
-        )
-        modelContext.insert(profile)
+        // 설정에서 "처음 안내 다시 보기"로 들어올 수 있다 — 그때 프로필을 또 만들면 두 개가 된다.
+        // 이미 있으면 새로 넣지 않고 값만 갱신한다.
+        let existing = (try? modelContext.fetch(FetchDescriptor<UserProfile>()))?.first
+        let profile: UserProfile
+        if let existing {
+            existing.name = userName.isEmpty ? existing.name : userName
+            existing.yearStartMonth = yearStartMonth
+            existing.totalAnnualLeave = totalLeave
+            existing.country = country
+            profile = existing
+        } else {
+            profile = UserProfile(
+                name: userName.isEmpty ? Strings.defaultUser : userName,
+                yearStartMonth: yearStartMonth,
+                totalAnnualLeave: totalLeave,
+                usedLeave: 0,
+                country: country
+            )
+            modelContext.insert(profile)
+        }
         do {
             try modelContext.save()
         } catch {
             // 프로필 없이 온보딩이 끝나면 앱이 깨진 상태가 되므로 완료를 막는다
-            modelContext.delete(profile)
+            if existing == nil { modelContext.delete(profile) }
             logError("온보딩 프로필 저장 실패: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
             showingSaveError = true

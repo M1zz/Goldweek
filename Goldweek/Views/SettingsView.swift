@@ -57,6 +57,9 @@ struct SettingsView: View {
     @State private var showingRestoreResult = false
     @State private var showingCalendarImport = false
     @State private var showingPhotoImport = false
+    @State private var showingTutorial = false
+    @State private var showingOnboardingReplay = false
+    @State private var showingTipsResetNotice = false
     @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
     /// 홈 "다가오는 휴가" 카드에 공휴일도 함께 보여줄지 (HomeView와 같은 키를 공유)
     @AppStorage("showHolidaysInUpcoming") private var showHolidaysInUpcoming = true
@@ -399,6 +402,7 @@ struct SettingsView: View {
                         }
                         .accessibilityElement(children: .combine)
                     }
+                    .popoverTip(AppTips.bonusLeave)
 
                     // 활성 보너스 연차 목록
                     ForEach(bonusLeaves.filter { !$0.isUsed }) { bonus in
@@ -728,6 +732,32 @@ struct SettingsView: View {
                     }
                 }
 
+                // 도움말 — 안내를 언제든 다시 볼 수 있어야 한다.
+                // 한 번 지나가면 끝인 안내는 "그때 뭐라 했더라"로 남는다.
+                Section {
+                    Button {
+                        showingTutorial = true
+                    } label: {
+                        Label(Strings.helpTutorial, systemImage: "book")
+                    }
+
+                    Button {
+                        showingOnboardingReplay = true
+                    } label: {
+                        Label(Strings.helpOnboarding, systemImage: "sparkles.rectangle.stack")
+                    }
+
+                    Button {
+                        AppTips.requestResetOnNextLaunch()
+                        showingTipsResetNotice = true
+                        HapticFeedback.success()
+                    } label: {
+                        Label(Strings.helpResetTips, systemImage: "lightbulb")
+                    }
+                } header: {
+                    Text(Strings.helpSection)
+                }
+
                 // 지원 — 피드백 보내기·리뷰 남기기·법적 링크·버전.
                 // 버전 행을 7번 탭하면 개발자 모드가 켜지고, 접수된 피드백·사용 통계·안정성이 보인다.
                 //
@@ -827,6 +857,21 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingPhotoImport) {
                 PhotoImportSheet()
+            }
+            .sheet(isPresented: $showingTutorial) {
+                TutorialView()
+            }
+            .sheet(isPresented: $showingOnboardingReplay) {
+                // 다시 볼 때는 프로필을 새로 만들지 않고 기존 값을 갱신한다(OnboardingView 안에서 처리)
+                OnboardingView(isOnboardingComplete: Binding(
+                    get: { false },
+                    set: { if $0 { showingOnboardingReplay = false } }
+                ))
+            }
+            .alert(Strings.helpResetTips, isPresented: $showingTipsResetNotice) {
+                Button(Strings.confirm, role: .cancel) { }
+            } message: {
+                Text(Strings.helpResetTipsDone)
             }
             .alert(Strings.resetDataTitle, isPresented: $showingResetAlert) {
                 Button(Strings.cancel, role: .cancel) { }

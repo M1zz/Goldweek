@@ -52,19 +52,15 @@ struct CalendarView: View {
     }
 
     // MARK: 추천 일정 계산 입력값
-    private var committedLeave: Double {
-        leaveRecords
-            .filter { ($0.status == .used || $0.status == .planned) && $0.deductsFromAnnualLeave }
-            .reduce(0.0) { $0 + $1.effectiveLeaveDays }
-    }
-    private var activeBonusLeave: Double {
-        let now = Date()
-        return allBonusLeaves
-            .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > now) }
-            .reduce(0) { $0 + $1.remainingDays }
+    /// 홈·설정과 **같은 계산기**를 쓴다 — 추천이 쓸 수 있다고 본 연차가 현황과 다르면
+    /// "남은 연차 3일"인데 5일짜리 추천이 뜨는 식으로 어긋난다.
+    private var usage: LeaveUsageCalculator.Summary {
+        LeaveUsageCalculator.currentSummary(records: leaveRecords,
+                                            bonuses: allBonusLeaves,
+                                            startMonth: profile.yearStartMonth)
     }
     private var availableLeave: Double {
-        max(0, profile.totalAnnualLeave - committedLeave) + activeBonusLeave
+        usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: true)
     }
 
     /// MRT 여행 큐레이션 노출 조건: 한국어 + 한국 거주 + 직장인 (마이리얼트립은 한국 시장 위주)
@@ -196,6 +192,11 @@ struct CalendarView: View {
                     // 범례
                     LegendView(showsRecommendation: !recommendedDates.isEmpty,
                                showsWarning: !burnoutWarningDates.isEmpty)
+
+                    // 추천이 실제로 있을 때만 안내한다 — 없는 기능을 설명하면 소음이다
+                    if !recommendedDates.isEmpty {
+                        TipView(AppTips.recommendation)
+                    }
 
                     // 선택된 날짜 정보
                     SelectedDateInfo(
