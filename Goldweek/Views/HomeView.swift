@@ -236,6 +236,10 @@ struct HomeView: View {
                         UpcomingLeavesSection(items: upcomingItems)
                     }
 
+                    // 내역 안내는 **인라인**으로 — 팝오버로 띄우면 화면 맨 아래라
+                    // 탭바에 물려 잘린다(여백을 줄 자리가 없다).
+                    TipView(AppTips.leaveHistory)
+
                     // 휴가 사용 내역 버튼 (맨 아래)
                     LeaveHistoryButton(
                         usedCount: usedLeavesCount,
@@ -1144,7 +1148,6 @@ struct LeaveHistoryButton: View {
             .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
         }
         .buttonStyle(.plain)
-        .popoverTip(AppTips.leaveHistory)
         .accessibilityLabel(Text("\(Strings.leaveHistory), \(Strings.checkPastRecords)"))
         .accessibilityValue(usedCount > 0 ? Text(Strings.itemCount(usedCount)) : Text(""))
     }
