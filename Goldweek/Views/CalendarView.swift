@@ -16,10 +16,6 @@ struct CalendarView: View {
 
     @State private var selectedDate = Date()
     @State private var currentMonth = Date()
-    @State private var recordToEdit: LeaveRecord?
-    @State private var showingDeleteAlert = false
-    @State private var recordToDelete: LeaveRecord?
-    @State private var showingDeleteError = false
     @State private var showingAddLeave = false
 
     @Query private var customHolidays: [CustomHoliday]
@@ -28,6 +24,22 @@ struct CalendarView: View {
 
     /// 추천 탭과 동일한 추천 일정(공휴일 포함, 연차 필요) — 캘린더 노란색 표시 + 상세정보용
     @State private var recommendations: [LeaveRecommendation] = []
+    /// 이 화면에서 방금 등록한 추천 — 버튼을 "추가됨"으로 바꿔 두 번 누르지 않게 한다
+    @State private var addedRecommendationIDs: Set<UUID> = []
+    @State private var showingAddError = false
+
+    /// 목록에 띄울 추천 — 오늘 이후 것만, 가까운 순으로 몇 개.
+    /// 다 늘어놓으면 캘린더 탭이 추천 목록이 되어 버린다.
+    private var upcomingRecommendations: [LeaveRecommendation] {
+        let today = calendar.startOfDay(for: Date())
+        return recommendations
+            .filter { $0.startDate >= today }
+            .sorted { $0.startDate < $1.startDate }
+            .prefix(Self.recommendationListLimit)
+            .map { $0 }
+    }
+
+    private static let recommendationListLimit = 3
 
     private let holidayService = HolidayService()
     private let recommendationEngine = RecommendationEngine()
@@ -42,13 +54,6 @@ struct CalendarView: View {
         return holidayService.getHolidays(for: year, country: profile.country,
                                            customHolidays: customHolidays,
                                            hiddenDates: hiddenDates)
-    }
-
-    var upcomingLeaves: [LeaveRecord] {
-        let today = calendar.startOfDay(for: Date())
-        return leaveRecords
-            .filter { $0.status != .cancelled && $0.endDate >= today }
-            .sorted { $0.startDate < $1.startDate }
     }
 
     // MARK: 추천 일정 계산 입력값
@@ -157,11 +162,30 @@ struct CalendarView: View {
         }
     }
 
-    var pastLeaves: [LeaveRecord] {
-        let today = calendar.startOfDay(for: Date())
-        return leaveRecords
-            .filter { $0.status != .cancelled && $0.endDate < today }
-            .sorted { $0.startDate > $1.startDate }
+    /// 추천을 그대로 등록한다 — 추천 탭과 같은 규칙(연차 예정, 추천 표시).
+    private func addLeave(from recommendation: LeaveRecommendation) {
+        let record = LeaveRecord(
+            startDate: recommendation.startDate,
+            endDate: recommendation.endDate,
+            type: .annual,
+            status: .planned,
+            note: recommendation.title,
+            isRecommended: true
+        )
+        modelContext.insert(record)
+        addedRecommendationIDs.insert(recommendation.id)
+
+        do {
+            try modelContext.save()
+            UsageReportingService.record(event: "recommendation_added")
+            AppTips.recommendation.invalidate(reason: .actionPerformed)
+            HapticFeedback.success()
+        } catch {
+            addedRecommendationIDs.remove(recommendation.id)
+            modelContext.delete(record)
+            HapticFeedback.error()
+            showingAddError = true
+        }
     }
 
     var body: some View {
@@ -212,18 +236,17 @@ struct CalendarView: View {
                         }
                     )
 
-                    // 나의 연차 일정
-                    MyLeaveListView(
-                        upcomingLeaves: upcomingLeaves,
-                        pastLeaves: pastLeaves,
-                        onEdit: { record in
-                            recordToEdit = record
-                        },
-                        onDelete: { record in
-                            recordToDelete = record
-                            showingDeleteAlert = true
-                        }
-                    )
+                    // 추천 휴가 — 캘린더의 노란 표시를 목록으로 풀어 준다.
+                    //
+                    // 예전엔 여기에 "나의 연차 일정"이 있었는데, 현황 탭의 "다가오는 휴가"와
+                    // 같은 내용이라 두 탭이 겹쳤다. 캘린더에서 더 쓸모 있는 건 **아직 안 정한 날**이다.
+                    if !upcomingRecommendations.isEmpty {
+                        CalendarRecommendationSection(
+                            recommendations: upcomingRecommendations,
+                            addedIDs: addedRecommendationIDs,
+                            onAdd: addLeave(from:)
+                        )
+                    }
                 }
                 .padding()
             }
@@ -232,49 +255,14 @@ struct CalendarView: View {
             .task(id: "\(calendar.component(.year, from: currentMonth))-\(Int(availableLeave))-\(leaveRecords.count)-\(profile.preferredDurationRaw)-\(profile.preferLongWeekend)-\(profile.preferConsecutive)-\(profile.avoidPeakSeason)") {
                 computeRecommendations(year: calendar.component(.year, from: currentMonth))
             }
-            .sheet(item: $recordToEdit) { record in
-                EditLeaveSheet(record: record, profile: profile) {
-                    recordToEdit = nil
-                }
-            }
-            .alert(Strings.deleteLeave, isPresented: $showingDeleteAlert) {
-                Button(Strings.cancel, role: .cancel) { }
-                Button(Strings.delete, role: .destructive) {
-                    if let record = recordToDelete {
-                        deleteRecord(record)
-                    }
-                }
-            } message: {
-                Text(Strings.deleteLeaveConfirm)
-            }
-            .alert(Strings.alert, isPresented: $showingDeleteError) {
+            .alert(Strings.alert, isPresented: $showingAddError) {
                 Button(Strings.confirm, role: .cancel) { }
             } message: {
-                Text(Strings.deleteFailed)
+                Text(Strings.saveFailed)
             }
             .sheet(isPresented: $showingAddLeave) {
                 AddLeaveView(profile: profile, initialDate: selectedDate)
             }
-        }
-    }
-
-    private func deleteRecord(_ record: LeaveRecord) {
-        if record.type.deductsFromAnnual {
-            let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
-            profile.usedLeave -= days
-        }
-
-        modelContext.delete(record)
-        do {
-            try modelContext.save()
-            HapticFeedback.success()
-        } catch {
-            if record.type.deductsFromAnnual {
-                let days = record.type == .half ? 0.5 : (record.type == .quarter ? 0.25 : Double(record.daysCount))
-                profile.usedLeave += days
-            }
-            HapticFeedback.error()
-            showingDeleteError = true
         }
     }
 
@@ -877,127 +865,48 @@ struct SelectedDateInfo: View {
 }
 
 // MARK: - 나의 연차 일정 리스트
-struct MyLeaveListView: View {
-    let upcomingLeaves: [LeaveRecord]
-    let pastLeaves: [LeaveRecord]
-    var onEdit: ((LeaveRecord) -> Void)?
-    var onDelete: ((LeaveRecord) -> Void)?
+/// 캘린더 탭의 추천 휴가 목록 — 카드는 추천 화면과 같은 것을 쓴다(모양이 갈리면 다른 기능처럼 보인다).
+struct CalendarRecommendationSection: View {
+    let recommendations: [LeaveRecommendation]
+    let addedIDs: Set<UUID>
+    let onAdd: (LeaveRecommendation) -> Void
 
-    @State private var showPastLeaves = false
+    @State private var showingPaywall = false
+    private let proManager = ProManager.shared
+    /// 무료로 등록할 수 있는 추천 수 — 추천 화면과 같은 규칙을 따른다.
+    private let freeAddLimit = 3
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text(Strings.myLeaveSchedule)
-                    .font(.title3.bold())
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Text(Strings.recommendedSchedule)
+                    .font(.headline)
+                    .voHeader()
                 Spacer()
-                Text(Strings.itemCount(upcomingLeaves.count + pastLeaves.count))
+                Text(Strings.itemCount(recommendations.count))
                     .font(.body)
                     .foregroundStyle(.secondary)
             }
 
-            if upcomingLeaves.isEmpty && pastLeaves.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "calendar.badge.plus")
-                        .font(.largeTitle)
-                        .foregroundStyle(.secondary)
-                    Text(Strings.noLeaveRegistered)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 32)
-            } else {
-                if onEdit != nil {
-                    HStack(spacing: 4) {
-                        Image(systemName: "hand.tap")
-                            .font(.body)
-                        Text(Strings.tapToEditSwipeToDelete)
-                            .font(.body)
-                    }
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                }
-
-                if !upcomingLeaves.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(Strings.upcomingSchedule)
-                            .font(.body)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(AppTheme.Colors.brand)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(AppTheme.Colors.brand.opacity(0.1))
-                            .clipShape(Capsule())
-
-                        ForEach(upcomingLeaves) { leave in
-                            LeaveListRowInteractive(
-                                leave: leave,
-                                isUpcoming: true,
-                                onEdit: onEdit,
-                                onDelete: onDelete
-                            )
+            ForEach(Array(recommendations.enumerated()), id: \.element.id) { index, recommendation in
+                let requiresPro = !proManager.isPro && index >= freeAddLimit
+                DetailedRecommendationCard(
+                    recommendation: recommendation,
+                    isAdded: addedIDs.contains(recommendation.id),
+                    requiresPro: requiresPro,
+                    onAdd: {
+                        if requiresPro {
+                            showingPaywall = true
+                        } else {
+                            onAdd(recommendation)
                         }
                     }
-                }
-
-                if !pastLeaves.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Button {
-                            withAnimation {
-                                showPastLeaves.toggle()
-                            }
-                            HapticFeedback.selection()
-                        } label: {
-                            HStack {
-                                Text(Strings.pastSchedule)
-                                    .font(.body)
-                                    .fontWeight(.semibold)
-                                    .foregroundStyle(.secondary)
-                                Image(systemName: showPastLeaves ? "chevron.up" : "chevron.down")
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                                    .voDecorative()
-                                Spacer()
-                                Text(Strings.itemCount(pastLeaves.count))
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color(.systemGray5))
-                            .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text("\(Strings.pastSchedule), \(Strings.itemCount(pastLeaves.count))"))
-                        .accessibilityValue(Text(showPastLeaves ? Strings.a11yExpanded : Strings.a11yCollapsed))
-
-                        if showPastLeaves {
-                            ForEach(pastLeaves.prefix(10)) { leave in
-                                LeaveListRowInteractive(
-                                    leave: leave,
-                                    isUpcoming: false,
-                                    onEdit: onEdit,
-                                    onDelete: onDelete
-                                )
-                            }
-
-                            if pastLeaves.count > 10 {
-                                Text(Strings.moreItems(pastLeaves.count - 10))
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.top, 4)
-                            }
-                        }
-                    }
-                }
+                )
             }
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 5)
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+        }
     }
 }
 
