@@ -17,6 +17,11 @@ struct CalendarView: View {
     @State private var selectedDate = Date()
     @State private var currentMonth = Date()
     @State private var showingAddLeave = false
+    /// 선택한 날짜 카드에서 바로 고치거나 지우기
+    @State private var recordToEdit: LeaveRecord?
+    @State private var recordToDelete: LeaveRecord?
+    @State private var showingDeleteAlert = false
+    @State private var showingDeleteError = false
 
     @Query private var customHolidays: [CustomHoliday]
     @Query private var allBonusLeaves: [BonusLeave]
@@ -162,6 +167,28 @@ struct CalendarView: View {
         }
     }
 
+    /// 휴가 삭제 — 휴가 사용 내역과 같은 규칙을 쓴다.
+    /// ⚠️ 화면마다 다르게 지우면 보너스 사용량이 화면에 따라 어긋난다.
+    private func deleteRecord(_ record: LeaveRecord) {
+        // 보너스에서 쓴 휴가였다면 그만큼 되돌린다
+        if let bonusId = record.bonusLeaveId,
+           let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
+            bonus.usedDays = max(0, bonus.usedDays - record.effectiveLeaveDays)
+            if bonus.isUsed && bonus.remainingDays > 0 { bonus.isUsed = false }
+        }
+
+        UsageReportingService.record(event: "leave_deleted:\(record.type.rawValue)")
+        modelContext.delete(record)
+        do {
+            try modelContext.save()
+            HapticFeedback.success()
+        } catch {
+            logError("휴가 삭제 실패: \(error.localizedDescription)", category: .data)
+            HapticFeedback.error()
+            showingDeleteError = true
+        }
+    }
+
     /// 추천을 그대로 등록한다 — 추천 탭과 같은 규칙(연차 예정, 추천 표시).
     private func addLeave(from recommendation: LeaveRecommendation) {
         let record = LeaveRecord(
@@ -233,6 +260,13 @@ struct CalendarView: View {
                         onAddLeave: {
                             AppTips.calendarTap.invalidate(reason: .actionPerformed)
                             showingAddLeave = true
+                        },
+                        onEditLeave: { record in
+                            recordToEdit = record
+                        },
+                        onDeleteLeave: { record in
+                            recordToDelete = record
+                            showingDeleteAlert = true
                         }
                     )
 
@@ -262,6 +296,24 @@ struct CalendarView: View {
             }
             .sheet(isPresented: $showingAddLeave) {
                 AddLeaveView(profile: profile, initialDate: selectedDate)
+            }
+            .sheet(item: $recordToEdit) { record in
+                EditLeaveSheet(record: record, profile: profile) {
+                    recordToEdit = nil
+                }
+            }
+            .alert(Strings.deleteLeave, isPresented: $showingDeleteAlert) {
+                Button(Strings.cancel, role: .cancel) { }
+                Button(Strings.delete, role: .destructive) {
+                    if let record = recordToDelete { deleteRecord(record) }
+                }
+            } message: {
+                Text(Strings.deleteLeaveConfirm)
+            }
+            .alert(Strings.alert, isPresented: $showingDeleteError) {
+                Button(Strings.confirm, role: .cancel) { }
+            } message: {
+                Text(Strings.deleteFailed)
             }
         }
     }
@@ -725,6 +777,9 @@ struct SelectedDateInfo: View {
     var originCountry: Country = .korea
     /// 선택한 날짜로 바로 휴가를 등록하는 액션 (등록된 휴가가 없는 날짜에만 노출)
     var onAddLeave: (() -> Void)? = nil
+    /// 그 날 등록된 휴가를 바로 고치거나 지우는 액션 (휴가가 있는 날짜에만 노출)
+    var onEditLeave: ((LeaveRecord) -> Void)? = nil
+    var onDeleteLeave: ((LeaveRecord) -> Void)? = nil
 
     private let calendar = Calendar.current
 
@@ -783,6 +838,29 @@ struct SelectedDateInfo: View {
                     }
                 }
                 .accessibilityElement(children: .combine)
+
+                // 날짜를 눌러 확인한 김에 바로 고칠 수 있게 — 예전엔 휴가 사용 내역까지 들어가야 했다
+                if onEditLeave != nil || onDeleteLeave != nil {
+                    HStack(spacing: 8) {
+                        if let onEditLeave {
+                            Button { onEditLeave(leave) } label: {
+                                Label(Strings.edit, systemImage: "pencil")
+                                    .font(.body)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.bordered)
+                        }
+                        if let onDeleteLeave {
+                            Button(role: .destructive) { onDeleteLeave(leave) } label: {
+                                Label(Strings.delete, systemImage: "trash")
+                                    .font(.body)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(.red)
+                        }
+                    }
+                }
             }
 
             // 추천 일정 상세 (실제 등록 휴가가 없을 때) — "일정 없음" 대신 표시
