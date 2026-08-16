@@ -2,6 +2,13 @@
 
 ## 진행 중
 
+### v2.1.2 출시 전 (릴리즈 노트: docs/release-notes.md)
+- [ ] **CloudKit 배포 선행** — 포털에 `iCloud.com.Ysoup.FeedbackHub` 컨테이너 추가 +
+      Dashboard 스키마(Feedback·UsageSnapshot·UsageEvent·CrashReport) Production 배포
+      ⚠️ 안 하면 릴리즈 노트에 적은 "피드백 보내기"가 전송 실패한다
+- [ ] App Store Connect 개인정보 설문 갱신
+- [ ] 아카이브 빌드 확인
+
 ### 사용 통계·피드백 허브 — 남은 운영 작업 (코드는 끝, 대시보드가 남음)
 - [ ] Apple Developer 포털: App ID `com.Ysoup.LeaveWise`에 iCloud 컨테이너
       `iCloud.com.Ysoup.FeedbackHub` 추가 + 프로비저닝 프로파일 갱신

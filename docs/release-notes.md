@@ -1,5 +1,138 @@
 # Release Notes
 
+## v2.1.2 — 읽기 쉬운 화면, 어디서 봐도 같은 숫자
+
+> 이전 출시: v2.1.1
+> 핵심: 앱 전체 글자를 본문 크기 이상으로 키우고, 홈·휴가 사용 내역·설정이 서로 다른 "사용 완료" 일수를 보여주던 문제를 잡았습니다. 다가오는 휴가에 공휴일이 함께 뜨고, 사용법 안내를 언제든 다시 볼 수 있습니다.
+
+---
+
+### App Store "이번 버전의 새로운 기능" (붙여넣기용)
+
+#### 🇰🇷 한국어
+```
+글자가 커지고, 어디서 봐도 숫자가 같아졌어요.
+
+• 앱 전체 글자를 본문 크기 이상으로 키웠어요
+• 홈과 휴가 사용 내역의 "사용 완료" 일수가 서로 다르던 문제를 바로잡았어요
+• 다가오는 휴가에 공휴일도 함께 보여줘요 (설정에서 끌 수 있어요)
+• 캘린더에서 날짜를 누르면 그 날 휴가를 바로 수정하거나 지울 수 있어요
+• 캘린더 아래쪽을 추천 휴가 일정으로 바꿨어요 — 노란 표시를 목록에서 바로 등록하세요
+• 연차 현황을 공유할 때 어떤 이미지가 나가는지 먼저 보여드려요
+• 사용법 안내를 새로 넣었어요 — 설정 > 도움말에서 언제든 다시 볼 수 있어요
+• 설정 > 지원에서 피드백을 바로 보낼 수 있어요
+• 영어·일본어·중국어 화면에 한국어가 섞여 나오던 문구를 정리했어요
+• Google 애널리틱스를 완전히 걷어냈어요. 앱 개선용 익명 통계는 개발자 본인의 iCloud에만 저장돼요
+```
+
+#### 🇺🇸 English
+```
+Bigger text, and the same numbers everywhere.
+
+• Text across the app is now at body size or larger
+• Fixed "days used" showing different totals on Home and in Leave History
+• Upcoming Leave now lists public holidays too (you can turn this off in Settings)
+• Tap a date on the calendar to edit or delete that day's leave right there
+• The calendar now ends with suggested breaks — add one straight from the list
+• Sharing your leave status shows a preview of the image first
+• A new how-to guide — reopen it any time from Settings > Help
+• Send feedback directly from Settings > Support
+• Cleaned up Korean text that leaked into English, Japanese and Chinese screens
+• Google Analytics is gone. Anonymous usage stats stay in the developer's own iCloud
+```
+
+#### 🇯🇵 日本語
+```
+文字が大きくなり、どの画面でも同じ数字に。
+
+• アプリ全体の文字を本文サイズ以上に大きくしました
+• ホームと休暇の履歴で「使用済み」日数が食い違う問題を修正しました
+• 「今後の休暇」に祝日も表示します（設定でオフにできます）
+• カレンダーで日付をタップすると、その日の休暇をその場で編集・削除できます
+• カレンダー下部をおすすめの連休一覧に変更しました — その場で登録できます
+• 有給の状況を共有するとき、送る画像を先に確認できます
+• 使い方ガイドを追加しました — 設定 > ヘルプからいつでも見られます
+• 設定 > サポートからフィードバックを送れます
+• 英語・日本語・中国語の画面に韓国語が混ざっていた文言を整理しました
+• Google アナリティクスを完全に削除しました。匿名の利用統計は開発者本人のiCloudにのみ保存されます
+```
+
+#### 🇨🇳 中文(简体)
+```
+字更大了，各处数字也一致了。
+
+• 全应用文字提升到正文大小以上
+• 修复了首页与休假记录中"已使用"天数不一致的问题
+• "即将到来的假期"现在也会显示节假日（可在设置中关闭）
+• 在日历上点击日期，即可就地编辑或删除当天的休假
+• 日历下方改为推荐连休列表 — 可直接登记
+• 分享年假状况时，会先让你预览要发送的图片
+• 新增使用指南 — 可随时从"设置 > 帮助"重新打开
+• 可在"设置 > 支持"中直接发送反馈
+• 整理了英文、日文、中文界面中混入的韩文文案
+• 已彻底移除 Google Analytics。用于改进应用的匿名统计仅保存在开发者本人的 iCloud 中
+```
+
+---
+
+### 변경 사항 (내부 체인지로그)
+
+**수정 — 화면마다 다르던 "사용 완료" 일수 (핵심)**
+- 같은 계산이 홈·내역·설정·휴가 등록·추천·캘린더 6~7곳에 복사돼 있었고 필터가 조금씩 달랐다
+  (홈은 연차 차감분만, 내역은 출장·병가까지 합산, 일부는 회계연도 범위조차 안 봄)
+- `LeaveUsageCalculator` 신설 — 회계연도 소속·"사용 완료"(지난 예정 포함)·취소 제외·
+  연차 차감분 vs 전체 유형 합계·보너스 연도 스코프를 한 곳에 정의하고 모든 화면이 이것만 읽는다
+- 보너스 잔여는 **만료분 제외**로 통일(`expiredBonus`로 차이를 드러냄), 보너스 포함 토글도 같은 값 사용
+- 테스트 헬퍼가 화면 공식을 복제하던 문제도 정리 — 이제 테스트가 실제 계산기를 호출한다
+
+**신규 — 사용법 튜토리얼 · 도움말**
+- `TutorialView` 6장(등록 → 사진 가져오기 → 추천 → 보너스 → 공유 → 위젯). 온보딩 직후 1회 자동, 이후 설정에서
+- 설정 > 도움말: 사용법 다시 보기 / 처음 안내 다시 보기 / 기능 팁 다시 보기
+- 온보딩 재실행 시 프로필이 복제되던 버그 수정(기존 프로필 갱신)
+- TipKit 팁 4종 추가(추천 연휴·현황 공유·보너스 연차·사용 내역), 총 8종
+
+**신규 — 사용 통계·피드백·안정성 허브 (LeeoKit 3.2.0)**
+- Firebase 제거로 비어 있던 분석 경로를 개발자 본인 CloudKit(FeedbackHub)으로 대체. 새 외부 SDK 0개
+- 사용자: 설정 > 지원에서 피드백 보내기 · 만족도 프롬프트(아쉬우면 피드백으로 유도)
+- 개발자(버전 7탭 마스터 모드): 사용 통계 · 접수된 피드백 · 안정성(MetricKit)
+- 원격 킬스위치(GoldweekFlag)로 수집을 심사 없이 중단 가능
+
+**UI**
+- 다가오는 휴가에 공휴일 병합(연휴는 한 줄로 묶고 최대 3개) + 설정 토글
+- 캘린더: "나의 연차 일정" → 추천 휴가 일정(가까운 3개, 추천 화면과 같은 카드·같은 무료 한도)
+- 캘린더: 날짜 탭 → 그 날 휴가 수정·삭제 (내역 화면과 같은 편집 시트·같은 삭제 규칙)
+- 연차 현황 공유: 미리보기 후 공유 (렌더를 시트 안으로 옮겨 실패해도 버튼이 죽지 않음)
+- 휴가 페이스: "올해 진행"을 회색 막대로 채움 / 쉬어가는 흐름의 연결선을 끊기지 않는 트랙으로 재구성
+- 보너스 표기를 "1.5/3일" 분수 하나로 (문장형은 VoiceOver 낭독용으로 유지)
+
+**타이포그래피 · 다국어**
+- 화면 코드 339줄의 caption/caption2/footnote/subheadline·소형 고정 크기를 .body 이상으로 상향
+  (예외: 안정성 화면의 콜스택 원문 — 붙여넣기용 로그)
+- 커진 글자로 깨진 레이아웃 보정: 캘린더 범례 흐름 배치, 쉬어가는 흐름 칸 폭, 월별 미리보기 축소 허용
+- 위젯 문자열 21개 미번역 → en/ja/zh-Hans 채움 ("연차 현황"만 한국어로 남던 원인)
+- 공유·가족 화면의 enum rawValue 직접 표시 3곳, 날짜 18곳(기기 언어 → 앱 언어), 기본 이름("사용자") 정리
+- 설정 > 지원 섹션을 직접 그려 앱 언어를 따르게 + 언어 변경 시 `AppleLanguages` 동기화
+- 영어 "1 days" 복수형 오류 정리(`Strings.dayCount`)
+
+**안정성 · 개인정보**
+- Firebase / Google Analytics 완전 제거 (SDK·plist·호출부 전부)
+- 총 연차 등 프로필 편집을 변경 즉시 저장 (자동 저장은 시점을 보장하지 않는다)
+- 개인정보 처리방침 4개 언어 갱신 — 익명 통계·크래시 진단 수집을 정확히 고지
+
+---
+
+### 빌드 체크리스트
+- [x] MARKETING_VERSION 2.1.1 → 2.1.2 (모든 타깃: Goldweek, widgetExtension, GoldweekTests)
+- [x] CURRENT_PROJECT_VERSION 1 (빌드 산출물 Info.plist에서 앱·위젯 모두 2.1.2 (1) 확인)
+- [x] 단위 테스트 그린
+- [ ] 아카이브 빌드 확인
+- [ ] **CloudKit 배포 선행** — Developer 포털에 `iCloud.com.Ysoup.FeedbackHub` 컨테이너 추가 +
+      Dashboard 스키마(Feedback·UsageSnapshot·UsageEvent·CrashReport) Production 배포.
+      ⚠️ 이걸 안 하면 "피드백 보내기"가 전송에 실패한다 — 릴리즈 노트에 적은 기능이므로 **출시 전 필수**
+- [ ] App Store Connect 개인정보 설문 갱신 (Product Interaction / Contact Info / Crash Data)
+
+---
+
 ## v2.1.1 — 휴가 종류 × 길이 조합, 보너스 사용 현황
 
 > 이전 출시: v2.1.0
