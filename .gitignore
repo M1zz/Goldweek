@@ -27,3 +27,6 @@ Pods/
 .swiftpm/
 .build/
 Package.resolved
+*.xcuserdatad/
+xcuserdata/
+**/xcshareddata/IDEWorkspaceChecks.plist
