@@ -188,7 +188,10 @@ enum UsageInsights {
         let registered = share(snapshots, key: "leaves")
         let adopted = share(snapshots, key: "adoptedRecommendations")
         let shared = share(snapshots, key: "flag.sharing")
-        let pro = share(snapshots, key: "flag.isPro")
+        // 결제로 센다 — 접근 권한(flag.isPro = 구매 ∪ TestFlight)이 아니라.
+        // 옛 스냅샷에는 flag.isPaid 가 없어서 그때는 옛 키로 물러선다.
+        let paidKey = snapshots.contains { $0.metrics["flag.isPaid"] != nil } ? "flag.isPaid" : "flag.isPro"
+        let pro = share(snapshots, key: paidKey)
         let empty = snapshots.filter { ($0.metrics["leaves"] ?? 0) == 0 }.count
 
         return [
@@ -241,7 +244,10 @@ enum UsageInsights {
         case "usageRatePct":           return "연차 사용률 (%)"
         case "bonusLeaves":            return "보너스 연차 수"
         case "customHolidays":         return "직접 추가한 공휴일 수"
-        case "flag.isPro":             return "Pro 사용자"
+        case "flag.isPaid":            return "결제한 사용자"
+        case "flag.isComped":          return "무상 제공 (TestFlight)"
+        // 결제가 아니라 접근 권한이다. 이름만 "Pro"로 두면 결제로 읽힌다.
+        case "flag.isPro":             return "기능 열림 (결제 아님)"
         case "flag.autoDetect":        return "캘린더 자동 감지 켠 사용자"
         case "flag.sharing":           return "일정을 공유 중인 사용자"
         case "flag.familyShared":      return "공유받은 일정이 있는 사용자"
