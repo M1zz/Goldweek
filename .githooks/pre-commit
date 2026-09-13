@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+#
+# Goldweek pre-commit hook — 시크릿이 실수로 커밋되는 것을 막습니다.
+#
+# 활성화 (저장소당 1회):
+#     git config core.hooksPath .githooks
+#
+# 우회가 필요하면 (권장 X):  git commit --no-verify
+#
+set -euo pipefail
+
+RED=$'\033[0;31m'; YEL=$'\033[1;33m'; NC=$'\033[0m'
+fail() { echo "${RED}✋ pre-commit 차단:${NC} $1" >&2; exit 1; }
+
+# 스테이징된(추가/수정/복사) 파일 목록
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$staged" ] && exit 0
+
+# 1) 시크릿 파일 자체가 스테이징됐는지 차단 (example 템플릿은 허용)
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  case "$f" in
+    *.example.swift) ;;  # 템플릿은 OK
+    *Secrets.swift|*Secrets.xcconfig|*Secrets.plist|*GoogleService-Info.plist)
+      fail "시크릿 파일이 스테이징됨: $f
+       → git rm --cached \"$f\" 후 .gitignore 확인하세요." ;;
+  esac
+done <<< "$staged"
+
+# 2) gitleaks 가 있으면 정밀 스캔
+if command -v gitleaks >/dev/null 2>&1; then
+  if ! gitleaks protect --staged --redact --no-banner; then
+    fail "gitleaks 가 스테이징된 변경에서 시크릿을 발견했습니다."
+  fi
+  exit 0
+fi
+
+# 3) gitleaks 미설치 시 가벼운 자체 검사 (플레이스홀더는 통과)
+#    실제 키처럼 보이는 할당만 탐지
+diff=$(git diff --cached -U0 --no-color | grep '^+' || true)
+if echo "$diff" | grep -Eq 'mrtAPIKey[[:space:]]*=[[:space:]]*"[^"]{8,}"' \
+   || echo "$diff" | grep -Eiq '(api[_-]?key|secret|token|password)[[:space:]]*[:=][[:space:]]*"[A-Za-z0-9/_+-]{16,}"'; then
+  # 플레이스홀더 토큰만 들어있으면 통과
+  if ! echo "$diff" | grep -Eq 'YOUR_.*_HERE|REPLACE|EXAMPLE|xxxx'; then
+    fail "실제 키처럼 보이는 시크릿이 변경에 포함된 것 같습니다.
+       잘못된 탐지면: git commit --no-verify
+       (정확한 스캔을 원하면 'brew install gitleaks' 권장)"
+  fi
+fi
+
+echo "${YEL}ℹ pre-commit:${NC} gitleaks 미설치 — 가벼운 검사만 수행했습니다 (brew install gitleaks 권장)"
+exit 0

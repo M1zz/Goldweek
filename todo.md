@@ -1,8 +1,127 @@
-# LeaveWise TODO
+# Goldweek TODO
 
 ## 진행 중
 
+### v2.1.2 출시 전 (릴리즈 노트: docs/release-notes.md)
+- [ ] **CloudKit 배포 선행** — 포털에 `iCloud.com.Ysoup.FeedbackHub` 컨테이너 추가 +
+      Dashboard 스키마(Feedback·UsageSnapshot·UsageEvent·CrashReport) Production 배포
+      ⚠️ 안 하면 릴리즈 노트에 적은 "피드백 보내기"가 전송 실패한다
+- [ ] App Store Connect 개인정보 설문 갱신
+- [ ] 아카이브 빌드 확인
+
+### 사용 통계·피드백 허브 — 남은 운영 작업 (코드는 끝, 대시보드가 남음)
+- [ ] Apple Developer 포털: App ID `com.Ysoup.LeaveWise`에 iCloud 컨테이너
+      `iCloud.com.Ysoup.FeedbackHub` 추가 + 프로비저닝 프로파일 갱신
+      (안 하면 "Invalid bundle ID for container" 오류로 조회가 실패한다)
+- [ ] CloudKit Dashboard(FeedbackHub): Development에서 스키마 생성(UsageSnapshot·UsageEvent·
+      Feedback·CrashReport) → 인덱스 → Security Roles(admin read + 내 userRecordName) → Production 배포
+- [ ] App Store Connect 개인정보(App Privacy) 설문 갱신:
+      Product Interaction(Analytics, 미연결) + Contact Info(피드백) + Crash Data(MetricKit)
+- [ ] 절차 전문: `docs/USAGE_STATS_HUB.md`
+
+## 완료 (사용 통계·피드백 허브 + 다국어 정리)
+- [x] LeeoKit 3.2.0 도입 + GoldweekSpec 계약, 원격 킬스위치(GoldweekFlag)
+- [x] 익명 스냅샷(효용 지표) + 주요 행동 이벤트 — Firebase 제거로 비어 있던 분석 경로를 대체
+      (onboarding_complete / leave_added / leave_deleted / recommendation_added / paywall_* / app_open)
+- [x] 마스터 모드(버전 7탭): 접수된 피드백 · 사용 통계 · 안정성(MetricKit 크래시)
+- [x] 만족도 프롬프트 — 좋으면 리뷰, 아쉬우면 피드백. 휴가 등록 후 자동 별점 요청은 제거(중복 방지)
+- [x] 위젯 문자열 21개 미번역 → en/ja/zh-Hans 채움
+- [x] 공유·가족 화면의 enum rawValue 직접 표시 3곳 수정
+- [x] 날짜 18곳: `Date.formatted()`(기기 언어) → `appFormatted()`(앱 언어 설정)
+- [x] 기본 이름("사용자")이 만든 시점 언어로 굳던 문제 — `UserProfile.displayName`
+- [x] 설정 > 지원 섹션을 직접 그려 앱 언어를 따르게 + `AppleLanguages` 동기화
+- [x] 개인정보 처리방침 4개 언어 갱신 (익명 통계·크래시 진단 고지, Firebase 문구 정리)
+- [x] 집계 로직 유닛 테스트 9개
+
+## 완료 (Firebase/GA 완전 제거 세션 2026-07-21)
+- [x] AnalyticsService.swift 삭제 + 전 화면 호출부(~35곳) 제거 (온보딩·휴가등록/삭제·추천·MRT·페이월·휴식레이더·공유 등)
+- [x] GoogleService-Info.plist 삭제
+- [x] pbxproj에서 firebase-ios-sdk SPM 패키지·5개 product(Firebase Analytics/Core/IdentitySupport/Core/Crashlytics)·빌드파일·리소스 참조 전부 제거
+- [x] GoldweekApp.configure() 호출 제거
+- [x] 빌드·전체 테스트 통과, 스테일 Firebase 프레임워크 정리됨
+
+## 완료 (휴가 = 카테고리 × 길이 직교 구조 세션 2026-07-21)
+- [x] LeaveLength enum 추가 (종일 1.0 / 반차 0.5 / 반반차 0.25) — 카테고리와 직교
+- [x] LeaveRecord: lengthRaw 저장 + length/category 계산 속성, effectiveLeaveDays·deductsFromAnnualLeave 길이 기반으로 변경 (레거시 반차/반반차 자동 흡수, 마이그레이션 불필요)
+- [x] LeaveType.categories (연차·대체휴무·공가·병가·특별휴가·출장) — 입력 UI용 순수 카테고리
+- [x] 파서: 유형명 "(1/2)"·"½" 등 분수 → suggestedLength(반차/반반차)로 추론. 날짜 슬래시 오인 방지(괄호 요구). 테스트 3개 추가
+- [x] PhotoImport 파이프라인: DetectedLeaveCandidate.suggestedLength → LeaveRecord.length 전달, effectiveDays 반영
+- [x] AddLeaveView: 길이 선택 + 카테고리 선택 2축으로 재구성 (특별휴가·반차, 자녀돌봄·반차 등 n×n 조합 가능)
+- [x] EditLeaveSheet: 카테고리 Picker + 길이 세그먼트 추가 → 기존 기록 재분류 가능
+- [x] 사용 내역 행에 길이 배지 표시, 전체 테스트 통과
+
+## 완료 (보너스 사용량 기록 기준 재계산 세션 2026-07-21)
+- [x] BonusLeaveReconciler 추가 (Models.swift) — 휴가 사용 내역 기준으로 보너스 usedDays 재산정
+  - 연차 비차감 미연결 특별휴가(자녀돌봄 등)를 유형·잔여 맞는 보너스에 자동 연결(bonusLeaveId)
+  - 모든 보너스 usedDays/isUsed를 연결 기록 기준으로 재산정
+- [x] LeaveHistoryView.repairBonusLeaveUsage → 리컨실러 호출로 교체
+- [x] HomeView 현황 카드 onAppear에서도 리컨실 실행 → 홈에서 바로 반영
+- [x] 주의: 자녀돌봄은 보너스 유형이 "일가정균형"으로 등록돼 있어야 자동 연결됨
+
+## 완료 (보너스 사용 현황 노출 세션 2026-07-21)
+- [x] 설정 화면 보너스 연차 행에 "N일 중 M일 사용" 캡션 추가 (Strings.bonusUsedOfGranted, 4개 언어)
+- [x] 홈 현황 카드에 보너스 사용 현황 표시 — 부여 대비 사용량 + 진행률 바 + 잔여 강조 (부여받은 보너스가 있으면 항상 노출)
+- [x] AddLeave(+ 탭)는 이미 보너스 선택 차감 지원 확인 (별도 구현 불필요)
+- [x] 앱 버전 2.1.1
+
+## 완료 (특별휴가-보너스 연결 세션 2026-07-13)
+- [x] 버전 2.1.0으로 업데이트 (MARKETING_VERSION, 앱+위젯 전 타깃)
+- [x] 릴리즈 노트 작성 (docs/release-notes.md v2.1.0 — App Store 4개 언어 + 내부 체인지로그)
+- [x] 사진 가져오기(OCR): 특별휴가류(자녀돌봄 등)가 아무 차감 없이 등록되던 갭 해소
+  - 자동 매칭: 연차 차감 없는 후보의 유형명(돌봄/포상/리프레시 등)을 BonusLeaveType.matching으로 추론해 유형·잔여가 맞는 보너스 연차에 자동 연결 (잔여 누적 추적으로 과할당 방지)
+  - 확인 화면 UI: 후보별 "보너스에서 차감" 메뉴 추가 — 자동 매칭 결과 표시, 사용자가 행별로 변경/해제 가능
+  - 저장 시 bonusLeaveId 연결 + usedDays 차감, 잔여 부족 시 등록 차단, 저장 실패 시 롤백. 삭제 시 복원은 기존 LeaveHistoryView 로직 재사용
+  - 신규 문자열 3개(4개 언어), 빌드·전체 테스트 통과
+
+## 완료 (브랜치 정리 세션 2026-07-13)
+- [x] dev ↔ origin/dev 분기 해소: 멈춰 있던 머지 충돌 3파일 해결 후 머지 커밋(eb299e4) + push
+  - ContentView: refreshRestRadar(로컬 번아웃) + syncSharedSchedules/타임머신 백그라운드 캡처(원격) 모두 유지
+  - HomeView: 피로 체크인 시트(로컬) + AddLeave/캘린더 가져오기 시트(원격) 모두 유지
+  - pbxproj: ID 충돌 수정 — 원격의 LeaveTableParserTests/AppTips가 로컬의 BurnoutEngine/NotificationService와 같은 ID(A…60/61) 사용 → A…63/64로 재번호. MARKETING_VERSION은 2.0.9 채택
+  - 시뮬레이터 빌드 검증 통과
+
+## 완료 (개인화 추천 세션)
+- [x] 추천 탭 제거 (홈·캘린더·설정 3탭). 추천 기능은 캘린더에 통합 유지
+- [x] 선호 기간 기반 추천: 공휴일에 연차를 며칠 붙여 선호 길이(짧음3/보통5/김7)에 맞춰 확장(일반화된 징검다리), 기간 매칭 가중치 강화
+- [x] 번아웃 텀 반영: 직전 휴식 이후 공백이 길면 가산(60일+ 강하게), 기존 휴가와 너무 붙으면 감산. 기존 휴가와 겹치는 추천 제거
+- [x] 설정(PreferencesView)의 선호 기간/롱위켄드/연속/성수기회피가 캘린더 추천에 실시간 반영(.task id + 캐시키)
+
+## 완료 (추천·캘린더 연동 세션)
+- [x] 플래너: 연차 1일로 단순 3일(금/월+주말)만 만드는 사소한 연휴 후보 제외
+- [x] 최적 플랜 카드: 슬림 리스트 → 시각화 카드(구성 막대 주말/공휴일/연차, 효율 배지, 포함 공휴일)
+- [x] 캘린더 추천 일정: 추천 탭과 동일한 RecommendationEngine 사용. 공휴일 포함+연차 필요 추천의 연차일을 노란색 표시(범례 추가)
+- [x] 캘린더 날짜 탭: 추천 일정 포함 날이면 "일정 없음" 대신 추천 상세(제목·기간·휴식/연차·설명) 표시
+
+## 완료 (UI/공휴일 개선 세션)
+- [x] 휴가 페이스 카드: 막대 2개 → 단일 연간 축 + 핀 2개(올해 진행/연차 사용)로 직관화, paceMessage 해설 복원
+- [x] 홈 다가오는 휴가 섹션 카드화(아이콘+개수 배지+그림자), 휴가 사용 내역 버튼 맨 아래로 이동
+- [x] 캘린더 휴가 표시: 점 → 이어지는 선(막대), 연속일은 칸 사이 간격까지 메워 하나로 연결
+- [x] 캘린더 주말 브릿지: 금·월처럼 양옆이 휴가인 주말도 선으로 이어 표현
+- [x] 쉬어가는 흐름 타임라인: 오늘 위치를 이전/다음 거리 비율(완화·클램프)로 이동해 직관화
+- [x] 공휴일 데이터: 제헌절(7/17) 2026년부터 공휴일 재지정 반영(2025-01-29 공휴일법 개정 통과)
+- [x] 대체공휴일 규칙 정확화: 토·일 적용(삼일절·광복절·개천절·한글날·어린이날·부처님오신날·제헌절) vs 일요일만 적용(설날·추석·크리스마스) 분리. 근로자의 날(관공서 공휴일 아님) 대체 대상에서 제거. → 추석 9/26(토) 잘못된 대체일 생성 버그 수정
+
+## 완료 (이번 세션 추가)
+- [x] 시크릿 운영 체계: GoldweekSecrets.example.swift 템플릿 + pre-commit 훅(.githooks) + README 갱신 (커밋 de0d91f)
+- [x] 홈 "연차 현황" 정리
+  - "2026년 연차 현황" → "연차 현황" (연도 제거)
+  - 보너스 포함 토글: 홈에서 제거 → 설정 > 보너스 연차 섹션으로 이전
+  - 카드 제목 앞 심볼 제거: 📅(다가오는 휴가), speedometer(휴가 페이스), 번아웃 아이콘
+  - 휴가 페이스 카드: 설명 문구 제거(paceMessage "여유롭게 사용 중이에요…", burnoutMessage) + 죽은 코드 정리
+
 ## 완료
+- [x] 시각장애인 접근성(VoiceOver) 전체 화면 점검·보강 (빌드 성공 검증)
+  - [x] 보너스 포함: 칩 버튼 → 실제 스위치 토글 (상태/힌트 음성 안내)
+  - [x] 공용 컴포넌트(Components.swift): GradientButton/SectionHeader/ProgressBar/DateRangeLabel/DDayLabel
+  - [x] PreferencesView: 기간/계절/활동 버튼 선택상태(.voSelected) + 라벨
+  - [x] HolidayManagementView: 연도칩, 섹션헤더, 빈토글 라벨, 행 결합, 삭제버튼 라벨
+  - [x] LeaveHistoryView: 연도/필터칩 선택상태, 통계카드 결합, 기록행 결합+힌트
+  - [x] CalendarView: 과거일정 토글 펼침/접힘 음성, 선택날짜 카드 장식아이콘 숨김
+  - [x] SettingsView: 아바타 숨김, 이름수정 버튼 라벨, 보너스행 결합, 요약/통계행 값 음성
+  - [x] AddLeaveView: 보너스 선택 버튼 선택상태/라벨, 빠른선택 칩, 스테퍼 라벨
+  - [x] OnboardingView: 월 선택 그리드 선택상태(.voSelected)
+  - [x] RecommendationsView: 남은연차 카드 결합(원형그래프 숨김) — 주요 카드는 기존에 적용됨 확인
+  - 신규 VoiceOver 문자열(4개 언어): 보너스 힌트, 공휴일 표시 힌트, 추천 표식, 수정 힌트, 펼침/접힘, 이름수정, D-Day
 - [x] ModelContainer 크래시 수정
   - 원인: try!로 강제 언래핑하여 스키마 변경/저장소 손상 시 크래시
   - 해결: 에러 핸들링 추가, 저장소 삭제 후 재시도, 인메모리 fallback

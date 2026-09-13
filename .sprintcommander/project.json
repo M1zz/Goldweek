@@ -1,27 +1,30 @@
 {
-  "appStoreURL" : "",
+  "appStoreURL" : "https:\/\/apps.apple.com\/app\/휴가-플래너\/id6755983135",
   "colorHex" : "FBBF24",
   "desc" : "SwiftUI 기반 Xcode Project · 27개 파일",
   "doneTasks" : 0,
   "durationWeeks" : 4,
   "icon" : "📱",
   "id" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
-  "landingURL" : "",
+  "landingURL" : "https:\/\/m1zz.github.io\/Goldweek\/",
   "languages" : [
-
+    "한국어",
+    "English",
+    "日本語",
+    "中文(简体)"
   ],
-  "lastModified" : "2026-02-27T03:23:01Z",
-  "name" : "LeaveWise",
+  "lastModified" : "2026-05-04T13:00:00Z",
+  "name" : "Goldweek",
   "pricing" : {
-    "downloadPrice" : "",
-    "lifetimePrice" : "",
-    "monthlyPrice" : "",
-    "yearlyPrice" : ""
+    "downloadPrice" : "무료",
+    "lifetimePrice" : "$4.99, ₩6,600",
+    "monthlyPrice" : "0",
+    "yearlyPrice" : "0"
   },
   "progress" : 0,
-  "sourcePath" : "~\/Documents\/workspace\/code\/LeaveWise",
+  "sourcePath" : "~\/Documents\/workspace\/code\/Goldweek",
   "sprint" : "Sprint 1",
-  "startWeek" : 2,
-  "totalTasks" : 0,
+  "startWeek" : 4,
+  "totalTasks" : 15,
   "version" : "2.0.0"
 }

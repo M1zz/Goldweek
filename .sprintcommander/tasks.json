@@ -1,3 +1,230 @@
 [
-
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A01-B234-567890ABCDE1",
+    "priority" : "high",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 3,
+    "tags" : [
+      "Bug",
+      "Core"
+    ],
+    "title" : "LeaveManager 날짜 계산 강제 언래핑 제거 및 안전 처리"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A02-B234-567890ABCDE2",
+    "priority" : "high",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 3,
+    "tags" : [
+      "Bug",
+      "Core",
+      "Refactor"
+    ],
+    "title" : "RecommendationEngine .last! 강제 언래핑 크래시 수정"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A03-B234-567890ABCDE3",
+    "priority" : "high",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 5,
+    "tags" : [
+      "Bug",
+      "Core"
+    ],
+    "title" : "DataProtectionService 빈 catch 블록 에러 복구 로직 추가"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A04-B234-567890ABCDE4",
+    "priority" : "high",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 2,
+    "tags" : [
+      "Bug",
+      "Core"
+    ],
+    "title" : "SettingsView URL 강제 언래핑 안전화"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A05-B234-567890ABCDE5",
+    "priority" : "high",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 8,
+    "tags" : [
+      "Core",
+      "Refactor"
+    ],
+    "title" : "핵심 비즈니스 로직 유닛 테스트 작성 (LeaveManager, RecommendationEngine)"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A06-B234-567890ABCDE6",
+    "priority" : "medium",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 1,
+    "tags" : [
+      "Bug",
+      "Core"
+    ],
+    "title" : "ReviewManager 하드코드된 App Store ID 설정 파일로 이동"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A07-B234-567890ABCDE7",
+    "priority" : "medium",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 3,
+    "tags" : [
+      "Performance",
+      "Refactor",
+      "UI"
+    ],
+    "title" : "DispatchQueue.main.asyncAfter를 async\/await으로 전환"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A08-B234-567890ABCDE8",
+    "priority" : "medium",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 5,
+    "tags" : [
+      "UI",
+      "Design"
+    ],
+    "title" : "주요 UI 요소에 VoiceOver 접근성 라벨 및 힌트 추가"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A09-B234-567890ABCDE9",
+    "priority" : "medium",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 2,
+    "tags" : [
+      "Performance",
+      "Core",
+      "Refactor"
+    ],
+    "title" : "테스트 코드 Thread.sleep을 비동기 expectation으로 전환"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A10-B234-567890ABCDF0",
+    "priority" : "medium",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 5,
+    "tags" : [
+      "Feature",
+      "Backend",
+      "Core"
+    ],
+    "title" : "공휴일 데이터 2030년 이후 지원 (외부 API 또는 확장 데이터)"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A11-B234-567890ABCDF1",
+    "priority" : "medium",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 2,
+    "tags" : [
+      "Bug",
+      "Core"
+    ],
+    "title" : "DataProtectionService 체크섬 빈 값 검증 강화"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A12-B234-567890ABCDF2",
+    "priority" : "low",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 1,
+    "tags" : [
+      "Refactor"
+    ],
+    "title" : "프로덕션 코드에서 디버그 print문 제거"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A13-B234-567890ABCDF3",
+    "priority" : "low",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 2,
+    "tags" : [
+      "Refactor",
+      "Performance"
+    ],
+    "title" : "중복 상태 변수 정리 및 뷰 간 데이터 통합"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A14-B234-567890ABCDF4",
+    "priority" : "low",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 2,
+    "tags" : [
+      "Refactor",
+      "Core"
+    ],
+    "title" : "DataProtectionService try? 반복 패턴 헬퍼 메서드로 통합"
+  },
+  {
+    "assignee" : "ME",
+    "assigneeColorHex" : "4FACFE",
+    "id" : "A1B2C3D4-E5F6-4A15-B234-567890ABCDF5",
+    "priority" : "low",
+    "projectId" : "E466F765-85A1-46BB-A647-2B1077F64EF3",
+    "sprint" : "",
+    "status" : "백로그",
+    "storyPoints" : 2,
+    "tags" : [
+      "Performance",
+      "Refactor"
+    ],
+    "title" : "SettingsView 중복 filter 호출 단일 순회로 최적화"
+  }
 ]
