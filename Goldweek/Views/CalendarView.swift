@@ -226,7 +226,7 @@ struct CalendarView: View {
                     TipView(AppTips.calendarTap)
 
                     // 공휴일 데이터 신뢰 범위를 벗어난 연도 안내
-                    if !holidayService.isHolidayDataReliable(for: calendar.component(.year, from: currentMonth)) {
+                    if !holidayService.isHolidayDataReliable(for: calendar.component(.year, from: currentMonth), country: profile.country) {
                         HolidayDataNoticeBanner(year: calendar.component(.year, from: currentMonth))
                     }
 

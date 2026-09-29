@@ -16,8 +16,10 @@ class HolidayService {
     static let reliableDataLastYear = 2030
 
     /// 해당 연도의 공휴일 데이터가 정확한 테이블 범위 안에 있는지
-    func isHolidayDataReliable(for year: Int) -> Bool {
-        year <= Self.reliableDataLastYear
+    func isHolidayDataReliable(for year: Int, country: Country = .korea) -> Bool {
+        // 중국은 调休(주말 대체 근무) 때문에 정부 발표 전에는 실제 휴무일을 알 수 없다
+        if country == .china { return year <= Self.chinaOfficialLastYear }
+        return year <= Self.reliableDataLastYear
     }
 
     // MARK: - 공휴일 데이터 (국가별)
@@ -111,6 +113,14 @@ class HolidayService {
             2026: [
                 // 9회 전국동시지방선거 — 2026-06-03 (수요일) 임시공휴일
                 (6, 3, [.korean: "지방선거일", .english: "Local Election Day", .japanese: "地方選挙日", .chinese: "地方选举日"])
+            ],
+            2028: [
+                // 23대 국회의원선거 — 임기만료(5/29) 전 50일 이후 첫 수요일
+                (4, 12, [.korean: "국회의원선거일", .english: "National Assembly Election Day", .japanese: "国会議員選挙日", .chinese: "国会议员选举日"])
+            ],
+            2030: [
+                // 10회 전국동시지방선거 — 임기만료(6/30) 전 30일 이후 첫 수요일
+                (6, 5, [.korean: "지방선거일", .english: "Local Election Day", .japanese: "地方選挙日", .chinese: "地方选举日"])
             ]
         ]
 
@@ -262,20 +272,21 @@ class HolidayService {
         let lang = AppLanguage.current
 
         // 「관공서의 공휴일에 관한 규정」 제3조 대체공휴일 기준
-        // - 토요일·일요일 모두 적용: 삼일절·광복절·개천절·한글날·어린이날·부처님오신날·제헌절
-        // - 일요일에만 적용: 설날 연휴·추석 연휴·크리스마스(기독탄신일)
+        // - 토·일 또는 다른 공휴일과 겹치면: 삼일절·광복절·개천절·한글날·어린이날·부처님오신날·크리스마스·제헌절
+        //   (부처님오신날·크리스마스는 2023년 개정으로 토요일까지 확대)
+        // - 일요일 또는 다른 공휴일과 겹치면: 설날 연휴·추석 연휴
         // - 적용 제외: 신정·현충일·근로자의 날(관공서 공휴일 아님)
         let weekendEligible: [AppLanguage: [String]] = [
-            .korean:   ["삼일절", "광복절", "개천절", "한글날", "어린이날", "부처님오신날", "제헌절"],
-            .english:  ["Independence Movement Day", "Liberation Day", "National Foundation Day", "Hangul Day", "Children's Day", "Buddha's Birthday", "Constitution Day"],
-            .japanese: ["三一節", "光復節", "開天節", "ハングルの日", "こどもの日", "釈迦誕生日", "制憲節"],
-            .chinese:  ["三一节", "光复节", "开天节", "韩文日", "儿童节", "佛诞日", "制宪节"]
+            .korean:   ["삼일절", "광복절", "개천절", "한글날", "어린이날", "부처님오신날", "제헌절", "크리스마스"],
+            .english:  ["Independence Movement Day", "Liberation Day", "National Foundation Day", "Hangul Day", "Children's Day", "Buddha's Birthday", "Constitution Day", "Christmas"],
+            .japanese: ["三一節", "光復節", "開天節", "ハングルの日", "こどもの日", "釈迦誕生日", "制憲節", "クリスマス"],
+            .chinese:  ["三一节", "光复节", "开天节", "韩文日", "儿童节", "佛诞日", "制宪节", "圣诞节"]
         ]
         let sundayOnlyEligible: [AppLanguage: [String]] = [
-            .korean:   ["설날", "설날 연휴", "추석", "추석 연휴", "크리스마스"],
-            .english:  ["Seollal", "Seollal Holiday", "Chuseok", "Chuseok Holiday", "Christmas"],
-            .japanese: ["ソルラル", "ソルラル連休", "秋夕", "秋夕連休", "クリスマス"],
-            .chinese:  ["春节", "春节假期", "中秋节", "中秋节假期", "圣诞节"]
+            .korean:   ["설날", "설날 연휴", "추석", "추석 연휴"],
+            .english:  ["Seollal", "Seollal Holiday", "Chuseok", "Chuseok Holiday"],
+            .japanese: ["ソルラル", "ソルラル連休", "秋夕", "秋夕連休"],
+            .chinese:  ["春节", "春节假期", "中秋节", "中秋节假期"]
         ]
 
         let weekendNames = weekendEligible[lang] ?? weekendEligible[.english]!
@@ -291,21 +302,30 @@ class HolidayService {
         case .french: subLabel = "Jour férié de remplacement"
         }
 
-        for holiday in holidays {
-            let weekday = calendar.component(.weekday, from: holiday.date)
+        // 대체공휴일이 필요한 (공휴일, 개수) — 날짜 순서대로 처리해야 앞선 대체일을 피해 간다
+        var triggers: [Holiday] = []
+        let byDay = Dictionary(grouping: holidays) { dateKey($0.date) }
+        for key in byDay.keys.sorted() {
+            let sameDay = byDay[key]!
+            let weekday = calendar.component(.weekday, from: sameDay[0].date)
             let isSunday = weekday == 1
             let isSaturday = weekday == 7
+            let isWeekendEligible = { (h: Holiday) in weekendNames.contains { h.name.contains($0) } }
+            let isSundayEligible = { (h: Holiday) in sundayNames.contains { h.name.contains($0) } }
+            let eligible = sameDay.filter { isWeekendEligible($0) || isSundayEligible($0) }
+            guard !eligible.isEmpty else { continue }
 
-            // 토·일 적용 대상은 주말 전체, 일요일 전용 대상은 일요일에만 트리거
-            let triggers: Bool
-            if weekendNames.contains(where: { holiday.name.contains($0) }) {
-                triggers = isSunday || isSaturday
-            } else if sundayNames.contains(where: { holiday.name.contains($0) }) {
-                triggers = isSunday
-            } else {
-                triggers = false
+            if isSunday || isSaturday {
+                // 토·일 적용 대상은 주말 전체, 설·추석은 일요일에만
+                triggers += eligible.filter { isWeekendEligible($0) || isSunday }
+                // 주말에 공휴일끼리 또 겹쳐도 대상 수만큼만 — 위에서 이미 하나씩 세었다
+            } else if sameDay.count > 1 {
+                // 평일에 공휴일이 겹치면(예: 2025 어린이날=부처님오신날, 2028 추석=개천절) 하나가 밀린다
+                triggers += Array(eligible.prefix(sameDay.count - 1))
             }
-            guard triggers else { continue }
+        }
+
+        for holiday in triggers {
 
             // 겹치지 않는 첫 평일을 대체공휴일로 지정
             var nextDay = calendar.date(byAdding: .day, value: 1, to: holiday.date)!
@@ -419,128 +439,141 @@ class HolidayService {
             }
         }()
 
-        for holiday in holidays {
-            let weekday = calendar.component(.weekday, from: holiday.date)
-            if weekday == 1 { // Sunday
-                if let nextMonday = calendar.date(byAdding: .day, value: 1, to: holiday.date) {
-                    let alreadyExists = holidays.contains { calendar.isDate($0.date, inSameDayAs: nextMonday) }
-                        || substitutes.contains { calendar.isDate($0.date, inSameDayAs: nextMonday) }
-                    if !alreadyExists {
-                        substitutes.append(Holiday(date: nextMonday, name: subLabel, isSubstitute: true))
-                    }
-                }
+        let isTaken = { (d: Date) in
+            holidays.contains { self.calendar.isDate($0.date, inSameDayAs: d) }
+                || substitutes.contains { self.calendar.isDate($0.date, inSameDayAs: d) }
+        }
+
+        // 振替休日: 일요일 공휴일 → 그 뒤 첫 번째 "공휴일이 아닌 날" (예: 2026-05-03(일) → 5/6(수))
+        for holiday in holidays.sorted(by: { $0.date < $1.date }) where calendar.component(.weekday, from: holiday.date) == 1 {
+            var next = calendar.date(byAdding: .day, value: 1, to: holiday.date)!
+            while isTaken(next) { next = calendar.date(byAdding: .day, value: 1, to: next)! }
+            substitutes.append(Holiday(date: next, name: subLabel, isSubstitute: true))
+        }
+
+        // 国民の休日: 앞뒤가 모두 공휴일인 평일 (예: 2026-09-22 — 敬老の日과 秋分の日 사이)
+        let citizensLabel: String = {
+            switch lang {
+            case .korean: return "국민의 휴일"
+            case .english: return "Citizens' Holiday"
+            case .japanese: return "国民の休日"
+            case .chinese: return "国民休息日"
+            case .german: return "Brückenfeiertag"
+            case .french: return "Jour férié intercalaire"
             }
+        }()
+        for holiday in holidays {
+            guard let mid = calendar.date(byAdding: .day, value: 1, to: holiday.date),
+                  let after = calendar.date(byAdding: .day, value: 2, to: holiday.date),
+                  calendar.component(.weekday, from: mid) != 1,
+                  !isTaken(mid),
+                  holidays.contains(where: { calendar.isDate($0.date, inSameDayAs: after) }) else { continue }
+            substitutes.append(Holiday(date: mid, name: citizensLabel, isSubstitute: true))
         }
         return substitutes
     }
 
     // MARK: - 중국 공휴일
 
+    /// 국무원이 매년 11월께 발표하는 **실제 휴무 기간**(调休 반영). 발표된 연도만 수록한다.
+    /// (key, 시작 월, 시작 일, 일수) — key는 아래 이름표와 같다.
+    private static let chinaOfficialSchedule: [Int: [(key: String, month: Int, day: Int, days: Int)]] = [
+        2024: [("newYear", 1, 1, 1), ("spring", 2, 10, 8), ("qingming", 4, 4, 3), ("labor", 5, 1, 5),
+               ("dragon", 6, 8, 3), ("midAutumn", 9, 15, 3), ("national", 10, 1, 7)],
+        2025: [("newYear", 1, 1, 1), ("spring", 1, 28, 8), ("qingming", 4, 4, 3), ("labor", 5, 1, 5),
+               ("dragon", 5, 31, 3), ("national", 10, 1, 8)],
+        2026: [("newYear", 1, 1, 3), ("spring", 2, 15, 9), ("qingming", 4, 4, 3), ("labor", 5, 1, 5),
+               ("dragon", 6, 19, 3), ("midAutumn", 9, 25, 3), ("national", 10, 1, 7)],
+    ]
+
+    /// 발표된 휴무표가 있는 마지막 연도 — 이후 연도는 음력 기준 추정치다.
+    static let chinaOfficialLastYear = 2026
+
     private func getChineseHolidays(for year: Int) -> [Holiday] {
         var holidays: [Holiday] = []
         let lang = AppLanguage.current
 
-        // New Year
-        let newYearName: [AppLanguage: String] = [.korean: "설날", .english: "New Year's Day", .japanese: "元日", .chinese: "元旦"]
-        var comp = DateComponents(); comp.year = year; comp.month = 1; comp.day = 1
-        if let date = calendar.date(from: comp) {
-            holidays.append(Holiday(date: date, name: newYearName[lang] ?? newYearName[.english]!))
-        }
-
-        // Labor Day (May 1-5)
-        let laborName: [AppLanguage: String] = [.korean: "노동절", .english: "Labor Day", .japanese: "メーデー", .chinese: "劳动节"]
-        for day in 1...5 {
-            comp = DateComponents(); comp.year = year; comp.month = 5; comp.day = day
-            if let date = calendar.date(from: comp) {
-                holidays.append(Holiday(date: date, name: laborName[lang] ?? laborName[.english]!))
-            }
-        }
-
-        // National Day (Oct 1-7)
-        let nationalName: [AppLanguage: String] = [.korean: "국경절", .english: "National Day", .japanese: "国慶節", .chinese: "国庆节"]
-        for day in 1...7 {
-            comp = DateComponents(); comp.year = year; comp.month = 10; comp.day = day
-            if let date = calendar.date(from: comp) {
-                holidays.append(Holiday(date: date, name: nationalName[lang] ?? nationalName[.english]!))
-            }
-        }
-
-        // Lunar-based holidays (hardcoded per year)
-        holidays.append(contentsOf: getChineseLunarHolidays(for: year))
-
-        return holidays.sorted { $0.date < $1.date }
-    }
-
-    private func getChineseLunarHolidays(for year: Int) -> [Holiday] {
-        var holidays: [Holiday] = []
-        let lang = AppLanguage.current
-
-        let springName: [AppLanguage: String] = [.korean: "춘절", .english: "Spring Festival", .japanese: "春節", .chinese: "春节"]
-        let qingmingName: [AppLanguage: String] = [.korean: "청명절", .english: "Qingming Festival", .japanese: "清明節", .chinese: "清明节"]
-        let dragonName: [AppLanguage: String] = [.korean: "단오절", .english: "Dragon Boat Festival", .japanese: "端午節", .chinese: "端午节"]
-        let midAutumnName: [AppLanguage: String] = [.korean: "중추절", .english: "Mid-Autumn Festival", .japanese: "中秋節", .chinese: "中秋节"]
-
-        // Spring Festival, Qingming, Dragon Boat, Mid-Autumn per year
-        struct LunarData {
-            let springStart: (Int, Int) // month, day - 7 days
-            let qingming: (Int, Int)    // 3 days
-            let dragon: (Int, Int)      // 3 days
-            let midAutumn: (Int, Int)   // 3 days
-        }
-
-        let data: [Int: LunarData] = [
-            2024: LunarData(springStart: (2, 10), qingming: (4, 4), dragon: (6, 10), midAutumn: (9, 15)),
-            2025: LunarData(springStart: (1, 29), qingming: (4, 4), dragon: (5, 31), midAutumn: (10, 6)),
-            2026: LunarData(springStart: (2, 17), qingming: (4, 5), dragon: (6, 19), midAutumn: (9, 25)),
-            2027: LunarData(springStart: (2, 6), qingming: (4, 5), dragon: (6, 9), midAutumn: (9, 15)),
-            2028: LunarData(springStart: (1, 26), qingming: (4, 4), dragon: (5, 28), midAutumn: (10, 3)),
-            2029: LunarData(springStart: (2, 13), qingming: (4, 4), dragon: (6, 16), midAutumn: (9, 22)),
-            2030: LunarData(springStart: (2, 3), qingming: (4, 5), dragon: (6, 5), midAutumn: (9, 12))
+        let names: [String: [AppLanguage: String]] = [
+            "newYear": [.korean: "신정", .english: "New Year's Day", .japanese: "元日", .chinese: "元旦"],
+            "spring": [.korean: "춘절", .english: "Spring Festival", .japanese: "春節", .chinese: "春节"],
+            "qingming": [.korean: "청명절", .english: "Qingming Festival", .japanese: "清明節", .chinese: "清明节"],
+            "labor": [.korean: "노동절", .english: "Labor Day", .japanese: "メーデー", .chinese: "劳动节"],
+            "dragon": [.korean: "단오절", .english: "Dragon Boat Festival", .japanese: "端午節", .chinese: "端午节"],
+            "midAutumn": [.korean: "중추절", .english: "Mid-Autumn Festival", .japanese: "中秋節", .chinese: "中秋节"],
+            "national": [.korean: "국경절", .english: "National Day", .japanese: "国慶節", .chinese: "国庆节"],
         ]
 
-        guard let yearData = data[year] else { return holidays }
+        if let schedule = Self.chinaOfficialSchedule[year] {
+            for item in schedule {
+                var comp = DateComponents(); comp.year = year; comp.month = item.month; comp.day = item.day
+                guard let start = calendar.date(from: comp) else { continue }
+                let name = names[item.key]?[lang] ?? names[item.key]?[.english] ?? ""
+                for i in 0..<item.days {
+                    if let d = calendar.date(byAdding: .day, value: i, to: start) {
+                        holidays.append(Holiday(date: d, name: name))
+                    }
+                }
+            }
+            return holidays.sorted { $0.date < $1.date }
+        }
 
-        // Spring Festival (7 days)
-        for i in 0..<7 {
-            var comp = DateComponents()
-            comp.year = year; comp.month = yearData.springStart.0; comp.day = yearData.springStart.1
-            if let start = calendar.date(from: comp),
-               let date = calendar.date(byAdding: .day, value: i, to: start) {
-                holidays.append(Holiday(date: date, name: springName[lang] ?? springName[.english]!))
+        // ── 발표 전 연도: 법정 휴일 + 관행으로 추정 (调休로 실제와 다를 수 있다 → 달력에 안내 배너)
+        var taken = Set<String>()
+        func add(_ key: String, _ date: Date, days: Int) {
+            let name = names[key]?[lang] ?? names[key]?[.english] ?? ""
+            for i in 0..<days {
+                guard let d = calendar.date(byAdding: .day, value: i, to: date), taken.insert(dateKey(d)).inserted else { continue }
+                holidays.append(Holiday(date: d, name: name))
+            }
+        }
+        func date(_ month: Int, _ day: Int) -> Date? {
+            var c = DateComponents(); c.year = year; c.month = month; c.day = day
+            return calendar.date(from: c)
+        }
+        /// 하루짜리 명절은 주말과 붙여 3일로 쉬는 게 관행 — 월(토~월)·금(금~일)·토(토~월)·일(토~월)
+        func addOneDay(_ key: String, _ d: Date) {
+            switch calendar.component(.weekday, from: d) {
+            case 2: add(key, calendar.date(byAdding: .day, value: -2, to: d)!, days: 3)
+            case 6, 7: add(key, d, days: 3)
+            case 1: add(key, calendar.date(byAdding: .day, value: -1, to: d)!, days: 3)
+            default: add(key, d, days: 1)
             }
         }
 
-        // Qingming (3 days)
-        for i in 0..<3 {
-            var comp = DateComponents()
-            comp.year = year; comp.month = yearData.qingming.0; comp.day = yearData.qingming.1
-            if let start = calendar.date(from: comp),
-               let date = calendar.date(byAdding: .day, value: i, to: start) {
-                holidays.append(Holiday(date: date, name: qingmingName[lang] ?? qingmingName[.english]!))
+        // 음력 명절 날짜 (춘절=정월 초하루, 청명, 단오, 중추)
+        let lunar: [Int: (spring: (Int, Int), qingming: (Int, Int), dragon: (Int, Int), midAutumn: (Int, Int))] = [
+            2027: ((2, 6), (4, 5), (6, 9), (9, 15)),
+            2028: ((1, 26), (4, 4), (5, 28), (10, 3)),
+            2029: ((2, 13), (4, 4), (6, 16), (9, 22)),
+            2030: ((2, 3), (4, 5), (6, 5), (9, 12)),
+        ]
+
+        if let d = date(1, 1) { addOneDay("newYear", d) }
+        if let l = lunar[year] {
+            // 2025년 개정 후 관행: 섣달그믐(除夕)부터 초이레까지 8일
+            if let cny = date(l.spring.0, l.spring.1), let eve = calendar.date(byAdding: .day, value: -1, to: cny) {
+                add("spring", eve, days: 8)
             }
+            if let d = date(l.qingming.0, l.qingming.1) { addOneDay("qingming", d) }
+            if let d = date(l.dragon.0, l.dragon.1) { addOneDay("dragon", d) }
+        }
+        if let d = date(5, 1) { add("labor", d, days: 5) }
+        // 중추절이 국경절 연휴에 걸리면 연휴가 8일로 늘어난다 (2025년 사례)
+        if let l = lunar[year], let mid = date(l.midAutumn.0, l.midAutumn.1) {
+            if l.midAutumn.0 == 10 || (l.midAutumn.0 == 9 && l.midAutumn.1 >= 29) {
+                if let d = date(10, 1) { add("national", d, days: 8) }
+                add("midAutumn", mid, days: 1)
+            } else {
+                addOneDay("midAutumn", mid)
+                if let d = date(10, 1) { add("national", d, days: 7) }
+            }
+        } else if let d = date(10, 1) {
+            add("national", d, days: 7)
         }
 
-        // Dragon Boat (3 days)
-        for i in 0..<3 {
-            var comp = DateComponents()
-            comp.year = year; comp.month = yearData.dragon.0; comp.day = yearData.dragon.1
-            if let start = calendar.date(from: comp),
-               let date = calendar.date(byAdding: .day, value: i, to: start) {
-                holidays.append(Holiday(date: date, name: dragonName[lang] ?? dragonName[.english]!))
-            }
-        }
-
-        // Mid-Autumn (3 days)
-        for i in 0..<3 {
-            var comp = DateComponents()
-            comp.year = year; comp.month = yearData.midAutumn.0; comp.day = yearData.midAutumn.1
-            if let start = calendar.date(from: comp),
-               let date = calendar.date(byAdding: .day, value: i, to: start) {
-                holidays.append(Holiday(date: date, name: midAutumnName[lang] ?? midAutumnName[.english]!))
-            }
-        }
-
-        return holidays
+        // 주말과 붙인 신정이 전년도로 넘어간 날은 뺀다 (어차피 주말)
+        holidays.removeAll { calendar.component(.year, from: $0.date) != year }
+        return holidays.sorted { $0.date < $1.date }
     }
 
     // MARK: - 미국 공휴일
@@ -604,23 +637,33 @@ class HolidayService {
 
         // USA observed holiday: Sat->Fri, Sun->Mon
         holidays.append(contentsOf: getUSAObservedHolidays(holidays: holidays))
+        // 1/1(토)의 대체일 12/31은 전년도 날짜 — 전년도 목록으로 옮긴다
+        holidays.removeAll { calendar.component(.year, from: $0.date) != year }
+        var nextNewYear = DateComponents(); nextNewYear.year = year + 1; nextNewYear.month = 1; nextNewYear.day = 1
+        if let d = calendar.date(from: nextNewYear), calendar.component(.weekday, from: d) == 7,
+           let dec31 = calendar.date(byAdding: .day, value: -1, to: d) {
+            let name = fixed[0].names[lang] ?? fixed[0].names[.english]!
+            holidays.append(Holiday(date: dec31, name: "\(name) (\(usObservedLabel))", isSubstitute: true))
+        }
 
         return holidays.sorted { $0.date < $1.date }
     }
 
+    /// 미국 대체 휴일 표기 ("Observed")
+    private var usObservedLabel: String {
+        switch AppLanguage.current {
+        case .korean: return "대체휴일"
+        case .english: return "Observed"
+        case .japanese: return "振替"
+        case .chinese: return "补休"
+        case .german: return "Ersatztag"
+        case .french: return "Jour observé"
+        }
+    }
+
     private func getUSAObservedHolidays(holidays: [Holiday]) -> [Holiday] {
         var observed: [Holiday] = []
-        let lang = AppLanguage.current
-        let obsLabel: String = {
-            switch lang {
-            case .korean: return "관측일"
-            case .english: return "Observed"
-            case .japanese: return "振替"
-            case .chinese: return "补休"
-            case .german: return "Ersatztag"
-            case .french: return "Jour observé"
-            }
-        }()
+        let obsLabel = usObservedLabel
 
         // Only fixed-date holidays get observed adjustments
         let fixedDateHolidays = holidays.filter { h in

@@ -1004,3 +1004,43 @@ final class LeaveCalculationTests: XCTestCase {
         XCTAssertEqual(summary.remaining(annualGrant: grant, includingBonus: true), 15.5)
     }
 }
+
+// MARK: - 공휴일 규칙 회귀 테스트 (실제 달력 기준)
+
+final class HolidayRuleTests: XCTestCase {
+    private let service = HolidayService()
+
+    private func has(_ y: Int, _ m: Int, _ d: Int, _ country: Country) -> Bool {
+        let date = Calendar.current.date(from: DateComponents(year: y, month: m, day: d))!
+        return service.isHoliday(date, in: y, country: country)
+    }
+
+    func testKoreaChristmasOnSaturdayGetsSubstitute() {
+        XCTAssertTrue(has(2027, 12, 27, .korea))       // 12/25(토) → 12/27(월)
+    }
+
+    func testKoreaOverlappingHolidaysGetSubstitute() {
+        XCTAssertTrue(has(2025, 5, 6, .korea))         // 어린이날 = 부처님오신날
+        XCTAssertTrue(has(2028, 10, 5, .korea))        // 추석 = 개천절
+        XCTAssertFalse(has(2028, 10, 6, .korea))       // 하나만 밀린다
+    }
+
+    func testJapanSubstituteSkipsToFirstNonHoliday() {
+        XCTAssertTrue(has(2026, 5, 6, .japan))         // 5/3(일) → 5/4·5/5가 공휴일이라 5/6
+    }
+
+    func testJapanCitizensHoliday() {
+        XCTAssertTrue(has(2026, 9, 22, .japan))        // 敬老の日과 秋分の日 사이
+    }
+
+    func testUSANewYearObservedBelongsToPreviousYear() {
+        XCTAssertTrue(has(2027, 12, 31, .usa))         // 2028-01-01(토)의 대체일
+    }
+
+    func testChinaUsesOfficialSchedule() {
+        XCTAssertTrue(has(2026, 2, 15, .china))        // 춘절 연휴 시작 (腊月二十八)
+        XCTAssertTrue(has(2026, 4, 4, .china))
+        XCTAssertFalse(has(2026, 4, 7, .china))
+        XCTAssertFalse(service.isHolidayDataReliable(for: 2027, country: .china))
+    }
+}

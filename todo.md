@@ -15,6 +15,17 @@
 - [ ] 개인정보 처리방침·지원 페이지 de/fr
 - [ ] 가격 티어·판매 국가 설정 확인
 
+### 국가별 공휴일 검토 (2026-09-29)
+- [x] 한국: 크리스마스 토요일 대체공휴일, 공휴일 겹침 대체(2025 어린이날=부처님, 2028 추석=개천절), 2028 총선·2030 지방선거
+- [x] 일본: 振替休日 다음 비공휴일까지 밀기(2026-05-06), 国民の休日(2026-09-22)
+- [x] 중국: 2024~2026 국무원 발표 휴무표 반영, 2027~ 추정 규칙 개선, 신뢰 범위 2026까지
+- [x] 미국: 1/1(토) 대체일 12/31을 전년도 목록에
+- [ ] 독일 주(Bundesland)별 공휴일 — Fronleichnam·Allerheiligen·Reformationstag 등 (지역 선택 UI 필요)
+- [ ] 프랑스 Alsace-Moselle (Vendredi saint, 26 déc)
+- [ ] 중국 调休 보강 근무일(주말 출근) — 추천 계산이 주말을 무조건 휴일로 본다
+- [ ] 매년 11월 중국 차년도 휴무표 발표 → chinaOfficialSchedule 갱신
+- [ ] 일본 연말연시(12/29~1/3) 회사 휴무 관행 옵션 검토
+
 ### v2.1.2 출시 전 (릴리즈 노트: docs/release-notes.md)
 - [ ] **CloudKit 배포 선행** — 포털에 `iCloud.com.Ysoup.FeedbackHub` 컨테이너 추가 +
       Dashboard 스키마(Feedback·UsageSnapshot·UsageEvent·CrashReport) Production 배포
