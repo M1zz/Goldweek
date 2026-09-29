@@ -477,6 +477,8 @@ enum CalendarSyncStatus {
             case .english: return "Synced"
             case .japanese: return "同期済み"
             case .chinese: return "已同步"
+            case .german: return "Synchronisiert"
+            case .french: return "Synchronisé"
             }
         case .notConfigured:
             switch LanguageManager.shared.currentLanguage {
@@ -484,6 +486,8 @@ enum CalendarSyncStatus {
             case .english: return "Setup Required"
             case .japanese: return "設定が必要"
             case .chinese: return "需要设置"
+            case .german: return "Einrichtung nötig"
+            case .french: return "Configuration requise"
             }
         case .permissionRequired:
             switch LanguageManager.shared.currentLanguage {
@@ -491,6 +495,8 @@ enum CalendarSyncStatus {
             case .english: return "Permission Required"
             case .japanese: return "権限が必要"
             case .chinese: return "需要权限"
+            case .german: return "Zugriff nötig"
+            case .french: return "Autorisation requise"
             }
         case .permissionDenied:
             switch LanguageManager.shared.currentLanguage {
@@ -498,6 +504,8 @@ enum CalendarSyncStatus {
             case .english: return "Permission Denied"
             case .japanese: return "権限が拒否"
             case .chinese: return "权限被拒绝"
+            case .german: return "Zugriff verweigert"
+            case .french: return "Autorisation refusée"
             }
         case .proRequired:
             switch LanguageManager.shared.currentLanguage {
@@ -505,6 +513,8 @@ enum CalendarSyncStatus {
             case .english: return "Pro Required"
             case .japanese: return "Pro が必要"
             case .chinese: return "需要Pro版"
+            case .german: return "Pro nötig"
+            case .french: return "Pro requis"
             }
         case .error:
             switch LanguageManager.shared.currentLanguage {
@@ -512,6 +522,8 @@ enum CalendarSyncStatus {
             case .english: return "Error"
             case .japanese: return "エラー"
             case .chinese: return "错误"
+            case .german: return "Fehler"
+            case .french: return "Erreur"
             }
         }
     }
@@ -586,6 +598,24 @@ enum CalendarError: LocalizedError {
             case .proFeatureRequired: return "需要Pro功能。"
             case .eventNotFound: return "找不到事件。"
             case .calendarNotFound: return "找不到日历。"
+            }
+        case .german:
+            switch self {
+            case .permissionDenied: return "Kalenderzugriff wurde verweigert."
+            case .unknownPermissionStatus: return "Unbekannter Berechtigungsstatus."
+            case .noAvailableSource: return "Keine Kalenderquelle verfügbar."
+            case .proFeatureRequired: return "Pro-Funktion erforderlich."
+            case .eventNotFound: return "Termin nicht gefunden."
+            case .calendarNotFound: return "Kalender nicht gefunden."
+            }
+        case .french:
+            switch self {
+            case .permissionDenied: return "L’accès au calendrier a été refusé."
+            case .unknownPermissionStatus: return "État d’autorisation inconnu."
+            case .noAvailableSource: return "Aucune source de calendrier disponible."
+            case .proFeatureRequired: return "Fonctionnalité Pro requise."
+            case .eventNotFound: return "Événement introuvable."
+            case .calendarNotFound: return "Calendrier introuvable."
             }
         }
     }

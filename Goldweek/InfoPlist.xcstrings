@@ -27,6 +27,18 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -52,6 +64,18 @@
           }
         },
         "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Goldweek"
@@ -85,6 +109,18 @@
             "state": "translated",
             "value": "需要日历访问权限,以便从日历中查找疑似休假的日程并导入,以及将已登记的休假同步到日历。"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek benötigt Zugriff auf deinen Kalender, um urlaubsähnliche Termine zum Importieren zu finden und deine eingetragenen Urlaube mit dem Kalender zu synchronisieren."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek a besoin d’accéder à votre calendrier pour trouver les événements de congé à importer et synchroniser vos congés enregistrés avec votre calendrier."
+          }
         }
       }
     },
@@ -114,6 +150,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "需要相机权限以拍摄休假申请记录页面并自动登记休假。"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Kamera wird benötigt, um deinen Urlaubsantragsverlauf zu fotografieren und deine Urlaube automatisch einzutragen."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’accès à l’appareil photo permet de photographier l’historique de vos demandes de congé et d’enregistrer vos congés automatiquement."
           }
         }
       }

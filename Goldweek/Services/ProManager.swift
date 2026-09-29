@@ -247,6 +247,18 @@ enum ProPurchaseError: LocalizedError {
             case .verificationFailed: return "购买验证失败。"
             case .purchaseFailed: return "购买失败。"
             }
+        case .german:
+            switch self {
+            case .productNotFound: return "Produkt nicht gefunden."
+            case .verificationFailed: return "Kaufbestätigung fehlgeschlagen."
+            case .purchaseFailed: return "Kauf fehlgeschlagen."
+            }
+        case .french:
+            switch self {
+            case .productNotFound: return "Produit introuvable."
+            case .verificationFailed: return "Échec de la vérification de l’achat."
+            case .purchaseFailed: return "Échec de l’achat."
+            }
         }
     }
 }

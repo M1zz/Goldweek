@@ -159,12 +159,8 @@ struct OnboardingView: View {
     private func completeOnboarding() {
         UsageReportingService.record(event: "onboarding_complete")
         let country = Country.fromDeviceLocale()
-        switch country {
-        case .korea: AppLanguage.current = .korean
-        case .japan: AppLanguage.current = .japanese
-        case .china: AppLanguage.current = .chinese
-        case .usa, .germany, .france: AppLanguage.current = .english
-        }
+        // 기기 언어를 그대로 따른다 — 지원하지 않는 언어면 영어
+        AppLanguage.current = AppLanguage.fromDeviceLocale()
 
         // 설정에서 "처음 안내 다시 보기"로 들어올 수 있다 — 그때 프로필을 또 만들면 두 개가 된다.
         // 이미 있으면 새로 넣지 않고 값만 갱신한다.

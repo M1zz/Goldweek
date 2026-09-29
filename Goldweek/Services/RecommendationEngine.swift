@@ -539,6 +539,12 @@ class RecommendationEngine {
         case .chinese:
             title = "黄金周"
             desc = "日本黄金周！请\(Int(requiredLeave))天年假获得\(totalDays)天假期。"
+        case .german:
+            title = "Golden Week"
+            desc = "Japans Golden Week! \(Int(requiredLeave)) Urlaubstage für \(totalDays) freie Tage."
+        case .french:
+            title = "Golden Week"
+            desc = "La Golden Week japonaise ! \(Int(requiredLeave)) jours de congé pour \(totalDays) jours de repos."
         }
 
         return LeaveRecommendation(
@@ -580,6 +586,8 @@ class RecommendationEngine {
                 case .english: title = "Obon Break"; desc = "Obon season! \(Int(requiredLeave)) leave days for \(totalDays) days off."
                 case .japanese: title = "お盆休み"; desc = "お盆休み！有給\(Int(requiredLeave))日で\(totalDays)連休。"
                 case .chinese: title = "盂兰盆节假期"; desc = "盂兰盆节！请\(Int(requiredLeave))天年假获得\(totalDays)天假期。"
+                case .german: title = "Obon-Auszeit"; desc = "Obon-Zeit! \(Int(requiredLeave)) Urlaubstage für \(totalDays) freie Tage."
+                case .french: title = "Pause d’Obon"; desc = "C’est la saison d’Obon ! \(Int(requiredLeave)) jours de congé pour \(totalDays) jours de repos."
                 }
 
                 opportunities.append(LeaveRecommendation(
@@ -617,6 +625,8 @@ class RecommendationEngine {
                 case .english: title = "Thanksgiving Break"; desc = "1 leave day (Friday) for a 5-day break!"
                 case .japanese: title = "感謝祭連休"; desc = "金曜1日の有給で5連休！"
                 case .chinese: title = "感恩节假期"; desc = "周五请1天年假获得5天假期！"
+                case .german: title = "Thanksgiving-Auszeit"; desc = "1 Urlaubstag (Freitag) für 5 freie Tage!"
+                case .french: title = "Pont de Thanksgiving"; desc = "1 jour de congé (vendredi) pour 5 jours de repos !"
                 }
 
                 opportunities.append(LeaveRecommendation(
@@ -648,6 +658,8 @@ class RecommendationEngine {
                     case .english: title = "July 4th Long Weekend"; desc = "1 leave day (Monday) for 4-day weekend!"
                     case .japanese: title = "独立記念日連休"; desc = "月曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周一请1天年假获得4天假期！"
+                    case .german: title = "Langes Wochenende am 4. Juli"; desc = "1 Urlaubstag (Montag) für 4 freie Tage!"
+                    case .french: title = "Long week-end du 4 juillet"; desc = "1 jour de congé (lundi) pour 4 jours de repos !"
                     }
                     opportunities.append(LeaveRecommendation(
                         title: title, description: desc,
@@ -667,6 +679,8 @@ class RecommendationEngine {
                     case .english: title = "July 4th Long Weekend"; desc = "1 leave day (Friday) for 4-day weekend!"
                     case .japanese: title = "独立記念日連休"; desc = "金曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周五请1天年假获得4天假期！"
+                    case .german: title = "Langes Wochenende am 4. Juli"; desc = "1 Urlaubstag (Freitag) für 4 freie Tage!"
+                    case .french: title = "Long week-end du 4 juillet"; desc = "1 jour de congé (vendredi) pour 4 jours de repos !"
                     }
                     opportunities.append(LeaveRecommendation(
                         title: title, description: desc,

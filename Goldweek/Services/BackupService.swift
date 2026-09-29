@@ -758,6 +758,30 @@ enum BackupError: LocalizedError {
             case .backupRotationFailed: return "备份文件轮换失败。"
             case .checksumMismatch: return "备份文件已损坏。(校验和不匹配)"
             }
+        case .german:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud ist nicht verfügbar. Aktiviere iCloud Drive in den Einstellungen."
+            case .localPathNotAvailable: return "Auf den lokalen Speicherpfad kann nicht zugegriffen werden."
+            case .backupNotFound: return "Backup-Datei nicht gefunden."
+            case .invalidBackupData: return "Backup-Daten können nicht gelesen werden."
+            case .encryptionFailed: return "Backup-Verschlüsselung fehlgeschlagen."
+            case .decryptionFailed: return "Backup-Entschlüsselung fehlgeschlagen. Möglicherweise stammt es von einem anderen Gerät."
+            case .integrityVerificationFailed: return "Integritätsprüfung der Backup-Datei fehlgeschlagen."
+            case .backupRotationFailed: return "Rotation der Backup-Dateien fehlgeschlagen."
+            case .checksumMismatch: return "Backup-Datei ist beschädigt. (Prüfsumme stimmt nicht überein)"
+            }
+        case .french:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud n’est pas disponible. Activez iCloud Drive dans les Réglages."
+            case .localPathNotAvailable: return "Impossible d’accéder au dossier de stockage local."
+            case .backupNotFound: return "Fichier de sauvegarde introuvable."
+            case .invalidBackupData: return "Impossible de lire les données de sauvegarde."
+            case .encryptionFailed: return "Échec du chiffrement de la sauvegarde."
+            case .decryptionFailed: return "Échec du déchiffrement de la sauvegarde. Elle provient peut-être d’un autre appareil."
+            case .integrityVerificationFailed: return "Échec de la vérification d’intégrité de la sauvegarde."
+            case .backupRotationFailed: return "Échec de la rotation des fichiers de sauvegarde."
+            case .checksumMismatch: return "Le fichier de sauvegarde est corrompu. (Somme de contrôle incorrecte)"
+            }
         }
     }
 }

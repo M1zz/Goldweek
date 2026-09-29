@@ -117,13 +117,8 @@ struct ContentView: View {
 
         let country = Country.fromDeviceLocale()
 
-        // 국가에 따라 언어 설정 (DE/FR는 UI 번역 추가 전까지 영문)
-        switch country {
-        case .korea: AppLanguage.current = .korean
-        case .japan: AppLanguage.current = .japanese
-        case .china: AppLanguage.current = .chinese
-        case .usa, .germany, .france: AppLanguage.current = .english
-        }
+        // 기기 언어를 그대로 따른다 — 지원하지 않는 언어면 영어
+        AppLanguage.current = AppLanguage.fromDeviceLocale()
 
         let profile = UserProfile(
             name: Strings.defaultUser,

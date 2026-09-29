@@ -26,6 +26,18 @@
             "state": "translated",
             "value": "%1$@ · 年假%2$@天"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@ Urlaubstage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@ jours de congé"
+          }
         }
       }
     },
@@ -47,6 +59,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@天"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Tage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ jours"
           }
         }
       }
@@ -70,6 +94,18 @@
             "state": "translated",
             "value": "剩余%@天"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch %@ Tage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ jours restants"
+          }
         }
       }
     },
@@ -88,6 +124,18 @@
           }
         },
         "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld"
@@ -114,6 +162,18 @@
             "state": "translated",
             "value": "%lld%%"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld %%"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld %%"
+          }
         }
       }
     },
@@ -135,6 +195,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "剩余%lld%%"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch %lld %%"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld %% restants"
           }
         }
       }
@@ -158,6 +230,18 @@
             "state": "translated",
             "value": "%lld天"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Tage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld jours"
+          }
         }
       }
     },
@@ -179,6 +263,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld天"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Tage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld jours"
           }
         }
       }
@@ -202,6 +298,18 @@
             "state": "translated",
             "value": "+%@天"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ Tage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ jours"
+          }
         }
       }
     },
@@ -224,6 +332,18 @@
             "state": "translated",
             "value": "D-"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "J-"
+          }
         }
       }
     },
@@ -245,6 +365,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "DAY"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TAG"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JOUR"
           }
         }
       }
@@ -274,6 +406,18 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -295,6 +439,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "距重置"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bis zum Reset"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avant renouvellement"
           }
         }
       }
@@ -318,6 +474,18 @@
             "state": "translated",
             "value": "距重置%lld天"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch %lld Tage bis zum Reset"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld jours avant renouvellement"
+          }
         }
       }
     },
@@ -339,6 +507,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "基准"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erwartet"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prévu"
           }
         }
       }
@@ -362,6 +542,18 @@
             "state": "translated",
             "value": "剩余年假"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resturlaub"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Congés restants"
+          }
         }
       }
     },
@@ -383,6 +575,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "剩余年假%@天"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch %@ Urlaubstage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ jours de congé restants"
           }
         }
       }
@@ -406,6 +610,18 @@
             "state": "translated",
             "value": "查看剩余年假和即将到来的假期"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resturlaub und kommende Urlaube im Blick"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos congés restants et vos prochaines vacances"
+          }
         }
       }
     },
@@ -427,6 +643,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "即将到来的假期"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kommender Urlaub"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prochains congés"
           }
         }
       }
@@ -450,6 +678,18 @@
             "state": "translated",
             "value": "下次假期"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächster Urlaub"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prochain congé"
+          }
         }
       }
     },
@@ -471,6 +711,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "倒数距离下次休假还有多少天"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Countdown bis zu deinem nächsten Urlaub"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compte à rebours jusqu’à votre prochain congé"
           }
         }
       }
@@ -494,6 +746,18 @@
             "state": "translated",
             "value": "奖励假"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonus"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonus"
+          }
         }
       }
     },
@@ -515,6 +779,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "消耗速度"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbrauch"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rythme"
           }
         }
       }
@@ -538,6 +814,18 @@
             "state": "translated",
             "value": "消耗速度：%@"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbrauch: %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rythme : %@"
+          }
         }
       }
     },
@@ -559,6 +847,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "实际"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tatsächlich"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réel"
           }
         }
       }
@@ -582,6 +882,18 @@
             "state": "translated",
             "value": "在应用中添加休假计划"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plane deinen Urlaub in der App"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajoutez un congé dans l’app"
+          }
         }
       }
     },
@@ -603,6 +915,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "年假"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urlaub"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Congés"
           }
         }
       }
@@ -626,6 +950,18 @@
             "state": "translated",
             "value": "年假%@天"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Urlaubstage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ jours de congé"
+          }
         }
       }
     },
@@ -647,6 +983,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "剩余年假%@天"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch %@ Urlaubstage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ jours de congé restants"
           }
         }
       }
@@ -670,6 +1018,18 @@
             "state": "translated",
             "value": "查看到重置日期前的年假消耗速度"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Behalte deinen Urlaubsverbrauch bis zum Reset im Blick"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivez le rythme de vos congés jusqu’au renouvellement"
+          }
         }
       }
     },
@@ -691,6 +1051,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "年假消耗速度"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urlaubsverbrauch"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rythme des congés"
           }
         }
       }
@@ -714,6 +1086,18 @@
             "state": "translated",
             "value": "年假状况"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urlaubsübersicht"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mes congés"
+          }
         }
       }
     },
@@ -735,6 +1119,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "天"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tage"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "jours"
           }
         }
       }
@@ -758,6 +1154,18 @@
             "state": "translated",
             "value": "剩余率"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übrig"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restant"
+          }
         }
       }
     },
@@ -779,6 +1187,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "在锁屏上查看倒数与剩余年假"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Countdown und Resturlaub auf dem Sperrbildschirm"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compte à rebours et congés restants sur l’écran verrouillé"
           }
         }
       }
@@ -803,6 +1223,18 @@
             "state": "translated",
             "value": "在锁屏上查看剩余年假"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resturlaub auf dem Sperrbildschirm"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Congés restants sur l’écran verrouillé"
+          }
         }
       }
     },
@@ -824,6 +1256,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "年假总数"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urlaub gesamt"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total des congés"
           }
         }
       }
@@ -848,6 +1292,18 @@
             "state": "translated",
             "value": "假期"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urlaub"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Congé"
+          }
         }
       }
     },
@@ -869,6 +1325,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "休假倒数"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urlaubs-Countdown"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compte à rebours"
           }
         }
       }
@@ -892,6 +1360,18 @@
             "state": "translated",
             "value": "来规划一次休假吧"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plane deine nächste Auszeit"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Planifiez votre prochaine pause"
+          }
         }
       }
     },
@@ -913,6 +1393,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "暂无休假计划"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Urlaub geplant"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun congé prévu"
           }
         }
       }
@@ -936,6 +1428,18 @@
             "state": "translated",
             "value": "无假期"
           }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Urlaub"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun congé"
+          }
         }
       }
     },
@@ -958,6 +1462,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "假期日历"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urlaubskalender"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendrier des congés"
           }
         }
       }

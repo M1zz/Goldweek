@@ -122,7 +122,7 @@ class HolidayService {
             components.month = special.month
             components.day = special.day
             guard let date = calendar.date(from: components) else { return nil }
-            return Holiday(date: date, name: special.names[lang] ?? special.names[.korean]!)
+            return Holiday(date: date, name: special.names[lang] ?? special.names[.english]!)
         }
     }
 
@@ -152,7 +152,7 @@ class HolidayService {
             components.month = fixed.month
             components.day = fixed.day
             guard let date = calendar.date(from: components) else { return nil }
-            return Holiday(date: date, name: fixed.names[lang] ?? fixed.names[.korean]!)
+            return Holiday(date: date, name: fixed.names[lang] ?? fixed.names[.english]!)
         }
     }
 
@@ -202,7 +202,7 @@ class HolidayService {
             components.day = holiday.day
 
             guard let startDate = calendar.date(from: components) else { continue }
-            let names = nameMap[holiday.key]?[lang] ?? nameMap[holiday.key]?[.korean] ?? ("Holiday", "Holiday")
+            let names = nameMap[holiday.key]?[lang] ?? nameMap[holiday.key]?[.english] ?? ("Holiday", "Holiday")
 
             if holiday.duration > 1 {
                 for i in 0..<holiday.duration {
@@ -225,11 +225,11 @@ class HolidayService {
         var components = DateComponents()
         components.year = year
 
-        let seollalMain = lang == .korean ? "설날" : (lang == .english ? "Seollal" : (lang == .japanese ? "ソルラル" : "春节"))
-        let seollalHoliday = lang == .korean ? "설날 연휴" : (lang == .english ? "Seollal Holiday" : (lang == .japanese ? "ソルラル連休" : "春节假期"))
-        let chuseokMain = lang == .korean ? "추석" : (lang == .english ? "Chuseok" : (lang == .japanese ? "秋夕" : "中秋节"))
-        let chuseokHoliday = lang == .korean ? "추석 연휴" : (lang == .english ? "Chuseok Holiday" : (lang == .japanese ? "秋夕連休" : "中秋节假期"))
-        let buddhaName = lang == .korean ? "부처님오신날" : (lang == .english ? "Buddha's Birthday" : (lang == .japanese ? "釈迦誕生日" : "佛诞日"))
+        let seollalMain = lang == .korean ? "설날" : (lang == .japanese ? "ソルラル" : (lang == .chinese ? "春节" : "Seollal"))
+        let seollalHoliday = lang == .korean ? "설날 연휴" : (lang == .japanese ? "ソルラル連休" : (lang == .chinese ? "春节假期" : "Seollal Holiday"))
+        let chuseokMain = lang == .korean ? "추석" : (lang == .japanese ? "秋夕" : (lang == .chinese ? "中秋节" : "Chuseok"))
+        let chuseokHoliday = lang == .korean ? "추석 연휴" : (lang == .japanese ? "秋夕連休" : (lang == .chinese ? "中秋节假期" : "Chuseok Holiday"))
+        let buddhaName = lang == .korean ? "부처님오신날" : (lang == .japanese ? "釈迦誕生日" : (lang == .chinese ? "佛诞日" : "Buddha's Birthday"))
 
         components.month = 2; components.day = 1
         if let date = calendar.date(from: components) {
@@ -278,8 +278,8 @@ class HolidayService {
             .chinese:  ["春节", "春节假期", "中秋节", "中秋节假期", "圣诞节"]
         ]
 
-        let weekendNames = weekendEligible[lang] ?? weekendEligible[.korean]!
-        let sundayNames = sundayOnlyEligible[lang] ?? sundayOnlyEligible[.korean]!
+        let weekendNames = weekendEligible[lang] ?? weekendEligible[.english]!
+        let sundayNames = sundayOnlyEligible[lang] ?? sundayOnlyEligible[.english]!
 
         let subLabel: String
         switch lang {
@@ -287,6 +287,8 @@ class HolidayService {
         case .english: subLabel = "Substitute Holiday"
         case .japanese: subLabel = "振替休日"
         case .chinese: subLabel = "补休日"
+        case .german: subLabel = "Ersatzfeiertag"
+        case .french: subLabel = "Jour férié de remplacement"
         }
 
         for holiday in holidays {
@@ -352,7 +354,7 @@ class HolidayService {
             var comp = DateComponents()
             comp.year = year; comp.month = f.month; comp.day = f.day
             if let date = calendar.date(from: comp) {
-                holidays.append(Holiday(date: date, name: f.names[lang] ?? f.names[.japanese]!))
+                holidays.append(Holiday(date: date, name: f.names[lang] ?? f.names[.english]!))
             }
         }
 
@@ -360,25 +362,25 @@ class HolidayService {
         // Coming of Age Day: 2nd Monday of January
         let comingOfAgeName: [AppLanguage: String] = [.korean: "성인의 날", .english: "Coming of Age Day", .japanese: "成人の日", .chinese: "成人日"]
         if let d = nthWeekday(nth: 2, weekday: 2, month: 1, year: year) {
-            holidays.append(Holiday(date: d, name: comingOfAgeName[lang] ?? comingOfAgeName[.japanese]!))
+            holidays.append(Holiday(date: d, name: comingOfAgeName[lang] ?? comingOfAgeName[.english]!))
         }
 
         // Marine Day: 3rd Monday of July
         let marineName: [AppLanguage: String] = [.korean: "바다의 날", .english: "Marine Day", .japanese: "海の日", .chinese: "海之日"]
         if let d = nthWeekday(nth: 3, weekday: 2, month: 7, year: year) {
-            holidays.append(Holiday(date: d, name: marineName[lang] ?? marineName[.japanese]!))
+            holidays.append(Holiday(date: d, name: marineName[lang] ?? marineName[.english]!))
         }
 
         // Respect for the Aged Day: 3rd Monday of September
         let agedName: [AppLanguage: String] = [.korean: "경로의 날", .english: "Respect for the Aged Day", .japanese: "敬老の日", .chinese: "敬老日"]
         if let d = nthWeekday(nth: 3, weekday: 2, month: 9, year: year) {
-            holidays.append(Holiday(date: d, name: agedName[lang] ?? agedName[.japanese]!))
+            holidays.append(Holiday(date: d, name: agedName[lang] ?? agedName[.english]!))
         }
 
         // Sports Day: 2nd Monday of October
         let sportsName: [AppLanguage: String] = [.korean: "스포츠의 날", .english: "Sports Day", .japanese: "スポーツの日", .chinese: "体育日"]
         if let d = nthWeekday(nth: 2, weekday: 2, month: 10, year: year) {
-            holidays.append(Holiday(date: d, name: sportsName[lang] ?? sportsName[.japanese]!))
+            holidays.append(Holiday(date: d, name: sportsName[lang] ?? sportsName[.english]!))
         }
 
         // Vernal Equinox (~March 20-21)
@@ -386,7 +388,7 @@ class HolidayService {
         let vernalDay = vernalEquinoxDay(year: year)
         var comp = DateComponents(); comp.year = year; comp.month = 3; comp.day = vernalDay
         if let date = calendar.date(from: comp) {
-            holidays.append(Holiday(date: date, name: vernalName[lang] ?? vernalName[.japanese]!))
+            holidays.append(Holiday(date: date, name: vernalName[lang] ?? vernalName[.english]!))
         }
 
         // Autumnal Equinox (~September 22-23)
@@ -394,7 +396,7 @@ class HolidayService {
         let autumnalDay = autumnalEquinoxDay(year: year)
         comp = DateComponents(); comp.year = year; comp.month = 9; comp.day = autumnalDay
         if let date = calendar.date(from: comp) {
-            holidays.append(Holiday(date: date, name: autumnalName[lang] ?? autumnalName[.japanese]!))
+            holidays.append(Holiday(date: date, name: autumnalName[lang] ?? autumnalName[.english]!))
         }
 
         // Japanese substitute holiday rule: if holiday falls on Sunday, next Monday is off
@@ -412,6 +414,8 @@ class HolidayService {
             case .english: return "Substitute Holiday"
             case .japanese: return "振替休日"
             case .chinese: return "补休日"
+            case .german: return "Ersatzfeiertag"
+            case .french: return "Jour férié de remplacement"
             }
         }()
 
@@ -440,7 +444,7 @@ class HolidayService {
         let newYearName: [AppLanguage: String] = [.korean: "설날", .english: "New Year's Day", .japanese: "元日", .chinese: "元旦"]
         var comp = DateComponents(); comp.year = year; comp.month = 1; comp.day = 1
         if let date = calendar.date(from: comp) {
-            holidays.append(Holiday(date: date, name: newYearName[lang] ?? newYearName[.chinese]!))
+            holidays.append(Holiday(date: date, name: newYearName[lang] ?? newYearName[.english]!))
         }
 
         // Labor Day (May 1-5)
@@ -448,7 +452,7 @@ class HolidayService {
         for day in 1...5 {
             comp = DateComponents(); comp.year = year; comp.month = 5; comp.day = day
             if let date = calendar.date(from: comp) {
-                holidays.append(Holiday(date: date, name: laborName[lang] ?? laborName[.chinese]!))
+                holidays.append(Holiday(date: date, name: laborName[lang] ?? laborName[.english]!))
             }
         }
 
@@ -457,7 +461,7 @@ class HolidayService {
         for day in 1...7 {
             comp = DateComponents(); comp.year = year; comp.month = 10; comp.day = day
             if let date = calendar.date(from: comp) {
-                holidays.append(Holiday(date: date, name: nationalName[lang] ?? nationalName[.chinese]!))
+                holidays.append(Holiday(date: date, name: nationalName[lang] ?? nationalName[.english]!))
             }
         }
 
@@ -502,7 +506,7 @@ class HolidayService {
             comp.year = year; comp.month = yearData.springStart.0; comp.day = yearData.springStart.1
             if let start = calendar.date(from: comp),
                let date = calendar.date(byAdding: .day, value: i, to: start) {
-                holidays.append(Holiday(date: date, name: springName[lang] ?? springName[.chinese]!))
+                holidays.append(Holiday(date: date, name: springName[lang] ?? springName[.english]!))
             }
         }
 
@@ -512,7 +516,7 @@ class HolidayService {
             comp.year = year; comp.month = yearData.qingming.0; comp.day = yearData.qingming.1
             if let start = calendar.date(from: comp),
                let date = calendar.date(byAdding: .day, value: i, to: start) {
-                holidays.append(Holiday(date: date, name: qingmingName[lang] ?? qingmingName[.chinese]!))
+                holidays.append(Holiday(date: date, name: qingmingName[lang] ?? qingmingName[.english]!))
             }
         }
 
@@ -522,7 +526,7 @@ class HolidayService {
             comp.year = year; comp.month = yearData.dragon.0; comp.day = yearData.dragon.1
             if let start = calendar.date(from: comp),
                let date = calendar.date(byAdding: .day, value: i, to: start) {
-                holidays.append(Holiday(date: date, name: dragonName[lang] ?? dragonName[.chinese]!))
+                holidays.append(Holiday(date: date, name: dragonName[lang] ?? dragonName[.english]!))
             }
         }
 
@@ -532,7 +536,7 @@ class HolidayService {
             comp.year = year; comp.month = yearData.midAutumn.0; comp.day = yearData.midAutumn.1
             if let start = calendar.date(from: comp),
                let date = calendar.date(byAdding: .day, value: i, to: start) {
-                holidays.append(Holiday(date: date, name: midAutumnName[lang] ?? midAutumnName[.chinese]!))
+                holidays.append(Holiday(date: date, name: midAutumnName[lang] ?? midAutumnName[.english]!))
             }
         }
 
@@ -613,6 +617,8 @@ class HolidayService {
             case .english: return "Observed"
             case .japanese: return "振替"
             case .chinese: return "补休"
+            case .german: return "Ersatztag"
+            case .french: return "Jour observé"
             }
         }()
 
@@ -658,15 +664,15 @@ class HolidayService {
         // 고정 공휴일 (연방 단위)
         let fixed: [(month: Int, day: Int, names: [AppLanguage: String])] = [
             (1, 1, [.korean: "신정", .english: "New Year's Day",
-                    .japanese: "元日", .chinese: "元旦"]),
+                    .japanese: "元日", .chinese: "元旦", .german: "Neujahr", .french: "Jour de l’an"]),
             (5, 1, [.korean: "노동절", .english: "Labour Day",
-                    .japanese: "メーデー", .chinese: "劳动节"]),
+                    .japanese: "メーデー", .chinese: "劳动节", .german: "Tag der Arbeit", .french: "Fête du Travail"]),
             (10, 3, [.korean: "독일 통일의 날", .english: "German Unity Day",
-                     .japanese: "ドイツ統一の日", .chinese: "德国统一日"]),
+                     .japanese: "ドイツ統一の日", .chinese: "德国统一日", .german: "Tag der Deutschen Einheit", .french: "Jour de l’Unité allemande"]),
             (12, 25, [.korean: "크리스마스", .english: "Christmas Day",
-                      .japanese: "クリスマス", .chinese: "圣诞节"]),
+                      .japanese: "クリスマス", .chinese: "圣诞节", .german: "1. Weihnachtstag", .french: "Noël"]),
             (12, 26, [.korean: "성 슈테판의 날", .english: "St. Stephen's Day",
-                      .japanese: "聖シュテファンの日", .chinese: "圣斯德望日"])
+                      .japanese: "聖シュテファンの日", .chinese: "圣斯德望日", .german: "2. Weihnachtstag", .french: "Saint-Étienne"])
         ]
         for fx in fixed {
             var c = DateComponents()
@@ -681,13 +687,13 @@ class HolidayService {
         guard let easter = Self.easterSunday(year: year, calendar: calendar) else { return holidays.sorted { $0.date < $1.date } }
         let movableNames: [(offsetDays: Int, names: [AppLanguage: String])] = [
             (-2, [.korean: "성금요일", .english: "Good Friday",
-                  .japanese: "聖金曜日", .chinese: "耶稣受难日"]),                     // 부활절 -2일 (금)
+                  .japanese: "聖金曜日", .chinese: "耶稣受难日", .german: "Karfreitag", .french: "Vendredi saint"]),                     // 부활절 -2일 (금)
             (1,  [.korean: "부활절 월요일", .english: "Easter Monday",
-                  .japanese: "イースターマンデー", .chinese: "复活节星期一"]),         // 부활절 +1일 (월)
+                  .japanese: "イースターマンデー", .chinese: "复活节星期一", .german: "Ostermontag", .french: "Lundi de Pâques"]),         // 부활절 +1일 (월)
             (39, [.korean: "예수 승천일", .english: "Ascension Day",
-                  .japanese: "キリスト昇天祭", .chinese: "耶稣升天节"]),               // 부활절 +39일 (목)
+                  .japanese: "キリスト昇天祭", .chinese: "耶稣升天节", .german: "Christi Himmelfahrt", .french: "Ascension"]),               // 부활절 +39일 (목)
             (50, [.korean: "성령강림절 월요일", .english: "Whit Monday",
-                  .japanese: "聖霊降臨祭月曜日", .chinese: "圣灵降临节星期一"])         // 부활절 +50일 (월)
+                  .japanese: "聖霊降臨祭月曜日", .chinese: "圣灵降临节星期一", .german: "Pfingstmontag", .french: "Lundi de Pentecôte"])         // 부활절 +50일 (월)
         ]
         for mv in movableNames {
             if let d = calendar.date(byAdding: .day, value: mv.offsetDays, to: easter) {
@@ -706,21 +712,21 @@ class HolidayService {
 
         let fixed: [(month: Int, day: Int, names: [AppLanguage: String])] = [
             (1, 1, [.korean: "신정", .english: "New Year's Day",
-                    .japanese: "元日", .chinese: "元旦"]),
+                    .japanese: "元日", .chinese: "元旦", .german: "Neujahr", .french: "Jour de l’an"]),
             (5, 1, [.korean: "노동절", .english: "Labour Day",
-                    .japanese: "メーデー", .chinese: "劳动节"]),
+                    .japanese: "メーデー", .chinese: "劳动节", .german: "Tag der Arbeit", .french: "Fête du Travail"]),
             (5, 8, [.korean: "전승기념일", .english: "Victory in Europe Day",
-                    .japanese: "戦勝記念日", .chinese: "胜利日"]),
+                    .japanese: "戦勝記念日", .chinese: "胜利日", .german: "Tag des Sieges", .french: "Victoire 1945"]),
             (7, 14, [.korean: "혁명기념일", .english: "Bastille Day",
-                     .japanese: "革命記念日", .chinese: "国庆日"]),
+                     .japanese: "革命記念日", .chinese: "国庆日", .german: "Französischer Nationalfeiertag", .french: "Fête nationale"]),
             (8, 15, [.korean: "성모승천일", .english: "Assumption of Mary",
-                     .japanese: "聖母被昇天祭", .chinese: "圣母升天节"]),
+                     .japanese: "聖母被昇天祭", .chinese: "圣母升天节", .german: "Mariä Himmelfahrt", .french: "Assomption"]),
             (11, 1, [.korean: "만성절", .english: "All Saints' Day",
-                     .japanese: "諸聖人の日", .chinese: "诸圣节"]),
+                     .japanese: "諸聖人の日", .chinese: "诸圣节", .german: "Allerheiligen", .french: "Toussaint"]),
             (11, 11, [.korean: "휴전기념일", .english: "Armistice Day",
-                      .japanese: "休戦記念日", .chinese: "停战日"]),
+                      .japanese: "休戦記念日", .chinese: "停战日", .german: "Waffenstillstandstag", .french: "Armistice 1918"]),
             (12, 25, [.korean: "크리스마스", .english: "Christmas Day",
-                      .japanese: "クリスマス", .chinese: "圣诞节"])
+                      .japanese: "クリスマス", .chinese: "圣诞节", .german: "Weihnachten", .french: "Noël"])
         ]
         for fx in fixed {
             var c = DateComponents()
@@ -735,11 +741,11 @@ class HolidayService {
         guard let easter = Self.easterSunday(year: year, calendar: calendar) else { return holidays.sorted { $0.date < $1.date } }
         let movableNames: [(offsetDays: Int, names: [AppLanguage: String])] = [
             (1,  [.korean: "부활절 월요일", .english: "Easter Monday",
-                  .japanese: "イースターマンデー", .chinese: "复活节星期一"]),
+                  .japanese: "イースターマンデー", .chinese: "复活节星期一", .german: "Ostermontag", .french: "Lundi de Pâques"]),
             (39, [.korean: "예수 승천일", .english: "Ascension Day",
-                  .japanese: "キリスト昇天祭", .chinese: "耶稣升天节"]),
+                  .japanese: "キリスト昇天祭", .chinese: "耶稣升天节", .german: "Christi Himmelfahrt", .french: "Ascension"]),
             (50, [.korean: "성령강림절 월요일", .english: "Whit Monday",
-                  .japanese: "聖霊降臨祭月曜日", .chinese: "圣灵降临节星期一"])
+                  .japanese: "聖霊降臨祭月曜日", .chinese: "圣灵降临节星期一", .german: "Pfingstmontag", .french: "Lundi de Pentecôte"])
         ]
         for mv in movableNames {
             if let d = calendar.date(byAdding: .day, value: mv.offsetDays, to: easter) {

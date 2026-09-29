@@ -64,6 +64,8 @@ enum VoiceOverLabel {
         case .english: return "\(u) of \(t) days used, \(r) remaining"
         case .japanese: return "有給\(t)日中\(u)日使用、残り\(r)日"
         case .chinese: return "年假\(t)天中已使用\(u)天，剩余\(r)天"
+        case .german: return "\(u) von \(t) Tagen genommen, \(r) übrig"
+        case .french: return "\(u) jours sur \(t) utilisés, \(r) restants"
         }
     }
 
@@ -76,6 +78,8 @@ enum VoiceOverLabel {
         case .english: return "Bonus available: \(d) days"
         case .japanese: return "ボーナス使用可能 \(d)日"
         case .chinese: return "可用奖励 \(d) 天"
+        case .german: return "Bonus verfügbar: \(d) Tage"
+        case .french: return "Bonus disponible : \(d) jours"
         }
     }
 
@@ -88,6 +92,8 @@ enum VoiceOverLabel {
         case .english: return "\(dateRange), \(typeLabel) \(d) days, in \(dDay) days"
         case .japanese: return "\(dateRange)、\(typeLabel)\(d)日、あと\(dDay)日"
         case .chinese: return "\(dateRange)，\(typeLabel)\(d)天，还有\(dDay)天"
+        case .german: return "\(dateRange), \(typeLabel) \(d) Tage, in \(dDay) Tagen"
+        case .french: return "\(dateRange), \(typeLabel) \(d) jours, dans \(dDay) jours"
         }
     }
 
@@ -101,6 +107,8 @@ enum VoiceOverLabel {
             case .english: return ", recommendation score \(score)"
             case .japanese: return "、おすすめスコア\(score)"
             case .chinese: return "，推荐分数\(score)"
+            case .german: return ", Empfehlungswert \(score)"
+            case .french: return ", score de recommandation \(score)"
             }
         }()
         switch lang {
@@ -108,6 +116,8 @@ enum VoiceOverLabel {
         case .english: return "\(dateRange), \(totalDays)-day holiday, \(leavesNeeded) leave days required\(scorePart)"
         case .japanese: return "\(dateRange)、合計\(totalDays)日の連休、有給\(leavesNeeded)日必要\(scorePart)"
         case .chinese: return "\(dateRange)，共\(totalDays)天连假，需请\(leavesNeeded)天年假\(scorePart)"
+        case .german: return "\(dateRange), \(totalDays) Tage frei, \(leavesNeeded) Urlaubstage nötig\(scorePart)"
+        case .french: return "\(dateRange), \(totalDays) jours de repos, \(leavesNeeded) jours de congé nécessaires\(scorePart)"
         }
     }
 
@@ -122,6 +132,8 @@ enum VoiceOverLabel {
             case .english: return " direct"
             case .japanese: return " 直行"
             case .chinese: return " 直飞"
+            case .german: return " Direktflug"
+            case .french: return " direct"
             }
         }()
         switch lang {
@@ -129,6 +141,8 @@ enum VoiceOverLabel {
         case .english: return "\(origin) to \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
         case .japanese: return "\(origin)から\(destination)、\(dateRange)、\(airlinePart)\(directPart)、\(priceText)"
         case .chinese: return "\(origin)到\(destination)，\(dateRange)，\(airlinePart)\(directPart)，\(priceText)"
+        case .german: return "\(origin) nach \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
+        case .french: return "\(origin) vers \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
         }
     }
 
@@ -143,6 +157,8 @@ enum VoiceOverLabel {
             case .english: return ", rating \(r)"
             case .japanese: return "、評価\(r)"
             case .chinese: return "，评分\(r)"
+            case .german: return ", Bewertung \(r)"
+            case .french: return ", note \(r)"
             }
         }()
         switch lang {
@@ -150,6 +166,8 @@ enum VoiceOverLabel {
         case .english: return "\(name)\(ratingPart), \(priceText)"
         case .japanese: return "\(name)\(ratingPart)、\(priceText)"
         case .chinese: return "\(name)\(ratingPart)，\(priceText)"
+        case .german: return "\(name)\(ratingPart), \(priceText)"
+        case .french: return "\(name)\(ratingPart), \(priceText)"
         }
     }
 
@@ -162,6 +180,8 @@ enum VoiceOverLabel {
             case .english: return "Today"
             case .japanese: return "今日"
             case .chinese: return "今天"
+            case .german: return "Heute"
+            case .french: return "Aujourd’hui"
             }
         }
         let n = abs(daysRemaining)
@@ -171,6 +191,8 @@ enum VoiceOverLabel {
             case .english: return "in \(n) days"
             case .japanese: return "あと\(n)日"
             case .chinese: return "还有\(n)天"
+            case .german: return "in \(n) Tagen"
+            case .french: return "dans \(n) jours"
             }
         } else {
             switch lang {
@@ -178,6 +200,8 @@ enum VoiceOverLabel {
             case .english: return "\(n) days ago"
             case .japanese: return "\(n)日経過"
             case .chinese: return "已过\(n)天"
+            case .german: return "vor \(n) Tagen"
+            case .french: return "il y a \(n) jours"
             }
         }
     }

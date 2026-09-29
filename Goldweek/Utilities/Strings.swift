@@ -13,6 +13,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     case english = "en"
     case japanese = "ja"
     case chinese = "zh"
+    case german = "de"
+    case french = "fr"
 
     var id: String { rawValue }
 
@@ -22,6 +24,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         case .english: return "English"
         case .japanese: return "日本語"
         case .chinese: return "中文"
+        case .german: return "Deutsch"
+        case .french: return "Français"
         }
     }
 
@@ -31,6 +35,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         case .english: return "🇺🇸"
         case .japanese: return "🇯🇵"
         case .chinese: return "🇨🇳"
+        case .german: return "🇩🇪"
+        case .french: return "🇫🇷"
         }
     }
 
@@ -42,6 +48,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         case .english: return "en"
         case .japanese: return "ja"
         case .chinese: return "zh-Hans"
+        case .german: return "de"
+        case .french: return "fr"
         }
     }
 
@@ -77,6 +85,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
             case "ko": return .korean
             case "ja": return .japanese
             case "zh": return .chinese
+            case "de": return .german
+            case "fr": return .french
             case "en": return .english
             default: continue
             }
@@ -112,6 +122,8 @@ enum Strings {
         case .english: return "Status"
         case .japanese: return "状況"
         case .chinese: return "概览"
+        case .german: return "Status"
+        case .french: return "Aperçu"
         }
     }
 
@@ -121,6 +133,8 @@ enum Strings {
         case .english: return "Calendar"
         case .japanese: return "カレンダー"
         case .chinese: return "日历"
+        case .german: return "Kalender"
+        case .french: return "Calendrier"
         }
     }
 
@@ -130,6 +144,8 @@ enum Strings {
         case .english: return "Recommend"
         case .japanese: return "おすすめ"
         case .chinese: return "推荐"
+        case .german: return "Tipps"
+        case .french: return "Idées"
         }
     }
 
@@ -139,6 +155,8 @@ enum Strings {
         case .english: return "Register"
         case .japanese: return "登録"
         case .chinese: return "登记"
+        case .german: return "Eintragen"
+        case .french: return "Ajouter"
         }
     }
 
@@ -148,6 +166,8 @@ enum Strings {
         case .english: return "M/d(EEE)"
         case .japanese: return "M/d(E)"
         case .chinese: return "M/d(E)"
+        case .german: return "d.M. (EEE)"
+        case .french: return "d/M (EEE)"
         }
     }
 
@@ -157,6 +177,8 @@ enum Strings {
         case .english: return "Settings"
         case .japanese: return "設定"
         case .chinese: return "设置"
+        case .german: return "Einstellungen"
+        case .french: return "Réglages"
         }
     }
 
@@ -167,6 +189,8 @@ enum Strings {
         case .english: return "Leave Planner"
         case .japanese: return "休暇プランナー"
         case .chinese: return "休假规划"
+        case .german: return "Urlaubsplaner"
+        case .french: return "Planificateur de congés"
         }
     }
 
@@ -176,6 +200,8 @@ enum Strings {
         case .english: return "\(year) Annual Leave"
         case .japanese: return "\(year)年 有給休暇"
         case .chinese: return "\(year)年 年假概况"
+        case .german: return "Urlaub \(year)"
+        case .french: return "Congés \(year)"
         }
     }
 
@@ -186,6 +212,8 @@ enum Strings {
         case .english: return "Annual Leave"
         case .japanese: return "有給休暇"
         case .chinese: return "年假概况"
+        case .german: return "Urlaub"
+        case .french: return "Congés"
         }
     }
 
@@ -196,6 +224,8 @@ enum Strings {
         case .english: return "Vacation Plan"
         case .japanese: return "休暇計画"
         case .chinese: return "休假计划"
+        case .german: return "Urlaubsplan"
+        case .french: return "Plan de vacances"
         }
     }
 
@@ -205,6 +235,8 @@ enum Strings {
         case .english: return "Used"
         case .japanese: return "使用"
         case .chinese: return "已用"
+        case .german: return "Genommen"
+        case .french: return "Pris"
         }
     }
 
@@ -214,6 +246,8 @@ enum Strings {
         case .english: return "Total"
         case .japanese: return "合計"
         case .chinese: return "共"
+        case .german: return "Gesamt"
+        case .french: return "Total"
         }
     }
 
@@ -223,6 +257,8 @@ enum Strings {
         case .english: return "Left"
         case .japanese: return "残り"
         case .chinese: return "剩余"
+        case .german: return "Übrig"
+        case .french: return "Restant"
         }
     }
 
@@ -232,6 +268,8 @@ enum Strings {
         case .english: return "Upcoming Leaves"
         case .japanese: return "今後の休暇"
         case .chinese: return "即将到来的假期"
+        case .german: return "Bevorstehender Urlaub"
+        case .french: return "Congés à venir"
         }
     }
 
@@ -241,6 +279,8 @@ enum Strings {
         case .english: return "Recommended Schedule"
         case .japanese: return "おすすめ休暇日程"
         case .chinese: return "推荐休假日程"
+        case .german: return "Empfohlene Urlaubsplanung"
+        case .french: return "Planning recommandé"
         }
     }
 
@@ -250,6 +290,8 @@ enum Strings {
         case .english: return "Generating recommendations..."
         case .japanese: return "おすすめを作成中..."
         case .chinese: return "正在生成推荐..."
+        case .german: return "Empfehlungen werden erstellt..."
+        case .french: return "Création des recommandations..."
         }
     }
 
@@ -259,6 +301,8 @@ enum Strings {
         case .english: return "Add to Schedule"
         case .japanese: return "予定に追加"
         case .chinese: return "添加到日程"
+        case .german: return "Zum Plan hinzufügen"
+        case .french: return "Ajouter au planning"
         }
     }
 
@@ -268,6 +312,8 @@ enum Strings {
         case .english: return "Added ✓"
         case .japanese: return "追加済み ✓"
         case .chinese: return "已添加 ✓"
+        case .german: return "Hinzugefügt ✓"
+        case .french: return "Ajouté ✓"
         }
     }
 
@@ -277,6 +323,8 @@ enum Strings {
         case .english: return "Efficiency"
         case .japanese: return "効率"
         case .chinese: return "效率"
+        case .german: return "Effizienz"
+        case .french: return "Efficacité"
         }
     }
 
@@ -286,6 +334,8 @@ enum Strings {
         case .english: return "Leave History"
         case .japanese: return "休暇履歴"
         case .chinese: return "休假记录"
+        case .german: return "Urlaubsverlauf"
+        case .french: return "Historique des congés"
         }
     }
 
@@ -295,6 +345,8 @@ enum Strings {
         case .english: return "Check past leave records"
         case .japanese: return "過去の休暇記録を確認"
         case .chinese: return "查看过去的休假记录"
+        case .german: return "Vergangene Urlaube ansehen"
+        case .french: return "Consultez vos congés passés"
         }
     }
 
@@ -304,6 +356,8 @@ enum Strings {
         case .english: return "Leave"
         case .japanese: return "休暇"
         case .chinese: return "假期"
+        case .german: return "Urlaub"
+        case .french: return "Congé"
         }
     }
 
@@ -314,6 +368,8 @@ enum Strings {
         case .english: return "Calendar"
         case .japanese: return "カレンダー"
         case .chinese: return "日历"
+        case .german: return "Kalender"
+        case .french: return "Calendrier"
         }
     }
 
@@ -323,6 +379,8 @@ enum Strings {
         case .english: return "Holiday"
         case .japanese: return "祝日"
         case .chinese: return "节假日"
+        case .german: return "Feiertag"
+        case .french: return "Jour férié"
         }
     }
 
@@ -332,6 +390,8 @@ enum Strings {
         case .english: return "Annual Leave"
         case .japanese: return "有給休暇"
         case .chinese: return "年假"
+        case .german: return "Jahresurlaub"
+        case .french: return "Congés annuels"
         }
     }
 
@@ -341,6 +401,8 @@ enum Strings {
         case .english: return "Weekend"
         case .japanese: return "週末"
         case .chinese: return "周末"
+        case .german: return "Wochenende"
+        case .french: return "Week-end"
         }
     }
 
@@ -350,6 +412,8 @@ enum Strings {
         case .english: return "No schedule"
         case .japanese: return "予定なし"
         case .chinese: return "无日程"
+        case .german: return "Kein Termin"
+        case .french: return "Aucun événement"
         }
     }
 
@@ -359,6 +423,8 @@ enum Strings {
         case .english: return "Substitute Holiday"
         case .japanese: return "振替休日"
         case .chinese: return "补休日"
+        case .german: return "Ersatzfeiertag"
+        case .french: return "Jour férié de remplacement"
         }
     }
 
@@ -368,6 +434,8 @@ enum Strings {
         case .english: return "Delete Leave"
         case .japanese: return "休暇を削除"
         case .chinese: return "删除假期"
+        case .german: return "Urlaub löschen"
+        case .french: return "Supprimer le congé"
         }
     }
 
@@ -377,6 +445,8 @@ enum Strings {
         case .english: return "Delete this leave record?\nAnnual leave will be restored."
         case .japanese: return "この休暇記録を削除しますか？\n有給が復元されます。"
         case .chinese: return "确定删除此休假记录吗？\n年假将被恢复。"
+        case .german: return "Diesen Urlaubseintrag löschen?\nDie Urlaubstage werden zurückgebucht."
+        case .french: return "Supprimer ce congé ?\nLes jours de congé seront restitués."
         }
     }
 
@@ -386,6 +456,8 @@ enum Strings {
         case .english: return "Cancel"
         case .japanese: return "キャンセル"
         case .chinese: return "取消"
+        case .german: return "Abbrechen"
+        case .french: return "Annuler"
         }
     }
 
@@ -395,6 +467,8 @@ enum Strings {
         case .english: return "Delete"
         case .japanese: return "削除"
         case .chinese: return "删除"
+        case .german: return "Löschen"
+        case .french: return "Supprimer"
         }
     }
 
@@ -404,6 +478,8 @@ enum Strings {
         case .english: return "My Leave Schedule"
         case .japanese: return "休暇スケジュール"
         case .chinese: return "我的年假日程"
+        case .german: return "Mein Urlaubsplan"
+        case .french: return "Mes congés"
         }
     }
 
@@ -413,6 +489,8 @@ enum Strings {
         case .english: return "No leave registered"
         case .japanese: return "登録された休暇がありません"
         case .chinese: return "没有登记的年假"
+        case .german: return "Kein Urlaub eingetragen"
+        case .french: return "Aucun congé enregistré"
         }
     }
 
@@ -422,6 +500,8 @@ enum Strings {
         case .english: return "Tap to edit · Swipe to delete"
         case .japanese: return "タップで編集 · スワイプで削除"
         case .chinese: return "点击编辑 · 滑动删除"
+        case .german: return "Tippen zum Bearbeiten · Wischen zum Löschen"
+        case .french: return "Touchez pour modifier · Balayez pour supprimer"
         }
     }
 
@@ -431,6 +511,8 @@ enum Strings {
         case .english: return "Upcoming"
         case .japanese: return "予定"
         case .chinese: return "即将到来"
+        case .german: return "Anstehend"
+        case .french: return "À venir"
         }
     }
 
@@ -440,6 +522,8 @@ enum Strings {
         case .english: return "Past"
         case .japanese: return "過去"
         case .chinese: return "过去"
+        case .german: return "Vergangen"
+        case .french: return "Passés"
         }
     }
 
@@ -449,6 +533,8 @@ enum Strings {
         case .english: return "Today"
         case .japanese: return "今日"
         case .chinese: return "今天"
+        case .german: return "Heute"
+        case .french: return "Aujourd’hui"
         }
     }
 
@@ -458,6 +544,8 @@ enum Strings {
         case .english: return "Previous month"
         case .japanese: return "前の月"
         case .chinese: return "上个月"
+        case .german: return "Vorheriger Monat"
+        case .french: return "Mois précédent"
         }
     }
 
@@ -467,6 +555,8 @@ enum Strings {
         case .english: return "Previous year"
         case .japanese: return "前の年"
         case .chinese: return "上一年"
+        case .german: return "Vorheriges Jahr"
+        case .french: return "Année précédente"
         }
     }
 
@@ -476,6 +566,8 @@ enum Strings {
         case .english: return "Next year"
         case .japanese: return "次の年"
         case .chinese: return "下一年"
+        case .german: return "Nächstes Jahr"
+        case .french: return "Année suivante"
         }
     }
 
@@ -486,6 +578,8 @@ enum Strings {
         case .english: return "Trips that match this leave"
         case .japanese: return "この休暇に合う旅行のおすすめ"
         case .chinese: return "适合此假期的旅行推荐"
+        case .german: return "Reisen, die zu diesem Urlaub passen"
+        case .french: return "Voyages adaptés à ce congé"
         }
     }
 
@@ -495,6 +589,8 @@ enum Strings {
         case .english: return "Curated by duration, season, and origin"
         case .japanese: return "期間・季節・出発国に基づく厳選"
         case .chinese: return "根据时长、季节和出发国精选"
+        case .german: return "Nach Dauer, Jahreszeit und Abflugland ausgewählt"
+        case .french: return "Sélection selon la durée, la saison et le pays de départ"
         }
     }
 
@@ -504,6 +600,8 @@ enum Strings {
         case .english: return "Live flights & stays for these dates"
         case .japanese: return "この日付のリアルタイム航空券・宿泊"
         case .chinese: return "针对这些日期的实时机票和住宿"
+        case .german: return "Live-Flüge & Unterkünfte für diese Tage"
+        case .french: return "Vols et hébergements en direct pour ces dates"
         }
     }
 
@@ -513,6 +611,8 @@ enum Strings {
         case .english: return "Loading recommendations…"
         case .japanese: return "おすすめを読み込み中…"
         case .chinese: return "正在加载推荐…"
+        case .german: return "Empfehlungen werden geladen…"
+        case .french: return "Chargement des recommandations…"
         }
     }
 
@@ -523,6 +623,8 @@ enum Strings {
         case .english: return "Optimal annual planner"
         case .japanese: return "最適な年間プランナー"
         case .chinese: return "最佳年度规划"
+        case .german: return "Optimaler Jahresplaner"
+        case .french: return "Planificateur annuel optimal"
         }
     }
 
@@ -533,6 +635,8 @@ enum Strings {
         case .english: return "Optimal year plan"
         case .japanese: return "年間最適プラン"
         case .chinese: return "全年最佳计划"
+        case .german: return "Optimaler Urlaubsplan fürs Jahr"
+        case .french: return "Plan de congés optimal pour l’année"
         }
     }
 
@@ -542,6 +646,8 @@ enum Strings {
         case .english: return "Computes the longest break combinations from holidays & weekends"
         case .japanese: return "祝日・週末を分析して最長の連休組み合わせを自動算出"
         case .chinese: return "分析公共假日和周末，自动计算最长假期组合"
+        case .german: return "Berechnet aus Feiertagen und Wochenenden die längsten Auszeiten"
+        case .french: return "Calcule les plus longues périodes de repos à partir des jours fériés et week-ends"
         }
     }
 
@@ -551,6 +657,8 @@ enum Strings {
         case .english: return "\(totalDays) days off with \(leaveUsed) PTO (\(breaks) breaks)"
         case .japanese: return "有給\(leaveUsed)日で計\(totalDays)日休み（\(breaks)回の連休）"
         case .chinese: return "用\(leaveUsed)天年假休息\(totalDays)天（\(breaks)次假期）"
+        case .german: return "\(totalDays) freie Tage mit \(leaveUsed) Urlaubstagen (\(breaks) Auszeiten)"
+        case .french: return "\(totalDays) jours de repos avec \(leaveUsed) congés (\(breaks) pauses)"
         }
     }
 
@@ -561,6 +669,8 @@ enum Strings {
         case .english: return "days off"
         case .japanese: return "日休み"
         case .chinese: return "天假期"
+        case .german: return "freie Tage"
+        case .french: return "jours de repos"
         }
     }
 
@@ -571,6 +681,8 @@ enum Strings {
         case .english: return "\(leaveUsed) PTO · \(breaks) breaks"
         case .japanese: return "有給\(leaveUsed)日・\(breaks)回"
         case .chinese: return "年假\(leaveUsed)天·\(breaks)次"
+        case .german: return "\(leaveUsed) Urlaubstage · \(breaks) Auszeiten"
+        case .french: return "\(leaveUsed) congés · \(breaks) pauses"
         }
     }
 
@@ -580,6 +692,8 @@ enum Strings {
         case .english: return "Double-tap to expand"
         case .japanese: return "ダブルタップで展開"
         case .chinese: return "双击展开"
+        case .german: return "Doppeltippen zum Erweitern"
+        case .french: return "Touchez deux fois pour développer"
         }
     }
 
@@ -589,6 +703,8 @@ enum Strings {
         case .english: return "Double-tap to collapse"
         case .japanese: return "ダブルタップで折りたたむ"
         case .chinese: return "双击折叠"
+        case .german: return "Doppeltippen zum Einklappen"
+        case .french: return "Touchez deux fois pour réduire"
         }
     }
 
@@ -598,6 +714,8 @@ enum Strings {
         case .english: return "Register more PTO to unlock longer breaks"
         case .japanese: return "有給を追加すると、より長い連休が作れます"
         case .chinese: return "添加更多年假可获得更长假期"
+        case .german: return "Trage mehr Urlaub ein, um längere Auszeiten zu ermöglichen"
+        case .french: return "Ajoutez des congés pour débloquer de plus longues pauses"
         }
     }
 
@@ -607,6 +725,8 @@ enum Strings {
         case .english: return "Plan your year in one tap"
         case .japanese: return "1年の休暇を一度に最適配置"
         case .chinese: return "一键规划全年假期"
+        case .german: return "Plane dein Jahr mit einem Tipp"
+        case .french: return "Planifiez votre année en un geste"
         }
     }
 
@@ -616,6 +736,8 @@ enum Strings {
         case .english: return "Optimally place your remaining PTO around all public holidays for the longest possible breaks"
         case .japanese: return "残りの有給を公休に最適配置し、最長の連休を計算"
         case .chinese: return "将剩余年假最佳分配在所有公假周围,获取最长假期"
+        case .german: return "Verteile deine restlichen Urlaubstage optimal rund um alle Feiertage, für die längstmöglichen Auszeiten"
+        case .french: return "Répartissez au mieux vos congés restants autour de tous les jours fériés pour des pauses les plus longues possible"
         }
     }
 
@@ -625,6 +747,8 @@ enum Strings {
         case .english: return "Unlock optimal plan with Pro"
         case .japanese: return "Proで最適プランを見る"
         case .chinese: return "升级 Pro 查看最佳计划"
+        case .german: return "Optimalen Plan mit Pro freischalten"
+        case .french: return "Débloquer le plan optimal avec Pro"
         }
     }
 
@@ -634,6 +758,8 @@ enum Strings {
         case .english: return "Add all to calendar"
         case .japanese: return "すべてカレンダーに追加"
         case .chinese: return "全部添加到日历"
+        case .german: return "Alle zum Kalender hinzufügen"
+        case .french: return "Tout ajouter au calendrier"
         }
     }
 
@@ -643,6 +769,8 @@ enum Strings {
         case .english: return "\(leaveUsed) PTO · \(totalDays)-day break"
         case .japanese: return "有給\(leaveUsed)日・\(totalDays)日連休"
         case .chinese: return "\(leaveUsed)天年假·\(totalDays)天假期"
+        case .german: return "\(leaveUsed) Urlaubstage · \(totalDays) Tage frei"
+        case .french: return "\(leaveUsed) congés · \(totalDays) jours de repos"
         }
     }
 
@@ -652,6 +780,8 @@ enum Strings {
         case .english: return "Next month"
         case .japanese: return "次の月"
         case .chinese: return "下个月"
+        case .german: return "Nächster Monat"
+        case .french: return "Mois suivant"
         }
     }
 
@@ -661,6 +791,8 @@ enum Strings {
         case .english: return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         case .japanese: return ["日", "月", "火", "水", "木", "金", "土"]
         case .chinese: return ["日", "一", "二", "三", "四", "五", "六"]
+        case .german: return ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
+        case .french: return ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"]
         }
     }
 
@@ -673,6 +805,14 @@ enum Strings {
             return "\(monthNames[month - 1]) \(year)"
         case .japanese: return "\(year)年 \(month)月"
         case .chinese: return "\(year)年\(month)月"
+        case .german:
+            let monthNames = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
+                              "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
+            return "\(monthNames[month - 1]) \(year)"
+        case .french:
+            let monthNames = ["janv.", "févr.", "mars", "avr.", "mai", "juin",
+                              "juil.", "août", "sept.", "oct.", "nov.", "déc."]
+            return "\(monthNames[month - 1]) \(year)"
         }
     }
 
@@ -685,6 +825,14 @@ enum Strings {
             return names[month - 1]
         case .japanese: return "\(month)月"
         case .chinese: return "\(month)月"
+        case .german:
+            let names = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
+                         "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
+            return names[month - 1]
+        case .french:
+            let names = ["janv.", "févr.", "mars", "avr.", "mai", "juin",
+                         "juil.", "août", "sept.", "oct.", "nov.", "déc."]
+            return names[month - 1]
         }
     }
 
@@ -694,6 +842,8 @@ enum Strings {
         case .english: return "\(days)d"
         case .japanese: return "\(days)日"
         case .chinese: return "\(days)天"
+        case .german: return "\(days) T"
+        case .french: return "\(days) j"
         }
     }
 
@@ -703,6 +853,8 @@ enum Strings {
         case .english: return " days"
         case .japanese: return "日"
         case .chinese: return "天"
+        case .german: return " Tage"
+        case .french: return " jours"
         }
     }
 
@@ -715,6 +867,8 @@ enum Strings {
         case .english: return value == 1 ? "1 day" : "\(text) days"
         case .japanese: return "\(text)日"
         case .chinese: return "\(text)天"
+        case .german: return value == 1 ? "1 Tag" : "\(text) Tage"
+        case .french: return value == 1 ? "1 jour" : "\(text) jours"
         }
     }
 
@@ -725,6 +879,8 @@ enum Strings {
         case .english: return "Leave Recommendations"
         case .japanese: return "休暇おすすめ"
         case .chinese: return "休假推荐"
+        case .german: return "Urlaubsempfehlungen"
+        case .french: return "Recommandations de congés"
         }
     }
 
@@ -734,6 +890,8 @@ enum Strings {
         case .english: return "\(year) Recommendations"
         case .japanese: return "\(year)年 おすすめ"
         case .chinese: return "\(year)年推荐"
+        case .german: return "Empfehlungen \(year)"
+        case .french: return "Recommandations \(year)"
         }
     }
 
@@ -743,6 +901,8 @@ enum Strings {
         case .english: return "Available Leave"
         case .japanese: return "利用可能な有給"
         case .chinese: return "可用年假"
+        case .german: return "Verfügbarer Urlaub"
+        case .french: return "Congés disponibles"
         }
     }
 
@@ -752,6 +912,8 @@ enum Strings {
         case .english: return "Analyzing schedule..."
         case .japanese: return "スケジュール分析中..."
         case .chinese: return "正在分析日程..."
+        case .german: return "Plan wird analysiert..."
+        case .french: return "Analyse du planning..."
         }
     }
 
@@ -761,6 +923,8 @@ enum Strings {
         case .english: return "No recommendations"
         case .japanese: return "おすすめがありません"
         case .chinese: return "没有推荐日程"
+        case .german: return "Keine Empfehlungen"
+        case .french: return "Aucune recommandation"
         }
     }
 
@@ -770,6 +934,8 @@ enum Strings {
         case .english: return "Check your preferences or\nsecure more leave days"
         case .japanese: return "設定を確認するか\n有給を確保してください"
         case .chinese: return "请检查偏好设置或\n确保有更多年假"
+        case .german: return "Prüfe deine Einstellungen oder\nsichere dir mehr Urlaubstage"
+        case .french: return "Vérifiez vos préférences ou\nobtenez plus de jours de congé"
         }
     }
 
@@ -779,6 +945,8 @@ enum Strings {
         case .english: return "Schedule Preview"
         case .japanese: return "スケジュールプレビュー"
         case .chinese: return "日程预览"
+        case .german: return "Vorschau des Plans"
+        case .french: return "Aperçu du planning"
         }
     }
 
@@ -788,6 +956,8 @@ enum Strings {
         case .english: return "\(days)d leave"
         case .japanese: return "\(days)日有給"
         case .chinese: return "\(days)天年假"
+        case .german: return "\(days) Urlaubstg."
+        case .french: return "\(days) j de congé"
         }
     }
 
@@ -797,6 +967,8 @@ enum Strings {
         case .english: return "\(days)d off"
         case .japanese: return "\(days)日休み"
         case .chinese: return "\(days)天休息"
+        case .german: return "\(days) Tage frei"
+        case .french: return "\(days) j de repos"
         }
     }
 
@@ -806,6 +978,8 @@ enum Strings {
         case .english: return "Add to Schedule"
         case .japanese: return "予定に追加"
         case .chinese: return "添加到日程"
+        case .german: return "Zum Plan hinzufügen"
+        case .french: return "Ajouter au planning"
         }
     }
 
@@ -815,6 +989,8 @@ enum Strings {
         case .english: return "Added to Schedule"
         case .japanese: return "予定に追加済み"
         case .chinese: return "已添加到日程"
+        case .german: return "Zum Plan hinzugefügt"
+        case .french: return "Ajouté au planning"
         }
     }
 
@@ -825,6 +1001,8 @@ enum Strings {
         case .english: return "Workday"
         case .japanese: return "平日"
         case .chinese: return "工作日"
+        case .german: return "Werktag"
+        case .french: return "Jour ouvré"
         }
     }
 
@@ -835,6 +1013,8 @@ enum Strings {
         case .english: return "Settings"
         case .japanese: return "設定"
         case .chinese: return "设置"
+        case .german: return "Einstellungen"
+        case .french: return "Réglages"
         }
     }
 
@@ -844,6 +1024,8 @@ enum Strings {
         case .english: return "Name"
         case .japanese: return "名前"
         case .chinese: return "姓名"
+        case .german: return "Name"
+        case .french: return "Nom"
         }
     }
 
@@ -854,6 +1036,8 @@ enum Strings {
         case .english: return "Edit name"
         case .japanese: return "名前を編集"
         case .chinese: return "编辑姓名"
+        case .german: return "Name bearbeiten"
+        case .french: return "Modifier le nom"
         }
     }
 
@@ -863,6 +1047,8 @@ enum Strings {
         case .english: return "Joined: \(dateStr)"
         case .japanese: return "登録日: \(dateStr)"
         case .chinese: return "注册日: \(dateStr)"
+        case .german: return "Dabei seit: \(dateStr)"
+        case .french: return "Inscrit le : \(dateStr)"
         }
     }
 
@@ -872,6 +1058,8 @@ enum Strings {
         case .english: return "Country & Language"
         case .japanese: return "国と言語"
         case .chinese: return "国家和语言"
+        case .german: return "Land & Sprache"
+        case .french: return "Pays et langue"
         }
     }
 
@@ -881,6 +1069,8 @@ enum Strings {
         case .english: return "Country"
         case .japanese: return "国"
         case .chinese: return "国家"
+        case .german: return "Land"
+        case .french: return "Pays"
         }
     }
 
@@ -890,6 +1080,8 @@ enum Strings {
         case .english: return "Language"
         case .japanese: return "言語"
         case .chinese: return "语言"
+        case .german: return "Sprache"
+        case .french: return "Langue"
         }
     }
 
@@ -899,6 +1091,8 @@ enum Strings {
         case .english: return "Annual Leave Settings"
         case .japanese: return "有給休暇設定"
         case .chinese: return "年假设置"
+        case .german: return "Urlaubseinstellungen"
+        case .french: return "Réglages des congés"
         }
     }
 
@@ -908,6 +1102,8 @@ enum Strings {
         case .english: return "Available Leave"
         case .japanese: return "利用可能有給"
         case .chinese: return "可用年假"
+        case .german: return "Verfügbarer Urlaub"
+        case .french: return "Congés disponibles"
         }
     }
 
@@ -917,6 +1113,8 @@ enum Strings {
         case .english: return "Base \(base)d + Bonus \(bonus)d"
         case .japanese: return "基本 \(base)日 + ボーナス \(bonus)日"
         case .chinese: return "基本 \(base)天 + 奖励 \(bonus)天"
+        case .german: return "Basis \(base) T. + Bonus \(bonus) T."
+        case .french: return "Base \(base) j + bonus \(bonus) j"
         }
     }
 
@@ -926,6 +1124,8 @@ enum Strings {
         case .english: return "Total Leave"
         case .japanese: return "有給合計"
         case .chinese: return "总年假"
+        case .german: return "Urlaub gesamt"
+        case .french: return "Total des congés"
         }
     }
 
@@ -935,6 +1135,8 @@ enum Strings {
         case .english: return "Used Leave"
         case .japanese: return "使用済み"
         case .chinese: return "已使用"
+        case .german: return "Genommener Urlaub"
+        case .french: return "Congés pris"
         }
     }
 
@@ -944,6 +1146,8 @@ enum Strings {
         case .english: return "Year Start Month"
         case .japanese: return "基準月"
         case .chinese: return "年假起始月"
+        case .german: return "Startmonat des Urlaubsjahres"
+        case .french: return "Mois de début d'année"
         }
     }
 
@@ -953,6 +1157,8 @@ enum Strings {
         case .english: return "Bonus Leave"
         case .japanese: return "ボーナス休暇"
         case .chinese: return "奖励年假"
+        case .german: return "Bonusurlaub"
+        case .french: return "Congés bonus"
         }
     }
 
@@ -962,6 +1168,8 @@ enum Strings {
         case .english: return "Add Bonus Leave"
         case .japanese: return "ボーナス休暇を追加"
         case .chinese: return "添加奖励年假"
+        case .german: return "Bonusurlaub hinzufügen"
+        case .french: return "Ajouter des congés bonus"
         }
     }
 
@@ -971,6 +1179,8 @@ enum Strings {
         case .english: return "Manage additional leave from comp time, rewards, etc."
         case .japanese: return "代替休暇、報奨休暇など追加の有給を管理します。"
         case .chinese: return "管理补休、奖励假等额外年假。"
+        case .german: return "Verwalte zusätzlichen Urlaub, z. B. Freizeitausgleich oder Prämien."
+        case .french: return "Gérez les congés supplémentaires : récupérations, récompenses, etc."
         }
     }
 
@@ -980,6 +1190,8 @@ enum Strings {
         case .english: return "Vacation Style"
         case .japanese: return "休暇スタイル"
         case .chinese: return "休假风格"
+        case .german: return "Urlaubsstil"
+        case .french: return "Style de vacances"
         }
     }
 
@@ -989,6 +1201,8 @@ enum Strings {
         case .english: return "Preferences"
         case .japanese: return "好み設定"
         case .chinese: return "偏好设置"
+        case .german: return "Vorlieben"
+        case .french: return "Préférences"
         }
     }
 
@@ -998,6 +1212,8 @@ enum Strings {
         case .english: return "Duration"
         case .japanese: return "期間"
         case .chinese: return "偏好时长"
+        case .german: return "Dauer"
+        case .french: return "Durée"
         }
     }
 
@@ -1007,6 +1223,8 @@ enum Strings {
         case .english: return "Season"
         case .japanese: return "季節"
         case .chinese: return "偏好季节"
+        case .german: return "Jahreszeit"
+        case .french: return "Saison"
         }
     }
 
@@ -1016,6 +1234,8 @@ enum Strings {
         case .english: return "Activity"
         case .japanese: return "活動"
         case .chinese: return "偏好活动"
+        case .german: return "Aktivität"
+        case .french: return "Activité"
         }
     }
 
@@ -1025,6 +1245,8 @@ enum Strings {
         case .english: return "Usage Stats"
         case .japanese: return "利用統計"
         case .chinese: return "使用统计"
+        case .german: return "Nutzungsstatistik"
+        case .french: return "Statistiques d'utilisation"
         }
     }
 
@@ -1034,6 +1256,8 @@ enum Strings {
         case .english: return "Completed"
         case .japanese: return "使用済み"
         case .chinese: return "已完成"
+        case .german: return "Genommen"
+        case .french: return "Pris"
         }
     }
 
@@ -1043,6 +1267,8 @@ enum Strings {
         case .english: return "Planned Leave"
         case .japanese: return "予定の休暇"
         case .chinese: return "计划中的假期"
+        case .german: return "Geplanter Urlaub"
+        case .french: return "Congés prévus"
         }
     }
 
@@ -1052,6 +1278,8 @@ enum Strings {
         case .english: return "Usage Rate"
         case .japanese: return "消化率"
         case .chinese: return "使用率"
+        case .german: return "Nutzungsquote"
+        case .french: return "Taux d'utilisation"
         }
     }
 
@@ -1061,6 +1289,8 @@ enum Strings {
         case .english: return "Data Management"
         case .japanese: return "データ管理"
         case .chinese: return "数据管理"
+        case .german: return "Datenverwaltung"
+        case .french: return "Gestion des données"
         }
     }
 
@@ -1070,6 +1300,8 @@ enum Strings {
         case .english: return "Backup to iCloud"
         case .japanese: return "iCloudにバックアップ"
         case .chinese: return "备份到iCloud"
+        case .german: return "In iCloud sichern"
+        case .french: return "Sauvegarder sur iCloud"
         }
     }
 
@@ -1079,6 +1311,8 @@ enum Strings {
         case .english: return "Restore from iCloud"
         case .japanese: return "iCloudから復元"
         case .chinese: return "从iCloud恢复"
+        case .german: return "Aus iCloud wiederherstellen"
+        case .french: return "Restaurer depuis iCloud"
         }
     }
 
@@ -1090,6 +1324,8 @@ enum Strings {
         case .english: return "Add Leaves from a Photo"
         case .japanese: return "写真で休暇を登録"
         case .chinese: return "用照片登记休假"
+        case .german: return "Urlaub per Foto eintragen"
+        case .french: return "Ajouter des congés par photo"
         }
     }
 
@@ -1099,6 +1335,8 @@ enum Strings {
         case .english: return "Snap your company's leave request history and it's recognized and added automatically."
         case .japanese: return "会社システムの休暇申請履歴を撮影すると、自動で認識して登録します。"
         case .chinese: return "拍摄公司系统的休假申请记录，即可自动识别并登记。"
+        case .german: return "Fotografiere die Urlaubsübersicht deiner Firma, und sie wird automatisch erkannt und eingetragen."
+        case .french: return "Photographiez l'historique de congés de votre entreprise : il est reconnu et ajouté automatiquement."
         }
     }
 
@@ -1108,6 +1346,8 @@ enum Strings {
         case .english: return "Share Your Schedule with Family"
         case .japanese: return "家族に予定を共有してみましょう"
         case .chinese: return "与家人共享日程"
+        case .german: return "Teile deinen Plan mit der Familie"
+        case .french: return "Partagez votre planning en famille"
         }
     }
 
@@ -1117,6 +1357,8 @@ enum Strings {
         case .english: return "Send an invite from Settings → Share Schedule to see each other's leaves in the Family tab."
         case .japanese: return "設定 → 予定の共有から招待リンクを送ると、家族の休暇予定を「家族」タブで一緒に見られます。"
         case .chinese: return "在设置 → 日程共享中发送邀请链接，即可在\"家人\"标签页中查看彼此的休假日程。"
+        case .german: return "Sende unter Einstellungen → Plan teilen eine Einladung, um euren Urlaub im Tab „Familie“ gemeinsam zu sehen."
+        case .french: return "Envoyez une invitation via Réglages → Partager le planning pour voir vos congés respectifs dans l'onglet Famille."
         }
     }
 
@@ -1126,6 +1368,8 @@ enum Strings {
         case .english: return "Time Machine Has Your Back"
         case .japanese: return "タイムマシンが守ります"
         case .chinese: return "时光机为您保驾护航"
+        case .german: return "Die Zeitmaschine sichert dich ab"
+        case .french: return "La machine à remonter le temps veille"
         }
     }
 
@@ -1135,6 +1379,8 @@ enum Strings {
         case .english: return "A snapshot is saved automatically whenever your data changes, so you can always roll back."
         case .japanese: return "データが変更されるたびに自動でスナップショットを保存。いつでも元に戻せます。"
         case .chinese: return "每当数据变化时都会自动保存快照，随时可以恢复到任意时间点。"
+        case .german: return "Bei jeder Änderung wird automatisch ein Snapshot gespeichert, sodass du jederzeit zurückgehen kannst."
+        case .french: return "Un instantané est enregistré à chaque modification de vos données, pour pouvoir toujours revenir en arrière."
         }
     }
 
@@ -1144,6 +1390,8 @@ enum Strings {
         case .english: return "Tap a Date to Register"
         case .japanese: return "日付をタップしてすぐ登録"
         case .chinese: return "点按日期即可登记"
+        case .german: return "Datum antippen zum Eintragen"
+        case .french: return "Touchez une date pour l'ajouter"
         }
     }
 
@@ -1153,6 +1401,8 @@ enum Strings {
         case .english: return "Select any date on the calendar to register a leave for that day instantly."
         case .japanese: return "カレンダーで日付を選ぶと、その日の休暇をすぐに登録できます。"
         case .chinese: return "在日历上选择日期，即可立即为该日期登记休假。"
+        case .german: return "Wähle ein Datum im Kalender, um sofort Urlaub für diesen Tag einzutragen."
+        case .french: return "Sélectionnez une date dans le calendrier pour y ajouter un congé instantanément."
         }
     }
 
@@ -1164,6 +1414,8 @@ enum Strings {
         case .english: return "Import from Photo"
         case .japanese: return "写真から取り込む"
         case .chinese: return "从照片导入"
+        case .german: return "Aus Foto importieren"
+        case .french: return "Importer depuis une photo"
         }
     }
 
@@ -1173,6 +1425,8 @@ enum Strings {
         case .english: return "Snap your leave request history to import it automatically"
         case .japanese: return "休暇申請履歴の画面を撮影すると自動で認識します"
         case .chinese: return "拍摄休假申请记录页面即可自动识别"
+        case .german: return "Fotografiere deine Urlaubsübersicht für den automatischen Import"
+        case .french: return "Photographiez votre historique de congés pour l'importer automatiquement"
         }
     }
 
@@ -1182,6 +1436,8 @@ enum Strings {
         case .english: return "Take a photo or choose a screenshot of your company's leave request history.\nDates, types, and deductions are recognized automatically."
         case .japanese: return "会社システムの休暇申請履歴画面を撮影するか、スクリーンショットを選択してください。\n日付・種類・控除日数を自動で認識します。"
         case .chinese: return "拍摄或选择公司系统的休假申请记录截图。\n将自动识别日期、类型和扣除天数。"
+        case .german: return "Fotografiere die Urlaubsübersicht deiner Firma oder wähle einen Screenshot.\nDaten, Arten und abgezogene Tage werden automatisch erkannt."
+        case .french: return "Prenez en photo l'historique de congés de votre entreprise ou choisissez une capture d'écran.\nLes dates, types et jours déduits sont reconnus automatiquement."
         }
     }
 
@@ -1191,6 +1447,8 @@ enum Strings {
         case .english: return "Take Photo"
         case .japanese: return "カメラで撮影"
         case .chinese: return "用相机拍摄"
+        case .german: return "Foto aufnehmen"
+        case .french: return "Prendre une photo"
         }
     }
 
@@ -1200,6 +1458,8 @@ enum Strings {
         case .english: return "Choose from Library"
         case .japanese: return "写真ライブラリから選択"
         case .chinese: return "从相册选择"
+        case .german: return "Aus Mediathek wählen"
+        case .french: return "Choisir dans la photothèque"
         }
     }
 
@@ -1209,6 +1469,8 @@ enum Strings {
         case .english: return "Choose Another Photo"
         case .japanese: return "別の写真を選択"
         case .chinese: return "选择其他照片"
+        case .german: return "Anderes Foto wählen"
+        case .french: return "Choisir une autre photo"
         }
     }
 
@@ -1218,6 +1480,8 @@ enum Strings {
         case .english: return "Recognizing leave records in photo..."
         case .japanese: return "写真から休暇履歴を認識中..."
         case .chinese: return "正在识别照片中的休假记录..."
+        case .german: return "Urlaubseinträge im Foto werden erkannt ..."
+        case .french: return "Reconnaissance des congés sur la photo..."
         }
     }
 
@@ -1227,6 +1491,8 @@ enum Strings {
         case .english: return "No leave records found in the photo.\nPlease retake it so the table is clearly visible."
         case .japanese: return "写真から休暇履歴が見つかりませんでした。\n表が鮮明に写るように撮り直してください。"
         case .chinese: return "未能在照片中找到休假记录。\n请重新拍摄，确保表格清晰可见。"
+        case .german: return "Im Foto wurden keine Urlaubseinträge gefunden.\nBitte fotografiere es erneut, sodass die Tabelle gut lesbar ist."
+        case .french: return "Aucun congé trouvé sur la photo.\nVeuillez la reprendre en veillant à ce que le tableau soit bien net."
         }
     }
 
@@ -1236,6 +1502,8 @@ enum Strings {
         case .english: return "All \(count) recognized records are already registered."
         case .japanese: return "認識された\(count)件はすべて登録済みです。"
         case .chinese: return "识别出的\(count)条记录均已登记。"
+        case .german: return "Alle \(count) erkannten Einträge sind bereits vorhanden."
+        case .french: return "Les \(count) entrées reconnues sont déjà enregistrées."
         }
     }
 
@@ -1245,6 +1513,8 @@ enum Strings {
         case .english: return "\(count) already-registered records were excluded."
         case .japanese: return "登録済みの\(count)件は除外しました。"
         case .chinese: return "已排除\(count)条已登记的记录。"
+        case .german: return "\(count) bereits vorhandene Einträge wurden ausgelassen."
+        case .french: return "\(count) entrées déjà enregistrées ont été exclues."
         }
     }
 
@@ -1254,6 +1524,8 @@ enum Strings {
         case .english: return "Records without a deduction (compensatory leave, family care, etc.) are added without reducing your annual leave."
         case .japanese: return "控除のない代替休暇・子育て休暇などは、年休を減らさずに登録されます。"
         case .chinese: return "无扣除天数的调休、育儿假等将在不扣减年假的情况下登记。"
+        case .german: return "Einträge ohne Abzug (Freizeitausgleich, Kinderbetreuung usw.) werden ohne Abzug vom Jahresurlaub eingetragen."
+        case .french: return "Les entrées sans déduction (récupération, garde d'enfant, etc.) sont ajoutées sans réduire vos congés annuels."
         }
     }
 
@@ -1263,6 +1535,8 @@ enum Strings {
         case .english: return "No deduction"
         case .japanese: return "年休控除なし"
         case .chinese: return "不扣年假"
+        case .german: return "Kein Abzug"
+        case .french: return "Aucune déduction"
         }
     }
 
@@ -1272,6 +1546,8 @@ enum Strings {
         case .english: return "Unable to load the photo."
         case .japanese: return "写真を読み込めません。"
         case .chinese: return "无法加载照片。"
+        case .german: return "Das Foto konnte nicht geladen werden."
+        case .french: return "Impossible de charger la photo."
         }
     }
 
@@ -1283,6 +1559,8 @@ enum Strings {
         case .english: return "Time Machine"
         case .japanese: return "タイムマシン"
         case .chinese: return "时光机"
+        case .german: return "Zeitmaschine"
+        case .french: return "Machine à remonter le temps"
         }
     }
 
@@ -1292,6 +1570,8 @@ enum Strings {
         case .english: return "A snapshot is saved automatically whenever your data changes. Select a point in time to restore your data to that moment."
         case .japanese: return "データが変更されるたびにスナップショットが自動保存されます。時点を選択すると、その時のデータに戻せます。"
         case .chinese: return "每当数据发生变化时都会自动保存快照。选择一个时间点即可将数据恢复到当时的状态。"
+        case .german: return "Bei jeder Änderung wird automatisch ein Snapshot gespeichert. Wähle einen Zeitpunkt, um deine Daten auf diesen Stand zurückzusetzen."
+        case .french: return "Un instantané est enregistré à chaque modification de vos données. Choisissez un point dans le temps pour restaurer vos données à ce moment."
         }
     }
 
@@ -1301,6 +1581,8 @@ enum Strings {
         case .english: return "Create Snapshot Now"
         case .japanese: return "今すぐスナップショットを作成"
         case .chinese: return "立即创建快照"
+        case .german: return "Jetzt Snapshot erstellen"
+        case .french: return "Créer un instantané"
         }
     }
 
@@ -1310,6 +1592,8 @@ enum Strings {
         case .english: return "Saved Points"
         case .japanese: return "保存された時点"
         case .chinese: return "已保存的时间点"
+        case .german: return "Gespeicherte Zeitpunkte"
+        case .french: return "Points enregistrés"
         }
     }
 
@@ -1319,6 +1603,8 @@ enum Strings {
         case .english: return "No snapshots saved yet"
         case .japanese: return "保存されたスナップショットはありません"
         case .chinese: return "尚无已保存的快照"
+        case .german: return "Noch keine Snapshots gespeichert"
+        case .french: return "Aucun instantané enregistré"
         }
     }
 
@@ -1328,6 +1614,8 @@ enum Strings {
         case .english: return "Restore This Point"
         case .japanese: return "この時点に復元"
         case .chinese: return "恢复到此时间点"
+        case .german: return "Diesen Zeitpunkt wiederherstellen"
+        case .french: return "Restaurer ce point"
         }
     }
 
@@ -1337,6 +1625,8 @@ enum Strings {
         case .english: return "Your data will be restored to \(date). The current state is saved automatically before restoring, so you can always go back."
         case .japanese: return "\(date) 時点のデータに戻します。復元直前の状態も自動保存されるため、いつでも元に戻せます。"
         case .chinese: return "数据将恢复到 \(date)。恢复前会自动保存当前状态，因此您随时可以撤销。"
+        case .german: return "Deine Daten werden auf den Stand vom \(date) zurückgesetzt. Der aktuelle Stand wird vorher automatisch gespeichert, sodass du jederzeit zurückkehren kannst."
+        case .french: return "Vos données seront restaurées à l'état du \(date). L'état actuel est enregistré automatiquement avant la restauration, vous pouvez donc toujours revenir en arrière."
         }
     }
 
@@ -1346,6 +1636,8 @@ enum Strings {
         case .english: return "\(leaves) leaves · \(bonuses) bonuses"
         case .japanese: return "休暇 \(leaves)件 · ボーナス \(bonuses)件"
         case .chinese: return "休假 \(leaves)条 · 奖励 \(bonuses)条"
+        case .german: return "\(leaves) Urlaube · \(bonuses) Boni"
+        case .french: return "\(leaves) congés · \(bonuses) bonus"
         }
     }
 
@@ -1355,6 +1647,8 @@ enum Strings {
         case .english: return "Snapshot saved."
         case .japanese: return "スナップショットを保存しました。"
         case .chinese: return "快照已保存。"
+        case .german: return "Snapshot gespeichert."
+        case .french: return "Instantané enregistré."
         }
     }
 
@@ -1364,6 +1658,8 @@ enum Strings {
         case .english: return "Failed to save snapshot."
         case .japanese: return "スナップショットの保存に失敗しました。"
         case .chinese: return "快照保存失败。"
+        case .german: return "Snapshot konnte nicht gespeichert werden."
+        case .french: return "Échec de l'enregistrement de l'instantané."
         }
     }
 
@@ -1373,6 +1669,8 @@ enum Strings {
         case .english: return "Snapshot integrity check failed."
         case .japanese: return "スナップショットの整合性検証に失敗しました。"
         case .chinese: return "快照完整性校验失败。"
+        case .german: return "Integritätsprüfung des Snapshots fehlgeschlagen."
+        case .french: return "Échec de la vérification d'intégrité de l'instantané."
         }
     }
 
@@ -1382,6 +1680,8 @@ enum Strings {
         case .english: return "Auto"
         case .japanese: return "自動"
         case .chinese: return "自动"
+        case .german: return "Automatisch"
+        case .french: return "Auto"
         }
     }
 
@@ -1391,6 +1691,8 @@ enum Strings {
         case .english: return "App switch"
         case .japanese: return "アプリ切替"
         case .chinese: return "应用切换"
+        case .german: return "App-Wechsel"
+        case .french: return "Changement d'app"
         }
     }
 
@@ -1400,6 +1702,8 @@ enum Strings {
         case .english: return "Manual"
         case .japanese: return "手動"
         case .chinese: return "手动"
+        case .german: return "Manuell"
+        case .french: return "Manuel"
         }
     }
 
@@ -1409,6 +1713,8 @@ enum Strings {
         case .english: return "Pre-restore"
         case .japanese: return "復元前の保存"
         case .chinese: return "恢复前保存"
+        case .german: return "Vor Wiederherstellung"
+        case .french: return "Avant restauration"
         }
     }
 
@@ -1418,6 +1724,8 @@ enum Strings {
         case .english: return "Reset Leave Data"
         case .japanese: return "データリセット"
         case .chinese: return "重置数据"
+        case .german: return "Urlaubsdaten zurücksetzen"
+        case .french: return "Réinitialiser les congés"
         }
     }
 
@@ -1427,6 +1735,8 @@ enum Strings {
         case .english: return "Reset Leave Data"
         case .japanese: return "データリセット"
         case .chinese: return "重置数据"
+        case .german: return "Urlaubsdaten zurücksetzen"
+        case .french: return "Réinitialiser les congés"
         }
     }
 
@@ -1436,6 +1746,8 @@ enum Strings {
         case .english: return "All leave records will be deleted and used leave will be reset to 0. This cannot be undone."
         case .japanese: return "すべての休暇記録が削除され、使用済み休暇が0にリセットされます。この操作は元に戻せません。"
         case .chinese: return "所有休假记录将被删除，已使用年假将重置为0。此操作无法撤销。"
+        case .german: return "Alle Urlaubseinträge werden gelöscht und der genommene Urlaub wird auf 0 gesetzt. Das lässt sich nicht rückgängig machen."
+        case .french: return "Tous les congés seront supprimés et les congés pris remis à 0. Cette action est irréversible."
         }
     }
 
@@ -1445,6 +1757,8 @@ enum Strings {
         case .english: return "Reset"
         case .japanese: return "リセット"
         case .chinese: return "重置"
+        case .german: return "Zurücksetzen"
+        case .french: return "Réinitialiser"
         }
     }
 
@@ -1457,6 +1771,8 @@ enum Strings {
         case .english: return "How to Use Goldweek"
         case .japanese: return "Goldweekの使い方"
         case .chinese: return "Goldweek 使用方法"
+        case .german: return "So funktioniert Goldweek"
+        case .french: return "Utiliser Goldweek"
         }
     }
 
@@ -1466,6 +1782,8 @@ enum Strings {
         case .english: return "Get Started"
         case .japanese: return "はじめる"
         case .chinese: return "开始使用"
+        case .german: return "Los geht's"
+        case .french: return "Commencer"
         }
     }
 
@@ -1475,6 +1793,8 @@ enum Strings {
         case .english: return "Skip"
         case .japanese: return "スキップ"
         case .chinese: return "跳过"
+        case .german: return "Überspringen"
+        case .french: return "Passer"
         }
     }
 
@@ -1484,6 +1804,8 @@ enum Strings {
         case .english: return "Adding a Leave"
         case .japanese: return "休暇の登録"
         case .chinese: return "登记休假"
+        case .german: return "Urlaub eintragen"
+        case .french: return "Ajouter un congé"
         }
     }
 
@@ -1493,6 +1815,8 @@ enum Strings {
         case .english: return "Tap + on the home card, or pick a date on the calendar. For half days, just choose the length."
         case .japanese: return "ホームの＋、またはカレンダーで日付をタップ。半休は長さを選ぶだけです。"
         case .chinese: return "点击主页的 +，或在日历上选择日期。半天假只需选择时长。"
+        case .german: return "Tippe auf der Startkarte auf + oder wähle ein Datum im Kalender. Für halbe Tage wählst du einfach die Länge."
+        case .french: return "Touchez + sur la carte d'accueil ou choisissez une date dans le calendrier. Pour une demi-journée, choisissez simplement la durée."
         }
     }
 
@@ -1502,6 +1826,8 @@ enum Strings {
         case .english: return "One Photo Is Enough"
         case .japanese: return "写真1枚でOK"
         case .chinese: return "一张照片就够了"
+        case .german: return "Ein Foto genügt"
+        case .french: return "Une photo suffit"
         }
     }
 
@@ -1511,6 +1837,8 @@ enum Strings {
         case .english: return "Snap your company's leave history and the dates and types are read for you."
         case .japanese: return "社内システムの休暇履歴を撮ると、日付と種類を読み取って登録します。"
         case .chinese: return "拍下公司系统的休假记录，应用会自动读取日期与类型。"
+        case .german: return "Fotografiere die Urlaubsübersicht deiner Firma, und Daten und Arten werden automatisch gelesen."
+        case .french: return "Photographiez l'historique de congés de votre entreprise : les dates et types sont lus pour vous."
         }
     }
 
@@ -1520,6 +1848,8 @@ enum Strings {
         case .english: return "Stretch One Day Off"
         case .japanese: return "有給1日で何日休む"
         case .chinese: return "用1天年假休几天"
+        case .german: return "Mit einem Tag mehr frei"
+        case .french: return "Un jour pour plus de repos"
         }
     }
 
@@ -1529,6 +1859,8 @@ enum Strings {
         case .english: return "Yellow marks on the calendar are breaks built by attaching leave to holidays. Tap to add one."
         case .japanese: return "カレンダーの黄色は祝日に有給をつなげた連休です。タップでそのまま登録できます。"
         case .chinese: return "日历上的黄色标记是把年假接在节假日上的连休。点击即可直接登记。"
+        case .german: return "Gelbe Markierungen im Kalender sind Auszeiten, bei denen Urlaub an Feiertage anschließt. Tippe darauf, um sie einzutragen."
+        case .french: return "Les repères jaunes du calendrier sont des pauses créées en accolant des congés aux jours fériés. Touchez-en un pour l'ajouter."
         }
     }
 
@@ -1538,6 +1870,8 @@ enum Strings {
         case .english: return "Bonus Leave Stays Separate"
         case .japanese: return "代休は別で管理"
         case .chinese: return "补休单独管理"
+        case .german: return "Bonusurlaub bleibt separat"
+        case .french: return "Les congés bonus restent à part"
         }
     }
 
@@ -1547,6 +1881,8 @@ enum Strings {
         case .english: return "Logged as bonus leave, it never eats into your annual days — and expiry dates are tracked."
         case .japanese: return "ボーナス休暇として登録すれば有給を減らさず別に管理され、有効期限も追えます。"
         case .chinese: return "登记为奖励假后不会占用年假，并会一并跟踪有效期。"
+        case .german: return "Als Bonusurlaub eingetragen, geht er nie von deinen Urlaubstagen ab – Ablaufdaten werden mitverfolgt."
+        case .french: return "Enregistrés comme congés bonus, ils ne réduisent jamais vos congés annuels, et les dates d'expiration sont suivies."
         }
     }
 
@@ -1556,6 +1892,8 @@ enum Strings {
         case .english: return "Line Up with Family"
         case .japanese: return "家族と予定を合わせる"
         case .chinese: return "与家人对好行程"
+        case .german: return "Pläne mit der Familie abstimmen"
+        case .french: return "Se coordonner en famille"
         }
     }
 
@@ -1565,6 +1903,8 @@ enum Strings {
         case .english: return "Share your schedule and see each other's time off in the Family tab."
         case .japanese: return "予定を共有すると、家族タブでお互いの休暇を一覧できます。"
         case .chinese: return "共享日程后，可在家庭标签中一览彼此的假期。"
+        case .german: return "Teile deinen Plan und sieh im Tab „Familie“ den Urlaub der anderen auf einen Blick."
+        case .french: return "Partagez votre planning et voyez les congés de chacun dans l'onglet Famille."
         }
     }
 
@@ -1574,6 +1914,8 @@ enum Strings {
         case .english: return "Right on Your Home Screen"
         case .japanese: return "ホーム画面でひと目"
         case .chinese: return "在主屏幕上一眼看到"
+        case .german: return "Direkt auf dem Home-Bildschirm"
+        case .french: return "Directement sur l'écran d'accueil"
         }
     }
 
@@ -1583,6 +1925,8 @@ enum Strings {
         case .english: return "Add a widget to see remaining leave and your next break, even on the Lock Screen. Records back up to iCloud."
         case .japanese: return "ウィジェットを追加すると、残りの有給と次の休暇をロック画面でも確認できます。記録はiCloudにバックアップされます。"
         case .chinese: return "添加小组件后，在锁定屏幕也能看到剩余年假和下次休假。记录会备份到 iCloud。"
+        case .german: return "Mit einem Widget siehst du Resturlaub und deine nächste Auszeit, auch auf dem Sperrbildschirm. Einträge werden in iCloud gesichert."
+        case .french: return "Ajoutez un widget pour voir vos congés restants et votre prochaine pause, même sur l'écran verrouillé. Les données sont sauvegardées sur iCloud."
         }
     }
 
@@ -1592,6 +1936,8 @@ enum Strings {
         case .english: return "Help"
         case .japanese: return "ヘルプ"
         case .chinese: return "帮助"
+        case .german: return "Hilfe"
+        case .french: return "Aide"
         }
     }
 
@@ -1601,6 +1947,8 @@ enum Strings {
         case .english: return "How to Use Goldweek"
         case .japanese: return "使い方をもう一度見る"
         case .chinese: return "重看使用方法"
+        case .german: return "So funktioniert Goldweek"
+        case .french: return "Utiliser Goldweek"
         }
     }
 
@@ -1610,6 +1958,8 @@ enum Strings {
         case .english: return "Replay Intro"
         case .japanese: return "初回案内をもう一度"
         case .chinese: return "重看初次引导"
+        case .german: return "Einführung erneut ansehen"
+        case .french: return "Revoir l'introduction"
         }
     }
 
@@ -1619,6 +1969,8 @@ enum Strings {
         case .english: return "Show Feature Tips Again"
         case .japanese: return "機能のヒントを再表示"
         case .chinese: return "重新显示功能提示"
+        case .german: return "Funktionstipps erneut anzeigen"
+        case .french: return "Réafficher les astuces"
         }
     }
 
@@ -1628,6 +1980,8 @@ enum Strings {
         case .english: return "Feature tips will appear again the next time you open the app."
         case .japanese: return "アプリを開き直すと、機能のヒントが最初から表示されます。"
         case .chinese: return "下次打开应用时，功能提示会重新出现。"
+        case .german: return "Die Funktionstipps erscheinen beim nächsten Öffnen der App erneut."
+        case .french: return "Les astuces réapparaîtront à la prochaine ouverture de l'app."
         }
     }
 
@@ -1637,6 +1991,8 @@ enum Strings {
         case .english: return "Tap a Suggested Break"
         case .japanese: return "おすすめの連休をタップ"
         case .chinese: return "点点推荐的连休"
+        case .german: return "Tippe auf eine empfohlene Auszeit"
+        case .french: return "Touchez une pause suggérée"
         }
     }
 
@@ -1646,6 +2002,8 @@ enum Strings {
         case .english: return "Yellow marks are breaks made with just a day or two of leave. Tap to add one."
         case .japanese: return "黄色の印は少ない有給で作った連休です。タップして登録できます。"
         case .chinese: return "黄色标记是只用一两天年假拼出的连休，点击即可登记。"
+        case .german: return "Gelbe Markierungen sind Auszeiten mit nur ein oder zwei Urlaubstagen. Tippe darauf, um sie einzutragen."
+        case .french: return "Les repères jaunes sont des pauses créées avec seulement un ou deux jours de congé. Touchez-en un pour l'ajouter."
         }
     }
 
@@ -1655,6 +2013,8 @@ enum Strings {
         case .english: return "Share Your Leave Status"
         case .japanese: return "有給の状況を画像で"
         case .chinese: return "把年假状况变成图片"
+        case .german: return "Urlaubsstand teilen"
+        case .french: return "Partager votre situation de congés"
         }
     }
 
@@ -1664,6 +2024,8 @@ enum Strings {
         case .english: return "Tap share to turn your status into a card you can send to family or friends."
         case .japanese: return "共有ボタンでカード画像を作り、家族や友人に送れます。"
         case .chinese: return "点击分享，即可生成卡片图片发给家人或朋友。"
+        case .german: return "Tippe auf Teilen, um aus deinem Stand eine Karte für Familie oder Freunde zu erstellen."
+        case .french: return "Touchez Partager pour créer une carte de votre situation à envoyer à votre famille ou vos amis."
         }
     }
 
@@ -1673,6 +2035,8 @@ enum Strings {
         case .english: return "Bonus Leave Goes Here"
         case .japanese: return "代休・特別休暇はこちら"
         case .chinese: return "补休和奖励假在这里"
+        case .german: return "Bonusurlaub kommt hierher"
+        case .french: return "Les congés bonus, c'est ici"
         }
     }
 
@@ -1682,6 +2046,8 @@ enum Strings {
         case .english: return "Add it as bonus leave — it's tracked separately from annual days, expiry included."
         case .japanese: return "ボーナス休暇として登録すると有給とは別に管理され、期限も追えます。"
         case .chinese: return "登记为奖励假后与年假分开管理，并会跟踪有效期。"
+        case .german: return "Trage ihn als Bonusurlaub ein – er wird getrennt von den Urlaubstagen verwaltet, samt Ablaufdatum."
+        case .french: return "Ajoutez-les comme congés bonus : ils sont suivis séparément des congés annuels, échéance comprise."
         }
     }
 
@@ -1691,6 +2057,8 @@ enum Strings {
         case .english: return "Look Back at Your Leave"
         case .japanese: return "これまでの休暇をふり返る"
         case .chinese: return "回顾过往假期"
+        case .german: return "Rückblick auf deinen Urlaub"
+        case .french: return "Revoir vos congés passés"
         }
     }
 
@@ -1700,6 +2068,8 @@ enum Strings {
         case .english: return "See how much you used each year, and which kinds of leave they were."
         case .japanese: return "年ごとの使用日数と休暇の種類をまとめて確認できます。"
         case .chinese: return "可以按年份查看用了多少天、用的是哪类假期。"
+        case .german: return "Sieh, wie viel du pro Jahr genommen hast und welche Urlaubsarten es waren."
+        case .french: return "Voyez combien vous en avez pris chaque année, et de quel type."
         }
     }
 
@@ -1709,6 +2079,8 @@ enum Strings {
         case .english: return "App Info"
         case .japanese: return "アプリ情報"
         case .chinese: return "应用信息"
+        case .german: return "App-Info"
+        case .french: return "Infos sur l'app"
         }
     }
 
@@ -1719,6 +2091,8 @@ enum Strings {
         case .english: return "Support"
         case .japanese: return "サポート"
         case .chinese: return "支持"
+        case .german: return "Support"
+        case .french: return "Assistance"
         }
     }
 
@@ -1728,6 +2102,8 @@ enum Strings {
         case .english: return "Send Feedback"
         case .japanese: return "フィードバックを送る"
         case .chinese: return "发送反馈"
+        case .german: return "Feedback senden"
+        case .french: return "Envoyer un avis"
         }
     }
 
@@ -1737,6 +2113,8 @@ enum Strings {
         case .english: return "Support Page"
         case .japanese: return "サポートページ"
         case .chinese: return "支持页面"
+        case .german: return "Support-Seite"
+        case .french: return "Page d'assistance"
         }
     }
 
@@ -1749,6 +2127,8 @@ enum Strings {
         case .english: return "Feedback Inbox (Developer)"
         case .japanese: return "受信フィードバック（開発者）"
         case .chinese: return "收到的反馈（开发者）"
+        case .german: return "Feedback-Eingang (Entwickler)"
+        case .french: return "Boîte des retours (développeur)"
         }
     }
 
@@ -1758,6 +2138,8 @@ enum Strings {
         case .english: return "Usage Stats (Developer)"
         case .japanese: return "利用統計（開発者）"
         case .chinese: return "使用统计（开发者）"
+        case .german: return "Nutzungsstatistik (Entwickler)"
+        case .french: return "Statistiques d'utilisation (dév.)"
         }
     }
 
@@ -1767,6 +2149,8 @@ enum Strings {
         case .english: return "Stability (Developer)"
         case .japanese: return "安定性（開発者）"
         case .chinese: return "稳定性（开发者）"
+        case .german: return "Stabilität (Entwickler)"
+        case .french: return "Stabilité (dév.)"
         }
     }
 
@@ -1776,6 +2160,8 @@ enum Strings {
         case .english: return "Version"
         case .japanese: return "バージョン"
         case .chinese: return "版本"
+        case .german: return "Version"
+        case .french: return "Version"
         }
     }
 
@@ -1785,6 +2171,8 @@ enum Strings {
         case .english: return "Developer"
         case .japanese: return "開発"
         case .chinese: return "开发者"
+        case .german: return "Entwicklung"
+        case .french: return "Développeur"
         }
     }
 
@@ -1794,6 +2182,8 @@ enum Strings {
         case .english: return "Rate This App"
         case .japanese: return "アプリを評価"
         case .chinese: return "评价应用"
+        case .german: return "App bewerten"
+        case .french: return "Noter l'app"
         }
     }
 
@@ -1803,6 +2193,8 @@ enum Strings {
         case .english: return "Contact the Developer"
         case .japanese: return "開発者に問い合わせ"
         case .chinese: return "联系开发者"
+        case .german: return "Entwickler kontaktieren"
+        case .french: return "Contacter le développeur"
         }
     }
 
@@ -1812,6 +2204,8 @@ enum Strings {
         case .english: return "Contact via Email"
         case .japanese: return "メールで問い合わせ"
         case .chinese: return "通过邮件联系"
+        case .german: return "Per E-Mail kontaktieren"
+        case .french: return "Contacter par e-mail"
         }
     }
 
@@ -1821,6 +2215,8 @@ enum Strings {
         case .english: return "Instagram DM (@lee25_ios)"
         case .japanese: return "Instagram DM (@lee25_ios)"
         case .chinese: return "Instagram 私信 (@lee25_ios)"
+        case .german: return "Instagram-DM (@lee25_ios)"
+        case .french: return "DM Instagram (@lee25_ios)"
         }
     }
 
@@ -1830,6 +2226,8 @@ enum Strings {
         case .english: return "Bug reports and feature suggestions are welcome."
         case .japanese: return "バグ報告や機能提案を歓迎します。"
         case .chinese: return "欢迎反馈问题和提出功能建议。"
+        case .german: return "Fehlerberichte und Funktionsvorschläge sind willkommen."
+        case .french: return "Signalements de bugs et suggestions bienvenus."
         }
     }
 
@@ -1839,6 +2237,8 @@ enum Strings {
         case .english: return "OK"
         case .japanese: return "確認"
         case .chinese: return "确认"
+        case .german: return "OK"
+        case .french: return "OK"
         }
     }
 
@@ -1848,6 +2248,8 @@ enum Strings {
         case .english: return "Backup"
         case .japanese: return "バックアップ"
         case .chinese: return "备份"
+        case .german: return "Backup"
+        case .french: return "Sauvegarde"
         }
     }
 
@@ -1857,6 +2259,8 @@ enum Strings {
         case .english: return "Confirm Restore"
         case .japanese: return "復元の確認"
         case .chinese: return "确认恢复"
+        case .german: return "Wiederherstellung bestätigen"
+        case .french: return "Confirmer la restauration"
         }
     }
 
@@ -1866,6 +2270,8 @@ enum Strings {
         case .english: return "Restore"
         case .japanese: return "復元"
         case .chinese: return "恢复"
+        case .german: return "Wiederherstellen"
+        case .french: return "Restaurer"
         }
     }
 
@@ -1875,6 +2281,8 @@ enum Strings {
         case .english: return "Restore data from iCloud backup. All current data will be deleted."
         case .japanese: return "iCloudバックアップからデータを復元します。現在のデータはすべて削除されます。"
         case .chinese: return "从iCloud备份恢复数据。当前所有数据将被删除。"
+        case .german: return "Daten aus dem iCloud-Backup wiederherstellen. Alle aktuellen Daten werden gelöscht."
+        case .french: return "Restaurer les données depuis la sauvegarde iCloud. Toutes les données actuelles seront supprimées."
         }
     }
 
@@ -1884,6 +2292,8 @@ enum Strings {
         case .english: return "Last backup: \(dateStr)"
         case .japanese: return "最終バックアップ: \(dateStr)"
         case .chinese: return "上次备份: \(dateStr)"
+        case .german: return "Letztes Backup: \(dateStr)"
+        case .french: return "Dernière sauvegarde : \(dateStr)"
         }
     }
 
@@ -1894,6 +2304,8 @@ enum Strings {
         case .english: return "My Vacation Style"
         case .japanese: return "休暇スタイル"
         case .chinese: return "我的休假风格"
+        case .german: return "Mein Urlaubsstil"
+        case .french: return "Mon style de congés"
         }
     }
 
@@ -1903,6 +2315,8 @@ enum Strings {
         case .english: return "Preferred Duration"
         case .japanese: return "好みの休暇期間"
         case .chinese: return "偏好休假时长"
+        case .german: return "Bevorzugte Dauer"
+        case .french: return "Durée préférée"
         }
     }
 
@@ -1912,6 +2326,8 @@ enum Strings {
         case .english: return "Preferred Season (Multiple)"
         case .japanese: return "好みの季節（複数選択）"
         case .chinese: return "偏好季节（可多选）"
+        case .german: return "Bevorzugte Jahreszeit (Mehrfachauswahl)"
+        case .french: return "Saison préférée (choix multiple)"
         }
     }
 
@@ -1921,6 +2337,8 @@ enum Strings {
         case .english: return "Vacation Style"
         case .japanese: return "休暇スタイル"
         case .chinese: return "休假风格"
+        case .german: return "Urlaubsstil"
+        case .french: return "Style de congés"
         }
     }
 
@@ -1930,6 +2348,8 @@ enum Strings {
         case .english: return "Use Bridge Days"
         case .japanese: return "飛び石連休の活用"
         case .chinese: return "利用桥接假日"
+        case .german: return "Brückentage nutzen"
+        case .french: return "Utiliser les ponts"
         }
     }
 
@@ -1939,6 +2359,8 @@ enum Strings {
         case .english: return "Prefer Consecutive"
         case .japanese: return "連続休暇を好む"
         case .chinese: return "偏好连续休假"
+        case .german: return "Zusammenhängenden Urlaub bevorzugen"
+        case .french: return "Privilégier les congés consécutifs"
         }
     }
 
@@ -1948,6 +2370,8 @@ enum Strings {
         case .english: return "Avoid Peak Season"
         case .japanese: return "ピークシーズン回避"
         case .chinese: return "避开旺季"
+        case .german: return "Hauptsaison meiden"
+        case .french: return "Éviter la haute saison"
         }
     }
 
@@ -1957,6 +2381,8 @@ enum Strings {
         case .english: return "Preferred Activities"
         case .japanese: return "したい活動"
         case .chinese: return "想做的活动"
+        case .german: return "Bevorzugte Aktivitäten"
+        case .french: return "Activités préférées"
         }
     }
 
@@ -1966,6 +2392,8 @@ enum Strings {
         case .english: return "Save"
         case .japanese: return "保存"
         case .chinese: return "保存"
+        case .german: return "Sichern"
+        case .french: return "Enregistrer"
         }
     }
 
@@ -1976,6 +2404,8 @@ enum Strings {
         case .english: return "Goldweek"
         case .japanese: return "ゴールドウィーク"
         case .chinese: return "Goldweek"
+        case .german: return "Goldweek"
+        case .french: return "Goldweek"
         }
     }
 
@@ -1985,6 +2415,8 @@ enum Strings {
         case .english: return "Maximum days off with minimum PTO\nAI plans your perfect long weekend"
         case .japanese: return "最少の有給で最大の連休を\n祝日を活かしたゴールデンプラン"
         case .chinese: return "最少年假，最长假期\n善用节假日的黄金组合"
+        case .german: return "Maximale freie Tage mit minimalem Urlaub\nKI plant dein perfektes langes Wochenende"
+        case .french: return "Un maximum de jours off avec un minimum de congés\nL'IA planifie votre week-end prolongé idéal"
         }
     }
 
@@ -1994,6 +2426,8 @@ enum Strings {
         case .english: return "3 PTO days\n9 days off"
         case .japanese: return "3日の有給で\n9日の連休"
         case .chinese: return "3天年假\n9天假期"
+        case .german: return "3 Urlaubstage\n9 Tage frei"
+        case .french: return "3 jours de congé\n9 jours off"
         }
     }
 
@@ -2003,6 +2437,8 @@ enum Strings {
         case .english: return "We automatically find the bridge days between holidays and weekends"
         case .japanese: return "祝日と週末の間にある飛び石を自動で見つけます"
         case .chinese: return "自动找出节假日与周末之间的搭桥日"
+        case .german: return "Wir finden automatisch die Brückentage zwischen Feiertagen und Wochenenden"
+        case .french: return "Nous trouvons automatiquement les ponts entre jours fériés et week-ends"
         }
     }
 
@@ -2012,6 +2448,8 @@ enum Strings {
         case .english: return "PTO"
         case .japanese: return "有給"
         case .chinese: return "年假"
+        case .german: return "Urlaub"
+        case .french: return "Congé"
         }
     }
 
@@ -2021,6 +2459,8 @@ enum Strings {
         case .english: return "Holiday"
         case .japanese: return "祝日"
         case .chinese: return "假日"
+        case .german: return "Feiertag"
+        case .french: return "Jour férié"
         }
     }
 
@@ -2030,6 +2470,8 @@ enum Strings {
         case .english: return "Weekend"
         case .japanese: return "週末"
         case .chinese: return "周末"
+        case .german: return "Wochenende"
+        case .french: return "Week-end"
         }
     }
 
@@ -2039,6 +2481,8 @@ enum Strings {
         case .english: return "Optional"
         case .japanese: return "任意"
         case .chinese: return "选填"
+        case .german: return "Optional"
+        case .french: return "Facultatif"
         }
     }
 
@@ -2048,6 +2492,8 @@ enum Strings {
         case .english: return "Long weekend planner"
         case .japanese: return "黄金連休プランナー"
         case .chinese: return "黄金假期规划"
+        case .german: return "Planer für lange Wochenenden"
+        case .french: return "Planificateur de longs week-ends"
         }
     }
 
@@ -2057,6 +2503,8 @@ enum Strings {
         case .english: return "Get Started"
         case .japanese: return "始める"
         case .chinese: return "开始"
+        case .german: return "Los geht's"
+        case .french: return "Commencer"
         }
     }
 
@@ -2066,6 +2514,8 @@ enum Strings {
         case .english: return "Next"
         case .japanese: return "次へ"
         case .chinese: return "下一步"
+        case .german: return "Weiter"
+        case .french: return "Suivant"
         }
     }
 
@@ -2075,6 +2525,8 @@ enum Strings {
         case .english: return "Key Features"
         case .japanese: return "主な機能"
         case .chinese: return "主要功能"
+        case .german: return "Hauptfunktionen"
+        case .french: return "Fonctions clés"
         }
     }
 
@@ -2084,6 +2536,8 @@ enum Strings {
         case .english: return "Leave Management"
         case .japanese: return "有給管理"
         case .chinese: return "年假管理"
+        case .german: return "Urlaubsverwaltung"
+        case .french: return "Gestion des congés"
         }
     }
 
@@ -2093,6 +2547,8 @@ enum Strings {
         case .english: return "Track annual, half-day, and\ncompensatory leave"
         case .japanese: return "有給、半休、代替休暇など\n様々な休暇を記録"
         case .chinese: return "记录年假、半天假、\n补休等各种休假"
+        case .german: return "Erfasse Jahresurlaub, halbe Tage und\nFreizeitausgleich"
+        case .french: return "Suivez congés payés, demi-journées\net jours de récupération"
         }
     }
 
@@ -2102,6 +2558,8 @@ enum Strings {
         case .english: return "AI Recommend"
         case .japanese: return "AIおすすめ"
         case .chinese: return "AI推荐"
+        case .german: return "KI-Empfehlung"
+        case .french: return "Suggestions IA"
         }
     }
 
@@ -2111,6 +2569,8 @@ enum Strings {
         case .english: return "Optimal leave combos using\nholidays and weekends"
         case .japanese: return "祝日と週末を活用した\n最適な休暇の組み合わせ"
         case .chinese: return "利用节假日和周末\n推荐最佳休假组合"
+        case .german: return "Optimale Urlaubskombis mit\nFeiertagen und Wochenenden"
+        case .french: return "Combinaisons de congés optimales\navec jours fériés et week-ends"
         }
     }
 
@@ -2120,6 +2580,8 @@ enum Strings {
         case .english: return "Bonus Leave"
         case .japanese: return "ボーナス休暇"
         case .chinese: return "奖励年假"
+        case .german: return "Bonusurlaub"
+        case .french: return "Congés bonus"
         }
     }
 
@@ -2129,6 +2591,8 @@ enum Strings {
         case .english: return "Manage comp time, rewards\nand extra leave"
         case .japanese: return "代替休暇、報奨休暇など\n追加の有給も管理"
         case .chinese: return "管理补休、奖励假\n等额外年假"
+        case .german: return "Verwalte Zeitausgleich, Prämien\nund Zusatzurlaub"
+        case .french: return "Gérez récupérations, primes\net congés supplémentaires"
         }
     }
 
@@ -2138,6 +2602,8 @@ enum Strings {
         case .english: return "Widget"
         case .japanese: return "ウィジェット"
         case .chinese: return "小组件"
+        case .german: return "Widget"
+        case .french: return "Widget"
         }
     }
 
@@ -2147,6 +2613,8 @@ enum Strings {
         case .english: return "Check remaining leave\nright from home screen"
         case .japanese: return "ホーム画面から\n残り有給を確認"
         case .chinese: return "在主屏幕上\n直接查看剩余年假"
+        case .german: return "Resturlaub direkt\nauf dem Home-Bildschirm"
+        case .french: return "Congés restants directement\nsur l'écran d'accueil"
         }
     }
 
@@ -2156,6 +2624,8 @@ enum Strings {
         case .english: return "Select your country"
         case .japanese: return "国を選んでください"
         case .chinese: return "选择您的国家"
+        case .german: return "Wähle dein Land"
+        case .french: return "Choisissez votre pays"
         }
     }
 
@@ -2165,6 +2635,8 @@ enum Strings {
         case .english: return "Holiday data will be set for your country"
         case .japanese: return "祝日データが国に合わせて設定されます"
         case .chinese: return "节假日数据将根据您的国家设置"
+        case .german: return "Die Feiertage werden an dein Land angepasst"
+        case .french: return "Les jours fériés seront adaptés à votre pays"
         }
     }
 
@@ -2174,6 +2646,8 @@ enum Strings {
         case .english: return "What's your name?"
         case .japanese: return "お名前を教えてください"
         case .chinese: return "请输入您的姓名"
+        case .german: return "Wie heißt du?"
+        case .french: return "Comment vous appelez-vous ?"
         }
     }
 
@@ -2183,6 +2657,8 @@ enum Strings {
         case .english: return "Enter the name to use in the app"
         case .japanese: return "アプリで使う名前を入力してください"
         case .chinese: return "请输入在应用中使用的姓名"
+        case .german: return "Gib den Namen ein, der in der App verwendet wird"
+        case .french: return "Saisissez le nom à utiliser dans l'app"
         }
     }
 
@@ -2192,6 +2668,8 @@ enum Strings {
         case .english: return "Leave Setup"
         case .japanese: return "有給設定"
         case .chinese: return "年假设置"
+        case .german: return "Urlaub einrichten"
+        case .french: return "Configuration des congés"
         }
     }
 
@@ -2201,6 +2679,8 @@ enum Strings {
         case .english: return "You can change this later in settings"
         case .japanese: return "後で設定で変更できます"
         case .chinese: return "稍后可在设置中更改"
+        case .german: return "Du kannst das später in den Einstellungen ändern"
+        case .french: return "Vous pourrez modifier cela plus tard dans les réglages"
         }
     }
 
@@ -2210,6 +2690,8 @@ enum Strings {
         case .english: return "Total Annual Leave"
         case .japanese: return "今年の有給合計"
         case .chinese: return "今年总年假"
+        case .german: return "Jahresurlaub gesamt"
+        case .french: return "Total des congés annuels"
         }
     }
 
@@ -2219,6 +2701,8 @@ enum Strings {
         case .english: return "Year Start Month"
         case .japanese: return "基準月"
         case .chinese: return "年假起始月"
+        case .german: return "Startmonat des Urlaubsjahrs"
+        case .french: return "Mois de début de l'année"
         }
     }
 
@@ -2228,6 +2712,8 @@ enum Strings {
         case .english: return "Month when annual leave renews"
         case .japanese: return "有給が更新される月"
         case .chinese: return "年假更新的月份"
+        case .german: return "Monat, in dem der Jahresurlaub erneuert wird"
+        case .french: return "Mois de renouvellement des congés annuels"
         }
     }
 
@@ -2237,6 +2723,8 @@ enum Strings {
         case .english: return "User"
         case .japanese: return "ユーザー"
         case .chinese: return "用户"
+        case .german: return "Nutzer"
+        case .french: return "Utilisateur"
         }
     }
 
@@ -2278,6 +2766,20 @@ enum Strings {
             case .long: return "5天以上"
             case .mixed: return "混合"
             }
+        case .german:
+            switch duration {
+            case .short: return "1–2 Tage"
+            case .medium: return "3–4 Tage"
+            case .long: return "5+ Tage"
+            case .mixed: return "Gemischt"
+            }
+        case .french:
+            switch duration {
+            case .short: return "1-2 jours"
+            case .medium: return "3-4 jours"
+            case .long: return "5+ jours"
+            case .mixed: return "Mixte"
+            }
         }
     }
 
@@ -2311,6 +2813,20 @@ enum Strings {
             case .summer: return "夏"
             case .fall: return "秋"
             case .winter: return "冬"
+            }
+        case .german:
+            switch season {
+            case .spring: return "Frühling"
+            case .summer: return "Sommer"
+            case .fall: return "Herbst"
+            case .winter: return "Winter"
+            }
+        case .french:
+            switch season {
+            case .spring: return "Printemps"
+            case .summer: return "Été"
+            case .fall: return "Automne"
+            case .winter: return "Hiver"
             }
         }
     }
@@ -2349,6 +2865,22 @@ enum Strings {
             case .family: return "家庭"
             case .hobby: return "爱好"
             case .selfCare: return "自我提升"
+            }
+        case .german:
+            switch activity {
+            case .travel: return "Reisen"
+            case .rest: return "Erholung"
+            case .family: return "Familie"
+            case .hobby: return "Hobby"
+            case .selfCare: return "Selbstfürsorge"
+            }
+        case .french:
+            switch activity {
+            case .travel: return "Voyage"
+            case .rest: return "Repos"
+            case .family: return "Famille"
+            case .hobby: return "Loisirs"
+            case .selfCare: return "Bien-être"
             }
         }
     }
@@ -2400,6 +2932,28 @@ enum Strings {
             case .special: return "特殊假"
             case .businessTrip: return "出差"
             }
+        case .german:
+            switch type {
+            case .annual: return "Urlaub"
+            case .half: return "Halber Tag"
+            case .quarter: return "Viertel Tag"
+            case .compensatory: return "Zeitausgleich"
+            case .official: return "Freistellung"
+            case .sick: return "Krank"
+            case .special: return "Sonderurlaub"
+            case .businessTrip: return "Dienstreise"
+            }
+        case .french:
+            switch type {
+            case .annual: return "Congé payé"
+            case .half: return "Demi-journée"
+            case .quarter: return "Quart de jour"
+            case .compensatory: return "Récup."
+            case .official: return "Officiel"
+            case .sick: return "Maladie"
+            case .special: return "Congé spécial"
+            case .businessTrip: return "Déplacement"
+            }
         }
     }
 
@@ -2429,6 +2983,18 @@ enum Strings {
             case .planned: return "计划中"
             case .used: return "已使用"
             case .cancelled: return "已取消"
+            }
+        case .german:
+            switch status {
+            case .planned: return "Geplant"
+            case .used: return "Genommen"
+            case .cancelled: return "Storniert"
+            }
+        case .french:
+            switch status {
+            case .planned: return "Prévu"
+            case .used: return "Pris"
+            case .cancelled: return "Annulé"
             }
         }
     }
@@ -2476,6 +3042,32 @@ enum Strings {
             case .official: return "公假"
             case .other: return "其他"
             }
+        case .german:
+            switch type {
+            case .compensatory: return "Zeitausgleich"
+            case .reward: return "Belohnung"
+            case .refresh: return "Auszeit"
+            case .marriage: return "Hochzeit"
+            case .bereavement: return "Trauerfall"
+            case .sick: return "Krank"
+            case .maternity: return "Mutterschaft"
+            case .familyBalance: return "Familie"
+            case .official: return "Freistellung"
+            case .other: return "Sonstiges"
+            }
+        case .french:
+            switch type {
+            case .compensatory: return "Récupération"
+            case .reward: return "Récompense"
+            case .refresh: return "Ressourcement"
+            case .marriage: return "Mariage"
+            case .bereavement: return "Deuil"
+            case .sick: return "Maladie"
+            case .maternity: return "Maternité"
+            case .familyBalance: return "Famille"
+            case .official: return "Officiel"
+            case .other: return "Autre"
+            }
         }
     }
 
@@ -2486,6 +3078,8 @@ enum Strings {
         case .english: return "Golden Week"
         case .japanese: return "ゴールデンウィーク"
         case .chinese: return "黄金周"
+        case .german: return "Goldene Woche"
+        case .french: return "Semaine d'or"
         }
     }
 
@@ -2495,6 +3089,8 @@ enum Strings {
         case .english: return "No Leave"
         case .japanese: return "有給不要"
         case .chinese: return "无需年假"
+        case .german: return "Ohne Urlaub"
+        case .french: return "Sans congé"
         }
     }
 
@@ -2504,6 +3100,8 @@ enum Strings {
         case .english: return "Bridge Day"
         case .japanese: return "飛び石"
         case .chinese: return "桥接假"
+        case .german: return "Brückentag"
+        case .french: return "Pont"
         }
     }
 
@@ -2513,6 +3111,8 @@ enum Strings {
         case .english: return "Best Value"
         case .japanese: return "最高効率"
         case .chinese: return "最高效率"
+        case .german: return "Beste Ausbeute"
+        case .french: return "Meilleur rapport"
         }
     }
 
@@ -2522,6 +3122,8 @@ enum Strings {
         case .english: return "Extended Leave"
         case .japanese: return "連続休暇"
         case .chinese: return "连续休假"
+        case .german: return "Langer Urlaub"
+        case .french: return "Congé prolongé"
         }
     }
 
@@ -2531,6 +3133,8 @@ enum Strings {
         case .english: return "Efficient"
         case .japanese: return "効率的"
         case .chinese: return "高效"
+        case .german: return "Effizient"
+        case .french: return "Efficace"
         }
     }
 
@@ -2540,6 +3144,8 @@ enum Strings {
         case .english: return "Weekend Holiday"
         case .japanese: return "週末休暇"
         case .chinese: return "周末假日"
+        case .german: return "Feiertag am Wochenende"
+        case .french: return "Férié le week-end"
         }
     }
 
@@ -2549,6 +3155,8 @@ enum Strings {
         case .english: return "Family Trip"
         case .japanese: return "家族旅行"
         case .chinese: return "家庭旅行"
+        case .german: return "Familienreise"
+        case .french: return "Voyage en famille"
         }
     }
 
@@ -2558,6 +3166,8 @@ enum Strings {
         case .english: return "Family"
         case .japanese: return "家族"
         case .chinese: return "家庭"
+        case .german: return "Familie"
+        case .french: return "Famille"
         }
     }
 
@@ -2567,6 +3177,8 @@ enum Strings {
         case .english: return "Major Holiday"
         case .japanese: return "大型連休"
         case .chinese: return "重大节日"
+        case .german: return "Großer Feiertag"
+        case .french: return "Grande fête"
         }
     }
 
@@ -2613,6 +3225,22 @@ enum Strings {
             case 12, 1, 2: return "年末休息。"
             default: return ""
             }
+        case .german:
+            switch month {
+            case 3, 4, 5: return "Ideal für Frühlingsausflüge."
+            case 6, 7, 8: return "Perfekte Sommerferien."
+            case 9, 10, 11: return "Genieße die Herbstfarben."
+            case 12, 1, 2: return "Entspannung zum Jahreswechsel."
+            default: return ""
+            }
+        case .french:
+            switch month {
+            case 3, 4, 5: return "Idéal pour les sorties de printemps."
+            case 6, 7, 8: return "Parfait pour les vacances d'été."
+            case 9, 10, 11: return "Profitez des couleurs d'automne."
+            case 12, 1, 2: return "Détente de fin d'année."
+            default: return ""
+            }
         }
     }
 
@@ -2622,6 +3250,8 @@ enum Strings {
         case .english: return "\(days)-day break"
         case .japanese: return "\(days)日連休"
         case .chinese: return "\(days)天假期"
+        case .german: return "\(days)-Tage-Pause"
+        case .french: return "\(days) jours de repos"
         }
     }
 
@@ -2631,6 +3261,8 @@ enum Strings {
         case .english: return "\(holidayName) Golden Week"
         case .japanese: return "\(holidayName) ゴールデンウィーク"
         case .chinese: return "\(holidayName) 黄金周"
+        case .german: return "Goldene Woche: \(holidayName)"
+        case .french: return "Semaine d'or : \(holidayName)"
         }
     }
 
@@ -2640,6 +3272,8 @@ enum Strings {
         case .english: return "\(name) Break"
         case .japanese: return "\(name) 連休"
         case .chinese: return "\(name) 假期"
+        case .german: return "\(name)-Pause"
+        case .french: return "Congés : \(name)"
         }
     }
 
@@ -2653,6 +3287,8 @@ enum Strings {
             return "\(weekdayStart)〜\(weekdayEnd) \(holidayDesc)で有給なし\(totalDays)日連休！"
         case .chinese:
             return "\(weekdayStart)~\(weekdayEnd) \(holidayDesc)，无需年假\(totalDays)天假期！"
+        case .german: return "\(weekdayStart)–\(weekdayEnd): \(totalDays) freie Tage mit \(holidayDesc), ohne Urlaub!"
+        case .french: return "\(weekdayStart)–\(weekdayEnd) : \(totalDays) jours off avec \(holidayDesc), sans congé !"
         }
     }
 
@@ -2662,6 +3298,8 @@ enum Strings {
         case .english: return "\(holidayName) Bridge Holiday"
         case .japanese: return "\(holidayName) 飛び石連休"
         case .chinese: return "\(holidayName) 桥接假期"
+        case .german: return "Brückentage: \(holidayName)"
+        case .french: return "Pont : \(holidayName)"
         }
     }
 
@@ -2671,6 +3309,8 @@ enum Strings {
         case .english: return "1 day leave on Monday for 4-day weekend! Use Monday before \(holidayName)."
         case .japanese: return "月曜1日の有給で4連休！\(holidayName)前の月曜を活用。"
         case .chinese: return "周一请1天年假获得4天假期！利用\(holidayName)前的周一。"
+        case .german: return "1 Urlaubstag am Montag für 4 freie Tage! Nutze den Montag vor \(holidayName)."
+        case .french: return "1 jour de congé le lundi pour 4 jours off ! Profitez du lundi avant \(holidayName)."
         }
     }
 
@@ -2680,6 +3320,8 @@ enum Strings {
         case .english: return "1 day leave on Friday for 4-day weekend! Use Friday after \(holidayName)."
         case .japanese: return "金曜1日の有給で4連休！\(holidayName)後の金曜を活用。"
         case .chinese: return "周五请1天年假获得4天假期！利用\(holidayName)后的周五。"
+        case .german: return "1 Urlaubstag am Freitag für 4 freie Tage! Nutze den Freitag nach \(holidayName)."
+        case .french: return "1 jour de congé le vendredi pour 4 jours off ! Profitez du vendredi après \(holidayName)."
         }
     }
 
@@ -2689,6 +3331,8 @@ enum Strings {
         case .english: return "\(holidayName) Extended Leave"
         case .japanese: return "\(holidayName) 連携休暇"
         case .chinese: return "\(holidayName) 连休"
+        case .german: return "Verlängerter Urlaub: \(holidayName)"
+        case .french: return "Congé prolongé : \(holidayName)"
         }
     }
 
@@ -2698,6 +3342,8 @@ enum Strings {
         case .english: return "Use \(leaveDays) leave days around \(holidayName) for \(totalDays) days off."
         case .japanese: return "\(holidayName)を活用して有給\(leaveDays)日で\(totalDays)連休。"
         case .chinese: return "利用\(holidayName)，请\(leaveDays)天年假获得\(totalDays)天假期。"
+        case .german: return "Mit \(leaveDays) Urlaubstagen rund um \(holidayName) bekommst du \(totalDays) freie Tage."
+        case .french: return "Avec \(leaveDays) jours de congé autour de \(holidayName), profitez de \(totalDays) jours off."
         }
     }
 
@@ -2707,6 +3353,8 @@ enum Strings {
         case .english: return "\(holidayName) Week Off"
         case .japanese: return "\(holidayName) 週間休暇"
         case .chinese: return "\(holidayName) 周假"
+        case .german: return "Urlaubswoche: \(holidayName)"
+        case .french: return "Semaine de congé : \(holidayName)"
         }
     }
 
@@ -2716,6 +3364,8 @@ enum Strings {
         case .english: return "Take the week with \(holidayName)! \(leaveDays) leave days for 9 days off."
         case .japanese: return "\(holidayName)のある週を活用！有給\(leaveDays)日で9連休。"
         case .chinese: return "利用\(holidayName)所在周！请\(leaveDays)天年假获得9天假期。"
+        case .german: return "Nimm die Woche mit \(holidayName)! \(leaveDays) Urlaubstage für 9 freie Tage."
+        case .french: return "Prenez la semaine de \(holidayName) ! \(leaveDays) jours de congé pour 9 jours off."
         }
     }
 
@@ -2725,6 +3375,8 @@ enum Strings {
         case .english: return "Golden week around Children's Day! \(leaveDays) leave days for up to 6 days off."
         case .japanese: return "こどもの日を活用したゴールデンウィーク！有給\(leaveDays)日で最大6連休。"
         case .chinese: return "利用五一黄金周！请\(leaveDays)天年假获得最多6天假期。"
+        case .german: return "Goldene Woche rund um den Kindertag! \(leaveDays) Urlaubstage für bis zu 6 freie Tage."
+        case .french: return "Semaine d'or autour de la Fête des enfants ! \(leaveDays) jours de congé pour jusqu'à 6 jours off."
         }
     }
 
@@ -2734,6 +3386,8 @@ enum Strings {
         case .english: return "May Golden Week"
         case .japanese: return "5月ゴールデンウィーク"
         case .chinese: return "五月黄金周"
+        case .german: return "Goldene Woche im Mai"
+        case .french: return "Semaine d'or de mai"
         }
     }
 
@@ -2744,6 +3398,8 @@ enum Strings {
         case .english: return "en_US"
         case .japanese: return "ja_JP"
         case .chinese: return "zh_CN"
+        case .german: return "de_DE"
+        case .french: return "fr_FR"
         }
     }
 
@@ -2755,6 +3411,8 @@ enum Strings {
             case .english: return "MMM d (E)"
             case .japanese: return "M月d日(E)"
             case .chinese: return "M月d日(E)"
+            case .german: return "d. MMM (E)"
+            case .french: return "E d MMM"
             }
         case "monthDayOnly":
             switch lang {
@@ -2762,6 +3420,8 @@ enum Strings {
             case .english: return "MMM d"
             case .japanese: return "M月d日"
             case .chinese: return "M月d日"
+            case .german: return "d. MMM"
+            case .french: return "d MMM"
             }
         case "yearMonth":
             switch lang {
@@ -2769,6 +3429,8 @@ enum Strings {
             case .english: return "MMM yyyy"
             case .japanese: return "yyyy年M月"
             case .chinese: return "yyyy年M月"
+            case .german: return "MMM yyyy"
+            case .french: return "MMM yyyy"
             }
         default:
             return "M/d(E)"
@@ -2782,6 +3444,8 @@ enum Strings {
         case .english: return "Golden Week"
         case .japanese: return "GW"
         case .chinese: return "黄金周"
+        case .german: return "Goldene Woche"
+        case .french: return "Semaine d'or"
         }
     }
 
@@ -2791,6 +3455,8 @@ enum Strings {
         case .english: return "Bridge"
         case .japanese: return "飛び石"
         case .chinese: return "桥接假"
+        case .german: return "Brücke"
+        case .french: return "Pont"
         }
     }
 
@@ -2800,6 +3466,8 @@ enum Strings {
         case .english: return "Extended"
         case .japanese: return "連続"
         case .chinese: return "连休"
+        case .german: return "Verlängert"
+        case .french: return "Prolongé"
         }
     }
 
@@ -2810,6 +3478,8 @@ enum Strings {
         case .english: return "+\(count) more"
         case .japanese: return "他\(count)件"
         case .chinese: return "另外\(count)项"
+        case .german: return "+\(count) weitere"
+        case .french: return "+\(count) autres"
         }
     }
 
@@ -2820,6 +3490,8 @@ enum Strings {
         case .english: return "\(count)"
         case .japanese: return "\(count)件"
         case .chinese: return "\(count)项"
+        case .german: return "\(count)"
+        case .french: return "\(count)"
         }
     }
 
@@ -2829,6 +3501,8 @@ enum Strings {
         case .english: return "\(count)"
         case .japanese: return "\(count)個"
         case .chinese: return "\(count)个"
+        case .german: return "\(count)"
+        case .french: return "\(count)"
         }
     }
 
@@ -2844,6 +3518,8 @@ enum Strings {
             case .english: parts.append("selected")
             case .japanese: parts.append("選択中")
             case .chinese: parts.append("已选中")
+            case .german: parts.append("ausgewählt")
+            case .french: parts.append("sélectionné")
             }
         }
         return parts.joined(separator: ", ")
@@ -2855,6 +3531,8 @@ enum Strings {
         case .english: return "Legend: Red for holidays, Green for leave, Blue for weekends"
         case .japanese: return "凡例: 赤は祝日、緑は有給、青は週末"
         case .chinese: return "图例：红色节假日，绿色年假，蓝色周末"
+        case .german: return "Legende: Rot für Feiertage, Grün für Urlaub, Blau für Wochenenden"
+        case .french: return "Légende : rouge pour les jours fériés, vert pour les congés, bleu pour les week-ends"
         }
     }
 
@@ -2866,6 +3544,8 @@ enum Strings {
         case .english: return "Leave Management"
         case .japanese: return "休暇管理"
         case .chinese: return "年假管理"
+        case .german: return "Urlaubsverwaltung"
+        case .french: return "Gestion des congés"
         }
     }
 
@@ -2875,6 +3555,8 @@ enum Strings {
         case .english: return "Base Leave"
         case .japanese: return "基本有給"
         case .chinese: return "基本年假"
+        case .german: return "Grundurlaub"
+        case .french: return "Congés de base"
         }
     }
 
@@ -2884,6 +3566,8 @@ enum Strings {
         case .english: return "Bonus"
         case .japanese: return "ボーナス"
         case .chinese: return "奖励"
+        case .german: return "Bonus"
+        case .french: return "Bonus"
         }
     }
 
@@ -2893,6 +3577,8 @@ enum Strings {
         case .english: return "Total Available"
         case .japanese: return "利用可能合計"
         case .chinese: return "可用总数"
+        case .german: return "Insgesamt verfügbar"
+        case .french: return "Total disponible"
         }
     }
 
@@ -2902,6 +3588,8 @@ enum Strings {
         case .english: return "Type"
         case .japanese: return "管理タイプ"
         case .chinese: return "管理类型"
+        case .german: return "Art"
+        case .french: return "Type"
         }
     }
 
@@ -2911,6 +3599,8 @@ enum Strings {
         case .english: return "Register Leave"
         case .japanese: return "休暇登録"
         case .chinese: return "登记休假"
+        case .german: return "Urlaub eintragen"
+        case .french: return "Enregistrer un congé"
         }
     }
 
@@ -2920,6 +3610,8 @@ enum Strings {
         case .english: return "Add Leave"
         case .japanese: return "有給追加"
         case .chinese: return "添加年假"
+        case .german: return "Urlaub hinzufügen"
+        case .french: return "Ajouter un congé"
         }
     }
 
@@ -2929,6 +3621,8 @@ enum Strings {
         case .english: return "Leave Type"
         case .japanese: return "休暇タイプ"
         case .chinese: return "休假类型"
+        case .german: return "Urlaubsart"
+        case .french: return "Type de congé"
         }
     }
 
@@ -2938,6 +3632,8 @@ enum Strings {
         case .english: return "\(typeName) does not deduct from annual leave."
         case .japanese: return "\(typeName)は有給から差し引かれません。"
         case .chinese: return "\(typeName)不从年假中扣除。"
+        case .german: return "\(typeName) wird nicht vom Jahresurlaub abgezogen."
+        case .french: return "\(typeName) n'est pas déduit des congés annuels."
         }
     }
 
@@ -2947,6 +3643,8 @@ enum Strings {
         case .english: return "Select Dates"
         case .japanese: return "日付選択"
         case .chinese: return "选择日期"
+        case .german: return "Datum wählen"
+        case .french: return "Choisir les dates"
         }
     }
 
@@ -2956,6 +3654,8 @@ enum Strings {
         case .english: return "Start Date"
         case .japanese: return "開始日"
         case .chinese: return "开始日期"
+        case .german: return "Startdatum"
+        case .french: return "Date de début"
         }
     }
 
@@ -2965,6 +3665,8 @@ enum Strings {
         case .english: return "End Date"
         case .japanese: return "終了日"
         case .chinese: return "终止日期"
+        case .german: return "Enddatum"
+        case .french: return "Date de fin"
         }
     }
 
@@ -2974,6 +3676,8 @@ enum Strings {
         case .english: return "Days Used"
         case .japanese: return "使用日数"
         case .chinese: return "使用天数"
+        case .german: return "Genutzte Tage"
+        case .french: return "Jours utilisés"
         }
     }
 
@@ -2983,6 +3687,8 @@ enum Strings {
         case .english: return "Note (Optional)"
         case .japanese: return "メモ（任意）"
         case .chinese: return "备注（可选）"
+        case .german: return "Notiz (optional)"
+        case .french: return "Note (facultatif)"
         }
     }
 
@@ -2992,6 +3698,8 @@ enum Strings {
         case .english: return "Enter leave purpose"
         case .japanese: return "休暇の目的を入力"
         case .chinese: return "请输入休假目的"
+        case .german: return "Urlaubszweck eingeben"
+        case .french: return "Saisissez le motif du congé"
         }
     }
 
@@ -3001,6 +3709,8 @@ enum Strings {
         case .english: return "Register Leave"
         case .japanese: return "休暇を登録"
         case .chinese: return "登记休假"
+        case .german: return "Urlaub eintragen"
+        case .french: return "Enregistrer le congé"
         }
     }
 
@@ -3012,6 +3722,8 @@ enum Strings {
         case .english: return "Register \(typeName)"
         case .japanese: return "\(typeName)を登録"
         case .chinese: return "登记\(typeName)"
+        case .german: return "\(typeName) eintragen"
+        case .french: return "Enregistrer : \(typeName)"
         }
     }
 
@@ -3021,6 +3733,8 @@ enum Strings {
         case .english: return "Recent Records"
         case .japanese: return "最近の登録"
         case .chinese: return "最近记录"
+        case .german: return "Letzte Einträge"
+        case .french: return "Enregistrements récents"
         }
     }
 
@@ -3030,6 +3744,8 @@ enum Strings {
         case .english: return "Alert"
         case .japanese: return "お知らせ"
         case .chinese: return "提示"
+        case .german: return "Hinweis"
+        case .french: return "Alerte"
         }
     }
 
@@ -3039,6 +3755,8 @@ enum Strings {
         case .english: return "Insufficient leave days."
         case .japanese: return "有給が不足しています。"
         case .chinese: return "年假不足。"
+        case .german: return "Nicht genügend Urlaubstage."
+        case .french: return "Jours de congé insuffisants."
         }
     }
 
@@ -3048,6 +3766,8 @@ enum Strings {
         case .english: return "\(typeName) has been registered!"
         case .japanese: return "\(typeName)が登録されました！"
         case .chinese: return "\(typeName)已登记！"
+        case .german: return "\(typeName) wurde eingetragen!"
+        case .french: return "\(typeName) a été enregistré !"
         }
     }
 
@@ -3057,6 +3777,8 @@ enum Strings {
         case .english: return "Save failed. Please try again."
         case .japanese: return "保存に失敗しました。もう一度お試しください。"
         case .chinese: return "保存失败,请重试。"
+        case .german: return "Speichern fehlgeschlagen. Bitte versuche es erneut."
+        case .french: return "Échec de l’enregistrement. Veuillez réessayer."
         }
     }
 
@@ -3067,6 +3789,8 @@ enum Strings {
         case .english: return "Backed up to iCloud."
         case .japanese: return "iCloudにバックアップしました。"
         case .chinese: return "已备份到iCloud。"
+        case .german: return "In iCloud gesichert."
+        case .french: return "Sauvegardé dans iCloud."
         }
     }
 
@@ -3076,6 +3800,8 @@ enum Strings {
         case .english: return "Restore completed."
         case .japanese: return "復元が完了しました。"
         case .chinese: return "恢复已完成。"
+        case .german: return "Wiederherstellung abgeschlossen."
+        case .french: return "Restauration terminée."
         }
     }
 
@@ -3085,6 +3811,8 @@ enum Strings {
         case .english: return "Save failed: \(reason)"
         case .japanese: return "保存に失敗しました: \(reason)"
         case .chinese: return "保存失败: \(reason)"
+        case .german: return "Speichern fehlgeschlagen: \(reason)"
+        case .french: return "Échec de l’enregistrement : \(reason)"
         }
     }
 
@@ -3094,6 +3822,8 @@ enum Strings {
         case .english: return "Reset failed: \(reason)"
         case .japanese: return "リセットに失敗しました: \(reason)"
         case .chinese: return "重置失败: \(reason)"
+        case .german: return "Zurücksetzen fehlgeschlagen: \(reason)"
+        case .french: return "Échec de la réinitialisation : \(reason)"
         }
     }
 
@@ -3103,6 +3833,8 @@ enum Strings {
         case .english: return "Delete failed. Please try again."
         case .japanese: return "削除に失敗しました。もう一度お試しください。"
         case .chinese: return "删除失败,请重试。"
+        case .german: return "Löschen fehlgeschlagen. Bitte versuche es erneut."
+        case .french: return "Échec de la suppression. Veuillez réessayer."
         }
     }
 
@@ -3112,6 +3844,8 @@ enum Strings {
         case .english: return "Delete Bonus Leave"
         case .japanese: return "ボーナス休暇を削除"
         case .chinese: return "删除奖励年假"
+        case .german: return "Bonusurlaub löschen"
+        case .french: return "Supprimer le congé bonus"
         }
     }
 
@@ -3121,6 +3855,8 @@ enum Strings {
         case .english: return "Delete this bonus leave?"
         case .japanese: return "このボーナス休暇を削除しますか？"
         case .chinese: return "确定删除此奖励年假吗？"
+        case .german: return "Diesen Bonusurlaub löschen?"
+        case .french: return "Supprimer ce congé bonus ?"
         }
     }
 
@@ -3130,6 +3866,8 @@ enum Strings {
         case .english: return "Retry"
         case .japanese: return "再試行"
         case .chinese: return "重试"
+        case .german: return "Erneut versuchen"
+        case .french: return "Réessayer"
         }
     }
 
@@ -3140,6 +3878,8 @@ enum Strings {
         case .english: return "Add leave on this date"
         case .japanese: return "この日付で休暇を登録"
         case .chinese: return "在此日期登记休假"
+        case .german: return "Urlaub für dieses Datum eintragen"
+        case .french: return "Ajouter un congé à cette date"
         }
     }
 
@@ -3150,6 +3890,8 @@ enum Strings {
         case .english: return "Plan your first leave"
         case .japanese: return "最初の休暇を計画しましょう"
         case .chinese: return "计划您的第一个假期"
+        case .german: return "Plane deinen ersten Urlaub"
+        case .french: return "Planifiez votre premier congé"
         }
     }
 
@@ -3159,6 +3901,8 @@ enum Strings {
         case .english: return "Register a leave to see your remaining days and upcoming plans at a glance."
         case .japanese: return "休暇を登録すると、残りの有給と今後の予定が一目でわかります。"
         case .chinese: return "登记休假后,可一目了然地查看剩余年假和即将到来的日程。"
+        case .german: return "Trage Urlaub ein, um verbleibende Tage und anstehende Pläne auf einen Blick zu sehen."
+        case .french: return "Enregistrez un congé pour voir vos jours restants et vos prochains plans d’un coup d’œil."
         }
     }
 
@@ -3168,6 +3912,8 @@ enum Strings {
         case .english: return "Add Leave"
         case .japanese: return "休暇を登録"
         case .chinese: return "登记休假"
+        case .german: return "Urlaub hinzufügen"
+        case .french: return "Ajouter un congé"
         }
     }
 
@@ -3178,6 +3924,8 @@ enum Strings {
         case .english: return "Holiday data for \(year) may be inaccurate. Please update the app to the latest version."
         case .japanese: return "\(year)年の祝日情報は正確でない可能性があります。アプリを最新版に更新してください。"
         case .chinese: return "\(year)年的节假日信息可能不准确,请将应用更新到最新版本。"
+        case .german: return "Die Feiertage für \(year) sind möglicherweise ungenau. Bitte aktualisiere die App auf die neueste Version."
+        case .french: return "Les jours fériés de \(year) peuvent être inexacts. Veuillez mettre à jour l’app vers la dernière version."
         }
     }
 
@@ -3188,6 +3936,8 @@ enum Strings {
         case .english: return "Purchases restored."
         case .japanese: return "購入が復元されました。"
         case .chinese: return "购买已恢复。"
+        case .german: return "Käufe wiederhergestellt."
+        case .french: return "Achats restaurés."
         }
     }
 
@@ -3197,6 +3947,8 @@ enum Strings {
         case .english: return "No purchases to restore."
         case .japanese: return "復元できる購入履歴がありません。"
         case .chinese: return "没有可恢复的购买记录。"
+        case .german: return "Keine Käufe zum Wiederherstellen."
+        case .french: return "Aucun achat à restaurer."
         }
     }
 
@@ -3206,6 +3958,8 @@ enum Strings {
         case .english: return "Restore failed: \(reason)"
         case .japanese: return "購入の復元に失敗しました: \(reason)"
         case .chinese: return "恢复购买失败: \(reason)"
+        case .german: return "Wiederherstellung fehlgeschlagen: \(reason)"
+        case .french: return "Échec de la restauration : \(reason)"
         }
     }
 
@@ -3215,6 +3969,8 @@ enum Strings {
         case .english: return "Couldn't load price info. Please check your network connection."
         case .japanese: return "価格情報を読み込めませんでした。ネットワーク接続をご確認ください。"
         case .chinese: return "无法加载价格信息,请检查网络连接。"
+        case .german: return "Preise konnten nicht geladen werden. Bitte prüfe deine Netzwerkverbindung."
+        case .french: return "Impossible de charger les prix. Vérifiez votre connexion réseau."
         }
     }
 
@@ -3224,6 +3980,8 @@ enum Strings {
         case .english: return "Terms of Service"
         case .japanese: return "利用規約"
         case .chinese: return "服务条款"
+        case .german: return "Nutzungsbedingungen"
+        case .french: return "Conditions d’utilisation"
         }
     }
 
@@ -3233,6 +3991,8 @@ enum Strings {
         case .english: return "Privacy Policy"
         case .japanese: return "プライバシーポリシー"
         case .chinese: return "隐私政策"
+        case .german: return "Datenschutzerklärung"
+        case .french: return "Politique de confidentialité"
         }
     }
 
@@ -3243,6 +4003,8 @@ enum Strings {
         case .english: return "Import Leaves from Calendar"
         case .japanese: return "カレンダーから休暇を取り込む"
         case .chinese: return "从日历导入休假"
+        case .german: return "Urlaub aus Kalender importieren"
+        case .french: return "Importer les congés du calendrier"
         }
     }
 
@@ -3252,6 +4014,8 @@ enum Strings {
         case .english: return "Find calendar events that look like leaves and add them."
         case .japanese: return "カレンダーから休暇と思われる予定を見つけて追加できます。"
         case .chinese: return "从日历中查找疑似休假的日程并添加。"
+        case .german: return "Finde Kalendereinträge, die nach Urlaub aussehen, und füge sie hinzu."
+        case .french: return "Trouvez les événements du calendrier qui ressemblent à des congés et ajoutez-les."
         }
     }
 
@@ -3261,6 +4025,8 @@ enum Strings {
         case .english: return "Events that look like leaves"
         case .japanese: return "休暇と思われる予定"
         case .chinese: return "疑似休假的日程"
+        case .german: return "Einträge, die nach Urlaub aussehen"
+        case .french: return "Événements ressemblant à des congés"
         }
     }
 
@@ -3270,6 +4036,8 @@ enum Strings {
         case .english: return "No leave-like events found.\n(Already-registered leaves are excluded)"
         case .japanese: return "休暇と思われる予定が見つかりませんでした。\n(登録済みの休暇は除外されます)"
         case .chinese: return "未找到疑似休假的日程。\n(已登记的休假会被排除)"
+        case .german: return "Keine urlaubsähnlichen Einträge gefunden.\n(Bereits eingetragener Urlaub wird ausgeschlossen)"
+        case .french: return "Aucun événement ressemblant à un congé trouvé.\n(Les congés déjà enregistrés sont exclus)"
         }
     }
 
@@ -3279,6 +4047,8 @@ enum Strings {
         case .english: return "Add \(count)"
         case .japanese: return "\(count)件を追加"
         case .chinese: return "添加\(count)项"
+        case .german: return "\(count) hinzufügen"
+        case .french: return "Ajouter \(count)"
         }
     }
 
@@ -3288,6 +4058,8 @@ enum Strings {
         case .english: return "Added \(count) leave(s)."
         case .japanese: return "休暇\(count)件を追加しました。"
         case .chinese: return "已添加\(count)项休假。"
+        case .german: return "\(count) Urlaubseintrag/-einträge hinzugefügt."
+        case .french: return "\(count) congé(s) ajouté(s)."
         }
     }
 
@@ -3298,6 +4070,8 @@ enum Strings {
         case .english: return "Leaves found in your calendar"
         case .japanese: return "カレンダーで休暇を発見"
         case .chinese: return "在日历中发现休假"
+        case .german: return "Urlaub im Kalender gefunden"
+        case .french: return "Congés trouvés dans votre calendrier"
         }
     }
 
@@ -3307,6 +4081,8 @@ enum Strings {
         case .english: return "Found \(count) event(s) that look like leaves. Review and add them in one tap."
         case .japanese: return "休暇と思われる予定を\(count)件見つけました。確認してまとめて追加できます。"
         case .chinese: return "找到\(count)项疑似休假的日程,确认后可一键添加。"
+        case .german: return "\(count) Eintrag/Einträge gefunden, die nach Urlaub aussehen. Prüfe sie und füge sie mit einem Tipp hinzu."
+        case .french: return "\(count) événement(s) ressemblant à des congés trouvé(s). Vérifiez-les et ajoutez-les en un geste."
         }
     }
 
@@ -3316,6 +4092,8 @@ enum Strings {
         case .english: return "Review"
         case .japanese: return "確認する"
         case .chinese: return "查看"
+        case .german: return "Prüfen"
+        case .french: return "Vérifier"
         }
     }
 
@@ -3325,6 +4103,8 @@ enum Strings {
         case .english: return "Auto-Detect from Calendar"
         case .japanese: return "カレンダー自動検出"
         case .chinese: return "日历自动检测"
+        case .german: return "Automatische Kalendererkennung"
+        case .french: return "Détection auto depuis le calendrier"
         }
     }
 
@@ -3334,6 +4114,8 @@ enum Strings {
         case .english: return "Automatically finds new leave events in your calendar when you open the app."
         case .japanese: return "アプリを開くとカレンダーから新しい休暇予定を自動で見つけてお知らせします。"
         case .chinese: return "打开应用时自动从日历中查找新的休假日程并提醒您。"
+        case .german: return "Findet beim Öffnen der App automatisch neue Urlaubseinträge in deinem Kalender."
+        case .french: return "Trouve automatiquement les nouveaux congés de votre calendrier à l’ouverture de l’app."
         }
     }
 
@@ -3343,6 +4125,8 @@ enum Strings {
         case .english: return "Pro automatically finds leave events in your calendar"
         case .japanese: return "カレンダーの休暇予定、Proが自動で見つけます"
         case .chinese: return "Pro自动为您查找日历中的休假日程"
+        case .german: return "Pro findet Urlaubseinträge in deinem Kalender automatisch"
+        case .french: return "Pro trouve automatiquement les congés de votre calendrier"
         }
     }
 
@@ -3353,6 +4137,8 @@ enum Strings {
         case .english: return "Share Leave Plan"
         case .japanese: return "休暇プランを共有"
         case .chinese: return "分享休假计划"
+        case .german: return "Urlaubsplan teilen"
+        case .french: return "Partager le plan de congés"
         }
     }
 
@@ -3363,6 +4149,8 @@ enum Strings {
         case .english: return "Share Preview"
         case .japanese: return "共有プレビュー"
         case .chinese: return "分享预览"
+        case .german: return "Vorschau teilen"
+        case .french: return "Aperçu du partage"
         }
     }
 
@@ -3372,6 +4160,8 @@ enum Strings {
         case .english: return "This image will be shared"
         case .japanese: return "この画像が共有されます"
         case .chinese: return "将分享这张图片"
+        case .german: return "Dieses Bild wird geteilt"
+        case .french: return "Cette image sera partagée"
         }
     }
 
@@ -3381,6 +4171,8 @@ enum Strings {
         case .english: return "Share"
         case .japanese: return "共有する"
         case .chinese: return "分享"
+        case .german: return "Teilen"
+        case .french: return "Partager"
         }
     }
 
@@ -3390,6 +4182,8 @@ enum Strings {
         case .english: return "My Leave Status"
         case .japanese: return "私の休暇状況"
         case .chinese: return "我的年假概览"
+        case .german: return "Mein Urlaubsstand"
+        case .french: return "Mon solde de congés"
         }
     }
 
@@ -3399,6 +4193,8 @@ enum Strings {
         case .english: return "Goldweek — Turn your leaves into golden weeks"
         case .japanese: return "Goldweek — 有給をゴールデンウィークに"
         case .chinese: return "Goldweek — 把年假变成黄金周"
+        case .german: return "Goldweek — Mach aus Urlaubstagen goldene Wochen"
+        case .french: return "Goldweek — Transformez vos congés en semaines dorées"
         }
     }
 
@@ -3408,6 +4204,8 @@ enum Strings {
         case .english: return "Open Settings"
         case .japanese: return "設定を開く"
         case .chinese: return "打开设置"
+        case .german: return "Einstellungen öffnen"
+        case .french: return "Ouvrir les réglages"
         }
     }
 
@@ -3417,6 +4215,8 @@ enum Strings {
         case .english: return "Scanning calendar..."
         case .japanese: return "カレンダーを確認中..."
         case .chinese: return "正在检查日历..."
+        case .german: return "Kalender wird geprüft ..."
+        case .french: return "Analyse du calendrier..."
         }
     }
 
@@ -3427,6 +4227,8 @@ enum Strings {
         case .english: return "End date is before start date."
         case .japanese: return "終了日が開始日より前です。"
         case .chinese: return "结束日期早于开始日期。"
+        case .german: return "Das Enddatum liegt vor dem Startdatum."
+        case .french: return "La date de fin est antérieure à la date de début."
         }
     }
 
@@ -3436,6 +4238,8 @@ enum Strings {
         case .english: return "This period overlaps with an existing leave."
         case .japanese: return "登録済みの休暇と期間が重なっています。"
         case .chinese: return "该时间段与已登记的休假重叠。"
+        case .german: return "Dieser Zeitraum überschneidet sich mit bereits eingetragenem Urlaub."
+        case .french: return "Cette période chevauche un congé existant."
         }
     }
 
@@ -3445,6 +4249,8 @@ enum Strings {
         case .english: return "Goldweek - Annual Leave Management"
         case .japanese: return "Goldweek - 有給管理アプリ"
         case .chinese: return "Goldweek - 年假管理应用"
+        case .german: return "Goldweek - Urlaubsplaner"
+        case .french: return "Goldweek - Gestion des congés"
         }
     }
 
@@ -3461,6 +4267,8 @@ enum Strings {
         case .english: return "₩\(n)"
         case .japanese: return "₩\(n)"
         case .chinese: return "₩\(n)"
+        case .german: return "\(n) ₩"
+        case .french: return "\(n) ₩"
         }
     }
 
@@ -3471,6 +4279,8 @@ enum Strings {
         case .english: return "MyRealTrip API is not configured."
         case .japanese: return "MyRealTrip APIが設定されていません。"
         case .chinese: return "MyRealTrip API未配置。"
+        case .german: return "Die MyRealTrip-API ist nicht konfiguriert."
+        case .french: return "L’API MyRealTrip n’est pas configurée."
         }
     }
 
@@ -3480,6 +4290,8 @@ enum Strings {
         case .english: return "Invalid URL."
         case .japanese: return "無効なURLです。"
         case .chinese: return "无效的URL。"
+        case .german: return "Ungültige URL."
+        case .french: return "URL non valide."
         }
     }
 
@@ -3489,6 +4301,8 @@ enum Strings {
         case .english: return "Bad request."
         case .japanese: return "不正なリクエストです。"
         case .chinese: return "请求无效。"
+        case .german: return "Ungültige Anfrage."
+        case .french: return "Requête non valide."
         }
     }
 
@@ -3498,6 +4312,8 @@ enum Strings {
         case .english: return "Invalid API key."
         case .japanese: return "APIキーが無効です。"
         case .chinese: return "API密钥无效。"
+        case .german: return "Ungültiger API-Schlüssel."
+        case .french: return "Clé API non valide."
         }
     }
 
@@ -3507,6 +4323,8 @@ enum Strings {
         case .english: return "Access denied to this API."
         case .japanese: return "このAPIへのアクセス権限がありません。"
         case .chinese: return "无权访问此API。"
+        case .german: return "Zugriff auf diese API verweigert."
+        case .french: return "Accès à cette API refusé."
         }
     }
 
@@ -3516,6 +4334,8 @@ enum Strings {
         case .english: return "Endpoint not found."
         case .japanese: return "エンドポイントが見つかりません。"
         case .chinese: return "未找到端点。"
+        case .german: return "Endpunkt nicht gefunden."
+        case .french: return "Point de terminaison introuvable."
         }
     }
 
@@ -3525,6 +4345,8 @@ enum Strings {
         case .english: return "Request rate limit exceeded."
         case .japanese: return "リクエスト上限を超えました。"
         case .chinese: return "请求次数超限。"
+        case .german: return "Anfragelimit überschritten."
+        case .french: return "Limite de requêtes dépassée."
         }
     }
 
@@ -3534,6 +4356,8 @@ enum Strings {
         case .english: return "Server error (\(code))"
         case .japanese: return "サーバーエラー (\(code))"
         case .chinese: return "服务器错误 (\(code))"
+        case .german: return "Serverfehler (\(code))"
+        case .french: return "Erreur serveur (\(code))"
         }
     }
 
@@ -3543,6 +4367,8 @@ enum Strings {
         case .english: return "Invalid response format"
         case .japanese: return "応答形式エラー"
         case .chinese: return "响应格式错误"
+        case .german: return "Ungültiges Antwortformat"
+        case .french: return "Format de réponse non valide"
         }
     }
 
@@ -3552,6 +4378,8 @@ enum Strings {
         case .english: return "Max retries exceeded."
         case .japanese: return "再試行上限を超えました。"
         case .chinese: return "重试次数超限。"
+        case .german: return "Maximale Anzahl an Wiederholungen überschritten."
+        case .french: return "Nombre maximal de tentatives dépassé."
         }
     }
 
@@ -3562,6 +4390,8 @@ enum Strings {
         case .english: return "Available"
         case .japanese: return "利用可能"
         case .chinese: return "可用"
+        case .german: return "Verfügbar"
+        case .french: return "Disponible"
         }
     }
 
@@ -3571,6 +4401,8 @@ enum Strings {
         case .english: return "Used"
         case .japanese: return "使用済み"
         case .chinese: return "已使用"
+        case .german: return "Genommen"
+        case .french: return "Utilisé"
         }
     }
 
@@ -3580,6 +4412,8 @@ enum Strings {
         case .english: return "No bonus leave registered"
         case .japanese: return "ボーナス有給がありません"
         case .chinese: return "没有登记的奖励假"
+        case .german: return "Kein Bonusurlaub eingetragen"
+        case .french: return "Aucun congé bonus enregistré"
         }
     }
 
@@ -3589,6 +4423,8 @@ enum Strings {
         case .english: return "Leave Days"
         case .japanese: return "有給日数"
         case .chinese: return "年假天数"
+        case .german: return "Urlaubstage"
+        case .french: return "Jours de congé"
         }
     }
 
@@ -3598,6 +4434,8 @@ enum Strings {
         case .english: return "Days to Add"
         case .japanese: return "追加日数"
         case .chinese: return "添加天数"
+        case .german: return "Hinzuzufügende Tage"
+        case .french: return "Jours à ajouter"
         }
     }
 
@@ -3607,6 +4445,8 @@ enum Strings {
         case .english: return "Type"
         case .japanese: return "タイプ"
         case .chinese: return "类型"
+        case .german: return "Art"
+        case .french: return "Type"
         }
     }
 
@@ -3616,6 +4456,8 @@ enum Strings {
         case .english: return "Reason"
         case .japanese: return "理由"
         case .chinese: return "原因"
+        case .german: return "Grund"
+        case .french: return "Motif"
         }
     }
 
@@ -3625,6 +4467,8 @@ enum Strings {
         case .english: return "e.g. Holiday work comp, Project reward"
         case .japanese: return "例：休日出勤代替、プロジェクト報奨など"
         case .chinese: return "例：节假日加班补休、项目奖励等"
+        case .german: return "z. B. Ausgleich für Feiertagsarbeit, Projektprämie"
+        case .french: return "p. ex. récupération jour férié travaillé, prime de projet"
         }
     }
 
@@ -3634,6 +4478,8 @@ enum Strings {
         case .english: return "Set Expiration"
         case .japanese: return "有効期限設定"
         case .chinese: return "设置到期日"
+        case .german: return "Ablauf festlegen"
+        case .french: return "Définir une expiration"
         }
     }
 
@@ -3643,6 +4489,8 @@ enum Strings {
         case .english: return "Expiration"
         case .japanese: return "有効期限"
         case .chinese: return "到期日"
+        case .german: return "Ablaufdatum"
+        case .french: return "Expiration"
         }
     }
 
@@ -3652,6 +4500,8 @@ enum Strings {
         case .english: return "If no expiration is set, it can be used until year-end."
         case .japanese: return "有効期限を設定しない場合、年末まで使用可能です。"
         case .chinese: return "不设置到期日则可使用到年末。"
+        case .german: return "Ohne Ablaufdatum kann er bis zum Jahresende genutzt werden."
+        case .french: return "Sans date d’expiration, il reste utilisable jusqu’à la fin de l’année."
         }
     }
 
@@ -3662,6 +4512,8 @@ enum Strings {
         case .english: return "Leave History"
         case .japanese: return "休暇履歴"
         case .chinese: return "休假记录"
+        case .german: return "Urlaubsverlauf"
+        case .french: return "Historique des congés"
         }
     }
 
@@ -3671,6 +4523,8 @@ enum Strings {
         case .english: return "Close"
         case .japanese: return "閉じる"
         case .chinese: return "关闭"
+        case .german: return "Schließen"
+        case .french: return "Fermer"
         }
     }
 
@@ -3680,6 +4534,8 @@ enum Strings {
         case .english: return "All"
         case .japanese: return "すべて"
         case .chinese: return "全部"
+        case .german: return "Alle"
+        case .french: return "Tous"
         }
     }
 
@@ -3689,6 +4545,8 @@ enum Strings {
         case .english: return "All Types"
         case .japanese: return "全タイプ"
         case .chinese: return "全部类型"
+        case .german: return "Alle Arten"
+        case .french: return "Tous les types"
         }
     }
 
@@ -3698,6 +4556,8 @@ enum Strings {
         case .english: return "Used"
         case .japanese: return "使用済み"
         case .chinese: return "已使用"
+        case .german: return "Genommen"
+        case .french: return "Utilisés"
         }
     }
 
@@ -3707,6 +4567,8 @@ enum Strings {
         case .english: return "Planned"
         case .japanese: return "予定"
         case .chinese: return "计划中"
+        case .german: return "Geplant"
+        case .french: return "Prévus"
         }
     }
 
@@ -3716,6 +4578,8 @@ enum Strings {
         case .english: return "Cancelled"
         case .japanese: return "キャンセル"
         case .chinese: return "已取消"
+        case .german: return "Storniert"
+        case .french: return "Annulés"
         }
     }
 
@@ -3725,6 +4589,8 @@ enum Strings {
         case .english: return "\(count)"
         case .japanese: return "\(count)件"
         case .chinese: return "\(count)项"
+        case .german: return "\(count)"
+        case .french: return "\(count)"
         }
     }
 
@@ -3734,6 +4600,8 @@ enum Strings {
         case .english: return "No leave records"
         case .japanese: return "休暇記録がありません"
         case .chinese: return "没有休假记录"
+        case .german: return "Keine Urlaubseinträge"
+        case .french: return "Aucun congé enregistré"
         }
     }
 
@@ -3743,6 +4611,8 @@ enum Strings {
         case .english: return "No leave registered for \(year).\nTry registering a new leave."
         case .japanese: return "\(year)年の休暇がありません。\n新しい休暇を登録してみましょう。"
         case .chinese: return "\(year)年没有登记的休假。\n请尝试登记新的休假。"
+        case .german: return "Für \(year) ist kein Urlaub eingetragen.\nTrage einen neuen Urlaub ein."
+        case .french: return "Aucun congé enregistré pour \(year).\nEssayez d’en ajouter un."
         }
     }
 
@@ -3752,6 +4622,8 @@ enum Strings {
         case .english: return "\(year)"
         case .japanese: return "\(year)年"
         case .chinese: return "\(year)年"
+        case .german: return "\(year)"
+        case .french: return "\(year)"
         }
     }
 
@@ -3764,6 +4636,14 @@ enum Strings {
             return formatter.shortMonthSymbols[month - 1]
         case .japanese: return "\(month)月"
         case .chinese: return "\(month)月"
+        case .german:
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "de_DE")
+            return formatter.shortMonthSymbols[month - 1]
+        case .french:
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "fr_FR")
+            return formatter.shortMonthSymbols[month - 1]
         }
     }
 
@@ -3773,6 +4653,8 @@ enum Strings {
         case .english: return "(\(count) days)"
         case .japanese: return "(\(count)日)"
         case .chinese: return "(\(count)天)"
+        case .german: return "(\(count) Tage)"
+        case .french: return "(\(count) jours)"
         }
     }
 
@@ -3782,6 +4664,8 @@ enum Strings {
         case .english: return "Edit"
         case .japanese: return "編集"
         case .chinese: return "编辑"
+        case .german: return "Bearbeiten"
+        case .french: return "Modifier"
         }
     }
 
@@ -3792,6 +4676,8 @@ enum Strings {
         case .english: return "Edit Leave"
         case .japanese: return "休暇編集"
         case .chinese: return "编辑休假"
+        case .german: return "Urlaub bearbeiten"
+        case .french: return "Modifier le congé"
         }
     }
 
@@ -3801,6 +4687,8 @@ enum Strings {
         case .english: return "Status"
         case .japanese: return "ステータス"
         case .chinese: return "状态"
+        case .german: return "Status"
+        case .french: return "Statut"
         }
     }
 
@@ -3810,6 +4698,8 @@ enum Strings {
         case .english: return "Dates"
         case .japanese: return "日付"
         case .chinese: return "日期"
+        case .german: return "Datum"
+        case .french: return "Dates"
         }
     }
 
@@ -3819,6 +4709,8 @@ enum Strings {
         case .english: return "\(days) more leave days used"
         case .japanese: return "有給\(days)日追加使用"
         case .chinese: return "额外使用\(days)天年假"
+        case .german: return "\(days) weitere Urlaubstage genommen"
+        case .french: return "\(days) jours de congé supplémentaires utilisés"
         }
     }
 
@@ -3828,6 +4720,8 @@ enum Strings {
         case .english: return "\(days) leave days restored"
         case .japanese: return "有給\(days)日復元"
         case .chinese: return "恢复\(days)天年假"
+        case .german: return "\(days) Urlaubstage zurückgebucht"
+        case .french: return "\(days) jours de congé restitués"
         }
     }
 
@@ -3837,6 +4731,8 @@ enum Strings {
         case .english: return "Note"
         case .japanese: return "メモ"
         case .chinese: return "备注"
+        case .german: return "Notiz"
+        case .french: return "Note"
         }
     }
 
@@ -3846,6 +4742,8 @@ enum Strings {
         case .english: return "Leave purpose"
         case .japanese: return "休暇の目的"
         case .chinese: return "休假目的"
+        case .german: return "Urlaubszweck"
+        case .french: return "Motif du congé"
         }
     }
 
@@ -3855,6 +4753,8 @@ enum Strings {
         case .english: return "Schedule Preview"
         case .japanese: return "スケジュールプレビュー"
         case .chinese: return "日程预览"
+        case .german: return "Terminvorschau"
+        case .french: return "Aperçu du planning"
         }
     }
 
@@ -3867,6 +4767,8 @@ enum Strings {
             case .english: return "Sat"
             case .japanese: return "土"
             case .chinese: return "六"
+            case .german: return "Sa"
+            case .french: return "Sam"
             }
         case .sunday:
             switch lang {
@@ -3874,6 +4776,8 @@ enum Strings {
             case .english: return "Sun"
             case .japanese: return "日"
             case .chinese: return "日"
+            case .german: return "So"
+            case .french: return "Dim"
             }
         case .holiday:
             switch lang {
@@ -3881,6 +4785,8 @@ enum Strings {
             case .english: return "Holiday"
             case .japanese: return "祝日"
             case .chinese: return "节日"
+            case .german: return "Feiertag"
+            case .french: return "Férié"
             }
         case .workday: return workday
         }
@@ -3893,6 +4799,8 @@ enum Strings {
         case .english: return "Upgrade to Pro"
         case .japanese: return "Proにアップグレード"
         case .chinese: return "升级到Pro版"
+        case .german: return "Auf Pro upgraden"
+        case .french: return "Passer à Pro"
         }
     }
     
@@ -3902,6 +4810,8 @@ enum Strings {
         case .english: return "Goldweek Pro"
         case .japanese: return "ゴールドウィーク Pro"
         case .chinese: return "Goldweek Pro"
+        case .german: return "Goldweek Pro"
+        case .french: return "Goldweek Pro"
         }
     }
     
@@ -3911,6 +4821,8 @@ enum Strings {
         case .english: return "Unlock all features"
         case .japanese: return "すべての機能をアンロック"
         case .chinese: return "解锁所有功能"
+        case .german: return "Schalte alle Funktionen frei"
+        case .french: return "Débloquez toutes les fonctionnalités"
         }
     }
     
@@ -3920,6 +4832,8 @@ enum Strings {
         case .english: return "Free"
         case .japanese: return "無料版"
         case .chinese: return "免费版"
+        case .german: return "Kostenlos"
+        case .french: return "Gratuit"
         }
     }
     
@@ -3929,6 +4843,8 @@ enum Strings {
         case .english: return "Pro"
         case .japanese: return "Pro版"
         case .chinese: return "Pro版"
+        case .german: return "Pro"
+        case .french: return "Pro"
         }
     }
     
@@ -3938,6 +4854,8 @@ enum Strings {
         case .english: return "Purchase"
         case .japanese: return "購入"
         case .chinese: return "购买"
+        case .german: return "Kaufen"
+        case .french: return "Acheter"
         }
     }
     
@@ -3947,6 +4865,8 @@ enum Strings {
         case .english: return "Restore Purchase"
         case .japanese: return "購入を復元"
         case .chinese: return "恢复购买"
+        case .german: return "Kauf wiederherstellen"
+        case .french: return "Restaurer l’achat"
         }
     }
     
@@ -3956,6 +4876,8 @@ enum Strings {
         case .english: return "Feature Comparison"
         case .japanese: return "機能比較"
         case .chinese: return "功能对比"
+        case .german: return "Funktionsvergleich"
+        case .french: return "Comparatif des fonctions"
         }
     }
     
@@ -3965,6 +4887,8 @@ enum Strings {
         case .english: return "Basic Leave Management"
         case .japanese: return "基本的な有給管理"
         case .chinese: return "基本年假管理"
+        case .german: return "Urlaubsverwaltung (Basis)"
+        case .french: return "Gestion des congés de base"
         }
     }
     
@@ -3974,6 +4898,8 @@ enum Strings {
         case .english: return "Leave Recommendations"
         case .japanese: return "有給おすすめ"
         case .chinese: return "年假推荐"
+        case .german: return "Urlaubsempfehlungen"
+        case .french: return "Recommandations de congés"
         }
     }
     
@@ -3983,6 +4909,8 @@ enum Strings {
         case .english: return "3 recommendations only"
         case .japanese: return "3つの推奨のみ"
         case .chinese: return "仅显示3个推荐"
+        case .german: return "Nur 3 Empfehlungen"
+        case .french: return "3 recommandations seulement"
         }
     }
     
@@ -3992,6 +4920,8 @@ enum Strings {
         case .english: return "All recommendations"
         case .japanese: return "すべての推奨"
         case .chinese: return "显示所有推荐"
+        case .german: return "Alle Empfehlungen"
+        case .french: return "Toutes les recommandations"
         }
     }
     
@@ -4001,6 +4931,8 @@ enum Strings {
         case .english: return "Year Selection"
         case .japanese: return "年選択"
         case .chinese: return "年份选择"
+        case .german: return "Jahresauswahl"
+        case .french: return "Choix de l'année"
         }
     }
     
@@ -4010,6 +4942,8 @@ enum Strings {
         case .english: return "Current year only"
         case .japanese: return "今年のみ"
         case .chinese: return "仅当前年"
+        case .german: return "Nur aktuelles Jahr"
+        case .french: return "Année en cours uniquement"
         }
     }
     
@@ -4019,6 +4953,8 @@ enum Strings {
         case .english: return "All years"
         case .japanese: return "すべての年"
         case .chinese: return "所有年份"
+        case .german: return "Alle Jahre"
+        case .french: return "Toutes les années"
         }
     }
     
@@ -4028,6 +4964,8 @@ enum Strings {
         case .english: return "System Calendar Sync"
         case .japanese: return "システムカレンダー連携"
         case .chinese: return "系统日历同步"
+        case .german: return "Kalender-Synchronisierung"
+        case .french: return "Synchronisation du calendrier"
         }
     }
     
@@ -4037,6 +4975,8 @@ enum Strings {
         case .english: return "Not available"
         case .japanese: return "利用不可"
         case .chinese: return "不可用"
+        case .german: return "Nicht verfügbar"
+        case .french: return "Non disponible"
         }
     }
     
@@ -4046,6 +4986,8 @@ enum Strings {
         case .english: return "Bonus Leave Management"
         case .japanese: return "ボーナス休暇管理"
         case .chinese: return "奖励年假管理"
+        case .german: return "Bonusurlaub verwalten"
+        case .french: return "Gestion des congés bonus"
         }
     }
     
@@ -4055,6 +4997,8 @@ enum Strings {
         case .english: return "iCloud Backup"
         case .japanese: return "iCloudバックアップ"
         case .chinese: return "iCloud备份"
+        case .german: return "iCloud-Backup"
+        case .french: return "Sauvegarde iCloud"
         }
     }
     
@@ -4064,6 +5008,8 @@ enum Strings {
         case .english: return "One-time purchase, lifetime access"
         case .japanese: return "一度の購入で永続利用"
         case .chinese: return "一次购买，终身使用"
+        case .german: return "Einmalkauf, lebenslang nutzen"
+        case .french: return "Achat unique, accès à vie"
         }
     }
     
@@ -4073,6 +5019,8 @@ enum Strings {
         case .english: return "No subscription"
         case .japanese: return "サブスクなし"
         case .chinese: return "无订阅"
+        case .german: return "Kein Abo"
+        case .french: return "Sans abonnement"
         }
     }
     
@@ -4082,6 +5030,8 @@ enum Strings {
         case .english: return "Purchasing..."
         case .japanese: return "購入中..."
         case .chinese: return "购买中..."
+        case .german: return "Kauf läuft …"
+        case .french: return "Achat en cours…"
         }
     }
     
@@ -4091,6 +5041,8 @@ enum Strings {
         case .english: return "Purchase successful!"
         case .japanese: return "購入完了！"
         case .chinese: return "购买成功！"
+        case .german: return "Kauf abgeschlossen!"
+        case .french: return "Achat réussi !"
         }
     }
     
@@ -4100,6 +5052,8 @@ enum Strings {
         case .english: return "Purchase failed"
         case .japanese: return "購入失敗"
         case .chinese: return "购买失败"
+        case .german: return "Kauf fehlgeschlagen"
+        case .french: return "Échec de l'achat"
         }
     }
     
@@ -4109,6 +5063,8 @@ enum Strings {
         case .english: return "Restore successful!"
         case .japanese: return "復元完了！"
         case .chinese: return "恢复成功！"
+        case .german: return "Wiederherstellung abgeschlossen!"
+        case .french: return "Restauration réussie !"
         }
     }
     
@@ -4118,6 +5074,8 @@ enum Strings {
         case .english: return "You are a Pro user!"
         case .japanese: return "Pro ユーザーです！"
         case .chinese: return "您是Pro用户！"
+        case .german: return "Du bist Pro-Nutzer!"
+        case .french: return "Vous êtes utilisateur Pro !"
         }
     }
     
@@ -4127,6 +5085,8 @@ enum Strings {
         case .english: return "Want more features? Upgrade to Pro"
         case .japanese: return "もっと機能が欲しい？Proにアップグレード"
         case .chinese: return "想要更多功能？升级到Pro版"
+        case .german: return "Mehr Funktionen gewünscht? Upgrade auf Pro"
+        case .french: return "Envie de plus de fonctions ? Passez à Pro"
         }
     }
     
@@ -4137,6 +5097,8 @@ enum Strings {
         case .english: return "Share App"
         case .japanese: return "アプリを共有"
         case .chinese: return "分享应用"
+        case .german: return "App teilen"
+        case .french: return "Partager l'app"
         }
     }
     
@@ -4146,6 +5108,8 @@ enum Strings {
         case .english: return "Don't take the cash — take the days. Algorithm finds your longest possible breaks 🏖️"
         case .japanese: return "有給を現金じゃなく、実際の休みに。アルゴリズムが最長の連休を自動算出 🏖️"
         case .chinese: return "别拿年假补偿，真正去休假吧。算法自动计算最长假期组合 🏖️"
+        case .german: return "Lass dir Urlaub nicht auszahlen – nimm ihn dir. Der Algorithmus findet deine längsten Auszeiten 🏖️"
+        case .french: return "Ne vous faites pas payer vos congés, prenez-les. L'algorithme trouve vos plus longues pauses 🏖️"
         }
     }
 
@@ -4156,6 +5120,8 @@ enum Strings {
         case .english: return "One purchase. All features. Forever."
         case .japanese: return "一度の購入ですべての機能を永続利用"
         case .chinese: return "一次购买，永久使用全部功能"
+        case .german: return "Einmal zahlen. Alle Funktionen. Für immer."
+        case .french: return "Un seul paiement. Toutes les fonctions. Pour toujours."
         }
     }
 
@@ -4165,6 +5131,8 @@ enum Strings {
         case .english: return "Maybe later"
         case .japanese: return "あとで確認する"
         case .chinese: return "稍后了解"
+        case .german: return "Vielleicht später"
+        case .french: return "Peut-être plus tard"
         }
     }
 
@@ -4174,6 +5142,8 @@ enum Strings {
         case .english: return "Unlimited AI plans"
         case .japanese: return "無制限のAI推薦"
         case .chinese: return "无限AI推荐"
+        case .german: return "Unbegrenzte KI-Pläne"
+        case .french: return "Plans IA illimités"
         }
     }
 
@@ -4183,6 +5153,8 @@ enum Strings {
         case .english: return "Free is limited to 3"
         case .japanese: return "無料は3件まで"
         case .chinese: return "免费版最多3个"
+        case .german: return "Kostenlos nur bis zu 3"
+        case .french: return "Gratuit : 3 maximum"
         }
     }
 
@@ -4192,6 +5164,8 @@ enum Strings {
         case .english: return "Bonus leave tracking"
         case .japanese: return "ボーナス休暇管理"
         case .chinese: return "奖励年假管理"
+        case .german: return "Bonusurlaub verwalten"
+        case .french: return "Suivi des congés bonus"
         }
     }
 
@@ -4201,6 +5175,8 @@ enum Strings {
         case .english: return "Comp days, special leave, sick"
         case .japanese: return "代休、特別休暇、病気休暇"
         case .chinese: return "补休、特别假、病假"
+        case .german: return "Ausgleichstage, Sonderurlaub, Krankheit"
+        case .french: return "Récup, congés spéciaux, maladie"
         }
     }
 
@@ -4210,6 +5186,8 @@ enum Strings {
         case .english: return "Multi-year planning"
         case .japanese: return "複数年プランニング"
         case .chinese: return "跨年度规划"
+        case .german: return "Mehrjahresplanung"
+        case .french: return "Planification pluriannuelle"
         }
     }
 
@@ -4219,6 +5197,8 @@ enum Strings {
         case .english: return "Last year and next year at a glance"
         case .japanese: return "昨年と来年まで一目で"
         case .chinese: return "去年和明年一览"
+        case .german: return "Letztes und nächstes Jahr im Blick"
+        case .french: return "Année passée et suivante en un coup d'œil"
         }
     }
 
@@ -4228,6 +5208,8 @@ enum Strings {
         case .english: return "Calendar sync"
         case .japanese: return "カレンダー連携"
         case .chinese: return "日历同步"
+        case .german: return "Kalender-Sync"
+        case .french: return "Synchro du calendrier"
         }
     }
 
@@ -4237,6 +5219,8 @@ enum Strings {
         case .english: return "Auto-sync with iOS Calendar"
         case .japanese: return "iOSカレンダーに自動同期"
         case .chinese: return "自动同步到iOS日历"
+        case .german: return "Automatisch mit dem iOS-Kalender synchronisieren"
+        case .french: return "Synchro automatique avec le calendrier iOS"
         }
     }
 
@@ -4247,6 +5231,8 @@ enum Strings {
         case .english: return "Vacation Pace"
         case .japanese: return "休暇ペース"
         case .chinese: return "休假节奏"
+        case .german: return "Urlaubstempo"
+        case .french: return "Rythme des congés"
         }
     }
 
@@ -4256,6 +5242,8 @@ enum Strings {
         case .english: return "Year progress"
         case .japanese: return "今年の進捗"
         case .chinese: return "年度进度"
+        case .german: return "Jahresfortschritt"
+        case .french: return "Avancement de l'année"
         }
     }
 
@@ -4265,6 +5253,8 @@ enum Strings {
         case .english: return "Leave used"
         case .japanese: return "有給使用"
         case .chinese: return "年假使用"
+        case .german: return "Urlaub genommen"
+        case .french: return "Congés pris"
         }
     }
 
@@ -4274,6 +5264,8 @@ enum Strings {
         case .english: return "Relaxed"
         case .japanese: return "ゆとり"
         case .chinese: return "宽松"
+        case .german: return "Entspannt"
+        case .french: return "Serein"
         }
     }
 
@@ -4283,6 +5275,8 @@ enum Strings {
         case .english: return "Balanced"
         case .japanese: return "適正"
         case .chinese: return "均衡"
+        case .german: return "Ausgewogen"
+        case .french: return "Équilibré"
         }
     }
 
@@ -4292,6 +5286,8 @@ enum Strings {
         case .english: return "Fast"
         case .japanese: return "速い"
         case .chinese: return "偏快"
+        case .german: return "Schnell"
+        case .french: return "Rapide"
         }
     }
 
@@ -4301,6 +5297,8 @@ enum Strings {
         case .english: return "Very fast"
         case .japanese: return "非常に速い"
         case .chinese: return "很快"
+        case .german: return "Sehr schnell"
+        case .french: return "Très rapide"
         }
     }
 
@@ -4310,6 +5308,8 @@ enum Strings {
         case .english: return "You're pacing slowly. Try planning ahead so days don't pile up."
         case .japanese: return "ゆったり使っています。次の休暇を計画してみましょう。"
         case .chinese: return "使用节奏宽松。可以提前规划下一次休假。"
+        case .german: return "Du nutzt deinen Urlaub gemächlich. Plane vorausschauend, damit sich keine Tage anhäufen."
+        case .french: return "Vous prenez vos congés tranquillement. Planifiez à l'avance pour ne pas accumuler de jours."
         }
     }
 
@@ -4319,6 +5319,8 @@ enum Strings {
         case .english: return "Healthy pace. You're using leave at the right rate."
         case .japanese: return "健康的なペースで休暇を取れています。"
         case .chinese: return "节奏健康,休假分配合理。"
+        case .german: return "Gesundes Tempo. Du nutzt deinen Urlaub im richtigen Maß."
+        case .french: return "Rythme sain. Vous utilisez vos congés au bon rythme."
         }
     }
 
@@ -4328,6 +5330,8 @@ enum Strings {
         case .english: return "You're using leave faster than average. Pace yourself for the rest of the year."
         case .japanese: return "やや早めの消化です。残りの期間を見ながら配分しましょう。"
         case .chinese: return "使用较快。请合理分配剩余时间。"
+        case .german: return "Du nimmst Urlaub schneller als der Durchschnitt. Teile dir den Rest des Jahres gut ein."
+        case .french: return "Vous posez vos congés plus vite que la moyenne. Répartissez bien le reste de l'année."
         }
     }
 
@@ -4337,6 +5341,8 @@ enum Strings {
         case .english: return "Your leave is depleting very quickly. You might run short."
         case .japanese: return "有給の消化が非常に速いです。残日数が不足するかもしれません。"
         case .chinese: return "年假消耗非常快,剩余天数可能不足。"
+        case .german: return "Dein Urlaub schwindet sehr schnell. Am Ende könnten Tage fehlen."
+        case .french: return "Vos congés fondent très vite. Il pourrait vous manquer des jours."
         }
     }
 
@@ -4347,6 +5353,8 @@ enum Strings {
         case .english: return "Rest rhythm"
         case .japanese: return "休息のリズム"
         case .chinese: return "休息节奏"
+        case .german: return "Erholungsrhythmus"
+        case .french: return "Rythme de repos"
         }
     }
 
@@ -4356,6 +5364,8 @@ enum Strings {
         case .english: return "Last break"
         case .japanese: return "前回の休暇"
         case .chinese: return "上次休假"
+        case .german: return "Letzte Auszeit"
+        case .french: return "Dernière pause"
         }
     }
 
@@ -4365,6 +5375,8 @@ enum Strings {
         case .english: return "Today"
         case .japanese: return "今日"
         case .chinese: return "今天"
+        case .german: return "Heute"
+        case .french: return "Aujourd'hui"
         }
     }
 
@@ -4374,6 +5386,8 @@ enum Strings {
         case .english: return "Next break"
         case .japanese: return "次の休暇"
         case .chinese: return "下次休假"
+        case .german: return "Nächste Auszeit"
+        case .french: return "Prochaine pause"
         }
     }
 
@@ -4383,6 +5397,8 @@ enum Strings {
         case .english: return days == 1 ? "1 day ago" : "\(days) days ago"
         case .japanese: return "\(days)日前"
         case .chinese: return "\(days)天前"
+        case .german: return days == 1 ? "vor 1 Tag" : "vor \(days) Tagen"
+        case .french: return days == 1 ? "il y a 1 jour" : "il y a \(days) jours"
         }
     }
 
@@ -4392,6 +5408,8 @@ enum Strings {
         case .english: return days == 1 ? "in 1 day" : "in \(days) days"
         case .japanese: return "\(days)日後"
         case .chinese: return "\(days)天后"
+        case .german: return days == 1 ? "in 1 Tag" : "in \(days) Tagen"
+        case .french: return days == 1 ? "dans 1 jour" : "dans \(days) jours"
         }
     }
 
@@ -4401,6 +5419,8 @@ enum Strings {
         case .english: return "No record"
         case .japanese: return "記録なし"
         case .chinese: return "无记录"
+        case .german: return "Kein Eintrag"
+        case .french: return "Aucun enregistrement"
         }
     }
 
@@ -4410,6 +5430,8 @@ enum Strings {
         case .english: return "Not planned"
         case .japanese: return "未計画"
         case .chinese: return "未计划"
+        case .german: return "Nicht geplant"
+        case .french: return "Non planifié"
         }
     }
 
@@ -4419,6 +5441,8 @@ enum Strings {
         case .english: return "Healthy gap between breaks. Keep this rhythm."
         case .japanese: return "休暇の間隔が健康的です。今のリズムを維持しましょう。"
         case .chinese: return "休假间隔健康,继续保持这个节奏。"
+        case .german: return "Gesunder Abstand zwischen den Auszeiten. Behalte diesen Rhythmus bei."
+        case .french: return "Bon écart entre vos pauses. Gardez ce rythme."
         }
     }
 
@@ -4428,6 +5452,8 @@ enum Strings {
         case .english: return "It's been a while. Consider planning even a short break."
         case .japanese: return "少し休んでいません。短い休みでも計画してみましょう。"
         case .chinese: return "已经有段时间没休息了,哪怕短假也好,试着安排一下吧。"
+        case .german: return "Deine letzte Auszeit ist schon eine Weile her. Plane auch mal eine kurze Pause."
+        case .french: return "Cela fait un moment. Pensez à planifier une petite pause."
         }
     }
 
@@ -4437,6 +5463,8 @@ enum Strings {
         case .english: return "You haven't rested in a long time. Schedule a break before burnout sets in."
         case .japanese: return "長い間休めていません。バーンアウト前に休暇を入れましょう。"
         case .chinese: return "好久没休息了,在倦怠之前安排一次休假吧。"
+        case .german: return "Du hast dich lange nicht erholt. Plane Urlaub, bevor es zum Burnout kommt."
+        case .french: return "Vous ne vous êtes pas reposé depuis longtemps. Posez des congés avant le burn-out."
         }
     }
 
@@ -4446,6 +5474,8 @@ enum Strings {
         case .english: return "Your next break is coming up soon. Hang in there."
         case .japanese: return "次の休暇はすぐです。もう少しがんばりましょう。"
         case .chinese: return "下次休假就快到了,再坚持一下。"
+        case .german: return "Deine nächste Auszeit steht bald an. Halte noch ein bisschen durch."
+        case .french: return "Votre prochaine pause approche. Tenez bon encore un peu."
         }
     }
 
@@ -4458,6 +5488,8 @@ enum Strings {
         case .english: return "Your usual cycle: \(days) days"
         case .japanese: return "いつもの周期\(days)日"
         case .chinese: return "你通常的周期为\(days)天"
+        case .german: return "Dein üblicher Zyklus: \(days) Tage"
+        case .french: return "Votre cycle habituel : \(days) jours"
         }
     }
 
@@ -4468,6 +5500,8 @@ enum Strings {
         case .english: return "Burnout risk"
         case .japanese: return "バーンアウト注意"
         case .chinese: return "倦怠风险"
+        case .german: return "Burnout-Risiko"
+        case .french: return "Risque de burn-out"
         }
     }
 
@@ -4479,6 +5513,8 @@ enum Strings {
         case .english: return "How drained do you feel lately?"
         case .japanese: return "最近どれくらい疲れていますか?"
         case .chinese: return "最近你有多疲惫?"
+        case .german: return "Wie erschöpft fühlst du dich zurzeit?"
+        case .french: return "À quel point êtes-vous épuisé en ce moment ?"
         }
     }
 
@@ -4488,6 +5524,8 @@ enum Strings {
         case .english: return "One quick answer sharpens your rest suggestions."
         case .japanese: return "ひとつの回答で休息提案がより正確になります。"
         case .chinese: return "一个简单的回答能让休息建议更准确。"
+        case .german: return "Eine kurze Antwort macht deine Erholungstipps treffsicherer."
+        case .french: return "Une réponse rapide affine vos suggestions de repos."
         }
     }
 
@@ -4497,6 +5535,8 @@ enum Strings {
         case .english: return "Fine"
         case .japanese: return "元気"
         case .chinese: return "还好"
+        case .german: return "Geht so gut"
+        case .french: return "Ça va"
         }
     }
 
@@ -4506,6 +5546,8 @@ enum Strings {
         case .english: return "Exhausted"
         case .japanese: return "限界"
         case .chinese: return "精疲力竭"
+        case .german: return "Völlig erschöpft"
+        case .french: return "Épuisé"
         }
     }
 
@@ -4515,6 +5557,8 @@ enum Strings {
         case .english: return "Submit"
         case .japanese: return "記録する"
         case .chinese: return "提交"
+        case .german: return "Speichern"
+        case .french: return "Enregistrer"
         }
     }
 
@@ -4524,6 +5568,8 @@ enum Strings {
         case .english: return "Later"
         case .japanese: return "あとで"
         case .chinese: return "稍后"
+        case .german: return "Später"
+        case .french: return "Plus tard"
         }
     }
 
@@ -4535,6 +5581,8 @@ enum Strings {
         case .english: return "Rest reminders"
         case .japanese: return "休息リマインダー"
         case .chinese: return "休息提醒"
+        case .german: return "Erholungserinnerungen"
+        case .french: return "Rappels de repos"
         }
     }
 
@@ -4544,6 +5592,8 @@ enum Strings {
         case .english: return "Rest Radar"
         case .japanese: return "レストレーダー"
         case .chinese: return "休息雷达"
+        case .german: return "Erholungsradar"
+        case .french: return "Radar de repos"
         }
     }
 
@@ -4553,6 +5603,8 @@ enum Strings {
         case .english: return "When you've gone too long without a break, we'll nudge you with a nearby low-cost getaway."
         case .japanese: return "長く休めていないとき、近くの低コストな連休とともにお知らせします。"
         case .chinese: return "当你太久没休息时,会结合就近的低成本假期提醒你。"
+        case .german: return "Wenn du zu lange keine Pause hattest, erinnern wir dich an einen günstigen Kurztrip in der Nähe."
+        case .french: return "Si vous n'avez pas fait de pause depuis trop longtemps, nous vous suggérerons une escapade économique à proximité."
         }
     }
 
@@ -4563,6 +5615,8 @@ enum Strings {
         case .english: return "Remind in 2 weeks"
         case .japanese: return "2週間後に再通知"
         case .chinese: return "两周后再提醒"
+        case .german: return "In 2 Wochen erinnern"
+        case .french: return "Rappeler dans 2 semaines"
         }
     }
 
@@ -4573,6 +5627,8 @@ enum Strings {
         case .english: return "Include bonus"
         case .japanese: return "ボーナス含む"
         case .chinese: return "包含奖励"
+        case .german: return "Bonus einbeziehen"
+        case .french: return "Inclure le bonus"
         }
     }
 
@@ -4583,6 +5639,8 @@ enum Strings {
         case .english: return "When on, bonus leave is added to your remaining days"
         case .japanese: return "オンにするとボーナス休暇が残日数に合算されます"
         case .chinese: return "开启后奖励假期将计入剩余天数"
+        case .german: return "Wenn aktiviert, wird Bonusurlaub zu deinen Resttagen addiert"
+        case .french: return "Si activé, les congés bonus s'ajoutent à vos jours restants"
         }
     }
 
@@ -4592,6 +5650,8 @@ enum Strings {
         case .english: return "Goal left"
         case .japanese: return "残り目標"
         case .chinese: return "目标剩余"
+        case .german: return "Restziel"
+        case .french: return "Objectif restant"
         }
     }
 
@@ -4601,6 +5661,8 @@ enum Strings {
         case .english: return "Available"
         case .japanese: return "利用可能"
         case .chinese: return "可用"
+        case .german: return "Verfügbar"
+        case .french: return "Disponible"
         }
     }
 
@@ -4610,6 +5672,8 @@ enum Strings {
         case .english: return "No goal set · You can set a yearly goal in Settings"
         case .japanese: return "目標日数なし · 設定で年間目標を設定できます"
         case .chinese: return "未设目标 · 可在设置中设定年度目标"
+        case .german: return "Kein Ziel festgelegt · Du kannst in den Einstellungen ein Jahresziel setzen"
+        case .french: return "Aucun objectif défini · Vous pouvez en fixer un dans les Réglages"
         }
     }
 
@@ -4619,6 +5683,8 @@ enum Strings {
         case .english: return "Use the + tab to add leave by date"
         case .japanese: return "日付別に個別入力するには + タブを使ってください"
         case .chinese: return "如需按日期单独输入,请使用 + 标签"
+        case .german: return "Nutze den +-Tab, um Urlaub nach Datum einzutragen"
+        case .french: return "Utilisez l'onglet + pour ajouter des congés par date"
         }
     }
 
@@ -4629,6 +5695,8 @@ enum Strings {
         case .english: return "\(holidayName) in \(days)d · Add PTO for a longer break"
         case .japanese: return "\(holidayName) あと\(days)日 · 有給を足して長い連休に"
         case .chinese: return "\(holidayName) 还有\(days)天 · 拼上年假打造长假"
+        case .german: return "\(holidayName) in \(days) T. · Mit Urlaub zur längeren Auszeit"
+        case .french: return "\(holidayName) dans \(days) j · Posez des congés pour une pause plus longue"
         }
     }
 
@@ -4638,6 +5706,8 @@ enum Strings {
         case .english: return "\(daysText) days left this year · Plan before they expire"
         case .japanese: return "年末まで\(daysText)日 · 消滅前に計画しましょう"
         case .chinese: return "今年还剩\(daysText)天 · 在到期前安排好"
+        case .german: return "Noch \(daysText) Tage in diesem Jahr · Plane, bevor sie verfallen"
+        case .french: return "Plus que \(daysText) jours cette année · Planifiez avant qu'ils expirent"
         }
     }
 
@@ -4647,6 +5717,8 @@ enum Strings {
         case .english: return "Golden Week"
         case .japanese: return "ゴールデンウィーク"
         case .chinese: return "黄金周"
+        case .german: return "Goldene Woche"
+        case .french: return "Golden Week"
         }
     }
 
@@ -4656,6 +5728,8 @@ enum Strings {
         case .english: return "Autumn Holiday"
         case .japanese: return "秋の連休"
         case .chinese: return "中秋假期"
+        case .german: return "Herbstferien"
+        case .french: return "Vacances d'automne"
         }
     }
 
@@ -4665,6 +5739,8 @@ enum Strings {
         case .english: return "\(seasonName) season · Try AI recommendations for the best plan"
         case .japanese: return "\(seasonName)シーズン · AIおすすめで最適な日程を"
         case .chinese: return "\(seasonName)旺季 · 用AI推荐打造最佳行程"
+        case .german: return "Saison: \(seasonName) · Mit KI-Empfehlungen den besten Plan finden"
+        case .french: return "Saison : \(seasonName) · Trouvez le meilleur plan avec l'IA"
         }
     }
 
@@ -4674,6 +5750,8 @@ enum Strings {
         case .english: return "\(daysText) days of leave left · Place them wisely"
         case .japanese: return "残り有給\(daysText)日 · 効率的に配置しましょう"
         case .chinese: return "剩余\(daysText)天年假 · 合理安排"
+        case .german: return "Noch \(daysText) Urlaubstage · Setze sie klug ein"
+        case .french: return "Plus que \(daysText) jours de congé · Placez-les judicieusement"
         }
     }
 
@@ -4683,6 +5761,8 @@ enum Strings {
         case .english: return "\(daysText) days of leave unplanned · Get AI recommendations"
         case .japanese: return "\(daysText)日の有給が未計画です · AIおすすめを試してみては"
         case .chinese: return "还有\(daysText)天年假未安排 · 试试AI推荐"
+        case .german: return "\(daysText) Urlaubstage noch ungeplant · Hol dir KI-Empfehlungen"
+        case .french: return "\(daysText) jours de congé non planifiés · Obtenez des recommandations IA"
         }
     }
 
@@ -4693,6 +5773,8 @@ enum Strings {
         case .english: return "Days to goal"
         case .japanese: return "目標まで残り日数"
         case .chinese: return "距目标天数"
+        case .german: return "Tage bis zum Ziel"
+        case .french: return "Jours avant l'objectif"
         }
     }
 
@@ -4702,6 +5784,8 @@ enum Strings {
         case .english: return "Total planned"
         case .japanese: return "計画合計"
         case .chinese: return "计划合计"
+        case .german: return "Gesamt geplant"
+        case .french: return "Total planifié"
         }
     }
 
@@ -4711,6 +5795,8 @@ enum Strings {
         case .english: return "Use bonus leave"
         case .japanese: return "ボーナス休暇を使う"
         case .chinese: return "使用奖励年假"
+        case .german: return "Bonusurlaub nutzen"
+        case .french: return "Utiliser les congés bonus"
         }
     }
 
@@ -4720,6 +5806,8 @@ enum Strings {
         case .english: return "Bonus leave will be used. It won't be deducted from your annual leave."
         case .japanese: return "ボーナス休暇を使います。年次有給からは差し引かれません。"
         case .chinese: return "将使用奖励年假,不会从年假中扣除。"
+        case .german: return "Bonusurlaub wird verwendet. Er wird nicht von deinem Jahresurlaub abgezogen."
+        case .french: return "Les congés bonus seront utilisés. Ils ne seront pas déduits de vos congés annuels."
         }
     }
 
@@ -4729,6 +5817,8 @@ enum Strings {
         case .english: return "Tap to select bonus leave and use it instead of annual leave."
         case .japanese: return "タップしてボーナス休暇を選ぶと、年次有給の代わりに使えます。"
         case .chinese: return "点击选择奖励年假即可代替年假使用。"
+        case .german: return "Tippe, um Bonusurlaub auszuwählen und ihn statt Jahresurlaub zu nutzen."
+        case .french: return "Touchez pour choisir des congés bonus et les utiliser à la place des congés annuels."
         }
     }
 
@@ -4738,6 +5828,8 @@ enum Strings {
         case .english: return "Bonus leave unit"
         case .japanese: return "ボーナス休暇の単位"
         case .chinese: return "奖励年假单位"
+        case .german: return "Einheit für Bonusurlaub"
+        case .french: return "Unité des congés bonus"
         }
     }
 
@@ -4747,6 +5839,8 @@ enum Strings {
         case .english: return "Vacation length"
         case .japanese: return "休暇の長さ"
         case .chinese: return "休假时长"
+        case .german: return "Urlaubsdauer"
+        case .french: return "Durée des vacances"
         }
     }
 
@@ -4756,6 +5850,8 @@ enum Strings {
         case .english: return "Deduction unit"
         case .japanese: return "有給控除の単位"
         case .chinese: return "扣除单位"
+        case .german: return "Abzugseinheit"
+        case .french: return "Unité de déduction"
         }
     }
 
@@ -4822,6 +5918,38 @@ enum Strings {
                 default: return "年假"
                 }
             }
+        case .german:
+            if isLeisure {
+                switch type {
+                case .quarter: return "Viertel"
+                case .half: return "Halb"
+                case .annual: return "Freier Tag"
+                default: return "Freier Tag"
+                }
+            } else {
+                switch type {
+                case .quarter: return "Viertel Urlaubstag"
+                case .half: return "Halber Urlaubstag"
+                case .annual: return "Urlaubstag"
+                default: return "Urlaubstag"
+                }
+            }
+        case .french:
+            if isLeisure {
+                switch type {
+                case .quarter: return "Quart"
+                case .half: return "Demi"
+                case .annual: return "Jour off"
+                default: return "Jour off"
+                }
+            } else {
+                switch type {
+                case .quarter: return "Quart de congé"
+                case .half: return "Demi-congé"
+                case .annual: return "Congé"
+                default: return "Congé"
+                }
+            }
         }
     }
 
@@ -4852,6 +5980,18 @@ enum Strings {
             case .half: return "半天"
             case .quarter: return "四分之一天"
             }
+        case .german:
+            switch length {
+            case .full: return "Ganzer Tag"
+            case .half: return "Halber Tag"
+            case .quarter: return "Viertel Tag"
+            }
+        case .french:
+            switch length {
+            case .full: return "Journée entière"
+            case .half: return "Demi-journée"
+            case .quarter: return "Quart de journée"
+            }
         }
     }
 
@@ -4862,6 +6002,8 @@ enum Strings {
         case .english: return "Leave type"
         case .japanese: return "休暇の種類"
         case .chinese: return "休假类型"
+        case .german: return "Urlaubsart"
+        case .french: return "Type de congé"
         }
     }
 
@@ -4872,6 +6014,8 @@ enum Strings {
         case .english: return "Length"
         case .japanese: return "使用単位"
         case .chinese: return "使用长度"
+        case .german: return "Dauer"
+        case .french: return "Durée"
         }
     }
 
@@ -4881,6 +6025,8 @@ enum Strings {
         case .english: return "Other (no deduction)"
         case .japanese: return "その他 (有給控除なし)"
         case .chinese: return "其他 (不扣除年假)"
+        case .german: return "Sonstige (ohne Abzug)"
+        case .french: return "Autres (sans déduction)"
         }
     }
 
@@ -4890,6 +6036,8 @@ enum Strings {
         case .english: return "Adding bonus leave is a Pro feature. You can still edit existing items."
         case .japanese: return "ボーナス休暇の追加はPro機能です。既存項目の編集は可能です。"
         case .chinese: return "新增奖励年假为Pro功能。已添加的项目仍可编辑。"
+        case .german: return "Bonusurlaub hinzuzufügen ist eine Pro-Funktion. Vorhandene Einträge kannst du weiterhin bearbeiten."
+        case .french: return "L'ajout de congés bonus est une fonction Pro. Vous pouvez toujours modifier les éléments existants."
         }
     }
 
@@ -4902,6 +6050,8 @@ enum Strings {
         case .english: return "\(used)/\(granted) days"
         case .japanese: return "\(used)/\(granted)日"
         case .chinese: return "\(used)/\(granted)天"
+        case .german: return "\(used)/\(granted) Tage"
+        case .french: return "\(used)/\(granted) jours"
         }
     }
 
@@ -4912,6 +6062,8 @@ enum Strings {
         case .english: return "\(used) of \(granted) days used"
         case .japanese: return "\(granted)日中\(used)日使用"
         case .chinese: return "\(granted)天中已用\(used)天"
+        case .german: return "\(used) von \(granted) Tagen genutzt"
+        case .french: return "\(used) jours sur \(granted) utilisés"
         }
     }
 
@@ -4921,6 +6073,8 @@ enum Strings {
         case .english: return "\(used) days used · \(remaining) days remaining"
         case .japanese: return "すでに\(used)日使用 · 残り\(remaining)日"
         case .chinese: return "已使用\(used)天 · 剩余\(remaining)天"
+        case .german: return "\(used) Tage genutzt · \(remaining) Tage übrig"
+        case .french: return "\(used) jours utilisés · \(remaining) jours restants"
         }
     }
 
@@ -4930,6 +6084,8 @@ enum Strings {
         case .english: return "Edit bonus leave"
         case .japanese: return "ボーナス休暇を編集"
         case .chinese: return "编辑奖励年假"
+        case .german: return "Bonusurlaub bearbeiten"
+        case .french: return "Modifier les congés bonus"
         }
     }
 
@@ -4940,6 +6096,8 @@ enum Strings {
         case .english: return "Travel"
         case .japanese: return "旅行"
         case .chinese: return "旅行推荐"
+        case .german: return "Reisen"
+        case .french: return "Voyage"
         }
     }
 
@@ -4949,6 +6107,8 @@ enum Strings {
         case .english: return "Make the most of this break"
         case .japanese: return "この連休、出かけませんか?"
         case .chinese: return "这个假期,出发吧?"
+        case .german: return "Mach das Beste aus dieser Auszeit"
+        case .french: return "Profitez au mieux de cette pause"
         }
     }
 
@@ -4958,6 +6118,8 @@ enum Strings {
         case .english: return "Check flights, hotels, and tours together on MyRealTrip"
         case .japanese: return "マイリアルトリップで航空券・ホテル・ツアーをまとめてチェック"
         case .chinese: return "在MyRealTrip上一站查看机票、酒店和旅游产品"
+        case .german: return "Vergleiche Flüge, Hotels und Touren gemeinsam bei MyRealTrip"
+        case .french: return "Comparez vols, hôtels et visites en un seul endroit sur MyRealTrip"
         }
     }
 
@@ -4967,6 +6129,8 @@ enum Strings {
         case .english: return "Open MyRealTrip"
         case .japanese: return "マイリアルトリップで見る"
         case .chinese: return "在MyRealTrip中查看"
+        case .german: return "MyRealTrip öffnen"
+        case .french: return "Ouvrir MyRealTrip"
         }
     }
 
@@ -4977,6 +6141,8 @@ enum Strings {
         case .english: return "We've found some activities for this break.\nShow recommendations?"
         case .japanese: return "この連休にぴったりのアクティビティがあります。\nおすすめを表示しますか?"
         case .chinese: return "我们为这个假期找到了一些活动。\n要查看推荐吗?"
+        case .german: return "Wir haben Aktivitäten für diese Auszeit gefunden.\nEmpfehlungen anzeigen?"
+        case .french: return "Nous avons trouvé des activités pour cette pause.\nAfficher les recommandations ?"
         }
     }
 
@@ -4986,6 +6152,8 @@ enum Strings {
         case .english: return "Flights, stays, and tours from MyRealTrip"
         case .japanese: return "マイリアルトリップで航空券・ホテル・ツアーをまとめて確認"
         case .chinese: return "MyRealTrip上的机票、住宿和旅游产品"
+        case .german: return "Flüge, Unterkünfte und Touren von MyRealTrip"
+        case .french: return "Vols, hébergements et visites sur MyRealTrip"
         }
     }
 
@@ -4995,6 +6163,8 @@ enum Strings {
         case .english: return "Show me"
         case .japanese: return "見てみる"
         case .chinese: return "查看推荐"
+        case .german: return "Zeig mal"
+        case .french: return "Voir"
         }
     }
 
@@ -5004,6 +6174,8 @@ enum Strings {
         case .english: return "No thanks"
         case .japanese: return "結構です"
         case .chinese: return "不用了"
+        case .german: return "Nein danke"
+        case .french: return "Non merci"
         }
     }
 
@@ -5014,6 +6186,8 @@ enum Strings {
         case .english: return "\(city) for a \(days)-day break — \(season)"
         case .japanese: return "\(days)日の連休には\(city) — \(season)"
         case .chinese: return "\(days)天假期就去\(city) — \(season)"
+        case .german: return "\(city) für \(days) freie Tage — \(season)"
+        case .french: return "\(city) pour \(days) jours de pause — \(season)"
         }
     }
 
@@ -5023,6 +6197,8 @@ enum Strings {
         case .english: return "Cheapest"
         case .japanese: return "最安値"
         case .chinese: return "最便宜"
+        case .german: return "Am günstigsten"
+        case .french: return "Le moins cher"
         }
     }
 
@@ -5032,6 +6208,8 @@ enum Strings {
         case .english: return "Direct"
         case .japanese: return "直行"
         case .chinese: return "直飞"
+        case .german: return "Direktflug"
+        case .french: return "Vol direct"
         }
     }
 
@@ -5041,6 +6219,8 @@ enum Strings {
         case .english: return "Top rated"
         case .japanese: return "高評価"
         case .chinese: return "高分推荐"
+        case .german: return "Bestbewertet"
+        case .french: return "Mieux noté"
         }
     }
 
@@ -5050,6 +6230,8 @@ enum Strings {
         case .english: return "Bestseller"
         case .japanese: return "ベストセラー"
         case .chinese: return "热销"
+        case .german: return "Bestseller"
+        case .french: return "Meilleure vente"
         }
     }
 
@@ -5059,6 +6241,8 @@ enum Strings {
         case .english: return "Suggested package"
         case .japanese: return "おすすめパッケージ"
         case .chinese: return "推荐套餐"
+        case .german: return "Paketvorschlag"
+        case .french: return "Forfait suggéré"
         }
     }
 
@@ -5068,6 +6252,8 @@ enum Strings {
         case .english: return "Don't show automatically"
         case .japanese: return "次回から自動表示しない"
         case .chinese: return "不再自动显示"
+        case .german: return "Nicht mehr automatisch zeigen"
+        case .french: return "Ne plus afficher automatiquement"
         }
     }
 
@@ -5078,6 +6264,8 @@ enum Strings {
         case .english: return "Employee"
         case .japanese: return "会社員"
         case .chinese: return "上班族"
+        case .german: return "Angestellte"
+        case .french: return "Salarié"
         }
     }
 
@@ -5087,6 +6275,8 @@ enum Strings {
         case .english: return "Free Plan"
         case .japanese: return "自由計画"
         case .chinese: return "自由规划"
+        case .german: return "Freie Planung"
+        case .french: return "Planning libre"
         }
     }
 
@@ -5096,6 +6286,8 @@ enum Strings {
         case .english: return "User Type"
         case .japanese: return "ユーザータイプ"
         case .chinese: return "用户类型"
+        case .german: return "Nutzertyp"
+        case .french: return "Type d'utilisateur"
         }
     }
 
@@ -5105,6 +6297,8 @@ enum Strings {
         case .english: return "Mode"
         case .japanese: return "モード"
         case .chinese: return "模式"
+        case .german: return "Modus"
+        case .french: return "Mode"
         }
     }
 
@@ -5114,6 +6308,8 @@ enum Strings {
         case .english: return "A mode for those who want to plan vacations freely without leave-day limits."
         case .japanese: return "有給日数の制限なく自由に休暇を計画したい方向けのモードです。"
         case .chinese: return "适合不受年假天数限制、自由规划休假的用户。"
+        case .german: return "Ein Modus für alle, die ihren Urlaub frei und ohne Urlaubstage-Limit planen möchten."
+        case .french: return "Un mode pour planifier vos vacances librement, sans limite de jours de congé."
         }
     }
 
@@ -5123,6 +6319,8 @@ enum Strings {
         case .english: return "Vacation Settings"
         case .japanese: return "休暇設定"
         case .chinese: return "休假设置"
+        case .german: return "Urlaubseinstellungen"
+        case .french: return "Réglages des congés"
         }
     }
 
@@ -5132,6 +6330,8 @@ enum Strings {
         case .english: return "Annual Goal Days"
         case .japanese: return "年間目標日数"
         case .chinese: return "年度目标天数"
+        case .german: return "Jahresziel in Tagen"
+        case .french: return "Objectif annuel (jours)"
         }
     }
 
@@ -5141,6 +6341,8 @@ enum Strings {
         case .english: return "Unlimited"
         case .japanese: return "無制限"
         case .chinese: return "无限"
+        case .german: return "Unbegrenzt"
+        case .french: return "Illimité"
         }
     }
 
@@ -5150,6 +6352,8 @@ enum Strings {
         case .english: return "Planned Leave"
         case .japanese: return "計画した休暇"
         case .chinese: return "计划休假"
+        case .german: return "Geplanter Urlaub"
+        case .french: return "Congés planifiés"
         }
     }
 
@@ -5159,6 +6363,8 @@ enum Strings {
         case .english: return "Year Start Month"
         case .japanese: return "基準年度の開始月"
         case .chinese: return "起始月份"
+        case .german: return "Startmonat des Jahres"
+        case .french: return "Mois de début d'année"
         }
     }
 
@@ -5169,6 +6375,8 @@ enum Strings {
         case .english: return "Holiday Management"
         case .japanese: return "祝日管理"
         case .chinese: return "假日管理"
+        case .german: return "Feiertage verwalten"
+        case .french: return "Gérer les jours fériés"
         }
     }
 
@@ -5178,6 +6386,8 @@ enum Strings {
         case .english: return "Add or hide holidays"
         case .japanese: return "祝日の追加・非表示"
         case .chinese: return "添加·隐藏假日"
+        case .german: return "Feiertage hinzufügen oder ausblenden"
+        case .french: return "Ajouter ou masquer des jours fériés"
         }
     }
 
@@ -5188,6 +6398,8 @@ enum Strings {
         case .english: return "Show Holidays in Upcoming"
         case .japanese: return "「今後の休暇」に祝日を表示"
         case .chinese: return "在即将到来的假期中显示节假日"
+        case .german: return "Feiertage in Anstehendem zeigen"
+        case .french: return "Jours fériés dans À venir"
         }
     }
 
@@ -5197,6 +6409,8 @@ enum Strings {
         case .english: return "Also list upcoming public holidays on the home card"
         case .japanese: return "ホームのカードに今後の祝日も表示します"
         case .chinese: return "在主页卡片中一并显示即将到来的节假日"
+        case .german: return "Zeigt auf der Startseite auch anstehende Feiertage an"
+        case .french: return "Affiche aussi les prochains jours fériés sur l'accueil"
         }
     }
 
@@ -5206,6 +6420,8 @@ enum Strings {
         case .english: return "Restore all default holidays"
         case .japanese: return "すべてのデフォルト祝日を復元"
         case .chinese: return "恢复所有默认假日"
+        case .german: return "Alle Standard-Feiertage wiederherstellen"
+        case .french: return "Rétablir tous les jours fériés par défaut"
         }
     }
 
@@ -5215,6 +6431,8 @@ enum Strings {
         case .english: return "Delete Holiday"
         case .japanese: return "祝日を削除"
         case .chinese: return "删除假日"
+        case .german: return "Feiertag löschen"
+        case .french: return "Supprimer le jour férié"
         }
     }
 
@@ -5224,6 +6442,8 @@ enum Strings {
         case .english: return "Delete this holiday?"
         case .japanese: return "この祝日を削除しますか?"
         case .chinese: return "要删除此假日吗?"
+        case .german: return "Diesen Feiertag löschen?"
+        case .french: return "Supprimer ce jour férié ?"
         }
     }
 
@@ -5233,6 +6453,8 @@ enum Strings {
         case .english: return "Delete"
         case .japanese: return "削除"
         case .chinese: return "删除"
+        case .german: return "Löschen"
+        case .french: return "Supprimer"
         }
     }
 
@@ -5242,6 +6464,8 @@ enum Strings {
         case .english: return "Add"
         case .japanese: return "追加"
         case .chinese: return "添加"
+        case .german: return "Hinzufügen"
+        case .french: return "Ajouter"
         }
     }
 
@@ -5251,6 +6475,8 @@ enum Strings {
         case .english: return "Default Holidays"
         case .japanese: return "デフォルト祝日"
         case .chinese: return "默认假日"
+        case .german: return "Standard-Feiertage"
+        case .french: return "Jours fériés par défaut"
         }
     }
 
@@ -5260,6 +6486,8 @@ enum Strings {
         case .english: return "Turn off the toggle to hide the holiday from the calendar and recommendations."
         case .japanese: return "トグルをオフにすると、カレンダーとおすすめから該当祝日が非表示になります。"
         case .chinese: return "关闭开关后,该假日将从日历和推荐中隐藏。"
+        case .german: return "Wenn du den Schalter ausschaltest, wird der Feiertag im Kalender und in den Empfehlungen ausgeblendet."
+        case .french: return "Si vous désactivez l'interrupteur, ce jour férié sera masqué du calendrier et des recommandations."
         }
     }
 
@@ -5269,6 +6497,8 @@ enum Strings {
         case .english: return "My Holidays"
         case .japanese: return "マイ祝日"
         case .chinese: return "我的假日"
+        case .german: return "Meine Feiertage"
+        case .french: return "Mes jours fériés"
         }
     }
 
@@ -5278,6 +6508,8 @@ enum Strings {
         case .english: return "No custom holidays added"
         case .japanese: return "追加した祝日はありません"
         case .chinese: return "未添加自定义假日"
+        case .german: return "Keine eigenen Feiertage hinzugefügt"
+        case .french: return "Aucun jour férié personnalisé ajouté"
         }
     }
 
@@ -5287,6 +6519,8 @@ enum Strings {
         case .english: return "Custom holidays will appear in the calendar and recommendations."
         case .japanese: return "追加した祝日はカレンダーとおすすめに反映されます。"
         case .chinese: return "自定义假日将显示在日历和推荐中。"
+        case .german: return "Eigene Feiertage erscheinen im Kalender und in den Empfehlungen."
+        case .french: return "Les jours fériés personnalisés apparaissent dans le calendrier et les recommandations."
         }
     }
 
@@ -5296,6 +6530,8 @@ enum Strings {
         case .english: return "Substitute Holiday"
         case .japanese: return "振替休日"
         case .chinese: return "调休"
+        case .german: return "Ersatzfeiertag"
+        case .french: return "Jour férié de remplacement"
         }
     }
 
@@ -5305,6 +6541,8 @@ enum Strings {
         case .english: return "Added by me"
         case .japanese: return "自分で追加"
         case .chinese: return "我添加的"
+        case .german: return "Von mir hinzugefügt"
+        case .french: return "Ajouté par moi"
         }
     }
 
@@ -5315,6 +6553,8 @@ enum Strings {
         case .english: return "Expanded"
         case .japanese: return "展開"
         case .chinese: return "已展开"
+        case .german: return "Ausgeklappt"
+        case .french: return "Développé"
         }
     }
 
@@ -5324,6 +6564,8 @@ enum Strings {
         case .english: return "Collapsed"
         case .japanese: return "折りたたみ"
         case .chinese: return "已折叠"
+        case .german: return "Eingeklappt"
+        case .french: return "Réduit"
         }
     }
 
@@ -5334,6 +6576,8 @@ enum Strings {
         case .english: return "Double tap to edit"
         case .japanese: return "ダブルタップで編集"
         case .chinese: return "双击以编辑"
+        case .german: return "Doppeltippen zum Bearbeiten"
+        case .french: return "Appuyez deux fois pour modifier"
         }
     }
 
@@ -5344,6 +6588,8 @@ enum Strings {
         case .english: return "Recommended holiday"
         case .japanese: return "おすすめの連休"
         case .chinese: return "推荐黄金假期"
+        case .german: return "Empfohlene Brückentage"
+        case .french: return "Ponts recommandés"
         }
     }
 
@@ -5354,6 +6600,8 @@ enum Strings {
         case .english: return "Turn off to hide it from the calendar"
         case .japanese: return "オフにするとカレンダーから非表示になります"
         case .chinese: return "关闭后将从日历中隐藏"
+        case .german: return "Ausschalten, um ihn im Kalender auszublenden"
+        case .french: return "Désactivez pour le masquer du calendrier"
         }
     }
 
@@ -5363,6 +6611,8 @@ enum Strings {
         case .english: return "Date"
         case .japanese: return "日付"
         case .chinese: return "日期"
+        case .german: return "Datum"
+        case .french: return "Date"
         }
     }
 
@@ -5372,6 +6622,8 @@ enum Strings {
         case .english: return "Select Date"
         case .japanese: return "日付選択"
         case .chinese: return "选择日期"
+        case .german: return "Datum wählen"
+        case .french: return "Choisir la date"
         }
     }
 
@@ -5381,6 +6633,8 @@ enum Strings {
         case .english: return "Name"
         case .japanese: return "名前"
         case .chinese: return "名称"
+        case .german: return "Name"
+        case .french: return "Nom"
         }
     }
 
@@ -5390,6 +6644,8 @@ enum Strings {
         case .english: return "Holiday name (e.g. Founding Day)"
         case .japanese: return "祝日名 (例: 創立記念日)"
         case .chinese: return "假日名称 (例如: 创立纪念日)"
+        case .german: return "Name des Feiertags (z. B. Firmengründung)"
+        case .french: return "Nom du jour férié (ex. : Fête de l'entreprise)"
         }
     }
 
@@ -5399,6 +6655,8 @@ enum Strings {
         case .english: return "Add Holiday"
         case .japanese: return "祝日を追加"
         case .chinese: return "添加假日"
+        case .german: return "Feiertag hinzufügen"
+        case .french: return "Ajouter un jour férié"
         }
     }
 
@@ -5409,6 +6667,8 @@ enum Strings {
         case .english: return "\(daysText) days available"
         case .japanese: return "\(daysText)日利用可能"
         case .chinese: return "可用\(daysText)天"
+        case .german: return "\(daysText) Tage verfügbar"
+        case .french: return "\(daysText) jours disponibles"
         }
     }
 
@@ -5418,6 +6678,8 @@ enum Strings {
         case .english: return "Until \(dateText)"
         case .japanese: return "\(dateText)まで"
         case .chinese: return "至\(dateText)到期"
+        case .german: return "Bis \(dateText)"
+        case .french: return "Jusqu'au \(dateText)"
         }
     }
 
@@ -5427,6 +6689,8 @@ enum Strings {
         case .english: return "No bonus deduction"
         case .japanese: return "ボーナス差引なし"
         case .chinese: return "不扣除奖励年假"
+        case .german: return "Kein Bonusabzug"
+        case .french: return "Aucune déduction de bonus"
         }
     }
 
@@ -5436,6 +6700,8 @@ enum Strings {
         case .english: return "Deduct \(daysText)\(dayUnitSuffix) from \(name)"
         case .japanese: return "\(name)から\(daysText)日差引"
         case .chinese: return "从\(name)扣除\(daysText)天"
+        case .german: return "\(daysText)\(dayUnitSuffix) von \(name) abziehen"
+        case .french: return "Déduire \(daysText)\(dayUnitSuffix) de \(name)"
         }
     }
 
@@ -5445,6 +6711,8 @@ enum Strings {
         case .english: return "Not enough remaining days in '\(name)' bonus."
         case .japanese: return "「\(name)」ボーナスの残日数が不足しています。"
         case .chinese: return "「\(name)」奖励年假剩余天数不足。"
+        case .german: return "Im Bonus „\(name)“ sind nicht genug Tage übrig."
+        case .french: return "Pas assez de jours restants dans le bonus « \(name) »."
         }
     }
 
@@ -5455,6 +6723,8 @@ enum Strings {
         case .english: return "Flights"
         case .japanese: return "航空券"
         case .chinese: return "机票"
+        case .german: return "Flüge"
+        case .french: return "Vols"
         }
     }
 
@@ -5464,6 +6734,8 @@ enum Strings {
         case .english: return "Stays"
         case .japanese: return "宿泊"
         case .chinese: return "住宿"
+        case .german: return "Unterkünfte"
+        case .french: return "Hébergements"
         }
     }
 
@@ -5473,6 +6745,8 @@ enum Strings {
         case .english: return "Tours & Tickets"
         case .japanese: return "ツアー・チケット"
         case .chinese: return "旅游·门票"
+        case .german: return "Touren & Tickets"
+        case .french: return "Visites et billets"
         }
     }
 
@@ -5483,6 +6757,8 @@ enum Strings {
         case .english: return "\(year) Vacation Plan"
         case .japanese: return "\(year)年の休暇計画"
         case .chinese: return "\(year)年休假计划"
+        case .german: return "Urlaubsplan \(year)"
+        case .french: return "Plan de congés \(year)"
         }
     }
 
@@ -5493,6 +6769,8 @@ enum Strings {
         case .english: return "No purchase records found."
         case .japanese: return "購入履歴が見つかりません。"
         case .chinese: return "未找到购买记录。"
+        case .german: return "Keine Käufe gefunden."
+        case .french: return "Aucun achat trouvé."
         }
     }
 
@@ -5502,6 +6780,8 @@ enum Strings {
         case .english: return "Features"
         case .japanese: return "機能"
         case .chinese: return "功能"
+        case .german: return "Funktionen"
+        case .french: return "Fonctionnalités"
         }
     }
 
@@ -5512,6 +6792,8 @@ enum Strings {
         case .english: return "Goldweek"
         case .japanese: return "ゴールドウィーク"
         case .chinese: return "Goldweek"
+        case .german: return "Goldweek"
+        case .french: return "Goldweek"
         }
     }
 
@@ -5521,6 +6803,8 @@ enum Strings {
         case .english: return "Smart leave management"
         case .japanese: return "スマートな休暇管理"
         case .chinese: return "智能年假管理"
+        case .german: return "Smarte Urlaubsplanung"
+        case .french: return "Gestion malin des congés"
         }
     }
 
@@ -5551,6 +6835,18 @@ enum Strings {
             case .china: return "中国"; case .usa: return "美国"
             case .germany: return "德国"; case .france: return "法国"
             }
+        case .german:
+            switch country {
+            case .korea: return "Südkorea"; case .japan: return "Japan"
+            case .china: return "China"; case .usa: return "USA"
+            case .germany: return "Deutschland"; case .france: return "Frankreich"
+            }
+        case .french:
+            switch country {
+            case .korea: return "Corée du Sud"; case .japan: return "Japon"
+            case .china: return "Chine"; case .usa: return "États-Unis"
+            case .germany: return "Allemagne"; case .france: return "France"
+            }
         }
     }
 
@@ -5561,6 +6857,8 @@ enum Strings {
         case .english: return "Trips that fit this break"
         case .japanese: return "この連休にぴったりの旅"
         case .chinese: return "适合此假期的旅行"
+        case .german: return "Reisen für diese freien Tage"
+        case .french: return "Voyages pour cette pause"
         }
     }
 
@@ -5570,6 +6868,8 @@ enum Strings {
         case .english: return "Picked for this break's length and season. Tap to see options on MyRealTrip."
         case .japanese: return "連休の長さと季節に合わせて選びました。タップでマイリアルトリップの商品を確認。"
         case .chinese: return "根据假期长度和季节精选。点击可在MyRealTrip中查看商品。"
+        case .german: return "Passend zu Länge und Jahreszeit dieser freien Tage ausgewählt. Tippe, um Angebote bei MyRealTrip zu sehen."
+        case .french: return "Sélection selon la durée et la saison. Touchez pour voir les offres sur MyRealTrip."
         }
     }
 
@@ -5655,6 +6955,46 @@ enum Strings {
             case "phuket": return "普吉岛"
             default: return key
             }
+        case .german:
+            switch key {
+            case "osaka": return "Osaka"
+            case "fukuoka": return "Fukuoka"
+            case "tokyo": return "Tokio"
+            case "sapporo": return "Sapporo"
+            case "kyoto": return "Kyoto"
+            case "okinawa": return "Okinawa"
+            case "danang": return "Da Nang"
+            case "bangkok": return "Bangkok"
+            case "taipei": return "Taipeh"
+            case "bali": return "Bali"
+            case "jeju": return "Jeju"
+            case "busan": return "Busan"
+            case "guam": return "Guam"
+            case "saipan": return "Saipan"
+            case "hanoi": return "Hanoi"
+            case "phuket": return "Phuket"
+            default: return key.capitalized
+            }
+        case .french:
+            switch key {
+            case "osaka": return "Osaka"
+            case "fukuoka": return "Fukuoka"
+            case "tokyo": return "Tokyo"
+            case "sapporo": return "Sapporo"
+            case "kyoto": return "Kyoto"
+            case "okinawa": return "Okinawa"
+            case "danang": return "Da Nang"
+            case "bangkok": return "Bangkok"
+            case "taipei": return "Taipei"
+            case "bali": return "Bali"
+            case "jeju": return "Jeju"
+            case "busan": return "Busan"
+            case "guam": return "Guam"
+            case "saipan": return "Saipan"
+            case "hanoi": return "Hanoï"
+            case "phuket": return "Phuket"
+            default: return key.capitalized
+            }
         }
     }
 
@@ -5707,6 +7047,30 @@ enum Strings {
             case "culture": return "文化"
             case "activity": return "活动"
             default: return key
+            }
+        case .german:
+            switch key {
+            case "family": return "Familie"
+            case "rest": return "Erholung"
+            case "foodie": return "Kulinarik"
+            case "shopping": return "Shopping"
+            case "nature": return "Natur"
+            case "romantic": return "Romantik"
+            case "culture": return "Kultur"
+            case "activity": return "Aktivurlaub"
+            default: return key.capitalized
+            }
+        case .french:
+            switch key {
+            case "family": return "Famille"
+            case "rest": return "Détente"
+            case "foodie": return "Gastronomie"
+            case "shopping": return "Shopping"
+            case "nature": return "Nature"
+            case "romantic": return "Romantique"
+            case "culture": return "Culture"
+            case "activity": return "Activités"
+            default: return key.capitalized
             }
         }
     }
@@ -5769,6 +7133,34 @@ enum Strings {
             case "cultureExplore": return "文化探索"
             default: return ""
             }
+        case .german:
+            switch key {
+            case "bestSeason": return "Jetzt Hochsaison"
+            case "shortNearby": return "Nah und entspannt"
+            case "longResort": return "Ideal für lange Auszeiten"
+            case "burnoutRecovery": return "Abschalten und auftanken"
+            case "offSeasonDeal": return "Günstig in der Nebensaison"
+            case "familyTime": return "Familienfreundlich"
+            case "couplesTrip": return "Romantische Auszeit"
+            case "weekendEscape": return "Perfekt fürs lange Wochenende"
+            case "foodieParadise": return "Paradies für Genießer"
+            case "cultureExplore": return "Kultur und Geschichte"
+            default: return ""
+            }
+        case .french:
+            switch key {
+            case "bestSeason": return "Pleine saison"
+            case "shortNearby": return "Proche et facile"
+            case "longResort": return "Idéal pour les longs congés"
+            case "burnoutRecovery": return "Se ressourcer"
+            case "offSeasonDeal": return "Bons prix hors saison"
+            case "familyTime": return "Idéal en famille"
+            case "couplesTrip": return "Escapade romantique"
+            case "weekendEscape": return "Parfait pour un long week-end"
+            case "foodieParadise": return "Paradis gourmand"
+            case "cultureExplore": return "Culture et histoire"
+            default: return ""
+            }
         }
     }
 
@@ -5802,6 +7194,20 @@ enum Strings {
             case "premium": return "高端"
             default: return key
             }
+        case .german:
+            switch key {
+            case "budget": return "Günstig"
+            case "mid": return "Mittelklasse"
+            case "premium": return "Premium"
+            default: return key.capitalized
+            }
+        case .french:
+            switch key {
+            case "budget": return "Économique"
+            case "mid": return "Milieu de gamme"
+            case "premium": return "Premium"
+            default: return key.capitalized
+            }
         }
     }
 
@@ -5812,6 +7218,8 @@ enum Strings {
         case .english: return "Did you take any leave this year?"
         case .japanese: return "今年すでに有給を使いましたか？"
         case .chinese: return "今年已经使用过年假吗？"
+        case .german: return "Hast du dieses Jahr schon Urlaub genommen?"
+        case .french: return "Avez-vous déjà pris des congés cette année ?"
         }
     }
 
@@ -5821,6 +7229,8 @@ enum Strings {
         case .english: return "Log your past leave to see your accurate remaining balance"
         case .japanese: return "過去の有給を入力して正確な残日数を確認しましょう"
         case .chinese: return "输入已使用的年假以准确查看剩余天数"
+        case .german: return "Trag deinen bisherigen Urlaub ein, um den Resturlaub genau zu sehen"
+        case .french: return "Saisissez vos congés déjà pris pour connaître précisément votre solde restant"
         }
     }
 
@@ -5830,6 +7240,8 @@ enum Strings {
         case .english: return "Quick Entry"
         case .japanese: return "クイック入力"
         case .chinese: return "快速输入"
+        case .german: return "Schnelleingabe"
+        case .french: return "Saisie rapide"
         }
     }
 
@@ -5839,6 +7251,8 @@ enum Strings {
         case .english: return "Leave days used"
         case .japanese: return "使用した有給日数"
         case .chinese: return "已使用年假"
+        case .german: return "Genommene Urlaubstage"
+        case .french: return "Jours de congé pris"
         }
     }
 
@@ -5848,6 +7262,8 @@ enum Strings {
         case .english: return "Add Past Leave"
         case .japanese: return "過去の有給を入力"
         case .chinese: return "输入过去的年假"
+        case .german: return "Bisherigen Urlaub eintragen"
+        case .french: return "Ajouter des congés passés"
         }
     }
 
@@ -5857,6 +7273,8 @@ enum Strings {
         case .english: return "Enter the total leave days already used this year.\nFor exact dates, add them individually in the + tab."
         case .japanese: return "今年すでに使用した有給日数を入力してください。\n正確な日付は＋タブから個別入力できます。"
         case .chinese: return "请输入今年已使用的年假天数。\n精确日期可在+标签中单独输入。"
+        case .german: return "Gib die Gesamtzahl der dieses Jahr bereits genommenen Urlaubstage ein.\nGenaue Daten kannst du einzeln im Tab + hinzufügen."
+        case .french: return "Saisissez le total des jours de congé déjà pris cette année.\nPour des dates précises, ajoutez-les une à une dans l'onglet +."
         }
     }
 
@@ -5866,6 +7284,8 @@ enum Strings {
         case .english: return "Confirm"
         case .japanese: return "反映する"
         case .chinese: return "确认"
+        case .german: return "Bestätigen"
+        case .french: return "Confirmer"
         }
     }
 
@@ -5875,6 +7295,8 @@ enum Strings {
         case .english: return "Prior leave (bulk entry)"
         case .japanese: return "過去の有給（一括入力）"
         case .chinese: return "过去的年假（批量录入）"
+        case .german: return "Früherer Urlaub (Sammeleingabe)"
+        case .french: return "Congés antérieurs (saisie groupée)"
         }
     }
 
@@ -5884,6 +7306,8 @@ enum Strings {
         case .english: return "Past dates are automatically marked as 'Used'"
         case .japanese: return "過去の日付は自動的に「使用済み」になります"
         case .chinese: return "过去日期会自动标记为「已使用」"
+        case .german: return "Vergangene Daten werden automatisch als „Genommen“ markiert"
+        case .french: return "Les dates passées sont automatiquement marquées « Pris »"
         }
     }
 
@@ -5894,6 +7318,8 @@ enum Strings {
         case .english: return "Free Days Off"
         case .japanese: return "有給不要の連休"
         case .chinese: return "无需年假的假期"
+        case .german: return "Freie Tage ohne Urlaub"
+        case .french: return "Jours off sans congé"
         }
     }
 
@@ -5904,6 +7330,8 @@ enum Strings {
         case .english: return "Show whole year (include past)"
         case .japanese: return "1年分すべて表示(過去も含む)"
         case .chinese: return "查看全年(包含过去)"
+        case .german: return "Ganzes Jahr zeigen (inkl. Vergangenes)"
+        case .french: return "Afficher toute l'année (passé inclus)"
         }
     }
 
@@ -5913,6 +7341,8 @@ enum Strings {
         case .english: return "Holidays are already here. Add leave to extend them."
         case .japanese: return "連休があります。有給を追加して延ばせます。"
         case .chinese: return "已有假期。添加年假可以延长假期。"
+        case .german: return "Hier sind schon freie Tage. Mit Urlaub wird die Auszeit länger."
+        case .french: return "Il y a déjà des jours de repos. Ajoutez des congés pour les prolonger."
         }
     }
 
@@ -5922,6 +7352,8 @@ enum Strings {
         case .english: return "Add with Pro"
         case .japanese: return "Proで追加"
         case .chinese: return "Pro版添加"
+        case .german: return "Mit Pro hinzufügen"
+        case .french: return "Ajouter avec Pro"
         }
     }
 
@@ -5931,6 +7363,8 @@ enum Strings {
         case .english: return "Upgrade to Pro to add all recommendations to your schedule"
         case .japanese: return "Proにアップグレードしてすべての推薦を追加できます"
         case .chinese: return "升级Pro版即可添加所有推荐到日程"
+        case .german: return "Mit Pro kannst du alle Empfehlungen zu deinem Plan hinzufügen"
+        case .french: return "Passez à Pro pour ajouter toutes les recommandations à votre planning"
         }
     }
 
@@ -5941,6 +7375,8 @@ enum Strings {
         case .english: return "Schedule Sharing"
         case .japanese: return "スケジュール共有"
         case .chinese: return "日程共享"
+        case .german: return "Plan teilen"
+        case .french: return "Partage du planning"
         }
     }
 
@@ -5950,6 +7386,8 @@ enum Strings {
         case .english: return "Share your leave schedule with family & friends in real time"
         case .japanese: return "家族や友達と休暇予定をリアルタイムで共有"
         case .chinese: return "与家人朋友实时共享休假日程"
+        case .german: return "Teile deinen Urlaubsplan in Echtzeit mit Familie und Freunden"
+        case .french: return "Partagez vos congés en temps réel avec famille et amis"
         }
     }
 
@@ -5959,6 +7397,8 @@ enum Strings {
         case .english: return "Share My Schedule"
         case .japanese: return "自分の予定を共有"
         case .chinese: return "共享我的日程"
+        case .german: return "Meinen Plan teilen"
+        case .french: return "Partager mon planning"
         }
     }
 
@@ -5968,6 +7408,8 @@ enum Strings {
         case .english: return "Start Sharing"
         case .japanese: return "共有を開始"
         case .chinese: return "开始共享"
+        case .german: return "Teilen starten"
+        case .french: return "Commencer le partage"
         }
     }
 
@@ -5977,6 +7419,8 @@ enum Strings {
         case .english: return "Send Invite Link"
         case .japanese: return "招待リンクを送る"
         case .chinese: return "发送邀请链接"
+        case .german: return "Einladungslink senden"
+        case .french: return "Envoyer le lien d'invitation"
         }
     }
 
@@ -5986,6 +7430,8 @@ enum Strings {
         case .english: return "Sharing Active"
         case .japanese: return "共有中"
         case .chinese: return "共享中"
+        case .german: return "Teilen aktiv"
+        case .french: return "Partage actif"
         }
     }
 
@@ -5995,6 +7441,8 @@ enum Strings {
         case .english: return count == 1 ? "1 participant" : "\(count) participants"
         case .japanese: return "参加者\(count)人"
         case .chinese: return "\(count)位参与者"
+        case .german: return count == 1 ? "1 Teilnehmer" : "\(count) Teilnehmer"
+        case .french: return count == 1 ? "1 participant" : "\(count) participants"
         }
     }
 
@@ -6004,6 +7452,8 @@ enum Strings {
         case .english: return "No participants yet. Send an invite link."
         case .japanese: return "まだ参加者がいません。招待リンクを送ってみましょう。"
         case .chinese: return "还没有参与者。发送邀请链接试试吧。"
+        case .german: return "Noch keine Teilnehmer. Sende einen Einladungslink."
+        case .french: return "Aucun participant pour l'instant. Envoyez un lien d'invitation."
         }
     }
 
@@ -6013,6 +7463,8 @@ enum Strings {
         case .english: return "Sync Now"
         case .japanese: return "今すぐ同期"
         case .chinese: return "立即同步"
+        case .german: return "Jetzt synchronisieren"
+        case .french: return "Synchroniser"
         }
     }
 
@@ -6022,6 +7474,8 @@ enum Strings {
         case .english: return "Last synced: \(date)"
         case .japanese: return "最終同期: \(date)"
         case .chinese: return "上次同步: \(date)"
+        case .german: return "Zuletzt synchronisiert: \(date)"
+        case .french: return "Dernière synchro : \(date)"
         }
     }
 
@@ -6031,6 +7485,8 @@ enum Strings {
         case .english: return "Stop Sharing"
         case .japanese: return "共有を停止"
         case .chinese: return "停止共享"
+        case .german: return "Teilen beenden"
+        case .french: return "Arrêter le partage"
         }
     }
 
@@ -6040,6 +7496,8 @@ enum Strings {
         case .english: return "Stop sharing?"
         case .japanese: return "共有を停止しますか?"
         case .chinese: return "要停止共享吗?"
+        case .german: return "Teilen beenden?"
+        case .french: return "Arrêter le partage ?"
         }
     }
 
@@ -6049,6 +7507,8 @@ enum Strings {
         case .english: return "Your shared schedule will be removed from all participants' devices. Data on your device stays intact."
         case .japanese: return "共有された予定はすべての参加者のデバイスから削除されます。自分のデバイスのデータはそのまま残ります。"
         case .chinese: return "共享的日程将从所有参与者的设备中移除。您设备上的数据保持不变。"
+        case .german: return "Dein geteilter Plan wird von den Geräten aller Teilnehmer entfernt. Die Daten auf deinem Gerät bleiben erhalten."
+        case .french: return "Votre planning partagé sera supprimé des appareils de tous les participants. Les données de votre appareil sont conservées."
         }
     }
 
@@ -6058,6 +7518,8 @@ enum Strings {
         case .english: return "Shared With Me"
         case .japanese: return "共有された予定"
         case .chinese: return "收到的共享"
+        case .german: return "Mit mir geteilt"
+        case .french: return "Partagés avec moi"
         }
     }
 
@@ -6067,6 +7529,8 @@ enum Strings {
         case .english: return "No shared schedules yet.\nOpen an invite link from family or friends and it will appear here."
         case .japanese: return "まだ共有された予定がありません。\n家族や友達からの招待リンクを開くとここに表示されます。"
         case .chinese: return "还没有收到共享的日程。\n打开家人或朋友发送的邀请链接后会显示在这里。"
+        case .german: return "Noch keine geteilten Pläne.\nÖffne einen Einladungslink von Familie oder Freunden, dann erscheint er hier."
+        case .french: return "Aucun planning partagé pour l'instant.\nOuvrez un lien d'invitation de vos proches et il apparaîtra ici."
         }
     }
 
@@ -6076,6 +7540,8 @@ enum Strings {
         case .english: return "Leave Share"
         case .japanese: return "共有から退出"
         case .chinese: return "退出共享"
+        case .german: return "Teilen verlassen"
+        case .french: return "Quitter le partage"
         }
     }
 
@@ -6085,6 +7551,8 @@ enum Strings {
         case .english: return "You will leave \(name)'s shared schedule. You'll need a new invite link to see it again."
         case .japanese: return "\(name)さんの予定共有から退出します。再度見るには新しい招待リンクが必要です。"
         case .chinese: return "您将退出\(name)的日程共享。再次查看需要新的邀请链接。"
+        case .german: return "Du verlässt den geteilten Plan von \(name). Um ihn wieder zu sehen, brauchst du einen neuen Einladungslink."
+        case .french: return "Vous quittez le planning partagé de \(name). Il vous faudra un nouveau lien d'invitation pour le revoir."
         }
     }
 
@@ -6094,6 +7562,8 @@ enum Strings {
         case .english: return "iCloud sign-in required. Please sign in to iCloud in the Settings app."
         case .japanese: return "iCloudへのサインインが必要です。設定アプリでiCloudにサインインしてください。"
         case .chinese: return "需要登录iCloud。请在设置应用中登录iCloud。"
+        case .german: return "iCloud-Anmeldung erforderlich. Bitte melde dich in den Einstellungen bei iCloud an."
+        case .french: return "Connexion à iCloud requise. Connectez-vous à iCloud dans l'app Réglages."
         }
     }
 
@@ -6103,6 +7573,8 @@ enum Strings {
         case .english: return "\(name)'s Leave Schedule"
         case .japanese: return "\(name)さんの休暇予定"
         case .chinese: return "\(name)的休假日程"
+        case .german: return "Urlaubsplan von \(name)"
+        case .french: return "Congés de \(name)"
         }
     }
 
@@ -6112,6 +7584,8 @@ enum Strings {
         case .english: return "Unknown User"
         case .japanese: return "名前のないユーザー"
         case .chinese: return "未知用户"
+        case .german: return "Unbekannter Nutzer"
+        case .french: return "Utilisateur inconnu"
         }
     }
 
@@ -6121,6 +7595,8 @@ enum Strings {
         case .english: return "No upcoming leaves"
         case .japanese: return "予定されている休暇はありません"
         case .chinese: return "没有即将到来的休假"
+        case .german: return "Kein anstehender Urlaub"
+        case .french: return "Aucun congé à venir"
         }
     }
 
@@ -6130,6 +7606,8 @@ enum Strings {
         case .english: return count == 1 ? "1 upcoming leave" : "\(count) upcoming leaves"
         case .japanese: return "今後の休暇\(count)件"
         case .chinese: return "\(count)个即将到来的休假"
+        case .german: return count == 1 ? "1 anstehender Urlaub" : "\(count) anstehende Urlaube"
+        case .french: return count == 1 ? "1 congé à venir" : "\(count) congés à venir"
         }
     }
 
@@ -6139,6 +7617,8 @@ enum Strings {
         case .english: return "Sharing Error"
         case .japanese: return "共有エラー"
         case .chinese: return "共享错误"
+        case .german: return "Fehler beim Teilen"
+        case .french: return "Erreur de partage"
         }
     }
 
@@ -6148,6 +7628,8 @@ enum Strings {
         case .english: return "Sharing operation failed: \(message)"
         case .japanese: return "共有操作に失敗しました: \(message)"
         case .chinese: return "共享操作失败: \(message)"
+        case .german: return "Teilen fehlgeschlagen: \(message)"
+        case .french: return "Échec du partage : \(message)"
         }
     }
 
@@ -6157,6 +7639,8 @@ enum Strings {
         case .english: return "Only leave dates and types are shared. Notes are never shared."
         case .japanese: return "休暇の日付と種類のみ共有され、メモは共有されません。"
         case .chinese: return "仅共享休假日期和类型，备注不会被共享。"
+        case .german: return "Nur Urlaubsdaten und -arten werden geteilt. Notizen bleiben privat."
+        case .french: return "Seuls les dates et types de congé sont partagés. Les notes ne le sont jamais."
         }
     }
 
@@ -6167,6 +7651,8 @@ enum Strings {
         case .english: return "Family"
         case .japanese: return "家族"
         case .chinese: return "家人"
+        case .german: return "Familie"
+        case .french: return "Famille"
         }
     }
 
@@ -6176,6 +7662,8 @@ enum Strings {
         case .english: return "Family Schedules"
         case .japanese: return "家族の予定"
         case .chinese: return "家人日程"
+        case .german: return "Familienpläne"
+        case .french: return "Plannings famille"
         }
     }
 
@@ -6185,6 +7673,8 @@ enum Strings {
         case .english: return "On Leave"
         case .japanese: return "休暇中"
         case .chinese: return "休假中"
+        case .german: return "Im Urlaub"
+        case .french: return "En congé"
         }
     }
 
@@ -6194,6 +7684,8 @@ enum Strings {
         case .english: return days == 1 ? "in 1 day" : "in \(days) days"
         case .japanese: return "あと\(days)日"
         case .chinese: return "还有\(days)天"
+        case .german: return days == 1 ? "in 1 Tag" : "in \(days) Tagen"
+        case .french: return days == 1 ? "dans 1 jour" : "dans \(days) jours"
         }
     }
 }
