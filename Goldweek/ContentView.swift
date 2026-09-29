@@ -311,8 +311,9 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        // iPad·Mac 처럼 넓으면 탭 대신 "캘린더 + 현황 대시보드" 두 칸 화면
-        if horizontalSizeClass == .regular {
+        // Mac 처럼 넓으면 탭 대신 "캘린더 + 현황 대시보드" 두 칸 화면
+        // (아이폰 Pro Max 가로도 regular 라서 기기 종류까지 본다)
+        if LayoutMode.isLargeScreen(horizontalSizeClass) {
             WideMainView(profile: profile, hasSharedSchedules: hasSharedSchedules)
         } else {
             compactTabs
@@ -355,7 +356,14 @@ struct MainTabView: View {
     }
 }
 
-// MARK: - 넓은 화면 (iPad·Mac)
+// MARK: - 넓은 화면 (Mac)
+
+enum LayoutMode {
+    /// 두 칸 화면을 쓸지 — 아이폰이 아니고(현재는 Mac) 가로 폭이 넉넉할 때
+    static func isLargeScreen(_ sizeClass: UserInterfaceSizeClass?) -> Bool {
+        UIDevice.current.userInterfaceIdiom != .phone && sizeClass == .regular
+    }
+}
 
 /// 캘린더를 왼쪽에 크게, 오른쪽에 현황 대시보드.
 /// 아이폰 화면을 가로로 늘리면 카드가 화면 끝까지 퍼져 허전하다 — 넓은 화면에선 한눈에 달력과 현황을 같이 본다.
@@ -401,6 +409,8 @@ struct WideMainView: View {
         #if targetEnvironment(macCatalyst)
         for case let scene as UIWindowScene in UIApplication.shared.connectedScenes {
             scene.sizeRestrictions?.minimumSize = CGSize(width: 960, height: 680)
+            // 기본 최대 폭이 좁게 잡혀 창을 넓힐 수 없다 — 큰 모니터에서도 늘릴 수 있게 푼다
+            scene.sizeRestrictions?.maximumSize = CGSize(width: 10_000, height: 10_000)
         }
         #endif
     }

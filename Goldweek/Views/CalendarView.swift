@@ -492,7 +492,7 @@ struct CalendarGrid: View {
                         .buttonStyle(.plain)
                     } else {
                         Color.clear
-                            .frame(height: horizontalSizeClass == .regular ? 64 : 40)
+                            .frame(height: LayoutMode.isLargeScreen(horizontalSizeClass) ? 64 : 40)
                             .accessibilityHidden(true)
                     }
                 }
@@ -614,7 +614,7 @@ struct DayCell: View {
 
     // iPad·Mac 처럼 넓으면 칸을 키운다 — 폰 크기 그대로면 넓은 화면에서 달력이 작고 허전하다
     @Environment(\.horizontalSizeClass) private var sizeClass
-    private var isWide: Bool { sizeClass == .regular }
+    private var isWide: Bool { LayoutMode.isLargeScreen(sizeClass) }
     private var cellHeight: CGFloat { isWide ? 64 : 40 }
     private var circleSize: CGFloat { isWide ? 46 : 34 }
     private var markOffset: CGFloat { isWide ? 22 : 14 }

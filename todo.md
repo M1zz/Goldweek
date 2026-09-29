@@ -3,12 +3,14 @@
 ## 진행 중
 
 ### Mac(Catalyst)·iPad 지원 (2026-09-29)
-- [x] Mac Catalyst 켜기 (iPad 지원 필수라 기기군 iPhone+iPad), 번들 ID 동일 → 유니버설 구매
+- [x] Mac Catalyst 켜기, 번들 ID 동일 → 유니버설 구매
+- [x] iPad 판매 안 함: 기기군을 SDK별로 — iOS 빌드 iPhone 전용(UIDeviceFamily [1]), Mac 빌드만 Catalyst 요구사항대로 iPad 관용구
 - [x] Mac 전용 entitlements (샌드박스·네트워크·캘린더·카메라·사진·iCloud·푸시)
-- [x] 넓은 화면 레이아웃: 왼쪽 캘린더 + 오른쪽 현황 대시보드, 설정·가족은 상단 버튼(시트)
+- [x] Mac 레이아웃: 왼쪽 캘린더 + 오른쪽 현황 대시보드, 설정·가족은 상단 버튼(시트) — 아이폰 가로에선 안 씀
 - [x] 넓은 화면에서 캘린더 칸 확대, 온보딩 폭 제한, Mac 창 최소 크기
-- [x] iPad 13" 스크린샷 (docs/screenshots-ipad)
+- [x] Mac 스크린샷 2560×1600 × 6개 언어 (scripts/take_mac_screenshots.sh → docs/screenshots-mac)
 - [ ] App Store Connect: 같은 앱에 macOS 플랫폼 추가 → Mac 빌드(Any Mac) 업로드 + Mac 스크린샷
+- [ ] macOS 버전 페이지 키워드·설명 따로 입력 (플랫폼별 버전 메타데이터)
 - [ ] 개발자 포털: App ID에 Mac Catalyst 활성화, iCloud·App Group·Push 프로파일 갱신
 - [ ] "Designed for iPad"(아이폰 앱을 Mac에서 그대로)로 실행 시 온보딩 직후 스택 오버플로 크래시 — Catalyst 빌드에선 재현 안 됨. 실기기 아이폰 온보딩 한 번 확인 필요
 - [ ] Mac 메뉴 단축키(⌘N 휴가 등록 등), 사진 가져오기(카메라 없음) 동작 확인
