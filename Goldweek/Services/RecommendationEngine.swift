@@ -33,7 +33,7 @@ class RecommendationEngine {
 
         // 캐시 키 생성 — includePast·기존휴가도 키에 포함 (변경 시 캐시 무효화)
         let leaveKey = "\(existingLeaveDates.count):\(existingLeaveDates.map { Int($0.timeIntervalSince1970 / 86400) }.max() ?? 0)"
-        let newCacheKey = "\(year)-\(remainingLeave)-\(profile.preferredDurationRaw)-\(profile.preferredSeasonsRaw)-\(profile.preferLongWeekend)-\(profile.preferConsecutive)-\(profile.avoidPeakSeason)-\(targetCountry.rawValue)-past:\(includePast)-leave:\(leaveKey)"
+        let newCacheKey = "\(year)-\(remainingLeave)-\(profile.preferredDurationRaw)-\(profile.preferredSeasonsRaw)-\(profile.preferLongWeekend)-\(profile.preferConsecutive)-\(profile.avoidPeakSeason)-\(targetCountry.rawValue)-past:\(includePast)-leave:\(leaveKey)-dayoff:\(DayOffCalendar.shared.fingerprint.hashValue)"
 
         // 캐시 유효성 확인
         if let timestamp = cacheTimestamp,
@@ -47,7 +47,9 @@ class RecommendationEngine {
         logDebug("캐시 미스 - 새로운 추천 생성", category: .recommendation)
 
         var recommendations: [LeaveRecommendation] = []
-        let holidays = holidayService.getHolidays(for: year, country: targetCountry)
+        // 국가 공휴일 + 내 공휴일 + 내 방학(숨긴 공휴일 제외) — 연차 차감과 같은 쉬는 날 기준
+        let dayOff = DayOffCalendar.shared
+        let holidays = dayOff.holidays(for: year, country: targetCountry)
         logDebug("\(year)년 공휴일 \(holidays.count)개 로드", category: .recommendation)
 
         // 1. 연차 없이 쉴 수 있는 황금연휴 자동 감지
@@ -73,7 +75,7 @@ class RecommendationEngine {
         // 4-2. 실제 달력으로 검증 — 규칙들이 "다리 놓는 날은 평일"이라고 가정해서,
         //      중국 춘절처럼 공휴일이 이어지는 기간엔 주말·공휴일에 연차를 추천하는 일이 있었다.
         //      연차 낼 날(주말·공휴일 제외)을 다시 세어 적힌 일수와 다르면 버린다.
-        let rangeHolidays = holidays + holidayService.getHolidays(for: year + 1, country: targetCountry)
+        let rangeHolidays = holidays + dayOff.holidays(for: year + 1, country: targetCountry)
         recommendations = recommendations.filter { rec in
             let leaveDays = rec.leaveSegments(holidays: rangeHolidays, calendar: calendar).reduce(0) {
                 $0 + (calendar.dateComponents([.day], from: $1.start, to: $1.end).day ?? 0) + 1
@@ -92,6 +94,13 @@ class RecommendationEngine {
                 recommendation: recommendation,
                 profile: profile
             )
+            // 자녀 방학과 겹치면 가족이 함께 쉴 수 있는 기회 — 크게 앞세운다
+            if dayOff.overlapsChildBreak(start: recommendation.startDate, end: recommendation.endDate) {
+                scored.matchScore += 1.0
+                if !scored.tags.contains(Strings.childBreakTag) {
+                    scored.tags.insert(Strings.childBreakTag, at: 0)
+                }
+            }
             return scored
         }
 

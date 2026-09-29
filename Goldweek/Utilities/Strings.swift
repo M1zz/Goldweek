@@ -6369,25 +6369,203 @@ enum Strings {
     }
 
     // MARK: - 공휴일 관리
+    // MARK: - 방학
+
+    static var childBreakTag: String {
+        switch lang {
+        case .korean: return "자녀 방학"
+        case .english: return "Kids' break"
+        case .japanese: return "子どもの休み"
+        case .chinese: return "孩子放假"
+        case .german: return "Schulferien"
+        case .french: return "Vacances scolaires"
+        }
+    }
+
+    static var myBreakLabel: String {
+        switch lang {
+        case .korean: return "내 방학"
+        case .english: return "My break"
+        case .japanese: return "自分の休み"
+        case .chinese: return "我的假期"
+        case .german: return "Meine Ferien"
+        case .french: return "Mes vacances"
+        }
+    }
+
+    static var breakSectionTitle: String {
+        switch lang {
+        case .korean: return "방학"
+        case .english: return "School Breaks"
+        case .japanese: return "長期休み"
+        case .chinese: return "假期"
+        case .german: return "Ferien"
+        case .french: return "Vacances"
+        }
+    }
+
+    static var breakSectionFooter: String {
+        switch lang {
+        case .korean: return "자녀 방학은 달력에 표시하고, 그 기간에 쉴 수 있는 추천을 먼저 보여줘요. 내 방학은 공휴일처럼 쉬는 날로 쳐서 연차에서 빠지지 않아요."
+        case .english: return "Kids' breaks are shown on the calendar, and suggestions during them come first. My break counts as days off like holidays, so no leave is deducted."
+        case .japanese: return "子どもの休みはカレンダーに表示し、その期間のおすすめを優先します。自分の休みは祝日と同じく休日として扱い、有給から差し引きません。"
+        case .chinese: return "孩子放假会显示在日历上，并优先推荐该期间的休假。我的假期视同节假日，不扣年假。"
+        case .german: return "Schulferien der Kinder werden im Kalender angezeigt und Vorschläge in dieser Zeit zuerst gezeigt. Deine eigenen Ferien zählen wie Feiertage als frei – es wird kein Urlaub abgezogen."
+        case .french: return "Les vacances des enfants s’affichent dans le calendrier et les suggestions pendant cette période passent en premier. Vos propres vacances comptent comme des jours fériés : aucun congé n’est décompté."
+        }
+    }
+
+    static var breakEmpty: String {
+        switch lang {
+        case .korean: return "추가한 방학이 없어요"
+        case .english: return "No breaks added yet"
+        case .japanese: return "追加した長期休みはありません"
+        case .chinese: return "尚未添加假期"
+        case .german: return "Noch keine Ferien eingetragen"
+        case .french: return "Aucune période de vacances ajoutée"
+        }
+    }
+
+    static var breakAddTitle: String {
+        switch lang {
+        case .korean: return "방학 추가"
+        case .english: return "Add Break"
+        case .japanese: return "長期休みを追加"
+        case .chinese: return "添加假期"
+        case .german: return "Ferien hinzufügen"
+        case .french: return "Ajouter des vacances"
+        }
+    }
+
+    static var breakEditTitle: String {
+        switch lang {
+        case .korean: return "방학 수정"
+        case .english: return "Edit Break"
+        case .japanese: return "長期休みを編集"
+        case .chinese: return "编辑假期"
+        case .german: return "Ferien bearbeiten"
+        case .french: return "Modifier les vacances"
+        }
+    }
+
+    static var breakKindSection: String {
+        switch lang {
+        case .korean: return "누구의 방학인가요?"
+        case .english: return "Whose break is it?"
+        case .japanese: return "誰の休みですか？"
+        case .chinese: return "是谁的假期？"
+        case .german: return "Wessen Ferien?"
+        case .french: return "Les vacances de qui ?"
+        }
+    }
+
+    static var breakKindChildDesc: String {
+        switch lang {
+        case .korean: return "달력에 표시하고 이 기간의 추천을 앞세워요. 내 연차는 그대로 계산해요."
+        case .english: return "Shown on the calendar; suggestions in this period come first. Your leave is counted as usual."
+        case .japanese: return "カレンダーに表示し、この期間のおすすめを優先します。有給の計算は変わりません。"
+        case .chinese: return "在日历上显示，并优先推荐该期间。年假照常计算。"
+        case .german: return "Wird im Kalender angezeigt, Vorschläge in diesem Zeitraum kommen zuerst. Dein Urlaub wird normal gezählt."
+        case .french: return "Affichées dans le calendrier ; les suggestions sur cette période passent en premier. Vos congés sont comptés normalement."
+        }
+    }
+
+    static var breakKindMineDesc: String {
+        switch lang {
+        case .korean: return "교사·학생처럼 나도 쉬는 기간이에요. 연차에서 빠지지 않고, 쉰 기간으로 계산해요."
+        case .english: return "For teachers and students: you're off too. No leave is deducted and it counts as rest."
+        case .japanese: return "教師や学生のように自分も休む期間です。有給から差し引かず、休んだ期間として扱います。"
+        case .chinese: return "像教师、学生一样自己也放假。不扣年假，并计为休息。"
+        case .german: return "Für Lehrkräfte und Studierende: Du hast auch frei. Es wird kein Urlaub abgezogen, und es zählt als Erholung."
+        case .french: return "Pour les enseignants et étudiants : vous êtes aussi en repos. Aucun congé décompté, la période compte comme du repos."
+        }
+    }
+
+    static var breakPeriodSection: String {
+        switch lang {
+        case .korean: return "기간"
+        case .english: return "Period"
+        case .japanese: return "期間"
+        case .chinese: return "期间"
+        case .german: return "Zeitraum"
+        case .french: return "Période"
+        }
+    }
+
+    static var breakNameSection: String {
+        switch lang {
+        case .korean: return "이름"
+        case .english: return "Name"
+        case .japanese: return "名前"
+        case .chinese: return "名称"
+        case .german: return "Name"
+        case .french: return "Nom"
+        }
+    }
+
+    static var breakNamePlaceholder: String {
+        switch lang {
+        case .korean: return "예: 여름방학"
+        case .english: return "e.g. Summer break"
+        case .japanese: return "例：夏休み"
+        case .chinese: return "例如：暑假"
+        case .german: return "z. B. Sommerferien"
+        case .french: return "ex. : Vacances d’été"
+        }
+    }
+
+    static var breakDeleteAlertTitle: String {
+        switch lang {
+        case .korean: return "방학을 삭제할까요?"
+        case .english: return "Delete this break?"
+        case .japanese: return "この長期休みを削除しますか？"
+        case .chinese: return "删除此假期？"
+        case .german: return "Diese Ferien löschen?"
+        case .french: return "Supprimer ces vacances ?"
+        }
+    }
+
+    static var breakInvalidRange: String {
+        switch lang {
+        case .korean: return "종료일이 시작일보다 빨라요"
+        case .english: return "End date is before start date"
+        case .japanese: return "終了日が開始日より前です"
+        case .chinese: return "结束日期早于开始日期"
+        case .german: return "Das Enddatum liegt vor dem Startdatum"
+        case .french: return "La date de fin précède la date de début"
+        }
+    }
+
+    static func breakDays(_ n: Int) -> String {
+        switch lang {
+        case .korean: return "\(n)일"
+        case .english: return n == 1 ? "1 day" : "\(n) days"
+        case .japanese: return "\(n)日間"
+        case .chinese: return "\(n)天"
+        case .german: return n == 1 ? "1 Tag" : "\(n) Tage"
+        case .french: return n == 1 ? "1 jour" : "\(n) jours"
+        }
+    }
+
     static var holidayMgmtTitle: String {
         switch lang {
-        case .korean: return "공휴일 관리"
-        case .english: return "Holiday Management"
-        case .japanese: return "祝日管理"
-        case .chinese: return "假日管理"
-        case .german: return "Feiertage verwalten"
-        case .french: return "Gérer les jours fériés"
+        case .korean: return "공휴일·방학 관리"
+        case .english: return "Holidays & Breaks"
+        case .japanese: return "祝日・長期休み管理"
+        case .chinese: return "假日·假期管理"
+        case .german: return "Feiertage & Ferien"
+        case .french: return "Jours fériés et vacances"
         }
     }
 
     static var holidayMgmtSubtitle: String {
         switch lang {
-        case .korean: return "공휴일 추가·숨기기"
-        case .english: return "Add or hide holidays"
-        case .japanese: return "祝日の追加・非表示"
-        case .chinese: return "添加·隐藏假日"
-        case .german: return "Feiertage hinzufügen oder ausblenden"
-        case .french: return "Ajouter ou masquer des jours fériés"
+        case .korean: return "공휴일 추가·숨기기, 방학 추가"
+        case .english: return "Add or hide holidays, add school breaks"
+        case .japanese: return "祝日の追加・非表示、長期休みの追加"
+        case .chinese: return "添加·隐藏假日，添加假期"
+        case .german: return "Feiertage verwalten, Ferien eintragen"
+        case .french: return "Gérer les jours fériés, ajouter des vacances"
         }
     }
 

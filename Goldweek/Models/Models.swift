@@ -246,12 +246,26 @@ final class LeaveRecord {
         return (components.day ?? 0) + 1
     }
 
-    /// 실제 차감 일수 — 반차/반반차 길이는 하루 비율, 종일은 달력 일수
+    /// 실제 차감 일수 — 반차/반반차 길이는 하루 비율, 종일은 **쉬는 날을 뺀 평일 수**.
+    ///
+    /// 금~월로 등록해도 주말·공휴일·내 방학은 차감하지 않는다 (쉬는 날 판정: `DayOffCalendar`).
+    /// 예외: "이전 사용 연차 일괄 입력"은 N일을 달력 일수로 펼쳐 저장한 요약 기록이라 달력 일수 그대로 센다.
     var effectiveLeaveDays: Double {
         if length != .full { return length.fraction }
-        let days = Calendar.current.dateComponents([.day], from: startDate, to: endDate).day ?? 0
-        return Double(days + 1)
+        if isBulkSummary { return Double(daysCount) }
+        return Double(DayOffCalendar.shared.workdays(from: startDate, to: endDate))
     }
+
+    /// "이전 사용 연차 (일괄 입력)" 요약 기록인지 — 메모로 판별한다 (백업·복원을 거쳐도 남는 유일한 표식).
+    /// 입력 당시 앱 언어로 저장되므로 모든 언어의 문구와 비교한다.
+    var isBulkSummary: Bool {
+        Self.bulkSummaryNotes.contains(note)
+    }
+
+    static let bulkSummaryNotes: Set<String> = [
+        "이전 사용 연차 (일괄 입력)", "Prior leave (bulk entry)", "過去の有給（一括入力）",
+        "过去的年假（批量录入）", "Früherer Urlaub (Sammeleingabe)", "Congés antérieurs (saisie groupée)",
+    ]
 
     /// 실제 연차 차감 여부 — bonusLeaveId가 있으면 보너스 차감이므로 연차 차감 아님
     var deductsFromAnnualLeave: Bool {
@@ -670,12 +684,55 @@ struct Holiday: Identifiable {
     let name: String
     let isSubstitute: Bool
     let isCustom: Bool
+    /// 내 방학(교사·학생) — 공휴일처럼 쉬는 날이지만 달력에서 색을 달리한다
+    let isBreak: Bool
 
-    init(date: Date, name: String, isSubstitute: Bool = false, isCustom: Bool = false) {
+    init(date: Date, name: String, isSubstitute: Bool = false, isCustom: Bool = false, isBreak: Bool = false) {
         self.date = date
         self.name = name
         self.isSubstitute = isSubstitute
         self.isCustom = isCustom
+        self.isBreak = isBreak
+    }
+}
+
+// MARK: - 방학
+
+enum SchoolBreakKind: String, CaseIterable, Identifiable {
+    /// 자녀 방학 — 참고용. 달력에 표시하고 그 기간의 추천을 앞세운다. 내 연차 계산은 그대로.
+    case child
+    /// 내 방학(교사·학생) — 공휴일처럼 쉬는 날. 연차 차감 없음, 추천·번아웃 계산에서 휴식으로 본다.
+    case mine
+
+    var id: String { rawValue }
+}
+
+@Model
+final class SchoolBreak {
+    var id: UUID = UUID()
+    var name: String = ""
+    var startDate: Date = Date()
+    var endDate: Date = Date()
+    var kindRaw: String = SchoolBreakKind.child.rawValue
+    var createdAt: Date = Date()
+
+    init(name: String, startDate: Date, endDate: Date, kind: SchoolBreakKind) {
+        self.id = UUID()
+        self.name = name
+        self.startDate = Calendar.current.startOfDay(for: startDate)
+        self.endDate = Calendar.current.startOfDay(for: endDate)
+        self.kindRaw = kind.rawValue
+        self.createdAt = Date()
+    }
+
+    var kind: SchoolBreakKind {
+        get { SchoolBreakKind(rawValue: kindRaw) ?? .child }
+        set { kindRaw = newValue.rawValue }
+    }
+
+    func contains(_ date: Date) -> Bool {
+        let d = Calendar.current.startOfDay(for: date)
+        return d >= Calendar.current.startOfDay(for: startDate) && d <= Calendar.current.startOfDay(for: endDate)
     }
 }
 

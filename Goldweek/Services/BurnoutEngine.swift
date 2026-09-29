@@ -339,11 +339,14 @@ extension BurnoutEngine {
     /// 휴식으로 칠 것: 연차 차감 휴가 + 출장(일상 루틴 이탈). 취소는 제외.
     /// (BurnoutPaceCard.countsAsBreak 와 동일 기준 — 단일 진실 소스화 목적)
     static func restBlocks(from records: [LeaveRecord]) -> [RestBlock] {
-        records.compactMap { r in
+        let leaves: [RestBlock] = records.compactMap { r in
             guard r.status != .cancelled else { return nil }
             let counts = r.deductsFromAnnualLeave || r.type == .businessTrip
             guard counts else { return nil }
             return RestBlock(start: r.startDate, end: r.endDate)
         }
+        // 내 방학(교사·학생)도 쉰 기간이다
+        let breaks = DayOffCalendar.shared.myBreaks.map { RestBlock(start: $0.start, end: $0.end) }
+        return leaves + breaks
     }
 }

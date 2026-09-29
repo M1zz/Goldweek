@@ -626,8 +626,12 @@ struct EditLeaveSheet: View {
 
     var newLeaveDays: Double {
         if length != .full { return length.fraction }
-        let days = calendar.dateComponents([.day], from: startDate, to: endDate).day ?? 0
-        return Double(max(days + 1, 1))
+        // 일괄 입력 요약 기록은 달력 일수, 그 외엔 쉬는 날을 뺀 평일 수 (effectiveLeaveDays 와 같은 기준)
+        if record.isBulkSummary {
+            let days = calendar.dateComponents([.day], from: startDate, to: endDate).day ?? 0
+            return Double(max(days + 1, 1))
+        }
+        return Double(DayOffCalendar.shared.workdays(from: startDate, to: endDate))
     }
 
     var leaveDaysDifference: Double {

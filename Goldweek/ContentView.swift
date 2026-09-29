@@ -17,6 +17,8 @@ struct ContentView: View {
     @Query private var leaveRecords: [LeaveRecord]
     @Query private var bonusLeaves: [BonusLeave]
     @Query private var customHolidays: [CustomHoliday]
+    @Query private var schoolBreaks: [SchoolBreak]
+    @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
 
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     /// 사용법 시트를 이미 봤는지 — 온보딩 직후 딱 한 번 자동으로 띄운다.
@@ -50,6 +52,8 @@ struct ContentView: View {
                     // 불만인 사람을 별점 대신 피드백으로 흡수하는 게 이 프롬프트의 목적이다.
                     .leeoSatisfactionCheck(GoldweekSpec.self)
                     .onAppear {
+                        syncDayOffCalendar(profile: profile)
+                        LeaveMigrations.splitRecommendedLeavesIfNeeded(records: leaveRecords, context: modelContext)
                         LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                         updateWidget()
                         ReviewManager.shared.recordLaunch()
@@ -72,6 +76,11 @@ struct ContentView: View {
                             // 앱을 떠나는 순간의 상태를 타임머신에 보존 (내용 같으면 스킵됨)
                             TimeMachineService.shared.captureNow(from: modelContext, reason: .background)
                         }
+                    }
+                    // 쉬는 날(국가·내 공휴일·숨김·방학)이 바뀌면 연차 차감 계산 기준도 바꾼다
+                    .onChange(of: dayOffInputs(profile: profile)) { _, _ in
+                        syncDayOffCalendar(profile: profile)
+                        updateWidget()
                     }
                     .onChange(of: timeMachineFingerprint) { _, _ in
                         TimeMachineService.shared.scheduleAutoSnapshot(context: modelContext)
@@ -161,6 +170,13 @@ struct ContentView: View {
             hasher.combine(bonus.usedDays)
             hasher.combine(bonus.isUsed)
         }
+        for item in schoolBreaks {
+            hasher.combine(item.id)
+            hasher.combine(item.name)
+            hasher.combine(item.startDate)
+            hasher.combine(item.endDate)
+            hasher.combine(item.kindRaw)
+        }
         for holiday in customHolidays {
             hasher.combine(holiday.id)
             hasher.combine(holiday.date)
@@ -188,6 +204,19 @@ struct ContentView: View {
         Task {
             await ShareSyncService.shared.onAppActive(profile: snapshot, leaves: leaves)
         }
+    }
+
+    /// 쉬는 날 판정 입력값 요약 — 바뀌면 DayOffCalendar 를 다시 채운다
+    private func dayOffInputs(profile: UserProfile) -> String {
+        let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
+        let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)" }.sorted()
+        return "\(profile.countryRaw)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+    }
+
+    private func syncDayOffCalendar(profile: UserProfile) {
+        let hidden = Set(hiddenHolidayDatesRaw.split(separator: ",").map(String.init).filter { !$0.isEmpty })
+        DayOffCalendar.shared.update(country: profile.country, customHolidays: customHolidays,
+                                     hiddenDates: hidden, breaks: schoolBreaks)
     }
 
     private func updateWidget() {
@@ -318,5 +347,5 @@ struct MainTabView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self], inMemory: true)
+        .modelContainer(for: [UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self], inMemory: true)
 }

@@ -7,16 +7,26 @@
 
 import Foundation
 import XCTest
+import SwiftData
 @testable import Goldweek
 
 final class LeaveCalculationTests: XCTestCase {
 
     // MARK: - 날짜 헬퍼
 
+    /// 오늘부터 **평일** 기준으로 offset 만큼 떨어진 날.
+    /// 연차는 주말·공휴일을 차감하지 않으므로, 달력 일수로 잡으면 테스트를 도는 요일에 따라 결과가 바뀐다.
     private func makeDate(daysFromNow offset: Int) -> Date {
-        Calendar.current.startOfDay(
-            for: Calendar.current.date(byAdding: .day, value: offset, to: Date())!
-        )
+        let cal = Calendar.current
+        var d = cal.startOfDay(for: Date())
+        if offset == 0 { return d }
+        let step = offset > 0 ? 1 : -1
+        var remaining = abs(offset)
+        while remaining > 0 {
+            d = cal.date(byAdding: .day, value: step, to: d)!
+            if !DayOffCalendar.shared.isDayOff(d) { remaining -= 1 }
+        }
+        return d
     }
 
     // MARK: - effectiveLeaveDays 기본 테스트
@@ -1087,5 +1097,81 @@ final class RecommendationDayOffTests: XCTestCase {
         let segs = rec.leaveSegments(holidays: [Holiday(date: d(11, 26), name: "Thanksgiving")])
         XCTAssertEqual(segs.map { cal.component(.day, from: $0.start) }, [25, 27])
         XCTAssertEqual(segs.map { cal.component(.day, from: $0.end) }, [25, 27])
+    }
+}
+
+// MARK: - 주말·공휴일·방학은 연차에서 빼지 않는다
+
+final class LeaveDeductionTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    override func setUp() {
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    func testWeekendIsNotDeducted() {
+        // 2026-10-16(금) ~ 10-19(월) → 금·월 2일
+        let r = LeaveRecord(startDate: d(2026, 10, 16), endDate: d(2026, 10, 19))
+        XCTAssertEqual(r.effectiveLeaveDays, 2)
+    }
+
+    func testHolidayIsNotDeducted() {
+        // 2026-09-23(수) ~ 09-25(금), 24·25 추석 → 수 하루
+        let r = LeaveRecord(startDate: d(2026, 9, 23), endDate: d(2026, 9, 25))
+        XCTAssertEqual(r.effectiveLeaveDays, 1)
+    }
+
+    func testBulkSummaryKeepsCalendarDays() {
+        let r = LeaveRecord(startDate: d(2026, 1, 1), endDate: d(2026, 1, 7), note: "이전 사용 연차 (일괄 입력)")
+        XCTAssertEqual(r.effectiveLeaveDays, 7)
+    }
+
+    func testMyBreakIsNotDeducted() {
+        let mine = SchoolBreak(name: "여름방학", startDate: d(2026, 7, 20), endDate: d(2026, 8, 14), kind: .mine)
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [mine])
+        defer { DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: []) }
+        // 방학 마지막 주 금(8/14) ~ 다음 주 화(8/18), 8/15 광복절(토)·8/17 대체공휴일 → 8/18 하루
+        let r = LeaveRecord(startDate: d(2026, 8, 14), endDate: d(2026, 8, 18))
+        XCTAssertEqual(r.effectiveLeaveDays, 1)
+    }
+
+    func testChildBreakStillDeducts() {
+        let child = SchoolBreak(name: "여름방학", startDate: d(2026, 7, 20), endDate: d(2026, 8, 14), kind: .child)
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [child])
+        defer { DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: []) }
+        let r = LeaveRecord(startDate: d(2026, 7, 20), endDate: d(2026, 7, 24))
+        XCTAssertEqual(r.effectiveLeaveDays, 5)
+        XCTAssertTrue(DayOffCalendar.shared.overlapsChildBreak(start: d(2026, 7, 24), end: d(2026, 7, 27)))
+    }
+}
+
+@MainActor
+final class RecommendedLeaveMigrationTests: XCTestCase {
+    func testSplitsRecommendedLeaveIntoWorkdaySegments() throws {
+        let cal = Calendar.current
+        let d = { (m: Int, day: Int) in cal.date(from: DateComponents(year: 2026, month: m, day: day))! }
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        UserDefaults.standard.removeObject(forKey: "migration.splitRecommendedLeaves.v1")
+        defer { UserDefaults.standard.removeObject(forKey: "migration.splitRecommendedLeaves.v1") }
+
+        let schema = Schema([UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self])
+        let container = try ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+        let context = container.mainContext
+        // 10/8(목) ~ 10/12(월): 10/9 한글날, 10/10·11 주말 → 10/8, 10/12 두 구간
+        let old = LeaveRecord(startDate: d(10, 8), endDate: d(10, 12), note: "추천", isRecommended: true)
+        let manual = LeaveRecord(startDate: d(10, 8), endDate: d(10, 12), note: "직접")
+        context.insert(old); context.insert(manual)
+        try context.save()
+
+        LeaveMigrations.splitRecommendedLeavesIfNeeded(records: [old, manual], context: context)
+
+        let all = try context.fetch(FetchDescriptor<LeaveRecord>())
+        let recommended = all.filter(\.isRecommended).sorted { $0.startDate < $1.startDate }
+        XCTAssertEqual(recommended.map { cal.component(.day, from: $0.startDate) }, [8, 12])
+        XCTAssertEqual(recommended.map { cal.component(.day, from: $0.endDate) }, [8, 12])
+        // 직접 등록한 기간은 건드리지 않는다 (차감만 평일 기준)
+        XCTAssertEqual(all.filter { !$0.isRecommended }.count, 1)
+        XCTAssertEqual(manual.effectiveLeaveDays, 2)
     }
 }

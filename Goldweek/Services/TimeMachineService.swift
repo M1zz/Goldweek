@@ -91,6 +91,7 @@ final class TimeMachineService {
             let leaves = try context.fetch(FetchDescriptor<LeaveRecord>())
             let bonuses = try context.fetch(FetchDescriptor<BonusLeave>())
             let holidays = try context.fetch(FetchDescriptor<CustomHoliday>())
+            let breaks = try context.fetch(FetchDescriptor<SchoolBreak>())
 
             // 프로필조차 없는 완전히 빈 상태는 저장할 가치가 없다
             guard !profiles.isEmpty else { return false }
@@ -104,7 +105,8 @@ final class TimeMachineService {
                 profiles: profiles.map(TMProfileData.init),
                 leaveRecords: leaves.map(TMLeaveData.init),
                 bonusLeaves: bonuses.map(TMBonusData.init),
-                customHolidays: holidays.map(TMHolidayData.init)
+                customHolidays: holidays.map(TMHolidayData.init),
+                schoolBreaks: breaks.isEmpty ? nil : breaks.map(TMBreakData.init)
             )
 
             snapshot.contentHash = try Self.contentHash(of: snapshot)
@@ -216,6 +218,7 @@ final class TimeMachineService {
         try context.fetch(FetchDescriptor<LeaveRecord>()).forEach { context.delete($0) }
         try context.fetch(FetchDescriptor<BonusLeave>()).forEach { context.delete($0) }
         try context.fetch(FetchDescriptor<CustomHoliday>()).forEach { context.delete($0) }
+        try context.fetch(FetchDescriptor<SchoolBreak>()).forEach { context.delete($0) }
 
         if let profileData = snapshot.profiles.first {
             let existing = try context.fetch(FetchDescriptor<UserProfile>())
@@ -229,6 +232,7 @@ final class TimeMachineService {
         snapshot.leaveRecords.forEach { context.insert($0.materialize()) }
         snapshot.bonusLeaves.forEach { context.insert($0.materialize()) }
         snapshot.customHolidays.forEach { context.insert($0.materialize()) }
+        snapshot.schoolBreaks?.forEach { context.insert($0.materialize()) }
 
         try context.save()
     }
@@ -284,12 +288,14 @@ final class TimeMachineService {
             let leaveRecords: [TMLeaveData]
             let bonusLeaves: [TMBonusData]
             let customHolidays: [TMHolidayData]
+            let schoolBreaks: [TMBreakData]?
         }
         let payload = Payload(
             profiles: snapshot.profiles,
             leaveRecords: snapshot.leaveRecords,
             bonusLeaves: snapshot.bonusLeaves,
-            customHolidays: snapshot.customHolidays
+            customHolidays: snapshot.customHolidays,
+            schoolBreaks: snapshot.schoolBreaks
         )
         let data = try stableEncoder().encode(payload)
         return SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
@@ -325,6 +331,8 @@ struct TimeMachineSnapshot: Codable {
     var leaveRecords: [TMLeaveData]
     var bonusLeaves: [TMBonusData]
     var customHolidays: [TMHolidayData]
+    /// 방학 — 나중에 추가된 필드라 옵셔널 (없으면 인코딩에서 빠져 예전 스냅샷의 체크섬·해시가 그대로 맞는다)
+    var schoolBreaks: [TMBreakData]? = nil
 }
 
 struct TMProfileData: Codable {
@@ -474,6 +482,32 @@ struct TMHolidayData: Codable {
         holiday.id = id
         holiday.createdAt = createdAt
         return holiday
+    }
+}
+
+struct TMBreakData: Codable {
+    let id: UUID
+    let name: String
+    let startDate: Date
+    let endDate: Date
+    let kindRaw: String
+    let createdAt: Date
+
+    init(from item: SchoolBreak) {
+        self.id = item.id
+        self.name = item.name
+        self.startDate = item.startDate
+        self.endDate = item.endDate
+        self.kindRaw = item.kindRaw
+        self.createdAt = item.createdAt
+    }
+
+    func materialize() -> SchoolBreak {
+        let item = SchoolBreak(name: name, startDate: startDate, endDate: endDate,
+                               kind: SchoolBreakKind(rawValue: kindRaw) ?? .child)
+        item.id = id
+        item.createdAt = createdAt
+        return item
     }
 }
 

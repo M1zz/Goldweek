@@ -31,6 +31,7 @@ enum ScreenshotMode {
         try? context.delete(model: LeaveRecord.self)
         try? context.delete(model: BonusLeave.self)
         try? context.delete(model: CustomHoliday.self)
+        try? context.delete(model: SchoolBreak.self)
         try? context.delete(model: UserProfile.self)
 
         let lang = AppLanguage.current

@@ -273,11 +273,10 @@ struct LeaveRegistrationView: View {
         }
     }
 
+    /// 차감 일수 — 주말·공휴일·내 방학은 빼고 센다 (LeaveRecord.effectiveLeaveDays 와 같은 기준)
     var leaveDays: Double {
         if length != .full { return length.fraction }
-        let components = Calendar.current.dateComponents([.day], from: startDate, to: endDate)
-        let days = (components.day ?? 0) + 1
-        return Double(max(days, 1))
+        return Double(DayOffCalendar.shared.workdays(from: startDate, to: endDate))
     }
 
     /// 등록 버튼 동적 라벨 — 선택한 휴가 유형 이름을 반영

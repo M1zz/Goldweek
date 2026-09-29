@@ -56,9 +56,8 @@ struct CalendarView: View {
 
     var holidays: [Holiday] {
         let year = calendar.component(.year, from: currentMonth)
-        return holidayService.getHolidays(for: year, country: profile.country,
-                                           customHolidays: customHolidays,
-                                           hiddenDates: hiddenDates)
+        // 국가 공휴일 − 숨김 + 내 공휴일 + 내 방학 (연차 차감과 같은 기준)
+        return DayOffCalendar.shared.holidays(for: year, country: profile.country)
     }
 
     // MARK: 추천 일정 계산 입력값
@@ -81,6 +80,12 @@ struct CalendarView: View {
     }
 
     /// 추천 일정 중 노란색으로 표시할 "연차일" — 범위 내 평일(주말·공휴일 제외)
+    private var monthHasChildBreak: Bool {
+        guard let interval = calendar.dateInterval(of: .month, for: currentMonth) else { return false }
+        let lastDay = calendar.date(byAdding: .day, value: -1, to: interval.end) ?? interval.end
+        return DayOffCalendar.shared.overlapsChildBreak(start: interval.start, end: lastDay)
+    }
+
     private var recommendedDates: Set<Date> {
         let holidaySet = Set(holidays.map { calendar.startOfDay(for: $0.date) })
         var set: Set<Date> = []
@@ -139,8 +144,7 @@ struct CalendarView: View {
         let days = (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: calendar.startOfDay(for: start)) }
         let years = Set(days.map { calendar.component(.year, from: $0) })
         let dayOff = Set(years.flatMap {
-            holidayService.getHolidays(for: $0, country: profile.country,
-                                       customHolidays: customHolidays, hiddenDates: hiddenDates)
+            DayOffCalendar.shared.holidays(for: $0, country: profile.country)
         }.map { calendar.startOfDay(for: $0.date) })
         return Set(days.filter { d in
             let weekday = calendar.component(.weekday, from: d)
@@ -199,8 +203,7 @@ struct CalendarView: View {
     private func addLeave(from recommendation: LeaveRecommendation) {
         let years = Set([recommendation.startDate, recommendation.endDate].map { calendar.component(.year, from: $0) })
         let rangeHolidays = years.flatMap {
-            holidayService.getHolidays(for: $0, country: profile.country,
-                                       customHolidays: customHolidays, hiddenDates: hiddenDates)
+            DayOffCalendar.shared.holidays(for: $0, country: profile.country)
         }
         let records = recommendation.leaveSegments(holidays: rangeHolidays).map {
             LeaveRecord(
@@ -256,7 +259,9 @@ struct CalendarView: View {
 
                     // 범례
                     LegendView(showsRecommendation: !recommendedDates.isEmpty,
-                               showsWarning: !burnoutWarningDates.isEmpty)
+                               showsWarning: !burnoutWarningDates.isEmpty,
+                               showsMyBreak: holidays.contains { $0.isBreak && calendar.isDate($0.date, equalTo: currentMonth, toGranularity: .month) },
+                               showsChildBreak: monthHasChildBreak)
 
                     // 추천이 실제로 있을 때만 안내한다 — 없는 기능을 설명하면 소음이다
                     if !recommendedDates.isEmpty {
@@ -422,6 +427,11 @@ struct CalendarGrid: View {
 
     private let calendar = Calendar.current
 
+    /// 내 방학 날 — 쉬는 날이지만 공휴일(빨강)과 구분해 남색으로 그린다
+    private func isMyBreak(_ date: Date) -> Bool {
+        holidays.contains { $0.isBreak && calendar.isDate($0.date, inSameDayAs: date) }
+    }
+
     var daysInMonth: [Date?] {
         guard let range = calendar.range(of: .day, in: .month, for: currentMonth),
               let firstDay = calendar.date(from: calendar.dateComponents([.year, .month], from: currentMonth)) else {
@@ -466,8 +476,9 @@ struct CalendarGrid: View {
                             DayCell(
                                 date: date,
                                 isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
-                                isHoliday: isHoliday(date),
+                                isHoliday: isHoliday(date) && !isMyBreak(date),
                                 isLeave: isLeave(date),
+                                isChildBreak: DayOffCalendar.shared.childBreakName(on: date) != nil,
                                 barVisible: showsRestBar(date),
                                 barColor: restBarColor(date),
                                 leaveConnectsLeft: restConnectsLeft(date),
@@ -550,6 +561,7 @@ struct CalendarGrid: View {
     /// 막대 색 — 휴가색/공휴일색, 브릿지 주말은 인접 앵커 기준(휴가 우선)
     private func restBarColor(_ date: Date) -> Color {
         if isLeave(date) { return AppTheme.Colors.leave }
+        if isMyBreak(date) { return .indigo }
         if isHoliday(date) { return AppTheme.Colors.holiday }
         var start = date
         while let p = calendar.date(byAdding: .day, value: -1, to: start), isWeekendDate(p) { start = p }
@@ -558,7 +570,10 @@ struct CalendarGrid: View {
         let before = calendar.date(byAdding: .day, value: -1, to: start)
         let after = calendar.date(byAdding: .day, value: 1, to: end)
         let nearLeave = (before.map(isLeave) ?? false) || (after.map(isLeave) ?? false)
-        return nearLeave ? AppTheme.Colors.leave : AppTheme.Colors.holiday
+        if nearLeave { return AppTheme.Colors.leave }
+        // 내 방학에 붙은 주말은 방학 색으로 잇는다
+        let nearBreak = (before.map(isMyBreak) ?? false) || (after.map(isMyBreak) ?? false)
+        return nearBreak ? .indigo : AppTheme.Colors.holiday
     }
 
     /// 전날도 막대이고 같은 주 안에서 이어지는 경우 (일요일=첫 열은 좌측 연결 없음)
@@ -584,6 +599,8 @@ struct DayCell: View {
     let isSelected: Bool
     let isHoliday: Bool
     let isLeave: Bool
+    /// 자녀 방학 — 날짜 위쪽에 청록 선 (참고 표시라 배경은 건드리지 않는다)
+    var isChildBreak: Bool = false
     var barVisible: Bool = false
     var barColor: Color = AppTheme.Colors.leave
     var leaveConnectsLeft: Bool = false
@@ -616,6 +633,14 @@ struct DayCell: View {
 
     var body: some View {
         ZStack {
+            // 자녀 방학 — 옅은 청록 띠를 칸 사이까지 이어 깐다 (참고 표시라 다른 표식보다 뒤에)
+            if isChildBreak {
+                Rectangle()
+                    .fill(Color.teal.opacity(0.15))
+                    .frame(height: 36)
+                    .padding(.horizontal, -4)
+            }
+
             // 휴가·공휴일: 연속된 쉬는 날(+인접 주말)은 칸 사이를 메워 하나의 선으로 표현.
             // 선택 원보다 먼저(뒤에) 깔아 원이 막대에 잘리지 않게 한다 — 막대는 원 양옆으로만 보인다.
             if barVisible {
@@ -692,6 +717,8 @@ struct DayCell: View {
 struct LegendView: View {
     var showsRecommendation: Bool = false
     var showsWarning: Bool = false
+    var showsMyBreak: Bool = false
+    var showsChildBreak: Bool = false
 
     var body: some View {
         // 본문 크기 글자로는 5개가 한 줄에 안 들어간다 — 한 줄을 고집하면 "Holid/ay"처럼
@@ -705,6 +732,12 @@ struct LegendView: View {
             }
             if showsWarning {
                 LegendItem(color: AppTheme.Colors.compensatory, text: Strings.burnoutWarningLegend, dashed: true)
+            }
+            if showsMyBreak {
+                LegendItem(color: .indigo, text: Strings.myBreakLabel)
+            }
+            if showsChildBreak {
+                LegendItem(color: .teal.opacity(0.35), text: Strings.childBreakTag)
             }
         }
         .font(.body)
@@ -837,14 +870,29 @@ struct SelectedDateInfo: View {
 
             if let holiday = holidayOnDate {
                 HStack {
-                    Image(systemName: "flag.fill")
-                        .foregroundStyle(.red)
+                    Image(systemName: holiday.isBreak ? "graduationcap.fill" : "flag.fill")
+                        .foregroundStyle(holiday.isBreak ? .indigo : .red)
                         .voDecorative()
                     Text(holiday.name)
                     if holiday.isSubstitute {
                         Text("(\(Strings.substituteHoliday))")
                             .foregroundStyle(.secondary)
+                    } else if holiday.isBreak {
+                        Text("(\(Strings.myBreakLabel))")
+                            .foregroundStyle(.secondary)
                     }
+                }
+                .accessibilityElement(children: .combine)
+            }
+
+            if let childBreak = DayOffCalendar.shared.childBreakName(on: date) {
+                HStack {
+                    Image(systemName: "figure.and.child.holdinghands")
+                        .foregroundStyle(.teal)
+                        .voDecorative()
+                    Text(childBreak)
+                    Text("(\(Strings.childBreakTag))")
+                        .foregroundStyle(.secondary)
                 }
                 .accessibilityElement(children: .combine)
             }
