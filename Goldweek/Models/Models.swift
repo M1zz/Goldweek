@@ -16,6 +16,14 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case usa = "usa"
     case germany = "germany"   // Brückentag 문화 — Goldweek 핵심 타깃 시장
     case france = "france"     // Faire le pont 문화 — Goldweek 핵심 타깃 시장
+    case uk = "uk"
+    case canada = "canada"
+    case australia = "australia"
+    case spain = "spain"       // Puente 문화
+    case italy = "italy"       // Ponte 문화
+    case brazil = "brazil"     // Enforcado(징검다리) 문화
+    case taiwan = "taiwan"
+    case hongKong = "hongkong"
 
     var id: String { rawValue }
 
@@ -23,15 +31,31 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         Strings.countryDisplayName(self)
     }
 
-    var flag: String {
+    /// ISO 3166-1 지역 코드 — 기기 지역(`Locale.current.region`)과 맞춰 본다
+    var regionCode: String {
         switch self {
-        case .korea: return "🇰🇷"
-        case .japan: return "🇯🇵"
-        case .china: return "🇨🇳"
-        case .usa: return "🇺🇸"
-        case .germany: return "🇩🇪"
-        case .france: return "🇫🇷"
+        case .korea: return "KR"
+        case .japan: return "JP"
+        case .china: return "CN"
+        case .usa: return "US"
+        case .germany: return "DE"
+        case .france: return "FR"
+        case .uk: return "GB"
+        case .canada: return "CA"
+        case .australia: return "AU"
+        case .spain: return "ES"
+        case .italy: return "IT"
+        case .brazil: return "BR"
+        case .taiwan: return "TW"
+        case .hongKong: return "HK"
         }
+    }
+
+    var flag: String {
+        // 지역 코드 두 글자를 국기 이모지(Regional Indicator)로 바꾼다
+        String(String.UnicodeScalarView(regionCode.unicodeScalars.compactMap {
+            UnicodeScalar(0x1F1E6 - 0x41 + $0.value)
+        }))
     }
 
     var localeIdentifier: String {
@@ -42,20 +66,171 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .usa: return "en_US"
         case .germany: return "de_DE"
         case .france: return "fr_FR"
+        case .uk: return "en_GB"
+        case .canada: return "en_CA"
+        case .australia: return "en_AU"
+        case .spain: return "es_ES"
+        case .italy: return "it_IT"
+        case .brazil: return "pt_BR"
+        case .taiwan: return "zh_TW"
+        case .hongKong: return "zh_HK"
         }
     }
 
-    static func fromDeviceLocale() -> Country {
-        let lang = Locale.current.language.languageCode?.identifier ?? "en"
-        switch lang {
-        case "ko": return .korea
-        case "ja": return .japan
-        case "zh": return .china
-        case "de": return .germany
-        case "fr": return .france
-        default: return .usa
-        }
+    /// 주·지역마다 공휴일이 다른 나라의 지역 목록. 비어 있으면 전국 공통 공휴일만 있다.
+    var holidayRegions: [HolidayRegion] {
+        HolidayRegion.all.filter { $0.country == self }
     }
+
+    static func fromDeviceLocale() -> Country {
+        detect().country
+    }
+
+    /// 기기 **지역**으로 국가를 정한다. 언어만 보면 영국·호주 사용자가 미국 공휴일을,
+    /// 대만·홍콩 사용자가 중국 본토 공휴일을 보게 된다.
+    /// 지원하지 않는 지역이면 언어로 가장 가까운 나라를 고르고 `isSupported = false` 로 알린다.
+    static func detect(locale: Locale = .current) -> (country: Country, isSupported: Bool) {
+        if let region = locale.region?.identifier,
+           let match = allCases.first(where: { $0.regionCode == region }) {
+            return (match, true)
+        }
+        let lang = locale.language.languageCode?.identifier ?? "en"
+        let fallback: Country
+        switch lang {
+        case "ko": fallback = .korea
+        case "ja": fallback = .japan
+        case "zh": fallback = locale.language.script?.identifier == "Hant" ? .taiwan : .china
+        case "de": fallback = .germany
+        case "fr": fallback = .france
+        case "es": fallback = .spain
+        case "it": fallback = .italy
+        case "pt": fallback = .brazil
+        default: fallback = .usa
+        }
+        return (fallback, false)
+    }
+
+    /// 기기 지역이 지원하지 않는 곳이면 그 지역 코드 (예: "AT"). 지원하는 곳이거나 알 수 없으면 nil.
+    static var unsupportedDeviceRegion: String? {
+        guard let region = Locale.current.region?.identifier,
+              !allCases.contains(where: { $0.regionCode == region }) else { return nil }
+        return region
+    }
+}
+
+// MARK: - 공휴일 지역 (주·자치주·주/준주)
+
+/// 나라 안에서 지역마다 공휴일이 다른 경우의 지역. 코드는 ISO 3166-2 (예: "DE-BY").
+/// 이름은 현지 표기를 기본으로 하고, 그 나라 말이 아닌 화면에서는 영어 이름을 쓴다.
+struct HolidayRegion: Identifiable, Hashable {
+    let code: String
+    let country: Country
+    let localName: String
+    let englishName: String?
+
+    var id: String { code }
+
+    var displayName: String {
+        let lang = AppLanguage.current
+        let native: Bool
+        switch country {
+        case .germany: native = lang == .german
+        case .spain: native = lang == .spanish
+        case .canada: native = lang == .english || lang == .french
+        default: native = true   // 영어권(미국·영국·호주)은 현지명이 곧 영어 이름
+        }
+        return native ? localName : (englishName ?? localName)
+    }
+
+    static func find(_ code: String) -> HolidayRegion? {
+        all.first { $0.code == code }
+    }
+
+    private static func r(_ code: String, _ country: Country, _ local: String, _ english: String? = nil) -> HolidayRegion {
+        HolidayRegion(code: code, country: country, localName: local, englishName: english)
+    }
+
+    static let all: [HolidayRegion] = [
+        // 독일 — 16개 주 전부
+        r("DE-BW", .germany, "Baden-Württemberg"),
+        r("DE-BY", .germany, "Bayern", "Bavaria"),
+        r("DE-BE", .germany, "Berlin"),
+        r("DE-BB", .germany, "Brandenburg"),
+        r("DE-HB", .germany, "Bremen"),
+        r("DE-HH", .germany, "Hamburg"),
+        r("DE-HE", .germany, "Hessen", "Hesse"),
+        r("DE-MV", .germany, "Mecklenburg-Vorpommern", "Mecklenburg-Western Pomerania"),
+        r("DE-NI", .germany, "Niedersachsen", "Lower Saxony"),
+        r("DE-NW", .germany, "Nordrhein-Westfalen", "North Rhine-Westphalia"),
+        r("DE-RP", .germany, "Rheinland-Pfalz", "Rhineland-Palatinate"),
+        r("DE-SL", .germany, "Saarland"),
+        r("DE-SN", .germany, "Sachsen", "Saxony"),
+        r("DE-ST", .germany, "Sachsen-Anhalt", "Saxony-Anhalt"),
+        r("DE-SH", .germany, "Schleswig-Holstein"),
+        r("DE-TH", .germany, "Thüringen", "Thuringia"),
+
+        // 미국 — 연방 공휴일과 다른 주 공휴일이 뚜렷한 주만. 나머지 주는 연방 공휴일(기본값)을 쓴다.
+        r("US-AK", .usa, "Alaska"),
+        r("US-CA", .usa, "California"),
+        r("US-DC", .usa, "District of Columbia"),
+        r("US-FL", .usa, "Florida"),
+        r("US-HI", .usa, "Hawaii"),
+        r("US-IL", .usa, "Illinois"),
+        r("US-LA", .usa, "Louisiana"),
+        r("US-ME", .usa, "Maine"),
+        r("US-MA", .usa, "Massachusetts"),
+        r("US-NY", .usa, "New York"),
+        r("US-TX", .usa, "Texas"),
+        r("US-WA", .usa, "Washington"),
+
+        // 스페인 — 17개 자치주 + 세우타·멜리야
+        r("ES-AN", .spain, "Andalucía", "Andalusia"),
+        r("ES-AR", .spain, "Aragón", "Aragon"),
+        r("ES-AS", .spain, "Asturias"),
+        r("ES-IB", .spain, "Illes Balears", "Balearic Islands"),
+        r("ES-CN", .spain, "Canarias", "Canary Islands"),
+        r("ES-CB", .spain, "Cantabria"),
+        r("ES-CL", .spain, "Castilla y León", "Castile and León"),
+        r("ES-CM", .spain, "Castilla-La Mancha", "Castilla–La Mancha"),
+        r("ES-CT", .spain, "Catalunya", "Catalonia"),
+        r("ES-VC", .spain, "Comunitat Valenciana", "Valencian Community"),
+        r("ES-EX", .spain, "Extremadura"),
+        r("ES-GA", .spain, "Galicia"),
+        r("ES-MD", .spain, "Comunidad de Madrid", "Madrid"),
+        r("ES-MC", .spain, "Región de Murcia", "Murcia"),
+        r("ES-NC", .spain, "Navarra", "Navarre"),
+        r("ES-PV", .spain, "País Vasco", "Basque Country"),
+        r("ES-RI", .spain, "La Rioja"),
+        r("ES-CE", .spain, "Ceuta"),
+        r("ES-ML", .spain, "Melilla"),
+
+        // 영국 — 공휴일 체계가 다른 세 지역
+        r("GB-ENG", .uk, "England & Wales"),
+        r("GB-SCT", .uk, "Scotland"),
+        r("GB-NIR", .uk, "Northern Ireland"),
+
+        // 캐나다 — 10개 주 (준주는 연방 공휴일)
+        r("CA-AB", .canada, "Alberta"),
+        r("CA-BC", .canada, "British Columbia", "British Columbia"),
+        r("CA-MB", .canada, "Manitoba"),
+        r("CA-NB", .canada, "New Brunswick"),
+        r("CA-NL", .canada, "Newfoundland and Labrador"),
+        r("CA-NS", .canada, "Nova Scotia"),
+        r("CA-ON", .canada, "Ontario"),
+        r("CA-PE", .canada, "Prince Edward Island"),
+        r("CA-QC", .canada, "Québec", "Quebec"),
+        r("CA-SK", .canada, "Saskatchewan"),
+
+        // 호주 — 6개 주 + 2개 준주
+        r("AU-ACT", .australia, "Australian Capital Territory"),
+        r("AU-NSW", .australia, "New South Wales"),
+        r("AU-NT", .australia, "Northern Territory"),
+        r("AU-QLD", .australia, "Queensland"),
+        r("AU-SA", .australia, "South Australia"),
+        r("AU-TAS", .australia, "Tasmania"),
+        r("AU-VIC", .australia, "Victoria"),
+        r("AU-WA", .australia, "Western Australia"),
+    ]
 }
 
 // MARK: - 사용자 유형
@@ -92,6 +267,8 @@ final class UserProfile {
     var createdAt: Date
     var countryRaw: String = Country.korea.rawValue   // 국가 코드 (default: SwiftData lightweight migration용)
     var userTypeRaw: String = UserType.employee.rawValue  // 사용자 유형
+    /// 공휴일 지역 (ISO 3166-2, 예: "DE-BY"). 빈 문자열이면 전국 공통 공휴일만 쓴다.
+    var holidayRegionRaw: String = ""
 
     // 선호도 설정
     var preferredDurationRaw: String
@@ -140,7 +317,24 @@ final class UserProfile {
 
     var country: Country {
         get { Country(rawValue: countryRaw) ?? .korea }
-        set { countryRaw = newValue.rawValue }
+        set {
+            // 나라가 바뀌면 이전 나라의 지역은 의미가 없다
+            if newValue.rawValue != countryRaw { holidayRegion = nil }
+            countryRaw = newValue.rawValue
+        }
+    }
+
+    /// 공휴일 지역. 나라와 맞지 않는 값은 없는 것으로 본다.
+    /// 쓸 때 `HolidayService` 가 읽는 값도 같이 바꾼다 (HolidayService 는 프로필을 모른다).
+    var holidayRegion: HolidayRegion? {
+        get {
+            guard let region = HolidayRegion.find(holidayRegionRaw), region.country == country else { return nil }
+            return region
+        }
+        set {
+            holidayRegionRaw = newValue?.code ?? ""
+            HolidayService.selectedRegionCode = holidayRegionRaw
+        }
     }
 
     var userType: UserType {

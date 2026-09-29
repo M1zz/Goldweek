@@ -39,6 +39,30 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -76,6 +100,30 @@
           }
         },
         "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "zh-Hant": {
           "stringUnit": {
             "state": "translated",
             "value": "Goldweek"
@@ -121,6 +169,30 @@
             "state": "translated",
             "value": "Goldweek a besoin d’accéder à votre calendrier pour trouver les événements de congé à importer et synchroniser vos congés enregistrés avec votre calendrier."
           }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek necesita acceder a tu calendario para encontrar eventos que parezcan vacaciones e importarlos, y para sincronizar tus vacaciones registradas con el calendario."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek ha bisogno di accedere al calendario per trovare gli eventi che sembrano ferie da importare e per sincronizzare le ferie registrate con il calendario."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Goldweek precisa acessar seu calendário para encontrar eventos que parecem folgas e importá-los, e para sincronizar suas folgas registradas com o calendário."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek 需要存取你的行事曆，才能找出看起來像休假的行程並匯入，也能把已登記的休假同步到行事曆。"
+          }
         }
       }
     },
@@ -162,6 +234,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "L’accès à l’appareil photo permet de photographier l’historique de vos demandes de congé et d’enregistrer vos congés automatiquement."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se necesita acceso a la cámara para fotografiar tu historial de solicitudes de vacaciones y registrarlas automáticamente."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’accesso alla fotocamera serve per fotografare lo storico delle richieste di ferie e registrarle automaticamente."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O acesso à câmera é necessário para fotografar seu histórico de pedidos de folga e registrá-las automaticamente."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要使用相機拍攝你的休假申請紀錄，並自動登記休假。"
           }
         }
       }

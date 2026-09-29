@@ -1056,6 +1056,155 @@ final class HolidayRuleTests: XCTestCase {
 }
 
 
+// MARK: - 새 나라·지역 공휴일 (각국 정부 공표 달력 기준)
+
+final class WorldHolidayTests: XCTestCase {
+    private var savedRegion = ""
+
+    override func setUp() {
+        savedRegion = HolidayService.selectedRegionCode
+        HolidayService.selectedRegionCode = ""
+    }
+
+    override func tearDown() {
+        HolidayService.selectedRegionCode = savedRegion
+    }
+
+    private func has(_ y: Int, _ m: Int, _ d: Int, _ country: Country, region: String = "") -> Bool {
+        HolidayService.selectedRegionCode = region
+        let date = Calendar.current.date(from: DateComponents(year: y, month: m, day: d))!
+        return HolidayService().isHoliday(date, in: y, country: country)
+    }
+
+    func testDetectUsesRegionNotLanguage() {
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_GB")).country, .uk)
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_AU")).country, .australia)
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "zh_Hant_TW")).country, .taiwan)
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "zh_Hant_HK")).country, .hongKong)
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "fr_CA")).country, .canada)
+        let austria = Country.detect(locale: Locale(identifier: "de_AT"))
+        XCTAssertEqual(austria.country, .germany)
+        XCTAssertFalse(austria.isSupported)
+        XCTAssertTrue(Country.detect(locale: Locale(identifier: "pt_BR")).isSupported)
+    }
+
+    func testEveryCountryHasHolidays() {
+        for country in Country.allCases {
+            for region in [""] + country.holidayRegions.map(\.code) {
+                HolidayService.selectedRegionCode = region
+                for year in 2024...2030 {
+                    let list = HolidayService().getHolidays(for: year, country: country)
+                    XCTAssertGreaterThanOrEqual(list.count, 6, "\(country) \(region) \(year)")
+                    XCTAssertTrue(list.allSatisfy { Calendar.current.component(.year, from: $0.date) == year })
+                }
+            }
+        }
+    }
+
+    func testUnitedKingdom() {
+        XCTAssertTrue(has(2026, 4, 6, .uk))                      // 부활절 월요일
+        XCTAssertTrue(has(2026, 5, 25, .uk))                     // 봄 공휴일
+        XCTAssertTrue(has(2026, 8, 31, .uk))                     // 여름 공휴일 (잉글랜드)
+        XCTAssertTrue(has(2026, 12, 28, .uk))                    // 박싱데이(토) → 월
+        XCTAssertTrue(has(2027, 12, 27, .uk))                    // 크리스마스(토)·박싱데이(일)
+        XCTAssertTrue(has(2027, 12, 28, .uk))
+        XCTAssertFalse(has(2026, 4, 6, .uk, region: "GB-SCT"))   // 스코틀랜드는 부활절 월요일 없음
+        XCTAssertTrue(has(2026, 8, 3, .uk, region: "GB-SCT"))    // 8월 첫 월요일
+        XCTAssertTrue(has(2027, 1, 4, .uk, region: "GB-SCT"))    // 1/2(토) → 1/4(월)
+        XCTAssertTrue(has(2026, 11, 30, .uk, region: "GB-SCT"))
+        XCTAssertTrue(has(2026, 7, 13, .uk, region: "GB-NIR"))   // 7/12(일) → 월
+    }
+
+    func testCanada() {
+        XCTAssertTrue(has(2026, 5, 18, .canada))                 // 빅토리아 데이
+        XCTAssertTrue(has(2026, 9, 30, .canada))                 // 진실과 화해의 날 (연방)
+        XCTAssertTrue(has(2026, 10, 12, .canada))                // 추수감사절
+        XCTAssertTrue(has(2026, 12, 28, .canada))                // 박싱데이(토) → 월
+        XCTAssertTrue(has(2026, 2, 16, .canada, region: "CA-ON"))
+        XCTAssertFalse(has(2026, 9, 30, .canada, region: "CA-ON"))
+        XCTAssertTrue(has(2026, 6, 24, .canada, region: "CA-QC"))
+        XCTAssertTrue(has(2026, 4, 6, .canada, region: "CA-QC"))
+    }
+
+    func testAustralia() {
+        XCTAssertTrue(has(2026, 1, 26, .australia))
+        XCTAssertTrue(has(2026, 6, 8, .australia, region: "AU-NSW"))
+        XCTAssertTrue(has(2026, 10, 5, .australia, region: "AU-NSW"))
+        XCTAssertFalse(has(2026, 4, 27, .australia, region: "AU-NSW"))  // 안작(토) 대체 없음
+        XCTAssertTrue(has(2026, 4, 27, .australia, region: "AU-WA"))    // 서호주는 대체
+        XCTAssertTrue(has(2026, 11, 3, .australia, region: "AU-VIC"))   // 멜버른 컵
+        XCTAssertTrue(has(2026, 3, 9, .australia, region: "AU-VIC"))
+        XCTAssertTrue(has(2026, 10, 5, .australia, region: "AU-QLD"))   // 퀸즐랜드 국왕 탄신일
+        XCTAssertFalse(has(2026, 6, 8, .australia, region: "AU-QLD"))
+    }
+
+    func testSpain() {
+        XCTAssertTrue(has(2026, 4, 3, .spain))                   // 성금요일
+        XCTAssertTrue(has(2026, 12, 8, .spain))
+        XCTAssertFalse(has(2026, 4, 2, .spain))                  // 성목요일은 지역 공휴일
+        XCTAssertTrue(has(2026, 4, 2, .spain, region: "ES-MD"))
+        XCTAssertFalse(has(2026, 4, 2, .spain, region: "ES-CT"))
+        XCTAssertTrue(has(2026, 4, 6, .spain, region: "ES-CT"))
+        XCTAssertTrue(has(2026, 9, 11, .spain, region: "ES-CT"))
+        // 2026 관보(BOE) 표
+        XCTAssertTrue(has(2026, 4, 2, .spain, region: "ES-VC"))    // 2026년 발렌시아는 성목요일에 쉰다
+        XCTAssertFalse(has(2026, 3, 19, .spain, region: "ES-VC"))
+        XCTAssertTrue(has(2026, 3, 2, .spain, region: "ES-IB"))    // 3/1(일) → 월
+        XCTAssertTrue(has(2026, 11, 2, .spain, region: "ES-AN"))   // 만성절(일) → 월
+        XCTAssertTrue(has(2026, 7, 25, .spain, region: "ES-PV"))
+    }
+
+    func testItalyAndBrazil() {
+        XCTAssertTrue(has(2026, 4, 6, .italy))
+        XCTAssertTrue(has(2026, 6, 2, .italy))
+        XCTAssertTrue(has(2026, 10, 4, .italy))
+        XCTAssertFalse(has(2025, 10, 4, .italy))
+        XCTAssertTrue(has(2026, 2, 16, .brazil))                 // 카니발
+        XCTAssertTrue(has(2026, 2, 17, .brazil))
+        XCTAssertTrue(has(2026, 6, 4, .brazil))                  // 성체 축일
+        XCTAssertTrue(has(2026, 11, 20, .brazil))
+    }
+
+    func testTaiwan2026() {
+        for d in 16...20 { XCTAssertTrue(has(2026, 2, d, .taiwan), "2/\(d)") }   // 설 연휴 2/14~2/22
+        XCTAssertTrue(has(2026, 2, 27, .taiwan))                 // 2/28(토) → 금
+        XCTAssertTrue(has(2026, 4, 3, .taiwan))                  // 어린이날(토) → 금
+        XCTAssertTrue(has(2026, 4, 6, .taiwan))                  // 청명(일) → 월
+        XCTAssertTrue(has(2026, 6, 19, .taiwan))
+        XCTAssertTrue(has(2026, 9, 25, .taiwan))
+        XCTAssertTrue(has(2026, 9, 28, .taiwan))
+        XCTAssertTrue(has(2026, 10, 9, .taiwan))                 // 국경일(토) → 금
+        XCTAssertTrue(has(2026, 10, 26, .taiwan))                // 광복절(일) → 월
+        XCTAssertTrue(has(2026, 12, 25, .taiwan))
+        XCTAssertFalse(has(2026, 2, 23, .taiwan))
+    }
+
+    func testHongKong2026() {
+        XCTAssertTrue(has(2026, 2, 17, .hongKong))
+        XCTAssertTrue(has(2026, 2, 19, .hongKong))
+        XCTAssertFalse(has(2026, 2, 20, .hongKong))
+        XCTAssertTrue(has(2026, 4, 4, .hongKong))                // 성금요일 다음 날
+        XCTAssertTrue(has(2026, 4, 7, .hongKong))                // 청명(일)=… 부활절 월요일 다음
+        XCTAssertTrue(has(2026, 5, 25, .hongKong))               // 부처님 오신 날(일) → 월
+        XCTAssertTrue(has(2026, 9, 26, .hongKong))               // 중추절 다음 날
+        XCTAssertTrue(has(2026, 10, 19, .hongKong))              // 중양절(일) → 월
+        XCTAssertTrue(has(2026, 12, 26, .hongKong))              // 크리스마스 다음 첫 평일(토)
+    }
+
+    func testGermanStatesAndUSStates() {
+        XCTAssertFalse(has(2026, 6, 4, .germany))
+        XCTAssertTrue(has(2026, 6, 4, .germany, region: "DE-BY"))   // 성체 축일
+        XCTAssertTrue(has(2026, 1, 6, .germany, region: "DE-BY"))
+        XCTAssertTrue(has(2026, 11, 18, .germany, region: "DE-SN")) // 참회와 기도의 날
+        XCTAssertTrue(has(2026, 3, 9, .germany, region: "DE-BE") == false) // 3/8(일) 대체 없음
+        XCTAssertTrue(has(2026, 10, 12, .usa))
+        XCTAssertFalse(has(2026, 10, 12, .usa, region: "US-HI"))    // 하와이는 콜럼버스의 날 없음
+        XCTAssertTrue(has(2026, 6, 11, .usa, region: "US-HI"))
+        XCTAssertTrue(has(2026, 4, 20, .usa, region: "US-MA"))      // 애국자의 날
+        XCTAssertTrue(has(2026, 11, 27, .usa, region: "US-TX"))
+    }
+}
+
 // MARK: - 추천 회귀 테스트 — 주말·공휴일에 연차를 추천하지 않는다
 
 final class RecommendationDayOffTests: XCTestCase {

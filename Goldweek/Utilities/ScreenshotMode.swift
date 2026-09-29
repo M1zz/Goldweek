@@ -43,6 +43,10 @@ enum ScreenshotMode {
             case .chinese: return (.china, "小雨", 15)
             case .german: return (.germany, "Lena", 30)
             case .french: return (.france, "Camille", 25)
+            case .spanish: return (.spain, "Lucía", 22)
+            case .italian: return (.italy, "Giulia", 26)
+            case .portuguese: return (.brazil, "Ana", 22)
+            case .chineseTraditional: return (.taiwan, "怡君", 14)
             }
         }()
 

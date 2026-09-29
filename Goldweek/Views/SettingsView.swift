@@ -73,6 +73,7 @@ struct SettingsView: View {
 
     // 국가 & 언어
     @State private var selectedCountry: Country
+    @State private var selectedRegionCode: String
     @State private var selectedLanguage: AppLanguage
 
     private let recommendationEngine = RecommendationEngine()
@@ -81,6 +82,7 @@ struct SettingsView: View {
         self.profile = profile
         self.showsCloseButton = showsCloseButton
         _selectedCountry = State(initialValue: profile.country)
+        _selectedRegionCode = State(initialValue: profile.holidayRegion?.code ?? "")
         _selectedLanguage = State(initialValue: AppLanguage.current)
     }
 
@@ -212,7 +214,7 @@ struct SettingsView: View {
                 }
 
                 // 국가 및 언어
-                Section(Strings.countryAndLanguage) {
+                Section {
                     Picker(Strings.country, selection: $selectedCountry) {
                         ForEach(Country.allCases) { country in
                             Text("\(country.flag) \(country.displayName)").tag(country)
@@ -220,7 +222,22 @@ struct SettingsView: View {
                     }
                     .onChange(of: selectedCountry) { _, newValue in
                         profile.country = newValue
+                        selectedRegionCode = profile.holidayRegion?.code ?? ""
                         recommendationEngine.invalidateCache()
+                    }
+
+                    // 주·지역마다 공휴일이 다른 나라만
+                    if !selectedCountry.holidayRegions.isEmpty {
+                        Picker(Strings.holidayRegion, selection: $selectedRegionCode) {
+                            Text(Strings.holidayRegionNationwide).tag("")
+                            ForEach(selectedCountry.holidayRegions) { region in
+                                Text(region.displayName).tag(region.code)
+                            }
+                        }
+                        .onChange(of: selectedRegionCode) { _, newValue in
+                            profile.holidayRegion = HolidayRegion.find(newValue)
+                            recommendationEngine.invalidateCache()
+                        }
                     }
 
                     Picker(Strings.language, selection: $selectedLanguage) {
@@ -231,6 +248,12 @@ struct SettingsView: View {
                     .onChange(of: selectedLanguage) { _, newValue in
                         AppLanguage.current = newValue
                         recommendationEngine.invalidateCache()
+                    }
+                } header: {
+                    Text(Strings.countryAndLanguage)
+                } footer: {
+                    if !selectedCountry.holidayRegions.isEmpty {
+                        Text(Strings.holidayRegionFooter(selectedCountry))
                     }
                 }
 
@@ -836,6 +859,7 @@ struct SettingsView: View {
             .onChange(of: profile.name) { _, _ in persistProfile() }
             .onChange(of: profile.userTypeRaw) { _, _ in persistProfile() }
             .onChange(of: profile.countryRaw) { _, _ in persistProfile() }
+            .onChange(of: profile.holidayRegionRaw) { _, _ in persistProfile() }
             .navigationTitle(Strings.navTitleSettings)
             .toolbar {
                 if showsCloseButton {

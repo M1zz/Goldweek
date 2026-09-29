@@ -15,6 +15,10 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     case chinese = "zh"
     case german = "de"
     case french = "fr"
+    case spanish = "es"
+    case italian = "it"
+    case portuguese = "pt"
+    case chineseTraditional = "zh-Hant"
 
     var id: String { rawValue }
 
@@ -26,6 +30,10 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         case .chinese: return "中文"
         case .german: return "Deutsch"
         case .french: return "Français"
+        case .spanish: return "Español"
+        case .italian: return "Italiano"
+        case .portuguese: return "Português (Brasil)"
+        case .chineseTraditional: return "繁體中文"
         }
     }
 
@@ -37,6 +45,10 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         case .chinese: return "🇨🇳"
         case .german: return "🇩🇪"
         case .french: return "🇫🇷"
+        case .spanish: return "🇪🇸"
+        case .italian: return "🇮🇹"
+        case .portuguese: return "🇧🇷"
+        case .chineseTraditional: return "🇹🇼"
         }
     }
 
@@ -50,6 +62,10 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         case .chinese: return "zh-Hans"
         case .german: return "de"
         case .french: return "fr"
+        case .spanish: return "es"
+        case .italian: return "it"
+        case .portuguese: return "pt-BR"
+        case .chineseTraditional: return "zh-Hant"
         }
     }
 
@@ -84,9 +100,15 @@ enum AppLanguage: String, CaseIterable, Identifiable {
             switch prefix {
             case "ko": return .korean
             case "ja": return .japanese
-            case "zh": return .chinese
+            case "zh":
+                // zh-Hant-TW, zh-Hant-HK, zh-HK, zh-TW → 번체
+                let rest = code.split(separator: "-").dropFirst().map(String.init)
+                return rest.contains(where: { ["Hant", "TW", "HK", "MO"].contains($0) }) ? .chineseTraditional : .chinese
             case "de": return .german
             case "fr": return .french
+            case "es": return .spanish
+            case "it": return .italian
+            case "pt": return .portuguese
             case "en": return .english
             default: continue
             }
@@ -124,6 +146,10 @@ enum Strings {
         case .chinese: return "概览"
         case .german: return "Status"
         case .french: return "Aperçu"
+        case .spanish: return "Resumen"
+        case .italian: return "Panoramica"
+        case .portuguese: return "Resumo"
+        case .chineseTraditional: return "概況"
         }
     }
 
@@ -135,6 +161,10 @@ enum Strings {
         case .chinese: return "日历"
         case .german: return "Kalender"
         case .french: return "Calendrier"
+        case .spanish: return "Calendario"
+        case .italian: return "Calendario"
+        case .portuguese: return "Calendário"
+        case .chineseTraditional: return "行事曆"
         }
     }
 
@@ -146,6 +176,10 @@ enum Strings {
         case .chinese: return "推荐"
         case .german: return "Tipps"
         case .french: return "Idées"
+        case .spanish: return "Ideas"
+        case .italian: return "Idee"
+        case .portuguese: return "Sugestões"
+        case .chineseTraditional: return "推薦"
         }
     }
 
@@ -157,6 +191,10 @@ enum Strings {
         case .chinese: return "登记"
         case .german: return "Eintragen"
         case .french: return "Ajouter"
+        case .spanish: return "Añadir"
+        case .italian: return "Aggiungi"
+        case .portuguese: return "Adicionar"
+        case .chineseTraditional: return "新增"
         }
     }
 
@@ -168,6 +206,10 @@ enum Strings {
         case .chinese: return "M/d(E)"
         case .german: return "d.M. (EEE)"
         case .french: return "d/M (EEE)"
+        case .spanish: return "d/M (EEE)"
+        case .italian: return "d/M (EEE)"
+        case .portuguese: return "d/M (EEE)"
+        case .chineseTraditional: return "M/d(EEE)"
         }
     }
 
@@ -179,6 +221,10 @@ enum Strings {
         case .chinese: return "设置"
         case .german: return "Einstellungen"
         case .french: return "Réglages"
+        case .spanish: return "Ajustes"
+        case .italian: return "Impostazioni"
+        case .portuguese: return "Ajustes"
+        case .chineseTraditional: return "設定"
         }
     }
 
@@ -191,6 +237,10 @@ enum Strings {
         case .chinese: return "休假规划"
         case .german: return "Urlaubsplaner"
         case .french: return "Planificateur de congés"
+        case .spanish: return "Planificador de vacaciones"
+        case .italian: return "Pianificatore ferie"
+        case .portuguese: return "Planejador de férias"
+        case .chineseTraditional: return "休假規劃"
         }
     }
 
@@ -202,6 +252,10 @@ enum Strings {
         case .chinese: return "\(year)年 年假概况"
         case .german: return "Urlaub \(year)"
         case .french: return "Congés \(year)"
+        case .spanish: return "Vacaciones \(year)"
+        case .italian: return "Ferie \(year)"
+        case .portuguese: return "Férias \(year)"
+        case .chineseTraditional: return "\(year) 年特休"
         }
     }
 
@@ -214,6 +268,10 @@ enum Strings {
         case .chinese: return "年假概况"
         case .german: return "Urlaub"
         case .french: return "Congés"
+        case .spanish: return "Vacaciones"
+        case .italian: return "Ferie"
+        case .portuguese: return "Férias"
+        case .chineseTraditional: return "特休概況"
         }
     }
 
@@ -226,6 +284,10 @@ enum Strings {
         case .chinese: return "休假计划"
         case .german: return "Urlaubsplan"
         case .french: return "Plan de vacances"
+        case .spanish: return "Plan de vacaciones"
+        case .italian: return "Piano ferie"
+        case .portuguese: return "Plano de férias"
+        case .chineseTraditional: return "休假計畫"
         }
     }
 
@@ -237,6 +299,10 @@ enum Strings {
         case .chinese: return "已用"
         case .german: return "Genommen"
         case .french: return "Pris"
+        case .spanish: return "Usados"
+        case .italian: return "Usati"
+        case .portuguese: return "Usados"
+        case .chineseTraditional: return "已用"
         }
     }
 
@@ -248,6 +314,10 @@ enum Strings {
         case .chinese: return "共"
         case .german: return "Gesamt"
         case .french: return "Total"
+        case .spanish: return "Total"
+        case .italian: return "Totale"
+        case .portuguese: return "Total"
+        case .chineseTraditional: return "總計"
         }
     }
 
@@ -259,6 +329,10 @@ enum Strings {
         case .chinese: return "剩余"
         case .german: return "Übrig"
         case .french: return "Restant"
+        case .spanish: return "Quedan"
+        case .italian: return "Restanti"
+        case .portuguese: return "Restantes"
+        case .chineseTraditional: return "剩餘"
         }
     }
 
@@ -270,6 +344,10 @@ enum Strings {
         case .chinese: return "即将到来的假期"
         case .german: return "Bevorstehender Urlaub"
         case .french: return "Congés à venir"
+        case .spanish: return "Próximas vacaciones"
+        case .italian: return "Ferie in arrivo"
+        case .portuguese: return "Próximas férias"
+        case .chineseTraditional: return "即將到來的休假"
         }
     }
 
@@ -281,6 +359,10 @@ enum Strings {
         case .chinese: return "推荐休假日程"
         case .german: return "Empfohlene Urlaubsplanung"
         case .french: return "Planning recommandé"
+        case .spanish: return "Agenda recomendada"
+        case .italian: return "Agenda suggerita"
+        case .portuguese: return "Agenda sugerida"
+        case .chineseTraditional: return "推薦休假行程"
         }
     }
 
@@ -292,6 +374,10 @@ enum Strings {
         case .chinese: return "正在生成推荐..."
         case .german: return "Empfehlungen werden erstellt..."
         case .french: return "Création des recommandations..."
+        case .spanish: return "Generando recomendaciones..."
+        case .italian: return "Creazione dei suggerimenti..."
+        case .portuguese: return "Gerando sugestões..."
+        case .chineseTraditional: return "正在產生推薦..."
         }
     }
 
@@ -303,6 +389,10 @@ enum Strings {
         case .chinese: return "添加到日程"
         case .german: return "Zum Plan hinzufügen"
         case .french: return "Ajouter au planning"
+        case .spanish: return "Añadir a la agenda"
+        case .italian: return "Aggiungi all’agenda"
+        case .portuguese: return "Adicionar à agenda"
+        case .chineseTraditional: return "加入行程"
         }
     }
 
@@ -314,6 +404,10 @@ enum Strings {
         case .chinese: return "已添加 ✓"
         case .german: return "Hinzugefügt ✓"
         case .french: return "Ajouté ✓"
+        case .spanish: return "Añadido ✓"
+        case .italian: return "Aggiunto ✓"
+        case .portuguese: return "Adicionado ✓"
+        case .chineseTraditional: return "已加入 ✓"
         }
     }
 
@@ -325,6 +419,10 @@ enum Strings {
         case .chinese: return "效率"
         case .german: return "Effizienz"
         case .french: return "Efficacité"
+        case .spanish: return "Eficiencia"
+        case .italian: return "Efficienza"
+        case .portuguese: return "Eficiência"
+        case .chineseTraditional: return "效率"
         }
     }
 
@@ -336,6 +434,10 @@ enum Strings {
         case .chinese: return "休假记录"
         case .german: return "Urlaubsverlauf"
         case .french: return "Historique des congés"
+        case .spanish: return "Historial de vacaciones"
+        case .italian: return "Storico ferie"
+        case .portuguese: return "Histórico de férias"
+        case .chineseTraditional: return "休假紀錄"
         }
     }
 
@@ -347,6 +449,10 @@ enum Strings {
         case .chinese: return "查看过去的休假记录"
         case .german: return "Vergangene Urlaube ansehen"
         case .french: return "Consultez vos congés passés"
+        case .spanish: return "Consulta tus vacaciones pasadas"
+        case .italian: return "Rivedi le tue ferie passate"
+        case .portuguese: return "Veja suas férias anteriores"
+        case .chineseTraditional: return "查看過去的休假紀錄"
         }
     }
 
@@ -358,6 +464,10 @@ enum Strings {
         case .chinese: return "假期"
         case .german: return "Urlaub"
         case .french: return "Congé"
+        case .spanish: return "Vacaciones"
+        case .italian: return "Ferie"
+        case .portuguese: return "Férias"
+        case .chineseTraditional: return "休假"
         }
     }
 
@@ -370,6 +480,10 @@ enum Strings {
         case .chinese: return "日历"
         case .german: return "Kalender"
         case .french: return "Calendrier"
+        case .spanish: return "Calendario"
+        case .italian: return "Calendario"
+        case .portuguese: return "Calendário"
+        case .chineseTraditional: return "行事曆"
         }
     }
 
@@ -381,6 +495,10 @@ enum Strings {
         case .chinese: return "节假日"
         case .german: return "Feiertag"
         case .french: return "Jour férié"
+        case .spanish: return "Festivo"
+        case .italian: return "Festività"
+        case .portuguese: return "Feriado"
+        case .chineseTraditional: return "國定假日"
         }
     }
 
@@ -392,6 +510,10 @@ enum Strings {
         case .chinese: return "年假"
         case .german: return "Jahresurlaub"
         case .french: return "Congés annuels"
+        case .spanish: return "Vacaciones"
+        case .italian: return "Ferie"
+        case .portuguese: return "Férias"
+        case .chineseTraditional: return "特休"
         }
     }
 
@@ -403,6 +525,10 @@ enum Strings {
         case .chinese: return "周末"
         case .german: return "Wochenende"
         case .french: return "Week-end"
+        case .spanish: return "Fin de semana"
+        case .italian: return "Weekend"
+        case .portuguese: return "Fim de semana"
+        case .chineseTraditional: return "週末"
         }
     }
 
@@ -414,6 +540,10 @@ enum Strings {
         case .chinese: return "无日程"
         case .german: return "Kein Termin"
         case .french: return "Aucun événement"
+        case .spanish: return "Sin eventos"
+        case .italian: return "Nessun evento"
+        case .portuguese: return "Nenhum evento"
+        case .chineseTraditional: return "沒有行程"
         }
     }
 
@@ -425,6 +555,10 @@ enum Strings {
         case .chinese: return "补休日"
         case .german: return "Ersatzfeiertag"
         case .french: return "Jour férié de remplacement"
+        case .spanish: return "Festivo trasladado"
+        case .italian: return "Festività sostitutiva"
+        case .portuguese: return "Feriado transferido"
+        case .chineseTraditional: return "補假"
         }
     }
 
@@ -436,6 +570,10 @@ enum Strings {
         case .chinese: return "删除假期"
         case .german: return "Urlaub löschen"
         case .french: return "Supprimer le congé"
+        case .spanish: return "Eliminar vacaciones"
+        case .italian: return "Elimina ferie"
+        case .portuguese: return "Excluir férias"
+        case .chineseTraditional: return "刪除休假"
         }
     }
 
@@ -447,6 +585,10 @@ enum Strings {
         case .chinese: return "确定删除此休假记录吗？\n年假将被恢复。"
         case .german: return "Diesen Urlaubseintrag löschen?\nDie Urlaubstage werden zurückgebucht."
         case .french: return "Supprimer ce congé ?\nLes jours de congé seront restitués."
+        case .spanish: return "¿Eliminar este registro de vacaciones?\nSe te devolverán los días."
+        case .italian: return "Eliminare queste ferie?\nI giorni di ferie verranno ripristinati."
+        case .portuguese: return "Excluir este registro de férias?\nOs dias de férias serão devolvidos."
+        case .chineseTraditional: return "要刪除這筆休假紀錄嗎？\n特休天數將會歸還。"
         }
     }
 
@@ -458,6 +600,10 @@ enum Strings {
         case .chinese: return "取消"
         case .german: return "Abbrechen"
         case .french: return "Annuler"
+        case .spanish: return "Cancelar"
+        case .italian: return "Annulla"
+        case .portuguese: return "Cancelar"
+        case .chineseTraditional: return "取消"
         }
     }
 
@@ -469,6 +615,10 @@ enum Strings {
         case .chinese: return "删除"
         case .german: return "Löschen"
         case .french: return "Supprimer"
+        case .spanish: return "Eliminar"
+        case .italian: return "Elimina"
+        case .portuguese: return "Excluir"
+        case .chineseTraditional: return "刪除"
         }
     }
 
@@ -480,6 +630,10 @@ enum Strings {
         case .chinese: return "我的年假日程"
         case .german: return "Mein Urlaubsplan"
         case .french: return "Mes congés"
+        case .spanish: return "Mis vacaciones"
+        case .italian: return "Le mie ferie"
+        case .portuguese: return "Minhas férias"
+        case .chineseTraditional: return "我的特休行程"
         }
     }
 
@@ -491,6 +645,10 @@ enum Strings {
         case .chinese: return "没有登记的年假"
         case .german: return "Kein Urlaub eingetragen"
         case .french: return "Aucun congé enregistré"
+        case .spanish: return "No hay vacaciones registradas"
+        case .italian: return "Nessun giorno di ferie registrato"
+        case .portuguese: return "Nenhum período de férias registrado"
+        case .chineseTraditional: return "尚未登記特休"
         }
     }
 
@@ -502,6 +660,10 @@ enum Strings {
         case .chinese: return "点击编辑 · 滑动删除"
         case .german: return "Tippen zum Bearbeiten · Wischen zum Löschen"
         case .french: return "Touchez pour modifier · Balayez pour supprimer"
+        case .spanish: return "Toca para editar · Desliza para eliminar"
+        case .italian: return "Tocca per modificare · Scorri per eliminare"
+        case .portuguese: return "Toque para editar · Deslize para excluir"
+        case .chineseTraditional: return "點一下以編輯 · 滑動以刪除"
         }
     }
 
@@ -513,6 +675,10 @@ enum Strings {
         case .chinese: return "即将到来"
         case .german: return "Anstehend"
         case .french: return "À venir"
+        case .spanish: return "Próximos"
+        case .italian: return "In arrivo"
+        case .portuguese: return "Próximos"
+        case .chineseTraditional: return "即將到來"
         }
     }
 
@@ -524,6 +690,10 @@ enum Strings {
         case .chinese: return "过去"
         case .german: return "Vergangen"
         case .french: return "Passés"
+        case .spanish: return "Pasados"
+        case .italian: return "Passati"
+        case .portuguese: return "Anteriores"
+        case .chineseTraditional: return "已過去"
         }
     }
 
@@ -535,6 +705,10 @@ enum Strings {
         case .chinese: return "今天"
         case .german: return "Heute"
         case .french: return "Aujourd’hui"
+        case .spanish: return "Hoy"
+        case .italian: return "Oggi"
+        case .portuguese: return "Hoje"
+        case .chineseTraditional: return "今天"
         }
     }
 
@@ -546,6 +720,10 @@ enum Strings {
         case .chinese: return "上个月"
         case .german: return "Vorheriger Monat"
         case .french: return "Mois précédent"
+        case .spanish: return "Mes anterior"
+        case .italian: return "Mese precedente"
+        case .portuguese: return "Mês anterior"
+        case .chineseTraditional: return "上個月"
         }
     }
 
@@ -557,6 +735,10 @@ enum Strings {
         case .chinese: return "上一年"
         case .german: return "Vorheriges Jahr"
         case .french: return "Année précédente"
+        case .spanish: return "Año anterior"
+        case .italian: return "Anno precedente"
+        case .portuguese: return "Ano anterior"
+        case .chineseTraditional: return "前一年"
         }
     }
 
@@ -568,6 +750,10 @@ enum Strings {
         case .chinese: return "下一年"
         case .german: return "Nächstes Jahr"
         case .french: return "Année suivante"
+        case .spanish: return "Año siguiente"
+        case .italian: return "Anno successivo"
+        case .portuguese: return "Próximo ano"
+        case .chineseTraditional: return "下一年"
         }
     }
 
@@ -580,6 +766,10 @@ enum Strings {
         case .chinese: return "适合此假期的旅行推荐"
         case .german: return "Reisen, die zu diesem Urlaub passen"
         case .french: return "Voyages adaptés à ce congé"
+        case .spanish: return "Viajes que encajan con estas vacaciones"
+        case .italian: return "Viaggi adatti a queste ferie"
+        case .portuguese: return "Viagens que combinam com estas férias"
+        case .chineseTraditional: return "適合這次休假的旅遊推薦"
         }
     }
 
@@ -591,6 +781,10 @@ enum Strings {
         case .chinese: return "根据时长、季节和出发国精选"
         case .german: return "Nach Dauer, Jahreszeit und Abflugland ausgewählt"
         case .french: return "Sélection selon la durée, la saison et le pays de départ"
+        case .spanish: return "Selección según duración, temporada y país de salida"
+        case .italian: return "Selezione in base a durata, stagione e paese di partenza"
+        case .portuguese: return "Seleção por duração, estação e país de origem"
+        case .chineseTraditional: return "依天數、季節與出發國家精選"
         }
     }
 
@@ -602,6 +796,10 @@ enum Strings {
         case .chinese: return "针对这些日期的实时机票和住宿"
         case .german: return "Live-Flüge & Unterkünfte für diese Tage"
         case .french: return "Vols et hébergements en direct pour ces dates"
+        case .spanish: return "Vuelos y alojamientos en tiempo real para estas fechas"
+        case .italian: return "Voli e alloggi in tempo reale per queste date"
+        case .portuguese: return "Voos e hospedagens em tempo real para estas datas"
+        case .chineseTraditional: return "這段日期的即時機票與住宿"
         }
     }
 
@@ -613,6 +811,10 @@ enum Strings {
         case .chinese: return "正在加载推荐…"
         case .german: return "Empfehlungen werden geladen…"
         case .french: return "Chargement des recommandations…"
+        case .spanish: return "Cargando recomendaciones…"
+        case .italian: return "Caricamento dei suggerimenti…"
+        case .portuguese: return "Carregando sugestões…"
+        case .chineseTraditional: return "正在載入推薦…"
         }
     }
 
@@ -625,6 +827,10 @@ enum Strings {
         case .chinese: return "最佳年度规划"
         case .german: return "Optimaler Jahresplaner"
         case .french: return "Planificateur annuel optimal"
+        case .spanish: return "Planificador anual óptimo"
+        case .italian: return "Pianificatore annuale ottimale"
+        case .portuguese: return "Planejador anual ideal"
+        case .chineseTraditional: return "最佳年度休假規劃"
         }
     }
 
@@ -637,6 +843,10 @@ enum Strings {
         case .chinese: return "全年最佳计划"
         case .german: return "Optimaler Urlaubsplan fürs Jahr"
         case .french: return "Plan de congés optimal pour l’année"
+        case .spanish: return "Plan de vacaciones óptimo del año"
+        case .italian: return "Piano ferie ottimale dell’anno"
+        case .portuguese: return "Plano de férias ideal do ano"
+        case .chineseTraditional: return "年度最佳休假計畫"
         }
     }
 
@@ -648,6 +858,10 @@ enum Strings {
         case .chinese: return "分析公共假日和周末，自动计算最长假期组合"
         case .german: return "Berechnet aus Feiertagen und Wochenenden die längsten Auszeiten"
         case .french: return "Calcule les plus longues périodes de repos à partir des jours fériés et week-ends"
+        case .spanish: return "Calcula las combinaciones de días libres más largas a partir de festivos y fines de semana"
+        case .italian: return "Calcola le combinazioni di giorni liberi più lunghe da festività e weekend"
+        case .portuguese: return "Calcula as combinações de folga mais longas a partir de feriados e fins de semana"
+        case .chineseTraditional: return "分析國定假日與週末，自動算出最長的連假組合"
         }
     }
 
@@ -659,6 +873,10 @@ enum Strings {
         case .chinese: return "用\(leaveUsed)天年假休息\(totalDays)天（\(breaks)次假期）"
         case .german: return "\(totalDays) freie Tage mit \(leaveUsed) Urlaubstagen (\(breaks) Auszeiten)"
         case .french: return "\(totalDays) jours de repos avec \(leaveUsed) congés (\(breaks) pauses)"
+        case .spanish: return "\(totalDays) días libres con \(leaveUsed == 1 ? "1 día" : "\(leaveUsed) días") de vacaciones (\(breaks == 1 ? "1 puente" : "\(breaks) puentes"))"
+        case .italian: return "\(totalDays) giorni liberi con \(leaveUsed == 1 ? "1 giorno" : "\(leaveUsed) giorni") di ferie (\(breaks == 1 ? "1 ponte" : "\(breaks) ponti"))"
+        case .portuguese: return "\(totalDays) dias de folga com \(leaveUsed == 1 ? "1 dia" : "\(leaveUsed) dias") de férias (\(breaks == 1 ? "1 feriadão" : "\(breaks) feriadões"))"
+        case .chineseTraditional: return "用\(leaveUsed)天特休休息\(totalDays)天（\(breaks)次連假）"
         }
     }
 
@@ -671,6 +889,10 @@ enum Strings {
         case .chinese: return "天假期"
         case .german: return "freie Tage"
         case .french: return "jours de repos"
+        case .spanish: return "días libres"
+        case .italian: return "giorni liberi"
+        case .portuguese: return "dias de folga"
+        case .chineseTraditional: return "天休假"
         }
     }
 
@@ -683,6 +905,10 @@ enum Strings {
         case .chinese: return "年假\(leaveUsed)天·\(breaks)次"
         case .german: return "\(leaveUsed) Urlaubstage · \(breaks) Auszeiten"
         case .french: return "\(leaveUsed) congés · \(breaks) pauses"
+        case .spanish: return "\(leaveUsed == 1 ? "1 día" : "\(leaveUsed) días") de vacaciones · \(breaks == 1 ? "1 puente" : "\(breaks) puentes")"
+        case .italian: return "\(leaveUsed == 1 ? "1 giorno" : "\(leaveUsed) giorni") di ferie · \(breaks == 1 ? "1 ponte" : "\(breaks) ponti")"
+        case .portuguese: return "\(leaveUsed == 1 ? "1 dia" : "\(leaveUsed) dias") de férias · \(breaks == 1 ? "1 feriadão" : "\(breaks) feriadões")"
+        case .chineseTraditional: return "特休\(leaveUsed)天·\(breaks)次連假"
         }
     }
 
@@ -694,6 +920,10 @@ enum Strings {
         case .chinese: return "双击展开"
         case .german: return "Doppeltippen zum Erweitern"
         case .french: return "Touchez deux fois pour développer"
+        case .spanish: return "Toca dos veces para expandir"
+        case .italian: return "Tocca due volte per espandere"
+        case .portuguese: return "Toque duas vezes para expandir"
+        case .chineseTraditional: return "點兩下以展開"
         }
     }
 
@@ -705,6 +935,10 @@ enum Strings {
         case .chinese: return "双击折叠"
         case .german: return "Doppeltippen zum Einklappen"
         case .french: return "Touchez deux fois pour réduire"
+        case .spanish: return "Toca dos veces para contraer"
+        case .italian: return "Tocca due volte per comprimere"
+        case .portuguese: return "Toque duas vezes para recolher"
+        case .chineseTraditional: return "點兩下以收合"
         }
     }
 
@@ -716,6 +950,10 @@ enum Strings {
         case .chinese: return "添加更多年假可获得更长假期"
         case .german: return "Trage mehr Urlaub ein, um längere Auszeiten zu ermöglichen"
         case .french: return "Ajoutez des congés pour débloquer de plus longues pauses"
+        case .spanish: return "Añade más días de vacaciones para conseguir puentes más largos"
+        case .italian: return "Aggiungi altri giorni di ferie per ottenere ponti più lunghi"
+        case .portuguese: return "Adicione mais dias de férias para ter feriadões mais longos"
+        case .chineseTraditional: return "新增更多特休，就能排出更長的連假"
         }
     }
 
@@ -727,6 +965,10 @@ enum Strings {
         case .chinese: return "一键规划全年假期"
         case .german: return "Plane dein Jahr mit einem Tipp"
         case .french: return "Planifiez votre année en un geste"
+        case .spanish: return "Planifica tu año con un toque"
+        case .italian: return "Pianifica il tuo anno con un tocco"
+        case .portuguese: return "Planeje seu ano com um toque"
+        case .chineseTraditional: return "一鍵規劃全年休假"
         }
     }
 
@@ -738,6 +980,10 @@ enum Strings {
         case .chinese: return "将剩余年假最佳分配在所有公假周围,获取最长假期"
         case .german: return "Verteile deine restlichen Urlaubstage optimal rund um alle Feiertage, für die längstmöglichen Auszeiten"
         case .french: return "Répartissez au mieux vos congés restants autour de tous les jours fériés pour des pauses les plus longues possible"
+        case .spanish: return "Reparte tus vacaciones restantes alrededor de todos los festivos para lograr los puentes más largos posibles"
+        case .italian: return "Distribuisci al meglio le ferie rimaste attorno a tutte le festività per ponti il più lunghi possibile"
+        case .portuguese: return "Distribua suas férias restantes em torno de todos os feriados para ter os feriadões mais longos possíveis"
+        case .chineseTraditional: return "將剩餘特休最佳安排在所有國定假日前後，找出最長的連假組合"
         }
     }
 
@@ -749,6 +995,10 @@ enum Strings {
         case .chinese: return "升级 Pro 查看最佳计划"
         case .german: return "Optimalen Plan mit Pro freischalten"
         case .french: return "Débloquer le plan optimal avec Pro"
+        case .spanish: return "Desbloquea el plan óptimo con Pro"
+        case .italian: return "Sblocca il piano ottimale con Pro"
+        case .portuguese: return "Desbloqueie o plano ideal com o Pro"
+        case .chineseTraditional: return "升級 Pro 查看最佳方案"
         }
     }
 
@@ -760,6 +1010,10 @@ enum Strings {
         case .chinese: return "全部添加到日历"
         case .german: return "Alle zum Kalender hinzufügen"
         case .french: return "Tout ajouter au calendrier"
+        case .spanish: return "Añadir todo al calendario"
+        case .italian: return "Aggiungi tutto al calendario"
+        case .portuguese: return "Adicionar tudo ao calendário"
+        case .chineseTraditional: return "全部加入行事曆"
         }
     }
 
@@ -771,6 +1025,10 @@ enum Strings {
         case .chinese: return "\(leaveUsed)天年假·\(totalDays)天假期"
         case .german: return "\(leaveUsed) Urlaubstage · \(totalDays) Tage frei"
         case .french: return "\(leaveUsed) congés · \(totalDays) jours de repos"
+        case .spanish: return "\(leaveUsed == 1 ? "1 día" : "\(leaveUsed) días") de vacaciones · \(totalDays) días libres"
+        case .italian: return "\(leaveUsed == 1 ? "1 giorno" : "\(leaveUsed) giorni") di ferie · \(totalDays) giorni liberi"
+        case .portuguese: return "\(leaveUsed == 1 ? "1 dia" : "\(leaveUsed) dias") de férias · \(totalDays) dias de folga"
+        case .chineseTraditional: return "特休\(leaveUsed)天·\(totalDays)天連假"
         }
     }
 
@@ -782,6 +1040,10 @@ enum Strings {
         case .chinese: return "下个月"
         case .german: return "Nächster Monat"
         case .french: return "Mois suivant"
+        case .spanish: return "Mes siguiente"
+        case .italian: return "Mese successivo"
+        case .portuguese: return "Próximo mês"
+        case .chineseTraditional: return "下個月"
         }
     }
 
@@ -793,6 +1055,10 @@ enum Strings {
         case .chinese: return ["日", "一", "二", "三", "四", "五", "六"]
         case .german: return ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
         case .french: return ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"]
+        case .spanish: return ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"]
+        case .italian: return ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"]
+        case .portuguese: return ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+        case .chineseTraditional: return ["日", "一", "二", "三", "四", "五", "六"]
         }
     }
 
@@ -813,6 +1079,19 @@ enum Strings {
             let monthNames = ["janv.", "févr.", "mars", "avr.", "mai", "juin",
                               "juil.", "août", "sept.", "oct.", "nov.", "déc."]
             return "\(monthNames[month - 1]) \(year)"
+        case .spanish:
+            let monthNames = ["ene", "feb", "mar", "abr", "may", "jun",
+                              "jul", "ago", "sept", "oct", "nov", "dic"]
+            return "\(monthNames[month - 1]) \(year)"
+        case .italian:
+            let monthNames = ["gen", "feb", "mar", "apr", "mag", "giu",
+                              "lug", "ago", "set", "ott", "nov", "dic"]
+            return "\(monthNames[month - 1]) \(year)"
+        case .portuguese:
+            let monthNames = ["jan", "fev", "mar", "abr", "mai", "jun",
+                              "jul", "ago", "set", "out", "nov", "dez"]
+            return "\(monthNames[month - 1]) \(year)"
+        case .chineseTraditional: return "\(year)年\(month)月"
         }
     }
 
@@ -833,6 +1112,19 @@ enum Strings {
             let names = ["janv.", "févr.", "mars", "avr.", "mai", "juin",
                          "juil.", "août", "sept.", "oct.", "nov.", "déc."]
             return names[month - 1]
+        case .spanish:
+            let names = ["ene", "feb", "mar", "abr", "may", "jun",
+                         "jul", "ago", "sept", "oct", "nov", "dic"]
+            return names[month - 1]
+        case .italian:
+            let names = ["gen", "feb", "mar", "apr", "mag", "giu",
+                         "lug", "ago", "set", "ott", "nov", "dic"]
+            return names[month - 1]
+        case .portuguese:
+            let names = ["jan", "fev", "mar", "abr", "mai", "jun",
+                         "jul", "ago", "set", "out", "nov", "dez"]
+            return names[month - 1]
+        case .chineseTraditional: return "\(month)月"
         }
     }
 
@@ -844,6 +1136,10 @@ enum Strings {
         case .chinese: return "\(days)天"
         case .german: return "\(days) T"
         case .french: return "\(days) j"
+        case .spanish: return "\(days) d"
+        case .italian: return "\(days) g"
+        case .portuguese: return "\(days) d"
+        case .chineseTraditional: return "\(days)天"
         }
     }
 
@@ -855,6 +1151,10 @@ enum Strings {
         case .chinese: return "天"
         case .german: return " Tage"
         case .french: return " jours"
+        case .spanish: return " días"
+        case .italian: return " giorni"
+        case .portuguese: return " dias"
+        case .chineseTraditional: return "天"
         }
     }
 
@@ -869,6 +1169,10 @@ enum Strings {
         case .chinese: return "\(text)天"
         case .german: return value == 1 ? "1 Tag" : "\(text) Tage"
         case .french: return value == 1 ? "1 jour" : "\(text) jours"
+        case .spanish: return value == 1 ? "1 día" : "\(text) días"
+        case .italian: return value == 1 ? "1 giorno" : "\(text) giorni"
+        case .portuguese: return value == 1 ? "1 dia" : "\(text) dias"
+        case .chineseTraditional: return "\(text)天"
         }
     }
 
@@ -881,6 +1185,10 @@ enum Strings {
         case .chinese: return "休假推荐"
         case .german: return "Urlaubsempfehlungen"
         case .french: return "Recommandations de congés"
+        case .spanish: return "Recomendaciones de vacaciones"
+        case .italian: return "Suggerimenti per le ferie"
+        case .portuguese: return "Sugestões de férias"
+        case .chineseTraditional: return "休假推薦"
         }
     }
 
@@ -892,6 +1200,10 @@ enum Strings {
         case .chinese: return "\(year)年推荐"
         case .german: return "Empfehlungen \(year)"
         case .french: return "Recommandations \(year)"
+        case .spanish: return "Recomendaciones \(year)"
+        case .italian: return "Suggerimenti \(year)"
+        case .portuguese: return "Sugestões para \(year)"
+        case .chineseTraditional: return "\(year)年推薦"
         }
     }
 
@@ -903,6 +1215,10 @@ enum Strings {
         case .chinese: return "可用年假"
         case .german: return "Verfügbarer Urlaub"
         case .french: return "Congés disponibles"
+        case .spanish: return "Vacaciones disponibles"
+        case .italian: return "Ferie disponibili"
+        case .portuguese: return "Férias disponíveis"
+        case .chineseTraditional: return "可用特休"
         }
     }
 
@@ -914,6 +1230,10 @@ enum Strings {
         case .chinese: return "正在分析日程..."
         case .german: return "Plan wird analysiert..."
         case .french: return "Analyse du planning..."
+        case .spanish: return "Analizando la agenda..."
+        case .italian: return "Analisi dell’agenda..."
+        case .portuguese: return "Analisando a agenda..."
+        case .chineseTraditional: return "正在分析行程..."
         }
     }
 
@@ -925,6 +1245,10 @@ enum Strings {
         case .chinese: return "没有推荐日程"
         case .german: return "Keine Empfehlungen"
         case .french: return "Aucune recommandation"
+        case .spanish: return "No hay recomendaciones"
+        case .italian: return "Nessun suggerimento"
+        case .portuguese: return "Nenhuma sugestão"
+        case .chineseTraditional: return "沒有推薦行程"
         }
     }
 
@@ -936,6 +1260,10 @@ enum Strings {
         case .chinese: return "请检查偏好设置或\n确保有更多年假"
         case .german: return "Prüfe deine Einstellungen oder\nsichere dir mehr Urlaubstage"
         case .french: return "Vérifiez vos préférences ou\nobtenez plus de jours de congé"
+        case .spanish: return "Revisa tus preferencias o\nconsigue más días de vacaciones"
+        case .italian: return "Controlla le tue preferenze o\nottieni più giorni di ferie"
+        case .portuguese: return "Confira suas preferências ou\nconsiga mais dias de férias"
+        case .chineseTraditional: return "請檢查偏好設定，或\n爭取更多特休"
         }
     }
 
@@ -947,6 +1275,10 @@ enum Strings {
         case .chinese: return "日程预览"
         case .german: return "Vorschau des Plans"
         case .french: return "Aperçu du planning"
+        case .spanish: return "Vista previa de la agenda"
+        case .italian: return "Anteprima dell’agenda"
+        case .portuguese: return "Prévia da agenda"
+        case .chineseTraditional: return "行程預覽"
         }
     }
 
@@ -958,6 +1290,10 @@ enum Strings {
         case .chinese: return "\(days)天年假"
         case .german: return "\(days) Urlaubstg."
         case .french: return "\(days) j de congé"
+        case .spanish: return "\(days) d de vacaciones"
+        case .italian: return "\(days) g di ferie"
+        case .portuguese: return "\(days) d de férias"
+        case .chineseTraditional: return "\(days)天特休"
         }
     }
 
@@ -969,6 +1305,10 @@ enum Strings {
         case .chinese: return "\(days)天休息"
         case .german: return "\(days) Tage frei"
         case .french: return "\(days) j de repos"
+        case .spanish: return "\(days) d libres"
+        case .italian: return "\(days) g liberi"
+        case .portuguese: return "\(days) d de folga"
+        case .chineseTraditional: return "休息\(days)天"
         }
     }
 
@@ -980,6 +1320,10 @@ enum Strings {
         case .chinese: return "添加到日程"
         case .german: return "Zum Plan hinzufügen"
         case .french: return "Ajouter au planning"
+        case .spanish: return "Añadir a la agenda"
+        case .italian: return "Aggiungi all’agenda"
+        case .portuguese: return "Adicionar à agenda"
+        case .chineseTraditional: return "加入行程"
         }
     }
 
@@ -991,6 +1335,10 @@ enum Strings {
         case .chinese: return "已添加到日程"
         case .german: return "Zum Plan hinzugefügt"
         case .french: return "Ajouté au planning"
+        case .spanish: return "Añadido a la agenda"
+        case .italian: return "Aggiunto all’agenda"
+        case .portuguese: return "Adicionado à agenda"
+        case .chineseTraditional: return "已加入行程"
         }
     }
 
@@ -1003,6 +1351,10 @@ enum Strings {
         case .chinese: return "工作日"
         case .german: return "Werktag"
         case .french: return "Jour ouvré"
+        case .spanish: return "Laborable"
+        case .italian: return "Giorno lavorativo"
+        case .portuguese: return "Dia útil"
+        case .chineseTraditional: return "平日"
         }
     }
 
@@ -1015,6 +1367,10 @@ enum Strings {
         case .chinese: return "设置"
         case .german: return "Einstellungen"
         case .french: return "Réglages"
+        case .spanish: return "Ajustes"
+        case .italian: return "Impostazioni"
+        case .portuguese: return "Ajustes"
+        case .chineseTraditional: return "設定"
         }
     }
 
@@ -1026,6 +1382,10 @@ enum Strings {
         case .chinese: return "姓名"
         case .german: return "Name"
         case .french: return "Nom"
+        case .spanish: return "Nombre"
+        case .italian: return "Nome"
+        case .portuguese: return "Nome"
+        case .chineseTraditional: return "姓名"
         }
     }
 
@@ -1038,6 +1398,10 @@ enum Strings {
         case .chinese: return "编辑姓名"
         case .german: return "Name bearbeiten"
         case .french: return "Modifier le nom"
+        case .spanish: return "Editar nombre"
+        case .italian: return "Modifica nome"
+        case .portuguese: return "Editar nome"
+        case .chineseTraditional: return "編輯姓名"
         }
     }
 
@@ -1049,6 +1413,10 @@ enum Strings {
         case .chinese: return "注册日: \(dateStr)"
         case .german: return "Dabei seit: \(dateStr)"
         case .french: return "Inscrit le : \(dateStr)"
+        case .spanish: return "Miembro desde: \(dateStr)"
+        case .italian: return "Registrazione: \(dateStr)"
+        case .portuguese: return "Membro desde: \(dateStr)"
+        case .chineseTraditional: return "註冊日期：\(dateStr)"
         }
     }
 
@@ -1060,6 +1428,10 @@ enum Strings {
         case .chinese: return "国家和语言"
         case .german: return "Land & Sprache"
         case .french: return "Pays et langue"
+        case .spanish: return "País e idioma"
+        case .italian: return "Paese e lingua"
+        case .portuguese: return "País e idioma"
+        case .chineseTraditional: return "國家和語言"
         }
     }
 
@@ -1071,6 +1443,10 @@ enum Strings {
         case .chinese: return "国家"
         case .german: return "Land"
         case .french: return "Pays"
+        case .spanish: return "País"
+        case .italian: return "Paese"
+        case .portuguese: return "País"
+        case .chineseTraditional: return "國家"
         }
     }
 
@@ -1082,6 +1458,10 @@ enum Strings {
         case .chinese: return "语言"
         case .german: return "Sprache"
         case .french: return "Langue"
+        case .spanish: return "Idioma"
+        case .italian: return "Lingua"
+        case .portuguese: return "Idioma"
+        case .chineseTraditional: return "語言"
         }
     }
 
@@ -1093,6 +1473,10 @@ enum Strings {
         case .chinese: return "年假设置"
         case .german: return "Urlaubseinstellungen"
         case .french: return "Réglages des congés"
+        case .spanish: return "Ajustes de vacaciones"
+        case .italian: return "Impostazioni ferie"
+        case .portuguese: return "Ajustes de férias"
+        case .chineseTraditional: return "特休設定"
         }
     }
 
@@ -1104,6 +1488,10 @@ enum Strings {
         case .chinese: return "可用年假"
         case .german: return "Verfügbarer Urlaub"
         case .french: return "Congés disponibles"
+        case .spanish: return "Vacaciones disponibles"
+        case .italian: return "Ferie disponibili"
+        case .portuguese: return "Férias disponíveis"
+        case .chineseTraditional: return "可用特休"
         }
     }
 
@@ -1115,6 +1503,10 @@ enum Strings {
         case .chinese: return "基本 \(base)天 + 奖励 \(bonus)天"
         case .german: return "Basis \(base) T. + Bonus \(bonus) T."
         case .french: return "Base \(base) j + bonus \(bonus) j"
+        case .spanish: return "Base \(base) d + extra \(bonus) d"
+        case .italian: return "Base \(base) g + bonus \(bonus) g"
+        case .portuguese: return "Base \(base) d + bônus \(bonus) d"
+        case .chineseTraditional: return "基本 \(base)天 + 獎勵 \(bonus)天"
         }
     }
 
@@ -1126,6 +1518,10 @@ enum Strings {
         case .chinese: return "总年假"
         case .german: return "Urlaub gesamt"
         case .french: return "Total des congés"
+        case .spanish: return "Vacaciones totales"
+        case .italian: return "Ferie totali"
+        case .portuguese: return "Total de férias"
+        case .chineseTraditional: return "特休總數"
         }
     }
 
@@ -1137,6 +1533,10 @@ enum Strings {
         case .chinese: return "已使用"
         case .german: return "Genommener Urlaub"
         case .french: return "Congés pris"
+        case .spanish: return "Vacaciones usadas"
+        case .italian: return "Ferie godute"
+        case .portuguese: return "Férias usadas"
+        case .chineseTraditional: return "已使用"
         }
     }
 
@@ -1148,6 +1548,10 @@ enum Strings {
         case .chinese: return "年假起始月"
         case .german: return "Startmonat des Urlaubsjahres"
         case .french: return "Mois de début d'année"
+        case .spanish: return "Mes de inicio del año"
+        case .italian: return "Mese di inizio anno"
+        case .portuguese: return "Mês de início do ano"
+        case .chineseTraditional: return "特休起算月"
         }
     }
 
@@ -1159,6 +1563,10 @@ enum Strings {
         case .chinese: return "奖励年假"
         case .german: return "Bonusurlaub"
         case .french: return "Congés bonus"
+        case .spanish: return "Días extra"
+        case .italian: return "Ferie bonus"
+        case .portuguese: return "Folgas bônus"
+        case .chineseTraditional: return "獎勵特休"
         }
     }
 
@@ -1170,6 +1578,10 @@ enum Strings {
         case .chinese: return "添加奖励年假"
         case .german: return "Bonusurlaub hinzufügen"
         case .french: return "Ajouter des congés bonus"
+        case .spanish: return "Añadir días extra"
+        case .italian: return "Aggiungi ferie bonus"
+        case .portuguese: return "Adicionar folga bônus"
+        case .chineseTraditional: return "新增獎勵特休"
         }
     }
 
@@ -1181,6 +1593,10 @@ enum Strings {
         case .chinese: return "管理补休、奖励假等额外年假。"
         case .german: return "Verwalte zusätzlichen Urlaub, z. B. Freizeitausgleich oder Prämien."
         case .french: return "Gérez les congés supplémentaires : récupérations, récompenses, etc."
+        case .spanish: return "Gestiona los días extra que recibes aparte: días compensatorios, premios, etc."
+        case .italian: return "Gestisci le ferie bonus ricevute a parte: recuperi, premi, ecc."
+        case .portuguese: return "Gerencie as folgas bônus, como folgas compensatórias e prêmios."
+        case .chineseTraditional: return "以獎勵特休管理補休、獎勵假等額外取得的假。"
         }
     }
 
@@ -1192,6 +1608,10 @@ enum Strings {
         case .chinese: return "休假风格"
         case .german: return "Urlaubsstil"
         case .french: return "Style de vacances"
+        case .spanish: return "Estilo de vacaciones"
+        case .italian: return "Stile di ferie"
+        case .portuguese: return "Estilo de férias"
+        case .chineseTraditional: return "休假風格"
         }
     }
 
@@ -1203,6 +1623,10 @@ enum Strings {
         case .chinese: return "偏好设置"
         case .german: return "Vorlieben"
         case .french: return "Préférences"
+        case .spanish: return "Preferencias"
+        case .italian: return "Preferenze"
+        case .portuguese: return "Preferências"
+        case .chineseTraditional: return "偏好設定"
         }
     }
 
@@ -1214,6 +1638,10 @@ enum Strings {
         case .chinese: return "偏好时长"
         case .german: return "Dauer"
         case .french: return "Durée"
+        case .spanish: return "Duración"
+        case .italian: return "Durata"
+        case .portuguese: return "Duração"
+        case .chineseTraditional: return "偏好天數"
         }
     }
 
@@ -1225,6 +1653,10 @@ enum Strings {
         case .chinese: return "偏好季节"
         case .german: return "Jahreszeit"
         case .french: return "Saison"
+        case .spanish: return "Estación"
+        case .italian: return "Stagione"
+        case .portuguese: return "Estação"
+        case .chineseTraditional: return "偏好季節"
         }
     }
 
@@ -1236,6 +1668,10 @@ enum Strings {
         case .chinese: return "偏好活动"
         case .german: return "Aktivität"
         case .french: return "Activité"
+        case .spanish: return "Actividad"
+        case .italian: return "Attività"
+        case .portuguese: return "Atividade"
+        case .chineseTraditional: return "偏好活動"
         }
     }
 
@@ -1247,6 +1683,10 @@ enum Strings {
         case .chinese: return "使用统计"
         case .german: return "Nutzungsstatistik"
         case .french: return "Statistiques d'utilisation"
+        case .spanish: return "Estadísticas de uso"
+        case .italian: return "Statistiche di utilizzo"
+        case .portuguese: return "Estatísticas de uso"
+        case .chineseTraditional: return "使用統計"
         }
     }
 
@@ -1258,6 +1698,10 @@ enum Strings {
         case .chinese: return "已完成"
         case .german: return "Genommen"
         case .french: return "Pris"
+        case .spanish: return "Disfrutadas"
+        case .italian: return "Godute"
+        case .portuguese: return "Usadas"
+        case .chineseTraditional: return "已使用"
         }
     }
 
@@ -1269,6 +1713,10 @@ enum Strings {
         case .chinese: return "计划中的假期"
         case .german: return "Geplanter Urlaub"
         case .french: return "Congés prévus"
+        case .spanish: return "Vacaciones previstas"
+        case .italian: return "Ferie programmate"
+        case .portuguese: return "Férias planejadas"
+        case .chineseTraditional: return "預定的休假"
         }
     }
 
@@ -1280,6 +1728,10 @@ enum Strings {
         case .chinese: return "使用率"
         case .german: return "Nutzungsquote"
         case .french: return "Taux d'utilisation"
+        case .spanish: return "Tasa de uso"
+        case .italian: return "Tasso di utilizzo"
+        case .portuguese: return "Taxa de uso"
+        case .chineseTraditional: return "特休使用率"
         }
     }
 
@@ -1291,6 +1743,10 @@ enum Strings {
         case .chinese: return "数据管理"
         case .german: return "Datenverwaltung"
         case .french: return "Gestion des données"
+        case .spanish: return "Gestión de datos"
+        case .italian: return "Gestione dati"
+        case .portuguese: return "Gerenciamento de dados"
+        case .chineseTraditional: return "資料管理"
         }
     }
 
@@ -1302,6 +1758,10 @@ enum Strings {
         case .chinese: return "备份到iCloud"
         case .german: return "In iCloud sichern"
         case .french: return "Sauvegarder sur iCloud"
+        case .spanish: return "Copia de seguridad en iCloud"
+        case .italian: return "Backup su iCloud"
+        case .portuguese: return "Backup no iCloud"
+        case .chineseTraditional: return "備份到 iCloud"
         }
     }
 
@@ -1313,6 +1773,10 @@ enum Strings {
         case .chinese: return "从iCloud恢复"
         case .german: return "Aus iCloud wiederherstellen"
         case .french: return "Restaurer depuis iCloud"
+        case .spanish: return "Restaurar desde iCloud"
+        case .italian: return "Ripristina da iCloud"
+        case .portuguese: return "Restaurar do iCloud"
+        case .chineseTraditional: return "從 iCloud 還原"
         }
     }
 
@@ -1326,6 +1790,10 @@ enum Strings {
         case .chinese: return "用照片登记休假"
         case .german: return "Urlaub per Foto eintragen"
         case .french: return "Ajouter des congés par photo"
+        case .spanish: return "Añadir vacaciones con una foto"
+        case .italian: return "Aggiungi ferie da una foto"
+        case .portuguese: return "Adicionar férias por foto"
+        case .chineseTraditional: return "用照片登記休假"
         }
     }
 
@@ -1337,6 +1805,10 @@ enum Strings {
         case .chinese: return "拍摄公司系统的休假申请记录，即可自动识别并登记。"
         case .german: return "Fotografiere die Urlaubsübersicht deiner Firma, und sie wird automatisch erkannt und eingetragen."
         case .french: return "Photographiez l'historique de congés de votre entreprise : il est reconnu et ajouté automatiquement."
+        case .spanish: return "Haz una foto del historial de solicitudes de vacaciones de tu empresa y se reconocerá y añadirá automáticamente."
+        case .italian: return "Fotografa lo storico delle richieste di ferie della tua azienda: verrà riconosciuto e aggiunto automaticamente."
+        case .portuguese: return "Fotografe o histórico de solicitações de férias da sua empresa e ele será reconhecido e adicionado automaticamente."
+        case .chineseTraditional: return "拍下公司系統的休假申請紀錄，就會自動辨識並登記。"
         }
     }
 
@@ -1348,6 +1820,10 @@ enum Strings {
         case .chinese: return "与家人共享日程"
         case .german: return "Teile deinen Plan mit der Familie"
         case .french: return "Partagez votre planning en famille"
+        case .spanish: return "Comparte tu agenda con tu familia"
+        case .italian: return "Condividi l’agenda con la famiglia"
+        case .portuguese: return "Compartilhe sua agenda com a família"
+        case .chineseTraditional: return "與家人分享行程"
         }
     }
 
@@ -1359,6 +1835,10 @@ enum Strings {
         case .chinese: return "在设置 → 日程共享中发送邀请链接，即可在\"家人\"标签页中查看彼此的休假日程。"
         case .german: return "Sende unter Einstellungen → Plan teilen eine Einladung, um euren Urlaub im Tab „Familie“ gemeinsam zu sehen."
         case .french: return "Envoyez une invitation via Réglages → Partager le planning pour voir vos congés respectifs dans l'onglet Famille."
+        case .spanish: return "Envía una invitación desde Ajustes → Compartir agenda para ver las vacaciones de cada uno en la pestaña Familia."
+        case .italian: return "Invia un invito da Impostazioni → Condivisione agenda per vedere le ferie di tutti nella scheda Famiglia."
+        case .portuguese: return "Envie um convite em Ajustes → Compartilhar agenda para ver as férias de todos na aba Família."
+        case .chineseTraditional: return "在「設定 → 行程共享」傳送邀請連結，就能在「家人」分頁一起查看彼此的休假行程。"
         }
     }
 
@@ -1370,6 +1850,10 @@ enum Strings {
         case .chinese: return "时光机为您保驾护航"
         case .german: return "Die Zeitmaschine sichert dich ab"
         case .french: return "La machine à remonter le temps veille"
+        case .spanish: return "La máquina del tiempo te protege"
+        case .italian: return "La macchina del tempo ti protegge"
+        case .portuguese: return "A máquina do tempo protege você"
+        case .chineseTraditional: return "時光機幫你守護資料"
         }
     }
 
@@ -1381,6 +1865,10 @@ enum Strings {
         case .chinese: return "每当数据变化时都会自动保存快照，随时可以恢复到任意时间点。"
         case .german: return "Bei jeder Änderung wird automatisch ein Snapshot gespeichert, sodass du jederzeit zurückgehen kannst."
         case .french: return "Un instantané est enregistré à chaque modification de vos données, pour pouvoir toujours revenir en arrière."
+        case .spanish: return "Cada vez que cambian tus datos se guarda una instantánea automáticamente, así siempre puedes volver atrás."
+        case .italian: return "A ogni modifica dei dati viene salvata automaticamente un’istantanea, così puoi sempre tornare indietro."
+        case .portuguese: return "Uma cópia é salva automaticamente sempre que seus dados mudam, para você poder voltar atrás quando quiser."
+        case .chineseTraditional: return "每次資料變更都會自動儲存快照，隨時都能回到任一時間點。"
         }
     }
 
@@ -1392,6 +1880,10 @@ enum Strings {
         case .chinese: return "点按日期即可登记"
         case .german: return "Datum antippen zum Eintragen"
         case .french: return "Touchez une date pour l'ajouter"
+        case .spanish: return "Toca una fecha para añadir"
+        case .italian: return "Tocca una data per aggiungere"
+        case .portuguese: return "Toque em uma data para adicionar"
+        case .chineseTraditional: return "點一下日期即可登記"
         }
     }
 
@@ -1403,6 +1895,10 @@ enum Strings {
         case .chinese: return "在日历上选择日期，即可立即为该日期登记休假。"
         case .german: return "Wähle ein Datum im Kalender, um sofort Urlaub für diesen Tag einzutragen."
         case .french: return "Sélectionnez une date dans le calendrier pour y ajouter un congé instantanément."
+        case .spanish: return "Selecciona cualquier fecha del calendario para añadir vacaciones ese día al instante."
+        case .italian: return "Seleziona una data nel calendario per aggiungere subito le ferie in quel giorno."
+        case .portuguese: return "Selecione uma data no calendário para adicionar férias nesse dia na hora."
+        case .chineseTraditional: return "在行事曆上選擇日期，就能立即登記當天的休假。"
         }
     }
 
@@ -1416,6 +1912,10 @@ enum Strings {
         case .chinese: return "从照片导入"
         case .german: return "Aus Foto importieren"
         case .french: return "Importer depuis une photo"
+        case .spanish: return "Importar desde una foto"
+        case .italian: return "Importa da foto"
+        case .portuguese: return "Importar de foto"
+        case .chineseTraditional: return "從照片匯入"
         }
     }
 
@@ -1427,6 +1927,10 @@ enum Strings {
         case .chinese: return "拍摄休假申请记录页面即可自动识别"
         case .german: return "Fotografiere deine Urlaubsübersicht für den automatischen Import"
         case .french: return "Photographiez votre historique de congés pour l'importer automatiquement"
+        case .spanish: return "Haz una foto de tu historial de vacaciones para importarlo automáticamente"
+        case .italian: return "Fotografa lo storico delle ferie per importarlo automaticamente"
+        case .portuguese: return "Fotografe seu histórico de férias para importar automaticamente"
+        case .chineseTraditional: return "拍下休假申請紀錄畫面即可自動辨識"
         }
     }
 
@@ -1438,6 +1942,10 @@ enum Strings {
         case .chinese: return "拍摄或选择公司系统的休假申请记录截图。\n将自动识别日期、类型和扣除天数。"
         case .german: return "Fotografiere die Urlaubsübersicht deiner Firma oder wähle einen Screenshot.\nDaten, Arten und abgezogene Tage werden automatisch erkannt."
         case .french: return "Prenez en photo l'historique de congés de votre entreprise ou choisissez une capture d'écran.\nLes dates, types et jours déduits sont reconnus automatiquement."
+        case .spanish: return "Haz una foto o elige una captura del historial de solicitudes de vacaciones de tu empresa.\nSe reconocen automáticamente las fechas, los tipos y los días descontados."
+        case .italian: return "Scatta una foto o scegli uno screenshot dello storico delle richieste di ferie della tua azienda.\nDate, tipi e giorni scalati vengono riconosciuti automaticamente."
+        case .portuguese: return "Tire uma foto ou escolha uma captura de tela do histórico de solicitações de férias da sua empresa.\nDatas, tipos e dias descontados são reconhecidos automaticamente."
+        case .chineseTraditional: return "拍攝公司系統的休假申請紀錄畫面，或選擇螢幕截圖。\n會自動辨識日期、假別與扣除天數。"
         }
     }
 
@@ -1449,6 +1957,10 @@ enum Strings {
         case .chinese: return "用相机拍摄"
         case .german: return "Foto aufnehmen"
         case .french: return "Prendre une photo"
+        case .spanish: return "Hacer foto"
+        case .italian: return "Scatta foto"
+        case .portuguese: return "Tirar foto"
+        case .chineseTraditional: return "用相機拍攝"
         }
     }
 
@@ -1460,6 +1972,10 @@ enum Strings {
         case .chinese: return "从相册选择"
         case .german: return "Aus Mediathek wählen"
         case .french: return "Choisir dans la photothèque"
+        case .spanish: return "Elegir de la fototeca"
+        case .italian: return "Scegli dalla libreria"
+        case .portuguese: return "Escolher da fototeca"
+        case .chineseTraditional: return "從照片圖庫選擇"
         }
     }
 
@@ -1471,6 +1987,10 @@ enum Strings {
         case .chinese: return "选择其他照片"
         case .german: return "Anderes Foto wählen"
         case .french: return "Choisir une autre photo"
+        case .spanish: return "Elegir otra foto"
+        case .italian: return "Scegli un’altra foto"
+        case .portuguese: return "Escolher outra foto"
+        case .chineseTraditional: return "選擇其他照片"
         }
     }
 
@@ -1482,6 +2002,10 @@ enum Strings {
         case .chinese: return "正在识别照片中的休假记录..."
         case .german: return "Urlaubseinträge im Foto werden erkannt ..."
         case .french: return "Reconnaissance des congés sur la photo..."
+        case .spanish: return "Reconociendo las vacaciones de la foto..."
+        case .italian: return "Riconoscimento delle ferie nella foto..."
+        case .portuguese: return "Reconhecendo as férias na foto..."
+        case .chineseTraditional: return "正在辨識照片中的休假紀錄..."
         }
     }
 
@@ -1493,6 +2017,10 @@ enum Strings {
         case .chinese: return "未能在照片中找到休假记录。\n请重新拍摄，确保表格清晰可见。"
         case .german: return "Im Foto wurden keine Urlaubseinträge gefunden.\nBitte fotografiere es erneut, sodass die Tabelle gut lesbar ist."
         case .french: return "Aucun congé trouvé sur la photo.\nVeuillez la reprendre en veillant à ce que le tableau soit bien net."
+        case .spanish: return "No se encontraron vacaciones en la foto.\nVuelve a hacerla de modo que la tabla se vea con claridad."
+        case .italian: return "Nessun giorno di ferie trovato nella foto.\nRiscattala in modo che la tabella sia ben leggibile."
+        case .portuguese: return "Nenhum registro de férias encontrado na foto.\nTire outra foto com a tabela bem visível."
+        case .chineseTraditional: return "照片中找不到休假紀錄。\n請重新拍攝，讓表格清楚可見。"
         }
     }
 
@@ -1504,6 +2032,10 @@ enum Strings {
         case .chinese: return "识别出的\(count)条记录均已登记。"
         case .german: return "Alle \(count) erkannten Einträge sind bereits vorhanden."
         case .french: return "Les \(count) entrées reconnues sont déjà enregistrées."
+        case .spanish: return "Los \(count) registros reconocidos ya están añadidos."
+        case .italian: return "Tutte le \(count) voci riconosciute sono già registrate."
+        case .portuguese: return "Todos os \(count) registros reconhecidos já estão cadastrados."
+        case .chineseTraditional: return "辨識出的\(count)筆紀錄都已登記。"
         }
     }
 
@@ -1515,6 +2047,10 @@ enum Strings {
         case .chinese: return "已排除\(count)条已登记的记录。"
         case .german: return "\(count) bereits vorhandene Einträge wurden ausgelassen."
         case .french: return "\(count) entrées déjà enregistrées ont été exclues."
+        case .spanish: return "Se excluyeron \(count) registros ya añadidos."
+        case .italian: return "\(count) voci già registrate sono state escluse."
+        case .portuguese: return "\(count) registros já cadastrados foram excluídos."
+        case .chineseTraditional: return "已排除\(count)筆已登記的紀錄。"
         }
     }
 
@@ -1526,6 +2062,10 @@ enum Strings {
         case .chinese: return "无扣除天数的调休、育儿假等将在不扣减年假的情况下登记。"
         case .german: return "Einträge ohne Abzug (Freizeitausgleich, Kinderbetreuung usw.) werden ohne Abzug vom Jahresurlaub eingetragen."
         case .french: return "Les entrées sans déduction (récupération, garde d'enfant, etc.) sont ajoutées sans réduire vos congés annuels."
+        case .spanish: return "Los registros sin descuento (días compensatorios, cuidado de hijos, etc.) se añaden sin restar de tus vacaciones anuales."
+        case .italian: return "Le voci senza detrazione (recuperi, cura dei figli, ecc.) vengono aggiunte senza scalare le tue ferie annuali."
+        case .portuguese: return "Registros sem desconto (folga compensatória, cuidado com os filhos etc.) são adicionados sem reduzir suas férias."
+        case .chineseTraditional: return "沒有扣除天數的補休、育兒假等，會在不扣特休的情況下登記。"
         }
     }
 
@@ -1537,6 +2077,10 @@ enum Strings {
         case .chinese: return "不扣年假"
         case .german: return "Kein Abzug"
         case .french: return "Aucune déduction"
+        case .spanish: return "Sin descuento"
+        case .italian: return "Nessuna detrazione"
+        case .portuguese: return "Sem desconto"
+        case .chineseTraditional: return "不扣特休"
         }
     }
 
@@ -1548,6 +2092,10 @@ enum Strings {
         case .chinese: return "无法加载照片。"
         case .german: return "Das Foto konnte nicht geladen werden."
         case .french: return "Impossible de charger la photo."
+        case .spanish: return "No se pudo cargar la foto."
+        case .italian: return "Impossibile caricare la foto."
+        case .portuguese: return "Não foi possível carregar a foto."
+        case .chineseTraditional: return "無法載入照片。"
         }
     }
 
@@ -1561,6 +2109,10 @@ enum Strings {
         case .chinese: return "时光机"
         case .german: return "Zeitmaschine"
         case .french: return "Machine à remonter le temps"
+        case .spanish: return "Máquina del tiempo"
+        case .italian: return "Macchina del tempo"
+        case .portuguese: return "Máquina do tempo"
+        case .chineseTraditional: return "時光機"
         }
     }
 
@@ -1572,6 +2124,10 @@ enum Strings {
         case .chinese: return "每当数据发生变化时都会自动保存快照。选择一个时间点即可将数据恢复到当时的状态。"
         case .german: return "Bei jeder Änderung wird automatisch ein Snapshot gespeichert. Wähle einen Zeitpunkt, um deine Daten auf diesen Stand zurückzusetzen."
         case .french: return "Un instantané est enregistré à chaque modification de vos données. Choisissez un point dans le temps pour restaurer vos données à ce moment."
+        case .spanish: return "Cada vez que cambian tus datos se guarda una instantánea automáticamente. Elige un momento para restaurar tus datos tal como estaban entonces."
+        case .italian: return "A ogni modifica dei dati viene salvata automaticamente un’istantanea. Scegli un momento per riportare i tuoi dati a quello stato."
+        case .portuguese: return "Uma cópia é salva automaticamente sempre que seus dados mudam. Escolha um momento para restaurar seus dados como estavam naquela hora."
+        case .chineseTraditional: return "每次資料變更時都會自動儲存快照。選擇一個時間點，即可將資料還原到當時的狀態。"
         }
     }
 
@@ -1583,6 +2139,10 @@ enum Strings {
         case .chinese: return "立即创建快照"
         case .german: return "Jetzt Snapshot erstellen"
         case .french: return "Créer un instantané"
+        case .spanish: return "Crear instantánea ahora"
+        case .italian: return "Crea istantanea ora"
+        case .portuguese: return "Criar cópia agora"
+        case .chineseTraditional: return "立即建立快照"
         }
     }
 
@@ -1594,6 +2154,10 @@ enum Strings {
         case .chinese: return "已保存的时间点"
         case .german: return "Gespeicherte Zeitpunkte"
         case .french: return "Points enregistrés"
+        case .spanish: return "Puntos guardados"
+        case .italian: return "Punti salvati"
+        case .portuguese: return "Pontos salvos"
+        case .chineseTraditional: return "已儲存的時間點"
         }
     }
 
@@ -1605,6 +2169,10 @@ enum Strings {
         case .chinese: return "尚无已保存的快照"
         case .german: return "Noch keine Snapshots gespeichert"
         case .french: return "Aucun instantané enregistré"
+        case .spanish: return "Aún no hay instantáneas guardadas"
+        case .italian: return "Nessuna istantanea salvata"
+        case .portuguese: return "Nenhuma cópia salva ainda"
+        case .chineseTraditional: return "尚無已儲存的快照"
         }
     }
 
@@ -1616,6 +2184,10 @@ enum Strings {
         case .chinese: return "恢复到此时间点"
         case .german: return "Diesen Zeitpunkt wiederherstellen"
         case .french: return "Restaurer ce point"
+        case .spanish: return "Restaurar este punto"
+        case .italian: return "Ripristina questo punto"
+        case .portuguese: return "Restaurar este ponto"
+        case .chineseTraditional: return "還原到此時間點"
         }
     }
 
@@ -1627,6 +2199,10 @@ enum Strings {
         case .chinese: return "数据将恢复到 \(date)。恢复前会自动保存当前状态，因此您随时可以撤销。"
         case .german: return "Deine Daten werden auf den Stand vom \(date) zurückgesetzt. Der aktuelle Stand wird vorher automatisch gespeichert, sodass du jederzeit zurückkehren kannst."
         case .french: return "Vos données seront restaurées à l'état du \(date). L'état actuel est enregistré automatiquement avant la restauration, vous pouvez donc toujours revenir en arrière."
+        case .spanish: return "Tus datos volverán al estado del \(date). Antes de restaurar se guarda automáticamente el estado actual, así que siempre puedes volver atrás."
+        case .italian: return "I tuoi dati torneranno allo stato del \(date). Lo stato attuale viene salvato automaticamente prima del ripristino, quindi puoi sempre tornare indietro."
+        case .portuguese: return "Seus dados voltarão ao estado de \(date). O estado atual é salvo automaticamente antes da restauração, então você sempre pode voltar atrás."
+        case .chineseTraditional: return "資料將還原到 \(date) 的狀態。還原前會自動儲存目前的狀態，所以你隨時都能再還原回來。"
         }
     }
 
@@ -1638,6 +2214,10 @@ enum Strings {
         case .chinese: return "休假 \(leaves)条 · 奖励 \(bonuses)条"
         case .german: return "\(leaves) Urlaube · \(bonuses) Boni"
         case .french: return "\(leaves) congés · \(bonuses) bonus"
+        case .spanish: return "\(leaves) vacaciones · \(bonuses) extra"
+        case .italian: return "\(leaves) ferie · \(bonuses) bonus"
+        case .portuguese: return "\(leaves) férias · \(bonuses) bônus"
+        case .chineseTraditional: return "特休 \(leaves) 筆 · 獎勵 \(bonuses) 筆"
         }
     }
 
@@ -1649,6 +2229,10 @@ enum Strings {
         case .chinese: return "快照已保存。"
         case .german: return "Snapshot gespeichert."
         case .french: return "Instantané enregistré."
+        case .spanish: return "Instantánea guardada."
+        case .italian: return "Istantanea salvata."
+        case .portuguese: return "Cópia salva."
+        case .chineseTraditional: return "快照已儲存。"
         }
     }
 
@@ -1660,6 +2244,10 @@ enum Strings {
         case .chinese: return "快照保存失败。"
         case .german: return "Snapshot konnte nicht gespeichert werden."
         case .french: return "Échec de l'enregistrement de l'instantané."
+        case .spanish: return "No se pudo guardar la instantánea."
+        case .italian: return "Impossibile salvare l’istantanea."
+        case .portuguese: return "Não foi possível salvar a cópia."
+        case .chineseTraditional: return "快照儲存失敗。"
         }
     }
 
@@ -1671,6 +2259,10 @@ enum Strings {
         case .chinese: return "快照完整性校验失败。"
         case .german: return "Integritätsprüfung des Snapshots fehlgeschlagen."
         case .french: return "Échec de la vérification d'intégrité de l'instantané."
+        case .spanish: return "Falló la verificación de integridad de la instantánea."
+        case .italian: return "Verifica di integrità dell’istantanea non riuscita."
+        case .portuguese: return "Falha na verificação de integridade da cópia."
+        case .chineseTraditional: return "快照資料完整性驗證失敗。"
         }
     }
 
@@ -1682,6 +2274,10 @@ enum Strings {
         case .chinese: return "自动"
         case .german: return "Automatisch"
         case .french: return "Auto"
+        case .spanish: return "Auto"
+        case .italian: return "Auto"
+        case .portuguese: return "Auto"
+        case .chineseTraditional: return "自動"
         }
     }
 
@@ -1693,6 +2289,10 @@ enum Strings {
         case .chinese: return "应用切换"
         case .german: return "App-Wechsel"
         case .french: return "Changement d'app"
+        case .spanish: return "Cambio de app"
+        case .italian: return "Cambio app"
+        case .portuguese: return "Troca de app"
+        case .chineseTraditional: return "切換 App"
         }
     }
 
@@ -1704,6 +2304,10 @@ enum Strings {
         case .chinese: return "手动"
         case .german: return "Manuell"
         case .french: return "Manuel"
+        case .spanish: return "Manual"
+        case .italian: return "Manuale"
+        case .portuguese: return "Manual"
+        case .chineseTraditional: return "手動"
         }
     }
 
@@ -1715,6 +2319,10 @@ enum Strings {
         case .chinese: return "恢复前保存"
         case .german: return "Vor Wiederherstellung"
         case .french: return "Avant restauration"
+        case .spanish: return "Antes de restaurar"
+        case .italian: return "Prima del ripristino"
+        case .portuguese: return "Antes de restaurar"
+        case .chineseTraditional: return "還原前儲存"
         }
     }
 
@@ -1726,6 +2334,10 @@ enum Strings {
         case .chinese: return "重置数据"
         case .german: return "Urlaubsdaten zurücksetzen"
         case .french: return "Réinitialiser les congés"
+        case .spanish: return "Restablecer vacaciones"
+        case .italian: return "Azzera le ferie"
+        case .portuguese: return "Redefinir férias"
+        case .chineseTraditional: return "重設特休資料"
         }
     }
 
@@ -1737,6 +2349,10 @@ enum Strings {
         case .chinese: return "重置数据"
         case .german: return "Urlaubsdaten zurücksetzen"
         case .french: return "Réinitialiser les congés"
+        case .spanish: return "Restablecer vacaciones"
+        case .italian: return "Azzera le ferie"
+        case .portuguese: return "Redefinir férias"
+        case .chineseTraditional: return "重設特休資料"
         }
     }
 
@@ -1748,6 +2364,10 @@ enum Strings {
         case .chinese: return "所有休假记录将被删除，已使用年假将重置为0。此操作无法撤销。"
         case .german: return "Alle Urlaubseinträge werden gelöscht und der genommene Urlaub wird auf 0 gesetzt. Das lässt sich nicht rückgängig machen."
         case .french: return "Tous les congés seront supprimés et les congés pris remis à 0. Cette action est irréversible."
+        case .spanish: return "Se borrarán todos los registros de vacaciones y los días usados volverán a 0. Esta acción no se puede deshacer."
+        case .italian: return "Tutte le ferie registrate verranno eliminate e quelle usate torneranno a 0. L'operazione non si può annullare."
+        case .portuguese: return "Todos os registros de férias serão apagados e os dias usados voltarão a 0. Essa ação não pode ser desfeita."
+        case .chineseTraditional: return "所有特休紀錄都會刪除，已用特休將歸零。此動作無法復原。"
         }
     }
 
@@ -1759,6 +2379,10 @@ enum Strings {
         case .chinese: return "重置"
         case .german: return "Zurücksetzen"
         case .french: return "Réinitialiser"
+        case .spanish: return "Restablecer"
+        case .italian: return "Azzera"
+        case .portuguese: return "Redefinir"
+        case .chineseTraditional: return "重設"
         }
     }
 
@@ -1773,6 +2397,10 @@ enum Strings {
         case .chinese: return "Goldweek 使用方法"
         case .german: return "So funktioniert Goldweek"
         case .french: return "Utiliser Goldweek"
+        case .spanish: return "Cómo usar Goldweek"
+        case .italian: return "Come usare Goldweek"
+        case .portuguese: return "Como usar o Goldweek"
+        case .chineseTraditional: return "Goldweek 使用說明"
         }
     }
 
@@ -1784,6 +2412,10 @@ enum Strings {
         case .chinese: return "开始使用"
         case .german: return "Los geht's"
         case .french: return "Commencer"
+        case .spanish: return "Empezar"
+        case .italian: return "Inizia"
+        case .portuguese: return "Começar"
+        case .chineseTraditional: return "開始使用"
         }
     }
 
@@ -1795,6 +2427,10 @@ enum Strings {
         case .chinese: return "跳过"
         case .german: return "Überspringen"
         case .french: return "Passer"
+        case .spanish: return "Omitir"
+        case .italian: return "Salta"
+        case .portuguese: return "Pular"
+        case .chineseTraditional: return "略過"
         }
     }
 
@@ -1806,6 +2442,10 @@ enum Strings {
         case .chinese: return "登记休假"
         case .german: return "Urlaub eintragen"
         case .french: return "Ajouter un congé"
+        case .spanish: return "Añadir vacaciones"
+        case .italian: return "Aggiungere ferie"
+        case .portuguese: return "Adicionar férias"
+        case .chineseTraditional: return "這樣登記休假"
         }
     }
 
@@ -1817,6 +2457,10 @@ enum Strings {
         case .chinese: return "点击主页的 +，或在日历上选择日期。半天假只需选择时长。"
         case .german: return "Tippe auf der Startkarte auf + oder wähle ein Datum im Kalender. Für halbe Tage wählst du einfach die Länge."
         case .french: return "Touchez + sur la carte d'accueil ou choisissez une date dans le calendrier. Pour une demi-journée, choisissez simplement la durée."
+        case .spanish: return "Toca + en la tarjeta de inicio o elige una fecha en el calendario. Para medias jornadas, solo elige la duración."
+        case .italian: return "Tocca + nella scheda Home o scegli una data nel calendario. Per mezze giornate, scegli solo la durata."
+        case .portuguese: return "Toque em + no cartão inicial ou escolha uma data no calendário. Para meio período, é só escolher a duração."
+        case .chineseTraditional: return "點首頁的 + 按鈕，或在行事曆上點選日期即可登記。半天假只要選擇時數就好。"
         }
     }
 
@@ -1828,6 +2472,10 @@ enum Strings {
         case .chinese: return "一张照片就够了"
         case .german: return "Ein Foto genügt"
         case .french: return "Une photo suffit"
+        case .spanish: return "Con una foto basta"
+        case .italian: return "Basta una foto"
+        case .portuguese: return "Uma foto basta"
+        case .chineseTraditional: return "拍一張照就搞定"
         }
     }
 
@@ -1839,6 +2487,10 @@ enum Strings {
         case .chinese: return "拍下公司系统的休假记录，应用会自动读取日期与类型。"
         case .german: return "Fotografiere die Urlaubsübersicht deiner Firma, und Daten und Arten werden automatisch gelesen."
         case .french: return "Photographiez l'historique de congés de votre entreprise : les dates et types sont lus pour vous."
+        case .spanish: return "Haz una foto del historial de vacaciones de tu empresa y leemos las fechas y los tipos por ti."
+        case .italian: return "Fotografa lo storico ferie della tua azienda: date e tipi vengono letti per te."
+        case .portuguese: return "Tire uma foto do histórico de férias da sua empresa e as datas e tipos são lidos para você."
+        case .chineseTraditional: return "拍下公司系統的休假紀錄，就會自動讀取日期與假別並登記。"
         }
     }
 
@@ -1850,6 +2502,10 @@ enum Strings {
         case .chinese: return "用1天年假休几天"
         case .german: return "Mit einem Tag mehr frei"
         case .french: return "Un jour pour plus de repos"
+        case .spanish: return "Un día que rinde más"
+        case .italian: return "Un giorno che vale di più"
+        case .portuguese: return "Um dia que rende mais"
+        case .chineseTraditional: return "請 1 天特休能休幾天"
         }
     }
 
@@ -1861,6 +2517,10 @@ enum Strings {
         case .chinese: return "日历上的黄色标记是把年假接在节假日上的连休。点击即可直接登记。"
         case .german: return "Gelbe Markierungen im Kalender sind Auszeiten, bei denen Urlaub an Feiertage anschließt. Tippe darauf, um sie einzutragen."
         case .french: return "Les repères jaunes du calendrier sont des pauses créées en accolant des congés aux jours fériés. Touchez-en un pour l'ajouter."
+        case .spanish: return "Las marcas amarillas del calendario son puentes creados uniendo vacaciones a festivos. Toca uno para añadirlo."
+        case .italian: return "I segni gialli nel calendario sono ponti creati unendo le ferie alle festività. Toccane uno per aggiungerlo."
+        case .portuguese: return "As marcas amarelas no calendário são feriadões criados juntando férias aos feriados. Toque para adicionar."
+        case .chineseTraditional: return "行事曆上的黃色標示，是把特休接在國定假日旁組成的連假。點一下就能直接登記。"
         }
     }
 
@@ -1872,6 +2532,10 @@ enum Strings {
         case .chinese: return "补休单独管理"
         case .german: return "Bonusurlaub bleibt separat"
         case .french: return "Les congés bonus restent à part"
+        case .spanish: return "Los días extra, aparte"
+        case .italian: return "Le ferie bonus, a parte"
+        case .portuguese: return "Folgas bônus à parte"
+        case .chineseTraditional: return "獎勵特休另外管理"
         }
     }
 
@@ -1883,6 +2547,10 @@ enum Strings {
         case .chinese: return "登记为奖励假后不会占用年假，并会一并跟踪有效期。"
         case .german: return "Als Bonusurlaub eingetragen, geht er nie von deinen Urlaubstagen ab – Ablaufdaten werden mitverfolgt."
         case .french: return "Enregistrés comme congés bonus, ils ne réduisent jamais vos congés annuels, et les dates d'expiration sont suivies."
+        case .spanish: return "Si los registras como días extra, no descuentan de tus vacaciones anuales y controlamos su caducidad."
+        case .italian: return "Registrate come ferie bonus, non intaccano le ferie annuali e ne teniamo d'occhio la scadenza."
+        case .portuguese: return "Registradas como folga bônus, elas não descontam das suas férias anuais e o vencimento é acompanhado."
+        case .chineseTraditional: return "登記為獎勵特休就不會扣到特休，另外計算，也會幫你記住到期日。"
         }
     }
 
@@ -1894,6 +2562,10 @@ enum Strings {
         case .chinese: return "与家人对好行程"
         case .german: return "Pläne mit der Familie abstimmen"
         case .french: return "Se coordonner en famille"
+        case .spanish: return "Coordínate en familia"
+        case .italian: return "Organizzati in famiglia"
+        case .portuguese: return "Combine com a família"
+        case .chineseTraditional: return "和家人對好時間"
         }
     }
 
@@ -1905,6 +2577,10 @@ enum Strings {
         case .chinese: return "共享日程后，可在家庭标签中一览彼此的假期。"
         case .german: return "Teile deinen Plan und sieh im Tab „Familie“ den Urlaub der anderen auf einen Blick."
         case .french: return "Partagez votre planning et voyez les congés de chacun dans l'onglet Famille."
+        case .spanish: return "Comparte tu agenda para ver las vacaciones de todos en la pestaña Familia."
+        case .italian: return "Condividi la tua agenda per vedere le ferie di tutti nella scheda Famiglia."
+        case .portuguese: return "Compartilhe sua agenda para ver as férias de todos na aba Família."
+        case .chineseTraditional: return "分享行程後，就能在「家人」分頁一次看到彼此的休假。"
         }
     }
 
@@ -1916,6 +2592,10 @@ enum Strings {
         case .chinese: return "在主屏幕上一眼看到"
         case .german: return "Direkt auf dem Home-Bildschirm"
         case .french: return "Directement sur l'écran d'accueil"
+        case .spanish: return "En tu pantalla de inicio"
+        case .italian: return "Sulla schermata Home"
+        case .portuguese: return "Direto na tela de início"
+        case .chineseTraditional: return "在主畫面直接查看"
         }
     }
 
@@ -1927,6 +2607,10 @@ enum Strings {
         case .chinese: return "添加小组件后，在锁定屏幕也能看到剩余年假和下次休假。记录会备份到 iCloud。"
         case .german: return "Mit einem Widget siehst du Resturlaub und deine nächste Auszeit, auch auf dem Sperrbildschirm. Einträge werden in iCloud gesichert."
         case .french: return "Ajoutez un widget pour voir vos congés restants et votre prochaine pause, même sur l'écran verrouillé. Les données sont sauvegardées sur iCloud."
+        case .spanish: return "Añade un widget para ver tus vacaciones restantes y tu próximo descanso, incluso en la pantalla bloqueada. Tus datos se guardan en iCloud."
+        case .italian: return "Aggiungi un widget per vedere le ferie rimaste e la prossima pausa, anche sulla schermata di blocco. I dati vengono salvati su iCloud."
+        case .portuguese: return "Adicione um widget para ver as férias restantes e a próxima folga, até na tela bloqueada. Seus dados ficam salvos no iCloud."
+        case .chineseTraditional: return "加入小工具，連鎖定畫面也能看到剩餘特休和下一次休假。紀錄會備份到 iCloud。"
         }
     }
 
@@ -1938,6 +2622,10 @@ enum Strings {
         case .chinese: return "帮助"
         case .german: return "Hilfe"
         case .french: return "Aide"
+        case .spanish: return "Ayuda"
+        case .italian: return "Aiuto"
+        case .portuguese: return "Ajuda"
+        case .chineseTraditional: return "說明"
         }
     }
 
@@ -1949,6 +2637,10 @@ enum Strings {
         case .chinese: return "重看使用方法"
         case .german: return "So funktioniert Goldweek"
         case .french: return "Utiliser Goldweek"
+        case .spanish: return "Cómo usar Goldweek"
+        case .italian: return "Come usare Goldweek"
+        case .portuguese: return "Como usar o Goldweek"
+        case .chineseTraditional: return "再看一次使用說明"
         }
     }
 
@@ -1960,6 +2652,10 @@ enum Strings {
         case .chinese: return "重看初次引导"
         case .german: return "Einführung erneut ansehen"
         case .french: return "Revoir l'introduction"
+        case .spanish: return "Ver introducción de nuevo"
+        case .italian: return "Rivedi l'introduzione"
+        case .portuguese: return "Rever introdução"
+        case .chineseTraditional: return "重看初次導覽"
         }
     }
 
@@ -1971,6 +2667,10 @@ enum Strings {
         case .chinese: return "重新显示功能提示"
         case .german: return "Funktionstipps erneut anzeigen"
         case .french: return "Réafficher les astuces"
+        case .spanish: return "Mostrar consejos de nuevo"
+        case .italian: return "Mostra di nuovo i suggerimenti"
+        case .portuguese: return "Mostrar dicas novamente"
+        case .chineseTraditional: return "重新顯示功能提示"
         }
     }
 
@@ -1982,6 +2682,10 @@ enum Strings {
         case .chinese: return "下次打开应用时，功能提示会重新出现。"
         case .german: return "Die Funktionstipps erscheinen beim nächsten Öffnen der App erneut."
         case .french: return "Les astuces réapparaîtront à la prochaine ouverture de l'app."
+        case .spanish: return "Los consejos volverán a aparecer la próxima vez que abras la app."
+        case .italian: return "I suggerimenti riappariranno alla prossima apertura dell'app."
+        case .portuguese: return "As dicas aparecerão de novo na próxima vez que você abrir o app."
+        case .chineseTraditional: return "重新開啟 App 後，功能提示會從頭再出現一次。"
         }
     }
 
@@ -1993,6 +2697,10 @@ enum Strings {
         case .chinese: return "点点推荐的连休"
         case .german: return "Tippe auf eine empfohlene Auszeit"
         case .french: return "Touchez une pause suggérée"
+        case .spanish: return "Toca un puente recomendado"
+        case .italian: return "Tocca un ponte suggerito"
+        case .portuguese: return "Toque num feriadão sugerido"
+        case .chineseTraditional: return "點點看推薦連假"
         }
     }
 
@@ -2004,6 +2712,10 @@ enum Strings {
         case .chinese: return "黄色标记是只用一两天年假拼出的连休，点击即可登记。"
         case .german: return "Gelbe Markierungen sind Auszeiten mit nur ein oder zwei Urlaubstagen. Tippe darauf, um sie einzutragen."
         case .french: return "Les repères jaunes sont des pauses créées avec seulement un ou deux jours de congé. Touchez-en un pour l'ajouter."
+        case .spanish: return "Las marcas amarillas son puentes que salen con solo uno o dos días de vacaciones. Toca uno para añadirlo."
+        case .italian: return "I segni gialli sono ponti creati con appena uno o due giorni di ferie. Toccane uno per aggiungerlo."
+        case .portuguese: return "As marcas amarelas são feriadões feitos com só um ou dois dias de férias. Toque para adicionar."
+        case .chineseTraditional: return "黃色標示是只用一點特休就能組成的連假。點一下就能直接登記。"
         }
     }
 
@@ -2015,6 +2727,10 @@ enum Strings {
         case .chinese: return "把年假状况变成图片"
         case .german: return "Urlaubsstand teilen"
         case .french: return "Partager votre situation de congés"
+        case .spanish: return "Comparte tus vacaciones"
+        case .italian: return "Condividi le tue ferie"
+        case .portuguese: return "Compartilhe suas férias"
+        case .chineseTraditional: return "把特休狀況做成圖片"
         }
     }
 
@@ -2026,6 +2742,10 @@ enum Strings {
         case .chinese: return "点击分享，即可生成卡片图片发给家人或朋友。"
         case .german: return "Tippe auf Teilen, um aus deinem Stand eine Karte für Familie oder Freunde zu erstellen."
         case .french: return "Touchez Partager pour créer une carte de votre situation à envoyer à votre famille ou vos amis."
+        case .spanish: return "Toca Compartir para crear una tarjeta con tu resumen y enviarla a familia o amigos."
+        case .italian: return "Tocca Condividi per creare una scheda con il tuo riepilogo da inviare a familiari o amici."
+        case .portuguese: return "Toque em Compartilhar para criar um cartão com seu resumo e enviar para família ou amigos."
+        case .chineseTraditional: return "點分享按鈕就能產生卡片圖片，傳給朋友或家人。"
         }
     }
 
@@ -2037,6 +2757,10 @@ enum Strings {
         case .chinese: return "补休和奖励假在这里"
         case .german: return "Bonusurlaub kommt hierher"
         case .french: return "Les congés bonus, c'est ici"
+        case .spanish: return "Los días extra, aquí"
+        case .italian: return "Le ferie bonus vanno qui"
+        case .portuguese: return "Folgas bônus ficam aqui"
+        case .chineseTraditional: return "補休、獎勵假在這裡"
         }
     }
 
@@ -2048,6 +2772,10 @@ enum Strings {
         case .chinese: return "登记为奖励假后与年假分开管理，并会跟踪有效期。"
         case .german: return "Trage ihn als Bonusurlaub ein – er wird getrennt von den Urlaubstagen verwaltet, samt Ablaufdatum."
         case .french: return "Ajoutez-les comme congés bonus : ils sont suivis séparément des congés annuels, échéance comprise."
+        case .spanish: return "Añádelos como días extra: se controlan aparte de tus vacaciones anuales, caducidad incluida."
+        case .italian: return "Aggiungile come ferie bonus: sono gestite a parte dalle ferie annuali, scadenza compresa."
+        case .portuguese: return "Adicione como folga bônus: ela é controlada à parte das férias anuais, com vencimento incluído."
+        case .chineseTraditional: return "登記為獎勵特休，就會和特休分開管理，也會幫你記住到期日。"
         }
     }
 
@@ -2059,6 +2787,10 @@ enum Strings {
         case .chinese: return "回顾过往假期"
         case .german: return "Rückblick auf deinen Urlaub"
         case .french: return "Revoir vos congés passés"
+        case .spanish: return "Repasa tus vacaciones"
+        case .italian: return "Rivedi le tue ferie passate"
+        case .portuguese: return "Relembre suas férias"
+        case .chineseTraditional: return "回顧過去的休假"
         }
     }
 
@@ -2070,6 +2802,10 @@ enum Strings {
         case .chinese: return "可以按年份查看用了多少天、用的是哪类假期。"
         case .german: return "Sieh, wie viel du pro Jahr genommen hast und welche Urlaubsarten es waren."
         case .french: return "Voyez combien vous en avez pris chaque année, et de quel type."
+        case .spanish: return "Mira cuántos días usaste cada año y de qué tipo fueron."
+        case .italian: return "Guarda quanti giorni hai usato ogni anno e di che tipo."
+        case .portuguese: return "Veja quantos dias você usou por ano e de que tipo foram."
+        case .chineseTraditional: return "一次看到每年用了多少假、用了哪些假。"
         }
     }
 
@@ -2081,6 +2817,10 @@ enum Strings {
         case .chinese: return "应用信息"
         case .german: return "App-Info"
         case .french: return "Infos sur l'app"
+        case .spanish: return "Información de la app"
+        case .italian: return "Info sull'app"
+        case .portuguese: return "Sobre o app"
+        case .chineseTraditional: return "App 資訊"
         }
     }
 
@@ -2093,6 +2833,10 @@ enum Strings {
         case .chinese: return "支持"
         case .german: return "Support"
         case .french: return "Assistance"
+        case .spanish: return "Soporte"
+        case .italian: return "Assistenza"
+        case .portuguese: return "Suporte"
+        case .chineseTraditional: return "支援"
         }
     }
 
@@ -2104,6 +2848,10 @@ enum Strings {
         case .chinese: return "发送反馈"
         case .german: return "Feedback senden"
         case .french: return "Envoyer un avis"
+        case .spanish: return "Enviar comentarios"
+        case .italian: return "Invia feedback"
+        case .portuguese: return "Enviar feedback"
+        case .chineseTraditional: return "傳送意見回饋"
         }
     }
 
@@ -2115,6 +2863,10 @@ enum Strings {
         case .chinese: return "支持页面"
         case .german: return "Support-Seite"
         case .french: return "Page d'assistance"
+        case .spanish: return "Página de soporte"
+        case .italian: return "Pagina di assistenza"
+        case .portuguese: return "Página de suporte"
+        case .chineseTraditional: return "支援頁面"
         }
     }
 
@@ -2129,6 +2881,10 @@ enum Strings {
         case .chinese: return "收到的反馈（开发者）"
         case .german: return "Feedback-Eingang (Entwickler)"
         case .french: return "Boîte des retours (développeur)"
+        case .spanish: return "Comentarios recibidos (desarrollador)"
+        case .italian: return "Feedback ricevuti (sviluppatore)"
+        case .portuguese: return "Feedback recebido (desenvolvedor)"
+        case .chineseTraditional: return "已收到的回饋（開發者）"
         }
     }
 
@@ -2140,6 +2896,10 @@ enum Strings {
         case .chinese: return "使用统计（开发者）"
         case .german: return "Nutzungsstatistik (Entwickler)"
         case .french: return "Statistiques d'utilisation (dév.)"
+        case .spanish: return "Estadísticas de uso (dev.)"
+        case .italian: return "Statistiche d'uso (svil.)"
+        case .portuguese: return "Estatísticas de uso (dev.)"
+        case .chineseTraditional: return "使用統計（開發者）"
         }
     }
 
@@ -2151,6 +2911,10 @@ enum Strings {
         case .chinese: return "稳定性（开发者）"
         case .german: return "Stabilität (Entwickler)"
         case .french: return "Stabilité (dév.)"
+        case .spanish: return "Estabilidad (dev.)"
+        case .italian: return "Stabilità (svil.)"
+        case .portuguese: return "Estabilidade (dev.)"
+        case .chineseTraditional: return "穩定性（開發者）"
         }
     }
 
@@ -2162,6 +2926,10 @@ enum Strings {
         case .chinese: return "版本"
         case .german: return "Version"
         case .french: return "Version"
+        case .spanish: return "Versión"
+        case .italian: return "Versione"
+        case .portuguese: return "Versão"
+        case .chineseTraditional: return "版本"
         }
     }
 
@@ -2173,6 +2941,10 @@ enum Strings {
         case .chinese: return "开发者"
         case .german: return "Entwicklung"
         case .french: return "Développeur"
+        case .spanish: return "Desarrollador"
+        case .italian: return "Sviluppatore"
+        case .portuguese: return "Desenvolvedor"
+        case .chineseTraditional: return "開發者"
         }
     }
 
@@ -2184,6 +2956,10 @@ enum Strings {
         case .chinese: return "评价应用"
         case .german: return "App bewerten"
         case .french: return "Noter l'app"
+        case .spanish: return "Valorar la app"
+        case .italian: return "Valuta l'app"
+        case .portuguese: return "Avaliar o app"
+        case .chineseTraditional: return "為 App 評分"
         }
     }
 
@@ -2195,6 +2971,10 @@ enum Strings {
         case .chinese: return "联系开发者"
         case .german: return "Entwickler kontaktieren"
         case .french: return "Contacter le développeur"
+        case .spanish: return "Contactar al desarrollador"
+        case .italian: return "Contatta lo sviluppatore"
+        case .portuguese: return "Falar com o desenvolvedor"
+        case .chineseTraditional: return "聯絡開發者"
         }
     }
 
@@ -2206,6 +2986,10 @@ enum Strings {
         case .chinese: return "通过邮件联系"
         case .german: return "Per E-Mail kontaktieren"
         case .french: return "Contacter par e-mail"
+        case .spanish: return "Contactar por correo"
+        case .italian: return "Contatta via email"
+        case .portuguese: return "Contato por e-mail"
+        case .chineseTraditional: return "透過電子郵件聯絡"
         }
     }
 
@@ -2217,6 +3001,10 @@ enum Strings {
         case .chinese: return "Instagram 私信 (@lee25_ios)"
         case .german: return "Instagram-DM (@lee25_ios)"
         case .french: return "DM Instagram (@lee25_ios)"
+        case .spanish: return "DM de Instagram (@lee25_ios)"
+        case .italian: return "DM su Instagram (@lee25_ios)"
+        case .portuguese: return "DM no Instagram (@lee25_ios)"
+        case .chineseTraditional: return "Instagram 私訊 (@lee25_ios)"
         }
     }
 
@@ -2228,6 +3016,10 @@ enum Strings {
         case .chinese: return "欢迎反馈问题和提出功能建议。"
         case .german: return "Fehlerberichte und Funktionsvorschläge sind willkommen."
         case .french: return "Signalements de bugs et suggestions bienvenus."
+        case .spanish: return "Los informes de errores y las sugerencias son bienvenidos."
+        case .italian: return "Segnalazioni di bug e suggerimenti sono benvenuti."
+        case .portuguese: return "Relatos de bugs e sugestões são bem-vindos."
+        case .chineseTraditional: return "歡迎回報錯誤與提出功能建議。"
         }
     }
 
@@ -2239,6 +3031,10 @@ enum Strings {
         case .chinese: return "确认"
         case .german: return "OK"
         case .french: return "OK"
+        case .spanish: return "OK"
+        case .italian: return "OK"
+        case .portuguese: return "OK"
+        case .chineseTraditional: return "好"
         }
     }
 
@@ -2250,6 +3046,10 @@ enum Strings {
         case .chinese: return "备份"
         case .german: return "Backup"
         case .french: return "Sauvegarde"
+        case .spanish: return "Copia de seguridad"
+        case .italian: return "Backup"
+        case .portuguese: return "Backup"
+        case .chineseTraditional: return "備份"
         }
     }
 
@@ -2261,6 +3061,10 @@ enum Strings {
         case .chinese: return "确认恢复"
         case .german: return "Wiederherstellung bestätigen"
         case .french: return "Confirmer la restauration"
+        case .spanish: return "Confirmar restauración"
+        case .italian: return "Conferma ripristino"
+        case .portuguese: return "Confirmar restauração"
+        case .chineseTraditional: return "確認還原"
         }
     }
 
@@ -2272,6 +3076,10 @@ enum Strings {
         case .chinese: return "恢复"
         case .german: return "Wiederherstellen"
         case .french: return "Restaurer"
+        case .spanish: return "Restaurar"
+        case .italian: return "Ripristina"
+        case .portuguese: return "Restaurar"
+        case .chineseTraditional: return "還原"
         }
     }
 
@@ -2283,6 +3091,10 @@ enum Strings {
         case .chinese: return "从iCloud备份恢复数据。当前所有数据将被删除。"
         case .german: return "Daten aus dem iCloud-Backup wiederherstellen. Alle aktuellen Daten werden gelöscht."
         case .french: return "Restaurer les données depuis la sauvegarde iCloud. Toutes les données actuelles seront supprimées."
+        case .spanish: return "Se restaurarán los datos de la copia de iCloud. Se borrarán todos los datos actuales."
+        case .italian: return "I dati verranno ripristinati dal backup iCloud. Tutti i dati attuali verranno eliminati."
+        case .portuguese: return "Os dados serão restaurados do backup do iCloud. Todos os dados atuais serão apagados."
+        case .chineseTraditional: return "將從 iCloud 備份還原資料。目前的資料將全部刪除。"
         }
     }
 
@@ -2294,6 +3106,10 @@ enum Strings {
         case .chinese: return "上次备份: \(dateStr)"
         case .german: return "Letztes Backup: \(dateStr)"
         case .french: return "Dernière sauvegarde : \(dateStr)"
+        case .spanish: return "Última copia: \(dateStr)"
+        case .italian: return "Ultimo backup: \(dateStr)"
+        case .portuguese: return "Último backup: \(dateStr)"
+        case .chineseTraditional: return "上次備份：\(dateStr)"
         }
     }
 
@@ -2306,6 +3122,10 @@ enum Strings {
         case .chinese: return "我的休假风格"
         case .german: return "Mein Urlaubsstil"
         case .french: return "Mon style de congés"
+        case .spanish: return "Mi estilo de vacaciones"
+        case .italian: return "Il mio stile di ferie"
+        case .portuguese: return "Meu estilo de férias"
+        case .chineseTraditional: return "我的休假風格"
         }
     }
 
@@ -2317,6 +3137,10 @@ enum Strings {
         case .chinese: return "偏好休假时长"
         case .german: return "Bevorzugte Dauer"
         case .french: return "Durée préférée"
+        case .spanish: return "Duración preferida"
+        case .italian: return "Durata preferita"
+        case .portuguese: return "Duração preferida"
+        case .chineseTraditional: return "偏好的休假長度"
         }
     }
 
@@ -2328,6 +3152,10 @@ enum Strings {
         case .chinese: return "偏好季节（可多选）"
         case .german: return "Bevorzugte Jahreszeit (Mehrfachauswahl)"
         case .french: return "Saison préférée (choix multiple)"
+        case .spanish: return "Estación preferida (varias)"
+        case .italian: return "Stagione preferita (più scelte)"
+        case .portuguese: return "Estação preferida (várias)"
+        case .chineseTraditional: return "偏好的季節（可複選）"
         }
     }
 
@@ -2339,6 +3167,10 @@ enum Strings {
         case .chinese: return "休假风格"
         case .german: return "Urlaubsstil"
         case .french: return "Style de congés"
+        case .spanish: return "Estilo de vacaciones"
+        case .italian: return "Stile di ferie"
+        case .portuguese: return "Estilo de férias"
+        case .chineseTraditional: return "休假風格"
         }
     }
 
@@ -2350,6 +3182,10 @@ enum Strings {
         case .chinese: return "利用桥接假日"
         case .german: return "Brückentage nutzen"
         case .french: return "Utiliser les ponts"
+        case .spanish: return "Aprovechar puentes"
+        case .italian: return "Sfrutta i ponti"
+        case .portuguese: return "Aproveitar emendas"
+        case .chineseTraditional: return "善用橋接假"
         }
     }
 
@@ -2361,6 +3197,10 @@ enum Strings {
         case .chinese: return "偏好连续休假"
         case .german: return "Zusammenhängenden Urlaub bevorzugen"
         case .french: return "Privilégier les congés consécutifs"
+        case .spanish: return "Preferir días seguidos"
+        case .italian: return "Preferisci giorni di fila"
+        case .portuguese: return "Preferir dias seguidos"
+        case .chineseTraditional: return "偏好連續休假"
         }
     }
 
@@ -2372,6 +3212,10 @@ enum Strings {
         case .chinese: return "避开旺季"
         case .german: return "Hauptsaison meiden"
         case .french: return "Éviter la haute saison"
+        case .spanish: return "Evitar temporada alta"
+        case .italian: return "Evita l'alta stagione"
+        case .portuguese: return "Evitar alta temporada"
+        case .chineseTraditional: return "避開旺季"
         }
     }
 
@@ -2383,6 +3227,10 @@ enum Strings {
         case .chinese: return "想做的活动"
         case .german: return "Bevorzugte Aktivitäten"
         case .french: return "Activités préférées"
+        case .spanish: return "Actividades preferidas"
+        case .italian: return "Attività preferite"
+        case .portuguese: return "Atividades preferidas"
+        case .chineseTraditional: return "最想做的活動"
         }
     }
 
@@ -2394,6 +3242,10 @@ enum Strings {
         case .chinese: return "保存"
         case .german: return "Sichern"
         case .french: return "Enregistrer"
+        case .spanish: return "Guardar"
+        case .italian: return "Salva"
+        case .portuguese: return "Salvar"
+        case .chineseTraditional: return "儲存"
         }
     }
 
@@ -2406,6 +3258,10 @@ enum Strings {
         case .chinese: return "Goldweek"
         case .german: return "Goldweek"
         case .french: return "Goldweek"
+        case .spanish: return "Goldweek"
+        case .italian: return "Goldweek"
+        case .portuguese: return "Goldweek"
+        case .chineseTraditional: return "Goldweek"
         }
     }
 
@@ -2417,6 +3273,10 @@ enum Strings {
         case .chinese: return "最少年假，最长假期\n善用节假日的黄金组合"
         case .german: return "Maximale freie Tage mit minimalem Urlaub\nKI plant dein perfektes langes Wochenende"
         case .french: return "Un maximum de jours off avec un minimum de congés\nL'IA planifie votre week-end prolongé idéal"
+        case .spanish: return "Más días libres con menos vacaciones\nUn plan de puentes con los festivos"
+        case .italian: return "Più giorni liberi con meno ferie\nPonti perfetti sfruttando le festività"
+        case .portuguese: return "Mais dias livres com menos férias\nFeriadões planejados com os feriados"
+        case .chineseTraditional: return "用最少特休換最長連假\n善用國定假日的黃金連假計畫"
         }
     }
 
@@ -2428,6 +3288,10 @@ enum Strings {
         case .chinese: return "3天年假\n9天假期"
         case .german: return "3 Urlaubstage\n9 Tage frei"
         case .french: return "3 jours de congé\n9 jours off"
+        case .spanish: return "3 días de vacaciones\n9 días libres"
+        case .italian: return "3 giorni di ferie\n9 giorni liberi"
+        case .portuguese: return "3 dias de férias\n9 dias de folga"
+        case .chineseTraditional: return "請 3 天特休\n連休 9 天"
         }
     }
 
@@ -2439,6 +3303,10 @@ enum Strings {
         case .chinese: return "自动找出节假日与周末之间的搭桥日"
         case .german: return "Wir finden automatisch die Brückentage zwischen Feiertagen und Wochenenden"
         case .french: return "Nous trouvons automatiquement les ponts entre jours fériés et week-ends"
+        case .spanish: return "Encontramos automáticamente los puentes entre festivos y fines de semana"
+        case .italian: return "Troviamo in automatico i ponti tra festività e weekend"
+        case .portuguese: return "Encontramos automaticamente as emendas entre feriados e fins de semana"
+        case .chineseTraditional: return "自動幫你找出國定假日與週末之間的橋接假"
         }
     }
 
@@ -2450,6 +3318,10 @@ enum Strings {
         case .chinese: return "年假"
         case .german: return "Urlaub"
         case .french: return "Congé"
+        case .spanish: return "Vacaciones"
+        case .italian: return "Ferie"
+        case .portuguese: return "Férias"
+        case .chineseTraditional: return "特休"
         }
     }
 
@@ -2461,6 +3333,10 @@ enum Strings {
         case .chinese: return "假日"
         case .german: return "Feiertag"
         case .french: return "Jour férié"
+        case .spanish: return "Festivo"
+        case .italian: return "Festività"
+        case .portuguese: return "Feriado"
+        case .chineseTraditional: return "國定假日"
         }
     }
 
@@ -2472,6 +3348,10 @@ enum Strings {
         case .chinese: return "周末"
         case .german: return "Wochenende"
         case .french: return "Week-end"
+        case .spanish: return "Fin de semana"
+        case .italian: return "Weekend"
+        case .portuguese: return "Fim de semana"
+        case .chineseTraditional: return "週末"
         }
     }
 
@@ -2483,6 +3363,10 @@ enum Strings {
         case .chinese: return "选填"
         case .german: return "Optional"
         case .french: return "Facultatif"
+        case .spanish: return "Opcional"
+        case .italian: return "Facoltativo"
+        case .portuguese: return "Opcional"
+        case .chineseTraditional: return "選填"
         }
     }
 
@@ -2494,6 +3378,10 @@ enum Strings {
         case .chinese: return "黄金假期规划"
         case .german: return "Planer für lange Wochenenden"
         case .french: return "Planificateur de longs week-ends"
+        case .spanish: return "Planificador de puentes"
+        case .italian: return "Pianificatore di ponti"
+        case .portuguese: return "Planejador de feriadões"
+        case .chineseTraditional: return "黃金連假規劃"
         }
     }
 
@@ -2505,6 +3393,10 @@ enum Strings {
         case .chinese: return "开始"
         case .german: return "Los geht's"
         case .french: return "Commencer"
+        case .spanish: return "Empezar"
+        case .italian: return "Inizia"
+        case .portuguese: return "Começar"
+        case .chineseTraditional: return "開始使用"
         }
     }
 
@@ -2516,6 +3408,10 @@ enum Strings {
         case .chinese: return "下一步"
         case .german: return "Weiter"
         case .french: return "Suivant"
+        case .spanish: return "Siguiente"
+        case .italian: return "Avanti"
+        case .portuguese: return "Próximo"
+        case .chineseTraditional: return "下一步"
         }
     }
 
@@ -2527,6 +3423,10 @@ enum Strings {
         case .chinese: return "主要功能"
         case .german: return "Hauptfunktionen"
         case .french: return "Fonctions clés"
+        case .spanish: return "Funciones clave"
+        case .italian: return "Funzioni principali"
+        case .portuguese: return "Principais recursos"
+        case .chineseTraditional: return "主要功能"
         }
     }
 
@@ -2538,6 +3438,10 @@ enum Strings {
         case .chinese: return "年假管理"
         case .german: return "Urlaubsverwaltung"
         case .french: return "Gestion des congés"
+        case .spanish: return "Gestión de vacaciones"
+        case .italian: return "Gestione ferie"
+        case .portuguese: return "Gestão de férias"
+        case .chineseTraditional: return "特休管理"
         }
     }
 
@@ -2549,6 +3453,10 @@ enum Strings {
         case .chinese: return "记录年假、半天假、\n补休等各种休假"
         case .german: return "Erfasse Jahresurlaub, halbe Tage und\nFreizeitausgleich"
         case .french: return "Suivez congés payés, demi-journées\net jours de récupération"
+        case .spanish: return "Registra vacaciones, medias jornadas\ny días compensatorios"
+        case .italian: return "Registra ferie, mezze giornate\ne riposi compensativi"
+        case .portuguese: return "Registre férias, meios períodos\ne folgas compensatórias"
+        case .chineseTraditional: return "記錄特休、半天假、\n補休等各種假別"
         }
     }
 
@@ -2560,6 +3468,10 @@ enum Strings {
         case .chinese: return "AI推荐"
         case .german: return "KI-Empfehlung"
         case .french: return "Suggestions IA"
+        case .spanish: return "Recomendación IA"
+        case .italian: return "Suggerimenti IA"
+        case .portuguese: return "Sugestões IA"
+        case .chineseTraditional: return "AI推薦"
         }
     }
 
@@ -2571,6 +3483,10 @@ enum Strings {
         case .chinese: return "利用节假日和周末\n推荐最佳休假组合"
         case .german: return "Optimale Urlaubskombis mit\nFeiertagen und Wochenenden"
         case .french: return "Combinaisons de congés optimales\navec jours fériés et week-ends"
+        case .spanish: return "Combinaciones óptimas de vacaciones\ncon festivos y fines de semana"
+        case .italian: return "Combinazioni di ferie ottimali\ncon festività e weekend"
+        case .portuguese: return "Combinações ideais de férias\ncom feriados e fins de semana"
+        case .chineseTraditional: return "善用國定假日與週末，\n推薦最佳請假組合"
         }
     }
 
@@ -2582,6 +3498,10 @@ enum Strings {
         case .chinese: return "奖励年假"
         case .german: return "Bonusurlaub"
         case .french: return "Congés bonus"
+        case .spanish: return "Días extra"
+        case .italian: return "Ferie bonus"
+        case .portuguese: return "Folgas bônus"
+        case .chineseTraditional: return "獎勵特休"
         }
     }
 
@@ -2593,6 +3513,10 @@ enum Strings {
         case .chinese: return "管理补休、奖励假\n等额外年假"
         case .german: return "Verwalte Zeitausgleich, Prämien\nund Zusatzurlaub"
         case .french: return "Gérez récupérations, primes\net congés supplémentaires"
+        case .spanish: return "Gestiona compensatorios, premios\ny otros días extra"
+        case .italian: return "Gestisci riposi compensativi, premi\ne altre ferie bonus"
+        case .portuguese: return "Gerencie compensações, prêmios\ne outras folgas bônus"
+        case .chineseTraditional: return "補休、獎勵假等\n獎勵特休也能管理"
         }
     }
 
@@ -2604,6 +3528,10 @@ enum Strings {
         case .chinese: return "小组件"
         case .german: return "Widget"
         case .french: return "Widget"
+        case .spanish: return "Widget"
+        case .italian: return "Widget"
+        case .portuguese: return "Widget"
+        case .chineseTraditional: return "小工具"
         }
     }
 
@@ -2615,6 +3543,10 @@ enum Strings {
         case .chinese: return "在主屏幕上\n直接查看剩余年假"
         case .german: return "Resturlaub direkt\nauf dem Home-Bildschirm"
         case .french: return "Congés restants directement\nsur l'écran d'accueil"
+        case .spanish: return "Consulta tus vacaciones restantes\ndesde la pantalla de inicio"
+        case .italian: return "Controlla le ferie rimaste\ndalla schermata Home"
+        case .portuguese: return "Veja suas férias restantes\ndireto na tela de início"
+        case .chineseTraditional: return "在主畫面直接\n查看剩餘特休"
         }
     }
 
@@ -2626,6 +3558,10 @@ enum Strings {
         case .chinese: return "选择您的国家"
         case .german: return "Wähle dein Land"
         case .french: return "Choisissez votre pays"
+        case .spanish: return "Elige tu país"
+        case .italian: return "Scegli il tuo paese"
+        case .portuguese: return "Escolha seu país"
+        case .chineseTraditional: return "請選擇國家"
         }
     }
 
@@ -2637,6 +3573,10 @@ enum Strings {
         case .chinese: return "节假日数据将根据您的国家设置"
         case .german: return "Die Feiertage werden an dein Land angepasst"
         case .french: return "Les jours fériés seront adaptés à votre pays"
+        case .spanish: return "Los festivos se ajustarán a tu país"
+        case .italian: return "Le festività saranno adattate al tuo paese"
+        case .portuguese: return "Os feriados serão ajustados ao seu país"
+        case .chineseTraditional: return "國定假日資料將依國家設定"
         }
     }
 
@@ -2648,6 +3588,10 @@ enum Strings {
         case .chinese: return "请输入您的姓名"
         case .german: return "Wie heißt du?"
         case .french: return "Comment vous appelez-vous ?"
+        case .spanish: return "¿Cómo te llamas?"
+        case .italian: return "Come ti chiami?"
+        case .portuguese: return "Qual é o seu nome?"
+        case .chineseTraditional: return "你叫什麼名字？"
         }
     }
 
@@ -2659,6 +3603,10 @@ enum Strings {
         case .chinese: return "请输入在应用中使用的姓名"
         case .german: return "Gib den Namen ein, der in der App verwendet wird"
         case .french: return "Saisissez le nom à utiliser dans l'app"
+        case .spanish: return "Escribe el nombre que usarás en la app"
+        case .italian: return "Inserisci il nome da usare nell’app"
+        case .portuguese: return "Digite o nome que será usado no app"
+        case .chineseTraditional: return "輸入要在 App 中使用的名稱"
         }
     }
 
@@ -2670,6 +3618,10 @@ enum Strings {
         case .chinese: return "年假设置"
         case .german: return "Urlaub einrichten"
         case .french: return "Configuration des congés"
+        case .spanish: return "Configurar vacaciones"
+        case .italian: return "Impostazione ferie"
+        case .portuguese: return "Configurar férias"
+        case .chineseTraditional: return "特休設定"
         }
     }
 
@@ -2681,6 +3633,10 @@ enum Strings {
         case .chinese: return "稍后可在设置中更改"
         case .german: return "Du kannst das später in den Einstellungen ändern"
         case .french: return "Vous pourrez modifier cela plus tard dans les réglages"
+        case .spanish: return "Puedes cambiarlo más tarde en Ajustes"
+        case .italian: return "Puoi modificarlo più tardi nelle Impostazioni"
+        case .portuguese: return "Você pode alterar isso depois nos Ajustes"
+        case .chineseTraditional: return "之後可以在設定中變更"
         }
     }
 
@@ -2692,6 +3648,10 @@ enum Strings {
         case .chinese: return "今年总年假"
         case .german: return "Jahresurlaub gesamt"
         case .french: return "Total des congés annuels"
+        case .spanish: return "Vacaciones totales del año"
+        case .italian: return "Ferie totali dell’anno"
+        case .portuguese: return "Total de férias do ano"
+        case .chineseTraditional: return "今年特休總天數"
         }
     }
 
@@ -2703,6 +3663,10 @@ enum Strings {
         case .chinese: return "年假起始月"
         case .german: return "Startmonat des Urlaubsjahrs"
         case .french: return "Mois de début de l'année"
+        case .spanish: return "Mes de inicio del año"
+        case .italian: return "Mese di inizio anno"
+        case .portuguese: return "Mês de início do ano"
+        case .chineseTraditional: return "特休起算月份"
         }
     }
 
@@ -2714,6 +3678,10 @@ enum Strings {
         case .chinese: return "年假更新的月份"
         case .german: return "Monat, in dem der Jahresurlaub erneuert wird"
         case .french: return "Mois de renouvellement des congés annuels"
+        case .spanish: return "Mes en que se renuevan las vacaciones"
+        case .italian: return "Mese in cui si rinnovano le ferie"
+        case .portuguese: return "Mês em que as férias são renovadas"
+        case .chineseTraditional: return "特休重新計算的月份"
         }
     }
 
@@ -2725,6 +3693,10 @@ enum Strings {
         case .chinese: return "用户"
         case .german: return "Nutzer"
         case .french: return "Utilisateur"
+        case .spanish: return "Usuario"
+        case .italian: return "Utente"
+        case .portuguese: return "Usuário"
+        case .chineseTraditional: return "使用者"
         }
     }
 
@@ -2780,6 +3752,34 @@ enum Strings {
             case .long: return "5+ jours"
             case .mixed: return "Mixte"
             }
+        case .spanish:
+            switch duration {
+            case .short: return "1-2 días"
+            case .medium: return "3-4 días"
+            case .long: return "5+ días"
+            case .mixed: return "Mixto"
+            }
+        case .italian:
+            switch duration {
+            case .short: return "1-2 giorni"
+            case .medium: return "3-4 giorni"
+            case .long: return "5+ giorni"
+            case .mixed: return "Misto"
+            }
+        case .portuguese:
+            switch duration {
+            case .short: return "1-2 dias"
+            case .medium: return "3-4 dias"
+            case .long: return "5+ dias"
+            case .mixed: return "Misto"
+            }
+        case .chineseTraditional:
+            switch duration {
+            case .short: return "1-2天"
+            case .medium: return "3-4天"
+            case .long: return "5天以上"
+            case .mixed: return "混合"
+            }
         }
     }
 
@@ -2827,6 +3827,34 @@ enum Strings {
             case .summer: return "Été"
             case .fall: return "Automne"
             case .winter: return "Hiver"
+            }
+        case .spanish:
+            switch season {
+            case .spring: return "Primavera"
+            case .summer: return "Verano"
+            case .fall: return "Otoño"
+            case .winter: return "Invierno"
+            }
+        case .italian:
+            switch season {
+            case .spring: return "Primavera"
+            case .summer: return "Estate"
+            case .fall: return "Autunno"
+            case .winter: return "Inverno"
+            }
+        case .portuguese:
+            switch season {
+            case .spring: return "Primavera"
+            case .summer: return "Verão"
+            case .fall: return "Outono"
+            case .winter: return "Inverno"
+            }
+        case .chineseTraditional:
+            switch season {
+            case .spring: return "春"
+            case .summer: return "夏"
+            case .fall: return "秋"
+            case .winter: return "冬"
             }
         }
     }
@@ -2881,6 +3909,38 @@ enum Strings {
             case .family: return "Famille"
             case .hobby: return "Loisirs"
             case .selfCare: return "Bien-être"
+            }
+        case .spanish:
+            switch activity {
+            case .travel: return "Viaje"
+            case .rest: return "Descanso"
+            case .family: return "Familia"
+            case .hobby: return "Aficiones"
+            case .selfCare: return "Bienestar"
+            }
+        case .italian:
+            switch activity {
+            case .travel: return "Viaggio"
+            case .rest: return "Riposo"
+            case .family: return "Famiglia"
+            case .hobby: return "Hobby"
+            case .selfCare: return "Benessere"
+            }
+        case .portuguese:
+            switch activity {
+            case .travel: return "Viagem"
+            case .rest: return "Descanso"
+            case .family: return "Família"
+            case .hobby: return "Hobby"
+            case .selfCare: return "Autocuidado"
+            }
+        case .chineseTraditional:
+            switch activity {
+            case .travel: return "旅行"
+            case .rest: return "休息"
+            case .family: return "家庭"
+            case .hobby: return "嗜好"
+            case .selfCare: return "自我成長"
             }
         }
     }
@@ -2954,6 +4014,50 @@ enum Strings {
             case .special: return "Congé spécial"
             case .businessTrip: return "Déplacement"
             }
+        case .spanish:
+            switch type {
+            case .annual: return "Vacaciones"
+            case .half: return "Media jornada"
+            case .quarter: return "Cuarto de jornada"
+            case .compensatory: return "Compensatorio"
+            case .official: return "Oficial"
+            case .sick: return "Enfermedad"
+            case .special: return "Permiso especial"
+            case .businessTrip: return "Viaje de trabajo"
+            }
+        case .italian:
+            switch type {
+            case .annual: return "Ferie"
+            case .half: return "Mezza giornata"
+            case .quarter: return "Quarto di giornata"
+            case .compensatory: return "Riposo comp."
+            case .official: return "Permesso"
+            case .sick: return "Malattia"
+            case .special: return "Permesso speciale"
+            case .businessTrip: return "Trasferta"
+            }
+        case .portuguese:
+            switch type {
+            case .annual: return "Férias"
+            case .half: return "Meio período"
+            case .quarter: return "Quarto de dia"
+            case .compensatory: return "Folga"
+            case .official: return "Oficial"
+            case .sick: return "Atestado"
+            case .special: return "Licença especial"
+            case .businessTrip: return "Viagem a trabalho"
+            }
+        case .chineseTraditional:
+            switch type {
+            case .annual: return "特休"
+            case .half: return "半天假"
+            case .quarter: return "四分之一天"
+            case .compensatory: return "補休"
+            case .official: return "公假"
+            case .sick: return "病假"
+            case .special: return "特別假"
+            case .businessTrip: return "出差"
+            }
         }
     }
 
@@ -2995,6 +4099,30 @@ enum Strings {
             case .planned: return "Prévu"
             case .used: return "Pris"
             case .cancelled: return "Annulé"
+            }
+        case .spanish:
+            switch status {
+            case .planned: return "Previsto"
+            case .used: return "Usado"
+            case .cancelled: return "Cancelado"
+            }
+        case .italian:
+            switch status {
+            case .planned: return "Previsto"
+            case .used: return "Usato"
+            case .cancelled: return "Annullato"
+            }
+        case .portuguese:
+            switch status {
+            case .planned: return "Planejado"
+            case .used: return "Usado"
+            case .cancelled: return "Cancelado"
+            }
+        case .chineseTraditional:
+            switch status {
+            case .planned: return "預定"
+            case .used: return "已使用"
+            case .cancelled: return "已取消"
             }
         }
     }
@@ -3068,6 +4196,58 @@ enum Strings {
             case .official: return "Officiel"
             case .other: return "Autre"
             }
+        case .spanish:
+            switch type {
+            case .compensatory: return "Compensatorio"
+            case .reward: return "Premio"
+            case .refresh: return "Descanso"
+            case .marriage: return "Matrimonio"
+            case .bereavement: return "Duelo"
+            case .sick: return "Enfermedad"
+            case .maternity: return "Maternidad"
+            case .familyBalance: return "Familia"
+            case .official: return "Oficial"
+            case .other: return "Otro"
+            }
+        case .italian:
+            switch type {
+            case .compensatory: return "Riposo compensativo"
+            case .reward: return "Premio"
+            case .refresh: return "Rigenerazione"
+            case .marriage: return "Matrimonio"
+            case .bereavement: return "Lutto"
+            case .sick: return "Malattia"
+            case .maternity: return "Maternità"
+            case .familyBalance: return "Famiglia"
+            case .official: return "Permesso"
+            case .other: return "Altro"
+            }
+        case .portuguese:
+            switch type {
+            case .compensatory: return "Folga compensatória"
+            case .reward: return "Prêmio"
+            case .refresh: return "Descanso"
+            case .marriage: return "Casamento"
+            case .bereavement: return "Luto"
+            case .sick: return "Atestado"
+            case .maternity: return "Maternidade"
+            case .familyBalance: return "Família"
+            case .official: return "Oficial"
+            case .other: return "Outro"
+            }
+        case .chineseTraditional:
+            switch type {
+            case .compensatory: return "補休"
+            case .reward: return "獎勵假"
+            case .refresh: return "充電假"
+            case .marriage: return "婚假"
+            case .bereavement: return "喪假"
+            case .sick: return "病假"
+            case .maternity: return "產假"
+            case .familyBalance: return "家庭照顧假"
+            case .official: return "公假"
+            case .other: return "其他"
+            }
         }
     }
 
@@ -3080,6 +4260,10 @@ enum Strings {
         case .chinese: return "黄金周"
         case .german: return "Goldene Woche"
         case .french: return "Semaine d'or"
+        case .spanish: return "Semana dorada"
+        case .italian: return "Settimana d’oro"
+        case .portuguese: return "Semana de ouro"
+        case .chineseTraditional: return "黃金連假"
         }
     }
 
@@ -3091,6 +4275,10 @@ enum Strings {
         case .chinese: return "无需年假"
         case .german: return "Ohne Urlaub"
         case .french: return "Sans congé"
+        case .spanish: return "Sin vacaciones"
+        case .italian: return "Senza ferie"
+        case .portuguese: return "Sem férias"
+        case .chineseTraditional: return "免請特休"
         }
     }
 
@@ -3102,6 +4290,10 @@ enum Strings {
         case .chinese: return "桥接假"
         case .german: return "Brückentag"
         case .french: return "Pont"
+        case .spanish: return "Puente"
+        case .italian: return "Ponte"
+        case .portuguese: return "Emenda"
+        case .chineseTraditional: return "橋接假"
         }
     }
 
@@ -3113,6 +4305,10 @@ enum Strings {
         case .chinese: return "最高效率"
         case .german: return "Beste Ausbeute"
         case .french: return "Meilleur rapport"
+        case .spanish: return "Más rentable"
+        case .italian: return "Più conveniente"
+        case .portuguese: return "Mais vantajoso"
+        case .chineseTraditional: return "效率最高"
         }
     }
 
@@ -3124,6 +4320,10 @@ enum Strings {
         case .chinese: return "连续休假"
         case .german: return "Langer Urlaub"
         case .french: return "Congé prolongé"
+        case .spanish: return "Vacaciones largas"
+        case .italian: return "Ferie lunghe"
+        case .portuguese: return "Férias longas"
+        case .chineseTraditional: return "長假"
         }
     }
 
@@ -3135,6 +4335,10 @@ enum Strings {
         case .chinese: return "高效"
         case .german: return "Effizient"
         case .french: return "Efficace"
+        case .spanish: return "Eficiente"
+        case .italian: return "Efficiente"
+        case .portuguese: return "Eficiente"
+        case .chineseTraditional: return "高效率"
         }
     }
 
@@ -3146,6 +4350,10 @@ enum Strings {
         case .chinese: return "周末假日"
         case .german: return "Feiertag am Wochenende"
         case .french: return "Férié le week-end"
+        case .spanish: return "Festivo en fin de semana"
+        case .italian: return "Festività nel weekend"
+        case .portuguese: return "Feriado no fim de semana"
+        case .chineseTraditional: return "週末連假"
         }
     }
 
@@ -3157,6 +4365,10 @@ enum Strings {
         case .chinese: return "家庭旅行"
         case .german: return "Familienreise"
         case .french: return "Voyage en famille"
+        case .spanish: return "Viaje en familia"
+        case .italian: return "Viaggio in famiglia"
+        case .portuguese: return "Viagem em família"
+        case .chineseTraditional: return "家庭旅遊"
         }
     }
 
@@ -3168,6 +4380,10 @@ enum Strings {
         case .chinese: return "家庭"
         case .german: return "Familie"
         case .french: return "Famille"
+        case .spanish: return "Familia"
+        case .italian: return "Famiglia"
+        case .portuguese: return "Família"
+        case .chineseTraditional: return "家庭"
         }
     }
 
@@ -3179,6 +4395,10 @@ enum Strings {
         case .chinese: return "重大节日"
         case .german: return "Großer Feiertag"
         case .french: return "Grande fête"
+        case .spanish: return "Gran festividad"
+        case .italian: return "Grande festa"
+        case .portuguese: return "Grande feriado"
+        case .chineseTraditional: return "節日連假"
         }
     }
 
@@ -3241,6 +4461,38 @@ enum Strings {
             case 12, 1, 2: return "Détente de fin d'année."
             default: return ""
             }
+        case .spanish:
+            switch month {
+            case 3, 4, 5: return "Ideal para escapadas de primavera."
+            case 6, 7, 8: return "Perfecto para las vacaciones de verano."
+            case 9, 10, 11: return "Disfruta de los colores del otoño."
+            case 12, 1, 2: return "Descanso de fin de año."
+            default: return ""
+            }
+        case .italian:
+            switch month {
+            case 3, 4, 5: return "Ideale per le gite primaverili."
+            case 6, 7, 8: return "Perfetto per le vacanze estive."
+            case 9, 10, 11: return "Goditi i colori dell’autunno."
+            case 12, 1, 2: return "Relax di fine anno."
+            default: return ""
+            }
+        case .portuguese:
+            switch month {
+            case 3, 4, 5: return "Ótimo para passeios de primavera."
+            case 6, 7, 8: return "Perfeito para as férias de verão."
+            case 9, 10, 11: return "Aproveite as cores do outono."
+            case 12, 1, 2: return "Descanso de fim de ano."
+            default: return ""
+            }
+        case .chineseTraditional:
+            switch month {
+            case 3, 4, 5: return "適合春遊。"
+            case 6, 7, 8: return "暑假好時機。"
+            case 9, 10, 11: return "賞楓好時節。"
+            case 12, 1, 2: return "年末放鬆一下。"
+            default: return ""
+            }
         }
     }
 
@@ -3252,6 +4504,10 @@ enum Strings {
         case .chinese: return "\(days)天假期"
         case .german: return "\(days)-Tage-Pause"
         case .french: return "\(days) jours de repos"
+        case .spanish: return "\(days) días libres"
+        case .italian: return "\(days) giorni liberi"
+        case .portuguese: return "\(days) dias de folga"
+        case .chineseTraditional: return "\(days)天連假"
         }
     }
 
@@ -3263,6 +4519,10 @@ enum Strings {
         case .chinese: return "\(holidayName) 黄金周"
         case .german: return "Goldene Woche: \(holidayName)"
         case .french: return "Semaine d'or : \(holidayName)"
+        case .spanish: return "Semana dorada: \(holidayName)"
+        case .italian: return "Settimana d’oro: \(holidayName)"
+        case .portuguese: return "Semana de ouro: \(holidayName)"
+        case .chineseTraditional: return "\(holidayName)黃金連假"
         }
     }
 
@@ -3274,6 +4534,10 @@ enum Strings {
         case .chinese: return "\(name) 假期"
         case .german: return "\(name)-Pause"
         case .french: return "Congés : \(name)"
+        case .spanish: return "Puente de \(name)"
+        case .italian: return "Ponte di \(name)"
+        case .portuguese: return "Feriadão de \(name)"
+        case .chineseTraditional: return "\(name)連假"
         }
     }
 
@@ -3289,6 +4553,10 @@ enum Strings {
             return "\(weekdayStart)~\(weekdayEnd) \(holidayDesc)，无需年假\(totalDays)天假期！"
         case .german: return "\(weekdayStart)–\(weekdayEnd): \(totalDays) freie Tage mit \(holidayDesc), ohne Urlaub!"
         case .french: return "\(weekdayStart)–\(weekdayEnd) : \(totalDays) jours off avec \(holidayDesc), sans congé !"
+        case .spanish: return "\(weekdayStart)–\(weekdayEnd): \(totalDays) días libres con \(holidayDesc), ¡sin gastar vacaciones!"
+        case .italian: return "\(weekdayStart)–\(weekdayEnd): \(totalDays) giorni liberi con \(holidayDesc), senza ferie!"
+        case .portuguese: return "\(weekdayStart)–\(weekdayEnd): \(totalDays) dias de folga com \(holidayDesc), sem usar férias!"
+        case .chineseTraditional: return "\(weekdayStart)~\(weekdayEnd) \(holidayDesc)，不用請特休就有\(totalDays)天連假！"
         }
     }
 
@@ -3300,6 +4568,10 @@ enum Strings {
         case .chinese: return "\(holidayName) 桥接假期"
         case .german: return "Brückentage: \(holidayName)"
         case .french: return "Pont : \(holidayName)"
+        case .spanish: return "Puente: \(holidayName)"
+        case .italian: return "Ponte: \(holidayName)"
+        case .portuguese: return "Emenda: \(holidayName)"
+        case .chineseTraditional: return "\(holidayName)橋接連假"
         }
     }
 
@@ -3311,6 +4583,10 @@ enum Strings {
         case .chinese: return "周一请1天年假获得4天假期！利用\(holidayName)前的周一。"
         case .german: return "1 Urlaubstag am Montag für 4 freie Tage! Nutze den Montag vor \(holidayName)."
         case .french: return "1 jour de congé le lundi pour 4 jours off ! Profitez du lundi avant \(holidayName)."
+        case .spanish: return "¡1 día de vacaciones el lunes y tienes 4 días libres! Aprovecha el lunes antes de \(holidayName)."
+        case .italian: return "1 giorno di ferie il lunedì per 4 giorni di fila! Sfrutta il lunedì prima di \(holidayName)."
+        case .portuguese: return "1 dia de férias na segunda e você ganha 4 dias de folga! Aproveite a segunda antes de \(holidayName)."
+        case .chineseTraditional: return "週一請1天特休就有4天連假！善用\(holidayName)前的週一。"
         }
     }
 
@@ -3322,6 +4598,10 @@ enum Strings {
         case .chinese: return "周五请1天年假获得4天假期！利用\(holidayName)后的周五。"
         case .german: return "1 Urlaubstag am Freitag für 4 freie Tage! Nutze den Freitag nach \(holidayName)."
         case .french: return "1 jour de congé le vendredi pour 4 jours off ! Profitez du vendredi après \(holidayName)."
+        case .spanish: return "¡1 día de vacaciones el viernes y tienes 4 días libres! Aprovecha el viernes después de \(holidayName)."
+        case .italian: return "1 giorno di ferie il venerdì per 4 giorni di fila! Sfrutta il venerdì dopo \(holidayName)."
+        case .portuguese: return "1 dia de férias na sexta e você ganha 4 dias de folga! Aproveite a sexta depois de \(holidayName)."
+        case .chineseTraditional: return "週五請1天特休就有4天連假！善用\(holidayName)後的週五。"
         }
     }
 
@@ -3333,6 +4613,10 @@ enum Strings {
         case .chinese: return "\(holidayName) 连休"
         case .german: return "Verlängerter Urlaub: \(holidayName)"
         case .french: return "Congé prolongé : \(holidayName)"
+        case .spanish: return "Vacaciones junto a \(holidayName)"
+        case .italian: return "Ferie attorno a \(holidayName)"
+        case .portuguese: return "Férias perto de \(holidayName)"
+        case .chineseTraditional: return "\(holidayName)延伸休假"
         }
     }
 
@@ -3344,6 +4628,10 @@ enum Strings {
         case .chinese: return "利用\(holidayName)，请\(leaveDays)天年假获得\(totalDays)天假期。"
         case .german: return "Mit \(leaveDays) Urlaubstagen rund um \(holidayName) bekommst du \(totalDays) freie Tage."
         case .french: return "Avec \(leaveDays) jours de congé autour de \(holidayName), profitez de \(totalDays) jours off."
+        case .spanish: return "Con \(leaveDays == 1 ? "1 día" : "\(leaveDays) días") de vacaciones alrededor de \(holidayName), disfruta de \(totalDays) días libres."
+        case .italian: return "Con \(leaveDays == 1 ? "1 giorno" : "\(leaveDays) giorni") di ferie attorno a \(holidayName), hai \(totalDays) giorni di fila."
+        case .portuguese: return "Com \(leaveDays == 1 ? "1 dia" : "\(leaveDays) dias") de férias perto de \(holidayName), você tem \(totalDays) dias de folga."
+        case .chineseTraditional: return "善用\(holidayName)連假，請\(leaveDays)天特休就能休\(totalDays)天。"
         }
     }
 
@@ -3355,6 +4643,10 @@ enum Strings {
         case .chinese: return "\(holidayName) 周假"
         case .german: return "Urlaubswoche: \(holidayName)"
         case .french: return "Semaine de congé : \(holidayName)"
+        case .spanish: return "Semana libre: \(holidayName)"
+        case .italian: return "Settimana di ferie: \(holidayName)"
+        case .portuguese: return "Semana de folga: \(holidayName)"
+        case .chineseTraditional: return "\(holidayName)整週休假"
         }
     }
 
@@ -3366,6 +4658,10 @@ enum Strings {
         case .chinese: return "利用\(holidayName)所在周！请\(leaveDays)天年假获得9天假期。"
         case .german: return "Nimm die Woche mit \(holidayName)! \(leaveDays) Urlaubstage für 9 freie Tage."
         case .french: return "Prenez la semaine de \(holidayName) ! \(leaveDays) jours de congé pour 9 jours off."
+        case .spanish: return "¡Tómate la semana de \(holidayName)! \(leaveDays == 1 ? "1 día" : "\(leaveDays) días") de vacaciones para 9 días libres."
+        case .italian: return "Prenditi la settimana di \(holidayName)! \(leaveDays == 1 ? "1 giorno" : "\(leaveDays) giorni") di ferie per 9 giorni di fila."
+        case .portuguese: return "Tire a semana de \(holidayName)! \(leaveDays == 1 ? "1 dia" : "\(leaveDays) dias") de férias para 9 dias de folga."
+        case .chineseTraditional: return "善用\(holidayName)所在的那一週！請\(leaveDays)天特休就有9天連假。"
         }
     }
 
@@ -3377,6 +4673,10 @@ enum Strings {
         case .chinese: return "利用五一黄金周！请\(leaveDays)天年假获得\(totalDays)天假期。"
         case .german: return "Goldene Woche rund um den Kindertag! \(leaveDays) Urlaubstage für \(totalDays) freie Tage."
         case .french: return "Semaine d’or autour de la Fête des enfants : \(leaveDays) jours de congé pour \(totalDays) jours de repos."
+        case .spanish: return "¡Semana dorada con el Día del Niño y el Día del Trabajador! \(leaveDays == 1 ? "1 día" : "\(leaveDays) días") de vacaciones para \(totalDays) días libres."
+        case .italian: return "Settimana d’oro con la Festa dei bambini e la Festa dei lavoratori: \(leaveDays == 1 ? "1 giorno" : "\(leaveDays) giorni") di ferie per \(totalDays) giorni di fila."
+        case .portuguese: return "Semana de ouro com o Dia das Crianças e o Dia do Trabalhador! \(leaveDays == 1 ? "1 dia" : "\(leaveDays) dias") de férias para \(totalDays) dias de folga."
+        case .chineseTraditional: return "善用兒童節與勞動節的黃金連假！請\(leaveDays)天特休就有\(totalDays)天連假。"
         }
     }
 
@@ -3388,6 +4688,10 @@ enum Strings {
         case .chinese: return "五月黄金周"
         case .german: return "Goldene Woche im Mai"
         case .french: return "Semaine d'or de mai"
+        case .spanish: return "Semana dorada de mayo"
+        case .italian: return "Settimana d’oro di maggio"
+        case .portuguese: return "Semana de ouro de maio"
+        case .chineseTraditional: return "5月黃金連假"
         }
     }
 
@@ -3400,6 +4704,10 @@ enum Strings {
         case .chinese: return "zh_CN"
         case .german: return "de_DE"
         case .french: return "fr_FR"
+        case .spanish: return "es_ES"
+        case .italian: return "it_IT"
+        case .portuguese: return "pt_BR"
+        case .chineseTraditional: return "zh_Hant_TW"
         }
     }
 
@@ -3413,6 +4721,10 @@ enum Strings {
             case .chinese: return "M月d日(E)"
             case .german: return "d. MMM (E)"
             case .french: return "E d MMM"
+            case .spanish: return "E d MMM"
+            case .italian: return "E d MMM"
+            case .portuguese: return "E, d 'de' MMM"
+            case .chineseTraditional: return "M月d日 (E)"
             }
         case "monthDayOnly":
             switch lang {
@@ -3422,6 +4734,10 @@ enum Strings {
             case .chinese: return "M月d日"
             case .german: return "d. MMM"
             case .french: return "d MMM"
+            case .spanish: return "d MMM"
+            case .italian: return "d MMM"
+            case .portuguese: return "d 'de' MMM"
+            case .chineseTraditional: return "M月d日"
             }
         case "yearMonth":
             switch lang {
@@ -3431,6 +4747,10 @@ enum Strings {
             case .chinese: return "yyyy年M月"
             case .german: return "MMM yyyy"
             case .french: return "MMM yyyy"
+            case .spanish: return "MMM yyyy"
+            case .italian: return "MMM yyyy"
+            case .portuguese: return "MMM yyyy"
+            case .chineseTraditional: return "yyyy年M月"
             }
         default:
             return "M/d(E)"
@@ -3446,6 +4766,10 @@ enum Strings {
         case .chinese: return "黄金周"
         case .german: return "Goldene Woche"
         case .french: return "Semaine d'or"
+        case .spanish: return "Semana dorada"
+        case .italian: return "Settimana d’oro"
+        case .portuguese: return "Semana de ouro"
+        case .chineseTraditional: return "黃金連假"
         }
     }
 
@@ -3457,6 +4781,10 @@ enum Strings {
         case .chinese: return "桥接假"
         case .german: return "Brücke"
         case .french: return "Pont"
+        case .spanish: return "Puente"
+        case .italian: return "Ponte"
+        case .portuguese: return "Emenda"
+        case .chineseTraditional: return "橋接假"
         }
     }
 
@@ -3468,6 +4796,10 @@ enum Strings {
         case .chinese: return "连休"
         case .german: return "Verlängert"
         case .french: return "Prolongé"
+        case .spanish: return "Prolongado"
+        case .italian: return "Prolungato"
+        case .portuguese: return "Prolongado"
+        case .chineseTraditional: return "長假"
         }
     }
 
@@ -3480,6 +4812,10 @@ enum Strings {
         case .chinese: return "另外\(count)项"
         case .german: return "+\(count) weitere"
         case .french: return "+\(count) autres"
+        case .spanish: return "+\(count) más"
+        case .italian: return "+\(count) altri"
+        case .portuguese: return "+\(count) mais"
+        case .chineseTraditional: return "還有\(count)筆"
         }
     }
 
@@ -3492,6 +4828,10 @@ enum Strings {
         case .chinese: return "\(count)项"
         case .german: return "\(count)"
         case .french: return "\(count)"
+        case .spanish: return "\(count)"
+        case .italian: return "\(count)"
+        case .portuguese: return "\(count)"
+        case .chineseTraditional: return "\(count)筆"
         }
     }
 
@@ -3503,6 +4843,10 @@ enum Strings {
         case .chinese: return "\(count)个"
         case .german: return "\(count)"
         case .french: return "\(count)"
+        case .spanish: return "\(count)"
+        case .italian: return "\(count)"
+        case .portuguese: return "\(count)"
+        case .chineseTraditional: return "\(count)個"
         }
     }
 
@@ -3520,6 +4864,10 @@ enum Strings {
             case .chinese: parts.append("已选中")
             case .german: parts.append("ausgewählt")
             case .french: parts.append("sélectionné")
+            case .spanish: parts.append("seleccionado")
+            case .italian: parts.append("selezionato")
+            case .portuguese: parts.append("selecionado")
+            case .chineseTraditional: parts.append("已選取")
             }
         }
         return parts.joined(separator: ", ")
@@ -3533,6 +4881,10 @@ enum Strings {
         case .chinese: return "图例：红色节假日，绿色年假，蓝色周末"
         case .german: return "Legende: Rot für Feiertage, Grün für Urlaub, Blau für Wochenenden"
         case .french: return "Légende : rouge pour les jours fériés, vert pour les congés, bleu pour les week-ends"
+        case .spanish: return "Leyenda: rojo para festivos, verde para vacaciones, azul para fines de semana"
+        case .italian: return "Legenda: rosso per le festività, verde per le ferie, blu per i weekend"
+        case .portuguese: return "Legenda: vermelho para feriados, verde para férias, azul para fins de semana"
+        case .chineseTraditional: return "圖例：紅色為國定假日，綠色為特休，藍色為週末"
         }
     }
 
@@ -3546,6 +4898,10 @@ enum Strings {
         case .chinese: return "年假管理"
         case .german: return "Urlaubsverwaltung"
         case .french: return "Gestion des congés"
+        case .spanish: return "Gestión de vacaciones"
+        case .italian: return "Gestione ferie"
+        case .portuguese: return "Gestão de férias"
+        case .chineseTraditional: return "特休管理"
         }
     }
 
@@ -3557,6 +4913,10 @@ enum Strings {
         case .chinese: return "基本年假"
         case .german: return "Grundurlaub"
         case .french: return "Congés de base"
+        case .spanish: return "Vacaciones base"
+        case .italian: return "Ferie base"
+        case .portuguese: return "Férias base"
+        case .chineseTraditional: return "基本特休"
         }
     }
 
@@ -3568,6 +4928,10 @@ enum Strings {
         case .chinese: return "奖励"
         case .german: return "Bonus"
         case .french: return "Bonus"
+        case .spanish: return "Extra"
+        case .italian: return "Bonus"
+        case .portuguese: return "Bônus"
+        case .chineseTraditional: return "獎勵"
         }
     }
 
@@ -3579,6 +4943,10 @@ enum Strings {
         case .chinese: return "可用总数"
         case .german: return "Insgesamt verfügbar"
         case .french: return "Total disponible"
+        case .spanish: return "Total disponible"
+        case .italian: return "Totale disponibile"
+        case .portuguese: return "Total disponível"
+        case .chineseTraditional: return "可用總天數"
         }
     }
 
@@ -3590,6 +4958,10 @@ enum Strings {
         case .chinese: return "管理类型"
         case .german: return "Art"
         case .french: return "Type"
+        case .spanish: return "Tipo"
+        case .italian: return "Tipo"
+        case .portuguese: return "Tipo"
+        case .chineseTraditional: return "類型"
         }
     }
 
@@ -3601,6 +4973,10 @@ enum Strings {
         case .chinese: return "登记休假"
         case .german: return "Urlaub eintragen"
         case .french: return "Enregistrer un congé"
+        case .spanish: return "Registrar ausencia"
+        case .italian: return "Registra assenza"
+        case .portuguese: return "Registrar ausência"
+        case .chineseTraditional: return "登記休假"
         }
     }
 
@@ -3612,6 +4988,10 @@ enum Strings {
         case .chinese: return "添加年假"
         case .german: return "Urlaub hinzufügen"
         case .french: return "Ajouter un congé"
+        case .spanish: return "Añadir vacaciones"
+        case .italian: return "Aggiungi ferie"
+        case .portuguese: return "Adicionar férias"
+        case .chineseTraditional: return "新增特休"
         }
     }
 
@@ -3623,6 +5003,10 @@ enum Strings {
         case .chinese: return "休假类型"
         case .german: return "Urlaubsart"
         case .french: return "Type de congé"
+        case .spanish: return "Tipo de ausencia"
+        case .italian: return "Tipo di assenza"
+        case .portuguese: return "Tipo de ausência"
+        case .chineseTraditional: return "假別"
         }
     }
 
@@ -3634,6 +5018,10 @@ enum Strings {
         case .chinese: return "\(typeName)不从年假中扣除。"
         case .german: return "\(typeName) wird nicht vom Jahresurlaub abgezogen."
         case .french: return "\(typeName) n'est pas déduit des congés annuels."
+        case .spanish: return "Este tipo (\(typeName)) no se descuenta de tus vacaciones."
+        case .italian: return "Il tipo \(typeName) non viene scalato dalle ferie."
+        case .portuguese: return "O tipo \(typeName) não é descontado das suas férias."
+        case .chineseTraditional: return "\(typeName)不會扣除特休。"
         }
     }
 
@@ -3645,6 +5033,10 @@ enum Strings {
         case .chinese: return "选择日期"
         case .german: return "Datum wählen"
         case .french: return "Choisir les dates"
+        case .spanish: return "Elegir fechas"
+        case .italian: return "Scegli le date"
+        case .portuguese: return "Escolher datas"
+        case .chineseTraditional: return "選擇日期"
         }
     }
 
@@ -3656,6 +5048,10 @@ enum Strings {
         case .chinese: return "开始日期"
         case .german: return "Startdatum"
         case .french: return "Date de début"
+        case .spanish: return "Fecha de inicio"
+        case .italian: return "Data di inizio"
+        case .portuguese: return "Data de início"
+        case .chineseTraditional: return "開始日期"
         }
     }
 
@@ -3667,6 +5063,10 @@ enum Strings {
         case .chinese: return "终止日期"
         case .german: return "Enddatum"
         case .french: return "Date de fin"
+        case .spanish: return "Fecha de fin"
+        case .italian: return "Data di fine"
+        case .portuguese: return "Data de término"
+        case .chineseTraditional: return "結束日期"
         }
     }
 
@@ -3678,6 +5078,10 @@ enum Strings {
         case .chinese: return "使用天数"
         case .german: return "Genutzte Tage"
         case .french: return "Jours utilisés"
+        case .spanish: return "Días usados"
+        case .italian: return "Giorni usati"
+        case .portuguese: return "Dias usados"
+        case .chineseTraditional: return "使用天數"
         }
     }
 
@@ -3689,6 +5093,10 @@ enum Strings {
         case .chinese: return "备注（可选）"
         case .german: return "Notiz (optional)"
         case .french: return "Note (facultatif)"
+        case .spanish: return "Nota (opcional)"
+        case .italian: return "Nota (facoltativa)"
+        case .portuguese: return "Nota (opcional)"
+        case .chineseTraditional: return "備註（選填）"
         }
     }
 
@@ -3700,6 +5108,10 @@ enum Strings {
         case .chinese: return "请输入休假目的"
         case .german: return "Urlaubszweck eingeben"
         case .french: return "Saisissez le motif du congé"
+        case .spanish: return "Escribe el motivo de la ausencia"
+        case .italian: return "Inserisci il motivo dell’assenza"
+        case .portuguese: return "Digite o motivo da ausência"
+        case .chineseTraditional: return "輸入休假事由"
         }
     }
 
@@ -3711,6 +5123,10 @@ enum Strings {
         case .chinese: return "登记休假"
         case .german: return "Urlaub eintragen"
         case .french: return "Enregistrer le congé"
+        case .spanish: return "Registrar ausencia"
+        case .italian: return "Registra assenza"
+        case .portuguese: return "Registrar ausência"
+        case .chineseTraditional: return "登記休假"
         }
     }
 
@@ -3724,6 +5140,10 @@ enum Strings {
         case .chinese: return "登记\(typeName)"
         case .german: return "\(typeName) eintragen"
         case .french: return "Enregistrer : \(typeName)"
+        case .spanish: return "Registrar: \(typeName)"
+        case .italian: return "Registra: \(typeName)"
+        case .portuguese: return "Registrar: \(typeName)"
+        case .chineseTraditional: return "登記\(typeName)"
         }
     }
 
@@ -3735,6 +5155,10 @@ enum Strings {
         case .chinese: return "最近记录"
         case .german: return "Letzte Einträge"
         case .french: return "Enregistrements récents"
+        case .spanish: return "Registros recientes"
+        case .italian: return "Registrazioni recenti"
+        case .portuguese: return "Registros recentes"
+        case .chineseTraditional: return "最近登記紀錄"
         }
     }
 
@@ -3746,6 +5170,10 @@ enum Strings {
         case .chinese: return "提示"
         case .german: return "Hinweis"
         case .french: return "Alerte"
+        case .spanish: return "Aviso"
+        case .italian: return "Avviso"
+        case .portuguese: return "Aviso"
+        case .chineseTraditional: return "提醒"
         }
     }
 
@@ -3757,6 +5185,10 @@ enum Strings {
         case .chinese: return "年假不足。"
         case .german: return "Nicht genügend Urlaubstage."
         case .french: return "Jours de congé insuffisants."
+        case .spanish: return "No tienes suficientes días de vacaciones."
+        case .italian: return "Non hai abbastanza giorni di ferie."
+        case .portuguese: return "Você não tem dias de férias suficientes."
+        case .chineseTraditional: return "特休天數不足。"
         }
     }
 
@@ -3768,6 +5200,10 @@ enum Strings {
         case .chinese: return "\(typeName)已登记！"
         case .german: return "\(typeName) wurde eingetragen!"
         case .french: return "\(typeName) a été enregistré !"
+        case .spanish: return "¡Registrado: \(typeName)!"
+        case .italian: return "Registrato: \(typeName)!"
+        case .portuguese: return "Registrado: \(typeName)!"
+        case .chineseTraditional: return "已登記\(typeName)！"
         }
     }
 
@@ -3779,6 +5215,10 @@ enum Strings {
         case .chinese: return "保存失败,请重试。"
         case .german: return "Speichern fehlgeschlagen. Bitte versuche es erneut."
         case .french: return "Échec de l’enregistrement. Veuillez réessayer."
+        case .spanish: return "No se pudo guardar. Inténtalo de nuevo."
+        case .italian: return "Salvataggio non riuscito. Riprova."
+        case .portuguese: return "Não foi possível salvar. Tente novamente."
+        case .chineseTraditional: return "儲存失敗，請再試一次。"
         }
     }
 
@@ -3791,6 +5231,10 @@ enum Strings {
         case .chinese: return "已备份到iCloud。"
         case .german: return "In iCloud gesichert."
         case .french: return "Sauvegardé dans iCloud."
+        case .spanish: return "Copia de seguridad guardada en iCloud."
+        case .italian: return "Backup eseguito su iCloud."
+        case .portuguese: return "Backup feito no iCloud."
+        case .chineseTraditional: return "已備份到 iCloud。"
         }
     }
 
@@ -3802,6 +5246,10 @@ enum Strings {
         case .chinese: return "恢复已完成。"
         case .german: return "Wiederherstellung abgeschlossen."
         case .french: return "Restauration terminée."
+        case .spanish: return "Restauración completada."
+        case .italian: return "Ripristino completato."
+        case .portuguese: return "Restauração concluída."
+        case .chineseTraditional: return "已完成還原。"
         }
     }
 
@@ -3813,6 +5261,10 @@ enum Strings {
         case .chinese: return "保存失败: \(reason)"
         case .german: return "Speichern fehlgeschlagen: \(reason)"
         case .french: return "Échec de l’enregistrement : \(reason)"
+        case .spanish: return "No se pudo guardar: \(reason)"
+        case .italian: return "Salvataggio non riuscito: \(reason)"
+        case .portuguese: return "Não foi possível salvar: \(reason)"
+        case .chineseTraditional: return "儲存失敗：\(reason)"
         }
     }
 
@@ -3824,6 +5276,10 @@ enum Strings {
         case .chinese: return "重置失败: \(reason)"
         case .german: return "Zurücksetzen fehlgeschlagen: \(reason)"
         case .french: return "Échec de la réinitialisation : \(reason)"
+        case .spanish: return "No se pudo restablecer: \(reason)"
+        case .italian: return "Azzeramento non riuscito: \(reason)"
+        case .portuguese: return "Não foi possível redefinir: \(reason)"
+        case .chineseTraditional: return "重設失敗：\(reason)"
         }
     }
 
@@ -3835,6 +5291,10 @@ enum Strings {
         case .chinese: return "删除失败,请重试。"
         case .german: return "Löschen fehlgeschlagen. Bitte versuche es erneut."
         case .french: return "Échec de la suppression. Veuillez réessayer."
+        case .spanish: return "No se pudo eliminar. Inténtalo de nuevo."
+        case .italian: return "Eliminazione non riuscita. Riprova."
+        case .portuguese: return "Não foi possível excluir. Tente novamente."
+        case .chineseTraditional: return "刪除失敗，請再試一次。"
         }
     }
 
@@ -3846,6 +5306,10 @@ enum Strings {
         case .chinese: return "删除奖励年假"
         case .german: return "Bonusurlaub löschen"
         case .french: return "Supprimer le congé bonus"
+        case .spanish: return "Eliminar días extra"
+        case .italian: return "Elimina ferie bonus"
+        case .portuguese: return "Excluir folga bônus"
+        case .chineseTraditional: return "刪除獎勵特休"
         }
     }
 
@@ -3857,6 +5321,10 @@ enum Strings {
         case .chinese: return "确定删除此奖励年假吗？"
         case .german: return "Diesen Bonusurlaub löschen?"
         case .french: return "Supprimer ce congé bonus ?"
+        case .spanish: return "¿Eliminar estos días extra?"
+        case .italian: return "Eliminare queste ferie bonus?"
+        case .portuguese: return "Excluir esta folga bônus?"
+        case .chineseTraditional: return "要刪除這筆獎勵特休嗎？"
         }
     }
 
@@ -3868,6 +5336,10 @@ enum Strings {
         case .chinese: return "重试"
         case .german: return "Erneut versuchen"
         case .french: return "Réessayer"
+        case .spanish: return "Reintentar"
+        case .italian: return "Riprova"
+        case .portuguese: return "Tentar de novo"
+        case .chineseTraditional: return "重試"
         }
     }
 
@@ -3880,6 +5352,10 @@ enum Strings {
         case .chinese: return "在此日期登记休假"
         case .german: return "Urlaub für dieses Datum eintragen"
         case .french: return "Ajouter un congé à cette date"
+        case .spanish: return "Añadir vacaciones este día"
+        case .italian: return "Aggiungi ferie in questa data"
+        case .portuguese: return "Adicionar férias nesta data"
+        case .chineseTraditional: return "在這天登記休假"
         }
     }
 
@@ -3892,6 +5368,10 @@ enum Strings {
         case .chinese: return "计划您的第一个假期"
         case .german: return "Plane deinen ersten Urlaub"
         case .french: return "Planifiez votre premier congé"
+        case .spanish: return "Planea tus primeras vacaciones"
+        case .italian: return "Pianifica le tue prime ferie"
+        case .portuguese: return "Planeje suas primeiras férias"
+        case .chineseTraditional: return "規劃你的第一次休假"
         }
     }
 
@@ -3903,6 +5383,10 @@ enum Strings {
         case .chinese: return "登记休假后,可一目了然地查看剩余年假和即将到来的日程。"
         case .german: return "Trage Urlaub ein, um verbleibende Tage und anstehende Pläne auf einen Blick zu sehen."
         case .french: return "Enregistrez un congé pour voir vos jours restants et vos prochains plans d’un coup d’œil."
+        case .spanish: return "Registra tus vacaciones para ver de un vistazo los días que te quedan y tus próximos planes."
+        case .italian: return "Registra le tue ferie per vedere a colpo d’occhio i giorni rimasti e i prossimi programmi."
+        case .portuguese: return "Registre suas férias para ver num relance os dias restantes e os próximos planos."
+        case .chineseTraditional: return "登記休假後，就能一眼看到剩餘特休和接下來的行程。"
         }
     }
 
@@ -3914,6 +5398,10 @@ enum Strings {
         case .chinese: return "登记休假"
         case .german: return "Urlaub hinzufügen"
         case .french: return "Ajouter un congé"
+        case .spanish: return "Añadir vacaciones"
+        case .italian: return "Aggiungi ferie"
+        case .portuguese: return "Adicionar férias"
+        case .chineseTraditional: return "登記休假"
         }
     }
 
@@ -3926,6 +5414,10 @@ enum Strings {
         case .chinese: return "\(year)年的节假日信息可能不准确,请将应用更新到最新版本。"
         case .german: return "Die Feiertage für \(year) sind möglicherweise ungenau. Bitte aktualisiere die App auf die neueste Version."
         case .french: return "Les jours fériés de \(year) peuvent être inexacts. Veuillez mettre à jour l’app vers la dernière version."
+        case .spanish: return "Los festivos de \(year) podrían no ser exactos. Actualiza la app a la última versión."
+        case .italian: return "Le festività del \(year) potrebbero non essere precise. Aggiorna l’app all’ultima versione."
+        case .portuguese: return "Os feriados de \(year) podem não estar corretos. Atualize o app para a versão mais recente."
+        case .chineseTraditional: return "\(year) 年的國定假日資訊可能不準確，請將 App 更新至最新版本。"
         }
     }
 
@@ -3938,6 +5430,10 @@ enum Strings {
         case .chinese: return "购买已恢复。"
         case .german: return "Käufe wiederhergestellt."
         case .french: return "Achats restaurés."
+        case .spanish: return "Compras restauradas."
+        case .italian: return "Acquisti ripristinati."
+        case .portuguese: return "Compras restauradas."
+        case .chineseTraditional: return "已回復購買項目。"
         }
     }
 
@@ -3949,6 +5445,10 @@ enum Strings {
         case .chinese: return "没有可恢复的购买记录。"
         case .german: return "Keine Käufe zum Wiederherstellen."
         case .french: return "Aucun achat à restaurer."
+        case .spanish: return "No hay compras que restaurar."
+        case .italian: return "Nessun acquisto da ripristinare."
+        case .portuguese: return "Nenhuma compra para restaurar."
+        case .chineseTraditional: return "沒有可回復的購買項目。"
         }
     }
 
@@ -3960,6 +5460,10 @@ enum Strings {
         case .chinese: return "恢复购买失败: \(reason)"
         case .german: return "Wiederherstellung fehlgeschlagen: \(reason)"
         case .french: return "Échec de la restauration : \(reason)"
+        case .spanish: return "No se pudo restaurar: \(reason)"
+        case .italian: return "Ripristino non riuscito: \(reason)"
+        case .portuguese: return "Não foi possível restaurar: \(reason)"
+        case .chineseTraditional: return "回復購買失敗：\(reason)"
         }
     }
 
@@ -3971,6 +5475,10 @@ enum Strings {
         case .chinese: return "无法加载价格信息,请检查网络连接。"
         case .german: return "Preise konnten nicht geladen werden. Bitte prüfe deine Netzwerkverbindung."
         case .french: return "Impossible de charger les prix. Vérifiez votre connexion réseau."
+        case .spanish: return "No se pudieron cargar los precios. Comprueba tu conexión a internet."
+        case .italian: return "Impossibile caricare i prezzi. Controlla la connessione di rete."
+        case .portuguese: return "Não foi possível carregar os preços. Verifique sua conexão com a internet."
+        case .chineseTraditional: return "無法載入價格資訊，請檢查網路連線。"
         }
     }
 
@@ -3982,6 +5490,10 @@ enum Strings {
         case .chinese: return "服务条款"
         case .german: return "Nutzungsbedingungen"
         case .french: return "Conditions d’utilisation"
+        case .spanish: return "Términos de uso"
+        case .italian: return "Termini di utilizzo"
+        case .portuguese: return "Termos de uso"
+        case .chineseTraditional: return "使用條款"
         }
     }
 
@@ -3993,6 +5505,10 @@ enum Strings {
         case .chinese: return "隐私政策"
         case .german: return "Datenschutzerklärung"
         case .french: return "Politique de confidentialité"
+        case .spanish: return "Política de privacidad"
+        case .italian: return "Informativa sulla privacy"
+        case .portuguese: return "Política de privacidade"
+        case .chineseTraditional: return "隱私權政策"
         }
     }
 
@@ -4005,6 +5521,10 @@ enum Strings {
         case .chinese: return "从日历导入休假"
         case .german: return "Urlaub aus Kalender importieren"
         case .french: return "Importer les congés du calendrier"
+        case .spanish: return "Importar vacaciones del calendario"
+        case .italian: return "Importa ferie dal calendario"
+        case .portuguese: return "Importar férias do calendário"
+        case .chineseTraditional: return "從行事曆匯入休假"
         }
     }
 
@@ -4016,6 +5536,10 @@ enum Strings {
         case .chinese: return "从日历中查找疑似休假的日程并添加。"
         case .german: return "Finde Kalendereinträge, die nach Urlaub aussehen, und füge sie hinzu."
         case .french: return "Trouvez les événements du calendrier qui ressemblent à des congés et ajoutez-les."
+        case .spanish: return "Busca en tu calendario eventos que parezcan vacaciones y añádelos."
+        case .italian: return "Trova nel calendario gli eventi che sembrano ferie e aggiungili."
+        case .portuguese: return "Encontre no calendário eventos que parecem férias e adicione-os."
+        case .chineseTraditional: return "從行事曆找出看起來像休假的行程並加入。"
         }
     }
 
@@ -4027,6 +5551,10 @@ enum Strings {
         case .chinese: return "疑似休假的日程"
         case .german: return "Einträge, die nach Urlaub aussehen"
         case .french: return "Événements ressemblant à des congés"
+        case .spanish: return "Eventos que parecen vacaciones"
+        case .italian: return "Eventi che sembrano ferie"
+        case .portuguese: return "Eventos que parecem férias"
+        case .chineseTraditional: return "看起來像休假的行程"
         }
     }
 
@@ -4038,6 +5566,10 @@ enum Strings {
         case .chinese: return "未找到疑似休假的日程。\n(已登记的休假会被排除)"
         case .german: return "Keine urlaubsähnlichen Einträge gefunden.\n(Bereits eingetragener Urlaub wird ausgeschlossen)"
         case .french: return "Aucun événement ressemblant à un congé trouvé.\n(Les congés déjà enregistrés sont exclus)"
+        case .spanish: return "No se encontraron eventos que parezcan vacaciones.\n(Se excluyen las ya registradas)"
+        case .italian: return "Nessun evento simile a ferie trovato.\n(Le ferie già registrate sono escluse)"
+        case .portuguese: return "Nenhum evento parecido com férias encontrado.\n(Férias já registradas não aparecem)"
+        case .chineseTraditional: return "找不到看起來像休假的行程。\n（已登記的休假不會列出）"
         }
     }
 
@@ -4049,6 +5581,10 @@ enum Strings {
         case .chinese: return "添加\(count)项"
         case .german: return "\(count) hinzufügen"
         case .french: return "Ajouter \(count)"
+        case .spanish: return "Añadir \(count)"
+        case .italian: return "Aggiungi \(count)"
+        case .portuguese: return "Adicionar \(count)"
+        case .chineseTraditional: return "加入 \(count) 筆"
         }
     }
 
@@ -4060,6 +5596,10 @@ enum Strings {
         case .chinese: return "已添加\(count)项休假。"
         case .german: return "\(count) Urlaubseintrag/-einträge hinzugefügt."
         case .french: return "\(count) congé(s) ajouté(s)."
+        case .spanish: return count == 1 ? "Se añadió 1 registro de vacaciones." : "Se añadieron \(count) registros de vacaciones."
+        case .italian: return count == 1 ? "Aggiunto 1 periodo di ferie." : "Aggiunti \(count) periodi di ferie."
+        case .portuguese: return count == 1 ? "1 registro de férias adicionado." : "\(count) registros de férias adicionados."
+        case .chineseTraditional: return "已加入 \(count) 筆休假。"
         }
     }
 
@@ -4072,6 +5612,10 @@ enum Strings {
         case .chinese: return "在日历中发现休假"
         case .german: return "Urlaub im Kalender gefunden"
         case .french: return "Congés trouvés dans votre calendrier"
+        case .spanish: return "Vacaciones encontradas en tu calendario"
+        case .italian: return "Ferie trovate nel tuo calendario"
+        case .portuguese: return "Férias encontradas no seu calendário"
+        case .chineseTraditional: return "在行事曆中找到休假"
         }
     }
 
@@ -4083,6 +5627,10 @@ enum Strings {
         case .chinese: return "找到\(count)项疑似休假的日程,确认后可一键添加。"
         case .german: return "\(count) Eintrag/Einträge gefunden, die nach Urlaub aussehen. Prüfe sie und füge sie mit einem Tipp hinzu."
         case .french: return "\(count) événement(s) ressemblant à des congés trouvé(s). Vérifiez-les et ajoutez-les en un geste."
+        case .spanish: return count == 1 ? "Encontramos 1 evento que parece vacaciones. Revísalo y añádelo con un toque." : "Encontramos \(count) eventos que parecen vacaciones. Revísalos y añádelos de una vez."
+        case .italian: return count == 1 ? "Trovato 1 evento che sembra ferie. Controllalo e aggiungilo in un tocco." : "Trovati \(count) eventi che sembrano ferie. Controllali e aggiungili in un tocco."
+        case .portuguese: return count == 1 ? "Encontramos 1 evento que parece férias. Confira e adicione com um toque." : "Encontramos \(count) eventos que parecem férias. Confira e adicione todos de uma vez."
+        case .chineseTraditional: return "找到 \(count) 筆看起來像休假的行程，確認後可一次加入。"
         }
     }
 
@@ -4094,6 +5642,10 @@ enum Strings {
         case .chinese: return "查看"
         case .german: return "Prüfen"
         case .french: return "Vérifier"
+        case .spanish: return "Revisar"
+        case .italian: return "Controlla"
+        case .portuguese: return "Conferir"
+        case .chineseTraditional: return "查看"
         }
     }
 
@@ -4105,6 +5657,10 @@ enum Strings {
         case .chinese: return "日历自动检测"
         case .german: return "Automatische Kalendererkennung"
         case .french: return "Détection auto depuis le calendrier"
+        case .spanish: return "Detección automática en calendario"
+        case .italian: return "Rilevamento automatico dal calendario"
+        case .portuguese: return "Detecção automática no calendário"
+        case .chineseTraditional: return "行事曆自動偵測"
         }
     }
 
@@ -4116,6 +5672,10 @@ enum Strings {
         case .chinese: return "打开应用时自动从日历中查找新的休假日程并提醒您。"
         case .german: return "Findet beim Öffnen der App automatisch neue Urlaubseinträge in deinem Kalender."
         case .french: return "Trouve automatiquement les nouveaux congés de votre calendrier à l’ouverture de l’app."
+        case .spanish: return "Al abrir la app, busca automáticamente nuevas vacaciones en tu calendario y te avisa."
+        case .italian: return "All’apertura dell’app trova automaticamente nuove ferie nel calendario e ti avvisa."
+        case .portuguese: return "Ao abrir o app, encontra automaticamente novas férias no calendário e avisa você."
+        case .chineseTraditional: return "打開 App 時，自動從行事曆找出新的休假行程並通知你。"
         }
     }
 
@@ -4127,6 +5687,10 @@ enum Strings {
         case .chinese: return "Pro自动为您查找日历中的休假日程"
         case .german: return "Pro findet Urlaubseinträge in deinem Kalender automatisch"
         case .french: return "Pro trouve automatiquement les congés de votre calendrier"
+        case .spanish: return "Pro encuentra automáticamente las vacaciones de tu calendario"
+        case .italian: return "Pro trova automaticamente le ferie nel tuo calendario"
+        case .portuguese: return "O Pro encontra automaticamente as férias do seu calendário"
+        case .chineseTraditional: return "Pro 會自動找出行事曆中的休假行程"
         }
     }
 
@@ -4139,6 +5703,10 @@ enum Strings {
         case .chinese: return "分享休假计划"
         case .german: return "Urlaubsplan teilen"
         case .french: return "Partager le plan de congés"
+        case .spanish: return "Compartir plan de vacaciones"
+        case .italian: return "Condividi piano ferie"
+        case .portuguese: return "Compartilhar plano de férias"
+        case .chineseTraditional: return "分享特休計畫"
         }
     }
 
@@ -4151,6 +5719,10 @@ enum Strings {
         case .chinese: return "分享预览"
         case .german: return "Vorschau teilen"
         case .french: return "Aperçu du partage"
+        case .spanish: return "Vista previa"
+        case .italian: return "Anteprima condivisione"
+        case .portuguese: return "Prévia do compartilhamento"
+        case .chineseTraditional: return "分享預覽"
         }
     }
 
@@ -4162,6 +5734,10 @@ enum Strings {
         case .chinese: return "将分享这张图片"
         case .german: return "Dieses Bild wird geteilt"
         case .french: return "Cette image sera partagée"
+        case .spanish: return "Se compartirá esta imagen"
+        case .italian: return "Verrà condivisa questa immagine"
+        case .portuguese: return "Esta imagem será compartilhada"
+        case .chineseTraditional: return "將分享這張圖片"
         }
     }
 
@@ -4173,6 +5749,10 @@ enum Strings {
         case .chinese: return "分享"
         case .german: return "Teilen"
         case .french: return "Partager"
+        case .spanish: return "Compartir"
+        case .italian: return "Condividi"
+        case .portuguese: return "Compartilhar"
+        case .chineseTraditional: return "分享"
         }
     }
 
@@ -4184,6 +5764,10 @@ enum Strings {
         case .chinese: return "我的年假概览"
         case .german: return "Mein Urlaubsstand"
         case .french: return "Mon solde de congés"
+        case .spanish: return "Mis vacaciones"
+        case .italian: return "Le mie ferie"
+        case .portuguese: return "Minhas férias"
+        case .chineseTraditional: return "我的特休狀況"
         }
     }
 
@@ -4195,6 +5779,10 @@ enum Strings {
         case .chinese: return "Goldweek — 把年假变成黄金周"
         case .german: return "Goldweek — Mach aus Urlaubstagen goldene Wochen"
         case .french: return "Goldweek — Transformez vos congés en semaines dorées"
+        case .spanish: return "Goldweek — Convierte tus vacaciones en puentes de oro"
+        case .italian: return "Goldweek — Trasforma le tue ferie in ponti d’oro"
+        case .portuguese: return "Goldweek — Transforme suas férias em feriadões de ouro"
+        case .chineseTraditional: return "Goldweek — 把特休變成黃金連假"
         }
     }
 
@@ -4206,6 +5794,10 @@ enum Strings {
         case .chinese: return "打开设置"
         case .german: return "Einstellungen öffnen"
         case .french: return "Ouvrir les réglages"
+        case .spanish: return "Abrir Ajustes"
+        case .italian: return "Apri Impostazioni"
+        case .portuguese: return "Abrir Ajustes"
+        case .chineseTraditional: return "打開設定"
         }
     }
 
@@ -4217,6 +5809,10 @@ enum Strings {
         case .chinese: return "正在检查日历..."
         case .german: return "Kalender wird geprüft ..."
         case .french: return "Analyse du calendrier..."
+        case .spanish: return "Revisando el calendario..."
+        case .italian: return "Analisi del calendario..."
+        case .portuguese: return "Verificando o calendário..."
+        case .chineseTraditional: return "正在檢查行事曆..."
         }
     }
 
@@ -4229,6 +5825,10 @@ enum Strings {
         case .chinese: return "结束日期早于开始日期。"
         case .german: return "Das Enddatum liegt vor dem Startdatum."
         case .french: return "La date de fin est antérieure à la date de début."
+        case .spanish: return "La fecha de fin es anterior a la de inicio."
+        case .italian: return "La data di fine è precedente a quella di inizio."
+        case .portuguese: return "A data de término é anterior à de início."
+        case .chineseTraditional: return "結束日期早於開始日期。"
         }
     }
 
@@ -4240,6 +5840,10 @@ enum Strings {
         case .chinese: return "该时间段与已登记的休假重叠。"
         case .german: return "Dieser Zeitraum überschneidet sich mit bereits eingetragenem Urlaub."
         case .french: return "Cette période chevauche un congé existant."
+        case .spanish: return "Este periodo se solapa con unas vacaciones ya registradas."
+        case .italian: return "Questo periodo si sovrappone a ferie già registrate."
+        case .portuguese: return "Este período se sobrepõe a férias já registradas."
+        case .chineseTraditional: return "此期間與已登記的特休重疊。"
         }
     }
 
@@ -4251,6 +5855,10 @@ enum Strings {
         case .chinese: return "Goldweek - 年假管理应用"
         case .german: return "Goldweek - Urlaubsplaner"
         case .french: return "Goldweek - Gestion des congés"
+        case .spanish: return "Goldweek - Gestión de vacaciones"
+        case .italian: return "Goldweek - Gestione ferie"
+        case .portuguese: return "Goldweek - Gestão de férias"
+        case .chineseTraditional: return "Goldweek - 特休管理 App"
         }
     }
 
@@ -4269,6 +5877,10 @@ enum Strings {
         case .chinese: return "₩\(n)"
         case .german: return "\(n) ₩"
         case .french: return "\(n) ₩"
+        case .spanish: return "\(n) ₩"
+        case .italian: return "\(n) ₩"
+        case .portuguese: return "₩ \(n)"
+        case .chineseTraditional: return "₩\(n)"
         }
     }
 
@@ -4281,6 +5893,10 @@ enum Strings {
         case .chinese: return "MyRealTrip API未配置。"
         case .german: return "Die MyRealTrip-API ist nicht konfiguriert."
         case .french: return "L’API MyRealTrip n’est pas configurée."
+        case .spanish: return "La API de MyRealTrip no está configurada."
+        case .italian: return "L’API di MyRealTrip non è configurata."
+        case .portuguese: return "A API da MyRealTrip não está configurada."
+        case .chineseTraditional: return "尚未設定 MyRealTrip API。"
         }
     }
 
@@ -4292,6 +5908,10 @@ enum Strings {
         case .chinese: return "无效的URL。"
         case .german: return "Ungültige URL."
         case .french: return "URL non valide."
+        case .spanish: return "URL no válida."
+        case .italian: return "URL non valido."
+        case .portuguese: return "URL inválida."
+        case .chineseTraditional: return "網址無效。"
         }
     }
 
@@ -4303,6 +5923,10 @@ enum Strings {
         case .chinese: return "请求无效。"
         case .german: return "Ungültige Anfrage."
         case .french: return "Requête non valide."
+        case .spanish: return "Solicitud no válida."
+        case .italian: return "Richiesta non valida."
+        case .portuguese: return "Solicitação inválida."
+        case .chineseTraditional: return "請求無效。"
         }
     }
 
@@ -4314,6 +5938,10 @@ enum Strings {
         case .chinese: return "API密钥无效。"
         case .german: return "Ungültiger API-Schlüssel."
         case .french: return "Clé API non valide."
+        case .spanish: return "Clave de API no válida."
+        case .italian: return "Chiave API non valida."
+        case .portuguese: return "Chave de API inválida."
+        case .chineseTraditional: return "API 金鑰無效。"
         }
     }
 
@@ -4325,6 +5953,10 @@ enum Strings {
         case .chinese: return "无权访问此API。"
         case .german: return "Zugriff auf diese API verweigert."
         case .french: return "Accès à cette API refusé."
+        case .spanish: return "Acceso denegado a esta API."
+        case .italian: return "Accesso a questa API negato."
+        case .portuguese: return "Acesso negado a esta API."
+        case .chineseTraditional: return "沒有存取此 API 的權限。"
         }
     }
 
@@ -4336,6 +5968,10 @@ enum Strings {
         case .chinese: return "未找到端点。"
         case .german: return "Endpunkt nicht gefunden."
         case .french: return "Point de terminaison introuvable."
+        case .spanish: return "No se encontró el endpoint."
+        case .italian: return "Endpoint non trovato."
+        case .portuguese: return "Endpoint não encontrado."
+        case .chineseTraditional: return "找不到端點。"
         }
     }
 
@@ -4347,6 +5983,10 @@ enum Strings {
         case .chinese: return "请求次数超限。"
         case .german: return "Anfragelimit überschritten."
         case .french: return "Limite de requêtes dépassée."
+        case .spanish: return "Se superó el límite de solicitudes."
+        case .italian: return "Limite di richieste superato."
+        case .portuguese: return "Limite de solicitações excedido."
+        case .chineseTraditional: return "已超過請求次數上限。"
         }
     }
 
@@ -4358,6 +5998,10 @@ enum Strings {
         case .chinese: return "服务器错误 (\(code))"
         case .german: return "Serverfehler (\(code))"
         case .french: return "Erreur serveur (\(code))"
+        case .spanish: return "Error del servidor (\(code))"
+        case .italian: return "Errore del server (\(code))"
+        case .portuguese: return "Erro do servidor (\(code))"
+        case .chineseTraditional: return "伺服器錯誤（\(code)）"
         }
     }
 
@@ -4369,6 +6013,10 @@ enum Strings {
         case .chinese: return "响应格式错误"
         case .german: return "Ungültiges Antwortformat"
         case .french: return "Format de réponse non valide"
+        case .spanish: return "Formato de respuesta no válido"
+        case .italian: return "Formato di risposta non valido"
+        case .portuguese: return "Formato de resposta inválido"
+        case .chineseTraditional: return "回應格式錯誤"
         }
     }
 
@@ -4380,6 +6028,10 @@ enum Strings {
         case .chinese: return "重试次数超限。"
         case .german: return "Maximale Anzahl an Wiederholungen überschritten."
         case .french: return "Nombre maximal de tentatives dépassé."
+        case .spanish: return "Se superó el número máximo de reintentos."
+        case .italian: return "Numero massimo di tentativi superato."
+        case .portuguese: return "Número máximo de tentativas excedido."
+        case .chineseTraditional: return "已超過重試次數上限。"
         }
     }
 
@@ -4392,6 +6044,10 @@ enum Strings {
         case .chinese: return "可用"
         case .german: return "Verfügbar"
         case .french: return "Disponible"
+        case .spanish: return "Disponible"
+        case .italian: return "Disponibile"
+        case .portuguese: return "Disponível"
+        case .chineseTraditional: return "可使用"
         }
     }
 
@@ -4403,6 +6059,10 @@ enum Strings {
         case .chinese: return "已使用"
         case .german: return "Genommen"
         case .french: return "Utilisé"
+        case .spanish: return "Usado"
+        case .italian: return "Utilizzato"
+        case .portuguese: return "Usado"
+        case .chineseTraditional: return "已使用"
         }
     }
 
@@ -4414,6 +6074,10 @@ enum Strings {
         case .chinese: return "没有登记的奖励假"
         case .german: return "Kein Bonusurlaub eingetragen"
         case .french: return "Aucun congé bonus enregistré"
+        case .spanish: return "No hay días extra registrados"
+        case .italian: return "Non ci sono ferie bonus registrate"
+        case .portuguese: return "Nenhuma folga bônus registrada"
+        case .chineseTraditional: return "沒有已登記的獎勵特休"
         }
     }
 
@@ -4425,6 +6089,10 @@ enum Strings {
         case .chinese: return "年假天数"
         case .german: return "Urlaubstage"
         case .french: return "Jours de congé"
+        case .spanish: return "Días de vacaciones"
+        case .italian: return "Giorni di ferie"
+        case .portuguese: return "Dias de férias"
+        case .chineseTraditional: return "特休天數"
         }
     }
 
@@ -4436,6 +6104,10 @@ enum Strings {
         case .chinese: return "添加天数"
         case .german: return "Hinzuzufügende Tage"
         case .french: return "Jours à ajouter"
+        case .spanish: return "Días a añadir"
+        case .italian: return "Giorni da aggiungere"
+        case .portuguese: return "Dias a adicionar"
+        case .chineseTraditional: return "要增加的天數"
         }
     }
 
@@ -4447,6 +6119,10 @@ enum Strings {
         case .chinese: return "类型"
         case .german: return "Art"
         case .french: return "Type"
+        case .spanish: return "Tipo"
+        case .italian: return "Tipo"
+        case .portuguese: return "Tipo"
+        case .chineseTraditional: return "類型"
         }
     }
 
@@ -4458,6 +6134,10 @@ enum Strings {
         case .chinese: return "原因"
         case .german: return "Grund"
         case .french: return "Motif"
+        case .spanish: return "Motivo"
+        case .italian: return "Motivo"
+        case .portuguese: return "Motivo"
+        case .chineseTraditional: return "原因"
         }
     }
 
@@ -4469,6 +6149,10 @@ enum Strings {
         case .chinese: return "例：节假日加班补休、项目奖励等"
         case .german: return "z. B. Ausgleich für Feiertagsarbeit, Projektprämie"
         case .french: return "p. ex. récupération jour férié travaillé, prime de projet"
+        case .spanish: return "p. ej., compensación por trabajar un festivo, premio de proyecto"
+        case .italian: return "es. recupero festività lavorata, premio progetto"
+        case .portuguese: return "ex.: compensação por trabalhar no feriado, prêmio de projeto"
+        case .chineseTraditional: return "例：假日上班補休、專案獎勵等"
         }
     }
 
@@ -4480,6 +6164,10 @@ enum Strings {
         case .chinese: return "设置到期日"
         case .german: return "Ablauf festlegen"
         case .french: return "Définir une expiration"
+        case .spanish: return "Definir caducidad"
+        case .italian: return "Imposta scadenza"
+        case .portuguese: return "Definir validade"
+        case .chineseTraditional: return "設定到期日"
         }
     }
 
@@ -4491,6 +6179,10 @@ enum Strings {
         case .chinese: return "到期日"
         case .german: return "Ablaufdatum"
         case .french: return "Expiration"
+        case .spanish: return "Caducidad"
+        case .italian: return "Scadenza"
+        case .portuguese: return "Validade"
+        case .chineseTraditional: return "到期日"
         }
     }
 
@@ -4502,6 +6194,10 @@ enum Strings {
         case .chinese: return "不设置到期日则可使用到年末。"
         case .german: return "Ohne Ablaufdatum kann er bis zum Jahresende genutzt werden."
         case .french: return "Sans date d’expiration, il reste utilisable jusqu’à la fin de l’année."
+        case .spanish: return "Si no defines una caducidad, podrás usarlos hasta final de año."
+        case .italian: return "Se non imposti una scadenza, potrai usarle fino a fine anno."
+        case .portuguese: return "Se você não definir uma validade, poderá usar até o fim do ano."
+        case .chineseTraditional: return "若未設定到期日，可使用到年底。"
         }
     }
 
@@ -4514,6 +6210,10 @@ enum Strings {
         case .chinese: return "休假记录"
         case .german: return "Urlaubsverlauf"
         case .french: return "Historique des congés"
+        case .spanish: return "Historial de vacaciones"
+        case .italian: return "Storico ferie"
+        case .portuguese: return "Histórico de férias"
+        case .chineseTraditional: return "休假紀錄"
         }
     }
 
@@ -4525,6 +6225,10 @@ enum Strings {
         case .chinese: return "关闭"
         case .german: return "Schließen"
         case .french: return "Fermer"
+        case .spanish: return "Cerrar"
+        case .italian: return "Chiudi"
+        case .portuguese: return "Fechar"
+        case .chineseTraditional: return "關閉"
         }
     }
 
@@ -4536,6 +6240,10 @@ enum Strings {
         case .chinese: return "全部"
         case .german: return "Alle"
         case .french: return "Tous"
+        case .spanish: return "Todas"
+        case .italian: return "Tutte"
+        case .portuguese: return "Todas"
+        case .chineseTraditional: return "全部"
         }
     }
 
@@ -4547,6 +6255,10 @@ enum Strings {
         case .chinese: return "全部类型"
         case .german: return "Alle Arten"
         case .french: return "Tous les types"
+        case .spanish: return "Todos los tipos"
+        case .italian: return "Tutti i tipi"
+        case .portuguese: return "Todos os tipos"
+        case .chineseTraditional: return "所有類型"
         }
     }
 
@@ -4558,6 +6270,10 @@ enum Strings {
         case .chinese: return "已使用"
         case .german: return "Genommen"
         case .french: return "Utilisés"
+        case .spanish: return "Usadas"
+        case .italian: return "Usate"
+        case .portuguese: return "Usadas"
+        case .chineseTraditional: return "已使用"
         }
     }
 
@@ -4569,6 +6285,10 @@ enum Strings {
         case .chinese: return "计划中"
         case .german: return "Geplant"
         case .french: return "Prévus"
+        case .spanish: return "Previstas"
+        case .italian: return "Previste"
+        case .portuguese: return "Planejadas"
+        case .chineseTraditional: return "預定"
         }
     }
 
@@ -4580,6 +6300,10 @@ enum Strings {
         case .chinese: return "已取消"
         case .german: return "Storniert"
         case .french: return "Annulés"
+        case .spanish: return "Canceladas"
+        case .italian: return "Annullate"
+        case .portuguese: return "Canceladas"
+        case .chineseTraditional: return "已取消"
         }
     }
 
@@ -4591,6 +6315,10 @@ enum Strings {
         case .chinese: return "\(count)项"
         case .german: return "\(count)"
         case .french: return "\(count)"
+        case .spanish: return "\(count)"
+        case .italian: return "\(count)"
+        case .portuguese: return "\(count)"
+        case .chineseTraditional: return "\(count)筆"
         }
     }
 
@@ -4602,6 +6330,10 @@ enum Strings {
         case .chinese: return "没有休假记录"
         case .german: return "Keine Urlaubseinträge"
         case .french: return "Aucun congé enregistré"
+        case .spanish: return "No hay vacaciones registradas"
+        case .italian: return "Non ci sono ferie registrate"
+        case .portuguese: return "Nenhum registro de férias"
+        case .chineseTraditional: return "沒有休假紀錄"
         }
     }
 
@@ -4613,6 +6345,10 @@ enum Strings {
         case .chinese: return "\(year)年没有登记的休假。\n请尝试登记新的休假。"
         case .german: return "Für \(year) ist kein Urlaub eingetragen.\nTrage einen neuen Urlaub ein."
         case .french: return "Aucun congé enregistré pour \(year).\nEssayez d’en ajouter un."
+        case .spanish: return "No hay vacaciones registradas en \(year).\nPrueba a añadir unas nuevas."
+        case .italian: return "Non ci sono ferie registrate per il \(year).\nProva ad aggiungerne di nuove."
+        case .portuguese: return "Nenhum registro de férias em \(year).\nQue tal registrar novas férias?"
+        case .chineseTraditional: return "\(year) 年沒有登記的休假。\n試著登記新的休假吧。"
         }
     }
 
@@ -4624,6 +6360,10 @@ enum Strings {
         case .chinese: return "\(year)年"
         case .german: return "\(year)"
         case .french: return "\(year)"
+        case .spanish: return "\(year)"
+        case .italian: return "\(year)"
+        case .portuguese: return "\(year)"
+        case .chineseTraditional: return "\(year)年"
         }
     }
 
@@ -4644,6 +6384,22 @@ enum Strings {
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "fr_FR")
             return formatter.shortMonthSymbols[month - 1]
+        case .spanish:
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "es_ES")
+            return formatter.shortMonthSymbols[month - 1]
+        case .italian:
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "it_IT")
+            return formatter.shortMonthSymbols[month - 1]
+        case .portuguese:
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "pt_BR")
+            return formatter.shortMonthSymbols[month - 1]
+        case .chineseTraditional:
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "zh_Hant_TW")
+            return formatter.shortMonthSymbols[month - 1]
         }
     }
 
@@ -4655,6 +6411,10 @@ enum Strings {
         case .chinese: return "(\(count)天)"
         case .german: return "(\(count) Tage)"
         case .french: return "(\(count) jours)"
+        case .spanish: return "(\(count) días)"
+        case .italian: return "(\(count) giorni)"
+        case .portuguese: return "(\(count) dias)"
+        case .chineseTraditional: return "（\(count) 天）"
         }
     }
 
@@ -4666,6 +6426,10 @@ enum Strings {
         case .chinese: return "编辑"
         case .german: return "Bearbeiten"
         case .french: return "Modifier"
+        case .spanish: return "Editar"
+        case .italian: return "Modifica"
+        case .portuguese: return "Editar"
+        case .chineseTraditional: return "編輯"
         }
     }
 
@@ -4678,6 +6442,10 @@ enum Strings {
         case .chinese: return "编辑休假"
         case .german: return "Urlaub bearbeiten"
         case .french: return "Modifier le congé"
+        case .spanish: return "Editar vacaciones"
+        case .italian: return "Modifica ferie"
+        case .portuguese: return "Editar férias"
+        case .chineseTraditional: return "編輯休假"
         }
     }
 
@@ -4689,6 +6457,10 @@ enum Strings {
         case .chinese: return "状态"
         case .german: return "Status"
         case .french: return "Statut"
+        case .spanish: return "Estado"
+        case .italian: return "Stato"
+        case .portuguese: return "Status"
+        case .chineseTraditional: return "狀態"
         }
     }
 
@@ -4700,6 +6472,10 @@ enum Strings {
         case .chinese: return "日期"
         case .german: return "Datum"
         case .french: return "Dates"
+        case .spanish: return "Fechas"
+        case .italian: return "Date"
+        case .portuguese: return "Datas"
+        case .chineseTraditional: return "日期"
         }
     }
 
@@ -4711,6 +6487,10 @@ enum Strings {
         case .chinese: return "额外使用\(days)天年假"
         case .german: return "\(days) weitere Urlaubstage genommen"
         case .french: return "\(days) jours de congé supplémentaires utilisés"
+        case .spanish: return days == "1" ? "1 día más de vacaciones usado" : "\(days) días más de vacaciones usados"
+        case .italian: return days == "1" ? "1 giorno di ferie in più usato" : "\(days) giorni di ferie in più usati"
+        case .portuguese: return days == "1" ? "1 dia de férias a mais usado" : "\(days) dias de férias a mais usados"
+        case .chineseTraditional: return "額外使用\(days)天特休"
         }
     }
 
@@ -4722,6 +6502,10 @@ enum Strings {
         case .chinese: return "恢复\(days)天年假"
         case .german: return "\(days) Urlaubstage zurückgebucht"
         case .french: return "\(days) jours de congé restitués"
+        case .spanish: return days == "1" ? "1 día de vacaciones recuperado" : "\(days) días de vacaciones recuperados"
+        case .italian: return days == "1" ? "1 giorno di ferie ripristinato" : "\(days) giorni di ferie ripristinati"
+        case .portuguese: return days == "1" ? "1 dia de férias restaurado" : "\(days) dias de férias restaurados"
+        case .chineseTraditional: return "歸還\(days)天特休"
         }
     }
 
@@ -4733,6 +6517,10 @@ enum Strings {
         case .chinese: return "备注"
         case .german: return "Notiz"
         case .french: return "Note"
+        case .spanish: return "Nota"
+        case .italian: return "Nota"
+        case .portuguese: return "Nota"
+        case .chineseTraditional: return "備註"
         }
     }
 
@@ -4744,6 +6532,10 @@ enum Strings {
         case .chinese: return "休假目的"
         case .german: return "Urlaubszweck"
         case .french: return "Motif du congé"
+        case .spanish: return "Motivo de las vacaciones"
+        case .italian: return "Motivo delle ferie"
+        case .portuguese: return "Motivo das férias"
+        case .chineseTraditional: return "休假目的"
         }
     }
 
@@ -4755,6 +6547,10 @@ enum Strings {
         case .chinese: return "日程预览"
         case .german: return "Terminvorschau"
         case .french: return "Aperçu du planning"
+        case .spanish: return "Vista previa de la agenda"
+        case .italian: return "Anteprima dell’agenda"
+        case .portuguese: return "Prévia da agenda"
+        case .chineseTraditional: return "行程預覽"
         }
     }
 
@@ -4769,6 +6565,10 @@ enum Strings {
             case .chinese: return "六"
             case .german: return "Sa"
             case .french: return "Sam"
+            case .spanish: return "Sáb"
+            case .italian: return "Sab"
+            case .portuguese: return "Sáb"
+            case .chineseTraditional: return "六"
             }
         case .sunday:
             switch lang {
@@ -4778,6 +6578,10 @@ enum Strings {
             case .chinese: return "日"
             case .german: return "So"
             case .french: return "Dim"
+            case .spanish: return "Dom"
+            case .italian: return "Dom"
+            case .portuguese: return "Dom"
+            case .chineseTraditional: return "日"
             }
         case .holiday:
             switch lang {
@@ -4787,6 +6591,10 @@ enum Strings {
             case .chinese: return "节日"
             case .german: return "Feiertag"
             case .french: return "Férié"
+            case .spanish: return "Festivo"
+            case .italian: return "Festivo"
+            case .portuguese: return "Feriado"
+            case .chineseTraditional: return "假日"
             }
         case .workday: return workday
         }
@@ -4801,6 +6609,10 @@ enum Strings {
         case .chinese: return "升级到Pro版"
         case .german: return "Auf Pro upgraden"
         case .french: return "Passer à Pro"
+        case .spanish: return "Pásate a Pro"
+        case .italian: return "Passa a Pro"
+        case .portuguese: return "Atualize para o Pro"
+        case .chineseTraditional: return "升級至 Pro"
         }
     }
     
@@ -4812,6 +6624,10 @@ enum Strings {
         case .chinese: return "Goldweek Pro"
         case .german: return "Goldweek Pro"
         case .french: return "Goldweek Pro"
+        case .spanish: return "Goldweek Pro"
+        case .italian: return "Goldweek Pro"
+        case .portuguese: return "Goldweek Pro"
+        case .chineseTraditional: return "Goldweek Pro"
         }
     }
     
@@ -4823,6 +6639,10 @@ enum Strings {
         case .chinese: return "解锁所有功能"
         case .german: return "Schalte alle Funktionen frei"
         case .french: return "Débloquez toutes les fonctionnalités"
+        case .spanish: return "Desbloquea todas las funciones"
+        case .italian: return "Sblocca tutte le funzioni"
+        case .portuguese: return "Desbloqueie todos os recursos"
+        case .chineseTraditional: return "解鎖所有功能"
         }
     }
     
@@ -4834,6 +6654,10 @@ enum Strings {
         case .chinese: return "免费版"
         case .german: return "Kostenlos"
         case .french: return "Gratuit"
+        case .spanish: return "Gratis"
+        case .italian: return "Gratis"
+        case .portuguese: return "Grátis"
+        case .chineseTraditional: return "免費版"
         }
     }
     
@@ -4845,6 +6669,10 @@ enum Strings {
         case .chinese: return "Pro版"
         case .german: return "Pro"
         case .french: return "Pro"
+        case .spanish: return "Pro"
+        case .italian: return "Pro"
+        case .portuguese: return "Pro"
+        case .chineseTraditional: return "Pro 版"
         }
     }
     
@@ -4856,6 +6684,10 @@ enum Strings {
         case .chinese: return "购买"
         case .german: return "Kaufen"
         case .french: return "Acheter"
+        case .spanish: return "Comprar"
+        case .italian: return "Acquista"
+        case .portuguese: return "Comprar"
+        case .chineseTraditional: return "購買"
         }
     }
     
@@ -4867,6 +6699,10 @@ enum Strings {
         case .chinese: return "恢复购买"
         case .german: return "Kauf wiederherstellen"
         case .french: return "Restaurer l’achat"
+        case .spanish: return "Restaurar compra"
+        case .italian: return "Ripristina acquisto"
+        case .portuguese: return "Restaurar compra"
+        case .chineseTraditional: return "回復購買項目"
         }
     }
     
@@ -4878,6 +6714,10 @@ enum Strings {
         case .chinese: return "功能对比"
         case .german: return "Funktionsvergleich"
         case .french: return "Comparatif des fonctions"
+        case .spanish: return "Comparativa de funciones"
+        case .italian: return "Confronto funzioni"
+        case .portuguese: return "Comparação de recursos"
+        case .chineseTraditional: return "功能比較"
         }
     }
     
@@ -4889,6 +6729,10 @@ enum Strings {
         case .chinese: return "基本年假管理"
         case .german: return "Urlaubsverwaltung (Basis)"
         case .french: return "Gestion des congés de base"
+        case .spanish: return "Gestión básica de vacaciones"
+        case .italian: return "Gestione base delle ferie"
+        case .portuguese: return "Gestão básica de férias"
+        case .chineseTraditional: return "基本特休管理"
         }
     }
     
@@ -4900,6 +6744,10 @@ enum Strings {
         case .chinese: return "年假推荐"
         case .german: return "Urlaubsempfehlungen"
         case .french: return "Recommandations de congés"
+        case .spanish: return "Recomendaciones de vacaciones"
+        case .italian: return "Suggerimenti di ferie"
+        case .portuguese: return "Sugestões de férias"
+        case .chineseTraditional: return "特休推薦"
         }
     }
     
@@ -4911,6 +6759,10 @@ enum Strings {
         case .chinese: return "仅显示3个推荐"
         case .german: return "Nur 3 Empfehlungen"
         case .french: return "3 recommandations seulement"
+        case .spanish: return "Solo 3 recomendaciones"
+        case .italian: return "Solo 3 suggerimenti"
+        case .portuguese: return "Apenas 3 sugestões"
+        case .chineseTraditional: return "僅顯示 3 個推薦"
         }
     }
     
@@ -4922,6 +6774,10 @@ enum Strings {
         case .chinese: return "显示所有推荐"
         case .german: return "Alle Empfehlungen"
         case .french: return "Toutes les recommandations"
+        case .spanish: return "Todas las recomendaciones"
+        case .italian: return "Tutti i suggerimenti"
+        case .portuguese: return "Todas as sugestões"
+        case .chineseTraditional: return "顯示所有推薦"
         }
     }
     
@@ -4933,6 +6789,10 @@ enum Strings {
         case .chinese: return "年份选择"
         case .german: return "Jahresauswahl"
         case .french: return "Choix de l'année"
+        case .spanish: return "Selección de año"
+        case .italian: return "Scelta dell’anno"
+        case .portuguese: return "Seleção de ano"
+        case .chineseTraditional: return "選擇年份"
         }
     }
     
@@ -4944,6 +6804,10 @@ enum Strings {
         case .chinese: return "仅当前年"
         case .german: return "Nur aktuelles Jahr"
         case .french: return "Année en cours uniquement"
+        case .spanish: return "Solo el año actual"
+        case .italian: return "Solo l’anno in corso"
+        case .portuguese: return "Apenas o ano atual"
+        case .chineseTraditional: return "僅限今年"
         }
     }
     
@@ -4955,6 +6819,10 @@ enum Strings {
         case .chinese: return "所有年份"
         case .german: return "Alle Jahre"
         case .french: return "Toutes les années"
+        case .spanish: return "Todos los años"
+        case .italian: return "Tutti gli anni"
+        case .portuguese: return "Todos os anos"
+        case .chineseTraditional: return "所有年份"
         }
     }
     
@@ -4966,6 +6834,10 @@ enum Strings {
         case .chinese: return "系统日历同步"
         case .german: return "Kalender-Synchronisierung"
         case .french: return "Synchronisation du calendrier"
+        case .spanish: return "Sincronización con el calendario"
+        case .italian: return "Sincronizzazione calendario"
+        case .portuguese: return "Sincronização com o calendário"
+        case .chineseTraditional: return "系統行事曆同步"
         }
     }
     
@@ -4977,6 +6849,10 @@ enum Strings {
         case .chinese: return "不可用"
         case .german: return "Nicht verfügbar"
         case .french: return "Non disponible"
+        case .spanish: return "No disponible"
+        case .italian: return "Non disponibile"
+        case .portuguese: return "Indisponível"
+        case .chineseTraditional: return "無法使用"
         }
     }
     
@@ -4988,6 +6864,10 @@ enum Strings {
         case .chinese: return "奖励年假管理"
         case .german: return "Bonusurlaub verwalten"
         case .french: return "Gestion des congés bonus"
+        case .spanish: return "Gestión de días extra"
+        case .italian: return "Gestione ferie bonus"
+        case .portuguese: return "Gestão de folgas bônus"
+        case .chineseTraditional: return "獎勵特休管理"
         }
     }
     
@@ -4999,6 +6879,10 @@ enum Strings {
         case .chinese: return "iCloud备份"
         case .german: return "iCloud-Backup"
         case .french: return "Sauvegarde iCloud"
+        case .spanish: return "Copia de seguridad en iCloud"
+        case .italian: return "Backup su iCloud"
+        case .portuguese: return "Backup no iCloud"
+        case .chineseTraditional: return "iCloud 備份"
         }
     }
     
@@ -5010,6 +6894,10 @@ enum Strings {
         case .chinese: return "一次购买，终身使用"
         case .german: return "Einmalkauf, lebenslang nutzen"
         case .french: return "Achat unique, accès à vie"
+        case .spanish: return "Pago único, acceso de por vida"
+        case .italian: return "Acquisto unico, accesso a vita"
+        case .portuguese: return "Compra única, acesso vitalício"
+        case .chineseTraditional: return "一次購買，終身使用"
         }
     }
     
@@ -5021,6 +6909,10 @@ enum Strings {
         case .chinese: return "无订阅"
         case .german: return "Kein Abo"
         case .french: return "Sans abonnement"
+        case .spanish: return "Sin suscripción"
+        case .italian: return "Nessun abbonamento"
+        case .portuguese: return "Sem assinatura"
+        case .chineseTraditional: return "無需訂閱"
         }
     }
     
@@ -5032,6 +6924,10 @@ enum Strings {
         case .chinese: return "购买中..."
         case .german: return "Kauf läuft …"
         case .french: return "Achat en cours…"
+        case .spanish: return "Comprando…"
+        case .italian: return "Acquisto in corso…"
+        case .portuguese: return "Comprando…"
+        case .chineseTraditional: return "購買中…"
         }
     }
     
@@ -5043,6 +6939,10 @@ enum Strings {
         case .chinese: return "购买成功！"
         case .german: return "Kauf abgeschlossen!"
         case .french: return "Achat réussi !"
+        case .spanish: return "¡Compra completada!"
+        case .italian: return "Acquisto completato!"
+        case .portuguese: return "Compra concluída!"
+        case .chineseTraditional: return "購買完成！"
         }
     }
     
@@ -5054,6 +6954,10 @@ enum Strings {
         case .chinese: return "购买失败"
         case .german: return "Kauf fehlgeschlagen"
         case .french: return "Échec de l'achat"
+        case .spanish: return "Error en la compra"
+        case .italian: return "Acquisto non riuscito"
+        case .portuguese: return "Falha na compra"
+        case .chineseTraditional: return "購買失敗"
         }
     }
     
@@ -5065,6 +6969,10 @@ enum Strings {
         case .chinese: return "恢复成功！"
         case .german: return "Wiederherstellung abgeschlossen!"
         case .french: return "Restauration réussie !"
+        case .spanish: return "¡Compra restaurada!"
+        case .italian: return "Ripristino completato!"
+        case .portuguese: return "Restauração concluída!"
+        case .chineseTraditional: return "回復完成！"
         }
     }
     
@@ -5076,6 +6984,10 @@ enum Strings {
         case .chinese: return "您是Pro用户！"
         case .german: return "Du bist Pro-Nutzer!"
         case .french: return "Vous êtes utilisateur Pro !"
+        case .spanish: return "¡Eres usuario Pro!"
+        case .italian: return "Sei un utente Pro!"
+        case .portuguese: return "Você é usuário Pro!"
+        case .chineseTraditional: return "你是 Pro 使用者！"
         }
     }
     
@@ -5087,6 +6999,10 @@ enum Strings {
         case .chinese: return "想要更多功能？升级到Pro版"
         case .german: return "Mehr Funktionen gewünscht? Upgrade auf Pro"
         case .french: return "Envie de plus de fonctions ? Passez à Pro"
+        case .spanish: return "¿Quieres más funciones? Pásate a Pro"
+        case .italian: return "Vuoi più funzioni? Passa a Pro"
+        case .portuguese: return "Quer mais recursos? Atualize para o Pro"
+        case .chineseTraditional: return "想要更多功能嗎？升級至 Pro 吧"
         }
     }
     
@@ -5099,6 +7015,10 @@ enum Strings {
         case .chinese: return "分享应用"
         case .german: return "App teilen"
         case .french: return "Partager l'app"
+        case .spanish: return "Compartir la app"
+        case .italian: return "Condividi l’app"
+        case .portuguese: return "Compartilhar app"
+        case .chineseTraditional: return "分享 App"
         }
     }
     
@@ -5110,6 +7030,10 @@ enum Strings {
         case .chinese: return "别拿年假补偿，真正去休假吧。算法自动计算最长假期组合 🏖️"
         case .german: return "Lass dir Urlaub nicht auszahlen – nimm ihn dir. Der Algorithmus findet deine längsten Auszeiten 🏖️"
         case .french: return "Ne vous faites pas payer vos congés, prenez-les. L'algorithme trouve vos plus longues pauses 🏖️"
+        case .spanish: return "No cobres tus vacaciones: disfrútalas. El algoritmo encuentra tus puentes más largos 🏖️"
+        case .italian: return "Non farti pagare le ferie: goditele. L’algoritmo trova i ponti più lunghi 🏖️"
+        case .portuguese: return "Não venda suas férias: aproveite. O algoritmo encontra seus feriadões mais longos 🏖️"
+        case .chineseTraditional: return "別把特休換成錢，真的去休息吧。演算法自動算出最長連假組合 🏖️"
         }
     }
 
@@ -5122,6 +7046,10 @@ enum Strings {
         case .chinese: return "一次购买，永久使用全部功能"
         case .german: return "Einmal zahlen. Alle Funktionen. Für immer."
         case .french: return "Un seul paiement. Toutes les fonctions. Pour toujours."
+        case .spanish: return "Un solo pago. Todas las funciones. Para siempre."
+        case .italian: return "Un solo pagamento. Tutte le funzioni. Per sempre."
+        case .portuguese: return "Um só pagamento. Todos os recursos. Para sempre."
+        case .chineseTraditional: return "一次付費，永久使用所有功能"
         }
     }
 
@@ -5133,6 +7061,10 @@ enum Strings {
         case .chinese: return "稍后了解"
         case .german: return "Vielleicht später"
         case .french: return "Peut-être plus tard"
+        case .spanish: return "Quizás más tarde"
+        case .italian: return "Forse più tardi"
+        case .portuguese: return "Talvez depois"
+        case .chineseTraditional: return "以後再說"
         }
     }
 
@@ -5144,6 +7076,10 @@ enum Strings {
         case .chinese: return "无限AI推荐"
         case .german: return "Unbegrenzte KI-Pläne"
         case .french: return "Plans IA illimités"
+        case .spanish: return "Planes con IA ilimitados"
+        case .italian: return "Piani IA illimitati"
+        case .portuguese: return "Planos com IA ilimitados"
+        case .chineseTraditional: return "無限 AI 推薦"
         }
     }
 
@@ -5155,6 +7091,10 @@ enum Strings {
         case .chinese: return "免费版最多3个"
         case .german: return "Kostenlos nur bis zu 3"
         case .french: return "Gratuit : 3 maximum"
+        case .spanish: return "Gratis: máximo 3"
+        case .italian: return "Gratis: massimo 3"
+        case .portuguese: return "Grátis: até 3"
+        case .chineseTraditional: return "免費版最多 3 個"
         }
     }
 
@@ -5166,6 +7106,10 @@ enum Strings {
         case .chinese: return "奖励年假管理"
         case .german: return "Bonusurlaub verwalten"
         case .french: return "Suivi des congés bonus"
+        case .spanish: return "Seguimiento de días extra"
+        case .italian: return "Monitoraggio ferie bonus"
+        case .portuguese: return "Controle de folgas bônus"
+        case .chineseTraditional: return "獎勵特休管理"
         }
     }
 
@@ -5177,6 +7121,10 @@ enum Strings {
         case .chinese: return "补休、特别假、病假"
         case .german: return "Ausgleichstage, Sonderurlaub, Krankheit"
         case .french: return "Récup, congés spéciaux, maladie"
+        case .spanish: return "Compensatorios, permisos, bajas"
+        case .italian: return "Recuperi, permessi speciali, malattia"
+        case .portuguese: return "Folgas, licenças especiais, atestado"
+        case .chineseTraditional: return "補休、特別假、病假"
         }
     }
 
@@ -5188,6 +7136,10 @@ enum Strings {
         case .chinese: return "跨年度规划"
         case .german: return "Mehrjahresplanung"
         case .french: return "Planification pluriannuelle"
+        case .spanish: return "Planificación plurianual"
+        case .italian: return "Pianificazione pluriennale"
+        case .portuguese: return "Planejamento de vários anos"
+        case .chineseTraditional: return "多年度規劃"
         }
     }
 
@@ -5199,6 +7151,10 @@ enum Strings {
         case .chinese: return "去年和明年一览"
         case .german: return "Letztes und nächstes Jahr im Blick"
         case .french: return "Année passée et suivante en un coup d'œil"
+        case .spanish: return "El año pasado y el próximo de un vistazo"
+        case .italian: return "Anno scorso e prossimo a colpo d’occhio"
+        case .portuguese: return "Ano passado e próximo de uma só vez"
+        case .chineseTraditional: return "去年到明年一目了然"
         }
     }
 
@@ -5210,6 +7166,10 @@ enum Strings {
         case .chinese: return "日历同步"
         case .german: return "Kalender-Sync"
         case .french: return "Synchro du calendrier"
+        case .spanish: return "Sincronización del calendario"
+        case .italian: return "Sincronizzazione calendario"
+        case .portuguese: return "Sincronização do calendário"
+        case .chineseTraditional: return "行事曆同步"
         }
     }
 
@@ -5221,6 +7181,10 @@ enum Strings {
         case .chinese: return "自动同步到iOS日历"
         case .german: return "Automatisch mit dem iOS-Kalender synchronisieren"
         case .french: return "Synchro automatique avec le calendrier iOS"
+        case .spanish: return "Sincronización automática con Calendario de iOS"
+        case .italian: return "Sincronizzazione automatica con Calendario di iOS"
+        case .portuguese: return "Sincronização automática com o Calendário do iOS"
+        case .chineseTraditional: return "自動同步至 iOS 行事曆"
         }
     }
 
@@ -5233,6 +7197,10 @@ enum Strings {
         case .chinese: return "休假节奏"
         case .german: return "Urlaubstempo"
         case .french: return "Rythme des congés"
+        case .spanish: return "Ritmo de vacaciones"
+        case .italian: return "Ritmo delle ferie"
+        case .portuguese: return "Ritmo das férias"
+        case .chineseTraditional: return "休假步調"
         }
     }
 
@@ -5244,6 +7212,10 @@ enum Strings {
         case .chinese: return "年度进度"
         case .german: return "Jahresfortschritt"
         case .french: return "Avancement de l'année"
+        case .spanish: return "Progreso del año"
+        case .italian: return "Avanzamento dell’anno"
+        case .portuguese: return "Progresso do ano"
+        case .chineseTraditional: return "今年進度"
         }
     }
 
@@ -5255,6 +7227,10 @@ enum Strings {
         case .chinese: return "年假使用"
         case .german: return "Urlaub genommen"
         case .french: return "Congés pris"
+        case .spanish: return "Vacaciones usadas"
+        case .italian: return "Ferie usate"
+        case .portuguese: return "Férias usadas"
+        case .chineseTraditional: return "已用特休"
         }
     }
 
@@ -5266,6 +7242,10 @@ enum Strings {
         case .chinese: return "宽松"
         case .german: return "Entspannt"
         case .french: return "Serein"
+        case .spanish: return "Tranquilo"
+        case .italian: return "Tranquillo"
+        case .portuguese: return "Tranquilo"
+        case .chineseTraditional: return "從容"
         }
     }
 
@@ -5277,6 +7257,10 @@ enum Strings {
         case .chinese: return "均衡"
         case .german: return "Ausgewogen"
         case .french: return "Équilibré"
+        case .spanish: return "Equilibrado"
+        case .italian: return "Equilibrato"
+        case .portuguese: return "Equilibrado"
+        case .chineseTraditional: return "適中"
         }
     }
 
@@ -5288,6 +7272,10 @@ enum Strings {
         case .chinese: return "偏快"
         case .german: return "Schnell"
         case .french: return "Rapide"
+        case .spanish: return "Rápido"
+        case .italian: return "Veloce"
+        case .portuguese: return "Rápido"
+        case .chineseTraditional: return "偏快"
         }
     }
 
@@ -5299,6 +7287,10 @@ enum Strings {
         case .chinese: return "很快"
         case .german: return "Sehr schnell"
         case .french: return "Très rapide"
+        case .spanish: return "Muy rápido"
+        case .italian: return "Molto veloce"
+        case .portuguese: return "Muito rápido"
+        case .chineseTraditional: return "非常快"
         }
     }
 
@@ -5310,6 +7302,10 @@ enum Strings {
         case .chinese: return "使用节奏宽松。可以提前规划下一次休假。"
         case .german: return "Du nutzt deinen Urlaub gemächlich. Plane vorausschauend, damit sich keine Tage anhäufen."
         case .french: return "Vous prenez vos congés tranquillement. Planifiez à l'avance pour ne pas accumuler de jours."
+        case .spanish: return "Vas con calma. Planifica tu próximo descanso con antelación para no acumular días."
+        case .italian: return "Stai usando le ferie con calma. Pianifica in anticipo per non accumulare giorni."
+        case .portuguese: return "Você está usando as férias com calma. Planeje a próxima folga com antecedência para não acumular dias."
+        case .chineseTraditional: return "你目前休得很從容，試著提前規劃下一次休假吧。"
         }
     }
 
@@ -5321,6 +7317,10 @@ enum Strings {
         case .chinese: return "节奏健康,休假分配合理。"
         case .german: return "Gesundes Tempo. Du nutzt deinen Urlaub im richtigen Maß."
         case .french: return "Rythme sain. Vous utilisez vos congés au bon rythme."
+        case .spanish: return "Ritmo saludable. Estás usando tus vacaciones al ritmo adecuado."
+        case .italian: return "Ritmo sano. Stai usando le ferie al ritmo giusto."
+        case .portuguese: return "Ritmo saudável. Você está usando as férias no ritmo certo."
+        case .chineseTraditional: return "你正以健康的步調使用休假。"
         }
     }
 
@@ -5332,6 +7332,10 @@ enum Strings {
         case .chinese: return "使用较快。请合理分配剩余时间。"
         case .german: return "Du nimmst Urlaub schneller als der Durchschnitt. Teile dir den Rest des Jahres gut ein."
         case .french: return "Vous posez vos congés plus vite que la moyenne. Répartissez bien le reste de l'année."
+        case .spanish: return "Últimamente usas muchas vacaciones. Repártelas bien el resto del año."
+        case .italian: return "Ultimamente usi molte ferie. Distribuisci bene il resto dell’anno."
+        case .portuguese: return "Você tem usado bastante férias ultimamente. Distribua bem o resto do ano."
+        case .chineseTraditional: return "最近休得比較多，好好分配剩下的時間吧。"
         }
     }
 
@@ -5343,6 +7347,10 @@ enum Strings {
         case .chinese: return "年假消耗非常快,剩余天数可能不足。"
         case .german: return "Dein Urlaub schwindet sehr schnell. Am Ende könnten Tage fehlen."
         case .french: return "Vos congés fondent très vite. Il pourrait vous manquer des jours."
+        case .spanish: return "Tus vacaciones se agotan muy rápido. Podrían faltarte días."
+        case .italian: return "Le tue ferie si stanno esaurendo molto in fretta. Potrebbero mancarti giorni."
+        case .portuguese: return "Suas férias estão acabando muito rápido. Podem faltar dias."
+        case .chineseTraditional: return "特休消耗得非常快，剩餘天數可能不夠用。"
         }
     }
 
@@ -5355,6 +7363,10 @@ enum Strings {
         case .chinese: return "休息节奏"
         case .german: return "Erholungsrhythmus"
         case .french: return "Rythme de repos"
+        case .spanish: return "Ritmo de descanso"
+        case .italian: return "Ritmo di riposo"
+        case .portuguese: return "Ritmo de descanso"
+        case .chineseTraditional: return "休息節奏"
         }
     }
 
@@ -5366,6 +7378,10 @@ enum Strings {
         case .chinese: return "上次休假"
         case .german: return "Zuletzt"
         case .french: return "Dernière"
+        case .spanish: return "Último"
+        case .italian: return "Ultima"
+        case .portuguese: return "Última"
+        case .chineseTraditional: return "上次休假"
         }
     }
 
@@ -5377,6 +7393,10 @@ enum Strings {
         case .chinese: return "今天"
         case .german: return "Heute"
         case .french: return "Aujourd'hui"
+        case .spanish: return "Hoy"
+        case .italian: return "Oggi"
+        case .portuguese: return "Hoje"
+        case .chineseTraditional: return "今天"
         }
     }
 
@@ -5388,6 +7408,10 @@ enum Strings {
         case .chinese: return "下次休假"
         case .german: return "Als Nächstes"
         case .french: return "Prochaine"
+        case .spanish: return "Próximo"
+        case .italian: return "Prossima"
+        case .portuguese: return "Próxima"
+        case .chineseTraditional: return "下次休假"
         }
     }
 
@@ -5399,6 +7423,10 @@ enum Strings {
         case .chinese: return "\(days)天前"
         case .german: return days == 1 ? "vor 1 Tag" : "vor \(days) Tagen"
         case .french: return days == 1 ? "il y a 1 jour" : "il y a \(days) jours"
+        case .spanish: return days == 1 ? "hace 1 día" : "hace \(days) días"
+        case .italian: return days == 1 ? "1 giorno fa" : "\(days) giorni fa"
+        case .portuguese: return days == 1 ? "há 1 dia" : "há \(days) dias"
+        case .chineseTraditional: return days == 1 ? "1天前" : "\(days)天前"
         }
     }
 
@@ -5410,6 +7438,10 @@ enum Strings {
         case .chinese: return "\(days)天后"
         case .german: return days == 1 ? "in 1 Tag" : "in \(days) Tagen"
         case .french: return days == 1 ? "dans 1 jour" : "dans \(days) jours"
+        case .spanish: return days == 1 ? "en 1 día" : "en \(days) días"
+        case .italian: return days == 1 ? "tra 1 giorno" : "tra \(days) giorni"
+        case .portuguese: return days == 1 ? "em 1 dia" : "em \(days) dias"
+        case .chineseTraditional: return days == 1 ? "1天後" : "\(days)天後"
         }
     }
 
@@ -5421,6 +7453,10 @@ enum Strings {
         case .chinese: return "无记录"
         case .german: return "Kein Eintrag"
         case .french: return "Aucun enregistrement"
+        case .spanish: return "Sin registros"
+        case .italian: return "Nessun dato"
+        case .portuguese: return "Sem registro"
+        case .chineseTraditional: return "無紀錄"
         }
     }
 
@@ -5432,6 +7468,10 @@ enum Strings {
         case .chinese: return "未计划"
         case .german: return "Nicht geplant"
         case .french: return "Non planifié"
+        case .spanish: return "Sin planificar"
+        case .italian: return "Non pianificato"
+        case .portuguese: return "Não planejado"
+        case .chineseTraditional: return "尚無計畫"
         }
     }
 
@@ -5443,6 +7483,10 @@ enum Strings {
         case .chinese: return "休假间隔健康,继续保持这个节奏。"
         case .german: return "Gesunder Abstand zwischen den Auszeiten. Behalte diesen Rhythmus bei."
         case .french: return "Bon écart entre vos pauses. Gardez ce rythme."
+        case .spanish: return "Buen intervalo entre descansos. Mantén este ritmo."
+        case .italian: return "Buona distanza tra le pause. Mantieni questo ritmo."
+        case .portuguese: return "Bom intervalo entre as folgas. Mantenha esse ritmo."
+        case .chineseTraditional: return "休假間隔很健康，保持現在的節奏吧。"
         }
     }
 
@@ -5454,6 +7498,10 @@ enum Strings {
         case .chinese: return "已经有段时间没休息了,哪怕短假也好,试着安排一下吧。"
         case .german: return "Deine letzte Auszeit ist schon eine Weile her. Plane auch mal eine kurze Pause."
         case .french: return "Cela fait un moment. Pensez à planifier une petite pause."
+        case .spanish: return "Hace tiempo que no descansas. Planea aunque sea un descanso corto."
+        case .italian: return "È passato un po’ di tempo. Prova a pianificare anche solo una breve pausa."
+        case .portuguese: return "Já faz um tempo. Que tal planejar nem que seja uma folga curta?"
+        case .chineseTraditional: return "已經有一陣子沒休息了，就算短短幾天也好，排個休假吧。"
         }
     }
 
@@ -5465,6 +7513,10 @@ enum Strings {
         case .chinese: return "好久没休息了,在倦怠之前安排一次休假吧。"
         case .german: return "Du hast dich lange nicht erholt. Plane Urlaub, bevor es zum Burnout kommt."
         case .french: return "Vous ne vous êtes pas reposé depuis longtemps. Posez des congés avant le burn-out."
+        case .spanish: return "Llevas mucho tiempo sin descansar. Tómate unos días antes del burnout."
+        case .italian: return "Non ti riposi da tanto tempo. Prenditi delle ferie prima del burnout."
+        case .portuguese: return "Faz tempo que você não descansa. Tire uns dias antes do burnout."
+        case .chineseTraditional: return "你已經很久沒休息了，在過勞之前排個休假吧。"
         }
     }
 
@@ -5476,6 +7528,10 @@ enum Strings {
         case .chinese: return "下次休假就快到了,再坚持一下。"
         case .german: return "Deine nächste Auszeit steht bald an. Halte noch ein bisschen durch."
         case .french: return "Votre prochaine pause approche. Tenez bon encore un peu."
+        case .spanish: return "Tu próximo descanso está cerca. Aguanta un poco más."
+        case .italian: return "La prossima pausa è vicina. Resisti ancora un po’."
+        case .portuguese: return "Sua próxima folga está chegando. Aguente só mais um pouco."
+        case .chineseTraditional: return "下次休假就快到了，再撐一下吧。"
         }
     }
 
@@ -5490,6 +7546,10 @@ enum Strings {
         case .chinese: return "你通常的周期为\(days)天"
         case .german: return "Dein üblicher Zyklus: \(days) Tage"
         case .french: return "Votre cycle habituel : \(days) jours"
+        case .spanish: return "Tu ciclo habitual: \(days) días"
+        case .italian: return "Il tuo ciclo abituale: \(days) giorni"
+        case .portuguese: return "Seu ciclo habitual: \(days) dias"
+        case .chineseTraditional: return "平常週期 \(days) 天"
         }
     }
 
@@ -5502,6 +7562,10 @@ enum Strings {
         case .chinese: return "倦怠风险"
         case .german: return "Burnout-Risiko"
         case .french: return "Risque de burn-out"
+        case .spanish: return "Riesgo de burnout"
+        case .italian: return "Rischio burnout"
+        case .portuguese: return "Risco de burnout"
+        case .chineseTraditional: return "小心過勞"
         }
     }
 
@@ -5515,6 +7579,10 @@ enum Strings {
         case .chinese: return "最近你有多疲惫?"
         case .german: return "Wie erschöpft fühlst du dich zurzeit?"
         case .french: return "À quel point êtes-vous épuisé en ce moment ?"
+        case .spanish: return "¿Cuánto cansancio sientes últimamente?"
+        case .italian: return "Quanto ti senti esausto ultimamente?"
+        case .portuguese: return "Como anda seu cansaço ultimamente?"
+        case .chineseTraditional: return "你最近有多累？"
         }
     }
 
@@ -5526,6 +7594,10 @@ enum Strings {
         case .chinese: return "一个简单的回答能让休息建议更准确。"
         case .german: return "Eine kurze Antwort macht deine Erholungstipps treffsicherer."
         case .french: return "Une réponse rapide affine vos suggestions de repos."
+        case .spanish: return "Una respuesta rápida afina tus sugerencias de descanso."
+        case .italian: return "Una risposta veloce rende più precisi i suggerimenti di riposo."
+        case .portuguese: return "Uma resposta rápida deixa suas sugestões de descanso mais precisas."
+        case .chineseTraditional: return "回答一下，休息推薦就會更準確。"
         }
     }
 
@@ -5537,6 +7609,10 @@ enum Strings {
         case .chinese: return "还好"
         case .german: return "Geht so gut"
         case .french: return "Ça va"
+        case .spanish: return "Bien"
+        case .italian: return "Bene"
+        case .portuguese: return "Tudo bem"
+        case .chineseTraditional: return "還好"
         }
     }
 
@@ -5548,6 +7624,10 @@ enum Strings {
         case .chinese: return "精疲力竭"
         case .german: return "Völlig erschöpft"
         case .french: return "Épuisé"
+        case .spanish: return "Agotado"
+        case .italian: return "Esausto"
+        case .portuguese: return "Esgotado"
+        case .chineseTraditional: return "累壞了"
         }
     }
 
@@ -5559,6 +7639,10 @@ enum Strings {
         case .chinese: return "提交"
         case .german: return "Speichern"
         case .french: return "Enregistrer"
+        case .spanish: return "Guardar"
+        case .italian: return "Salva"
+        case .portuguese: return "Salvar"
+        case .chineseTraditional: return "記錄"
         }
     }
 
@@ -5570,6 +7654,10 @@ enum Strings {
         case .chinese: return "稍后"
         case .german: return "Später"
         case .french: return "Plus tard"
+        case .spanish: return "Más tarde"
+        case .italian: return "Più tardi"
+        case .portuguese: return "Depois"
+        case .chineseTraditional: return "稍後"
         }
     }
 
@@ -5583,6 +7671,10 @@ enum Strings {
         case .chinese: return "休息提醒"
         case .german: return "Erholungserinnerungen"
         case .french: return "Rappels de repos"
+        case .spanish: return "Recordatorios de descanso"
+        case .italian: return "Promemoria di riposo"
+        case .portuguese: return "Lembretes de descanso"
+        case .chineseTraditional: return "休息提醒"
         }
     }
 
@@ -5594,6 +7686,10 @@ enum Strings {
         case .chinese: return "休息雷达"
         case .german: return "Erholungsradar"
         case .french: return "Radar de repos"
+        case .spanish: return "Radar de descanso"
+        case .italian: return "Radar del riposo"
+        case .portuguese: return "Radar de descanso"
+        case .chineseTraditional: return "休息雷達"
         }
     }
 
@@ -5605,6 +7701,10 @@ enum Strings {
         case .chinese: return "当你太久没休息时,会结合就近的低成本假期提醒你。"
         case .german: return "Wenn du zu lange keine Pause hattest, erinnern wir dich an einen günstigen Kurztrip in der Nähe."
         case .french: return "Si vous n'avez pas fait de pause depuis trop longtemps, nous vous suggérerons une escapade économique à proximité."
+        case .spanish: return "Si llevas mucho tiempo sin descansar, te avisaremos de un puente cercano y económico."
+        case .italian: return "Se è da troppo che non ti fermi, ti segnaleremo un ponte vicino ed economico."
+        case .portuguese: return "Se você está há muito tempo sem descansar, vamos te avisar de um feriadão próximo e econômico."
+        case .chineseTraditional: return "太久沒休息時，會搭配近期低成本的連假提醒你。"
         }
     }
 
@@ -5617,6 +7717,10 @@ enum Strings {
         case .chinese: return "两周后再提醒"
         case .german: return "In 2 Wochen erinnern"
         case .french: return "Rappeler dans 2 semaines"
+        case .spanish: return "Recordar en 2 semanas"
+        case .italian: return "Ricorda tra 2 settimane"
+        case .portuguese: return "Lembrar em 2 semanas"
+        case .chineseTraditional: return "兩週後再提醒"
         }
     }
 
@@ -5629,6 +7733,10 @@ enum Strings {
         case .chinese: return "包含奖励"
         case .german: return "Bonus einbeziehen"
         case .french: return "Inclure le bonus"
+        case .spanish: return "Incluir días extra"
+        case .italian: return "Includi bonus"
+        case .portuguese: return "Incluir bônus"
+        case .chineseTraditional: return "包含獎勵特休"
         }
     }
 
@@ -5641,6 +7749,10 @@ enum Strings {
         case .chinese: return "开启后奖励假期将计入剩余天数"
         case .german: return "Wenn aktiviert, wird Bonusurlaub zu deinen Resttagen addiert"
         case .french: return "Si activé, les congés bonus s'ajoutent à vos jours restants"
+        case .spanish: return "Si está activado, los días extra se suman a tus días restantes"
+        case .italian: return "Se attivo, le ferie bonus si sommano ai giorni rimanenti"
+        case .portuguese: return "Quando ativado, as folgas bônus são somadas aos dias restantes"
+        case .chineseTraditional: return "開啟後，獎勵特休會計入剩餘天數"
         }
     }
 
@@ -5652,6 +7764,10 @@ enum Strings {
         case .chinese: return "目标剩余"
         case .german: return "Restziel"
         case .french: return "Objectif restant"
+        case .spanish: return "Objetivo restante"
+        case .italian: return "Obiettivo residuo"
+        case .portuguese: return "Meta restante"
+        case .chineseTraditional: return "目標剩餘"
         }
     }
 
@@ -5663,6 +7779,10 @@ enum Strings {
         case .chinese: return "可用"
         case .german: return "Verfügbar"
         case .french: return "Disponible"
+        case .spanish: return "Disponible"
+        case .italian: return "Disponibile"
+        case .portuguese: return "Disponível"
+        case .chineseTraditional: return "可使用"
         }
     }
 
@@ -5674,6 +7794,10 @@ enum Strings {
         case .chinese: return "未设目标 · 可在设置中设定年度目标"
         case .german: return "Kein Ziel festgelegt · Du kannst in den Einstellungen ein Jahresziel setzen"
         case .french: return "Aucun objectif défini · Vous pouvez en fixer un dans les Réglages"
+        case .spanish: return "Sin objetivo · Puedes fijar un objetivo anual en Ajustes"
+        case .italian: return "Nessun obiettivo · Puoi impostarne uno annuale nelle Impostazioni"
+        case .portuguese: return "Sem meta · Você pode definir uma meta anual em Ajustes"
+        case .chineseTraditional: return "未設定目標 · 可在設定中設定年度目標"
         }
     }
 
@@ -5685,6 +7809,10 @@ enum Strings {
         case .chinese: return "如需按日期单独输入,请使用 + 标签"
         case .german: return "Nutze den +-Tab, um Urlaub nach Datum einzutragen"
         case .french: return "Utilisez l'onglet + pour ajouter des congés par date"
+        case .spanish: return "Usa la pestaña + para añadir vacaciones por fecha"
+        case .italian: return "Usa la scheda + per aggiungere ferie per data"
+        case .portuguese: return "Use a aba + para adicionar férias por data"
+        case .chineseTraditional: return "若要依日期逐筆輸入，請使用「+」分頁"
         }
     }
 
@@ -5697,6 +7825,10 @@ enum Strings {
         case .chinese: return "\(holidayName) 还有\(days)天 · 拼上年假打造长假"
         case .german: return "\(holidayName) in \(days) T. · Mit Urlaub zur längeren Auszeit"
         case .french: return "\(holidayName) dans \(days) j · Posez des congés pour une pause plus longue"
+        case .spanish: return "\(holidayName) en \(days) d · Añade vacaciones para un descanso más largo"
+        case .italian: return "\(holidayName) tra \(days) g · Aggiungi ferie per una pausa più lunga"
+        case .portuguese: return "\(holidayName) em \(days) d · Tire férias para um descanso mais longo"
+        case .chineseTraditional: return "\(holidayName) 還有 \(days) 天 · 搭配特休放個長假吧"
         }
     }
 
@@ -5708,6 +7840,10 @@ enum Strings {
         case .chinese: return "今年还剩\(daysText)天 · 在到期前安排好"
         case .german: return "Noch \(daysText) Tage in diesem Jahr · Plane, bevor sie verfallen"
         case .french: return "Plus que \(daysText) jours cette année · Planifiez avant qu'ils expirent"
+        case .spanish: return daysText == "1" ? "Te queda 1 día este año · Planifícalo antes de que caduque" : "Te quedan \(daysText) días este año · Planifícalos antes de que caduquen"
+        case .italian: return daysText == "1" ? "Ti resta 1 giorno quest’anno · Pianificalo prima che scada" : "Ti restano \(daysText) giorni quest’anno · Pianificali prima che scadano"
+        case .portuguese: return daysText == "1" ? "Resta 1 dia este ano · Planeje antes que expire" : "Restam \(daysText) dias este ano · Planeje antes que expirem"
+        case .chineseTraditional: return "今年還剩 \(daysText) 天 · 趁失效前好好規劃"
         }
     }
 
@@ -5719,6 +7855,10 @@ enum Strings {
         case .chinese: return "黄金周"
         case .german: return "Goldene Woche"
         case .french: return "Golden Week"
+        case .spanish: return "Semana dorada"
+        case .italian: return "Settimana d’oro"
+        case .portuguese: return "Semana de ouro"
+        case .chineseTraditional: return "黃金連假"
         }
     }
 
@@ -5730,6 +7870,10 @@ enum Strings {
         case .chinese: return "中秋假期"
         case .german: return "Herbstferien"
         case .french: return "Vacances d'automne"
+        case .spanish: return "Vacaciones de otoño"
+        case .italian: return "Vacanze d’autunno"
+        case .portuguese: return "Feriado de outono"
+        case .chineseTraditional: return "中秋連假"
         }
     }
 
@@ -5741,6 +7885,10 @@ enum Strings {
         case .chinese: return "\(seasonName)旺季 · 用AI推荐打造最佳行程"
         case .german: return "Saison: \(seasonName) · Mit KI-Empfehlungen den besten Plan finden"
         case .french: return "Saison : \(seasonName) · Trouvez le meilleur plan avec l'IA"
+        case .spanish: return "Temporada: \(seasonName) · Crea el mejor plan con IA"
+        case .italian: return "Stagione: \(seasonName) · Trova il piano migliore con l’IA"
+        case .portuguese: return "Temporada: \(seasonName) · Monte o melhor plano com IA"
+        case .chineseTraditional: return "\(seasonName) 季 · 用 AI 推薦排出最佳行程"
         }
     }
 
@@ -5752,6 +7900,10 @@ enum Strings {
         case .chinese: return "剩余\(daysText)天年假 · 合理安排"
         case .german: return "Noch \(daysText) Urlaubstage · Setze sie klug ein"
         case .french: return "Plus que \(daysText) jours de congé · Placez-les judicieusement"
+        case .spanish: return daysText == "1" ? "Te queda 1 día de vacaciones · Aprovéchalo bien" : "Te quedan \(daysText) días de vacaciones · Distribúyelos bien"
+        case .italian: return daysText == "1" ? "Ti resta 1 giorno di ferie · Usalo al meglio" : "Ti restano \(daysText) giorni di ferie · Distribuiscili al meglio"
+        case .portuguese: return daysText == "1" ? "Resta 1 dia de férias · Use com inteligência" : "Restam \(daysText) dias de férias · Distribua com inteligência"
+        case .chineseTraditional: return "剩餘特休 \(daysText) 天 · 好好安排吧"
         }
     }
 
@@ -5763,6 +7915,10 @@ enum Strings {
         case .chinese: return "还有\(daysText)天年假未安排 · 试试AI推荐"
         case .german: return "\(daysText) Urlaubstage noch ungeplant · Hol dir KI-Empfehlungen"
         case .french: return "\(daysText) jours de congé non planifiés · Obtenez des recommandations IA"
+        case .spanish: return daysText == "1" ? "1 día de vacaciones sin planificar · Pide recomendaciones a la IA" : "\(daysText) días de vacaciones sin planificar · Pide recomendaciones a la IA"
+        case .italian: return daysText == "1" ? "1 giorno di ferie non pianificato · Chiedi suggerimenti all’IA" : "\(daysText) giorni di ferie non pianificati · Chiedi suggerimenti all’IA"
+        case .portuguese: return daysText == "1" ? "1 dia de férias sem plano · Receba sugestões da IA" : "\(daysText) dias de férias sem plano · Receba sugestões da IA"
+        case .chineseTraditional: return "還有 \(daysText) 天特休未安排 · 試試 AI 推薦"
         }
     }
 
@@ -5775,6 +7931,10 @@ enum Strings {
         case .chinese: return "距目标天数"
         case .german: return "Tage bis zum Ziel"
         case .french: return "Jours avant l'objectif"
+        case .spanish: return "Días para el objetivo"
+        case .italian: return "Giorni all’obiettivo"
+        case .portuguese: return "Dias até a meta"
+        case .chineseTraditional: return "距離目標天數"
         }
     }
 
@@ -5786,6 +7946,10 @@ enum Strings {
         case .chinese: return "计划合计"
         case .german: return "Gesamt geplant"
         case .french: return "Total planifié"
+        case .spanish: return "Total planificado"
+        case .italian: return "Totale pianificato"
+        case .portuguese: return "Total planejado"
+        case .chineseTraditional: return "計畫總計"
         }
     }
 
@@ -5797,6 +7961,10 @@ enum Strings {
         case .chinese: return "使用奖励年假"
         case .german: return "Bonusurlaub nutzen"
         case .french: return "Utiliser les congés bonus"
+        case .spanish: return "Usar días extra"
+        case .italian: return "Usa ferie bonus"
+        case .portuguese: return "Usar folga bônus"
+        case .chineseTraditional: return "使用獎勵特休"
         }
     }
 
@@ -5808,6 +7976,10 @@ enum Strings {
         case .chinese: return "将使用奖励年假,不会从年假中扣除。"
         case .german: return "Bonusurlaub wird verwendet. Er wird nicht von deinem Jahresurlaub abgezogen."
         case .french: return "Les congés bonus seront utilisés. Ils ne seront pas déduits de vos congés annuels."
+        case .spanish: return "Se usarán días extra. No se descontarán de tus vacaciones anuales."
+        case .italian: return "Verranno usate le ferie bonus. Non saranno scalate dalle ferie annuali."
+        case .portuguese: return "As folgas bônus serão usadas. Elas não serão descontadas das suas férias."
+        case .chineseTraditional: return "將使用獎勵特休，不會從特休中扣除。"
         }
     }
 
@@ -5819,6 +7991,10 @@ enum Strings {
         case .chinese: return "点击选择奖励年假即可代替年假使用。"
         case .german: return "Tippe, um Bonusurlaub auszuwählen und ihn statt Jahresurlaub zu nutzen."
         case .french: return "Touchez pour choisir des congés bonus et les utiliser à la place des congés annuels."
+        case .spanish: return "Toca para elegir días extra y usarlos en lugar de tus vacaciones anuales."
+        case .italian: return "Tocca per scegliere le ferie bonus e usarle al posto delle ferie annuali."
+        case .portuguese: return "Toque para escolher folgas bônus e usá-las no lugar das férias."
+        case .chineseTraditional: return "點一下選擇獎勵特休，即可用來代替特休。"
         }
     }
 
@@ -5830,6 +8006,10 @@ enum Strings {
         case .chinese: return "奖励年假单位"
         case .german: return "Einheit für Bonusurlaub"
         case .french: return "Unité des congés bonus"
+        case .spanish: return "Unidad de días extra"
+        case .italian: return "Unità ferie bonus"
+        case .portuguese: return "Unidade das folgas bônus"
+        case .chineseTraditional: return "獎勵特休使用單位"
         }
     }
 
@@ -5841,6 +8021,10 @@ enum Strings {
         case .chinese: return "休假时长"
         case .german: return "Urlaubsdauer"
         case .french: return "Durée des vacances"
+        case .spanish: return "Duración de las vacaciones"
+        case .italian: return "Durata delle ferie"
+        case .portuguese: return "Duração das férias"
+        case .chineseTraditional: return "休假期間"
         }
     }
 
@@ -5852,6 +8036,10 @@ enum Strings {
         case .chinese: return "扣除单位"
         case .german: return "Abzugseinheit"
         case .french: return "Unité de déduction"
+        case .spanish: return "Unidad de descuento"
+        case .italian: return "Unità di detrazione"
+        case .portuguese: return "Unidade de desconto"
+        case .chineseTraditional: return "特休扣除單位"
         }
     }
 
@@ -5950,6 +8138,70 @@ enum Strings {
                 default: return "Congé"
                 }
             }
+        case .spanish:
+            if isLeisure {
+                switch type {
+                case .quarter: return "Cuarto"
+                case .half: return "Medio"
+                case .annual: return "Día libre"
+                default: return "Día libre"
+                }
+            } else {
+                switch type {
+                case .quarter: return "Cuarto de jornada"
+                case .half: return "Media jornada"
+                case .annual: return "Vacaciones"
+                default: return "Vacaciones"
+                }
+            }
+        case .italian:
+            if isLeisure {
+                switch type {
+                case .quarter: return "Quarto"
+                case .half: return "Mezza"
+                case .annual: return "Giorno libero"
+                default: return "Giorno libero"
+                }
+            } else {
+                switch type {
+                case .quarter: return "Quarto di giornata"
+                case .half: return "Mezza giornata"
+                case .annual: return "Ferie"
+                default: return "Ferie"
+                }
+            }
+        case .portuguese:
+            if isLeisure {
+                switch type {
+                case .quarter: return "Quarto"
+                case .half: return "Meio"
+                case .annual: return "Folga"
+                default: return "Folga"
+                }
+            } else {
+                switch type {
+                case .quarter: return "Quarto de dia"
+                case .half: return "Meio período"
+                case .annual: return "Férias"
+                default: return "Férias"
+                }
+            }
+        case .chineseTraditional:
+            if isLeisure {
+                switch type {
+                case .quarter: return "四分之一天"
+                case .half: return "半天"
+                case .annual: return "休假"
+                default: return "休假"
+                }
+            } else {
+                switch type {
+                case .quarter: return "四分之一特休"
+                case .half: return "半天特休"
+                case .annual: return "特休"
+                default: return "特休"
+                }
+            }
         }
     }
 
@@ -5992,6 +8244,30 @@ enum Strings {
             case .half: return "Demi-journée"
             case .quarter: return "Quart de journée"
             }
+        case .spanish:
+            switch length {
+            case .full: return "Día completo"
+            case .half: return "Media jornada"
+            case .quarter: return "Cuarto de jornada"
+            }
+        case .italian:
+            switch length {
+            case .full: return "Giornata intera"
+            case .half: return "Mezza giornata"
+            case .quarter: return "Quarto di giornata"
+            }
+        case .portuguese:
+            switch length {
+            case .full: return "Dia inteiro"
+            case .half: return "Meio período"
+            case .quarter: return "Quarto de dia"
+            }
+        case .chineseTraditional:
+            switch length {
+            case .full: return "全天"
+            case .half: return "半天"
+            case .quarter: return "四分之一天"
+            }
         }
     }
 
@@ -6004,6 +8280,10 @@ enum Strings {
         case .chinese: return "休假类型"
         case .german: return "Urlaubsart"
         case .french: return "Type de congé"
+        case .spanish: return "Tipo de ausencia"
+        case .italian: return "Tipo di assenza"
+        case .portuguese: return "Tipo de ausência"
+        case .chineseTraditional: return "假別"
         }
     }
 
@@ -6016,6 +8296,10 @@ enum Strings {
         case .chinese: return "使用长度"
         case .german: return "Dauer"
         case .french: return "Durée"
+        case .spanish: return "Duración"
+        case .italian: return "Durata"
+        case .portuguese: return "Duração"
+        case .chineseTraditional: return "時長"
         }
     }
 
@@ -6027,6 +8311,10 @@ enum Strings {
         case .chinese: return "其他 (不扣除年假)"
         case .german: return "Sonstige (ohne Abzug)"
         case .french: return "Autres (sans déduction)"
+        case .spanish: return "Otros (sin descontar)"
+        case .italian: return "Altro (senza detrazione)"
+        case .portuguese: return "Outros (sem desconto)"
+        case .chineseTraditional: return "其他（不扣特休）"
         }
     }
 
@@ -6038,6 +8326,10 @@ enum Strings {
         case .chinese: return "新增奖励年假为Pro功能。已添加的项目仍可编辑。"
         case .german: return "Bonusurlaub hinzuzufügen ist eine Pro-Funktion. Vorhandene Einträge kannst du weiterhin bearbeiten."
         case .french: return "L'ajout de congés bonus est une fonction Pro. Vous pouvez toujours modifier les éléments existants."
+        case .spanish: return "Añadir días extra es una función Pro. Puedes seguir editando los elementos existentes."
+        case .italian: return "Aggiungere ferie bonus è una funzione Pro. Puoi comunque modificare gli elementi esistenti."
+        case .portuguese: return "Adicionar folgas bônus é um recurso Pro. Você ainda pode editar os itens existentes."
+        case .chineseTraditional: return "新增獎勵特休為 Pro 功能。已新增的項目仍可編輯。"
         }
     }
 
@@ -6052,6 +8344,10 @@ enum Strings {
         case .chinese: return "\(used)/\(granted)天"
         case .german: return "\(used)/\(granted) Tage"
         case .french: return "\(used)/\(granted) jours"
+        case .spanish: return "\(used)/\(granted) días"
+        case .italian: return "\(used)/\(granted) giorni"
+        case .portuguese: return "\(used)/\(granted) dias"
+        case .chineseTraditional: return "\(used)/\(granted) 天"
         }
     }
 
@@ -6064,6 +8360,10 @@ enum Strings {
         case .chinese: return "\(granted)天中已用\(used)天"
         case .german: return "\(used) von \(granted) Tagen genutzt"
         case .french: return "\(used) jours sur \(granted) utilisés"
+        case .spanish: return "\(used) de \(granted) días usados"
+        case .italian: return "\(used) giorni su \(granted) usati"
+        case .portuguese: return "\(used) de \(granted) dias usados"
+        case .chineseTraditional: return "已使用 \(granted) 天中的 \(used) 天"
         }
     }
 
@@ -6075,6 +8375,10 @@ enum Strings {
         case .chinese: return "已使用\(used)天 · 剩余\(remaining)天"
         case .german: return "\(used) Tage genutzt · \(remaining) Tage übrig"
         case .french: return "\(used) jours utilisés · \(remaining) jours restants"
+        case .spanish: return "\(used) \(used == "1" ? "día usado" : "días usados") · \(remaining) \(remaining == "1" ? "día restante" : "días restantes")"
+        case .italian: return "\(used) \(used == "1" ? "giorno usato" : "giorni usati") · \(remaining) \(remaining == "1" ? "giorno rimanente" : "giorni rimanenti")"
+        case .portuguese: return "\(used) \(used == "1" ? "dia usado" : "dias usados") · \(remaining) \(remaining == "1" ? "dia restante" : "dias restantes")"
+        case .chineseTraditional: return "已使用 \(used) 天 · 剩餘 \(remaining) 天"
         }
     }
 
@@ -6086,6 +8390,10 @@ enum Strings {
         case .chinese: return "编辑奖励年假"
         case .german: return "Bonusurlaub bearbeiten"
         case .french: return "Modifier les congés bonus"
+        case .spanish: return "Editar días extra"
+        case .italian: return "Modifica ferie bonus"
+        case .portuguese: return "Editar folga bônus"
+        case .chineseTraditional: return "編輯獎勵特休"
         }
     }
 
@@ -6098,6 +8406,10 @@ enum Strings {
         case .chinese: return "旅行推荐"
         case .german: return "Reisen"
         case .french: return "Voyage"
+        case .spanish: return "Viajes"
+        case .italian: return "Viaggi"
+        case .portuguese: return "Viagens"
+        case .chineseTraditional: return "旅遊推薦"
         }
     }
 
@@ -6109,6 +8421,10 @@ enum Strings {
         case .chinese: return "这个假期,出发吧?"
         case .german: return "Mach das Beste aus dieser Auszeit"
         case .french: return "Profitez au mieux de cette pause"
+        case .spanish: return "¿Te vas de viaje este puente?"
+        case .italian: return "Che ne dici di partire per questo ponte?"
+        case .portuguese: return "Que tal viajar neste feriadão?"
+        case .chineseTraditional: return "這個連假，出去走走吧？"
         }
     }
 
@@ -6120,6 +8436,10 @@ enum Strings {
         case .chinese: return "在MyRealTrip上一站查看机票、酒店和旅游产品"
         case .german: return "Vergleiche Flüge, Hotels und Touren gemeinsam bei MyRealTrip"
         case .french: return "Comparez vols, hôtels et visites en un seul endroit sur MyRealTrip"
+        case .spanish: return "Consulta vuelos, hoteles y tours a la vez en MyRealTrip"
+        case .italian: return "Scopri voli, hotel e tour in un unico posto su MyRealTrip"
+        case .portuguese: return "Veja voos, hotéis e passeios de uma vez no MyRealTrip"
+        case .chineseTraditional: return "在 MyRealTrip 一次查看機票、住宿和行程"
         }
     }
 
@@ -6131,6 +8451,10 @@ enum Strings {
         case .chinese: return "在MyRealTrip中查看"
         case .german: return "MyRealTrip öffnen"
         case .french: return "Ouvrir MyRealTrip"
+        case .spanish: return "Abrir MyRealTrip"
+        case .italian: return "Apri MyRealTrip"
+        case .portuguese: return "Abrir MyRealTrip"
+        case .chineseTraditional: return "在 MyRealTrip 查看"
         }
     }
 
@@ -6143,6 +8467,10 @@ enum Strings {
         case .chinese: return "我们为这个假期找到了一些活动。\n要查看推荐吗?"
         case .german: return "Wir haben Aktivitäten für diese Auszeit gefunden.\nEmpfehlungen anzeigen?"
         case .french: return "Nous avons trouvé des activités pour cette pause.\nAfficher les recommandations ?"
+        case .spanish: return "Hay actividades ideales para este puente.\n¿Quieres ver recomendaciones?"
+        case .italian: return "Abbiamo trovato delle attività per questo ponte.\nVuoi vedere i suggerimenti?"
+        case .portuguese: return "Encontramos atividades para este feriadão.\nQuer ver as sugestões?"
+        case .chineseTraditional: return "這個連假有一些很適合的活動，\n要推薦給你嗎？"
         }
     }
 
@@ -6154,6 +8482,10 @@ enum Strings {
         case .chinese: return "MyRealTrip上的机票、住宿和旅游产品"
         case .german: return "Flüge, Unterkünfte und Touren von MyRealTrip"
         case .french: return "Vols, hébergements et visites sur MyRealTrip"
+        case .spanish: return "Vuelos, alojamiento y tours en MyRealTrip"
+        case .italian: return "Voli, alloggi e tour su MyRealTrip"
+        case .portuguese: return "Voos, hospedagens e passeios no MyRealTrip"
+        case .chineseTraditional: return "在 MyRealTrip 一起看看機票、住宿和行程"
         }
     }
 
@@ -6165,6 +8497,10 @@ enum Strings {
         case .chinese: return "查看推荐"
         case .german: return "Zeig mal"
         case .french: return "Voir"
+        case .spanish: return "Ver"
+        case .italian: return "Vedi"
+        case .portuguese: return "Ver"
+        case .chineseTraditional: return "看推薦"
         }
     }
 
@@ -6176,6 +8512,10 @@ enum Strings {
         case .chinese: return "不用了"
         case .german: return "Nein danke"
         case .french: return "Non merci"
+        case .spanish: return "No, gracias"
+        case .italian: return "No, grazie"
+        case .portuguese: return "Agora não"
+        case .chineseTraditional: return "不用了"
         }
     }
 
@@ -6188,6 +8528,10 @@ enum Strings {
         case .chinese: return "\(days)天假期就去\(city) — \(season)"
         case .german: return "\(city) für \(days) freie Tage — \(season)"
         case .french: return "\(city) pour \(days) jours de pause — \(season)"
+        case .spanish: return "\(city) para un puente de \(days) días — \(season)"
+        case .italian: return "\(city) per un ponte di \(days) giorni — \(season)"
+        case .portuguese: return "\(city) para um feriadão de \(days) dias — \(season)"
+        case .chineseTraditional: return "\(days) 天連假就去\(city) — \(season)"
         }
     }
 
@@ -6199,6 +8543,10 @@ enum Strings {
         case .chinese: return "最便宜"
         case .german: return "Am günstigsten"
         case .french: return "Le moins cher"
+        case .spanish: return "Más barato"
+        case .italian: return "Più economico"
+        case .portuguese: return "Mais barato"
+        case .chineseTraditional: return "最便宜"
         }
     }
 
@@ -6210,6 +8558,10 @@ enum Strings {
         case .chinese: return "直飞"
         case .german: return "Direktflug"
         case .french: return "Vol direct"
+        case .spanish: return "Directo"
+        case .italian: return "Diretto"
+        case .portuguese: return "Direto"
+        case .chineseTraditional: return "直飛"
         }
     }
 
@@ -6221,6 +8573,10 @@ enum Strings {
         case .chinese: return "高分推荐"
         case .german: return "Bestbewertet"
         case .french: return "Mieux noté"
+        case .spanish: return "Mejor valorado"
+        case .italian: return "Più apprezzato"
+        case .portuguese: return "Mais bem avaliado"
+        case .chineseTraditional: return "最高評價"
         }
     }
 
@@ -6232,6 +8588,10 @@ enum Strings {
         case .chinese: return "热销"
         case .german: return "Bestseller"
         case .french: return "Meilleure vente"
+        case .spanish: return "Más vendido"
+        case .italian: return "Più venduto"
+        case .portuguese: return "Mais vendido"
+        case .chineseTraditional: return "暢銷"
         }
     }
 
@@ -6243,6 +8603,10 @@ enum Strings {
         case .chinese: return "推荐套餐"
         case .german: return "Paketvorschlag"
         case .french: return "Forfait suggéré"
+        case .spanish: return "Paquete sugerido"
+        case .italian: return "Pacchetto consigliato"
+        case .portuguese: return "Pacote sugerido"
+        case .chineseTraditional: return "推薦套裝行程"
         }
     }
 
@@ -6254,6 +8618,10 @@ enum Strings {
         case .chinese: return "不再自动显示"
         case .german: return "Nicht mehr automatisch zeigen"
         case .french: return "Ne plus afficher automatiquement"
+        case .spanish: return "No mostrar automáticamente"
+        case .italian: return "Non mostrare automaticamente"
+        case .portuguese: return "Não mostrar automaticamente"
+        case .chineseTraditional: return "之後不再自動顯示"
         }
     }
 
@@ -6266,6 +8634,10 @@ enum Strings {
         case .chinese: return "上班族"
         case .german: return "Angestellte"
         case .french: return "Salarié"
+        case .spanish: return "Empleado"
+        case .italian: return "Dipendente"
+        case .portuguese: return "Trabalhador"
+        case .chineseTraditional: return "上班族"
         }
     }
 
@@ -6277,6 +8649,10 @@ enum Strings {
         case .chinese: return "自由规划"
         case .german: return "Freie Planung"
         case .french: return "Planning libre"
+        case .spanish: return "Plan libre"
+        case .italian: return "Piano libero"
+        case .portuguese: return "Plano livre"
+        case .chineseTraditional: return "自由規劃"
         }
     }
 
@@ -6288,6 +8664,10 @@ enum Strings {
         case .chinese: return "用户类型"
         case .german: return "Nutzertyp"
         case .french: return "Type d'utilisateur"
+        case .spanish: return "Tipo de usuario"
+        case .italian: return "Tipo di utente"
+        case .portuguese: return "Tipo de usuário"
+        case .chineseTraditional: return "使用者類型"
         }
     }
 
@@ -6299,6 +8679,10 @@ enum Strings {
         case .chinese: return "模式"
         case .german: return "Modus"
         case .french: return "Mode"
+        case .spanish: return "Modo"
+        case .italian: return "Modalità"
+        case .portuguese: return "Modo"
+        case .chineseTraditional: return "模式"
         }
     }
 
@@ -6310,6 +8694,10 @@ enum Strings {
         case .chinese: return "适合不受年假天数限制、自由规划休假的用户。"
         case .german: return "Ein Modus für alle, die ihren Urlaub frei und ohne Urlaubstage-Limit planen möchten."
         case .french: return "Un mode pour planifier vos vacances librement, sans limite de jours de congé."
+        case .spanish: return "Un modo para planificar tus vacaciones libremente, sin límite de días."
+        case .italian: return "Una modalità per pianificare le vacanze liberamente, senza limiti di giorni di ferie."
+        case .portuguese: return "Um modo para planejar suas férias livremente, sem limite de dias."
+        case .chineseTraditional: return "適合想不受特休天數限制、自由規劃休假的你。"
         }
     }
 
@@ -6321,6 +8709,10 @@ enum Strings {
         case .chinese: return "休假设置"
         case .german: return "Urlaubseinstellungen"
         case .french: return "Réglages des congés"
+        case .spanish: return "Ajustes de vacaciones"
+        case .italian: return "Impostazioni ferie"
+        case .portuguese: return "Ajustes de férias"
+        case .chineseTraditional: return "休假設定"
         }
     }
 
@@ -6332,6 +8724,10 @@ enum Strings {
         case .chinese: return "年度目标天数"
         case .german: return "Jahresziel in Tagen"
         case .french: return "Objectif annuel (jours)"
+        case .spanish: return "Objetivo anual (días)"
+        case .italian: return "Obiettivo annuale (giorni)"
+        case .portuguese: return "Meta anual (dias)"
+        case .chineseTraditional: return "年度目標天數"
         }
     }
 
@@ -6343,6 +8739,10 @@ enum Strings {
         case .chinese: return "无限"
         case .german: return "Unbegrenzt"
         case .french: return "Illimité"
+        case .spanish: return "Ilimitado"
+        case .italian: return "Illimitato"
+        case .portuguese: return "Ilimitado"
+        case .chineseTraditional: return "無限制"
         }
     }
 
@@ -6354,6 +8754,10 @@ enum Strings {
         case .chinese: return "计划休假"
         case .german: return "Geplanter Urlaub"
         case .french: return "Congés planifiés"
+        case .spanish: return "Vacaciones planificadas"
+        case .italian: return "Ferie pianificate"
+        case .portuguese: return "Férias planejadas"
+        case .chineseTraditional: return "已規劃的休假"
         }
     }
 
@@ -6365,6 +8769,10 @@ enum Strings {
         case .chinese: return "起始月份"
         case .german: return "Startmonat des Jahres"
         case .french: return "Mois de début d'année"
+        case .spanish: return "Mes de inicio del año"
+        case .italian: return "Mese di inizio anno"
+        case .portuguese: return "Mês de início do ano"
+        case .chineseTraditional: return "年度起始月份"
         }
     }
 
@@ -6379,6 +8787,10 @@ enum Strings {
         case .chinese: return "孩子放假"
         case .german: return "Schulferien"
         case .french: return "Vacances scolaires"
+        case .spanish: return "Vacaciones de los niños"
+        case .italian: return "Vacanze dei figli"
+        case .portuguese: return "Férias das crianças"
+        case .chineseTraditional: return "孩子的寒暑假"
         }
     }
 
@@ -6390,6 +8802,10 @@ enum Strings {
         case .chinese: return "我的假期"
         case .german: return "Meine Ferien"
         case .french: return "Mes vacances"
+        case .spanish: return "Mis vacaciones escolares"
+        case .italian: return "Le mie vacanze"
+        case .portuguese: return "Minhas férias escolares"
+        case .chineseTraditional: return "我的寒暑假"
         }
     }
 
@@ -6401,6 +8817,10 @@ enum Strings {
         case .chinese: return "假期"
         case .german: return "Ferien"
         case .french: return "Vacances"
+        case .spanish: return "Vacaciones escolares"
+        case .italian: return "Vacanze scolastiche"
+        case .portuguese: return "Férias escolares"
+        case .chineseTraditional: return "寒暑假"
         }
     }
 
@@ -6412,6 +8832,10 @@ enum Strings {
         case .chinese: return "孩子放假会显示在日历上，并优先推荐该期间的休假。我的假期视同节假日，不扣年假。"
         case .german: return "Schulferien der Kinder werden im Kalender angezeigt und Vorschläge in dieser Zeit zuerst gezeigt. Deine eigenen Ferien zählen wie Feiertage als frei – es wird kein Urlaub abgezogen."
         case .french: return "Les vacances des enfants s’affichent dans le calendrier et les suggestions pendant cette période passent en premier. Vos propres vacances comptent comme des jours fériés : aucun congé n’est décompté."
+        case .spanish: return "Las vacaciones de los niños se muestran en el calendario y las recomendaciones de ese periodo aparecen primero. Tus propias vacaciones cuentan como días libres, igual que los festivos, así que no se descuentan días."
+        case .italian: return "Le vacanze dei figli compaiono nel calendario e i suggerimenti in quel periodo vengono mostrati per primi. Le tue vacanze contano come giorni liberi, come le festività, quindi non scalano le ferie."
+        case .portuguese: return "As férias das crianças aparecem no calendário, e as sugestões nesse período vêm primeiro. Suas próprias férias contam como folga, como os feriados, e não descontam dias."
+        case .chineseTraditional: return "孩子的寒暑假會顯示在行事曆上，並優先推薦這段期間的休假安排。我的寒暑假會像國定假日一樣算作休息日，不會扣特休。"
         }
     }
 
@@ -6423,6 +8847,10 @@ enum Strings {
         case .chinese: return "尚未添加假期"
         case .german: return "Noch keine Ferien eingetragen"
         case .french: return "Aucune période de vacances ajoutée"
+        case .spanish: return "Aún no has añadido vacaciones escolares"
+        case .italian: return "Nessuna vacanza aggiunta"
+        case .portuguese: return "Nenhum período de férias escolares adicionado"
+        case .chineseTraditional: return "尚未新增寒暑假"
         }
     }
 
@@ -6434,6 +8862,10 @@ enum Strings {
         case .chinese: return "添加假期"
         case .german: return "Ferien hinzufügen"
         case .french: return "Ajouter des vacances"
+        case .spanish: return "Añadir vacaciones escolares"
+        case .italian: return "Aggiungi vacanze"
+        case .portuguese: return "Adicionar férias escolares"
+        case .chineseTraditional: return "新增寒暑假"
         }
     }
 
@@ -6445,6 +8877,10 @@ enum Strings {
         case .chinese: return "编辑假期"
         case .german: return "Ferien bearbeiten"
         case .french: return "Modifier les vacances"
+        case .spanish: return "Editar vacaciones escolares"
+        case .italian: return "Modifica vacanze"
+        case .portuguese: return "Editar férias escolares"
+        case .chineseTraditional: return "編輯寒暑假"
         }
     }
 
@@ -6456,6 +8892,10 @@ enum Strings {
         case .chinese: return "是谁的假期？"
         case .german: return "Wessen Ferien?"
         case .french: return "Les vacances de qui ?"
+        case .spanish: return "¿De quién son las vacaciones escolares?"
+        case .italian: return "Di chi sono le vacanze?"
+        case .portuguese: return "De quem são as férias escolares?"
+        case .chineseTraditional: return "是誰的寒暑假？"
         }
     }
 
@@ -6467,6 +8907,10 @@ enum Strings {
         case .chinese: return "在日历上显示，并优先推荐该期间。年假照常计算。"
         case .german: return "Wird im Kalender angezeigt, Vorschläge in diesem Zeitraum kommen zuerst. Dein Urlaub wird normal gezählt."
         case .french: return "Affichées dans le calendrier ; les suggestions sur cette période passent en premier. Vos congés sont comptés normalement."
+        case .spanish: return "Se muestran en el calendario y las recomendaciones de este periodo van primero. Tus días de vacaciones se cuentan como siempre."
+        case .italian: return "Mostrate nel calendario; i suggerimenti in questo periodo vengono prima. Le tue ferie si contano come sempre."
+        case .portuguese: return "Aparecem no calendário, e as sugestões desse período vêm primeiro. Suas férias são contadas normalmente."
+        case .chineseTraditional: return "會顯示在行事曆上，並優先推薦這段期間。你的特休照常計算。"
         }
     }
 
@@ -6478,6 +8922,10 @@ enum Strings {
         case .chinese: return "像教师、学生一样自己也放假。不扣年假，并计为休息。"
         case .german: return "Für Lehrkräfte und Studierende: Du hast auch frei. Es wird kein Urlaub abgezogen, und es zählt als Erholung."
         case .french: return "Pour les enseignants et étudiants : vous êtes aussi en repos. Aucun congé décompté, la période compte comme du repos."
+        case .spanish: return "Para docentes y estudiantes: tú también descansas. No se descuentan días de vacaciones y cuenta como descanso."
+        case .italian: return "Per insegnanti e studenti: sei in pausa anche tu. Non si scalano ferie e il periodo conta come riposo."
+        case .portuguese: return "Para professores e estudantes: você também está de folga. Não desconta férias e conta como descanso."
+        case .chineseTraditional: return "像老師、學生一樣，你也在放假。不會扣特休，並算作休息期間。"
         }
     }
 
@@ -6489,6 +8937,10 @@ enum Strings {
         case .chinese: return "期间"
         case .german: return "Zeitraum"
         case .french: return "Période"
+        case .spanish: return "Periodo"
+        case .italian: return "Periodo"
+        case .portuguese: return "Período"
+        case .chineseTraditional: return "期間"
         }
     }
 
@@ -6500,6 +8952,10 @@ enum Strings {
         case .chinese: return "名称"
         case .german: return "Name"
         case .french: return "Nom"
+        case .spanish: return "Nombre"
+        case .italian: return "Nome"
+        case .portuguese: return "Nome"
+        case .chineseTraditional: return "名稱"
         }
     }
 
@@ -6511,6 +8967,10 @@ enum Strings {
         case .chinese: return "例如：暑假"
         case .german: return "z. B. Sommerferien"
         case .french: return "ex. : Vacances d’été"
+        case .spanish: return "p. ej.: Vacaciones de verano"
+        case .italian: return "es. Vacanze estive"
+        case .portuguese: return "ex.: Férias de verão"
+        case .chineseTraditional: return "例如：暑假"
         }
     }
 
@@ -6522,6 +8982,10 @@ enum Strings {
         case .chinese: return "删除此假期？"
         case .german: return "Diese Ferien löschen?"
         case .french: return "Supprimer ces vacances ?"
+        case .spanish: return "¿Eliminar estas vacaciones escolares?"
+        case .italian: return "Eliminare queste vacanze?"
+        case .portuguese: return "Excluir estas férias escolares?"
+        case .chineseTraditional: return "要刪除這個寒暑假嗎？"
         }
     }
 
@@ -6533,6 +8997,10 @@ enum Strings {
         case .chinese: return "结束日期早于开始日期"
         case .german: return "Das Enddatum liegt vor dem Startdatum"
         case .french: return "La date de fin précède la date de début"
+        case .spanish: return "La fecha de fin es anterior a la de inicio"
+        case .italian: return "La data di fine è precedente a quella di inizio"
+        case .portuguese: return "A data de término é anterior à de início"
+        case .chineseTraditional: return "結束日早於開始日"
         }
     }
 
@@ -6544,6 +9012,10 @@ enum Strings {
         case .chinese: return "\(n)天"
         case .german: return n == 1 ? "1 Tag" : "\(n) Tage"
         case .french: return n == 1 ? "1 jour" : "\(n) jours"
+        case .spanish: return n == 1 ? "1 día" : "\(n) días"
+        case .italian: return n == 1 ? "1 giorno" : "\(n) giorni"
+        case .portuguese: return n == 1 ? "1 dia" : "\(n) dias"
+        case .chineseTraditional: return n == 1 ? "1 天" : "\(n) 天"
         }
     }
 
@@ -6555,6 +9027,10 @@ enum Strings {
         case .chinese: return "假日·假期管理"
         case .german: return "Feiertage & Ferien"
         case .french: return "Jours fériés et vacances"
+        case .spanish: return "Festivos y vacaciones escolares"
+        case .italian: return "Festività e vacanze"
+        case .portuguese: return "Feriados e férias escolares"
+        case .chineseTraditional: return "國定假日與寒暑假"
         }
     }
 
@@ -6566,6 +9042,10 @@ enum Strings {
         case .chinese: return "添加·隐藏假日，添加假期"
         case .german: return "Feiertage verwalten, Ferien eintragen"
         case .french: return "Gérer les jours fériés, ajouter des vacances"
+        case .spanish: return "Añade u oculta festivos y añade vacaciones escolares"
+        case .italian: return "Aggiungi o nascondi festività, aggiungi vacanze scolastiche"
+        case .portuguese: return "Adicione ou oculte feriados e adicione férias escolares"
+        case .chineseTraditional: return "新增或隱藏國定假日、新增寒暑假"
         }
     }
 
@@ -6578,6 +9058,10 @@ enum Strings {
         case .chinese: return "在即将到来的假期中显示节假日"
         case .german: return "Feiertage in Anstehendem zeigen"
         case .french: return "Jours fériés dans À venir"
+        case .spanish: return "Mostrar próximos festivos"
+        case .italian: return "Mostra festività imminenti"
+        case .portuguese: return "Mostrar próximos feriados"
+        case .chineseTraditional: return "顯示即將到來的國定假日"
         }
     }
 
@@ -6589,6 +9073,10 @@ enum Strings {
         case .chinese: return "在主页卡片中一并显示即将到来的节假日"
         case .german: return "Zeigt auf der Startseite auch anstehende Feiertage an"
         case .french: return "Affiche aussi les prochains jours fériés sur l'accueil"
+        case .spanish: return "Muestra también los próximos festivos en la tarjeta de inicio"
+        case .italian: return "Mostra anche le prossime festività nella scheda Home"
+        case .portuguese: return "Mostra também os próximos feriados no card da tela inicial"
+        case .chineseTraditional: return "在首頁卡片上一併顯示即將到來的國定假日"
         }
     }
 
@@ -6600,6 +9088,10 @@ enum Strings {
         case .chinese: return "恢复所有默认假日"
         case .german: return "Alle Standard-Feiertage wiederherstellen"
         case .french: return "Rétablir tous les jours fériés par défaut"
+        case .spanish: return "Restaurar todos los festivos predeterminados"
+        case .italian: return "Ripristina tutte le festività predefinite"
+        case .portuguese: return "Restaurar todos os feriados padrão"
+        case .chineseTraditional: return "還原所有預設國定假日"
         }
     }
 
@@ -6611,6 +9103,10 @@ enum Strings {
         case .chinese: return "删除假日"
         case .german: return "Feiertag löschen"
         case .french: return "Supprimer le jour férié"
+        case .spanish: return "Eliminar festivo"
+        case .italian: return "Elimina festività"
+        case .portuguese: return "Excluir feriado"
+        case .chineseTraditional: return "刪除國定假日"
         }
     }
 
@@ -6622,6 +9118,10 @@ enum Strings {
         case .chinese: return "要删除此假日吗?"
         case .german: return "Diesen Feiertag löschen?"
         case .french: return "Supprimer ce jour férié ?"
+        case .spanish: return "¿Eliminar este festivo?"
+        case .italian: return "Eliminare questa festività?"
+        case .portuguese: return "Excluir este feriado?"
+        case .chineseTraditional: return "要刪除這個國定假日嗎？"
         }
     }
 
@@ -6633,6 +9133,10 @@ enum Strings {
         case .chinese: return "删除"
         case .german: return "Löschen"
         case .french: return "Supprimer"
+        case .spanish: return "Eliminar"
+        case .italian: return "Elimina"
+        case .portuguese: return "Excluir"
+        case .chineseTraditional: return "刪除"
         }
     }
 
@@ -6644,6 +9148,10 @@ enum Strings {
         case .chinese: return "添加"
         case .german: return "Hinzufügen"
         case .french: return "Ajouter"
+        case .spanish: return "Añadir"
+        case .italian: return "Aggiungi"
+        case .portuguese: return "Adicionar"
+        case .chineseTraditional: return "新增"
         }
     }
 
@@ -6655,6 +9163,10 @@ enum Strings {
         case .chinese: return "默认假日"
         case .german: return "Standard-Feiertage"
         case .french: return "Jours fériés par défaut"
+        case .spanish: return "Festivos predeterminados"
+        case .italian: return "Festività predefinite"
+        case .portuguese: return "Feriados padrão"
+        case .chineseTraditional: return "預設國定假日"
         }
     }
 
@@ -6666,6 +9178,10 @@ enum Strings {
         case .chinese: return "关闭开关后,该假日将从日历和推荐中隐藏。"
         case .german: return "Wenn du den Schalter ausschaltest, wird der Feiertag im Kalender und in den Empfehlungen ausgeblendet."
         case .french: return "Si vous désactivez l'interrupteur, ce jour férié sera masqué du calendrier et des recommandations."
+        case .spanish: return "Si desactivas el interruptor, el festivo se ocultará del calendario y de las recomendaciones."
+        case .italian: return "Se disattivi l’interruttore, la festività verrà nascosta dal calendario e dai suggerimenti."
+        case .portuguese: return "Se você desativar a chave, o feriado ficará oculto no calendário e nas sugestões."
+        case .chineseTraditional: return "關閉開關後，該國定假日將從行事曆和推薦中隱藏。"
         }
     }
 
@@ -6677,6 +9193,10 @@ enum Strings {
         case .chinese: return "我的假日"
         case .german: return "Meine Feiertage"
         case .french: return "Mes jours fériés"
+        case .spanish: return "Mis festivos"
+        case .italian: return "Le mie festività"
+        case .portuguese: return "Meus feriados"
+        case .chineseTraditional: return "我的假日"
         }
     }
 
@@ -6688,6 +9208,10 @@ enum Strings {
         case .chinese: return "未添加自定义假日"
         case .german: return "Keine eigenen Feiertage hinzugefügt"
         case .french: return "Aucun jour férié personnalisé ajouté"
+        case .spanish: return "No has añadido festivos personalizados"
+        case .italian: return "Nessuna festività personalizzata aggiunta"
+        case .portuguese: return "Nenhum feriado personalizado adicionado"
+        case .chineseTraditional: return "尚未新增自訂假日"
         }
     }
 
@@ -6699,6 +9223,10 @@ enum Strings {
         case .chinese: return "自定义假日将显示在日历和推荐中。"
         case .german: return "Eigene Feiertage erscheinen im Kalender und in den Empfehlungen."
         case .french: return "Les jours fériés personnalisés apparaissent dans le calendrier et les recommandations."
+        case .spanish: return "Los festivos personalizados aparecen en el calendario y en las recomendaciones."
+        case .italian: return "Le festività personalizzate compaiono nel calendario e nei suggerimenti."
+        case .portuguese: return "Os feriados personalizados aparecem no calendário e nas sugestões."
+        case .chineseTraditional: return "自訂假日會顯示在行事曆和推薦中。"
         }
     }
 
@@ -6710,6 +9238,10 @@ enum Strings {
         case .chinese: return "调休"
         case .german: return "Ersatzfeiertag"
         case .french: return "Jour férié de remplacement"
+        case .spanish: return "Festivo trasladado"
+        case .italian: return "Festività sostitutiva"
+        case .portuguese: return "Feriado transferido"
+        case .chineseTraditional: return "補假"
         }
     }
 
@@ -6721,6 +9253,10 @@ enum Strings {
         case .chinese: return "我添加的"
         case .german: return "Von mir hinzugefügt"
         case .french: return "Ajouté par moi"
+        case .spanish: return "Añadido por mí"
+        case .italian: return "Aggiunto da me"
+        case .portuguese: return "Adicionado por mim"
+        case .chineseTraditional: return "我新增的"
         }
     }
 
@@ -6733,6 +9269,10 @@ enum Strings {
         case .chinese: return "已展开"
         case .german: return "Ausgeklappt"
         case .french: return "Développé"
+        case .spanish: return "Desplegado"
+        case .italian: return "Espanso"
+        case .portuguese: return "Expandido"
+        case .chineseTraditional: return "已展開"
         }
     }
 
@@ -6744,6 +9284,10 @@ enum Strings {
         case .chinese: return "已折叠"
         case .german: return "Eingeklappt"
         case .french: return "Réduit"
+        case .spanish: return "Contraído"
+        case .italian: return "Compresso"
+        case .portuguese: return "Recolhido"
+        case .chineseTraditional: return "已收合"
         }
     }
 
@@ -6756,6 +9300,10 @@ enum Strings {
         case .chinese: return "双击以编辑"
         case .german: return "Doppeltippen zum Bearbeiten"
         case .french: return "Appuyez deux fois pour modifier"
+        case .spanish: return "Toca dos veces para editar"
+        case .italian: return "Tocca due volte per modificare"
+        case .portuguese: return "Toque duas vezes para editar"
+        case .chineseTraditional: return "點兩下以編輯"
         }
     }
 
@@ -6768,6 +9316,10 @@ enum Strings {
         case .chinese: return "推荐黄金假期"
         case .german: return "Empfohlene Brückentage"
         case .french: return "Ponts recommandés"
+        case .spanish: return "Puentes recomendados"
+        case .italian: return "Ponti suggeriti"
+        case .portuguese: return "Feriadões sugeridos"
+        case .chineseTraditional: return "推薦連假"
         }
     }
 
@@ -6780,6 +9332,10 @@ enum Strings {
         case .chinese: return "关闭后将从日历中隐藏"
         case .german: return "Ausschalten, um ihn im Kalender auszublenden"
         case .french: return "Désactivez pour le masquer du calendrier"
+        case .spanish: return "Desactívalo para ocultarlo del calendario"
+        case .italian: return "Disattiva per nasconderlo dal calendario"
+        case .portuguese: return "Desative para ocultar do calendário"
+        case .chineseTraditional: return "關閉即可從行事曆隱藏"
         }
     }
 
@@ -6791,6 +9347,10 @@ enum Strings {
         case .chinese: return "日期"
         case .german: return "Datum"
         case .french: return "Date"
+        case .spanish: return "Fecha"
+        case .italian: return "Data"
+        case .portuguese: return "Data"
+        case .chineseTraditional: return "日期"
         }
     }
 
@@ -6802,6 +9362,10 @@ enum Strings {
         case .chinese: return "选择日期"
         case .german: return "Datum wählen"
         case .french: return "Choisir la date"
+        case .spanish: return "Elegir fecha"
+        case .italian: return "Scegli la data"
+        case .portuguese: return "Escolher data"
+        case .chineseTraditional: return "選擇日期"
         }
     }
 
@@ -6813,6 +9377,10 @@ enum Strings {
         case .chinese: return "名称"
         case .german: return "Name"
         case .french: return "Nom"
+        case .spanish: return "Nombre"
+        case .italian: return "Nome"
+        case .portuguese: return "Nome"
+        case .chineseTraditional: return "名稱"
         }
     }
 
@@ -6824,6 +9392,10 @@ enum Strings {
         case .chinese: return "假日名称 (例如: 创立纪念日)"
         case .german: return "Name des Feiertags (z. B. Firmengründung)"
         case .french: return "Nom du jour férié (ex. : Fête de l'entreprise)"
+        case .spanish: return "Nombre del festivo (p. ej., Aniversario de la empresa)"
+        case .italian: return "Nome della festività (es. Anniversario aziendale)"
+        case .portuguese: return "Nome do feriado (ex.: Aniversário da empresa)"
+        case .chineseTraditional: return "假日名稱（例：公司創立紀念日）"
         }
     }
 
@@ -6835,6 +9407,10 @@ enum Strings {
         case .chinese: return "添加假日"
         case .german: return "Feiertag hinzufügen"
         case .french: return "Ajouter un jour férié"
+        case .spanish: return "Añadir festivo"
+        case .italian: return "Aggiungi festività"
+        case .portuguese: return "Adicionar feriado"
+        case .chineseTraditional: return "新增假日"
         }
     }
 
@@ -6847,6 +9423,10 @@ enum Strings {
         case .chinese: return "可用\(daysText)天"
         case .german: return "\(daysText) Tage verfügbar"
         case .french: return "\(daysText) jours disponibles"
+        case .spanish: return daysText == "1" ? "1 día disponible" : "\(daysText) días disponibles"
+        case .italian: return daysText == "1" ? "1 giorno disponibile" : "\(daysText) giorni disponibili"
+        case .portuguese: return daysText == "1" ? "1 dia disponível" : "\(daysText) dias disponíveis"
+        case .chineseTraditional: return "可用 \(daysText) 天"
         }
     }
 
@@ -6858,6 +9438,10 @@ enum Strings {
         case .chinese: return "至\(dateText)到期"
         case .german: return "Bis \(dateText)"
         case .french: return "Jusqu'au \(dateText)"
+        case .spanish: return "Hasta el \(dateText)"
+        case .italian: return "Fino al \(dateText)"
+        case .portuguese: return "Até \(dateText)"
+        case .chineseTraditional: return "\(dateText) 到期"
         }
     }
 
@@ -6869,6 +9453,10 @@ enum Strings {
         case .chinese: return "不扣除奖励年假"
         case .german: return "Kein Bonusabzug"
         case .french: return "Aucune déduction de bonus"
+        case .spanish: return "Sin descontar de días extra"
+        case .italian: return "Nessuna detrazione dalle ferie bonus"
+        case .portuguese: return "Sem desconto da folga bônus"
+        case .chineseTraditional: return "不扣除獎勵特休"
         }
     }
 
@@ -6880,6 +9468,10 @@ enum Strings {
         case .chinese: return "从\(name)扣除\(daysText)天"
         case .german: return "\(daysText)\(dayUnitSuffix) von \(name) abziehen"
         case .french: return "Déduire \(daysText)\(dayUnitSuffix) de \(name)"
+        case .spanish: return "Descontar \(daysText)\(dayUnitSuffix) de \(name)"
+        case .italian: return "Detrai \(daysText)\(dayUnitSuffix) da \(name)"
+        case .portuguese: return "Descontar \(daysText)\(dayUnitSuffix) de \(name)"
+        case .chineseTraditional: return "從\(name)扣除 \(daysText)\(dayUnitSuffix)"
         }
     }
 
@@ -6891,6 +9483,10 @@ enum Strings {
         case .chinese: return "「\(name)」奖励年假剩余天数不足。"
         case .german: return "Im Bonus „\(name)“ sind nicht genug Tage übrig."
         case .french: return "Pas assez de jours restants dans le bonus « \(name) »."
+        case .spanish: return "No quedan suficientes días extra en «\(name)»."
+        case .italian: return "Giorni rimanenti insufficienti nelle ferie bonus «\(name)»."
+        case .portuguese: return "Não há dias suficientes na folga bônus “\(name)”."
+        case .chineseTraditional: return "「\(name)」獎勵特休的剩餘天數不足。"
         }
     }
 
@@ -6903,6 +9499,10 @@ enum Strings {
         case .chinese: return "机票"
         case .german: return "Flüge"
         case .french: return "Vols"
+        case .spanish: return "Vuelos"
+        case .italian: return "Voli"
+        case .portuguese: return "Voos"
+        case .chineseTraditional: return "機票"
         }
     }
 
@@ -6914,6 +9514,10 @@ enum Strings {
         case .chinese: return "住宿"
         case .german: return "Unterkünfte"
         case .french: return "Hébergements"
+        case .spanish: return "Alojamiento"
+        case .italian: return "Alloggi"
+        case .portuguese: return "Hospedagens"
+        case .chineseTraditional: return "住宿"
         }
     }
 
@@ -6925,6 +9529,10 @@ enum Strings {
         case .chinese: return "旅游·门票"
         case .german: return "Touren & Tickets"
         case .french: return "Visites et billets"
+        case .spanish: return "Tours y entradas"
+        case .italian: return "Tour e biglietti"
+        case .portuguese: return "Passeios e ingressos"
+        case .chineseTraditional: return "行程與票券"
         }
     }
 
@@ -6937,6 +9545,10 @@ enum Strings {
         case .chinese: return "\(year)年休假计划"
         case .german: return "Urlaubsplan \(year)"
         case .french: return "Plan de congés \(year)"
+        case .spanish: return "Plan de vacaciones \(year)"
+        case .italian: return "Piano ferie \(year)"
+        case .portuguese: return "Plano de férias \(year)"
+        case .chineseTraditional: return "\(year) 年休假計畫"
         }
     }
 
@@ -6949,6 +9561,10 @@ enum Strings {
         case .chinese: return "未找到购买记录。"
         case .german: return "Keine Käufe gefunden."
         case .french: return "Aucun achat trouvé."
+        case .spanish: return "No se encontraron compras."
+        case .italian: return "Nessun acquisto trovato."
+        case .portuguese: return "Nenhuma compra encontrada."
+        case .chineseTraditional: return "找不到購買紀錄。"
         }
     }
 
@@ -6960,6 +9576,10 @@ enum Strings {
         case .chinese: return "功能"
         case .german: return "Funktionen"
         case .french: return "Fonctionnalités"
+        case .spanish: return "Funciones"
+        case .italian: return "Funzionalità"
+        case .portuguese: return "Recursos"
+        case .chineseTraditional: return "功能"
         }
     }
 
@@ -6972,6 +9592,10 @@ enum Strings {
         case .chinese: return "Goldweek"
         case .german: return "Goldweek"
         case .french: return "Goldweek"
+        case .spanish: return "Goldweek"
+        case .italian: return "Goldweek"
+        case .portuguese: return "Goldweek"
+        case .chineseTraditional: return "Goldweek"
         }
     }
 
@@ -6983,49 +9607,214 @@ enum Strings {
         case .chinese: return "智能年假管理"
         case .german: return "Smarte Urlaubsplanung"
         case .french: return "Gestion malin des congés"
+        case .spanish: return "Gestión inteligente de vacaciones"
+        case .italian: return "Gestione intelligente delle ferie"
+        case .portuguese: return "Gestão inteligente de férias"
+        case .chineseTraditional: return "聰明管理特休"
         }
     }
 
     // MARK: - 국가명 (Settings 노출용)
+    // MARK: - 공휴일 지역 (주·자치주)
+
+    static var holidayRegion: String {
+        switch lang {
+        case .korean: return "지역"
+        case .english: return "Region"
+        case .japanese: return "地域"
+        case .chinese: return "地区"
+        case .german: return "Bundesland"
+        case .french: return "Région"
+        case .spanish: return "Región"
+        case .italian: return "Regione"
+        case .portuguese: return "Região"
+        case .chineseTraditional: return "地區"
+        }
+    }
+
+    static var holidayRegionNationwide: String {
+        switch lang {
+        case .korean: return "전국 공통"
+        case .english: return "Nationwide"
+        case .japanese: return "全国共通"
+        case .chinese: return "全国通用"
+        case .german: return "Bundesweit"
+        case .french: return "National"
+        case .spanish: return "Nacional"
+        case .italian: return "Nazionale"
+        case .portuguese: return "Nacional"
+        case .chineseTraditional: return "全國通用"
+        }
+    }
+
+    /// 설정의 지역 선택 아래 설명 — 나라마다 주의점이 다르다
+    static func holidayRegionFooter(_ country: Country) -> String {
+        let base: String
+        switch lang {
+        case .korean: base = "지역마다 공휴일이 달라요. 사는 곳을 고르면 그 지역 공휴일이 더해져요."
+        case .english: base = "Holidays differ by region. Pick where you work to add its local holidays."
+        case .japanese: base = "地域によって祝日が異なります。勤務地を選ぶと、その地域の祝日が追加されます。"
+        case .chinese: base = "各地区的假日不同。选择你工作的地区，即可加入当地假日。"
+        case .german: base = "Feiertage unterscheiden sich je nach Bundesland. Wähle dein Bundesland, um seine Feiertage hinzuzufügen."
+        case .french: base = "Les jours fériés varient selon la région. Choisissez la vôtre pour ajouter ses jours fériés."
+        case .spanish: base = "Los festivos cambian según la región. Elige la tuya para añadir sus festivos."
+        case .italian: base = "Le festività cambiano da regione a regione. Scegli la tua per aggiungere quelle locali."
+        case .portuguese: base = "Os feriados mudam conforme a região. Escolha a sua para incluir os feriados locais."
+        case .chineseTraditional: base = "各地區的假日不同。選擇你工作的地區，就會加入當地假日。"
+        }
+        let extra: String?
+        switch country {
+        case .usa:
+            switch lang {
+            case .korean: extra = "주 공휴일은 주 정부 기준이라 회사 휴무와 다를 수 있어요. 목록에 없는 주는 연방 공휴일을 따라요."
+            case .english: extra = "State holidays follow the state government and may differ from your employer's. States not listed use federal holidays."
+            case .japanese: extra = "州の祝日は州政府の基準のため、会社の休日と異なる場合があります。一覧にない州は連邦の祝日に従います。"
+            case .chinese: extra = "州假日以州政府为准，可能与公司休假不同。未列出的州使用联邦假日。"
+            case .german: extra = "Feiertage der Bundesstaaten gelten für die Landesverwaltung und können vom Arbeitgeber abweichen. Nicht aufgeführte Staaten nutzen die Bundesfeiertage."
+            case .french: extra = "Les jours fériés d’État suivent l’administration de l’État et peuvent différer de ceux de votre employeur. Les États non listés suivent les jours fériés fédéraux."
+            case .spanish: extra = "Los festivos estatales siguen al gobierno del estado y pueden no coincidir con los de tu empresa. Los estados que no aparecen usan los festivos federales."
+            case .italian: extra = "Le festività statali valgono per l’amministrazione dello Stato e possono differire da quelle della tua azienda. Gli Stati non elencati seguono le festività federali."
+            case .portuguese: extra = "Os feriados estaduais seguem o governo do estado e podem ser diferentes dos da sua empresa. Estados fora da lista usam os feriados federais."
+            case .chineseTraditional: extra = "州假日以州政府為準，可能和公司休假不同。未列出的州採用聯邦假日。"
+            }
+        case .spain:
+            switch lang {
+            case .korean: extra = "자치주 공휴일은 해마다 조금씩 바뀌어요. 해마다 반복되는 날만 넣었어요."
+            case .english: extra = "Regional holidays change a little every year. Only the ones that repeat every year are included."
+            case .japanese: extra = "自治州の祝日は毎年少しずつ変わります。毎年繰り返される日だけを入れています。"
+            case .chinese: extra = "自治区假日每年略有变化，这里只收录每年固定的日子。"
+            case .german: extra = "Regionale Feiertage ändern sich jedes Jahr etwas. Enthalten sind nur die, die jedes Jahr gleich sind."
+            case .french: extra = "Les jours fériés régionaux changent un peu chaque année. Seuls ceux qui reviennent chaque année sont inclus."
+            case .spanish: extra = "Los festivos autonómicos cambian un poco cada año. Solo se incluyen los que se repiten todos los años."
+            case .italian: extra = "Le festività regionali cambiano un po’ ogni anno. Sono incluse solo quelle che si ripetono ogni anno."
+            case .portuguese: extra = "Os feriados regionais mudam um pouco a cada ano. Só estão incluídos os que se repetem todo ano."
+            case .chineseTraditional: extra = "自治區假日每年略有不同，這裡只收錄每年固定的日子。"
+            }
+        default:
+            extra = nil
+        }
+        return [base, extra].compactMap { $0 }.joined(separator: " ")
+    }
+
+    static var chooseRegionTitle: String {
+        switch lang {
+        case .korean: return "일하는 지역을 골라 주세요"
+        case .english: return "Choose your region"
+        case .japanese: return "勤務地の地域を選んでください"
+        case .chinese: return "请选择你工作的地区"
+        case .german: return "Wähle dein Bundesland"
+        case .french: return "Choisissez votre région"
+        case .spanish: return "Elige tu región"
+        case .italian: return "Scegli la tua regione"
+        case .portuguese: return "Escolha sua região"
+        case .chineseTraditional: return "請選擇你工作的地區"
+        }
+    }
+
+    static func chooseRegionMessage(_ country: String) -> String {
+        switch lang {
+        case .korean: return "\(country)은(는) 지역마다 공휴일이 달라요. 지역을 고르면 그 지역 공휴일까지 반영해 추천해 드려요."
+        case .english: return "In \(country), holidays differ by region. Pick yours and recommendations will include local holidays."
+        case .japanese: return "\(country)は地域によって祝日が異なります。地域を選ぶと、その地域の祝日も反映しておすすめします。"
+        case .chinese: return "\(country)各地区的假日不同。选择地区后，推荐也会计入当地假日。"
+        case .german: return "In \(country) unterscheiden sich die Feiertage je nach Region. Wähle deine, damit die Vorschläge lokale Feiertage berücksichtigen."
+        case .french: return "Pays : \(country). Les jours fériés y varient selon la région. Choisissez la vôtre pour que les suggestions en tiennent compte."
+        case .spanish: return "En \(country) los festivos cambian según la región. Elige la tuya y las recomendaciones incluirán los festivos locales."
+        case .italian: return "In \(country) le festività cambiano da regione a regione. Scegli la tua e i suggerimenti terranno conto di quelle locali."
+        case .portuguese: return "Em \(country), os feriados mudam conforme a região. Escolha a sua e as sugestões vão incluir os feriados locais."
+        case .chineseTraditional: return "\(country)各地區的假日不同。選擇地區後，推薦也會納入當地假日。"
+        }
+    }
+
+    static var chooseRegion: String {
+        switch lang {
+        case .korean: return "지역 선택"
+        case .english: return "Choose Region"
+        case .japanese: return "地域を選ぶ"
+        case .chinese: return "选择地区"
+        case .german: return "Bundesland wählen"
+        case .french: return "Choisir la région"
+        case .spanish: return "Elegir región"
+        case .italian: return "Scegli regione"
+        case .portuguese: return "Escolher região"
+        case .chineseTraditional: return "選擇地區"
+        }
+    }
+
+    static var unsupportedCountryTitle: String {
+        switch lang {
+        case .korean: return "아직 지원하지 않는 국가예요"
+        case .english: return "Your country isn't supported yet"
+        case .japanese: return "まだ対応していない国です"
+        case .chinese: return "暂不支持你所在的国家/地区"
+        case .german: return "Dein Land wird noch nicht unterstützt"
+        case .french: return "Votre pays n’est pas encore pris en charge"
+        case .spanish: return "Tu país aún no está disponible"
+        case .italian: return "Il tuo paese non è ancora supportato"
+        case .portuguese: return "Seu país ainda não é suportado"
+        case .chineseTraditional: return "尚未支援你所在的國家／地區"
+        }
+    }
+
+    /// `region`: 기기 지역 이름(예: 오스트리아), `country`: 지금 대신 보여 주는 나라
+    static func unsupportedCountryMessage(region: String, country: String) -> String {
+        let path = "\(navTitleSettings) ▸ \(holidayMgmtTitle)"
+        switch lang {
+        case .korean: return "\(region)의 공휴일은 아직 없어서 지금은 \(country) 공휴일을 보여 드리고 있어요. 가까운 나라로 바꾸거나, \(path)에서 공휴일을 직접 추가할 수 있어요."
+        case .english: return "We don't have holidays for \(region) yet, so you're seeing \(country) holidays. Switch to a closer country, or add your holidays in \(path)."
+        case .japanese: return "\(region)の祝日にはまだ対応していないため、\(country)の祝日を表示しています。近い国に変更するか、\(path)で祝日を追加できます。"
+        case .chinese: return "暂不支持\(region)的假日，目前显示的是\(country)的假日。你可以改成相近的国家，或在“\(path)”中自行添加。"
+        case .german: return "Für \(region) gibt es noch keine Feiertage, daher siehst du die Feiertage von \(country). Wähle ein näheres Land oder füge deine Feiertage unter \(path) hinzu."
+        case .french: return "Les jours fériés de ce pays (\(region)) ne sont pas encore disponibles : vous voyez ceux de \(country). Choisissez un pays plus proche ou ajoutez vos jours fériés dans \(path)."
+        case .spanish: return "Aún no tenemos los festivos de \(region), así que ves los de \(country). Cambia a un país más cercano o añade tus festivos en \(path)."
+        case .italian: return "Non abbiamo ancora le festività per \(region), quindi vedi quelle di \(country). Passa a un paese più vicino o aggiungi le tue festività in \(path)."
+        case .portuguese: return "Ainda não temos os feriados de \(region), então você está vendo os de \(country). Troque para um país mais próximo ou adicione seus feriados em \(path)."
+        case .chineseTraditional: return "目前還沒有\(region)的假日，所以顯示的是\(country)的假日。你可以改成相近的國家，或到「\(path)」自行新增。"
+        }
+    }
+
+    static var changeCountry: String {
+        switch lang {
+        case .korean: return "국가 바꾸기"
+        case .english: return "Change Country"
+        case .japanese: return "国を変更"
+        case .chinese: return "更改国家/地区"
+        case .german: return "Land ändern"
+        case .french: return "Changer de pays"
+        case .spanish: return "Cambiar país"
+        case .italian: return "Cambia paese"
+        case .portuguese: return "Trocar país"
+        case .chineseTraditional: return "變更國家／地區"
+        }
+    }
+
+    /// 나라 이름 — 표의 순서는 `Country.allCases` 순서와 같다
     static func countryDisplayName(_ country: Country) -> String {
+        let names: [String]
         switch lang {
         case .korean:
-            switch country {
-            case .korea: return "한국"; case .japan: return "일본"
-            case .china: return "중국"; case .usa: return "미국"
-            case .germany: return "독일"; case .france: return "프랑스"
-            }
+            names = ["한국", "일본", "중국", "미국", "독일", "프랑스", "영국", "캐나다", "호주", "스페인", "이탈리아", "브라질", "대만", "홍콩"]
         case .english:
-            switch country {
-            case .korea: return "Korea"; case .japan: return "Japan"
-            case .china: return "China"; case .usa: return "USA"
-            case .germany: return "Germany"; case .france: return "France"
-            }
+            names = ["Korea", "Japan", "China", "USA", "Germany", "France", "United Kingdom", "Canada", "Australia", "Spain", "Italy", "Brazil", "Taiwan", "Hong Kong"]
         case .japanese:
-            switch country {
-            case .korea: return "韓国"; case .japan: return "日本"
-            case .china: return "中国"; case .usa: return "アメリカ"
-            case .germany: return "ドイツ"; case .france: return "フランス"
-            }
+            names = ["韓国", "日本", "中国", "アメリカ", "ドイツ", "フランス", "イギリス", "カナダ", "オーストラリア", "スペイン", "イタリア", "ブラジル", "台湾", "香港"]
         case .chinese:
-            switch country {
-            case .korea: return "韩国"; case .japan: return "日本"
-            case .china: return "中国"; case .usa: return "美国"
-            case .germany: return "德国"; case .france: return "法国"
-            }
+            names = ["韩国", "日本", "中国", "美国", "德国", "法国", "英国", "加拿大", "澳大利亚", "西班牙", "意大利", "巴西", "中国台湾", "中国香港"]
         case .german:
-            switch country {
-            case .korea: return "Südkorea"; case .japan: return "Japan"
-            case .china: return "China"; case .usa: return "USA"
-            case .germany: return "Deutschland"; case .france: return "Frankreich"
-            }
+            names = ["Südkorea", "Japan", "China", "USA", "Deutschland", "Frankreich", "Vereinigtes Königreich", "Kanada", "Australien", "Spanien", "Italien", "Brasilien", "Taiwan", "Hongkong"]
         case .french:
-            switch country {
-            case .korea: return "Corée du Sud"; case .japan: return "Japon"
-            case .china: return "Chine"; case .usa: return "États-Unis"
-            case .germany: return "Allemagne"; case .france: return "France"
-            }
+            names = ["Corée du Sud", "Japon", "Chine", "États-Unis", "Allemagne", "France", "Royaume-Uni", "Canada", "Australie", "Espagne", "Italie", "Brésil", "Taïwan", "Hong Kong"]
+        case .spanish:
+            names = ["Corea del Sur", "Japón", "China", "Estados Unidos", "Alemania", "Francia", "Reino Unido", "Canadá", "Australia", "España", "Italia", "Brasil", "Taiwán", "Hong Kong"]
+        case .italian:
+            names = ["Corea del Sud", "Giappone", "Cina", "Stati Uniti", "Germania", "Francia", "Regno Unito", "Canada", "Australia", "Spagna", "Italia", "Brasile", "Taiwan", "Hong Kong"]
+        case .portuguese:
+            names = ["Coreia do Sul", "Japão", "China", "Estados Unidos", "Alemanha", "França", "Reino Unido", "Canadá", "Austrália", "Espanha", "Itália", "Brasil", "Taiwan", "Hong Kong"]
+        case .chineseTraditional:
+            names = ["韓國", "日本", "中國", "美國", "德國", "法國", "英國", "加拿大", "澳洲", "西班牙", "義大利", "巴西", "臺灣", "香港"]
         }
+        let index = Country.allCases.firstIndex(of: country) ?? 0
+        return names[index]
     }
 
     // MARK: - 여행 큐레이션 섹션
@@ -7037,6 +9826,10 @@ enum Strings {
         case .chinese: return "适合此假期的旅行"
         case .german: return "Reisen für diese freien Tage"
         case .french: return "Voyages pour cette pause"
+        case .spanish: return "Viajes para este puente"
+        case .italian: return "Viaggi per questo ponte"
+        case .portuguese: return "Viagens para este feriadão"
+        case .chineseTraditional: return "適合這次連假的旅行"
         }
     }
 
@@ -7048,6 +9841,10 @@ enum Strings {
         case .chinese: return "根据假期长度和季节精选。点击可在MyRealTrip中查看商品。"
         case .german: return "Passend zu Länge und Jahreszeit dieser freien Tage ausgewählt. Tippe, um Angebote bei MyRealTrip zu sehen."
         case .french: return "Sélection selon la durée et la saison. Touchez pour voir les offres sur MyRealTrip."
+        case .spanish: return "Elegidos según la duración y la temporada. Toca para ver ofertas en MyRealTrip."
+        case .italian: return "Scelti in base alla durata e alla stagione. Tocca per vedere le offerte su MyRealTrip."
+        case .portuguese: return "Escolhidos pela duração e pela época. Toque para ver as ofertas na MyRealTrip."
+        case .chineseTraditional: return "依連假長度和季節挑選。點一下即可在 MyRealTrip 查看商品。"
         }
     }
 
@@ -7173,6 +9970,86 @@ enum Strings {
             case "phuket": return "Phuket"
             default: return key.capitalized
             }
+        case .spanish:
+            switch key {
+            case "osaka": return "Osaka"
+            case "fukuoka": return "Fukuoka"
+            case "tokyo": return "Tokio"
+            case "sapporo": return "Sapporo"
+            case "kyoto": return "Kioto"
+            case "okinawa": return "Okinawa"
+            case "danang": return "Da Nang"
+            case "bangkok": return "Bangkok"
+            case "taipei": return "Taipéi"
+            case "bali": return "Bali"
+            case "jeju": return "Jeju"
+            case "busan": return "Busan"
+            case "guam": return "Guam"
+            case "saipan": return "Saipán"
+            case "hanoi": return "Hanói"
+            case "phuket": return "Phuket"
+            default: return key.capitalized
+            }
+        case .italian:
+            switch key {
+            case "osaka": return "Osaka"
+            case "fukuoka": return "Fukuoka"
+            case "tokyo": return "Tokyo"
+            case "sapporo": return "Sapporo"
+            case "kyoto": return "Kyoto"
+            case "okinawa": return "Okinawa"
+            case "danang": return "Da Nang"
+            case "bangkok": return "Bangkok"
+            case "taipei": return "Taipei"
+            case "bali": return "Bali"
+            case "jeju": return "Jeju"
+            case "busan": return "Busan"
+            case "guam": return "Guam"
+            case "saipan": return "Saipan"
+            case "hanoi": return "Hanoi"
+            case "phuket": return "Phuket"
+            default: return key.capitalized
+            }
+        case .portuguese:
+            switch key {
+            case "osaka": return "Osaka"
+            case "fukuoka": return "Fukuoka"
+            case "tokyo": return "Tóquio"
+            case "sapporo": return "Sapporo"
+            case "kyoto": return "Quioto"
+            case "okinawa": return "Okinawa"
+            case "danang": return "Da Nang"
+            case "bangkok": return "Bangkok"
+            case "taipei": return "Taipé"
+            case "bali": return "Bali"
+            case "jeju": return "Jeju"
+            case "busan": return "Busan"
+            case "guam": return "Guam"
+            case "saipan": return "Saipan"
+            case "hanoi": return "Hanói"
+            case "phuket": return "Phuket"
+            default: return key.capitalized
+            }
+        case .chineseTraditional:
+            switch key {
+            case "osaka": return "大阪"
+            case "fukuoka": return "福岡"
+            case "tokyo": return "東京"
+            case "sapporo": return "札幌"
+            case "kyoto": return "京都"
+            case "okinawa": return "沖繩"
+            case "danang": return "峴港"
+            case "bangkok": return "曼谷"
+            case "taipei": return "台北"
+            case "bali": return "峇里島"
+            case "jeju": return "濟州島"
+            case "busan": return "釜山"
+            case "guam": return "關島"
+            case "saipan": return "塞班島"
+            case "hanoi": return "河內"
+            case "phuket": return "普吉島"
+            default: return key.capitalized
+            }
         }
     }
 
@@ -7248,6 +10125,54 @@ enum Strings {
             case "romantic": return "Romantique"
             case "culture": return "Culture"
             case "activity": return "Activités"
+            default: return key.capitalized
+            }
+        case .spanish:
+            switch key {
+            case "family": return "Familia"
+            case "rest": return "Relax"
+            case "foodie": return "Gastronomía"
+            case "shopping": return "Compras"
+            case "nature": return "Naturaleza"
+            case "romantic": return "Romántico"
+            case "culture": return "Cultura"
+            case "activity": return "Actividades"
+            default: return key.capitalized
+            }
+        case .italian:
+            switch key {
+            case "family": return "Famiglia"
+            case "rest": return "Relax"
+            case "foodie": return "Gastronomia"
+            case "shopping": return "Shopping"
+            case "nature": return "Natura"
+            case "romantic": return "Romantico"
+            case "culture": return "Cultura"
+            case "activity": return "Attività"
+            default: return key.capitalized
+            }
+        case .portuguese:
+            switch key {
+            case "family": return "Família"
+            case "rest": return "Descanso"
+            case "foodie": return "Gastronomia"
+            case "shopping": return "Compras"
+            case "nature": return "Natureza"
+            case "romantic": return "Romântico"
+            case "culture": return "Cultura"
+            case "activity": return "Atividades"
+            default: return key.capitalized
+            }
+        case .chineseTraditional:
+            switch key {
+            case "family": return "家庭旅行"
+            case "rest": return "度假"
+            case "foodie": return "美食"
+            case "shopping": return "購物"
+            case "nature": return "自然"
+            case "romantic": return "浪漫"
+            case "culture": return "文化"
+            case "activity": return "活動"
             default: return key.capitalized
             }
         }
@@ -7339,6 +10264,62 @@ enum Strings {
             case "cultureExplore": return "Culture et histoire"
             default: return ""
             }
+        case .spanish:
+            switch key {
+            case "bestSeason": return "Temporada ideal"
+            case "shortNearby": return "Cerca y fácil"
+            case "longResort": return "Ideal para vacaciones largas"
+            case "burnoutRecovery": return "Para desconectar"
+            case "offSeasonDeal": return "Buenos precios en temporada baja"
+            case "familyTime": return "Ideal en familia"
+            case "couplesTrip": return "Escapada romántica"
+            case "weekendEscape": return "Perfecto para un puente"
+            case "foodieParadise": return "Paraíso gastronómico"
+            case "cultureExplore": return "Cultura e historia"
+            default: return ""
+            }
+        case .italian:
+            switch key {
+            case "bestSeason": return "Stagione ideale"
+            case "shortNearby": return "Vicino e facile"
+            case "longResort": return "Ideale per ferie lunghe"
+            case "burnoutRecovery": return "Per staccare la spina"
+            case "offSeasonDeal": return "Convenienza in bassa stagione"
+            case "familyTime": return "Ideale in famiglia"
+            case "couplesTrip": return "Fuga romantica"
+            case "weekendEscape": return "Perfetto per un ponte"
+            case "foodieParadise": return "Paradiso dei buongustai"
+            case "cultureExplore": return "Cultura e storia"
+            default: return ""
+            }
+        case .portuguese:
+            switch key {
+            case "bestSeason": return "Melhor época agora"
+            case "shortNearby": return "Perto e fácil"
+            case "longResort": return "Ideal para férias longas"
+            case "burnoutRecovery": return "Para recarregar as energias"
+            case "offSeasonDeal": return "Preços bons na baixa temporada"
+            case "familyTime": return "Ideal para a família"
+            case "couplesTrip": return "Viagem romântica"
+            case "weekendEscape": return "Perfeito para um feriadão"
+            case "foodieParadise": return "Paraíso gastronômico"
+            case "cultureExplore": return "Cultura e história"
+            default: return ""
+            }
+        case .chineseTraditional:
+            switch key {
+            case "bestSeason": return "現在正是好時節"
+            case "shortNearby": return "近又輕鬆"
+            case "longResort": return "長假首選"
+            case "burnoutRecovery": return "適合放空充電"
+            case "offSeasonDeal": return "淡季更划算"
+            case "familyTime": return "適合全家"
+            case "couplesTrip": return "適合情侶"
+            case "weekendEscape": return "週末+1天就夠"
+            case "foodieParadise": return "美食天堂"
+            case "cultureExplore": return "文化探索"
+            default: return ""
+            }
         }
     }
 
@@ -7386,6 +10367,34 @@ enum Strings {
             case "premium": return "Premium"
             default: return key.capitalized
             }
+        case .spanish:
+            switch key {
+            case "budget": return "Económico"
+            case "mid": return "Gama media"
+            case "premium": return "Premium"
+            default: return key.capitalized
+            }
+        case .italian:
+            switch key {
+            case "budget": return "Economico"
+            case "mid": return "Fascia media"
+            case "premium": return "Premium"
+            default: return key.capitalized
+            }
+        case .portuguese:
+            switch key {
+            case "budget": return "Econômico"
+            case "mid": return "Intermediário"
+            case "premium": return "Premium"
+            default: return key.capitalized
+            }
+        case .chineseTraditional:
+            switch key {
+            case "budget": return "經濟"
+            case "mid": return "標準"
+            case "premium": return "高級"
+            default: return key.capitalized
+            }
         }
     }
 
@@ -7398,6 +10407,10 @@ enum Strings {
         case .chinese: return "今年已经使用过年假吗？"
         case .german: return "Hast du dieses Jahr schon Urlaub genommen?"
         case .french: return "Avez-vous déjà pris des congés cette année ?"
+        case .spanish: return "¿Ya te has tomado vacaciones este año?"
+        case .italian: return "Hai già preso ferie quest’anno?"
+        case .portuguese: return "Você já tirou férias este ano?"
+        case .chineseTraditional: return "今年已經請過特休了嗎？"
         }
     }
 
@@ -7409,6 +10422,10 @@ enum Strings {
         case .chinese: return "输入已使用的年假以准确查看剩余天数"
         case .german: return "Trag deinen bisherigen Urlaub ein, um den Resturlaub genau zu sehen"
         case .french: return "Saisissez vos congés déjà pris pour connaître précisément votre solde restant"
+        case .spanish: return "Introduce los días que ya has usado para saber exactamente cuántos te quedan"
+        case .italian: return "Inserisci le ferie già usate per sapere con precisione quante te ne restano"
+        case .portuguese: return "Informe as férias que você já tirou para saber exatamente quantos dias restam"
+        case .chineseTraditional: return "輸入目前已請的特休，就能準確掌握剩餘天數"
         }
     }
 
@@ -7420,6 +10437,10 @@ enum Strings {
         case .chinese: return "快速输入"
         case .german: return "Schnelleingabe"
         case .french: return "Saisie rapide"
+        case .spanish: return "Entrada rápida"
+        case .italian: return "Inserimento rapido"
+        case .portuguese: return "Entrada rápida"
+        case .chineseTraditional: return "快速輸入"
         }
     }
 
@@ -7431,6 +10452,10 @@ enum Strings {
         case .chinese: return "已使用年假"
         case .german: return "Genommene Urlaubstage"
         case .french: return "Jours de congé pris"
+        case .spanish: return "Días de vacaciones usados"
+        case .italian: return "Giorni di ferie usati"
+        case .portuguese: return "Dias de férias usados"
+        case .chineseTraditional: return "已請特休"
         }
     }
 
@@ -7442,6 +10467,10 @@ enum Strings {
         case .chinese: return "输入过去的年假"
         case .german: return "Bisherigen Urlaub eintragen"
         case .french: return "Ajouter des congés passés"
+        case .spanish: return "Añadir vacaciones anteriores"
+        case .italian: return "Aggiungi ferie passate"
+        case .portuguese: return "Adicionar férias anteriores"
+        case .chineseTraditional: return "新增先前特休"
         }
     }
 
@@ -7453,6 +10482,10 @@ enum Strings {
         case .chinese: return "请输入今年已使用的年假天数。\n精确日期可在+标签中单独输入。"
         case .german: return "Gib die Gesamtzahl der dieses Jahr bereits genommenen Urlaubstage ein.\nGenaue Daten kannst du einzeln im Tab + hinzufügen."
         case .french: return "Saisissez le total des jours de congé déjà pris cette année.\nPour des dates précises, ajoutez-les une à une dans l'onglet +."
+        case .spanish: return "Introduce el total de días de vacaciones que ya has usado este año.\nPara fechas concretas, añádelas una a una en la pestaña +."
+        case .italian: return "Inserisci il totale dei giorni di ferie già usati quest’anno.\nPer le date esatte, aggiungile una per una nella scheda +."
+        case .portuguese: return "Informe o total de dias de férias já usados este ano.\nPara datas exatas, adicione uma por uma na aba +."
+        case .chineseTraditional: return "請輸入今年已請的特休天數。\n確切日期可在 + 分頁逐筆新增。"
         }
     }
 
@@ -7464,6 +10497,10 @@ enum Strings {
         case .chinese: return "确认"
         case .german: return "Bestätigen"
         case .french: return "Confirmer"
+        case .spanish: return "Confirmar"
+        case .italian: return "Conferma"
+        case .portuguese: return "Confirmar"
+        case .chineseTraditional: return "套用"
         }
     }
 
@@ -7475,6 +10512,10 @@ enum Strings {
         case .chinese: return "过去的年假（批量录入）"
         case .german: return "Früherer Urlaub (Sammeleingabe)"
         case .french: return "Congés antérieurs (saisie groupée)"
+        case .spanish: return "Vacaciones anteriores (entrada en bloque)"
+        case .italian: return "Ferie precedenti (inserimento in blocco)"
+        case .portuguese: return "Férias anteriores (entrada em lote)"
+        case .chineseTraditional: return "先前特休（批次輸入）"
         }
     }
 
@@ -7486,6 +10527,10 @@ enum Strings {
         case .chinese: return "过去日期会自动标记为「已使用」"
         case .german: return "Vergangene Daten werden automatisch als „Genommen“ markiert"
         case .french: return "Les dates passées sont automatiquement marquées « Pris »"
+        case .spanish: return "Las fechas pasadas se marcan automáticamente como «Usado»"
+        case .italian: return "Le date passate vengono segnate automaticamente come «Usate»"
+        case .portuguese: return "Datas passadas são marcadas automaticamente como “Usado”"
+        case .chineseTraditional: return "選擇過去日期時會自動標為「已使用」"
         }
     }
 
@@ -7498,6 +10543,10 @@ enum Strings {
         case .chinese: return "无需年假的假期"
         case .german: return "Freie Tage ohne Urlaub"
         case .french: return "Jours off sans congé"
+        case .spanish: return "Días libres sin gastar vacaciones"
+        case .italian: return "Giorni liberi senza ferie"
+        case .portuguese: return "Folgas sem usar férias"
+        case .chineseTraditional: return "免請特休的休息日"
         }
     }
 
@@ -7510,6 +10559,10 @@ enum Strings {
         case .chinese: return "查看全年(包含过去)"
         case .german: return "Ganzes Jahr zeigen (inkl. Vergangenes)"
         case .french: return "Afficher toute l'année (passé inclus)"
+        case .spanish: return "Ver todo el año (incluido lo pasado)"
+        case .italian: return "Mostra tutto l’anno (passato incluso)"
+        case .portuguese: return "Mostrar o ano todo (inclui o passado)"
+        case .chineseTraditional: return "顯示全年（含過去的休假）"
         }
     }
 
@@ -7521,6 +10574,10 @@ enum Strings {
         case .chinese: return "已有假期。添加年假可以延长假期。"
         case .german: return "Hier sind schon freie Tage. Mit Urlaub wird die Auszeit länger."
         case .french: return "Il y a déjà des jours de repos. Ajoutez des congés pour les prolonger."
+        case .spanish: return "Ya hay días libres. Añade vacaciones para alargarlos."
+        case .italian: return "Ci sono già giorni liberi. Aggiungi ferie per allungarli."
+        case .portuguese: return "Já tem folga aqui. Adicione férias para descansar mais."
+        case .chineseTraditional: return "已經有連假了。加上特休就能休得更久。"
         }
     }
 
@@ -7532,6 +10589,10 @@ enum Strings {
         case .chinese: return "Pro版添加"
         case .german: return "Mit Pro hinzufügen"
         case .french: return "Ajouter avec Pro"
+        case .spanish: return "Añadir con Pro"
+        case .italian: return "Aggiungi con Pro"
+        case .portuguese: return "Adicionar com Pro"
+        case .chineseTraditional: return "用 Pro 加入行程"
         }
     }
 
@@ -7543,6 +10604,10 @@ enum Strings {
         case .chinese: return "升级Pro版即可添加所有推荐到日程"
         case .german: return "Mit Pro kannst du alle Empfehlungen zu deinem Plan hinzufügen"
         case .french: return "Passez à Pro pour ajouter toutes les recommandations à votre planning"
+        case .spanish: return "Pásate a Pro para añadir todas las recomendaciones a tu agenda"
+        case .italian: return "Passa a Pro per aggiungere tutti i suggerimenti alla tua agenda"
+        case .portuguese: return "Atualize para o Pro para adicionar todas as sugestões à sua agenda"
+        case .chineseTraditional: return "升級 Pro 即可將所有推薦加入行程"
         }
     }
 
@@ -7555,6 +10620,10 @@ enum Strings {
         case .chinese: return "日程共享"
         case .german: return "Plan teilen"
         case .french: return "Partage du planning"
+        case .spanish: return "Compartir agenda"
+        case .italian: return "Condivisione agenda"
+        case .portuguese: return "Compartilhar agenda"
+        case .chineseTraditional: return "行程共享"
         }
     }
 
@@ -7566,6 +10635,10 @@ enum Strings {
         case .chinese: return "与家人朋友实时共享休假日程"
         case .german: return "Teile deinen Urlaubsplan in Echtzeit mit Familie und Freunden"
         case .french: return "Partagez vos congés en temps réel avec famille et amis"
+        case .spanish: return "Comparte tus vacaciones con familia y amigos en tiempo real"
+        case .italian: return "Condividi le tue ferie in tempo reale con famiglia e amici"
+        case .portuguese: return "Compartilhe suas férias em tempo real com família e amigos"
+        case .chineseTraditional: return "與家人朋友即時共享休假行程"
         }
     }
 
@@ -7577,6 +10650,10 @@ enum Strings {
         case .chinese: return "共享我的日程"
         case .german: return "Meinen Plan teilen"
         case .french: return "Partager mon planning"
+        case .spanish: return "Compartir mi agenda"
+        case .italian: return "Condividi la mia agenda"
+        case .portuguese: return "Compartilhar minha agenda"
+        case .chineseTraditional: return "共享我的行程"
         }
     }
 
@@ -7588,6 +10665,10 @@ enum Strings {
         case .chinese: return "开始共享"
         case .german: return "Teilen starten"
         case .french: return "Commencer le partage"
+        case .spanish: return "Empezar a compartir"
+        case .italian: return "Inizia a condividere"
+        case .portuguese: return "Começar a compartilhar"
+        case .chineseTraditional: return "開始共享"
         }
     }
 
@@ -7599,6 +10680,10 @@ enum Strings {
         case .chinese: return "发送邀请链接"
         case .german: return "Einladungslink senden"
         case .french: return "Envoyer le lien d'invitation"
+        case .spanish: return "Enviar enlace de invitación"
+        case .italian: return "Invia link di invito"
+        case .portuguese: return "Enviar link de convite"
+        case .chineseTraditional: return "傳送邀請連結"
         }
     }
 
@@ -7610,6 +10695,10 @@ enum Strings {
         case .chinese: return "共享中"
         case .german: return "Teilen aktiv"
         case .french: return "Partage actif"
+        case .spanish: return "Compartiendo"
+        case .italian: return "Condivisione attiva"
+        case .portuguese: return "Compartilhando"
+        case .chineseTraditional: return "共享中"
         }
     }
 
@@ -7621,6 +10710,10 @@ enum Strings {
         case .chinese: return "\(count)位参与者"
         case .german: return count == 1 ? "1 Teilnehmer" : "\(count) Teilnehmer"
         case .french: return count == 1 ? "1 participant" : "\(count) participants"
+        case .spanish: return count == 1 ? "1 participante" : "\(count) participantes"
+        case .italian: return count == 1 ? "1 partecipante" : "\(count) partecipanti"
+        case .portuguese: return count == 1 ? "1 participante" : "\(count) participantes"
+        case .chineseTraditional: return count == 1 ? "1 位參與者" : "\(count) 位參與者"
         }
     }
 
@@ -7632,6 +10725,10 @@ enum Strings {
         case .chinese: return "还没有参与者。发送邀请链接试试吧。"
         case .german: return "Noch keine Teilnehmer. Sende einen Einladungslink."
         case .french: return "Aucun participant pour l'instant. Envoyez un lien d'invitation."
+        case .spanish: return "Aún no hay participantes. Envía un enlace de invitación."
+        case .italian: return "Ancora nessun partecipante. Invia un link di invito."
+        case .portuguese: return "Ainda não há participantes. Envie um link de convite."
+        case .chineseTraditional: return "還沒有參與者。傳送邀請連結試試看。"
         }
     }
 
@@ -7643,6 +10740,10 @@ enum Strings {
         case .chinese: return "立即同步"
         case .german: return "Jetzt synchronisieren"
         case .french: return "Synchroniser"
+        case .spanish: return "Sincronizar"
+        case .italian: return "Sincronizza"
+        case .portuguese: return "Sincronizar"
+        case .chineseTraditional: return "立即同步"
         }
     }
 
@@ -7654,6 +10755,10 @@ enum Strings {
         case .chinese: return "上次同步: \(date)"
         case .german: return "Zuletzt synchronisiert: \(date)"
         case .french: return "Dernière synchro : \(date)"
+        case .spanish: return "Última sincronización: \(date)"
+        case .italian: return "Ultima sincronizzazione: \(date)"
+        case .portuguese: return "Última sincronização: \(date)"
+        case .chineseTraditional: return "上次同步：\(date)"
         }
     }
 
@@ -7665,6 +10770,10 @@ enum Strings {
         case .chinese: return "停止共享"
         case .german: return "Teilen beenden"
         case .french: return "Arrêter le partage"
+        case .spanish: return "Dejar de compartir"
+        case .italian: return "Interrompi condivisione"
+        case .portuguese: return "Parar de compartilhar"
+        case .chineseTraditional: return "停止共享"
         }
     }
 
@@ -7676,6 +10785,10 @@ enum Strings {
         case .chinese: return "要停止共享吗?"
         case .german: return "Teilen beenden?"
         case .french: return "Arrêter le partage ?"
+        case .spanish: return "¿Dejar de compartir?"
+        case .italian: return "Interrompere la condivisione?"
+        case .portuguese: return "Parar de compartilhar?"
+        case .chineseTraditional: return "要停止共享嗎？"
         }
     }
 
@@ -7687,6 +10800,10 @@ enum Strings {
         case .chinese: return "共享的日程将从所有参与者的设备中移除。您设备上的数据保持不变。"
         case .german: return "Dein geteilter Plan wird von den Geräten aller Teilnehmer entfernt. Die Daten auf deinem Gerät bleiben erhalten."
         case .french: return "Votre planning partagé sera supprimé des appareils de tous les participants. Les données de votre appareil sont conservées."
+        case .spanish: return "Tu agenda compartida se eliminará de los dispositivos de todos los participantes. Los datos de tu dispositivo se conservan."
+        case .italian: return "La tua agenda condivisa verrà rimossa dai dispositivi di tutti i partecipanti. I dati sul tuo dispositivo restano invariati."
+        case .portuguese: return "Sua agenda compartilhada será removida dos aparelhos de todos os participantes. Os dados no seu aparelho continuam intactos."
+        case .chineseTraditional: return "共享的行程將從所有參與者的裝置移除。你裝置上的資料會保留。"
         }
     }
 
@@ -7698,6 +10815,10 @@ enum Strings {
         case .chinese: return "收到的共享"
         case .german: return "Mit mir geteilt"
         case .french: return "Partagés avec moi"
+        case .spanish: return "Compartidas conmigo"
+        case .italian: return "Condivise con me"
+        case .portuguese: return "Compartilhadas comigo"
+        case .chineseTraditional: return "與我共享"
         }
     }
 
@@ -7709,6 +10830,10 @@ enum Strings {
         case .chinese: return "还没有收到共享的日程。\n打开家人或朋友发送的邀请链接后会显示在这里。"
         case .german: return "Noch keine geteilten Pläne.\nÖffne einen Einladungslink von Familie oder Freunden, dann erscheint er hier."
         case .french: return "Aucun planning partagé pour l'instant.\nOuvrez un lien d'invitation de vos proches et il apparaîtra ici."
+        case .spanish: return "Aún no hay agendas compartidas.\nAbre un enlace de invitación de familiares o amigos y aparecerá aquí."
+        case .italian: return "Ancora nessuna agenda condivisa.\nApri un link di invito di familiari o amici e apparirà qui."
+        case .portuguese: return "Ainda não há agendas compartilhadas.\nAbra um link de convite de familiares ou amigos e ela aparecerá aqui."
+        case .chineseTraditional: return "還沒有別人共享的行程。\n開啟家人或朋友傳來的邀請連結後，就會顯示在這裡。"
         }
     }
 
@@ -7720,6 +10845,10 @@ enum Strings {
         case .chinese: return "退出共享"
         case .german: return "Teilen verlassen"
         case .french: return "Quitter le partage"
+        case .spanish: return "Salir de la agenda"
+        case .italian: return "Esci dalla condivisione"
+        case .portuguese: return "Sair do compartilhamento"
+        case .chineseTraditional: return "退出共享"
         }
     }
 
@@ -7731,6 +10860,10 @@ enum Strings {
         case .chinese: return "您将退出\(name)的日程共享。再次查看需要新的邀请链接。"
         case .german: return "Du verlässt den geteilten Plan von \(name). Um ihn wieder zu sehen, brauchst du einen neuen Einladungslink."
         case .french: return "Vous quittez le planning partagé de \(name). Il vous faudra un nouveau lien d'invitation pour le revoir."
+        case .spanish: return "Saldrás de la agenda compartida de \(name). Necesitarás un nuevo enlace de invitación para volver a verla."
+        case .italian: return "Uscirai dall’agenda condivisa di \(name). Ti servirà un nuovo link di invito per rivederla."
+        case .portuguese: return "Você vai sair da agenda compartilhada de \(name). Para vê-la de novo, será preciso um novo link de convite."
+        case .chineseTraditional: return "你將退出\(name)的共享行程。若要再次查看，需要新的邀請連結。"
         }
     }
 
@@ -7742,6 +10875,10 @@ enum Strings {
         case .chinese: return "需要登录iCloud。请在设置应用中登录iCloud。"
         case .german: return "iCloud-Anmeldung erforderlich. Bitte melde dich in den Einstellungen bei iCloud an."
         case .french: return "Connexion à iCloud requise. Connectez-vous à iCloud dans l'app Réglages."
+        case .spanish: return "Debes iniciar sesión en iCloud. Hazlo en la app Ajustes."
+        case .italian: return "È necessario accedere a iCloud. Accedi a iCloud nell’app Impostazioni."
+        case .portuguese: return "É necessário iniciar sessão no iCloud. Faça isso no app Ajustes."
+        case .chineseTraditional: return "需要登入 iCloud。請在「設定」App 中登入 iCloud。"
         }
     }
 
@@ -7753,6 +10890,10 @@ enum Strings {
         case .chinese: return "\(name)的休假日程"
         case .german: return "Urlaubsplan von \(name)"
         case .french: return "Congés de \(name)"
+        case .spanish: return "Vacaciones de \(name)"
+        case .italian: return "Ferie di \(name)"
+        case .portuguese: return "Férias de \(name)"
+        case .chineseTraditional: return "\(name)的休假行程"
         }
     }
 
@@ -7764,6 +10905,10 @@ enum Strings {
         case .chinese: return "未知用户"
         case .german: return "Unbekannter Nutzer"
         case .french: return "Utilisateur inconnu"
+        case .spanish: return "Usuario desconocido"
+        case .italian: return "Utente sconosciuto"
+        case .portuguese: return "Usuário desconhecido"
+        case .chineseTraditional: return "未命名使用者"
         }
     }
 
@@ -7775,6 +10920,10 @@ enum Strings {
         case .chinese: return "没有即将到来的休假"
         case .german: return "Kein anstehender Urlaub"
         case .french: return "Aucun congé à venir"
+        case .spanish: return "No tienes vacaciones próximas"
+        case .italian: return "Non ci sono ferie in programma"
+        case .portuguese: return "Sem férias programadas"
+        case .chineseTraditional: return "沒有即將到來的休假"
         }
     }
 
@@ -7786,6 +10935,10 @@ enum Strings {
         case .chinese: return "\(count)个即将到来的休假"
         case .german: return count == 1 ? "1 anstehender Urlaub" : "\(count) anstehende Urlaube"
         case .french: return count == 1 ? "1 congé à venir" : "\(count) congés à venir"
+        case .spanish: return count == 1 ? "1 descanso próximo" : "\(count) descansos próximos"
+        case .italian: return count == 1 ? "1 periodo di ferie in arrivo" : "\(count) periodi di ferie in arrivo"
+        case .portuguese: return count == 1 ? "1 folga programada" : "\(count) folgas programadas"
+        case .chineseTraditional: return count == 1 ? "即將到來的休假 1 筆" : "即將到來的休假 \(count) 筆"
         }
     }
 
@@ -7797,6 +10950,10 @@ enum Strings {
         case .chinese: return "共享错误"
         case .german: return "Fehler beim Teilen"
         case .french: return "Erreur de partage"
+        case .spanish: return "Error al compartir"
+        case .italian: return "Errore di condivisione"
+        case .portuguese: return "Erro ao compartilhar"
+        case .chineseTraditional: return "共享錯誤"
         }
     }
 
@@ -7808,6 +10965,10 @@ enum Strings {
         case .chinese: return "共享操作失败: \(message)"
         case .german: return "Teilen fehlgeschlagen: \(message)"
         case .french: return "Échec du partage : \(message)"
+        case .spanish: return "No se pudo compartir: \(message)"
+        case .italian: return "Condivisione non riuscita: \(message)"
+        case .portuguese: return "Falha ao compartilhar: \(message)"
+        case .chineseTraditional: return "共享失敗：\(message)"
         }
     }
 
@@ -7819,6 +10980,10 @@ enum Strings {
         case .chinese: return "仅共享休假日期和类型，备注不会被共享。"
         case .german: return "Nur Urlaubsdaten und -arten werden geteilt. Notizen bleiben privat."
         case .french: return "Seuls les dates et types de congé sont partagés. Les notes ne le sont jamais."
+        case .spanish: return "Solo se comparten las fechas y los tipos de vacaciones. Las notas nunca se comparten."
+        case .italian: return "Vengono condivisi solo date e tipi di ferie. Le note non vengono mai condivise."
+        case .portuguese: return "Apenas as datas e os tipos de férias são compartilhados. As notas nunca são compartilhadas."
+        case .chineseTraditional: return "只會共享休假日期和類型，備註不會共享。"
         }
     }
 
@@ -7831,6 +10996,10 @@ enum Strings {
         case .chinese: return "家人"
         case .german: return "Familie"
         case .french: return "Famille"
+        case .spanish: return "Familia"
+        case .italian: return "Famiglia"
+        case .portuguese: return "Família"
+        case .chineseTraditional: return "家人"
         }
     }
 
@@ -7842,6 +11011,10 @@ enum Strings {
         case .chinese: return "家人日程"
         case .german: return "Familienpläne"
         case .french: return "Plannings famille"
+        case .spanish: return "Agendas familiares"
+        case .italian: return "Agende di famiglia"
+        case .portuguese: return "Agendas da família"
+        case .chineseTraditional: return "家人行程"
         }
     }
 
@@ -7853,6 +11026,10 @@ enum Strings {
         case .chinese: return "休假中"
         case .german: return "Im Urlaub"
         case .french: return "En congé"
+        case .spanish: return "De vacaciones"
+        case .italian: return "In ferie"
+        case .portuguese: return "De férias"
+        case .chineseTraditional: return "休假中"
         }
     }
 
@@ -7864,6 +11041,10 @@ enum Strings {
         case .chinese: return "还有\(days)天"
         case .german: return days == 1 ? "in 1 Tag" : "in \(days) Tagen"
         case .french: return days == 1 ? "dans 1 jour" : "dans \(days) jours"
+        case .spanish: return days == 1 ? "en 1 día" : "en \(days) días"
+        case .italian: return days == 1 ? "tra 1 giorno" : "tra \(days) giorni"
+        case .portuguese: return days == 1 ? "em 1 dia" : "em \(days) dias"
+        case .chineseTraditional: return days == 1 ? "還有 1 天" : "還有 \(days) 天"
         }
     }
 }

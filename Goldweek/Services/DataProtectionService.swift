@@ -281,6 +281,8 @@ struct ProfileData: Codable {
     let totalAnnualLeave: Double
     let usedLeave: Double
     let countryRaw: String
+    /// 공휴일 지역 — 이 필드가 생기기 전 백업에는 없다
+    let holidayRegionRaw: String?
     let preferredDurationRaw: String
     let preferredSeasonsRaw: String
     let preferLongWeekend: Bool
@@ -294,6 +296,7 @@ struct ProfileData: Codable {
         self.totalAnnualLeave = profile.totalAnnualLeave
         self.usedLeave = profile.usedLeave
         self.countryRaw = profile.countryRaw
+        self.holidayRegionRaw = profile.holidayRegionRaw
         self.preferredDurationRaw = profile.preferredDurationRaw
         self.preferredSeasonsRaw = profile.preferredSeasonsRaw
         self.preferLongWeekend = profile.preferLongWeekend
@@ -308,6 +311,7 @@ struct ProfileData: Codable {
         profile.totalAnnualLeave = totalAnnualLeave
         profile.usedLeave = usedLeave
         profile.countryRaw = countryRaw
+        profile.holidayRegionRaw = holidayRegionRaw ?? ""
         profile.preferredDurationRaw = preferredDurationRaw
         profile.preferredSeasonsRaw = preferredSeasonsRaw
         profile.preferLongWeekend = preferLongWeekend
@@ -324,6 +328,7 @@ struct ProfileData: Codable {
             usedLeave: usedLeave,
             country: Country(rawValue: countryRaw) ?? .korea
         )
+        profile.holidayRegionRaw = holidayRegionRaw ?? ""
         profile.preferredDurationRaw = preferredDurationRaw
         profile.preferredSeasonsRaw = preferredSeasonsRaw
         profile.preferLongWeekend = preferLongWeekend

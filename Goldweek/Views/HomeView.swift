@@ -24,6 +24,8 @@ struct HomeView: View {
     @State private var showingFatigueCheckIn = false
     @State private var showingAddLeave = false
     @AppStorage("hasSeenPastLeavePrompt") private var hasSeenPastLeavePrompt = false
+    /// 닫은 공휴일 안내 — "unsupported:AT" 또는 "region:germany" 형태로 쌓는다
+    @AppStorage("dismissedHolidayNotices") private var dismissedHolidayNoticesRaw = ""
     @AppStorage("lastProBannerShownAt") private var lastProBannerShownAt: Double = 0
 
     /// 다가오는 휴가 카드에 공휴일도 함께 보여줄지 (설정 > 공휴일 관리에서 끌 수 있다)
@@ -193,6 +195,15 @@ struct HomeView: View {
                     // 연차 현황 카드
                     LeaveStatusCard(profile: profile)
 
+                    // 공휴일 안내 — 지원하지 않는 나라이거나, 지역을 아직 안 고른 나라
+                    if let notice = holidayNotice {
+                        HolidayRegionNoticeCard(
+                            profile: profile,
+                            notice: notice,
+                            onDismiss: { dismissHolidayNotice(notice) }
+                        )
+                    }
+
                     // 가족 일정 공유 팁 (기록이 좀 쌓인 뒤에 노출)
                     if !leaveRecords.isEmpty {
                         TipView(AppTips.familyShare)
@@ -324,6 +335,31 @@ struct HomeView: View {
     }
 
     /// 배너를 닫거나 가져오기를 마치면 현재 후보들을 "본 것"으로 기록해 재노출을 막는다
+    /// 보여 줄 공휴일 안내. 지원하지 않는 나라 안내가 먼저다.
+    private var holidayNotice: HolidayRegionNoticeCard.Notice? {
+        guard !ScreenshotMode.isActive else { return nil }
+        let dismissed = Set(dismissedHolidayNoticesRaw.split(separator: ",").map(String.init))
+        if let region = Country.unsupportedDeviceRegion, !dismissed.contains("unsupported:\(region)") {
+            return .unsupported(regionCode: region)
+        }
+        if !profile.country.holidayRegions.isEmpty, profile.holidayRegion == nil,
+           !dismissed.contains("region:\(profile.countryRaw)") {
+            return .chooseRegion
+        }
+        return nil
+    }
+
+    private func dismissHolidayNotice(_ notice: HolidayRegionNoticeCard.Notice) {
+        let key: String
+        switch notice {
+        case .unsupported(let region): key = "unsupported:\(region)"
+        case .chooseRegion: key = "region:\(profile.countryRaw)"
+        }
+        var keys = dismissedHolidayNoticesRaw.split(separator: ",").map(String.init)
+        keys.append(key)
+        withAnimation { dismissedHolidayNoticesRaw = keys.joined(separator: ",") }
+    }
+
     private func dismissAutoDetectBanner() {
         guard !autoDetectedCandidates.isEmpty else { return }
         var seen = Set(autoDetectSeenKeysRaw.split(separator: ",").map(String.init))
@@ -392,6 +428,119 @@ struct AutoDetectBanner: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
                         .stroke(Color.green.opacity(0.3), lineWidth: 1)
+                )
+        )
+    }
+}
+
+// MARK: - 공휴일 안내 카드
+
+/// 기기 지역을 지원하지 않거나(다른 나라 공휴일을 보여 주는 중), 지역마다 공휴일이 다른 나라에서
+/// 지역을 아직 안 골랐을 때. 카드 안에서 바로 고를 수 있게 메뉴를 둔다.
+struct HolidayRegionNoticeCard: View {
+    enum Notice: Equatable {
+        case unsupported(regionCode: String)
+        case chooseRegion
+    }
+
+    @Bindable var profile: UserProfile
+    let notice: Notice
+    let onDismiss: () -> Void
+    @Environment(\.modelContext) private var modelContext
+
+    /// 공휴일 계산의 근거라 바로 디스크에 쓴다 (자동 저장은 시점을 보장하지 않는다)
+    private func save() {
+        do { try modelContext.save() } catch {
+            logError("공휴일 지역 저장 실패: \(error.localizedDescription)", category: .data)
+        }
+    }
+
+    private var title: String {
+        switch notice {
+        case .unsupported: return Strings.unsupportedCountryTitle
+        case .chooseRegion: return Strings.chooseRegionTitle
+        }
+    }
+
+    private var message: String {
+        switch notice {
+        case .unsupported(let code):
+            let locale = Locale(identifier: AppLanguage.current.bundleLanguageCode)
+            let regionName = locale.localizedString(forRegionCode: code) ?? code
+            return Strings.unsupportedCountryMessage(region: regionName, country: profile.country.displayName)
+        case .chooseRegion:
+            return Strings.chooseRegionMessage(profile.country.displayName)
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top) {
+                HStack(spacing: 6) {
+                    Image(systemName: notice == .chooseRegion ? "map" : "globe")
+                        .foregroundStyle(.orange)
+                        .voDecorative()
+                    Text(title)
+                        .font(.body)
+                        .fontWeight(.semibold)
+                        .voHeader()
+                }
+                Spacer()
+                Button(action: onDismiss) {
+                    Image(systemName: "xmark")
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 28, height: 28)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel(Text(Strings.close))
+            }
+
+            Text(message)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Menu {
+                switch notice {
+                case .unsupported:
+                    ForEach(Country.allCases) { country in
+                        Button("\(country.flag) \(country.displayName)") {
+                            profile.country = country
+                            save()
+                            onDismiss()
+                        }
+                    }
+                case .chooseRegion:
+                    ForEach(profile.country.holidayRegions) { region in
+                        Button(region.displayName) {
+                            profile.holidayRegion = region
+                            save()
+                        }
+                    }
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: notice == .chooseRegion ? "mappin.and.ellipse" : "arrow.left.arrow.right")
+                        .voDecorative()
+                    Text(notice == .chooseRegion ? Strings.chooseRegion : Strings.changeCountry)
+                        .fontWeight(.semibold)
+                }
+                .font(.body)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color.orange)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color.orange.opacity(0.08))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
                 )
         )
     }

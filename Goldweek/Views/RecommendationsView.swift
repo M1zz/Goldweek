@@ -1330,6 +1330,14 @@ struct MyRealTripPromoCard: View {
         case .usa: return "LAX"     // LA
         case .germany: return "FRA" // 프랑크푸르트
         case .france: return "CDG"  // 파리 샤를드골
+        case .uk: return "LHR"      // 런던 히스로
+        case .canada: return "YYZ"  // 토론토
+        case .australia: return "SYD" // 시드니
+        case .spain: return "MAD"   // 마드리드
+        case .italy: return "FCO"   // 로마
+        case .brazil: return "GRU"  // 상파울루
+        case .taiwan: return "TPE"  // 타오위안
+        case .hongKong: return "HKG"
         }
     }
 

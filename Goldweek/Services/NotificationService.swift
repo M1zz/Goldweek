@@ -248,6 +248,10 @@ enum NotificationService {
         case .english:  title = a.level == .critical ? "Time to recharge 🌿" : "A break is due soon 🌿"
         case .german: title = a.level == .critical ? "Zeit zum Auftanken 🌿" : "Bald ist eine Pause fällig 🌿"
         case .french: title = a.level == .critical ? "Il est temps de souffler 🌿" : "Une pause approche 🌿"
+        case .spanish: title = a.level == .critical ? "Es hora de recargar pilas 🌿" : "Se acerca un descanso 🌿"
+        case .italian: title = a.level == .critical ? "È ora di ricaricarti 🌿" : "Una pausa si avvicina 🌿"
+        case .portuguese: title = a.level == .critical ? "Hora de recarregar as energias 🌿" : "Uma pausa está chegando 🌿"
+        case .chineseTraditional: title = a.level == .critical ? "該好好休息了 🌿" : "差不多該休息一下了 🌿"
         }
 
         // 1절: 이력 기반 사유
@@ -301,6 +305,38 @@ enum NotificationService {
             } else {
                 reasonText = "Aucune pause enregistrée cette année."
             }
+        case .spanish:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Han pasado \(s) días desde tu último descanso — más que tu ciclo habitual de \(cycle) días."
+            } else if let s = since {
+                reasonText = "Han pasado \(s) días desde tu último descanso."
+            } else {
+                reasonText = "Aún no has registrado ningún descanso este año."
+            }
+        case .italian:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Sono passati \(s) giorni dalla tua ultima pausa — oltre il tuo ciclo abituale di \(cycle) giorni."
+            } else if let s = since {
+                reasonText = "Sono passati \(s) giorni dalla tua ultima pausa."
+            } else {
+                reasonText = "Nessuna pausa registrata quest’anno."
+            }
+        case .portuguese:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Já se passaram \(s) dias desde sua última pausa — mais do que seu ciclo habitual de \(cycle) dias."
+            } else if let s = since {
+                reasonText = "Já se passaram \(s) dias desde sua última pausa."
+            } else {
+                reasonText = "Nenhuma pausa registrada este ano ainda."
+            }
+        case .chineseTraditional:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "距離上次休息已經 \(s) 天 — 超過你平常 \(cycle) 天的週期了。"
+            } else if let s = since {
+                reasonText = "距離上次休息已經過了 \(s) 天。"
+            } else {
+                reasonText = "今年還沒有休息紀錄。"
+            }
         }
 
         // 2절: 알고리즘 기반 저비용 창 (있으면)
@@ -325,6 +361,18 @@ enum NotificationService {
             case .french:
                 let h = w.holidayName.isEmpty ? "" : " autour de \(w.holidayName)"
                 windowText = " Dans \(daysFromNow(w.startDate, lang)),\(h) il suffit de \(w.leaveDaysNeeded) jour(s) de congé pour \(w.totalDaysOff) jours de repos."
+            case .spanish:
+                let h = w.holidayName.isEmpty ? "" : " cerca de \(w.holidayName)"
+                windowText = " En \(daysFromNow(w.startDate, lang)),\(h) con solo \(w.leaveDaysNeeded == 1 ? "1 día" : "\(w.leaveDaysNeeded) días") de vacaciones tienes \(w.totalDaysOff) días de descanso."
+            case .italian:
+                let h = w.holidayName.isEmpty ? "" : " intorno a \(w.holidayName)"
+                windowText = " Tra \(daysFromNow(w.startDate, lang)),\(h) \(w.leaveDaysNeeded == 1 ? "basta 1 giorno" : "bastano \(w.leaveDaysNeeded) giorni") di ferie per \(w.totalDaysOff) giorni di riposo."
+            case .portuguese:
+                let h = w.holidayName.isEmpty ? "" : " perto de \(w.holidayName)"
+                windowText = " Daqui a \(daysFromNow(w.startDate, lang)),\(h) com só \(w.leaveDaysNeeded == 1 ? "1 dia" : "\(w.leaveDaysNeeded) dias") de férias você tem \(w.totalDaysOff) dias de descanso."
+            case .chineseTraditional:
+                let h = w.holidayName.isEmpty ? "" : "\(w.holidayName)前後"
+                windowText = " \(daysFromNow(w.startDate, lang))後，\(h)只要請 \(w.leaveDaysNeeded) 天特休，就能連休 \(w.totalDaysOff) 天。"
             }
         }
 
@@ -341,6 +389,10 @@ enum NotificationService {
         case .english:  return "\(max(0, d)) day(s)"
         case .german: return "\(max(0, d)) Tag(e)"
         case .french: return "\(max(0, d)) jour(s)"
+        case .spanish: return d == 1 ? "1 día" : "\(max(0, d)) días"
+        case .italian: return d == 1 ? "1 giorno" : "\(max(0, d)) giorni"
+        case .portuguese: return d == 1 ? "1 dia" : "\(max(0, d)) dias"
+        case .chineseTraditional: return "\(max(0, d)) 天"
         }
     }
 }

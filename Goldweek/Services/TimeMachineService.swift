@@ -343,6 +343,8 @@ struct TMProfileData: Codable {
     let usedLeave: Double
     let createdAt: Date
     let countryRaw: String
+    /// 공휴일 지역 — 이 필드가 생기기 전 백업에는 없다
+    let holidayRegionRaw: String?
     let userTypeRaw: String
     let preferredDurationRaw: String
     let preferredSeasonsRaw: String
@@ -359,6 +361,7 @@ struct TMProfileData: Codable {
         self.usedLeave = profile.usedLeave
         self.createdAt = profile.createdAt
         self.countryRaw = profile.countryRaw
+        self.holidayRegionRaw = profile.holidayRegionRaw
         self.userTypeRaw = profile.userTypeRaw
         self.preferredDurationRaw = profile.preferredDurationRaw
         self.preferredSeasonsRaw = profile.preferredSeasonsRaw
@@ -376,6 +379,7 @@ struct TMProfileData: Codable {
         profile.usedLeave = usedLeave
         profile.createdAt = createdAt
         profile.countryRaw = countryRaw
+        profile.holidayRegionRaw = holidayRegionRaw ?? ""
         profile.userTypeRaw = userTypeRaw
         profile.preferredDurationRaw = preferredDurationRaw
         profile.preferredSeasonsRaw = preferredSeasonsRaw

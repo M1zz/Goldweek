@@ -470,8 +470,8 @@ class RecommendationEngine {
             // Thanksgiving weekend, 4th of July, Memorial/Labor Day
             opportunities.append(contentsOf: findUSAOpportunities(holidays: holidays, year: year))
 
-        case .germany, .france:
-            // 알고리즘 기반 OptimalLeavePlannerCard가 자동 처리 (Brückentag / pont)
+        case .germany, .france, .uk, .canada, .australia, .spain, .italy, .brazil, .taiwan, .hongKong:
+            // 알고리즘 기반 OptimalLeavePlannerCard가 자동 처리 (Brückentag / pont / puente / ponte)
             // 여기서는 일반적인 공휴일 연장만 제공
             opportunities.append(contentsOf: findMajorHolidayExtensions(holidays: holidays, year: year, country: country))
         }
@@ -557,6 +557,18 @@ class RecommendationEngine {
         case .french:
             title = "Golden Week"
             desc = "La Golden Week japonaise ! \(Int(requiredLeave)) jours de congé pour \(totalDays) jours de repos."
+        case .spanish:
+            title = "Golden Week"
+            desc = "¡La Golden Week de Japón! \(Int(requiredLeave) == 1 ? "1 día" : "\(Int(requiredLeave)) días") de vacaciones para \(totalDays) días libres seguidos."
+        case .italian:
+            title = "Golden Week"
+            desc = "La Golden Week giapponese! \(Int(requiredLeave) == 1 ? "1 giorno" : "\(Int(requiredLeave)) giorni") di ferie per \(totalDays) giorni di fila."
+        case .portuguese:
+            title = "Golden Week"
+            desc = "Golden Week no Japão! \(Int(requiredLeave) == 1 ? "1 dia" : "\(Int(requiredLeave)) dias") de férias para um feriadão de \(totalDays) dias."
+        case .chineseTraditional:
+            title = "黃金週"
+            desc = "日本黃金週！請 \(Int(requiredLeave)) 天特休，連休 \(totalDays) 天。"
         }
 
         return LeaveRecommendation(
@@ -600,6 +612,10 @@ class RecommendationEngine {
                 case .chinese: title = "盂兰盆节假期"; desc = "盂兰盆节！请\(Int(requiredLeave))天年假获得\(totalDays)天假期。"
                 case .german: title = "Obon-Auszeit"; desc = "Obon-Zeit! \(Int(requiredLeave)) Urlaubstage für \(totalDays) freie Tage."
                 case .french: title = "Pause d’Obon"; desc = "C’est la saison d’Obon ! \(Int(requiredLeave)) jours de congé pour \(totalDays) jours de repos."
+                case .spanish: title = "Puente de Obon"; desc = "¡Temporada de Obon! \(Int(requiredLeave) == 1 ? "1 día" : "\(Int(requiredLeave)) días") de vacaciones para \(totalDays) días libres seguidos."
+                case .italian: title = "Ponte di Obon"; desc = "È la stagione dell’Obon! \(Int(requiredLeave) == 1 ? "1 giorno" : "\(Int(requiredLeave)) giorni") di ferie per \(totalDays) giorni di fila."
+                case .portuguese: title = "Feriadão de Obon"; desc = "Temporada de Obon! \(Int(requiredLeave) == 1 ? "1 dia" : "\(Int(requiredLeave)) dias") de férias para um feriadão de \(totalDays) dias."
+                case .chineseTraditional: title = "盂蘭盆連假"; desc = "日本盂蘭盆節！請 \(Int(requiredLeave)) 天特休，連休 \(totalDays) 天。"
                 }
 
                 opportunities.append(LeaveRecommendation(
@@ -638,6 +654,10 @@ class RecommendationEngine {
                 case .chinese: title = "感恩节假期"; desc = "周五请1天年假获得4天假期！"
                 case .german: title = "Thanksgiving-Auszeit"; desc = "1 Urlaubstag (Freitag) für 4 freie Tage!"
                 case .french: title = "Pont de Thanksgiving"; desc = "1 jour de congé (vendredi) pour 4 jours de repos !"
+                case .spanish: title = "Puente de Acción de Gracias"; desc = "¡1 día de vacaciones (viernes) para 4 días libres!"
+                case .italian: title = "Ponte del Ringraziamento"; desc = "1 giorno di ferie (venerdì) per 4 giorni di fila!"
+                case .portuguese: title = "Feriadão de Ação de Graças"; desc = "1 dia de férias (sexta) para 4 dias de folga!"
+                case .chineseTraditional: title = "感恩節連假"; desc = "週五請 1 天特休，連休 4 天！"
                 }
 
                 opportunities.append(LeaveRecommendation(
@@ -671,6 +691,10 @@ class RecommendationEngine {
                     case .chinese: title = "独立日假期"; desc = "周一请1天年假获得4天假期！"
                     case .german: title = "Langes Wochenende am 4. Juli"; desc = "1 Urlaubstag (Montag) für 4 freie Tage!"
                     case .french: title = "Long week-end du 4 juillet"; desc = "1 jour de congé (lundi) pour 4 jours de repos !"
+                    case .spanish: title = "Puente del 4 de julio"; desc = "¡1 día de vacaciones (lunes) para 4 días libres!"
+                    case .italian: title = "Ponte del 4 luglio"; desc = "1 giorno di ferie (lunedì) per 4 giorni di fila!"
+                    case .portuguese: title = "Feriadão de 4 de julho"; desc = "1 dia de férias (segunda) para 4 dias de folga!"
+                    case .chineseTraditional: title = "美國獨立紀念日連假"; desc = "週一請 1 天特休，連休 4 天！"
                     }
                     opportunities.append(LeaveRecommendation(
                         title: title, description: desc,
@@ -692,6 +716,10 @@ class RecommendationEngine {
                     case .chinese: title = "独立日假期"; desc = "周五请1天年假获得4天假期！"
                     case .german: title = "Langes Wochenende am 4. Juli"; desc = "1 Urlaubstag (Freitag) für 4 freie Tage!"
                     case .french: title = "Long week-end du 4 juillet"; desc = "1 jour de congé (vendredi) pour 4 jours de repos !"
+                    case .spanish: title = "Puente del 4 de julio"; desc = "¡1 día de vacaciones (viernes) para 4 días libres!"
+                    case .italian: title = "Ponte del 4 luglio"; desc = "1 giorno di ferie (venerdì) per 4 giorni di fila!"
+                    case .portuguese: title = "Feriadão de 4 de julho"; desc = "1 dia de férias (sexta) para 4 dias de folga!"
+                    case .chineseTraditional: title = "美國獨立紀念日連假"; desc = "週五請 1 天特休，連休 4 天！"
                     }
                     opportunities.append(LeaveRecommendation(
                         title: title, description: desc,
@@ -726,6 +754,14 @@ class RecommendationEngine {
                 $0.name.contains("国庆") || $0.name.contains("National Day") ||
                 $0.name.contains("春節") || $0.name.contains("国慶")
             }
+        case .taiwan, .hongKong:
+            // 설 연휴 — 이름은 앱 언어에 따라 달라서 여러 표기를 본다
+            majorHolidays = holidays.filter {
+                $0.name.contains("春節") || $0.name.contains("春节") || $0.name.contains("農曆") || $0.name.contains("农历") ||
+                $0.name.contains("旧正月") || $0.name.contains("Lunar New Year") || $0.name.contains("춘절") || $0.name.contains("음력 설") ||
+                $0.name.contains("Año Nuevo Lunar") || $0.name.contains("Capodanno lunare") || $0.name.contains("Ano Novo Lunar") ||
+                $0.name.contains("Chinesisches Neujahr") || $0.name.contains("Nouvel An")
+            }.filter { !$0.isSubstitute }
         default:
             majorHolidays = []
         }

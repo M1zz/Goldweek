@@ -144,6 +144,10 @@ struct LeaveStatusHeader: View {
             case .chinese: return "\(Strings.basicLeave) \(formatD(remainingLeave))天，\(Strings.bonus) \(formatD(bonusLeave))天，\(Strings.totalAvailable) \(formatD(totalAvailable))天"
             case .german: return "\(Strings.basicLeave) \(formatD(remainingLeave)) Tage, \(Strings.bonus) \(formatD(bonusLeave)) Tage, \(Strings.totalAvailable) \(formatD(totalAvailable)) Tage"
             case .french: return "\(Strings.basicLeave) \(formatD(remainingLeave)) jours, \(Strings.bonus) \(formatD(bonusLeave)) jours, \(Strings.totalAvailable) \(formatD(totalAvailable)) jours"
+            case .spanish: return "\(Strings.basicLeave) \(formatD(remainingLeave)) días, \(Strings.bonus) \(formatD(bonusLeave)) días, \(Strings.totalAvailable) \(formatD(totalAvailable)) días"
+            case .italian: return "\(Strings.basicLeave) \(formatD(remainingLeave)) giorni, \(Strings.bonus) \(formatD(bonusLeave)) giorni, \(Strings.totalAvailable) \(formatD(totalAvailable)) giorni"
+            case .portuguese: return "\(Strings.basicLeave) \(formatD(remainingLeave)) dias, \(Strings.bonus) \(formatD(bonusLeave)) dias, \(Strings.totalAvailable) \(formatD(totalAvailable)) dias"
+            case .chineseTraditional: return "\(Strings.basicLeave) \(formatD(remainingLeave)) 天，\(Strings.bonus) \(formatD(bonusLeave)) 天，\(Strings.totalAvailable) \(formatD(totalAvailable)) 天"
             }
         } else {
             switch lang {
@@ -153,6 +157,10 @@ struct LeaveStatusHeader: View {
             case .chinese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))天"
             case .german: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) Tage"
             case .french: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) jours"
+            case .spanish: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) días"
+            case .italian: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) giorni"
+            case .portuguese: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) dias"
+            case .chineseTraditional: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) 天"
             }
         }
     }

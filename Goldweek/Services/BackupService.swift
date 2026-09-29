@@ -782,6 +782,54 @@ enum BackupError: LocalizedError {
             case .backupRotationFailed: return "Échec de la rotation des fichiers de sauvegarde."
             case .checksumMismatch: return "Le fichier de sauvegarde est corrompu. (Somme de contrôle incorrecte)"
             }
+        case .spanish:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud no está disponible. Activa iCloud Drive en Ajustes."
+            case .localPathNotAvailable: return "No se puede acceder a la ruta de almacenamiento local."
+            case .backupNotFound: return "No se encontró el archivo de copia de seguridad."
+            case .invalidBackupData: return "No se pueden leer los datos de la copia de seguridad."
+            case .encryptionFailed: return "Error al cifrar la copia de seguridad."
+            case .decryptionFailed: return "Error al descifrar la copia de seguridad. Puede que sea de otro dispositivo."
+            case .integrityVerificationFailed: return "Error al verificar la integridad de la copia de seguridad."
+            case .backupRotationFailed: return "Error al rotar los archivos de copia de seguridad."
+            case .checksumMismatch: return "El archivo de copia de seguridad está dañado. (La suma de verificación no coincide)"
+            }
+        case .italian:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud non è disponibile. Attiva iCloud Drive in Impostazioni."
+            case .localPathNotAvailable: return "Impossibile accedere alla cartella di archiviazione locale."
+            case .backupNotFound: return "File di backup non trovato."
+            case .invalidBackupData: return "Impossibile leggere i dati del backup."
+            case .encryptionFailed: return "Crittografia del backup non riuscita."
+            case .decryptionFailed: return "Decrittografia del backup non riuscita. Potrebbe provenire da un altro dispositivo."
+            case .integrityVerificationFailed: return "Verifica dell’integrità del backup non riuscita."
+            case .backupRotationFailed: return "Rotazione dei file di backup non riuscita."
+            case .checksumMismatch: return "Il file di backup è danneggiato. (Checksum non corrispondente)"
+            }
+        case .portuguese:
+            switch self {
+            case .iCloudNotAvailable: return "O iCloud não está disponível. Ative o iCloud Drive em Ajustes."
+            case .localPathNotAvailable: return "Não foi possível acessar o local de armazenamento."
+            case .backupNotFound: return "Arquivo de backup não encontrado."
+            case .invalidBackupData: return "Não foi possível ler os dados do backup."
+            case .encryptionFailed: return "Falha ao criptografar o backup."
+            case .decryptionFailed: return "Falha ao descriptografar o backup. Ele pode ser de outro dispositivo."
+            case .integrityVerificationFailed: return "Falha na verificação de integridade do backup."
+            case .backupRotationFailed: return "Falha na rotação dos arquivos de backup."
+            case .checksumMismatch: return "O arquivo de backup está corrompido. (Checksum não confere)"
+            }
+        case .chineseTraditional:
+            switch self {
+            case .iCloudNotAvailable: return "無法使用 iCloud。請到「設定」開啟 iCloud 雲碟。"
+            case .localPathNotAvailable: return "無法存取本機儲存路徑。"
+            case .backupNotFound: return "找不到備份檔案。"
+            case .invalidBackupData: return "無法讀取備份資料。"
+            case .encryptionFailed: return "備份加密失敗。"
+            case .decryptionFailed: return "備份解密失敗，可能是其他裝置的備份。"
+            case .integrityVerificationFailed: return "備份檔案完整性驗證失敗。"
+            case .backupRotationFailed: return "備份檔案輪替失敗。"
+            case .checksumMismatch: return "備份檔案已損毀。（總和檢查碼不符）"
+            }
         }
     }
 }

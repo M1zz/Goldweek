@@ -239,7 +239,15 @@ class CalendarService {
         // 출장
         "출장", "出張", "出差", "business trip",
         // 독일어/프랑스어 (Country 지원 국가)
-        "urlaub", "congé", "congés", "vacances", "rtt"
+        "urlaub", "congé", "congés", "vacances", "rtt",
+        // 스페인어
+        "vacaciones", "día libre", "asuntos propios", "baja médica",
+        // 이탈리아어
+        "ferie", "permesso", "malattia",
+        // 포르투갈어 (브라질)
+        "férias", "folga", "atestado", "abono",
+        // 중국어 (번체) — 대만의 特休 는 연차다
+        "請假", "特休", "補休", "事假", "婚假", "產假", "喪假"
     ]
 
     /// 이벤트 제목에서 휴가 유형을 추론한다 (구체적인 유형 → 일반 유형 순서로 검사)
@@ -254,17 +262,22 @@ class CalendarService {
             if t.contains("반차") || t.contains("半休") || t.contains("half day") { return .half }
         }
         // 병가
-        if t.contains("병가") || t.contains("病欠") || t.contains("病假") || t.contains("sick") {
+        if t.contains("병가") || t.contains("病欠") || t.contains("病假") || t.contains("sick")
+            || t.contains("baja médica") || t.contains("malattia") || t.contains("atestado") {
             return .sick
         }
         // 대체휴무/보상휴가
         if t.contains("대휴") || t.contains("대체휴무") || t.contains("보상휴가")
             || t.contains("代休") || t.contains("振替休日") || t.contains("振休")
-            || t.contains("补休") || t.contains("倒休") || t.contains("comp day") {
+            || t.contains("补休") || t.contains("補休") || t.contains("倒休") || t.contains("comp day") {
             return .compensatory
         }
         // 특별휴가 (경조사, 출산 등)
-        if t.contains("경조사") || t.contains("특별휴가") || t.contains("特別休暇") || t.contains("特休")
+        // 特休: 일본에서는 특별휴가 줄임말이지만 대만에서는 연차(特別休假)라 번체 사용자는 연차로 둔다
+        let isTraditionalChinese = AppLanguage.current == .chineseTraditional
+        if t.contains("경조사") || t.contains("특별휴가") || t.contains("特別休暇")
+            || (t.contains("特休") && !isTraditionalChinese)
+            || t.contains("產假") || t.contains("喪假")
             || t.contains("婚假") || t.contains("产假") || t.contains("探亲假")
             || t.contains("maternity") || t.contains("paternity")
             || t.contains("family leave") || t.contains("parental leave") {
@@ -479,6 +492,10 @@ enum CalendarSyncStatus {
             case .chinese: return "已同步"
             case .german: return "Synchronisiert"
             case .french: return "Synchronisé"
+            case .spanish: return "Sincronizado"
+            case .italian: return "Sincronizzato"
+            case .portuguese: return "Sincronizado"
+            case .chineseTraditional: return "已同步"
             }
         case .notConfigured:
             switch LanguageManager.shared.currentLanguage {
@@ -488,6 +505,10 @@ enum CalendarSyncStatus {
             case .chinese: return "需要设置"
             case .german: return "Einrichtung nötig"
             case .french: return "Configuration requise"
+            case .spanish: return "Configuración necesaria"
+            case .italian: return "Configurazione necessaria"
+            case .portuguese: return "Configuração necessária"
+            case .chineseTraditional: return "需要設定"
             }
         case .permissionRequired:
             switch LanguageManager.shared.currentLanguage {
@@ -497,6 +518,10 @@ enum CalendarSyncStatus {
             case .chinese: return "需要权限"
             case .german: return "Zugriff nötig"
             case .french: return "Autorisation requise"
+            case .spanish: return "Permiso necesario"
+            case .italian: return "Autorizzazione necessaria"
+            case .portuguese: return "Permissão necessária"
+            case .chineseTraditional: return "需要權限"
             }
         case .permissionDenied:
             switch LanguageManager.shared.currentLanguage {
@@ -506,6 +531,10 @@ enum CalendarSyncStatus {
             case .chinese: return "权限被拒绝"
             case .german: return "Zugriff verweigert"
             case .french: return "Autorisation refusée"
+            case .spanish: return "Permiso denegado"
+            case .italian: return "Autorizzazione negata"
+            case .portuguese: return "Permissão negada"
+            case .chineseTraditional: return "權限遭拒"
             }
         case .proRequired:
             switch LanguageManager.shared.currentLanguage {
@@ -515,6 +544,10 @@ enum CalendarSyncStatus {
             case .chinese: return "需要Pro版"
             case .german: return "Pro nötig"
             case .french: return "Pro requis"
+            case .spanish: return "Requiere Pro"
+            case .italian: return "Richiede Pro"
+            case .portuguese: return "Requer Pro"
+            case .chineseTraditional: return "需要 Pro"
             }
         case .error:
             switch LanguageManager.shared.currentLanguage {
@@ -524,6 +557,10 @@ enum CalendarSyncStatus {
             case .chinese: return "错误"
             case .german: return "Fehler"
             case .french: return "Erreur"
+            case .spanish: return "Error"
+            case .italian: return "Errore"
+            case .portuguese: return "Erro"
+            case .chineseTraditional: return "錯誤"
             }
         }
     }
@@ -616,6 +653,42 @@ enum CalendarError: LocalizedError {
             case .proFeatureRequired: return "Fonctionnalité Pro requise."
             case .eventNotFound: return "Événement introuvable."
             case .calendarNotFound: return "Calendrier introuvable."
+            }
+        case .spanish:
+            switch self {
+            case .permissionDenied: return "Se denegó el acceso al calendario."
+            case .unknownPermissionStatus: return "Estado de permiso desconocido."
+            case .noAvailableSource: return "No hay ninguna fuente de calendario disponible."
+            case .proFeatureRequired: return "Esta función requiere Pro."
+            case .eventNotFound: return "No se encontró el evento."
+            case .calendarNotFound: return "No se encontró el calendario."
+            }
+        case .italian:
+            switch self {
+            case .permissionDenied: return "L’accesso al calendario è stato negato."
+            case .unknownPermissionStatus: return "Stato dell’autorizzazione sconosciuto."
+            case .noAvailableSource: return "Nessuna fonte di calendario disponibile."
+            case .proFeatureRequired: return "Funzione riservata a Pro."
+            case .eventNotFound: return "Evento non trovato."
+            case .calendarNotFound: return "Calendario non trovato."
+            }
+        case .portuguese:
+            switch self {
+            case .permissionDenied: return "O acesso ao calendário foi negado."
+            case .unknownPermissionStatus: return "Status de permissão desconhecido."
+            case .noAvailableSource: return "Nenhuma fonte de calendário disponível."
+            case .proFeatureRequired: return "Recurso exclusivo do Pro."
+            case .eventNotFound: return "Evento não encontrado."
+            case .calendarNotFound: return "Calendário não encontrado."
+            }
+        case .chineseTraditional:
+            switch self {
+            case .permissionDenied: return "行事曆存取權限遭拒。"
+            case .unknownPermissionStatus: return "未知的權限狀態。"
+            case .noAvailableSource: return "沒有可用的行事曆來源。"
+            case .proFeatureRequired: return "需要 Pro 功能。"
+            case .eventNotFound: return "找不到行程。"
+            case .calendarNotFound: return "找不到行事曆。"
             }
         }
     }
