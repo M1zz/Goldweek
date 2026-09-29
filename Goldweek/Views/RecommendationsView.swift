@@ -935,8 +935,8 @@ struct MonthPreviewCell: View {
                 .font(.body)
                 .fontWeight(.medium)
                 .foregroundStyle(isPastMonth ? .secondary : .primary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)   // 6열 그리드라 칸이 좁다 — 넘칠 때만 줄어든다
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)   // 6열 그리드라 칸이 좁다 — 넘치면 줄을 바꾼다
 
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
@@ -963,8 +963,8 @@ struct MonthPreviewCell: View {
                 Text(Strings.itemCountUnit(recommendations.count))
                     .font(.body)
                     .foregroundStyle(.blue)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
             } else {
                 Text(" ")
                     .font(.body)
@@ -1702,7 +1702,7 @@ struct MRTFlightCard: View {
                 Text(dateText)
                     .font(.body)
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 // 항공사 + 직항 여부 + 가장 저렴 (이유 라벨)
                 HStack(spacing: 6) {
@@ -2083,8 +2083,7 @@ struct TravelSuggestionCard: View {
                                 .font(.system(size: 9, weight: .bold))
                             Text(Strings.travelReasonLabel(reasonKey))
                                 .font(.body.weight(.semibold))
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.85)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                         .foregroundStyle(accentColor)
                         .padding(.horizontal, 7)
@@ -2532,8 +2531,7 @@ struct OptimalLeavePlannerCard: View {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text(dateRange)
                     .font(.body.weight(.bold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
                 if brk.efficiency >= 1.5 {
                     HStack(spacing: 2) {

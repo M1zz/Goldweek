@@ -1104,7 +1104,7 @@ struct ShareableLeavePlanView: View {
                                 Text(leave.note)
                                     .font(.body)
                                     .foregroundStyle(secondaryText)
-                                    .lineLimit(1)
+                                    .fixedSize(horizontal: false, vertical: true)
                             }
                         }
                     }
@@ -1694,7 +1694,7 @@ struct BurnoutPaceCard: View {
     private var paceSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             // 범례 — 라벨/값은 트랙에서 분리해 좌·우로 배치(겹침 방지)
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
+            HStack(alignment: .top, spacing: 8) {
                 paceLegend(label: Strings.paceYearProgressLabel,
                            value: "\(Int(yearProgress * 100))%",
                            color: Color(.systemGray),
@@ -1755,16 +1755,17 @@ struct BurnoutPaceCard: View {
                     .fill(color)
                     .frame(width: 9, height: 9)
             }
+            // 칸이 좁으면 줄을 바꿔서라도 다 보여 준다 (말줄임표로 자르지 않는다)
             Text(label)
                 .font(.body)
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
             Text(value)
                 .font(.body.weight(.bold))
                 .foregroundStyle(color)
                 .monospacedDigit()
+                .fixedSize()
         }
-        .lineLimit(1)
-        .minimumScaleFactor(0.7)
     }
 
     /// '지금'을 가리키는 세로선 — 트랙을 가로지르는 재생 헤드 느낌
@@ -1827,8 +1828,8 @@ struct BurnoutPaceCard: View {
             Text(Strings.burnoutToday)
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.primary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -1912,9 +1913,8 @@ struct BurnoutPaceCard: View {
             Text(value)
                 .font(.body.weight(.semibold))
                 .foregroundStyle(hasData ? .primary : .secondary)
-                .lineLimit(2)
                 .multilineTextAlignment(.center)
-                .minimumScaleFactor(0.8)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity)
     }

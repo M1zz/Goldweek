@@ -189,7 +189,7 @@ struct PhotoImportSheet: View {
                                     Text(candidate.title)
                                         .fontWeight(.medium)
                                         .foregroundStyle(.primary)
-                                        .lineLimit(1)
+                                        .fixedSize(horizontal: false, vertical: true)
                                     HStack(spacing: 6) {
                                         Text(Strings.leaveTypeName(candidate.suggestedType))
                                             .font(.body.weight(.semibold))

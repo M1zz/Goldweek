@@ -353,7 +353,7 @@ struct LeaveRegistrationView: View {
                                             Text("· \(bonus.reason)")
                                                 .font(.body)
                                                 .foregroundStyle(selectedBonusLeave?.id == bonus.id ? .white.opacity(0.85) : .secondary)
-                                                .lineLimit(1)
+                                                .fixedSize(horizontal: false, vertical: true)
                                         }
                                     }
                                     if let exp = bonus.expirationDate {

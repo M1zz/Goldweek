@@ -1291,7 +1291,7 @@ struct CalendarImportSheet: View {
                                             Text(candidate.title)
                                                 .fontWeight(.medium)
                                                 .foregroundStyle(.primary)
-                                                .lineLimit(1)
+                                                .fixedSize(horizontal: false, vertical: true)
                                             HStack(spacing: 6) {
                                                 // 추론된 휴가 유형 배지
                                                 Text(Strings.leaveTypeName(candidate.suggestedType))

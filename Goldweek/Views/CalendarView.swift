@@ -1208,7 +1208,7 @@ struct LeaveListRow: View {
                     Text(leave.note)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                        .lineLimit(1)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
 
