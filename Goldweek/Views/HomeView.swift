@@ -268,7 +268,7 @@ struct HomeView: View {
             }
             .onAppear {
                 // 가끔(쿨다운 후) 단일문항 피로 체크인 — 모델을 주관 상태로 보정
-                if profile.userType == .employee, !leaveRecords.isEmpty,
+                if profile.userType == .employee, !leaveRecords.isEmpty, !ScreenshotMode.isActive,
                    FatigueCheckIn.isDue(hasHistory: true) {
                     showingFatigueCheckIn = true
                 }
@@ -1656,6 +1656,8 @@ struct BurnoutPaceCard: View {
             Text(Strings.burnoutToday)
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
         }
     }
 

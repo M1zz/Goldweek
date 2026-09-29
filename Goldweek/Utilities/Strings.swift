@@ -5364,8 +5364,8 @@ enum Strings {
         case .english: return "Last break"
         case .japanese: return "前回の休暇"
         case .chinese: return "上次休假"
-        case .german: return "Letzte Auszeit"
-        case .french: return "Dernière pause"
+        case .german: return "Zuletzt"
+        case .french: return "Dernière"
         }
     }
 
@@ -5386,8 +5386,8 @@ enum Strings {
         case .english: return "Next break"
         case .japanese: return "次の休暇"
         case .chinese: return "下次休假"
-        case .german: return "Nächste Auszeit"
-        case .french: return "Prochaine pause"
+        case .german: return "Als Nächstes"
+        case .french: return "Prochaine"
         }
     }
 

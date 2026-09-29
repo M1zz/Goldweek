@@ -2,6 +2,19 @@
 
 ## 진행 중
 
+### 전세계 판매 준비 (2026-09-29)
+- [x] main ↔ dev 정리: origin/main 으로 fast-forward, dev 를 main 에서 다시 분기
+- [x] 독일어·프랑스어 UI 추가 (앱 문자열 640곳 + 위젯·InfoPlist 카탈로그)
+- [x] 미지원 언어 → 영어 폴백 (앱 언어 + developmentRegion en 으로 번들 리소스까지)
+- [x] 독일·프랑스 공휴일 이름 현지어화
+- [x] 스크린샷 자동 촬영: `scripts/take_screenshots.sh` (DEBUG 스크린샷 모드, 6개 언어 × 3화면 → docs/screenshots)
+- [ ] 번역 원어민 검수 (de/fr는 기계 번역 수준 — 특히 "Goldene Woche", 휴가 종류명)
+- [ ] App Store Connect 에 de-DE / fr-FR / 기타 로컬라이제이션 추가 + docs/aso-keywords.md 메타데이터 입력
+- [ ] 스크린샷에 마케팅 문구 프레임 입히기 (현재는 원본 화면 캡처)
+- [ ] LeeoKit(피드백·페이월) 문구 de/fr 번역 — 현재는 영어로 폴백
+- [ ] 개인정보 처리방침·지원 페이지 de/fr
+- [ ] 가격 티어·판매 국가 설정 확인
+
 ### v2.1.2 출시 전 (릴리즈 노트: docs/release-notes.md)
 - [ ] **CloudKit 배포 선행** — 포털에 `iCloud.com.Ysoup.FeedbackHub` 컨테이너 추가 +
       Dashboard 스키마(Feedback·UsageSnapshot·UsageEvent·CrashReport) Production 배포

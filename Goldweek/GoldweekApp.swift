@@ -55,6 +55,7 @@ struct GoldweekApp: App {
         ])
 
         sharedModelContainer = Self.createModelContainer(schema: schema)
+        ScreenshotMode.seed(container: sharedModelContainer)
 
         // 기능 팁 (TipKit) — 하루 1개씩 노출, 기능 사용 시 각 팁이 invalidate 됨
         #if DEBUG
@@ -65,6 +66,7 @@ struct GoldweekApp: App {
         #endif
         // "기능 팁 다시 보기"를 눌렀다면 여기서 되돌린다 — configure 전에만 유효하다
         AppTips.performPendingResetIfNeeded()
+        if ScreenshotMode.isActive { Tips.hideAllTipsForTesting() }
         try? Tips.configure([.displayFrequency(.daily)])
 
         checkICloudStatus()

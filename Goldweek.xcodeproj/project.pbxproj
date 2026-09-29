@@ -38,6 +38,7 @@
 		A1000012 /* HolidayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* HolidayService.swift */; };
 		A1000013 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000013 /* Components.swift */; };
 		A1000014 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000014 /* Extensions.swift */; };
+		A1000099 /* ScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000099 /* ScreenshotMode.swift */; };
 		A1000015 /* RecommendationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000015 /* RecommendationsView.swift */; };
 		A1000016 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000016 /* OnboardingView.swift */; };
 		A1000017 /* WidgetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000017 /* WidgetService.swift */; };
@@ -135,6 +136,7 @@
 		A2000012 /* HolidayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayService.swift; sourceTree = "<group>"; };
 		A2000013 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		A2000014 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		A2000099 /* ScreenshotMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotMode.swift; sourceTree = "<group>"; };
 		A2000015 /* RecommendationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationsView.swift; sourceTree = "<group>"; };
 		A2000016 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		A2000017 /* WidgetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetService.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 			isa = PBXGroup;
 			children = (
 				A2000014 /* Extensions.swift */,
+				A2000099 /* ScreenshotMode.swift */,
 				A2000023 /* Strings.swift */,
 				A2000050 /* Accessibility.swift */,
 				A2000064 /* AppTips.swift */,
@@ -519,6 +522,7 @@
 				A1000012 /* HolidayService.swift in Sources */,
 				A1000013 /* Components.swift in Sources */,
 				A1000014 /* Extensions.swift in Sources */,
+				A1000099 /* ScreenshotMode.swift in Sources */,
 				A1000015 /* RecommendationsView.swift in Sources */,
 				A1000016 /* OnboardingView.swift in Sources */,
 				A1000017 /* WidgetService.swift in Sources */,

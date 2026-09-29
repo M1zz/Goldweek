@@ -1,60 +1,60 @@
 #!/bin/bash
-# LeaveWise 스크린샷 촬영 스크립트
-# 시뮬레이터에서 앱이 실행 중이어야 합니다
+# Goldweek App Store 스크린샷 자동 촬영 — 언어 × 탭
+#
+# DEBUG 빌드의 스크린샷 모드(Goldweek/Utilities/ScreenshotMode.swift)로 언어별 데모 데이터를 채운 뒤
+# 탭마다 시뮬레이터 화면을 캡처한다. 결과: docs/screenshots/<언어>/<번호>-<화면>.png
+#
+# 사용법: scripts/take_screenshots.sh [언어...]   (기본: en ko ja zh de fr)
 
-DEVICE="iPhone 17"
-OUTPUT_DIR="/Users/leeo/Documents/workspace/code/LeaveWise/docs/images"
+set -euo pipefail
 
-echo "📸 LeaveWise 스크린샷 촬영"
-echo "================================"
-echo ""
-echo "각 화면에서 Enter를 누르면 스크린샷을 찍습니다."
-echo "시뮬레이터에서 원하는 화면으로 이동한 후 Enter를 누르세요."
-echo ""
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+DEVICE="${DEVICE:-iPhone 18 Pro Max}"   # 6.9" — App Store 필수 규격 (1320×2868)
+BUNDLE_ID="com.Ysoup.LeaveWise"
+DERIVED="${DERIVED:-$ROOT/build/screenshots-dd}"
+OUT="$ROOT/docs/screenshots"
+LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr)
 
-# 홈 화면
-echo "1️⃣  홈 화면으로 이동하세요 (첫 번째 탭)"
-read -p "   준비되면 Enter..."
-xcrun simctl io "$DEVICE" screenshot "$OUTPUT_DIR/screenshot-1.png"
-echo "   ✅ screenshot-1.png 저장됨"
-echo ""
+# 탭 번호:이름 (MainTabView 의 tag)
+SHOTS=("0:home" "1:calendar" "3:settings")
 
-# 캘린더
-echo "2️⃣  캘린더 화면으로 이동하세요 (두 번째 탭)"
-read -p "   준비되면 Enter..."
-xcrun simctl io "$DEVICE" screenshot "$OUTPUT_DIR/screenshot-2.png"
-echo "   ✅ screenshot-2.png 저장됨"
-echo ""
+apple_lang() {   # 앱 언어 코드 → 시스템 언어 코드
+  case "$1" in zh) echo "zh-Hans" ;; *) echo "$1" ;; esac
+}
 
-# 추천
-echo "3️⃣  추천 화면으로 이동하세요 (네 번째 탭)"
-read -p "   준비되면 Enter..."
-xcrun simctl io "$DEVICE" screenshot "$OUTPUT_DIR/screenshot-3.png"
-echo "   ✅ screenshot-3.png 저장됨"
-echo ""
+echo "▶ 시뮬레이터 준비: $DEVICE"
+xcrun simctl boot "$DEVICE" 2>/dev/null || true
+xcrun simctl bootstatus "$DEVICE" -b >/dev/null
+xcrun simctl status_bar "$DEVICE" override --time "9:41" --batteryState charged --batteryLevel 100 \
+  --cellularMode active --cellularBars 4 --wifiBars 3 --dataNetwork wifi
 
-# 등록
-echo "4️⃣  등록 화면으로 이동하세요 (세 번째 탭)"
-read -p "   준비되면 Enter..."
-xcrun simctl io "$DEVICE" screenshot "$OUTPUT_DIR/screenshot-4.png"
-echo "   ✅ screenshot-4.png 저장됨"
-echo ""
+echo "▶ 빌드 (Debug)"
+xcodebuild -project "$ROOT/Goldweek.xcodeproj" -scheme Goldweek -configuration Debug \
+  -destination "platform=iOS Simulator,name=$DEVICE" -derivedDataPath "$DERIVED" build -quiet
+APP="$DERIVED/Build/Products/Debug-iphonesimulator/Goldweek.app"
+xcrun simctl install "$DEVICE" "$APP"
 
-# 설정
-echo "5️⃣  설정 화면으로 이동하세요 (다섯 번째 탭)"
-read -p "   준비되면 Enter..."
-xcrun simctl io "$DEVICE" screenshot "$OUTPUT_DIR/screenshot-5.png"
-echo "   ✅ screenshot-5.png 저장됨"
-echo ""
+# 첫 실행은 초기화가 길어 빈 화면이 찍힌다 — 한 번 띄워 두고 시작
+xcrun simctl launch "$DEVICE" "$BUNDLE_ID" -screenshotMode YES >/dev/null
+sleep 8
 
-# 히어로 이미지 (홈 화면 다시)
-echo "6️⃣  히어로 이미지용 - 홈 화면 (데이터가 있는 상태)"
-read -p "   준비되면 Enter..."
-xcrun simctl io "$DEVICE" screenshot "$OUTPUT_DIR/hero-mockup.png"
-echo "   ✅ hero-mockup.png 저장됨"
-echo ""
+for lang in "${LANGS[@]}"; do
+  mkdir -p "$OUT/$lang"
+  sys=$(apple_lang "$lang")
+  i=1
+  for shot in "${SHOTS[@]}"; do
+    tab="${shot%%:*}"; name="${shot##*:}"
+    xcrun simctl terminate "$DEVICE" "$BUNDLE_ID" 2>/dev/null || true
+    xcrun simctl launch "$DEVICE" "$BUNDLE_ID" \
+      -screenshotMode YES -screenshotTab "$tab" -isPro YES \
+      -appLanguage "$lang" -AppleLanguages "($sys)" -AppleLocale "$sys" >/dev/null
+    sleep "${WAIT:-6}"
+    file="$OUT/$lang/$i-$name.png"
+    xcrun simctl io "$DEVICE" screenshot "$file" >/dev/null 2>&1
+    echo "  ✓ $file"
+    i=$((i + 1))
+  done
+done
 
-echo "================================"
-echo "🎉 완료! 모든 스크린샷이 저장되었습니다."
-echo "📁 저장 위치: $OUTPUT_DIR"
-ls -la "$OUTPUT_DIR"
+xcrun simctl status_bar "$DEVICE" clear
+echo "완료 → $OUT"

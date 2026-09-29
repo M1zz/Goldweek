@@ -273,7 +273,7 @@ struct ContentView: View {
 
 struct MainTabView: View {
     @Bindable var profile: UserProfile
-    @State private var selectedTab = 0
+    @State private var selectedTab = ScreenshotMode.initialTab
 
     // 공유받은 일정이 있으면 가족 탭 표시 (@Observable — body에서 읽으면 자동 갱신)
     private var hasSharedSchedules: Bool {
