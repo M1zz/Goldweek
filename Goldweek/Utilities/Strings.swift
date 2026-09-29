@@ -3369,14 +3369,14 @@ enum Strings {
         }
     }
 
-    static func mayGoldenWeekDesc(leaveDays: Int) -> String {
+    static func mayGoldenWeekDesc(leaveDays: Int, totalDays: Int) -> String {
         switch lang {
-        case .korean: return "어린이날과 근로자의 날을 활용한 황금연휴! 연차 \(leaveDays)일로 최대 6일 연휴를 만들 수 있어요."
-        case .english: return "Golden week around Children's Day! \(leaveDays) leave days for up to 6 days off."
-        case .japanese: return "こどもの日を活用したゴールデンウィーク！有給\(leaveDays)日で最大6連休。"
-        case .chinese: return "利用五一黄金周！请\(leaveDays)天年假获得最多6天假期。"
-        case .german: return "Goldene Woche rund um den Kindertag! \(leaveDays) Urlaubstage für bis zu 6 freie Tage."
-        case .french: return "Semaine d'or autour de la Fête des enfants ! \(leaveDays) jours de congé pour jusqu'à 6 jours off."
+        case .korean: return "어린이날과 근로자의 날을 활용한 황금연휴! 연차 \(leaveDays)일로 \(totalDays)일 연휴를 만들 수 있어요."
+        case .english: return "Golden week around Children's Day! \(leaveDays) leave days for \(totalDays) days off."
+        case .japanese: return "こどもの日を活用したゴールデンウィーク！有給\(leaveDays)日で\(totalDays)連休。"
+        case .chinese: return "利用五一黄金周！请\(leaveDays)天年假获得\(totalDays)天假期。"
+        case .german: return "Goldene Woche rund um den Kindertag! \(leaveDays) Urlaubstage für \(totalDays) freie Tage."
+        case .french: return "Semaine d’or autour de la Fête des enfants : \(leaveDays) jours de congé pour \(totalDays) jours de repos."
         }
     }
 

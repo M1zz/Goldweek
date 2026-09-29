@@ -117,7 +117,7 @@ struct RecommendationsView: View {
                     } else {
                         // 연차 없이 쉬는 날 (정보성, 액션 없음)
                         if !freeHolidays.isEmpty {
-                            UpcomingHolidaysSection(holidays: freeHolidays)
+                            UpcomingHolidaysSection(holidays: freeHolidays, country: profile.country)
                         }
 
                         // 연차를 써야 만들 수 있는 추천 + 일정별 MRT 여행 큐레이션
@@ -169,17 +169,23 @@ struct RecommendationsView: View {
         }
     }
 
+    /// 주말·공휴일을 뺀 **연차 내는 날만** 휴가로 잡는다 (캘린더 탭과 같은 규칙).
     private func addLeave(from recommendation: LeaveRecommendation) {
-        let record = LeaveRecord(
-            startDate: recommendation.startDate,
-            endDate: recommendation.endDate,
-            type: .annual,
-            status: .planned,
-            note: recommendation.title,
-            isRecommended: true
-        )
-
-        modelContext.insert(record)
+        let calendar = Calendar.current
+        let years = Set([recommendation.startDate, recommendation.endDate].map { calendar.component(.year, from: $0) })
+        let rangeHolidays = years.flatMap { HolidayService().getHolidays(for: $0, country: profile.country) }
+        let records = recommendation.leaveSegments(holidays: rangeHolidays).map {
+            LeaveRecord(
+                startDate: $0.start,
+                endDate: $0.end,
+                type: .annual,
+                status: .planned,
+                note: recommendation.title,
+                isRecommended: true
+            )
+        }
+        guard !records.isEmpty else { return }
+        records.forEach { modelContext.insert($0) }
         addedRecommendations.insert(recommendation.id)
 
         do {
@@ -188,7 +194,7 @@ struct RecommendationsView: View {
             HapticFeedback.success()
         } catch {
             addedRecommendations.remove(recommendation.id)
-            modelContext.delete(record)
+            records.forEach { modelContext.delete($0) }
             HapticFeedback.error()
             showingAddError = true
         }
@@ -352,6 +358,7 @@ struct RecommendationList: View {
                 VStack(spacing: 12) {
                     DetailedRecommendationCard(
                         recommendation: recommendation,
+                        country: originCountry,
                         isAdded: addedRecommendations.contains(recommendation.id),
                         requiresPro: requiresPro,
                         onAdd: {
@@ -393,6 +400,7 @@ struct RecommendationList: View {
 // MARK: - 연차 없이 쉬는 날 섹션
 struct UpcomingHolidaysSection: View {
     let holidays: [LeaveRecommendation]
+    let country: Country
 
     private let dateFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -420,7 +428,7 @@ struct UpcomingHolidaysSection: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     ForEach(holidays) { holiday in
-                        HolidayInfoCard(holiday: holiday, formatter: dateFormatter)
+                        HolidayInfoCard(holiday: holiday, formatter: dateFormatter, country: country)
                     }
                 }
                 .padding(.horizontal, 2)
@@ -437,6 +445,7 @@ struct UpcomingHolidaysSection: View {
 struct HolidayInfoCard: View {
     let holiday: LeaveRecommendation
     let formatter: DateFormatter
+    let country: Country
 
     private let calendar = Calendar.current
     private let holidayService = HolidayService()
@@ -454,8 +463,8 @@ struct HolidayInfoCard: View {
 
     /// 해당 연도의 공휴일 (요일 동그라미 색상 판정용)
     var publicHolidays: [Holiday] {
-        let year = calendar.component(.year, from: holiday.startDate)
-        return holidayService.getHolidays(for: year)
+        let years = Set([holiday.startDate, holiday.endDate].map { calendar.component(.year, from: $0) })
+        return years.flatMap { holidayService.getHolidays(for: $0, country: country) }
     }
 
     /// 추천 카드와 동일한 색상 규칙: 주말(토/일) 우선 파랑 → 평일 공휴일은 빨강 → 평일
@@ -517,6 +526,7 @@ struct HolidayInfoCard: View {
 // MARK: - 상세 추천 카드
 struct DetailedRecommendationCard: View {
     let recommendation: LeaveRecommendation
+    let country: Country
     let isAdded: Bool
     var requiresPro: Bool = false
     let onAdd: () -> Void
@@ -581,7 +591,8 @@ struct DetailedRecommendationCard: View {
             // 일정 미리보기 (시각화)
             RecommendationDatePreview(
                 startDate: recommendation.startDate,
-                endDate: recommendation.endDate
+                endDate: recommendation.endDate,
+                country: country
             )
 
             // 요약 정보
@@ -661,6 +672,8 @@ struct DetailedRecommendationCard: View {
 struct RecommendationDatePreview: View {
     let startDate: Date
     let endDate: Date
+    /// 공휴일 판정 국가 — 빠뜨리면 한국 공휴일로 칠해진다(미국 추수감사절이 "연차"로 보이던 원인)
+    let country: Country
 
     private let calendar = Calendar.current
     private let holidayService = HolidayService()
@@ -686,8 +699,8 @@ struct RecommendationDatePreview: View {
     }
 
     var holidays: [Holiday] {
-        let year = calendar.component(.year, from: startDate)
-        return holidayService.getHolidays(for: year)
+        let years = Set([startDate, endDate].map { calendar.component(.year, from: $0) })
+        return years.flatMap { holidayService.getHolidays(for: $0, country: country) }
     }
 
     var body: some View {

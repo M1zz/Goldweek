@@ -726,7 +726,8 @@ struct EditLeaveSheet: View {
                 Section(Strings.schedulePreview) {
                     RecommendationDatePreview(
                         startDate: startDate,
-                        endDate: length != .full ? startDate : endDate
+                        endDate: length != .full ? startDate : endDate,
+                        country: profile?.country ?? .korea
                     )
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)

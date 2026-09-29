@@ -123,7 +123,10 @@ struct CalendarView: View {
         )
     }
 
-    /// 캘린더에 주황 링으로 표시할 "번아웃 주의 구간" (예측일부터 1주). 없으면 빈 셋.
+    /// 캘린더에 주황 점선 링으로 표시할 "번아웃 주의 구간" (예측일부터 1주). 없으면 빈 셋.
+    ///
+    /// 주말·공휴일은 뺀다 — 링은 "이때 쉬어 두면 좋다"는 뜻이라, 원래 쉬는 날에 그리면
+    /// 토·일·공휴일에 연차를 내라는 추천처럼 보인다.
     private var burnoutWarningDates: Set<Date> {
         let a = burnoutAssessment
         let anchor: Date?
@@ -133,13 +136,16 @@ struct CalendarView: View {
             anchor = a.predictedRiskDate                  // 예측 진입일부터
         }
         guard let start = anchor else { return [] }
-        var set: Set<Date> = []
-        for offset in 0..<7 {
-            if let d = calendar.date(byAdding: .day, value: offset, to: start) {
-                set.insert(calendar.startOfDay(for: d))
-            }
-        }
-        return set
+        let days = (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: calendar.startOfDay(for: start)) }
+        let years = Set(days.map { calendar.component(.year, from: $0) })
+        let dayOff = Set(years.flatMap {
+            holidayService.getHolidays(for: $0, country: profile.country,
+                                       customHolidays: customHolidays, hiddenDates: hiddenDates)
+        }.map { calendar.startOfDay(for: $0.date) })
+        return Set(days.filter { d in
+            let weekday = calendar.component(.weekday, from: d)
+            return weekday != 1 && weekday != 7 && !dayOff.contains(d)
+        })
     }
 
     /// 추천 탭과 동일한 엔진으로 추천을 만들고, 공휴일이 포함되고 연차가 필요한 일정만 남긴다.
@@ -189,17 +195,25 @@ struct CalendarView: View {
         }
     }
 
-    /// 추천을 그대로 등록한다 — 추천 탭과 같은 규칙(연차 예정, 추천 표시).
+    /// 추천을 등록한다 — 주말·공휴일을 뺀 **연차 내는 날만** 휴가로 잡는다.
     private func addLeave(from recommendation: LeaveRecommendation) {
-        let record = LeaveRecord(
-            startDate: recommendation.startDate,
-            endDate: recommendation.endDate,
-            type: .annual,
-            status: .planned,
-            note: recommendation.title,
-            isRecommended: true
-        )
-        modelContext.insert(record)
+        let years = Set([recommendation.startDate, recommendation.endDate].map { calendar.component(.year, from: $0) })
+        let rangeHolidays = years.flatMap {
+            holidayService.getHolidays(for: $0, country: profile.country,
+                                       customHolidays: customHolidays, hiddenDates: hiddenDates)
+        }
+        let records = recommendation.leaveSegments(holidays: rangeHolidays).map {
+            LeaveRecord(
+                startDate: $0.start,
+                endDate: $0.end,
+                type: .annual,
+                status: .planned,
+                note: recommendation.title,
+                isRecommended: true
+            )
+        }
+        guard !records.isEmpty else { return }
+        records.forEach { modelContext.insert($0) }
         addedRecommendationIDs.insert(recommendation.id)
 
         do {
@@ -209,7 +223,7 @@ struct CalendarView: View {
             HapticFeedback.success()
         } catch {
             addedRecommendationIDs.remove(recommendation.id)
-            modelContext.delete(record)
+            records.forEach { modelContext.delete($0) }
             HapticFeedback.error()
             showingAddError = true
         }
@@ -277,6 +291,7 @@ struct CalendarView: View {
                     if !upcomingRecommendations.isEmpty {
                         CalendarRecommendationSection(
                             recommendations: upcomingRecommendations,
+                            country: profile.country,
                             addedIDs: addedRecommendationIDs,
                             onAdd: addLeave(from:)
                         )
@@ -689,7 +704,7 @@ struct LegendView: View {
                 LegendItem(color: .yellow, text: Strings.tabRecommendations)
             }
             if showsWarning {
-                LegendItem(color: AppTheme.Colors.compensatory, text: Strings.burnoutWarningLegend)
+                LegendItem(color: AppTheme.Colors.compensatory, text: Strings.burnoutWarningLegend, dashed: true)
             }
         }
         .font(.body)
@@ -701,12 +716,20 @@ struct LegendView: View {
 struct LegendItem: View {
     let color: Color
     let text: String
+    /// 달력의 번아웃 주의 표시처럼 점선 링으로 그린다 — 범례가 점이면 링과 연결이 안 된다
+    var dashed = false
 
     var body: some View {
         HStack(spacing: 4) {
-            Circle()
-                .fill(color)
-                .frame(width: 8, height: 8)
+            if dashed {
+                Circle()
+                    .stroke(color.opacity(0.7), style: StrokeStyle(lineWidth: 1.5, dash: [3, 2]))
+                    .frame(width: 12, height: 12)
+            } else {
+                Circle()
+                    .fill(color)
+                    .frame(width: 8, height: 8)
+            }
             Text(text)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)   // 항목 안에서는 줄을 바꾸지 않는다 — 줄바꿈은 레이아웃이 항목 단위로 한다
@@ -946,6 +969,7 @@ struct SelectedDateInfo: View {
 /// 캘린더 탭의 추천 휴가 목록 — 카드는 추천 화면과 같은 것을 쓴다(모양이 갈리면 다른 기능처럼 보인다).
 struct CalendarRecommendationSection: View {
     let recommendations: [LeaveRecommendation]
+    let country: Country
     let addedIDs: Set<UUID>
     let onAdd: (LeaveRecommendation) -> Void
 
@@ -970,6 +994,7 @@ struct CalendarRecommendationSection: View {
                 let requiresPro = !proManager.isPro && index >= freeAddLimit
                 DetailedRecommendationCard(
                     recommendation: recommendation,
+                    country: country,
                     isAdded: addedIDs.contains(recommendation.id),
                     requiresPro: requiresPro,
                     onAdd: {

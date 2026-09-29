@@ -70,6 +70,21 @@ class RecommendationEngine {
         let preferredLength = findPreferredLengthOpportunities(holidays: holidays, year: year, profile: profile)
         recommendations.append(contentsOf: preferredLength)
 
+        // 4-2. 실제 달력으로 검증 — 규칙들이 "다리 놓는 날은 평일"이라고 가정해서,
+        //      중국 춘절처럼 공휴일이 이어지는 기간엔 주말·공휴일에 연차를 추천하는 일이 있었다.
+        //      연차 낼 날(주말·공휴일 제외)을 다시 세어 적힌 일수와 다르면 버린다.
+        let rangeHolidays = holidays + holidayService.getHolidays(for: year + 1, country: targetCountry)
+        recommendations = recommendations.filter { rec in
+            let leaveDays = rec.leaveSegments(holidays: rangeHolidays, calendar: calendar).reduce(0) {
+                $0 + (calendar.dateComponents([.day], from: $1.start, to: $1.end).day ?? 0) + 1
+            }
+            if Double(leaveDays) != rec.requiredLeaveDays {
+                logDebug("추천 제외(연차 일수 불일치): \(rec.title) 적힘 \(rec.requiredLeaveDays) / 실제 \(leaveDays)", category: .recommendation)
+                return false
+            }
+            return true
+        }
+
         // 5. 선호도 기반 필터링 및 점수 계산
         var scoredRecommendations = recommendations.map { recommendation in
             var scored = recommendation
@@ -456,49 +471,37 @@ class RecommendationEngine {
     }
 
     private func findMayGoldenWeek(holidays: [Holiday], year: Int) -> LeaveRecommendation? {
-        var components = DateComponents()
-        components.year = year
-        components.month = 5
-
         let mayHolidays = holidays.filter {
             calendar.component(.month, from: $0.date) == 5
         }
+        guard !mayHolidays.isEmpty,
+              var startDate = calendar.date(from: DateComponents(year: year, month: 5, day: 1)),
+              var endDate = calendar.date(from: DateComponents(year: year, month: 5, day: 5)) else { return nil }
 
-        guard !mayHolidays.isEmpty else { return nil }
-
-        components.day = 1
-        guard let may1 = calendar.date(from: components) else { return nil }
-
-        components.day = 5
-        guard let may5 = calendar.date(from: components) else { return nil }
+        // 5/1~5/5 앞뒤로 붙은 주말·공휴일까지 늘려 실제로 쉬는 구간을 만든다
+        while let prev = calendar.date(byAdding: .day, value: -1, to: startDate), isNonWorkingDay(prev, holidays: holidays) {
+            startDate = prev
+        }
+        while let next = calendar.date(byAdding: .day, value: 1, to: endDate), isNonWorkingDay(next, holidays: holidays) {
+            endDate = next
+        }
 
         var requiredLeave = 0.0
-        var currentDate = may1
-
-        while currentDate <= may5 {
-            let weekday = calendar.component(.weekday, from: currentDate)
-            let isWeekend = weekday == 1 || weekday == 7
-            let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: currentDate) }
-
-            if !isWeekend && !isHoliday {
-                requiredLeave += 1
-            }
-
+        var totalDays = 0
+        var currentDate = startDate
+        while currentDate <= endDate {
+            if !isNonWorkingDay(currentDate, holidays: holidays) { requiredLeave += 1 }
+            totalDays += 1
             currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
         }
 
-        components.day = 1
-        let startDate = calendar.date(from: components)!
-        components.day = 6
-        let endDate = calendar.date(from: components)!
-
         return LeaveRecommendation(
             title: Strings.mayGoldenWeekTitle,
-            description: Strings.mayGoldenWeekDesc(leaveDays: Int(requiredLeave)),
+            description: Strings.mayGoldenWeekDesc(leaveDays: Int(requiredLeave), totalDays: totalDays),
             startDate: startDate,
             endDate: endDate,
             requiredLeaveDays: requiredLeave,
-            totalDaysOff: 6,
+            totalDaysOff: totalDays,
             tags: [Strings.goldenWeek, Strings.monthShort(5), Strings.familyTrip],
             reason: "5월 연계"
         )
@@ -609,30 +612,29 @@ class RecommendationEngine {
 
         // Find Thanksgiving and create long weekend
         let thanksgivingHolidays = holidays.filter { h in
-            let m = calendar.component(.month, from: h.date)
-            let wd = calendar.component(.weekday, from: h.date)
-            return m == 11 && wd == 5  // Thursday in November
+            let c = calendar.dateComponents([.month, .day, .weekday], from: h.date)
+            // 11월 넷째 목요일(22~28일) — 그냥 "11월 목요일"이면 목요일에 걸린 재향군인의 날(11/11)이 잡힌다
+            return c.month == 11 && c.weekday == 5 && (22...28).contains(c.day ?? 0)
         }
 
         if let thanksgiving = thanksgivingHolidays.first {
-            // Wed before to Sun after = 5 days off with 1 leave day (Friday)
-            if let wed = calendar.date(byAdding: .day, value: -1, to: thanksgiving.date),
-               let sun = calendar.date(byAdding: .day, value: 3, to: thanksgiving.date) {
+            // Thu(추수감사절) ~ Sun = 금요일 연차 1일로 4일 연휴
+            if let sun = calendar.date(byAdding: .day, value: 3, to: thanksgiving.date) {
                 let title: String
                 let desc: String
                 switch lang {
-                case .korean: title = "추수감사절 연휴"; desc = "금요일 연차 1일로 5일 연휴!"
-                case .english: title = "Thanksgiving Break"; desc = "1 leave day (Friday) for a 5-day break!"
-                case .japanese: title = "感謝祭連休"; desc = "金曜1日の有給で5連休！"
-                case .chinese: title = "感恩节假期"; desc = "周五请1天年假获得5天假期！"
-                case .german: title = "Thanksgiving-Auszeit"; desc = "1 Urlaubstag (Freitag) für 5 freie Tage!"
-                case .french: title = "Pont de Thanksgiving"; desc = "1 jour de congé (vendredi) pour 5 jours de repos !"
+                case .korean: title = "추수감사절 연휴"; desc = "금요일 연차 1일로 4일 연휴!"
+                case .english: title = "Thanksgiving Break"; desc = "1 leave day (Friday) for a 4-day weekend!"
+                case .japanese: title = "感謝祭連休"; desc = "金曜1日の有給で4連休！"
+                case .chinese: title = "感恩节假期"; desc = "周五请1天年假获得4天假期！"
+                case .german: title = "Thanksgiving-Auszeit"; desc = "1 Urlaubstag (Freitag) für 4 freie Tage!"
+                case .french: title = "Pont de Thanksgiving"; desc = "1 jour de congé (vendredi) pour 4 jours de repos !"
                 }
 
                 opportunities.append(LeaveRecommendation(
                     title: title, description: desc,
-                    startDate: wed, endDate: sun,
-                    requiredLeaveDays: 1, totalDaysOff: 5,
+                    startDate: thanksgiving.date, endDate: sun,
+                    requiredLeaveDays: 1, totalDaysOff: 4,
                     tags: [Strings.bridgeDay, Strings.family, Strings.topEfficiency],
                     reason: "Thanksgiving"
                 ))

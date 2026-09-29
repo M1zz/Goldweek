@@ -1044,3 +1044,48 @@ final class HolidayRuleTests: XCTestCase {
         XCTAssertFalse(service.isHolidayDataReliable(for: 2027, country: .china))
     }
 }
+
+
+// MARK: - 추천 회귀 테스트 — 주말·공휴일에 연차를 추천하지 않는다
+
+final class RecommendationDayOffTests: XCTestCase {
+    func testRecommendedLeaveDaysAreAlwaysWorkdays() {
+        let cal = Calendar.current
+        for country in Country.allCases {
+            for year in [2026, 2027] {
+                let profile = UserProfile(name: "t", totalAnnualLeave: 25, country: country)
+                let recs = RecommendationEngine().generateRecommendations(
+                    for: profile, remainingLeave: 25, year: year, country: country, includePast: true)
+                let holidays = HolidayService().getHolidays(for: year, country: country)
+                    + HolidayService().getHolidays(for: year + 1, country: country)
+                for rec in recs {
+                    let days = rec.leaveSegments(holidays: holidays).reduce(0) {
+                        $0 + cal.dateComponents([.day], from: $1.start, to: $1.end).day! + 1
+                    }
+                    XCTAssertEqual(Double(days), rec.requiredLeaveDays,
+                                   "\(country) \(year) \(rec.title): 연차일 \(days) ≠ 표기 \(rec.requiredLeaveDays)")
+                }
+            }
+        }
+    }
+
+    func testThanksgivingIsFourthThursday() {
+        let profile = UserProfile(name: "t", totalAnnualLeave: 25, country: .usa)
+        let recs = RecommendationEngine().generateRecommendations(
+            for: profile, remainingLeave: 25, year: 2027, country: .usa, includePast: true)
+        for rec in recs where rec.reason == "Thanksgiving" {
+            XCTAssertEqual(Calendar.current.component(.day, from: rec.startDate), 25)   // 2027-11-25
+        }
+    }
+
+    func testLeaveSegmentsSkipWeekendsAndHolidays() {
+        let cal = Calendar.current
+        let d = { (m: Int, day: Int) in cal.date(from: DateComponents(year: 2026, month: m, day: day))! }
+        // 2026-11-25(수)~29(일), 26일 추수감사절 → 25일·27일만 연차
+        let rec = LeaveRecommendation(title: "t", description: "", startDate: d(11, 25), endDate: d(11, 29),
+                                      requiredLeaveDays: 2, totalDaysOff: 5)
+        let segs = rec.leaveSegments(holidays: [Holiday(date: d(11, 26), name: "Thanksgiving")])
+        XCTAssertEqual(segs.map { cal.component(.day, from: $0.start) }, [25, 27])
+        XCTAssertEqual(segs.map { cal.component(.day, from: $0.end) }, [25, 27])
+    }
+}
