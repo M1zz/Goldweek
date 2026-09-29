@@ -10,13 +10,16 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DEVICE="${DEVICE:-iPhone 18 Pro Max}"   # 6.9" — App Store 필수 규격 (1320×2868)
+# iPad(13") 스크린샷: DEVICE="iPad Pro 13-inch (M5)" OUT_SUFFIX=-ipad scripts/take_screenshots.sh
 BUNDLE_ID="com.Ysoup.LeaveWise"
 DERIVED="${DERIVED:-$ROOT/build/screenshots-dd}"
-OUT="$ROOT/docs/screenshots"
+OUT="$ROOT/docs/screenshots${OUT_SUFFIX:-}"
 LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr)
 
 # 탭 번호:이름 (MainTabView 의 tag)
 SHOTS=("0:home" "1:calendar" "3:settings")
+# iPad·Mac 넓은 화면은 탭 없이 캘린더+현황 한 화면이라 한 장이면 된다
+[[ "$DEVICE" == iPad* ]] && SHOTS=("0:home")
 
 apple_lang() {   # 앱 언어 코드 → 시스템 언어 코드
   case "$1" in zh) echo "zh-Hans" ;; *) echo "$1" ;; esac

@@ -11,6 +11,9 @@ import TipKit
 
 struct HomeView: View {
     @Bindable var profile: UserProfile
+    /// 넓은 화면(iPad·Mac)에서는 탭바가 없어 설정·가족 일정을 여기 상단 버튼으로 연다
+    var onOpenSettings: (() -> Void)? = nil
+    var onOpenFamily: (() -> Void)? = nil
     @Query(sort: \LeaveRecord.startDate) private var leaveRecords: [LeaveRecord]
     @Environment(\.modelContext) private var modelContext
 
@@ -250,6 +253,25 @@ struct HomeView: View {
                 .padding()
             }
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if let onOpenFamily {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: onOpenFamily) {
+                            Image(systemName: "person.2.fill")
+                        }
+                        .accessibilityLabel(Text(Strings.tabFamily))
+                    }
+                }
+                if let onOpenSettings {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: onOpenSettings) {
+                            Image(systemName: "gearshape.fill")
+                        }
+                        .accessibilityLabel(Text(Strings.tabSettings))
+                        .keyboardShortcut(",", modifiers: .command)
+                    }
+                }
+            }
             .sheet(isPresented: $showingHistory) {
                 LeaveHistoryView(yearStartMonth: profile.yearStartMonth)
             }

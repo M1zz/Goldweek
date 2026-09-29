@@ -303,6 +303,7 @@ struct ContentView: View {
 struct MainTabView: View {
     @Bindable var profile: UserProfile
     @State private var selectedTab = ScreenshotMode.initialTab
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     // 공유받은 일정이 있으면 가족 탭 표시 (@Observable — body에서 읽으면 자동 갱신)
     private var hasSharedSchedules: Bool {
@@ -310,6 +311,15 @@ struct MainTabView: View {
     }
 
     var body: some View {
+        // iPad·Mac 처럼 넓으면 탭 대신 "캘린더 + 현황 대시보드" 두 칸 화면
+        if horizontalSizeClass == .regular {
+            WideMainView(profile: profile, hasSharedSchedules: hasSharedSchedules)
+        } else {
+            compactTabs
+        }
+    }
+
+    private var compactTabs: some View {
         TabView(selection: $selectedTab) {
             HomeView(profile: profile)
                 .tabItem {
@@ -342,6 +352,57 @@ struct MainTabView: View {
                 .tag(3)
         }
         .tint(Color(red: 0.0, green: 0.4, blue: 0.9))
+    }
+}
+
+// MARK: - 넓은 화면 (iPad·Mac)
+
+/// 캘린더를 왼쪽에 크게, 오른쪽에 현황 대시보드.
+/// 아이폰 화면을 가로로 늘리면 카드가 화면 끝까지 퍼져 허전하다 — 넓은 화면에선 한눈에 달력과 현황을 같이 본다.
+struct WideMainView: View {
+    @Bindable var profile: UserProfile
+    let hasSharedSchedules: Bool
+
+    @State private var showingSettings = false
+    @State private var showingFamily = false
+
+    /// 오른쪽 대시보드 폭 — 현황 카드가 아이폰 폭과 비슷할 때 가장 읽기 좋다
+    private let dashboardWidth: CGFloat = 400
+
+    var body: some View {
+        HStack(spacing: 0) {
+            CalendarView(profile: profile)
+                .frame(minWidth: 460, maxWidth: .infinity)
+
+            Divider()
+                .ignoresSafeArea()
+
+            HomeView(
+                profile: profile,
+                onOpenSettings: { showingSettings = true },
+                onOpenFamily: hasSharedSchedules ? { showingFamily = true } : nil
+            )
+            .frame(width: dashboardWidth)
+            .background(Color(.systemGroupedBackground))
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView(profile: profile, showsCloseButton: true)
+                .frame(minWidth: 540, minHeight: 640)
+        }
+        .sheet(isPresented: $showingFamily) {
+            FamilyView(profile: profile, showsCloseButton: true)
+                .frame(minWidth: 540, minHeight: 640)
+        }
+        .onAppear(perform: applyMacWindowMinimumSize)
+    }
+
+    /// Mac 창을 너무 줄이면 두 칸이 찌그러진다 — 최소 크기를 건다
+    private func applyMacWindowMinimumSize() {
+        #if targetEnvironment(macCatalyst)
+        for case let scene as UIWindowScene in UIApplication.shared.connectedScenes {
+            scene.sizeRestrictions?.minimumSize = CGSize(width: 960, height: 680)
+        }
+        #endif
     }
 }
 

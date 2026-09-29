@@ -65,11 +65,16 @@ enum ScreenshotMode {
         // 다가오는 휴가 — 공휴일 옆 징검다리를 채워 연휴로 만든 모습
         let holidays = HolidayService().getHolidays(for: year, country: country)
             + HolidayService().getHolidays(for: year + 1, country: country)
-        var added = 0
+        var added: [(start: Date, end: Date)] = []
         for holiday in holidays where holiday.date > cal.date(byAdding: .day, value: 3, to: today)! {
-            guard added < 2, let bridge = bridgeRange(for: holiday.date, calendar: cal) else { continue }
+            guard added.count < 2, let bridge = bridgeRange(for: holiday.date, calendar: cal) else { continue }
+            // 앞서 넣은 휴가와 겹치거나 붙으면 건너뛴다 (연휴가 이어지는 주에 두 번 잡히던 문제)
+            let dayAfter = { (d: Date) in cal.date(byAdding: .day, value: 1, to: d)! }
+            if added.contains(where: { bridge.start <= dayAfter($0.end) && dayAfter(bridge.end) >= $0.start }) { continue }
+            // 연휴 사이 평일이 다른 공휴일이면 휴가로 잡지 않는다
+            if holidays.contains(where: { cal.isDate($0.date, inSameDayAs: bridge.start) || cal.isDate($0.date, inSameDayAs: bridge.end) }) { continue }
             context.insert(LeaveRecord(startDate: bridge.start, endDate: bridge.end, status: .planned))
-            added += 1
+            added.append(bridge)
         }
 
         try? context.save()

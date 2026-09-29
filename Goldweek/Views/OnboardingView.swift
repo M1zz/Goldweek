@@ -68,6 +68,8 @@ struct OnboardingView: View {
                         .padding(.bottom, 32)
                 }
             }
+            // iPad·Mac 에서 버튼·카드가 창 끝까지 늘어나지 않게 — 가운데 폰 폭 정도로 모은다
+            .frame(maxWidth: 600)
         }
         .onTapGesture {
             isNameFieldFocused = false

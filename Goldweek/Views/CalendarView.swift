@@ -426,6 +426,7 @@ struct CalendarGrid: View {
     var warningDates: Set<Date> = []
 
     private let calendar = Calendar.current
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     /// 내 방학 날 — 쉬는 날이지만 공휴일(빨강)과 구분해 남색으로 그린다
     private func isMyBreak(_ date: Date) -> Bool {
@@ -491,7 +492,7 @@ struct CalendarGrid: View {
                         .buttonStyle(.plain)
                     } else {
                         Color.clear
-                            .frame(height: 40)
+                            .frame(height: horizontalSizeClass == .regular ? 64 : 40)
                             .accessibilityHidden(true)
                     }
                 }
@@ -611,6 +612,13 @@ struct DayCell: View {
 
     private let calendar = Calendar.current
 
+    // iPad·Mac 처럼 넓으면 칸을 키운다 — 폰 크기 그대로면 넓은 화면에서 달력이 작고 허전하다
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    private var isWide: Bool { sizeClass == .regular }
+    private var cellHeight: CGFloat { isWide ? 64 : 40 }
+    private var circleSize: CGFloat { isWide ? 46 : 34 }
+    private var markOffset: CGFloat { isWide ? 22 : 14 }
+
     var dayNumber: Int {
         calendar.component(.day, from: date)
     }
@@ -637,7 +645,7 @@ struct DayCell: View {
             if isChildBreak {
                 Rectangle()
                     .fill(Color.teal.opacity(0.15))
-                    .frame(height: 36)
+                    .frame(height: cellHeight - 4)
                     .padding(.horizontal, -4)
             }
 
@@ -650,18 +658,18 @@ struct DayCell: View {
             if isSelected {
                 Circle()
                     .fill(AppTheme.Colors.brand)
-                    .frame(width: 34, height: 34)
+                    .frame(width: circleSize, height: circleSize)
             } else if isToday {
                 Circle()
                     .stroke(AppTheme.Colors.brand, lineWidth: 2)
-                    .frame(width: 34, height: 34)
+                    .frame(width: circleSize, height: circleSize)
             }
 
             // 추천: 최적 플랜이 제안하는 연차일 — 노란 배경으로 강조
             if isRecommended && !isSelected {
                 Circle()
                     .fill(Color.yellow.opacity(0.3))
-                    .frame(width: 34, height: 34)
+                    .frame(width: circleSize, height: circleSize)
             }
 
             // 번아웃 주의 구간 — 주황 점선 링으로 "구간" 강조 (배경 칠 X, 다른 표식과 겹쳐도 구분)
@@ -669,7 +677,7 @@ struct DayCell: View {
                 Circle()
                     .stroke(AppTheme.Colors.compensatory.opacity(0.7),
                             style: StrokeStyle(lineWidth: 1.5, dash: [3, 2]))
-                    .frame(width: 30, height: 30)
+                    .frame(width: circleSize - 4, height: circleSize - 4)
             }
 
             // 외톨이 공휴일은 점으로 표시
@@ -677,14 +685,14 @@ struct DayCell: View {
                 Circle()
                     .fill(AppTheme.Colors.holiday)
                     .frame(width: 6, height: 6)
-                    .offset(y: 14)
+                    .offset(y: markOffset)
             }
 
             Text("\(dayNumber)")
-                .font(.system(.body, weight: (isToday || isRecommended) ? .bold : .regular))
+                .font(.system(isWide ? .title3 : .body, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
         }
-        .frame(height: 40)
+        .frame(height: cellHeight)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Strings.accessibilityDayLabel(day: dayNumber, isToday: isToday, isHoliday: isHoliday, isLeave: isLeave, isSelected: isSelected))
         .accessibilityHint(isRecommended ? Text(Strings.recommendedSchedule) : Text(""))
@@ -709,7 +717,7 @@ struct DayCell: View {
             )
             .padding(.leading, leaveConnectsLeft ? -5 : 0)
             .padding(.trailing, leaveConnectsRight ? -5 : 0)
-            .offset(y: 14)
+            .offset(y: markOffset)
     }
 }
 

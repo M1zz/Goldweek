@@ -13,6 +13,9 @@ import LeeoKit
 
 struct SettingsView: View {
     @Bindable var profile: UserProfile
+    /// 넓은 화면에서 시트로 띄울 때 닫기 버튼을 단다 (탭으로 볼 땐 필요 없다)
+    var showsCloseButton = false
+    @Environment(\.dismiss) private var dismissSheet
     @Environment(\.modelContext) private var modelContext
     @Environment(\.requestReview) private var requestReview
     @Query private var leaveRecords: [LeaveRecord]
@@ -74,8 +77,9 @@ struct SettingsView: View {
 
     private let recommendationEngine = RecommendationEngine()
 
-    init(profile: UserProfile) {
+    init(profile: UserProfile, showsCloseButton: Bool = false) {
         self.profile = profile
+        self.showsCloseButton = showsCloseButton
         _selectedCountry = State(initialValue: profile.country)
         _selectedLanguage = State(initialValue: AppLanguage.current)
     }
@@ -833,6 +837,14 @@ struct SettingsView: View {
             .onChange(of: profile.userTypeRaw) { _, _ in persistProfile() }
             .onChange(of: profile.countryRaw) { _, _ in persistProfile() }
             .navigationTitle(Strings.navTitleSettings)
+            .toolbar {
+                if showsCloseButton {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(Strings.close) { dismissSheet() }
+                            .keyboardShortcut(.cancelAction)
+                    }
+                }
+            }
             .sheet(isPresented: $showingPreferences) {
                 PreferencesView(profile: profile)
             }

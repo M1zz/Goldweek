@@ -10,6 +10,9 @@ import SwiftUI
 
 struct FamilyView: View {
     @Bindable var profile: UserProfile
+    /// 넓은 화면에서 시트로 띄울 때 닫기 버튼
+    var showsCloseButton = false
+    @Environment(\.dismiss) private var dismissSheet
 
     private var service: ShareSyncService { .shared }
 
@@ -45,6 +48,12 @@ struct FamilyView: View {
             }
             .navigationTitle(Strings.familyNavTitle)
             .toolbar {
+                if showsCloseButton {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(Strings.close) { dismissSheet() }
+                            .keyboardShortcut(.cancelAction)
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(destination: ShareScheduleView(profile: profile)) {
                         Image(systemName: "person.2.badge.gearshape")
