@@ -62,7 +62,8 @@ final class LeaveTableParserTests: XCTestCase {
 
     func testBackfillLength_singleDaySpecialWithFractionNote() {
         // 파서 개선 전 1일로 저장된 "자녀돌봄(1/2)" → 반차(0.5)로 보정
-        let day = calendar.startOfDay(for: Date())
+        // 오늘 날짜를 쓰면 주말에 돌릴 때 차감 0일이 되어 깨진다 — 어느 나라든 평일인 날로 고정
+        let day = calendar.date(from: DateComponents(year: 2026, month: 3, day: 11))!
         let record = LeaveRecord(startDate: day, endDate: day, type: .special, note: "자녀돌봄(1/2)")
         XCTAssertEqual(record.effectiveLeaveDays, 1.0, accuracy: 0.001)
 
