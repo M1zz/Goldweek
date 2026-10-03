@@ -18,6 +18,7 @@ class LeaveManager: ObservableObject {
         from startDate: Date,
         to endDate: Date,
         holidays: [Holiday],
+        country: Country? = nil,
         excludeWeekends: Bool = true
     ) -> Double {
         let calendar = Calendar.current
@@ -25,8 +26,7 @@ class LeaveManager: ObservableObject {
         var leaveDays = 0.0
 
         while currentDate <= endDate {
-            let weekday = calendar.component(.weekday, from: currentDate)
-            let isWeekend = weekday == 1 || weekday == 7
+            let isWeekend = HolidayService.isRestWeekend(currentDate, country: country ?? DayOffCalendar.shared.country, calendar: calendar)
             let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: currentDate) }
 
             if !isWeekend || !excludeWeekends {
@@ -119,7 +119,7 @@ class LeaveManager: ObservableObject {
         }
 
         // 연차 잔여일 체크
-        let requiredDays = type == .half ? 0.5 : calculateLeaveDays(from: startDate, to: endDate, holidays: holidays)
+        let requiredDays = type == .half ? 0.5 : calculateLeaveDays(from: startDate, to: endDate, holidays: holidays, country: profile.country)
         if profile.remainingLeave < requiredDays {
             logWarning("연차 등록 실패: 잔여 연차 부족 (필요: \(requiredDays), 남음: \(profile.remainingLeave))", category: .data)
             return (false, "연차가 부족합니다. (필요: \(requiredDays)일, 남음: \(profile.remainingLeave)일)")

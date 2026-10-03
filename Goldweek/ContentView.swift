@@ -282,6 +282,7 @@ struct ContentView: View {
             availableLeaveDays: available,
             holidays: holidays,
             excludedDates: excluded,
+            makeupWorkdays: HolidayService.makeupWorkdays(for: year, country: profile.country),
             earliestDate: today
         )
 

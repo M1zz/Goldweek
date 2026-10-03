@@ -17,6 +17,8 @@ class RecommendationEngine {
     private var cacheKey: String = ""
     private var cacheTimestamp: Date?
     private let cacheValidDuration: TimeInterval = 3600 // 1시간
+    /// 지금 계산 중인 나라 — 주말 판정(중국 보충 근무일)에 쓴다
+    private var country: Country = .korea
 
     // MARK: - 추천 생성
 
@@ -29,6 +31,7 @@ class RecommendationEngine {
         existingLeaveDates: [Date] = []  // 번아웃 텀 고려용 — 이미 잡힌 휴가/휴식일
     ) -> [LeaveRecommendation] {
         let targetCountry = country ?? profile.country
+        self.country = targetCountry
         logDebug("추천 생성 시작 - 연도: \(year), 잔여연차: \(remainingLeave), 국가: \(targetCountry.rawValue), includePast: \(includePast)", category: .recommendation)
 
         // 캐시 키 생성 — includePast·기존휴가도 키에 포함 (변경 시 캐시 무효화)
@@ -77,7 +80,7 @@ class RecommendationEngine {
         //      연차 낼 날(주말·공휴일 제외)을 다시 세어 적힌 일수와 다르면 버린다.
         let rangeHolidays = holidays + dayOff.holidays(for: year + 1, country: targetCountry)
         recommendations = recommendations.filter { rec in
-            let leaveDays = rec.leaveSegments(holidays: rangeHolidays, calendar: calendar).reduce(0) {
+            let leaveDays = rec.leaveSegments(holidays: rangeHolidays, country: targetCountry, calendar: calendar).reduce(0) {
                 $0 + (calendar.dateComponents([.day], from: $1.start, to: $1.end).day ?? 0) + 1
             }
             if Double(leaveDays) != rec.requiredLeaveDays {
@@ -354,8 +357,7 @@ class RecommendationEngine {
     }
 
     private func isNonWorkingDay(_ date: Date, holidays: [Holiday]) -> Bool {
-        let weekday = calendar.component(.weekday, from: date)
-        let isWeekend = weekday == 1 || weekday == 7
+        let isWeekend = HolidayService.isRestWeekend(date, country: country, calendar: calendar)
         let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
         return isWeekend || isHoliday
     }
@@ -812,8 +814,7 @@ class RecommendationEngine {
         var currentDate = extendedStart
 
         while currentDate <= extendedEnd {
-            let weekday = calendar.component(.weekday, from: currentDate)
-            let isWeekend = weekday == 1 || weekday == 7
+            let isWeekend = HolidayService.isRestWeekend(currentDate, country: country, calendar: calendar)
             let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: currentDate) }
 
             if !isWeekend && !isHoliday {

@@ -531,6 +531,33 @@ class HolidayService {
     /// 발표된 휴무표가 있는 마지막 연도 — 이후 연도는 음력 기준 추정치다.
     static let chinaOfficialLastYear = 2026
 
+    /// 调休로 주말인데 출근하는 날(补班) (월, 일) — 같은 국무원 발표 원문. 발표된 연도만 수록한다.
+    private static let chinaMakeupWorkdays: [Int: [(month: Int, day: Int)]] = [
+        2024: [(2, 4), (2, 18), (4, 7), (4, 28), (5, 11), (9, 14), (9, 29), (10, 12)],
+        2025: [(1, 26), (2, 8), (4, 27), (9, 28), (10, 11)],
+        2026: [(1, 4), (2, 14), (2, 28), (5, 9), (9, 20), (10, 10)],
+    ]
+
+    /// 주말이지만 출근하는 날인지 (중국 调休 补班)
+    static func isMakeupWorkday(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
+        guard country == .china else { return false }
+        let c = calendar.dateComponents([.year, .month, .day], from: date)
+        guard let year = c.year, let days = chinaMakeupWorkdays[year] else { return false }
+        return days.contains { $0.month == c.month && $0.day == c.day }
+    }
+
+    /// 쉬는 주말인지 — 토·일 중 보충 근무일이 아닌 날
+    static func isRestWeekend(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
+        let weekday = calendar.component(.weekday, from: date)
+        return (weekday == 1 || weekday == 7) && !isMakeupWorkday(date, country: country, calendar: calendar)
+    }
+
+    /// 한 해의 보충 근무일 (startOfDay) — 연휴 플래너용
+    static func makeupWorkdays(for year: Int, country: Country, calendar: Calendar = .current) -> Set<Date> {
+        guard country == .china, let days = chinaMakeupWorkdays[year] else { return [] }
+        return Set(days.compactMap { calendar.date(from: DateComponents(year: year, month: $0.month, day: $0.day)) })
+    }
+
     private func getChineseHolidays(for year: Int) -> [Holiday] {
         var holidays: [Holiday] = []
         let lang = AppLanguage.current

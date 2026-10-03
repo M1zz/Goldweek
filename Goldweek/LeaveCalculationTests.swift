@@ -1218,7 +1218,7 @@ final class RecommendationDayOffTests: XCTestCase {
                 let holidays = HolidayService().getHolidays(for: year, country: country)
                     + HolidayService().getHolidays(for: year + 1, country: country)
                 for rec in recs {
-                    let days = rec.leaveSegments(holidays: holidays).reduce(0) {
+                    let days = rec.leaveSegments(holidays: holidays, country: country).reduce(0) {
                         $0 + cal.dateComponents([.day], from: $1.start, to: $1.end).day! + 1
                     }
                     XCTAssertEqual(Double(days), rec.requiredLeaveDays,
@@ -1322,5 +1322,63 @@ final class RecommendedLeaveMigrationTests: XCTestCase {
         // 직접 등록한 기간은 건드리지 않는다 (차감만 평일 기준)
         XCTAssertEqual(all.filter { !$0.isRecommended }.count, 1)
         XCTAssertEqual(manual.effectiveLeaveDays, 2)
+    }
+}
+
+// MARK: - 중국 调休: 보충 근무일(补班)은 주말이어도 출근하는 날이다
+
+final class ChinaMakeupWorkdayTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    override func setUp() {
+        DayOffCalendar.shared.update(country: .china, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+    override func tearDown() {
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    func testOfficialMakeupDays() {
+        // 국무원 발표: 2026-02-14(토)·02-28(토)·09-20(일)·10-10(토), 2025-01-26(일), 2024-02-18(일)
+        for date in [d(2026, 2, 14), d(2026, 2, 28), d(2026, 9, 20), d(2026, 10, 10), d(2025, 1, 26), d(2024, 2, 18)] {
+            XCTAssertTrue(HolidayService.isMakeupWorkday(date, country: .china), "\(date)")
+            XCTAssertFalse(HolidayService.isRestWeekend(date, country: .china), "\(date)")
+        }
+        // 다른 나라에는 없다, 보통 주말은 그대로 쉰다
+        XCTAssertFalse(HolidayService.isMakeupWorkday(d(2026, 2, 14), country: .korea))
+        XCTAssertTrue(HolidayService.isRestWeekend(d(2026, 3, 7), country: .china))
+        // 발표 전 연도는 비워 둔다
+        XCTAssertTrue(HolidayService.makeupWorkdays(for: 2027, country: .china).isEmpty)
+    }
+
+    func testMakeupDayCostsLeave() {
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 2, 14)))
+        // 2026-02-13(금)~14(토 补班) → 이틀 모두 연차
+        XCTAssertEqual(DayOffCalendar.shared.workdays(from: d(2026, 2, 13), to: d(2026, 2, 14)), 2)
+    }
+
+    func testLeaveSegmentsIncludeMakeupDay() {
+        let holidays = (15...23).map { Holiday(date: d(2026, 2, $0), name: "春节") }
+        let rec = LeaveRecommendation(title: "t", description: "", startDate: d(2026, 2, 13), endDate: d(2026, 2, 23),
+                                      requiredLeaveDays: 2, totalDaysOff: 11)
+        let china = rec.leaveSegments(holidays: holidays, country: .china)
+        XCTAssertEqual(china.map { cal.component(.day, from: $0.start) }, [13])
+        XCTAssertEqual(china.map { cal.component(.day, from: $0.end) }, [14])
+        // 한국 기준이면 토요일은 쉬는 날
+        let korea = rec.leaveSegments(holidays: holidays, country: .korea)
+        XCTAssertEqual(korea.map { cal.component(.day, from: $0.end) }, [13])
+    }
+
+    func testPlannerTreatsMakeupDayAsWorkday() {
+        // 춘절 2/15~23 앞의 2/14(토)는 补班 — 연휴에 넣으려면 그날도 연차를 써야 한다
+        let holidays = (15...23).map { d(2026, 2, $0) }
+        let plan = LeavePlanner.optimalPlan(year: 2026, availableLeaveDays: 1, holidays: holidays,
+                                            makeupWorkdays: HolidayService.makeupWorkdays(for: 2026, country: .china),
+                                            calendar: cal)
+        let feb14 = d(2026, 2, 14)
+        for brk in plan.breaks where brk.startDate <= feb14 && brk.endDate >= feb14 {
+            XCTAssertTrue(brk.leaveDates.contains { cal.isDate($0, inSameDayAs: feb14) }, "补班 날을 공짜로 쉬는 날로 셌다")
+        }
+        XCTAssertTrue(plan.breaks.contains { $0.startDate <= feb14 && $0.endDate >= feb14 })
     }
 }

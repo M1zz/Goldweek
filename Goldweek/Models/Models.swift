@@ -848,14 +848,13 @@ extension LeaveRecommendation {
     ///
     /// 추천의 startDate~endDate는 "쉬는 기간 전체"(주말·공휴일 포함)다. 그대로 등록하면
     /// 주말·공휴일까지 휴가로 잡히고, 차감 일수(달력 일수)도 그만큼 부풀어 연차가 과하게 빠진다.
-    func leaveSegments(holidays: [Holiday], calendar: Calendar = .current) -> [(start: Date, end: Date)] {
+    func leaveSegments(holidays: [Holiday], country: Country = DayOffCalendar.shared.country, calendar: Calendar = .current) -> [(start: Date, end: Date)] {
         let holidayDays = Set(holidays.map { calendar.startOfDay(for: $0.date) })
         var segments: [(start: Date, end: Date)] = []
         var d = calendar.startOfDay(for: startDate)
         let last = calendar.startOfDay(for: endDate)
         while d <= last {
-            let weekday = calendar.component(.weekday, from: d)
-            let isDayOff = weekday == 1 || weekday == 7 || holidayDays.contains(d)
+            let isDayOff = HolidayService.isRestWeekend(d, country: country, calendar: calendar) || holidayDays.contains(d)
             if !isDayOff {
                 if let prev = segments.last,
                    let next = calendar.date(byAdding: .day, value: 1, to: prev.end),

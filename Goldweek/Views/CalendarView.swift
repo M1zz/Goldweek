@@ -479,6 +479,7 @@ struct CalendarGrid: View {
                                 isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
                                 isHoliday: isHoliday(date) && !isMyBreak(date),
                                 isLeave: isLeave(date),
+                                isMakeupWorkday: HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country),
                                 isChildBreak: DayOffCalendar.shared.childBreakName(on: date) != nil,
                                 barVisible: showsRestBar(date),
                                 barColor: restBarColor(date),
@@ -518,8 +519,7 @@ struct CalendarGrid: View {
     }
 
     private func isWeekendDate(_ date: Date) -> Bool {
-        let wd = calendar.component(.weekday, from: date)
-        return wd == 1 || wd == 7
+        HolidayService.isRestWeekend(date, country: DayOffCalendar.shared.country, calendar: calendar)
     }
 
     /// 평일 쉬는 날(휴가·공휴일) — 주말 브릿지의 앵커
@@ -600,6 +600,8 @@ struct DayCell: View {
     let isSelected: Bool
     let isHoliday: Bool
     let isLeave: Bool
+    /// 중국 调休 보충 근무일 — 토·일이지만 평일처럼 그리고 '班' 표시를 단다
+    var isMakeupWorkday: Bool = false
     /// 자녀 방학 — 날짜 위쪽에 청록 선 (참고 표시라 배경은 건드리지 않는다)
     var isChildBreak: Bool = false
     var barVisible: Bool = false
@@ -631,6 +633,8 @@ struct DayCell: View {
     var textColor: Color {
         if isSelected {
             return .white
+        } else if isMakeupWorkday && !isHoliday {
+            return .primary
         } else if isHoliday || calendar.component(.weekday, from: date) == 1 {
             return AppTheme.Colors.holiday
         } else if calendar.component(.weekday, from: date) == 7 {
@@ -691,6 +695,13 @@ struct DayCell: View {
             Text("\(dayNumber)")
                 .font(.system(isWide ? .title3 : .body, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
+
+            if isMakeupWorkday && !isSelected {
+                Text(Strings.makeupWorkdayMark)
+                    .font(.system(size: isWide ? 11 : 9, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .offset(x: markOffset, y: -markOffset)
+            }
         }
         .frame(height: cellHeight)
         .accessibilityElement(children: .ignore)
@@ -889,6 +900,16 @@ struct SelectedDateInfo: View {
                         Text("(\(Strings.myBreakLabel))")
                             .foregroundStyle(.secondary)
                     }
+                }
+                .accessibilityElement(children: .combine)
+            }
+
+            if HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country) {
+                HStack {
+                    Image(systemName: "briefcase.fill")
+                        .foregroundStyle(.secondary)
+                        .voDecorative()
+                    Text(Strings.makeupWorkday)
                 }
                 .accessibilityElement(children: .combine)
             }

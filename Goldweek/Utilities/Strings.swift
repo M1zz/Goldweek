@@ -8794,6 +8794,38 @@ enum Strings {
         }
     }
 
+    /// 중국 调休 보충 근무일 — 달력 칸 구석의 한 글자 표시
+    static var makeupWorkdayMark: String {
+        switch lang {
+        case .korean: return "근무"
+        case .english: return "Work"
+        case .japanese: return "出勤"
+        case .chinese: return "班"
+        case .german: return "Arbeit"
+        case .french: return "Travail"
+        case .spanish: return "Lab."
+        case .italian: return "Lav."
+        case .portuguese: return "Trab."
+        case .chineseTraditional: return "班"
+        }
+    }
+
+    /// 중국 调休 보충 근무일 — 날짜를 골랐을 때의 설명
+    static var makeupWorkday: String {
+        switch lang {
+        case .korean: return "보충 근무일 (주말이지만 출근하는 날)"
+        case .english: return "Make-up workday (a weekend you work)"
+        case .japanese: return "振替出勤日（週末ですが出勤日です）"
+        case .chinese: return "调休上班日"
+        case .german: return "Nachholarbeitstag (Wochenende mit Arbeit)"
+        case .french: return "Jour de travail compensatoire (week-end travaillé)"
+        case .spanish: return "Día laborable de recuperación (fin de semana)"
+        case .italian: return "Giorno lavorativo di recupero (weekend)"
+        case .portuguese: return "Dia de trabalho compensatório (fim de semana)"
+        case .chineseTraditional: return "調休補班日"
+        }
+    }
+
     static var myBreakLabel: String {
         switch lang {
         case .korean: return "내 방학"

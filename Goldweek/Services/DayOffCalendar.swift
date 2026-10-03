@@ -85,8 +85,7 @@ final class DayOffCalendar {
     // MARK: - 조회
 
     func isDayOff(_ date: Date) -> Bool {
-        let weekday = calendar.component(.weekday, from: date)
-        if weekday == 1 || weekday == 7 { return true }
+        if HolidayService.isRestWeekend(date, country: country, calendar: calendar) { return true }
         let k = key(date)
         if customDays[k] != nil || breakDays[k] != nil { return true }
         return holidayKeys(for: calendar.component(.year, from: date)).contains(k)

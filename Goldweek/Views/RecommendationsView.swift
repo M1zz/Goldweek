@@ -469,7 +469,9 @@ struct HolidayInfoCard: View {
 
     /// 추천 카드와 동일한 색상 규칙: 주말(토/일) 우선 파랑 → 평일 공휴일은 빨강 → 평일
     func dayType(for date: Date) -> DayType {
-        let weekday = calendar.component(.weekday, from: date)
+        // 중국 调休 보충 근무일은 토·일이어도 평일로 칠한다
+        let weekday = HolidayService.isMakeupWorkday(date, country: country, calendar: calendar)
+            ? 0 : calendar.component(.weekday, from: date)
         if weekday == 1 { return .sunday }
         if weekday == 7 { return .saturday }
         let isHoliday = publicHolidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
@@ -747,7 +749,9 @@ struct RecommendationDatePreview: View {
     }
 
     private func getDayType(for date: Date) -> DayType {
-        let weekday = calendar.component(.weekday, from: date)
+        // 중국 调休 보충 근무일은 토·일이어도 평일로 칠한다
+        let weekday = HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country, calendar: calendar)
+            ? 0 : calendar.component(.weekday, from: date)
         let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
         let isInLeaveRange = date >= startDate && date <= endDate
 
@@ -2634,6 +2638,8 @@ struct OptimalLeavePlannerCard: View {
             }
         }
 
+        let makeupDays = HolidayService.makeupWorkdays(for: year, country: profile.country, calendar: cal)
+
         // 백그라운드 계산 (DP는 가볍지만 main 스레드 차단 방지)
         let computed = await Task.detached(priority: .userInitiated) { () -> OptimalLeavePlan in
             LeavePlanner.optimalPlan(
@@ -2641,6 +2647,7 @@ struct OptimalLeavePlannerCard: View {
                 availableLeaveDays: availableLeaveDays,
                 holidays: holidayDates,
                 excludedDates: excluded,
+                makeupWorkdays: makeupDays,
                 minBreakLength: 3,
                 earliestDate: Date(),
                 calendar: cal
