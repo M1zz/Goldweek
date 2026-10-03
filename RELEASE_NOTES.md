@@ -1,5 +1,82 @@
 # Goldweek 릴리즈 노트
 
+## 2.1.4
+
+### 앱스토어 (한국어)
+
+중국 공휴일의 주말 보충 근무일을 반영했어요
+보충 근무일은 달력에 따로 표시돼요
+중국 연휴 추천이 실제 출근일에 맞춰졌어요
+보충 근무일에 쉬면 연차가 정확히 빠져요
+
+### App Store (English)
+
+China's make-up workdays now count
+Calendar now marks make-up workdays
+China break ideas match real workdays
+Leave on those days is counted right
+
+### 앱스토어 (일본어)
+
+中国の週末の振替出勤日に対応しました
+振替出勤日はカレンダーに表示されます
+中国の連休提案が実際の出勤日に合いました
+振替出勤日に休むと有給が正しく減ります
+
+### 앱스토어 (중국어 간체)
+
+新增调休补班日，周末上班也会算进来
+日历上会标出补班日
+拼假推荐按实际上班日计算，更准确
+补班日请假，年假会正确扣除
+
+### 앱스토어 (독일어)
+
+China: Arbeitswochenenden werden erkannt
+Arbeitswochenenden im Kalender markiert
+Vorschläge für China jetzt genauer
+Urlaub an diesen Tagen korrekt gezählt
+
+### 앱스토어 (프랑스어)
+
+Week-ends travaillés en Chine gérés
+Ils sont signalés dans le calendrier
+Suggestions pour la Chine plus justes
+Congé ces jours-là bien décompté
+
+### 앱스토어 (스페인어)
+
+Incluye findes laborables de China
+Se marcan en el calendario
+Sugerencias para China más precisas
+Pedir esos días descuenta lo correcto
+
+### 앱스토어 (이탈리아어)
+
+Weekend lavorativi in Cina ora inclusi
+Sono segnati nel calendario
+Suggerimenti per la Cina più precisi
+Ferie in quei giorni conteggiate bene
+
+### 앱스토어 (포르투갈어 브라질)
+
+Fins de semana úteis na China incluídos
+Eles aparecem marcados no calendário
+Sugestões para a China mais precisas
+Folgar nesses dias desconta certo
+
+### 앱스토어 (중국어 번체)
+
+支援中國調休補班日
+行事曆會標示補班日
+中國連假推薦依實際上班日計算
+補班日請假會正確扣除特休
+
+### 개발 메모 (스토어에 올라가지 않음)
+
+중국 调休 补班(주말 출근일) 2024~2026 국무원 발표분 반영: DayOffCalendar·RecommendationEngine·LeavePlanner·leaveSegments·LeaveManager 주말 판정, 달력 '班' 표시
+릴리즈 준비: Version.xcconfig 로 버전 단일화, APPSTORE.md 10개 언어, 간체 스크린샷 폴더 zh-Hans
+
 ## 2.1.3
 
 ### 앱스토어 (한국어)
