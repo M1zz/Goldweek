@@ -735,7 +735,7 @@ struct SettingsView: View {
 
                     // 앱 공유하기
                     ShareLink(
-                        item: URL(string: "https://apps.apple.com/app/id6739899592")!,
+                        item: URL(string: "https://apps.apple.com/app/id6755983135")!,
                         subject: Text(Strings.shareSubject),
                         message: Text(Strings.shareMessage)
                     ) {

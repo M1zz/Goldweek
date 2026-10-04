@@ -41,7 +41,7 @@ enum GoldweekSpec: LeeoAppSpec {
     )
 
     /// "리뷰 남기기"가 App Store 작성 페이지로 바로 가게 한다.
-    static let appStoreID: String? = "6739899592"
+    static let appStoreID: String? = "6755983135"
 
     /// 분석 싱크 — LeeoKit 내부 이벤트(페이월 노출·구매·피드백 제출·리뷰)를
     /// 앱 정책(쓰로틀·킬스위치)을 거쳐 허브로 흘려보낸다.

@@ -111,8 +111,7 @@ final class ReviewManager: ObservableObject {
     
     /// App Store 리뷰 페이지 직접 열기 (설정에서 사용)
     func openAppStoreForReview() {
-        // Goldweek App Store ID (출시 후 실제 ID로 교체 필요)
-        let appStoreId = "6739899592" // TODO: 실제 App Store ID로 교체
+        guard let appStoreId = GoldweekSpec.appStoreID else { return }
         
         if let url = URL(string: "https://apps.apple.com/app/id\(appStoreId)?action=write-review") {
             AppLogger.shared.info("App Store 리뷰 페이지 열기", category: .app)
@@ -122,8 +121,8 @@ final class ReviewManager: ObservableObject {
     
     /// App Store 앱 페이지 열기 (공유용)
     func openAppStorePage() {
-        let appStoreId = "6739899592" // TODO: 실제 App Store ID로 교체
-        
+        guard let appStoreId = GoldweekSpec.appStoreID else { return }
+
         if let url = URL(string: "https://apps.apple.com/app/id\(appStoreId)") {
             UIApplication.shared.open(url)
         }

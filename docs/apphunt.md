@@ -63,7 +63,7 @@ Every year I'd open the calendar, count holidays on my fingers, and try to figur
 
 **Tech stack** (in case anyone's curious): SwiftUI + SwiftData + WidgetKit + CloudKit + StoreKit 2. Solo-built.
 
-App Store: https://apps.apple.com/app/id6739899592
+App Store: https://apps.apple.com/app/id6755983135
 Landing: https://m1zz.github.io/Goldweek/
 
 Happy to answer any questions in the comments — feedback very welcome 🙏
@@ -100,7 +100,7 @@ iOS 연차 관리 앱 **Goldweek**(골드위크) 만든 `[채울 부분: 본인 
 
 **스택:** SwiftUI + SwiftData + WidgetKit + CloudKit + StoreKit 2 (1인 개발).
 
-App Store: https://apps.apple.com/app/id6739899592
+App Store: https://apps.apple.com/app/id6755983135
 랜딩: https://m1zz.github.io/Goldweek/
 
 피드백 환영합니다 🙏 댓글로 질문 주시면 답변 드릴게요.
