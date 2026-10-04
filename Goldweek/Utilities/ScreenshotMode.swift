@@ -7,6 +7,7 @@
 //  scripts/take_screenshots.sh 가 언어별로 아래 인자를 붙여 실행한다.
 //    -screenshotMode YES      저장소를 비우고 언어에 맞는 데모 데이터로 채운다
 //    -screenshotTab 1         시작 탭 (0 현황 · 1 캘린더 · 3 설정)
+//    -screenshotScroll recommendations   캘린더를 추천 목록까지 내려 둔다
 //    -appLanguage de          앱 언어 (UserDefaults 인자 도메인으로 그대로 읽힌다)
 //
 
@@ -22,6 +23,20 @@ enum ScreenshotMode {
 
     static var initialTab: Int {
         isActive ? UserDefaults.standard.integer(forKey: "screenshotTab") : 0
+    }
+
+    /// 처음 화면에서 내려 둘 위치 (`-screenshotScroll recommendations`)
+    static var scrollTarget: String? {
+        isActive ? UserDefaults.standard.string(forKey: "screenshotScroll") : nil
+    }
+
+    /// 캘린더가 처음 보여 줄 달 — 추천 목록을 찍을 땐 내년 1월.
+    /// 연말엔 올해 남은 추천이 나라마다 0~3개로 들쭉날쭉해서, 언어마다 같은 화면이 나오게 맞춘다.
+    static var calendarStartMonth: Date {
+        let now = Date()
+        guard scrollTarget == "recommendations" else { return now }
+        let cal = Calendar.current
+        return cal.date(from: DateComponents(year: cal.component(.year, from: now) + 1, month: 1, day: 1)) ?? now
     }
 
     /// 저장소를 비우고 현재 앱 언어에 맞는 국가·연차·휴가 기록을 넣는다.

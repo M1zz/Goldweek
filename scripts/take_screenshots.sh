@@ -2,7 +2,8 @@
 # Goldweek App Store 스크린샷 자동 촬영 — 언어 × 탭
 #
 # DEBUG 빌드의 스크린샷 모드(Goldweek/Utilities/ScreenshotMode.swift)로 언어별 데모 데이터를 채운 뒤
-# 탭마다 시뮬레이터 화면을 캡처한다. 결과: docs/screenshots/<언어>/<번호>-<화면>.png
+# 탭마다 시뮬레이터 화면을 캡처한다. 결과: docs/screenshots/raw/<로케일>/<번호>-<화면>.png (원본 — 스토어에 안 올라감)
+# 제출본은 scripts/make_marketing_screenshots.py 가 이 원본으로 docs/screenshots/marketing/<로케일>/ 에 만든다.
 #
 # 사용법: scripts/take_screenshots.sh [언어...]   (기본: en ko ja zh de fr es it pt zh-Hant)
 
@@ -12,11 +13,11 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DEVICE="${DEVICE:-iPhone 18 Pro Max}"   # 6.9" — App Store 필수 규격 (1320×2868)
 BUNDLE_ID="com.Ysoup.LeaveWise"
 DERIVED="${DERIVED:-$ROOT/build/screenshots-dd}"
-OUT="$ROOT/docs/screenshots"
+OUT="${OUT:-$ROOT/docs/screenshots/raw}"
 LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr es it pt zh-Hant)
 
-# 탭 번호:이름 (MainTabView 의 tag)
-SHOTS=("0:home" "1:calendar" "3:settings")
+# 탭 번호:이름[:스크롤 위치] (MainTabView 의 tag, ScreenshotMode.scrollTarget)
+SHOTS=("0:home" "1:recommend:recommendations" "1:calendar" "3:settings")
 
 apple_lang() {   # 앱 언어 코드 → 시스템 언어 코드
   case "$1" in zh) echo "zh-Hans" ;; pt) echo "pt-BR" ;; *) echo "$1" ;; esac
@@ -30,8 +31,8 @@ apple_locale() {   # 앱 언어 코드 → 지역 (국가 판별이 지역을 �
   esac
 }
 
-out_dir() {   # 저장 폴더 — 기존 6개 언어는 예전 이름 그대로, 새 언어는 스토어 로케일 이름
-  case "$1" in pt) echo "pt-BR" ;; *) echo "$1" ;; esac
+out_dir() {   # 저장 폴더 = App Store 로케일 이름
+  case "$1" in zh) echo "zh-Hans" ;; pt) echo "pt-BR" ;; *) echo "$1" ;; esac
 }
 
 echo "▶ 시뮬레이터 준비: $DEVICE"
@@ -57,13 +58,13 @@ for lang in "${LANGS[@]}"; do
   loc=$(apple_locale "$lang")
   i=1
   for shot in "${SHOTS[@]}"; do
-    tab="${shot%%:*}"; name="${shot##*:}"
+    IFS=: read -r tab name scroll <<< "$shot"
     xcrun simctl terminate "$DEVICE" "$BUNDLE_ID" 2>/dev/null || true
     xcrun simctl launch "$DEVICE" "$BUNDLE_ID" \
-      -screenshotMode YES -screenshotTab "$tab" -isPro YES \
+      -screenshotMode YES -screenshotTab "$tab" -screenshotScroll "${scroll:-none}" -isPro YES \
       -appLanguage "$lang" -AppleLanguages "($sys)" -AppleLocale "$loc" >/dev/null
     sleep "${WAIT:-6}"
-    file="$dir/$i-$name.png"
+    file="$dir/0$i-$name.png"
     # 레포 경로에 한글이 있으면 pwd 가 자모 분리형(NFD)으로 돌려주는데, simctl 은 그 경로에 쓰지 못한다
     # → 임시 파일로 찍고 옮긴다
     tmp="$(mktemp -t goldweek-shot).png"

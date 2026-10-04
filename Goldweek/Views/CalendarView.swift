@@ -15,7 +15,7 @@ struct CalendarView: View {
     @Query(sort: \LeaveRecord.startDate) private var leaveRecords: [LeaveRecord]
 
     @State private var selectedDate = Date()
-    @State private var currentMonth = Date()
+    @State private var currentMonth = ScreenshotMode.calendarStartMonth
     @State private var showingAddLeave = false
     /// 선택한 날짜 카드에서 바로 고치거나 지우기
     @State private var recordToEdit: LeaveRecord?
@@ -234,6 +234,7 @@ struct CalendarView: View {
 
     var body: some View {
         NavigationStack {
+            ScrollViewReader { proxy in
             ScrollView {
                 VStack(spacing: 20) {
                     // 월 네비게이션
@@ -300,9 +301,17 @@ struct CalendarView: View {
                             addedIDs: addedRecommendationIDs,
                             onAdd: addLeave(from:)
                         )
+                        .id("recommendations")
                     }
                 }
                 .padding()
+            }
+            // 스크린샷 모드: 추천 목록이 화면 위로 오게 내려 둔다
+            .task(id: upcomingRecommendations.count) {
+                guard ScreenshotMode.scrollTarget == "recommendations", !upcomingRecommendations.isEmpty else { return }
+                try? await Task.sleep(for: .milliseconds(300))
+                proxy.scrollTo("recommendations", anchor: .top)
+            }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .navigationBar)
