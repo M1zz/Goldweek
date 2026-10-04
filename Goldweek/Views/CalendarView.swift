@@ -14,7 +14,7 @@ struct CalendarView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \LeaveRecord.startDate) private var leaveRecords: [LeaveRecord]
 
-    @State private var selectedDate = Date()
+    @State private var selectedDate = ScreenshotMode.calendarStartMonth
     @State private var currentMonth = ScreenshotMode.calendarStartMonth
     @State private var showingAddLeave = false
     /// 선택한 날짜 카드에서 바로 고치거나 지우기
@@ -244,7 +244,9 @@ struct CalendarView: View {
                     TipView(AppTips.calendarTap)
 
                     // 공휴일 데이터 신뢰 범위를 벗어난 연도 안내
-                    if !holidayService.isHolidayDataReliable(for: calendar.component(.year, from: currentMonth), country: profile.country) {
+                    // (스크린샷 모드는 일부러 내년을 띄우므로 빼 둔다)
+                    if !ScreenshotMode.isActive,
+                       !holidayService.isHolidayDataReliable(for: calendar.component(.year, from: currentMonth), country: profile.country) {
                         HolidayDataNoticeBanner(year: calendar.component(.year, from: currentMonth))
                     }
 

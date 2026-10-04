@@ -17,7 +17,7 @@ OUT="${OUT:-$ROOT/docs/screenshots/raw}"
 LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr es it pt zh-Hant)
 
 # 탭 번호:이름[:스크롤 위치] (MainTabView 의 tag, ScreenshotMode.scrollTarget)
-SHOTS=("0:home" "1:recommend:recommendations" "1:calendar" "3:settings")
+SHOTS=("0:home" "1:recommend:recommendations" "1:calendar:nextYear" "3:settings")
 
 apple_lang() {   # 앱 언어 코드 → 시스템 언어 코드
   case "$1" in zh) echo "zh-Hans" ;; pt) echo "pt-BR" ;; *) echo "$1" ;; esac

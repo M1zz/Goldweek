@@ -8,6 +8,7 @@
 //    -screenshotMode YES      저장소를 비우고 언어에 맞는 데모 데이터로 채운다
 //    -screenshotTab 1         시작 탭 (0 현황 · 1 캘린더 · 3 설정)
 //    -screenshotScroll recommendations   캘린더를 추천 목록까지 내려 둔다
+//    -screenshotScroll nextYear          캘린더를 내년 1월로 연다
 //    -appLanguage de          앱 언어 (UserDefaults 인자 도메인으로 그대로 읽힌다)
 //
 
@@ -30,11 +31,11 @@ enum ScreenshotMode {
         isActive ? UserDefaults.standard.string(forKey: "screenshotScroll") : nil
     }
 
-    /// 캘린더가 처음 보여 줄 달 — 추천 목록을 찍을 땐 내년 1월.
+    /// 캘린더가 처음 보여 주고 골라 둘 날 — 캘린더를 찍을 땐(`recommendations`·`nextYear`) 내년 1월 1일.
     /// 연말엔 올해 남은 추천이 나라마다 0~3개로 들쭉날쭉해서, 언어마다 같은 화면이 나오게 맞춘다.
     static var calendarStartMonth: Date {
         let now = Date()
-        guard scrollTarget == "recommendations" else { return now }
+        guard scrollTarget == "recommendations" || scrollTarget == "nextYear" else { return now }
         let cal = Calendar.current
         return cal.date(from: DateComponents(year: cal.component(.year, from: now) + 1, month: 1, day: 1)) ?? now
     }
