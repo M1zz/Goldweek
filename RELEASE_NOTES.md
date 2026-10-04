@@ -1,5 +1,71 @@
 # Goldweek 릴리즈 노트
 
+## 2.1.5
+
+### 앱스토어 (한국어)
+
+앱 공유하기 링크가 제대로 열려요
+리뷰 쓰기를 누르면 앱스토어로 바로 가요
+설정 속 앱스토어 링크를 모두 바로잡았어요
+
+### App Store (English)
+
+Sharing the app now opens the right page
+Write a Review takes you straight there
+All App Store links in Settings fixed
+
+### 앱스토어 (일본어)
+
+アプリを共有するリンクが正しく開きます
+レビューを書くとApp Storeにすぐ移動します
+設定内のApp Storeリンクを修正しました
+
+### 앱스토어 (중국어 간체)
+
+分享 App 的链接现在能正常打开了
+点击写评论会直接跳转到 App Store
+修正了设置中所有 App Store 链接
+
+### 앱스토어 (독일어)
+
+Teilen-Link öffnet die richtige Seite
+Bewerten führt direkt in den App Store
+Alle App-Store-Links korrigiert
+
+### 앱스토어 (프랑스어)
+
+Le lien de partage s'ouvre enfin bien
+Noter l'app mène droit à l'App Store
+Liens App Store des réglages corrigés
+
+### 앱스토어 (스페인어)
+
+El enlace para compartir ya funciona
+Valorar la app abre la App Store
+Enlaces a la App Store corregidos
+
+### 앱스토어 (이탈리아어)
+
+Il link di condivisione ora funziona
+Recensire l'app apre l'App Store
+Link all'App Store corretti
+
+### 앱스토어 (포르투갈어 브라질)
+
+O link de compartilhar já funciona
+Avaliar o app abre a App Store
+Links da App Store corrigidos
+
+### 앱스토어 (중국어 번체)
+
+分享 App 的連結現在能正常開啟
+點選撰寫評論會直接前往 App Store
+修正設定中所有 App Store 連結
+
+### 개발 메모 (스토어에 올라가지 않음)
+
+App Store ID 6739899592(404) → 6755983135: SettingsView 공유 링크, ReviewManager 리뷰·공유, GoldweekSpec.appStoreID, README·docs
+
 ## 2.1.4
 
 ### 앱스토어 (한국어)
