@@ -254,6 +254,8 @@ struct SettingsView: View {
                 } footer: {
                     if !selectedCountry.holidayRegions.isEmpty {
                         Text(Strings.holidayRegionFooter(selectedCountry))
+                    } else if selectedCountry == .custom {
+                        Text(Strings.customCountryBuiltInInfo)
                     }
                 }
 

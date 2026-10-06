@@ -9790,18 +9790,17 @@ enum Strings {
 
     /// `region`: 기기 지역 이름(예: 오스트리아), `country`: 지금 대신 보여 주는 나라
     static func unsupportedCountryMessage(region: String, country: String) -> String {
-        let path = "\(navTitleSettings) ▸ \(holidayMgmtTitle)"
         switch lang {
-        case .korean: return "\(region)의 공휴일은 아직 없어서 지금은 \(country) 공휴일을 보여 드리고 있어요. 가까운 나라로 바꾸거나, \(path)에서 공휴일을 직접 추가할 수 있어요."
-        case .english: return "We don't have holidays for \(region) yet, so you're seeing \(country) holidays. Switch to a closer country, or add your holidays in \(path)."
-        case .japanese: return "\(region)の祝日にはまだ対応していないため、\(country)の祝日を表示しています。近い国に変更するか、\(path)で祝日を追加できます。"
-        case .chinese: return "暂不支持\(region)的假日，目前显示的是\(country)的假日。你可以改成相近的国家，或在“\(path)”中自行添加。"
-        case .german: return "Für \(region) gibt es noch keine Feiertage, daher siehst du die Feiertage von \(country). Wähle ein näheres Land oder füge deine Feiertage unter \(path) hinzu."
-        case .french: return "Les jours fériés de ce pays (\(region)) ne sont pas encore disponibles : vous voyez ceux de \(country). Choisissez un pays plus proche ou ajoutez vos jours fériés dans \(path)."
-        case .spanish: return "Aún no tenemos los festivos de \(region), así que ves los de \(country). Cambia a un país más cercano o añade tus festivos en \(path)."
-        case .italian: return "Non abbiamo ancora le festività per \(region), quindi vedi quelle di \(country). Passa a un paese più vicino o aggiungi le tue festività in \(path)."
-        case .portuguese: return "Ainda não temos os feriados de \(region), então você está vendo os de \(country). Troque para um país mais próximo ou adicione seus feriados em \(path)."
-        case .chineseTraditional: return "目前還沒有\(region)的假日，所以顯示的是\(country)的假日。你可以改成相近的國家，或到「\(path)」自行新增。"
+        case .korean: return "\(region)의 공휴일은 아직 없어서 지금은 \(country) 공휴일을 보여 드리고 있어요. 가까운 나라로 바꾸거나, 공휴일을 직접 입력할 수 있어요."
+        case .english: return "We don't have holidays for \(region) yet, so you're seeing \(country) holidays. Switch to a closer country, or enter your own holidays."
+        case .japanese: return "\(region)の祝日にはまだ対応していないため、\(country)の祝日を表示しています。近い国に変更するか、祝日を自分で入力できます。"
+        case .chinese: return "暂不支持\(region)的假日，目前显示的是\(country)的假日。你可以改成相近的国家，或自己输入假日。"
+        case .german: return "Für \(region) gibt es noch keine Feiertage, daher siehst du die Feiertage von \(country). Wähle ein näheres Land oder gib deine eigenen Feiertage ein."
+        case .french: return "Les jours fériés de ce pays (\(region)) ne sont pas encore disponibles : vous voyez ceux de \(country). Choisissez un pays plus proche ou saisissez vos propres jours fériés."
+        case .spanish: return "Aún no tenemos los festivos de \(region), así que ves los de \(country). Cambia a un país más cercano o introduce tus propios festivos."
+        case .italian: return "Non abbiamo ancora le festività per \(region), quindi vedi quelle di \(country). Passa a un paese più vicino o inserisci le tue festività."
+        case .portuguese: return "Ainda não temos os feriados de \(region), então você está vendo os de \(country). Troque para um país mais próximo ou insira seus próprios feriados."
+        case .chineseTraditional: return "目前還沒有\(region)的假日，所以顯示的是\(country)的假日。你可以改成相近的國家，或自行輸入假日。"
         }
     }
 
@@ -9820,30 +9819,158 @@ enum Strings {
         }
     }
 
+    /// 지원하지 않는 나라 안내 카드 — 나라를 '직접 입력'으로 바꾸고 공휴일 관리로 간다
+    static var customHolidayModeButton: String {
+        switch lang {
+        case .korean: return "공휴일 직접 입력하기"
+        case .english: return "Enter My Own Holidays"
+        case .japanese: return "祝日を自分で入力"
+        case .chinese: return "自己输入假日"
+        case .german: return "Eigene Feiertage eingeben"
+        case .french: return "Saisir mes jours fériés"
+        case .spanish: return "Introducir mis festivos"
+        case .italian: return "Inserisci le mie festività"
+        case .portuguese: return "Inserir meus feriados"
+        case .chineseTraditional: return "自行輸入假日"
+        }
+    }
+
+    /// 직접 입력 모드인데 공휴일이 하나도 없을 때
+    static var customHolidayNoticeTitle: String {
+        switch lang {
+        case .korean: return "공휴일을 추가해 주세요"
+        case .english: return "Add Your Holidays"
+        case .japanese: return "祝日を追加してください"
+        case .chinese: return "请添加你的假日"
+        case .german: return "Füge deine Feiertage hinzu"
+        case .french: return "Ajoutez vos jours fériés"
+        case .spanish: return "Añade tus festivos"
+        case .italian: return "Aggiungi le tue festività"
+        case .portuguese: return "Adicione seus feriados"
+        case .chineseTraditional: return "請新增你的假日"
+        }
+    }
+
+    /// 직접 입력 모드 안내 본문
+    static var customHolidayNoticeMessage: String {
+        switch lang {
+        case .korean: return "직접 입력 모드에는 기본 공휴일이 없어요. 공휴일을 추가하면 달력, 연차 계산, 추천에 반영돼요."
+        case .english: return "Custom mode has no built-in holidays. Holidays you add are used in the calendar, leave counts and recommendations."
+        case .japanese: return "手動入力モードには既定の祝日がありません。追加した祝日はカレンダー、休暇日数の計算、おすすめに反映されます。"
+        case .chinese: return "自定义模式没有内置假日。你添加的假日会用于日历、年假计算和推荐。"
+        case .german: return "Im eigenen Modus gibt es keine vorgegebenen Feiertage. Hinzugefügte Feiertage zählen im Kalender, bei den Urlaubstagen und in den Empfehlungen."
+        case .french: return "Le mode personnalisé n'a aucun jour férié prédéfini. Ceux que vous ajoutez sont pris en compte dans le calendrier, le décompte des congés et les recommandations."
+        case .spanish: return "El modo personalizado no incluye festivos. Los que añadas se usan en el calendario, el cómputo de vacaciones y las recomendaciones."
+        case .italian: return "La modalità personalizzata non ha festività predefinite. Quelle che aggiungi valgono per calendario, conteggio ferie e suggerimenti."
+        case .portuguese: return "O modo personalizado não tem feriados embutidos. Os que você adicionar entram no calendário, na contagem de folgas e nas sugestões."
+        case .chineseTraditional: return "自訂模式沒有內建假日。你新增的假日會用於行事曆、特休計算和推薦。"
+        }
+    }
+
+    /// 직접 입력 안내 카드 버튼
+    static var customHolidayNoticeButton: String {
+        switch lang {
+        case .korean: return "공휴일 추가하기"
+        case .english: return "Add Holidays"
+        case .japanese: return "祝日を追加"
+        case .chinese: return "添加假日"
+        case .german: return "Feiertage hinzufügen"
+        case .french: return "Ajouter des jours fériés"
+        case .spanish: return "Añadir festivos"
+        case .italian: return "Aggiungi festività"
+        case .portuguese: return "Adicionar feriados"
+        case .chineseTraditional: return "新增假日"
+        }
+    }
+
+    /// 공휴일 관리 — 직접 입력 모드에서 기본 공휴일 자리
+    static var customCountryBuiltInInfo: String {
+        switch lang {
+        case .korean: return "직접 입력 모드라 기본 공휴일이 없어요. 아래 내 공휴일에 공휴일을 추가해 주세요."
+        case .english: return "You're in custom mode, so there are no built-in holidays. Add your holidays under My Holidays below."
+        case .japanese: return "手動入力モードのため既定の祝日はありません。下の「マイ祝日」に追加してください。"
+        case .chinese: return "当前为自定义模式，没有内置假日。请在下方“我的假日”中添加。"
+        case .german: return "Im eigenen Modus gibt es keine vorgegebenen Feiertage. Füge sie unten unter Meine Feiertage hinzu."
+        case .french: return "En mode personnalisé, il n'y a aucun jour férié prédéfini. Ajoutez-les ci-dessous dans Mes jours fériés."
+        case .spanish: return "En modo personalizado no hay festivos predefinidos. Añádelos abajo en Mis festivos."
+        case .italian: return "In modalità personalizzata non ci sono festività predefinite. Aggiungile qui sotto in Le mie festività."
+        case .portuguese: return "No modo personalizado não há feriados embutidos. Adicione-os abaixo em Meus feriados."
+        case .chineseTraditional: return "目前為自訂模式，沒有內建假日。請在下方「我的假日」新增。"
+        }
+    }
+
+    /// 공휴일 추가 — 매년 반복 토글
+    static var holidayRepeatYearly: String {
+        switch lang {
+        case .korean: return "매년 반복"
+        case .english: return "Repeat Every Year"
+        case .japanese: return "毎年繰り返す"
+        case .chinese: return "每年重复"
+        case .german: return "Jedes Jahr wiederholen"
+        case .french: return "Répéter chaque année"
+        case .spanish: return "Repetir cada año"
+        case .italian: return "Ripeti ogni anno"
+        case .portuguese: return "Repetir todo ano"
+        case .chineseTraditional: return "每年重複"
+        }
+    }
+
+    /// 공휴일 추가 — 매년 반복 설명
+    static var holidayRepeatYearlyFooter: String {
+        switch lang {
+        case .korean: return "날짜가 고정된 공휴일은 켜 두면 해마다 다시 넣지 않아도 돼요. 부활절처럼 날짜가 바뀌는 공휴일은 끄고 해마다 넣어 주세요."
+        case .english: return "Turn this on for holidays on a fixed date so you don't have to add them every year. For holidays that move, like Easter, leave it off and add them each year."
+        case .japanese: return "日付が固定の祝日はオンにすると毎年追加する必要がありません。イースターのように日付が変わる祝日はオフにして毎年追加してください。"
+        case .chinese: return "日期固定的假日开启后无需每年重新添加。像复活节这样日期会变的假日，请关闭并每年添加。"
+        case .german: return "Für Feiertage mit festem Datum einschalten, dann musst du sie nicht jedes Jahr neu eintragen. Bewegliche Feiertage wie Ostern bitte ausgeschaltet lassen und jährlich eintragen."
+        case .french: return "Activez-le pour les jours fériés à date fixe afin de ne pas les ajouter chaque année. Pour les fêtes mobiles comme Pâques, laissez-le désactivé et ajoutez-les chaque année."
+        case .spanish: return "Actívalo para festivos de fecha fija y no tendrás que añadirlos cada año. Para festivos móviles como Semana Santa, déjalo desactivado y añádelos cada año."
+        case .italian: return "Attivalo per le festività a data fissa, così non dovrai aggiungerle ogni anno. Per quelle mobili come Pasqua, lascialo disattivato e aggiungile ogni anno."
+        case .portuguese: return "Ative para feriados de data fixa e não precisará adicioná-los todo ano. Para feriados móveis, como a Páscoa, deixe desativado e adicione-os a cada ano."
+        case .chineseTraditional: return "日期固定的假日開啟後就不必每年重新新增。像復活節這種日期會變動的假日，請關閉並每年新增。"
+        }
+    }
+
+    /// 내 공휴일 행 — 매년 반복 표시
+    static var holidayEveryYear: String {
+        switch lang {
+        case .korean: return "매년"
+        case .english: return "Every year"
+        case .japanese: return "毎年"
+        case .chinese: return "每年"
+        case .german: return "Jährlich"
+        case .french: return "Chaque année"
+        case .spanish: return "Cada año"
+        case .italian: return "Ogni anno"
+        case .portuguese: return "Todo ano"
+        case .chineseTraditional: return "每年"
+        }
+    }
+
     /// 나라 이름 — 표의 순서는 `Country.allCases` 순서와 같다
     static func countryDisplayName(_ country: Country) -> String {
         let names: [String]
         switch lang {
         case .korean:
-            names = ["한국", "일본", "중국", "미국", "독일", "프랑스", "영국", "캐나다", "호주", "스페인", "이탈리아", "브라질", "대만", "홍콩"]
+            names = ["한국", "일본", "중국", "미국", "독일", "프랑스", "영국", "캐나다", "호주", "스페인", "이탈리아", "브라질", "대만", "홍콩", "기타 (직접 입력)"]
         case .english:
-            names = ["Korea", "Japan", "China", "USA", "Germany", "France", "United Kingdom", "Canada", "Australia", "Spain", "Italy", "Brazil", "Taiwan", "Hong Kong"]
+            names = ["Korea", "Japan", "China", "USA", "Germany", "France", "United Kingdom", "Canada", "Australia", "Spain", "Italy", "Brazil", "Taiwan", "Hong Kong", "Other (Custom)"]
         case .japanese:
-            names = ["韓国", "日本", "中国", "アメリカ", "ドイツ", "フランス", "イギリス", "カナダ", "オーストラリア", "スペイン", "イタリア", "ブラジル", "台湾", "香港"]
+            names = ["韓国", "日本", "中国", "アメリカ", "ドイツ", "フランス", "イギリス", "カナダ", "オーストラリア", "スペイン", "イタリア", "ブラジル", "台湾", "香港", "その他（手動入力）"]
         case .chinese:
-            names = ["韩国", "日本", "中国", "美国", "德国", "法国", "英国", "加拿大", "澳大利亚", "西班牙", "意大利", "巴西", "中国台湾", "中国香港"]
+            names = ["韩国", "日本", "中国", "美国", "德国", "法国", "英国", "加拿大", "澳大利亚", "西班牙", "意大利", "巴西", "中国台湾", "中国香港", "其他（自定义）"]
         case .german:
-            names = ["Südkorea", "Japan", "China", "USA", "Deutschland", "Frankreich", "Vereinigtes Königreich", "Kanada", "Australien", "Spanien", "Italien", "Brasilien", "Taiwan", "Hongkong"]
+            names = ["Südkorea", "Japan", "China", "USA", "Deutschland", "Frankreich", "Vereinigtes Königreich", "Kanada", "Australien", "Spanien", "Italien", "Brasilien", "Taiwan", "Hongkong", "Andere (eigene)"]
         case .french:
-            names = ["Corée du Sud", "Japon", "Chine", "États-Unis", "Allemagne", "France", "Royaume-Uni", "Canada", "Australie", "Espagne", "Italie", "Brésil", "Taïwan", "Hong Kong"]
+            names = ["Corée du Sud", "Japon", "Chine", "États-Unis", "Allemagne", "France", "Royaume-Uni", "Canada", "Australie", "Espagne", "Italie", "Brésil", "Taïwan", "Hong Kong", "Autre (personnalisé)"]
         case .spanish:
-            names = ["Corea del Sur", "Japón", "China", "Estados Unidos", "Alemania", "Francia", "Reino Unido", "Canadá", "Australia", "España", "Italia", "Brasil", "Taiwán", "Hong Kong"]
+            names = ["Corea del Sur", "Japón", "China", "Estados Unidos", "Alemania", "Francia", "Reino Unido", "Canadá", "Australia", "España", "Italia", "Brasil", "Taiwán", "Hong Kong", "Otro (personalizado)"]
         case .italian:
-            names = ["Corea del Sud", "Giappone", "Cina", "Stati Uniti", "Germania", "Francia", "Regno Unito", "Canada", "Australia", "Spagna", "Italia", "Brasile", "Taiwan", "Hong Kong"]
+            names = ["Corea del Sud", "Giappone", "Cina", "Stati Uniti", "Germania", "Francia", "Regno Unito", "Canada", "Australia", "Spagna", "Italia", "Brasile", "Taiwan", "Hong Kong", "Altro (personalizzato)"]
         case .portuguese:
-            names = ["Coreia do Sul", "Japão", "China", "Estados Unidos", "Alemanha", "França", "Reino Unido", "Canadá", "Austrália", "Espanha", "Itália", "Brasil", "Taiwan", "Hong Kong"]
+            names = ["Coreia do Sul", "Japão", "China", "Estados Unidos", "Alemanha", "França", "Reino Unido", "Canadá", "Austrália", "Espanha", "Itália", "Brasil", "Taiwan", "Hong Kong", "Outro (personalizado)"]
         case .chineseTraditional:
-            names = ["韓國", "日本", "中國", "美國", "德國", "法國", "英國", "加拿大", "澳洲", "西班牙", "義大利", "巴西", "臺灣", "香港"]
+            names = ["韓國", "日本", "中國", "美國", "德國", "法國", "英國", "加拿大", "澳洲", "西班牙", "義大利", "巴西", "臺灣", "香港", "其他（自訂）"]
         }
         let index = Country.allCases.firstIndex(of: country) ?? 0
         return names[index]

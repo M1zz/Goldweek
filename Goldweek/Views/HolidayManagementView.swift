@@ -56,8 +56,11 @@ struct HolidayManagementView: View {
         holidayService.getHolidays(for: selectedYear, country: country)
     }
 
-    private var customHolidaysThisYear: [CustomHoliday] {
-        customHolidays.filter { calendar.component(.year, from: $0.date) == selectedYear }
+    /// 선택한 연도에 오는 내 공휴일과 그해 날짜 (매년 반복 포함)
+    private var customHolidaysThisYear: [(holiday: CustomHoliday, date: Date)] {
+        customHolidays
+            .compactMap { h in h.occurrence(in: selectedYear, calendar: calendar).map { (h, $0) } }
+            .sorted { $0.date < $1.date }
     }
 
     /// 선택한 연도에 걸친 방학 (겨울방학처럼 해를 넘기는 것도 포함)
@@ -107,8 +110,8 @@ struct HolidayManagementView: View {
         .navigationTitle(Strings.holidayMgmtTitle)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingAddSheet) {
-            AddCustomHolidaySheet(defaultYear: selectedYear) { date, name in
-                let holiday = CustomHoliday(date: date, name: name)
+            AddCustomHolidaySheet(defaultYear: selectedYear, defaultRepeats: country == .custom) { date, name, repeats in
+                let holiday = CustomHoliday(date: date, name: name, repeatsYearly: repeats)
                 modelContext.insert(holiday)
                 do {
                     try modelContext.save()
@@ -300,6 +303,20 @@ struct HolidayManagementView: View {
 
             // 항목 목록
             VStack(spacing: 0) {
+                if country == .custom {
+                    HStack(spacing: 10) {
+                        Image(systemName: "globe")
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+                            .voDecorative()
+                        Text(Strings.customCountryBuiltInInfo)
+                            .foregroundStyle(.secondary)
+                            .font(.body)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                }
                 ForEach(builtInHolidays, id: \.date) { holiday in
                     BuiltInHolidayRow(
                         holiday: holiday,
@@ -313,11 +330,13 @@ struct HolidayManagementView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal)
 
-            Text(Strings.holidayDefaultFooter)
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .padding(.horizontal)
-                .padding(.top, 6)
+            if country != .custom {
+                Text(Strings.holidayDefaultFooter)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal)
+                    .padding(.top, 6)
+            }
         }
     }
 
@@ -361,15 +380,16 @@ struct HolidayManagementView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                 } else {
-                    ForEach(customHolidaysThisYear) { holiday in
+                    ForEach(customHolidaysThisYear, id: \.holiday.id) { item in
                         CustomHolidayRow(
-                            holiday: holiday,
+                            holiday: item.holiday,
+                            date: item.date,
                             onDelete: {
-                                holidayToDelete = holiday
+                                holidayToDelete = item.holiday
                                 showingDeleteAlert = true
                             }
                         )
-                        if holiday.id != customHolidaysThisYear.last?.id {
+                        if item.holiday.id != customHolidaysThisYear.last?.holiday.id {
                             Divider().padding(.leading, 60)
                         }
                     }
@@ -440,16 +460,18 @@ private struct BuiltInHolidayRow: View {
 // MARK: - 커스텀 공휴일 행
 private struct CustomHolidayRow: View {
     let holiday: CustomHoliday
+    /// 보고 있는 해의 날짜 — 매년 반복이면 처음 넣은 날과 다르다
+    let date: Date
     let onDelete: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
             HStack(spacing: 12) {
                 VStack(alignment: .center, spacing: 1) {
-                    Text(holiday.date, format: .dateTime.month(.abbreviated))
+                    Text(date, format: .dateTime.month(.abbreviated))
                         .font(.body)
                         .foregroundStyle(.secondary)
-                    Text(holiday.date, format: .dateTime.day())
+                    Text(date, format: .dateTime.day())
                         .font(.headline)
                         .foregroundStyle(.purple)
                 }
@@ -459,10 +481,10 @@ private struct CustomHolidayRow: View {
                     Text(holiday.name)
                         .font(.body)
                     HStack(spacing: 4) {
-                        Image(systemName: "person.fill")
+                        Image(systemName: holiday.repeatsYearly ? "repeat" : "person.fill")
                             .font(.body)
                             .voDecorative()
-                        Text(Strings.holidayAddedByMe)
+                        Text(holiday.repeatsYearly ? Strings.holidayEveryYear : Strings.holidayAddedByMe)
                             .font(.body)
                     }
                     .foregroundStyle(.purple)
@@ -626,15 +648,17 @@ struct SchoolBreakEditSheet: View {
 // MARK: - 커스텀 공휴일 추가 시트
 struct AddCustomHolidaySheet: View {
     let defaultYear: Int
-    let onSave: (Date, String) -> Void
+    let onSave: (Date, String, Bool) -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var date: Date
     @State private var name = ""
+    @State private var repeatsYearly: Bool
 
-    init(defaultYear: Int, onSave: @escaping (Date, String) -> Void) {
+    init(defaultYear: Int, defaultRepeats: Bool = false, onSave: @escaping (Date, String, Bool) -> Void) {
         self.defaultYear = defaultYear
         self.onSave = onSave
+        _repeatsYearly = State(initialValue: defaultRepeats)
         var comps = DateComponents()
         comps.year = defaultYear; comps.month = 1; comps.day = 1
         _date = State(initialValue: Calendar.current.date(from: comps) ?? Date())
@@ -651,6 +675,12 @@ struct AddCustomHolidaySheet: View {
                     TextField(Strings.holidayNamePlaceholder, text: $name)
                         .submitLabel(.done)
                 }
+                Section {
+                    Toggle(Strings.holidayRepeatYearly, isOn: $repeatsYearly)
+                } footer: {
+                    Text(Strings.holidayRepeatYearlyFooter)
+                        .font(.body)
+                }
             }
             .navigationTitle(Strings.holidayAddTitle)
             .navigationBarTitleDisplayMode(.inline)
@@ -662,7 +692,7 @@ struct AddCustomHolidaySheet: View {
                     Button(Strings.commonAdd) {
                         let trimmed = name.trimmingCharacters(in: .whitespaces)
                         guard !trimmed.isEmpty else { return }
-                        onSave(date, trimmed)
+                        onSave(date, trimmed, repeatsYearly)
                         dismiss()
                     }
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)

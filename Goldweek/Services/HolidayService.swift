@@ -19,6 +19,7 @@ class HolidayService {
     func isHolidayDataReliable(for year: Int, country: Country = .korea) -> Bool {
         // 중국은 调休(주말 대체 근무) 때문에 정부 발표 전에는 실제 휴무일을 알 수 없다
         if country == .china { return year <= Self.chinaOfficialLastYear }
+        if country == .custom { return true }   // 기본 공휴일이 없으니 틀릴 것도 없다
         return year <= Self.reliableDataLastYear
     }
 
@@ -91,6 +92,8 @@ class HolidayService {
                 result = getTaiwanHolidays(for: year)
             case .hongKong:
                 result = getHongKongHolidays(for: year)
+            case .custom:
+                result = []   // 전부 사용자가 직접 넣는다
             }
             baseHolidaysCache[baseKey] = result
         }
@@ -100,11 +103,10 @@ class HolidayService {
             result = result.filter { !hiddenDates.contains(dateKey($0.date)) }
         }
         if !customHolidays.isEmpty {
-            let yearCustom = customHolidays.filter {
-                calendar.component(.year, from: $0.date) == year
-            }
-            result.append(contentsOf: yearCustom.map {
-                Holiday(date: $0.date, name: $0.name, isCustom: true)
+            result.append(contentsOf: customHolidays.compactMap { custom in
+                custom.occurrence(in: year, calendar: calendar).map {
+                    Holiday(date: $0, name: custom.name, isCustom: true)
+                }
             })
             result.sort { $0.date < $1.date }
         }

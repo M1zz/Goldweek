@@ -182,6 +182,7 @@ struct ContentView: View {
             hasher.combine(holiday.id)
             hasher.combine(holiday.date)
             hasher.combine(holiday.name)
+            hasher.combine(holiday.repeatsYearly)
         }
         return hasher.finalize()
     }
@@ -210,7 +211,7 @@ struct ContentView: View {
     /// 쉬는 날 판정 입력값 요약 — 바뀌면 DayOffCalendar 를 다시 채운다
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
-        let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)" }.sorted()
+        let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
         return "\(profile.countryRaw)|\(profile.holidayRegionRaw)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
     }
 

@@ -1342,6 +1342,7 @@ struct MyRealTripPromoCard: View {
         case .brazil: return "GRU"  // 상파울루
         case .taiwan: return "TPE"  // 타오위안
         case .hongKong: return "HKG"
+        case .custom: return "ICN"   // 출발지를 알 수 없다 — 기본값
         }
     }
 

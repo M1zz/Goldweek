@@ -23,6 +23,7 @@ struct HomeView: View {
     @State private var showingPastLeaveEntry = false
     @State private var showingFatigueCheckIn = false
     @State private var showingAddLeave = false
+    @State private var showingHolidayManagement = false
     @AppStorage("hasSeenPastLeavePrompt") private var hasSeenPastLeavePrompt = false
     /// 닫은 공휴일 안내 — "unsupported:AT" 또는 "region:germany" 형태로 쌓는다
     @AppStorage("dismissedHolidayNotices") private var dismissedHolidayNoticesRaw = ""
@@ -200,7 +201,8 @@ struct HomeView: View {
                         HolidayRegionNoticeCard(
                             profile: profile,
                             notice: notice,
-                            onDismiss: { dismissHolidayNotice(notice) }
+                            onDismiss: { dismissHolidayNotice(notice) },
+                            onOpenHolidays: { showingHolidayManagement = true }
                         )
                     }
 
@@ -283,6 +285,9 @@ struct HomeView: View {
                     }
                 }
             }
+            .navigationDestination(isPresented: $showingHolidayManagement) {
+                HolidayManagementView(country: profile.country)
+            }
             .sheet(isPresented: $showingHistory) {
                 LeaveHistoryView(yearStartMonth: profile.yearStartMonth)
             }
@@ -339,6 +344,11 @@ struct HomeView: View {
     private var holidayNotice: HolidayRegionNoticeCard.Notice? {
         guard !ScreenshotMode.isActive else { return nil }
         let dismissed = Set(dismissedHolidayNoticesRaw.split(separator: ",").map(String.init))
+        if profile.country == .custom {
+            // 직접 입력을 골랐으면 미지원 안내는 끝났다 — 공휴일이 하나도 없을 때만 넣으라고 알린다
+            if customHolidays.isEmpty, !dismissed.contains("custom-empty") { return .addCustomHolidays }
+            return nil
+        }
         if let region = Country.unsupportedDeviceRegion, !dismissed.contains("unsupported:\(region)") {
             return .unsupported(regionCode: region)
         }
@@ -354,6 +364,7 @@ struct HomeView: View {
         switch notice {
         case .unsupported(let region): key = "unsupported:\(region)"
         case .chooseRegion: key = "region:\(profile.countryRaw)"
+        case .addCustomHolidays: key = "custom-empty"
         }
         var keys = dismissedHolidayNoticesRaw.split(separator: ",").map(String.init)
         keys.append(key)
@@ -441,11 +452,15 @@ struct HolidayRegionNoticeCard: View {
     enum Notice: Equatable {
         case unsupported(regionCode: String)
         case chooseRegion
+        /// 나라를 직접 입력으로 골랐는데 공휴일이 하나도 없다
+        case addCustomHolidays
     }
 
     @Bindable var profile: UserProfile
     let notice: Notice
     let onDismiss: () -> Void
+    /// 공휴일 관리 화면 열기
+    let onOpenHolidays: () -> Void
     @Environment(\.modelContext) private var modelContext
 
     /// 공휴일 계산의 근거라 바로 디스크에 쓴다 (자동 저장은 시점을 보장하지 않는다)
@@ -459,6 +474,7 @@ struct HolidayRegionNoticeCard: View {
         switch notice {
         case .unsupported: return Strings.unsupportedCountryTitle
         case .chooseRegion: return Strings.chooseRegionTitle
+        case .addCustomHolidays: return Strings.customHolidayNoticeTitle
         }
     }
 
@@ -470,6 +486,8 @@ struct HolidayRegionNoticeCard: View {
             return Strings.unsupportedCountryMessage(region: regionName, country: profile.country.displayName)
         case .chooseRegion:
             return Strings.chooseRegionMessage(profile.country.displayName)
+        case .addCustomHolidays:
+            return Strings.customHolidayNoticeMessage
         }
     }
 
@@ -477,7 +495,7 @@ struct HolidayRegionNoticeCard: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top) {
                 HStack(spacing: 6) {
-                    Image(systemName: notice == .chooseRegion ? "map" : "globe")
+                    Image(systemName: notice == .chooseRegion ? "map" : notice == .addCustomHolidays ? "calendar.badge.plus" : "globe")
                         .foregroundStyle(.orange)
                         .voDecorative()
                     Text(title)
@@ -501,37 +519,42 @@ struct HolidayRegionNoticeCard: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Menu {
-                switch notice {
-                case .unsupported:
-                    ForEach(Country.allCases) { country in
+            switch notice {
+            case .unsupported:
+                Menu {
+                    ForEach(Country.allCases.filter { $0 != .custom }) { country in
                         Button("\(country.flag) \(country.displayName)") {
                             profile.country = country
                             save()
                             onDismiss()
                         }
                     }
-                case .chooseRegion:
+                } label: {
+                    actionLabel(icon: "arrow.left.arrow.right", text: Strings.changeCountry, filled: true)
+                }
+                Button {
+                    // 나라가 바뀌면 이 카드는 '공휴일 추가' 안내로 바뀐다
+                    profile.country = .custom
+                    save()
+                    onOpenHolidays()
+                } label: {
+                    actionLabel(icon: "square.and.pencil", text: Strings.customHolidayModeButton, filled: false)
+                }
+            case .chooseRegion:
+                Menu {
                     ForEach(profile.country.holidayRegions) { region in
                         Button(region.displayName) {
                             profile.holidayRegion = region
                             save()
                         }
                     }
+                } label: {
+                    actionLabel(icon: "mappin.and.ellipse", text: Strings.chooseRegion, filled: true)
                 }
-            } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: notice == .chooseRegion ? "mappin.and.ellipse" : "arrow.left.arrow.right")
-                        .voDecorative()
-                    Text(notice == .chooseRegion ? Strings.chooseRegion : Strings.changeCountry)
-                        .fontWeight(.semibold)
+            case .addCustomHolidays:
+                Button(action: onOpenHolidays) {
+                    actionLabel(icon: "plus.circle", text: Strings.customHolidayNoticeButton, filled: true)
                 }
-                .font(.body)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .background(Color.orange)
-                .foregroundStyle(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
         }
         .padding()
@@ -543,6 +566,21 @@ struct HolidayRegionNoticeCard: View {
                         .stroke(Color.orange.opacity(0.3), lineWidth: 1)
                 )
         )
+    }
+
+    private func actionLabel(icon: String, text: String, filled: Bool) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .voDecorative()
+            Text(text)
+                .fontWeight(.semibold)
+        }
+        .font(.body)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 8)
+        .background(filled ? Color.orange : Color.orange.opacity(0.15))
+        .foregroundStyle(filled ? Color.white : Color.orange)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 

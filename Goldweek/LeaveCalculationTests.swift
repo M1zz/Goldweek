@@ -1293,6 +1293,32 @@ final class LeaveDeductionTests: XCTestCase {
         XCTAssertEqual(r.effectiveLeaveDays, 5)
         XCTAssertTrue(DayOffCalendar.shared.overlapsChildBreak(start: d(2026, 7, 24), end: d(2026, 7, 27)))
     }
+
+    // MARK: 직접 입력 국가·매년 반복 공휴일
+
+    func testCustomCountryHasNoBuiltInHolidays() {
+        XCTAssertTrue(HolidayService().getHolidays(for: 2027, country: .custom).isEmpty)
+    }
+
+    func testYearlyCustomHolidayRepeatsEveryYear() {
+        // 남아공 자유의 날 4/27 — 2026년에 넣었지만 2028년(목)에도 쉬는 날
+        let freedom = CustomHoliday(date: d(2026, 4, 27), name: "Freedom Day", repeatsYearly: true)
+        let once = CustomHoliday(date: d(2026, 6, 16), name: "Youth Day")
+        DayOffCalendar.shared.update(country: .custom, customHolidays: [freedom, once], hiddenDates: [], breaks: [])
+        defer { DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: []) }
+
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2028, 4, 27)))
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 6, 16)))
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2027, 6, 16)))   // 반복 안 함 (수요일)
+        XCTAssertEqual(DayOffCalendar.shared.holidays(for: 2028, country: .custom).map(\.name), ["Freedom Day"])
+        XCTAssertEqual(HolidayService().getHolidays(for: 2028, country: .custom, customHolidays: [freedom, once]).count, 1)
+    }
+
+    func testYearlyLeapDaySkipsCommonYears() {
+        let leap = CustomHoliday(date: d(2028, 2, 29), name: "Leap", repeatsYearly: true)
+        XCTAssertNil(leap.occurrence(in: 2027))
+        XCTAssertEqual(leap.occurrence(in: 2032), d(2032, 2, 29))
+    }
 }
 
 @MainActor

@@ -22,6 +22,8 @@ final class DayOffCalendar {
     private(set) var country: Country = .korea
     /// 내가 추가한 공휴일 (dateKey → 이름)
     private(set) var customDays: [String: String] = [:]
+    /// 매년 반복하는 내 공휴일 ("MM-dd" → 이름)
+    private(set) var yearlyCustomDays: [String: String] = [:]
     /// 내 방학 날짜 (dateKey → 방학 이름)
     private(set) var breakDays: [String: String] = [:]
     private(set) var hiddenDays: Set<String> = []
@@ -46,7 +48,14 @@ final class DayOffCalendar {
 
     func update(country: Country, customHolidays: [CustomHoliday], hiddenDates: Set<String>, breaks: [SchoolBreak]) {
         var custom: [String: String] = [:]
-        for h in customHolidays { custom[key(h.date)] = h.name }
+        var yearly: [String: String] = [:]
+        for h in customHolidays {
+            if h.repeatsYearly {
+                yearly[String(key(h.date).dropFirst(5))] = h.name
+            } else {
+                custom[key(h.date)] = h.name
+            }
+        }
         var mine: [String: String] = [:]
         var children: [(name: String, start: Date, end: Date)] = []
         var myRanges: [(name: String, start: Date, end: Date)] = []
@@ -68,13 +77,14 @@ final class DayOffCalendar {
         }
         children.sort { $0.start < $1.start }
 
-        let newFingerprint = "\(country.rawValue)|\(HolidayService.selectedRegionCode)|\(custom.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
+        let newFingerprint = "\(country.rawValue)|\(HolidayService.selectedRegionCode)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
             + children.map { "\(key($0.start))~\(key($0.end))" }.joined(separator: ",")
         guard newFingerprint != fingerprint else { return }
 
         lock.lock(); yearCache = [:]; lock.unlock()
         self.country = country
         self.customDays = custom
+        self.yearlyCustomDays = yearly
         self.breakDays = mine
         self.hiddenDays = hiddenDates
         self.childBreaks = children
@@ -87,7 +97,7 @@ final class DayOffCalendar {
     func isDayOff(_ date: Date) -> Bool {
         if HolidayService.isRestWeekend(date, country: country, calendar: calendar) { return true }
         let k = key(date)
-        if customDays[k] != nil || breakDays[k] != nil { return true }
+        if customDays[k] != nil || breakDays[k] != nil || yearlyCustomDays[String(k.dropFirst(5))] != nil { return true }
         return holidayKeys(for: calendar.component(.year, from: date)).contains(k)
     }
 
@@ -114,7 +124,15 @@ final class DayOffCalendar {
             guard let d = keyFormatter.date(from: k) else { continue }
             result.append(Holiday(date: d, name: name, isCustom: true))
         }
-        for (k, name) in breakDays where k.hasPrefix("\(year)-") && !taken.contains(k) && customDays[k] == nil {
+        for (md, name) in yearlyCustomDays {
+            // 2월 29일 반복은 평년엔 키가 만들어지지 않는다
+            let k = "\(year)-\(md)"
+            guard !taken.contains(k), customDays[k] == nil, let d = keyFormatter.date(from: k),
+                  key(d) == k else { continue }
+            result.append(Holiday(date: d, name: name, isCustom: true))
+        }
+        for (k, name) in breakDays where k.hasPrefix("\(year)-") && !taken.contains(k) && customDays[k] == nil
+            && yearlyCustomDays[String(k.dropFirst(5))] == nil {
             guard let d = keyFormatter.date(from: k) else { continue }
             result.append(Holiday(date: d, name: name, isCustom: true, isBreak: true))
         }

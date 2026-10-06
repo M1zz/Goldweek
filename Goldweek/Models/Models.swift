@@ -24,6 +24,8 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case brazil = "brazil"     // Enforcado(징검다리) 문화
     case taiwan = "taiwan"
     case hongKong = "hongkong"
+    /// 지원하지 않는 나라 — 기본 공휴일 없이 사용자가 직접 넣는다 (예: 남아공)
+    case custom = "custom"
 
     var id: String { rawValue }
 
@@ -48,12 +50,14 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .brazil: return "BR"
         case .taiwan: return "TW"
         case .hongKong: return "HK"
+        case .custom: return ""   // 어떤 기기 지역과도 맞지 않게
         }
     }
 
     var flag: String {
+        if self == .custom { return "🌐" }
         // 지역 코드 두 글자를 국기 이모지(Regional Indicator)로 바꾼다
-        String(String.UnicodeScalarView(regionCode.unicodeScalars.compactMap {
+        return String(String.UnicodeScalarView(regionCode.unicodeScalars.compactMap {
             UnicodeScalar(0x1F1E6 - 0x41 + $0.value)
         }))
     }
@@ -74,6 +78,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .brazil: return "pt_BR"
         case .taiwan: return "zh_TW"
         case .hongKong: return "zh_HK"
+        case .custom: return Locale.current.identifier
         }
     }
 
@@ -936,11 +941,24 @@ class CustomHoliday {
     var date: Date
     var name: String
     var createdAt: Date
+    /// 매년 같은 월·일에 반복 (default: SwiftData lightweight migration용)
+    var repeatsYearly: Bool = false
 
-    init(date: Date, name: String) {
+    init(date: Date, name: String, repeatsYearly: Bool = false) {
         self.id = UUID()
         self.date = date
         self.name = name
         self.createdAt = Date()
+        self.repeatsYearly = repeatsYearly
+    }
+
+    /// 그해에 이 공휴일이 오는 날. 반복이면 모든 해, 아니면 넣은 해에만.
+    /// 2월 29일 반복은 평년엔 건너뛴다.
+    func occurrence(in year: Int, calendar: Calendar = .current) -> Date? {
+        let comps = calendar.dateComponents([.year, .month, .day], from: date)
+        if !repeatsYearly { return comps.year == year ? calendar.startOfDay(for: date) : nil }
+        guard let d = calendar.date(from: DateComponents(year: year, month: comps.month, day: comps.day)),
+              calendar.component(.day, from: d) == comps.day else { return nil }
+        return d
     }
 }

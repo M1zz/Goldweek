@@ -473,16 +473,19 @@ struct TMHolidayData: Codable {
     let date: Date
     let name: String
     let createdAt: Date
+    /// 옛 스냅샷엔 없다
+    let repeatsYearly: Bool?
 
     init(from holiday: CustomHoliday) {
         self.id = holiday.id
         self.date = holiday.date
         self.name = holiday.name
         self.createdAt = holiday.createdAt
+        self.repeatsYearly = holiday.repeatsYearly
     }
 
     func materialize() -> CustomHoliday {
-        let holiday = CustomHoliday(date: date, name: name)
+        let holiday = CustomHoliday(date: date, name: name, repeatsYearly: repeatsYearly ?? false)
         holiday.id = id
         holiday.createdAt = createdAt
         return holiday
