@@ -488,6 +488,14 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "동기화됨"
             case .english: return "Synced"
+            case .swedish: return "Synkad"
+            case .norwegian: return "Synkronisert"
+            case .danish: return "Synkroniseret"
+            case .finnish: return "Synkronoitu"
+            case .polish: return "Zsynchronizowano"
+            case .czech: return "Synchronizováno"
+            case .greek: return "Συγχρονίστηκε"
+            case .turkish: return "Senkronize"
             case .dutch: return "Gesynchroniseerd"
             case .japanese: return "同期済み"
             case .chinese: return "已同步"
@@ -502,6 +510,14 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "설정 필요"
             case .english: return "Setup Required"
+            case .swedish: return "Konfiguration krävs"
+            case .norwegian: return "Oppsett kreves"
+            case .danish: return "Opsætning påkrævet"
+            case .finnish: return "Asetus vaaditaan"
+            case .polish: return "Wymaga konfiguracji"
+            case .czech: return "Vyžaduje nastavení"
+            case .greek: return "Απαιτείται ρύθμιση"
+            case .turkish: return "Kurulum Gerekli"
             case .dutch: return "Instellen vereist"
             case .japanese: return "設定が必要"
             case .chinese: return "需要设置"
@@ -516,6 +532,14 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "권한 필요"
             case .english: return "Permission Required"
+            case .swedish: return "Behörighet krävs"
+            case .norwegian: return "Tillatelse kreves"
+            case .danish: return "Tilladelse påkrævet"
+            case .finnish: return "Lupa vaaditaan"
+            case .polish: return "Wymaga uprawnień"
+            case .czech: return "Vyžaduje oprávnění"
+            case .greek: return "Απαιτείται άδεια πρόσβασης"
+            case .turkish: return "İzin Gerekli"
             case .dutch: return "Toestemming vereist"
             case .japanese: return "権限が必要"
             case .chinese: return "需要权限"
@@ -530,6 +554,14 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "권한 거부됨"
             case .english: return "Permission Denied"
+            case .swedish: return "Behörighet nekad"
+            case .norwegian: return "Tillatelse nektet"
+            case .danish: return "Tilladelse nægtet"
+            case .finnish: return "Lupa evätty"
+            case .polish: return "Odmowa dostępu"
+            case .czech: return "Oprávnění zamítnuto"
+            case .greek: return "Η πρόσβαση απορρίφθηκε"
+            case .turkish: return "İzin Reddedildi"
             case .dutch: return "Toestemming geweigerd"
             case .japanese: return "権限が拒否"
             case .chinese: return "权限被拒绝"
@@ -544,6 +576,14 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "Pro 필요"
             case .english: return "Pro Required"
+            case .swedish: return "Pro krävs"
+            case .norwegian: return "Pro kreves"
+            case .danish: return "Pro påkrævet"
+            case .finnish: return "Pro vaaditaan"
+            case .polish: return "Wymaga Pro"
+            case .czech: return "Vyžaduje Pro"
+            case .greek: return "Απαιτείται Pro"
+            case .turkish: return "Pro Gerekli"
             case .dutch: return "Pro vereist"
             case .japanese: return "Pro が必要"
             case .chinese: return "需要Pro版"
@@ -558,6 +598,14 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "오류"
             case .english: return "Error"
+            case .swedish: return "Fel"
+            case .norwegian: return "Feil"
+            case .danish: return "Fejl"
+            case .finnish: return "Virhe"
+            case .polish: return "Błąd"
+            case .czech: return "Chyba"
+            case .greek: return "Σφάλμα"
+            case .turkish: return "Hata"
             case .dutch: return "Fout"
             case .japanese: return "エラー"
             case .chinese: return "错误"
@@ -623,6 +671,78 @@ enum CalendarError: LocalizedError {
             case .proFeatureRequired: return "Pro feature required."
             case .eventNotFound: return "Event not found."
             case .calendarNotFound: return "Calendar not found."
+            }
+        case .swedish:
+            switch self {
+            case .permissionDenied: return "Åtkomst till kalendern nekades."
+            case .unknownPermissionStatus: return "Okänd behörighetsstatus."
+            case .noAvailableSource: return "Ingen kalenderkälla tillgänglig."
+            case .proFeatureRequired: return "Pro-funktion krävs."
+            case .eventNotFound: return "Händelsen hittades inte."
+            case .calendarNotFound: return "Kalendern hittades inte."
+            }
+        case .norwegian:
+            switch self {
+            case .permissionDenied: return "Tilgang til kalenderen ble nektet."
+            case .unknownPermissionStatus: return "Ukjent tillatelsesstatus."
+            case .noAvailableSource: return "Ingen tilgjengelig kalenderkilde."
+            case .proFeatureRequired: return "Pro-funksjon kreves."
+            case .eventNotFound: return "Fant ikke hendelsen."
+            case .calendarNotFound: return "Fant ikke kalenderen."
+            }
+        case .danish:
+            switch self {
+            case .permissionDenied: return "Adgang til kalenderen er nægtet."
+            case .unknownPermissionStatus: return "Ukendt tilladelsesstatus."
+            case .noAvailableSource: return "Ingen tilgængelig kalenderkilde."
+            case .proFeatureRequired: return "Pro-funktion påkrævet."
+            case .eventNotFound: return "Begivenheden blev ikke fundet."
+            case .calendarNotFound: return "Kalenderen blev ikke fundet."
+            }
+        case .finnish:
+            switch self {
+            case .permissionDenied: return "Kalenterin käyttölupa evätty."
+            case .unknownPermissionStatus: return "Tuntematon lupatila."
+            case .noAvailableSource: return "Käytettävissä olevaa kalenterilähdettä ei ole."
+            case .proFeatureRequired: return "Vaatii Pro-ominaisuuden."
+            case .eventNotFound: return "Tapahtumaa ei löytynyt."
+            case .calendarNotFound: return "Kalenteria ei löytynyt."
+            }
+        case .polish:
+            switch self {
+            case .permissionDenied: return "Odmowa dostępu do kalendarza."
+            case .unknownPermissionStatus: return "Nieznany stan uprawnień."
+            case .noAvailableSource: return "Brak dostępnego źródła kalendarza."
+            case .proFeatureRequired: return "Wymagana funkcja Pro."
+            case .eventNotFound: return "Nie znaleziono wydarzenia."
+            case .calendarNotFound: return "Nie znaleziono kalendarza."
+            }
+        case .czech:
+            switch self {
+            case .permissionDenied: return "Přístup ke kalendáři byl zamítnut."
+            case .unknownPermissionStatus: return "Neznámý stav oprávnění."
+            case .noAvailableSource: return "Žádný dostupný zdroj kalendáře."
+            case .proFeatureRequired: return "Tato funkce vyžaduje Pro."
+            case .eventNotFound: return "Událost nebyla nalezena."
+            case .calendarNotFound: return "Kalendář nebyl nalezen."
+            }
+        case .greek:
+            switch self {
+            case .permissionDenied: return "Η πρόσβαση στο ημερολόγιο απορρίφθηκε."
+            case .unknownPermissionStatus: return "Άγνωστη κατάσταση δικαιωμάτων."
+            case .noAvailableSource: return "Δεν υπάρχει διαθέσιμη πηγή ημερολογίου."
+            case .proFeatureRequired: return "Απαιτείται η λειτουργία Pro."
+            case .eventNotFound: return "Το συμβάν δεν βρέθηκε."
+            case .calendarNotFound: return "Το ημερολόγιο δεν βρέθηκε."
+            }
+        case .turkish:
+            switch self {
+            case .permissionDenied: return "Takvim erişim izni reddedildi."
+            case .unknownPermissionStatus: return "Bilinmeyen izin durumu."
+            case .noAvailableSource: return "Kullanılabilir takvim kaynağı yok."
+            case .proFeatureRequired: return "Pro özelliği gerekli."
+            case .eventNotFound: return "Etkinlik bulunamadı."
+            case .calendarNotFound: return "Takvim bulunamadı."
             }
         case .dutch:
             switch self {

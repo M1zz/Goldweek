@@ -235,6 +235,54 @@ enum ProPurchaseError: LocalizedError {
             case .verificationFailed: return "Purchase verification failed."
             case .purchaseFailed: return "Purchase failed."
             }
+        case .swedish:
+            switch self {
+            case .productNotFound: return "Produkten hittades inte."
+            case .verificationFailed: return "Köpverifieringen misslyckades."
+            case .purchaseFailed: return "Köpet misslyckades."
+            }
+        case .norwegian:
+            switch self {
+            case .productNotFound: return "Fant ikke produktet."
+            case .verificationFailed: return "Kjøpsverifiseringen mislyktes."
+            case .purchaseFailed: return "Kjøpet mislyktes."
+            }
+        case .danish:
+            switch self {
+            case .productNotFound: return "Produktet blev ikke fundet."
+            case .verificationFailed: return "Verificering af købet mislykkedes."
+            case .purchaseFailed: return "Købet mislykkedes."
+            }
+        case .finnish:
+            switch self {
+            case .productNotFound: return "Tuotetta ei löytynyt."
+            case .verificationFailed: return "Oston vahvistus epäonnistui."
+            case .purchaseFailed: return "Osto epäonnistui."
+            }
+        case .polish:
+            switch self {
+            case .productNotFound: return "Nie znaleziono produktu."
+            case .verificationFailed: return "Weryfikacja zakupu nie powiodła się."
+            case .purchaseFailed: return "Zakup nie powiódł się."
+            }
+        case .czech:
+            switch self {
+            case .productNotFound: return "Produkt nebyl nalezen."
+            case .verificationFailed: return "Ověření nákupu se nezdařilo."
+            case .purchaseFailed: return "Nákup se nezdařil."
+            }
+        case .greek:
+            switch self {
+            case .productNotFound: return "Το προϊόν δεν βρέθηκε."
+            case .verificationFailed: return "Η επαλήθευση της αγοράς απέτυχε."
+            case .purchaseFailed: return "Η αγορά απέτυχε."
+            }
+        case .turkish:
+            switch self {
+            case .productNotFound: return "Ürün bulunamadı."
+            case .verificationFailed: return "Satın alma doğrulanamadı."
+            case .purchaseFailed: return "Satın alma başarısız oldu."
+            }
         case .dutch:
             switch self {
             case .productNotFound: return "Product niet gevonden."

@@ -69,6 +69,54 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -136,6 +184,54 @@
           }
         },
         "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "Goldweek"
@@ -211,6 +307,54 @@
             "state": "translated",
             "value": "Goldweek heeft toegang tot je agenda nodig om verlofachtige afspraken te vinden die je kunt importeren en om je ingevoerde verlof met je agenda te synchroniseren."
           }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek behöver åtkomst till kalendern för att hitta händelser som liknar ledigheter som du kan importera och för att synka dina registrerade ledigheter till kalendern."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek trenger kalendertilgang for å finne ferielignende hendelser du kan importere, og for å synkronisere registrert ferie til kalenderen din."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek har brug for adgang til kalenderen for at finde ferielignende begivenheder, du kan importere, og for at synkronisere din registrerede ferie til kalenderen."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek tarvitsee kalenterin käyttöoikeuden löytääkseen tuotavissa olevat lomalta näyttävät tapahtumat ja synkronoidakseen kirjatut lomasi kalenteriin."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek potrzebuje dostępu do kalendarza, aby znaleźć wydarzenia przypominające urlop do zaimportowania i zsynchronizować Twoje urlopy z kalendarzem."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek potřebuje přístup ke kalendáři, aby našel události podobné dovolené k importu a synchronizoval zapsanou dovolenou do kalendáře."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Το Goldweek χρειάζεται πρόσβαση στο ημερολόγιο για να βρίσκει συμβάντα που μοιάζουν με άδειες και να τα εισάγεις, και για να συγχρονίζει τις καταχωρισμένες άδειές σου με το ημερολόγιό σου."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek, içe aktarabileceğin izin benzeri etkinlikleri bulmak ve kayıtlı izinlerini takvimine senkronize etmek için takvim erişimine ihtiyaç duyar."
+          }
         }
       }
     },
@@ -282,6 +426,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cameratoegang is nodig om je verlofaanvragen te fotograferen en je verlof automatisch in te voeren."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kameraåtkomst behövs för att fotografera din ledighetshistorik och registrera dina ledigheter automatiskt."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kameratilgang trengs for å ta bilde av ferieoversikten din og registrere ferie automatisk."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der er brug for kameraadgang for at fotografere din feriehistorik og registrere din ferie automatisk."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kameran käyttöoikeus tarvitaan lomahakemushistoriasi kuvaamiseen ja lomien kirjaamiseen automaattisesti."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dostęp do aparatu jest potrzebny, aby sfotografować historię wniosków urlopowych i automatycznie dodać Twoje urlopy."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přístup k fotoaparátu je potřeba k vyfocení historie žádostí o dovolenou a jejímu automatickému zapsání."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Απαιτείται πρόσβαση στην κάμερα για να φωτογραφίζεις το ιστορικό αιτήσεων άδειας και να καταχωρίζονται αυτόματα οι άδειές σου."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İzin talep geçmişini fotoğraflamak ve izinlerini otomatik kaydetmek için kamera erişimi gerekir."
           }
         }
       }

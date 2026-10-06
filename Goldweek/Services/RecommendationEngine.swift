@@ -548,6 +548,30 @@ class RecommendationEngine {
         case .english:
             title = "Golden Week"
             desc = "Japan's Golden Week! \(Int(requiredLeave)) leave days for \(totalDays) days off."
+        case .swedish:
+            title = "Golden Week"
+            desc = "Japans Golden Week! \(Int(requiredLeave)) semesterdagar ger \(totalDays) lediga dagar."
+        case .norwegian:
+            title = "Golden Week"
+            desc = "Japans Golden Week! \(Int(requiredLeave)) feriedager gir \(totalDays) dager fri."
+        case .danish:
+            title = "Golden Week"
+            desc = "Japans Golden Week! \(Int(requiredLeave)) feriedage giver \(totalDays) dage fri."
+        case .finnish:
+            title = "Golden Week"
+            desc = "Japanin Golden Week! \(Int(requiredLeave)) lomapäivällä \(totalDays) vapaapäivää."
+        case .polish:
+            title = "Golden Week"
+            desc = "Golden Week w Japonii! \(Int(requiredLeave)) dni urlopu na \(totalDays) dni wolnego."
+        case .czech:
+            title = "Golden Week"
+            desc = "Japonský Golden Week! Dovolená (dní: \(Int(requiredLeave))) = volno v kuse (dní: \(totalDays))."
+        case .greek:
+            title = "Golden Week"
+            desc = "Η Golden Week της Ιαπωνίας! \(Int(requiredLeave)) ημέρες άδειας για \(totalDays) ημέρες ρεπό."
+        case .turkish:
+            title = "Golden Week"
+            desc = "Japonya'nın Golden Week'i! \(Int(requiredLeave)) izin günüyle \(totalDays) gün tatil."
         case .dutch:
             title = "Golden Week"
             desc = "Japans Golden Week! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
@@ -614,6 +638,14 @@ class RecommendationEngine {
                 switch lang {
                 case .korean: title = "오봉 연휴"; desc = "일본 오봉 기간! 연차 \(Int(requiredLeave))일로 \(totalDays)일 연휴."
                 case .english: title = "Obon Break"; desc = "Obon season! \(Int(requiredLeave)) leave days for \(totalDays) days off."
+                case .swedish: title = "Obon-ledighet"; desc = "Obon-säsongen! \(Int(requiredLeave)) semesterdagar ger \(totalDays) lediga dagar."
+                case .norwegian: title = "Obon-ferie"; desc = "Obon-sesongen! \(Int(requiredLeave)) feriedager gir \(totalDays) dager fri."
+                case .danish: title = "Obon-pause"; desc = "Obon-sæsonen! \(Int(requiredLeave)) feriedage giver \(totalDays) dage fri."
+                case .finnish: title = "Obon-tauko"; desc = "Obon-aika! \(Int(requiredLeave)) lomapäivällä \(totalDays) vapaapäivää."
+                case .polish: title = "Przerwa Obon"; desc = "Sezon Obon! \(Int(requiredLeave)) dni urlopu na \(totalDays) dni wolnego."
+                case .czech: title = "Volno Obon"; desc = "Sezóna Obon! Dovolená (dní: \(Int(requiredLeave))) = volno v kuse (dní: \(totalDays))."
+                case .greek: title = "Διάλειμμα Ομπόν"; desc = "Εποχή του Ομπόν! \(Int(requiredLeave)) ημέρες άδειας για \(totalDays) ημέρες ρεπό."
+                case .turkish: title = "Obon Tatili"; desc = "Obon sezonu! \(Int(requiredLeave)) izin günüyle \(totalDays) gün tatil."
                 case .dutch: title = "Obon-vakantie"; desc = "Obon-seizoen! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
                 case .japanese: title = "お盆休み"; desc = "お盆休み！有給\(Int(requiredLeave))日で\(totalDays)連休。"
                 case .chinese: title = "盂兰盆节假期"; desc = "盂兰盆节！请\(Int(requiredLeave))天年假获得\(totalDays)天假期。"
@@ -657,6 +689,14 @@ class RecommendationEngine {
                 switch lang {
                 case .korean: title = "추수감사절 연휴"; desc = "금요일 연차 1일로 4일 연휴!"
                 case .english: title = "Thanksgiving Break"; desc = "1 leave day (Friday) for a 4-day weekend!"
+                case .swedish: title = "Thanksgiving-ledighet"; desc = "1 semesterdag (fredag) ger en långhelg på 4 dagar!"
+                case .norwegian: title = "Thanksgiving-ferie"; desc = "1 feriedag (fredag) gir 4 dagers langhelg!"
+                case .danish: title = "Thanksgiving-pause"; desc = "1 feriedag (fredag) giver en 4-dages weekend!"
+                case .finnish: title = "Thanksgiving-tauko"; desc = "1 lomapäivä (perjantai) ja saat 4 päivän viikonlopun!"
+                case .polish: title = "Przerwa na Święto Dziękczynienia"; desc = "1 dzień urlopu (piątek) na 4-dniowy weekend!"
+                case .czech: title = "Volno na Díkůvzdání"; desc = "1 den dovolené (pátek) a máš 4denní víkend!"
+                case .greek: title = "Διάλειμμα Ημέρας των Ευχαριστιών"; desc = "1 ημέρα άδειας (Παρασκευή) για τετραήμερο!"
+                case .turkish: title = "Şükran Günü Tatili"; desc = "1 izin günüyle (Cuma) 4 günlük uzun hafta sonu!"
                 case .dutch: title = "Thanksgiving-vakantie"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                 case .japanese: title = "感謝祭連休"; desc = "金曜1日の有給で4連休！"
                 case .chinese: title = "感恩节假期"; desc = "周五请1天年假获得4天假期！"
@@ -695,6 +735,14 @@ class RecommendationEngine {
                     switch lang {
                     case .korean: title = "독립기념일 연휴"; desc = "월요일 연차 1일로 4일 연휴!"
                     case .english: title = "July 4th Long Weekend"; desc = "1 leave day (Monday) for 4-day weekend!"
+                    case .swedish: title = "Långhelg runt 4 juli"; desc = "1 semesterdag (måndag) ger en långhelg på 4 dagar!"
+                    case .norwegian: title = "Langhelg 4. juli"; desc = "1 feriedag (mandag) gir 4 dagers langhelg!"
+                    case .danish: title = "Forlænget weekend omkring 4. juli"; desc = "1 feriedag (mandag) giver en 4-dages weekend!"
+                    case .finnish: title = "Heinäkuun 4. päivän pitkä viikonloppu"; desc = "1 lomapäivä (maanantai) ja saat 4 päivän viikonlopun!"
+                    case .polish: title = "Długi weekend 4 lipca"; desc = "1 dzień urlopu (poniedziałek) na 4-dniowy weekend!"
+                    case .czech: title = "Prodloužený víkend 4. července"; desc = "1 den dovolené (pondělí) a máš 4denní víkend!"
+                    case .greek: title = "Μακρύ Σαββατοκύριακο 4ης Ιουλίου"; desc = "1 ημέρα άδειας (Δευτέρα) για τετραήμερο!"
+                    case .turkish: title = "4 Temmuz Uzun Hafta Sonu"; desc = "1 izin günüyle (Pazartesi) 4 günlük uzun hafta sonu!"
                     case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (maandag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "月曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周一请1天年假获得4天假期！"
@@ -721,6 +769,14 @@ class RecommendationEngine {
                     switch lang {
                     case .korean: title = "독립기념일 연휴"; desc = "금요일 연차 1일로 4일 연휴!"
                     case .english: title = "July 4th Long Weekend"; desc = "1 leave day (Friday) for 4-day weekend!"
+                    case .swedish: title = "Långhelg runt 4 juli"; desc = "1 semesterdag (fredag) ger en långhelg på 4 dagar!"
+                    case .norwegian: title = "Langhelg 4. juli"; desc = "1 feriedag (fredag) gir 4 dagers langhelg!"
+                    case .danish: title = "Forlænget weekend omkring 4. juli"; desc = "1 feriedag (fredag) giver en 4-dages weekend!"
+                    case .finnish: title = "Heinäkuun 4. päivän pitkä viikonloppu"; desc = "1 lomapäivä (perjantai) ja saat 4 päivän viikonlopun!"
+                    case .polish: title = "Długi weekend 4 lipca"; desc = "1 dzień urlopu (piątek) na 4-dniowy weekend!"
+                    case .czech: title = "Prodloužený víkend 4. července"; desc = "1 den dovolené (pátek) a máš 4denní víkend!"
+                    case .greek: title = "Μακρύ Σαββατοκύριακο 4ης Ιουλίου"; desc = "1 ημέρα άδειας (Παρασκευή) για τετραήμερο!"
+                    case .turkish: title = "July 4th Long Weekend"; desc = "1 izin günüyle (Cuma) 4 günlük uzun hafta sonu!"
                     case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "金曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周五请1天年假获得4天假期！"

@@ -734,6 +734,102 @@ enum BackupError: LocalizedError {
             case .backupRotationFailed: return "Backup file rotation failed."
             case .checksumMismatch: return "Backup file is corrupted. (Checksum mismatch)"
             }
+        case .swedish:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud är inte tillgängligt. Aktivera iCloud Drive i Inställningar."
+            case .localPathNotAvailable: return "Det går inte att komma åt den lokala lagringssökvägen."
+            case .backupNotFound: return "Säkerhetskopian hittades inte."
+            case .invalidBackupData: return "Det går inte att läsa säkerhetskopian."
+            case .encryptionFailed: return "Krypteringen av säkerhetskopian misslyckades."
+            case .decryptionFailed: return "Dekrypteringen av säkerhetskopian misslyckades. Den kan komma från en annan enhet."
+            case .integrityVerificationFailed: return "Integritetskontrollen av säkerhetskopian misslyckades."
+            case .backupRotationFailed: return "Rotationen av säkerhetskopior misslyckades."
+            case .checksumMismatch: return "Säkerhetskopian är skadad. (Kontrollsumman stämmer inte)"
+            }
+        case .norwegian:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud er utilgjengelig. Slå på iCloud Drive i Innstillinger."
+            case .localPathNotAvailable: return "Får ikke tilgang til lokal lagringssti."
+            case .backupNotFound: return "Fant ikke sikkerhetskopifilen."
+            case .invalidBackupData: return "Kan ikke lese sikkerhetskopidata."
+            case .encryptionFailed: return "Kryptering av sikkerhetskopien mislyktes."
+            case .decryptionFailed: return "Dekryptering av sikkerhetskopien mislyktes. Den kan være fra en annen enhet."
+            case .integrityVerificationFailed: return "Integritetskontrollen av sikkerhetskopien mislyktes."
+            case .backupRotationFailed: return "Rotering av sikkerhetskopifiler mislyktes."
+            case .checksumMismatch: return "Sikkerhetskopifilen er skadet. (Sjekksummen stemmer ikke)"
+            }
+        case .danish:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud er ikke tilgængelig. Aktivér iCloud Drive i Indstillinger."
+            case .localPathNotAvailable: return "Kan ikke få adgang til den lokale lagersti."
+            case .backupNotFound: return "Sikkerhedskopien blev ikke fundet."
+            case .invalidBackupData: return "Kan ikke læse data fra sikkerhedskopien."
+            case .encryptionFailed: return "Kryptering af sikkerhedskopien mislykkedes."
+            case .decryptionFailed: return "Dekryptering af sikkerhedskopien mislykkedes. Den stammer måske fra en anden enhed."
+            case .integrityVerificationFailed: return "Integritetskontrol af sikkerhedskopien mislykkedes."
+            case .backupRotationFailed: return "Rotation af sikkerhedskopier mislykkedes."
+            case .checksumMismatch: return "Sikkerhedskopien er beskadiget. (Kontrolsum stemmer ikke)"
+            }
+        case .finnish:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud ei ole käytettävissä. Ota iCloud Drive käyttöön Asetuksissa."
+            case .localPathNotAvailable: return "Paikalliseen tallennuspolkuun ei ole pääsyä."
+            case .backupNotFound: return "Varmuuskopiotiedostoa ei löytynyt."
+            case .invalidBackupData: return "Varmuuskopion tietoja ei voi lukea."
+            case .encryptionFailed: return "Varmuuskopion salaus epäonnistui."
+            case .decryptionFailed: return "Varmuuskopion salauksen purku epäonnistui. Se voi olla toisen laitteen varmuuskopio."
+            case .integrityVerificationFailed: return "Varmuuskopion eheyden tarkistus epäonnistui."
+            case .backupRotationFailed: return "Varmuuskopiotiedostojen kierrätys epäonnistui."
+            case .checksumMismatch: return "Varmuuskopiotiedosto on vioittunut. (Tarkistussumma ei täsmää)"
+            }
+        case .polish:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud jest niedostępny. Włącz iCloud Drive w Ustawieniach."
+            case .localPathNotAvailable: return "Brak dostępu do lokalnej ścieżki przechowywania."
+            case .backupNotFound: return "Nie znaleziono pliku kopii zapasowej."
+            case .invalidBackupData: return "Nie można odczytać danych kopii zapasowej."
+            case .encryptionFailed: return "Szyfrowanie kopii zapasowej nie powiodło się."
+            case .decryptionFailed: return "Odszyfrowanie kopii zapasowej nie powiodło się. Może pochodzić z innego urządzenia."
+            case .integrityVerificationFailed: return "Weryfikacja integralności kopii zapasowej nie powiodła się."
+            case .backupRotationFailed: return "Rotacja plików kopii zapasowej nie powiodła się."
+            case .checksumMismatch: return "Plik kopii zapasowej jest uszkodzony. (Niezgodna suma kontrolna)"
+            }
+        case .czech:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud není dostupný. Zapni iCloud Drive v Nastavení."
+            case .localPathNotAvailable: return "K místnímu úložišti se nedá přistoupit."
+            case .backupNotFound: return "Soubor zálohy nebyl nalezen."
+            case .invalidBackupData: return "Data zálohy nelze přečíst."
+            case .encryptionFailed: return "Šifrování zálohy se nezdařilo."
+            case .decryptionFailed: return "Dešifrování zálohy se nezdařilo. Může jít o zálohu z jiného zařízení."
+            case .integrityVerificationFailed: return "Ověření integrity zálohy se nezdařilo."
+            case .backupRotationFailed: return "Rotace souborů záloh se nezdařila."
+            case .checksumMismatch: return "Soubor zálohy je poškozený. (Nesouhlasí kontrolní součet)"
+            }
+        case .greek:
+            switch self {
+            case .iCloudNotAvailable: return "Το iCloud δεν είναι διαθέσιμο. Ενεργοποίησε το iCloud Drive στις Ρυθμίσεις."
+            case .localPathNotAvailable: return "Δεν είναι δυνατή η πρόσβαση στη διαδρομή τοπικής αποθήκευσης."
+            case .backupNotFound: return "Το αρχείο αντιγράφου ασφαλείας δεν βρέθηκε."
+            case .invalidBackupData: return "Δεν είναι δυνατή η ανάγνωση των δεδομένων αντιγράφου."
+            case .encryptionFailed: return "Η κρυπτογράφηση του αντιγράφου απέτυχε."
+            case .decryptionFailed: return "Η αποκρυπτογράφηση του αντιγράφου απέτυχε. Ίσως προέρχεται από άλλη συσκευή."
+            case .integrityVerificationFailed: return "Ο έλεγχος ακεραιότητας του αντιγράφου απέτυχε."
+            case .backupRotationFailed: return "Η εναλλαγή των αρχείων αντιγράφου απέτυχε."
+            case .checksumMismatch: return "Το αρχείο αντιγράφου είναι κατεστραμμένο. (Ασυμφωνία checksum)"
+            }
+        case .turkish:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud kullanılamıyor. Lütfen Ayarlar'dan iCloud Drive'ı aç."
+            case .localPathNotAvailable: return "Yerel depolama yoluna erişilemiyor."
+            case .backupNotFound: return "Yedek dosyası bulunamadı."
+            case .invalidBackupData: return "Yedek verisi okunamıyor."
+            case .encryptionFailed: return "Yedek şifreleme başarısız oldu."
+            case .decryptionFailed: return "Yedek şifresi çözülemedi. Başka bir cihazın yedeği olabilir."
+            case .integrityVerificationFailed: return "Yedek bütünlük doğrulaması başarısız oldu."
+            case .backupRotationFailed: return "Yedek dosyası döndürme işlemi başarısız oldu."
+            case .checksumMismatch: return "Yedek dosyası bozuk. (Sağlama toplamı uyuşmuyor)"
+            }
         case .dutch:
             switch self {
             case .iCloudNotAvailable: return "iCloud is niet beschikbaar. Schakel iCloud Drive in via Instellingen."

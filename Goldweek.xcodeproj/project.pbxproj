@@ -457,6 +457,14 @@
 				"pt-BR",
 				"zh-Hant",
 				nl,
+				sv,
+				nb,
+				da,
+				fi,
+				pl,
+				cs,
+				el,
+				tr,
 			);
 			mainGroup = A4000000;
 			packageReferences = (

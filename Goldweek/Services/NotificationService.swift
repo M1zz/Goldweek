@@ -246,6 +246,14 @@ enum NotificationService {
         case .japanese: title = a.level == .critical ? "そろそろ休む時です 🌿" : "休憩を考える時期です 🌿"
         case .chinese:  title = a.level == .critical ? "该休息一下了 🌿" : "是时候安排休息了 🌿"
         case .english:  title = a.level == .critical ? "Time to recharge 🌿" : "A break is due soon 🌿"
+        case .swedish:  title = a.level == .critical ? "Dags att ladda batterierna 🌿" : "En paus närmar sig 🌿"
+        case .norwegian:  title = a.level == .critical ? "På tide å lade opp 🌿" : "En pause nærmer seg 🌿"
+        case .danish:  title = a.level == .critical ? "Tid til at lade op 🌿" : "En pause nærmer sig 🌿"
+        case .finnish:  title = a.level == .critical ? "Aika ladata akkuja 🌿" : "Tauko lähestyy 🌿"
+        case .polish:  title = a.level == .critical ? "Czas się zregenerować 🌿" : "Przerwa już niedługo 🌿"
+        case .czech:  title = a.level == .critical ? "Čas dobít baterky 🌿" : "Brzy je čas na pauzu 🌿"
+        case .greek:  title = a.level == .critical ? "Ώρα για επαναφόρτιση 🌿" : "Σύντομα έρχεται ένα διάλειμμα 🌿"
+        case .turkish:  title = a.level == .critical ? "Şarj olma zamanı 🌿" : "Yakında bir moladan yararlanma zamanı 🌿"
         case .dutch:  title = a.level == .critical ? "Tijd om op te laden 🌿" : "Je volgende vrije dagen komen eraan 🌿"
         case .german: title = a.level == .critical ? "Zeit zum Auftanken 🌿" : "Bald ist eine Pause fällig 🌿"
         case .french: title = a.level == .critical ? "Il est temps de souffler 🌿" : "Une pause approche 🌿"
@@ -289,6 +297,70 @@ enum NotificationService {
                 reasonText = "It's been \(s) days since your last break."
             } else {
                 reasonText = "No rest logged yet this year."
+            }
+        case .swedish:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Det har gått \(s) dagar sedan din senaste paus — längre än din vanliga cykel på \(cycle) dagar."
+            } else if let s = since {
+                reasonText = "Det har gått \(s) dagar sedan din senaste paus."
+            } else {
+                reasonText = "Ingen vila är loggad ännu i år."
+            }
+        case .norwegian:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Det er \(s) dager siden sist du hadde fri – lenger enn din vanlige syklus på \(cycle) dager."
+            } else if let s = since {
+                reasonText = "Det er \(s) dager siden sist du hadde fri."
+            } else {
+                reasonText = "Ingen hvile registrert i år ennå."
+            }
+        case .danish:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Der er gået \(s) dage siden din sidste pause — længere end din sædvanlige cyklus på \(cycle) dage."
+            } else if let s = since {
+                reasonText = "Der er gået \(s) dage siden din sidste pause."
+            } else {
+                reasonText = "Ingen hvile registreret i år endnu."
+            }
+        case .finnish:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Viime tauostasi on \(s) päivää — yli tavallisen \(cycle) päivän jakson."
+            } else if let s = since {
+                reasonText = "Viime tauostasi on \(s) päivää."
+            } else {
+                reasonText = "Tälle vuodelle ei ole vielä kirjattu lepoa."
+            }
+        case .polish:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Minęło \(s) dni od ostatniej przerwy — więcej niż Twój zwykły cykl (\(cycle) dni)."
+            } else if let s = since {
+                reasonText = "Minęło \(s) dni od ostatniej przerwy."
+            } else {
+                reasonText = "W tym roku nie zapisano jeszcze żadnego odpoczynku."
+            }
+        case .czech:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Od poslední pauzy uplynulo dní: \(s) — víc než tvůj obvyklý cyklus (\(cycle) d)."
+            } else if let s = since {
+                reasonText = "Od poslední pauzy uplynulo dní: \(s)."
+            } else {
+                reasonText = "Letos zatím nemáš zaznamenaný žádný odpočinek."
+            }
+        case .greek:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Έχουν περάσει \(s) ημέρες από το τελευταίο σου διάλειμμα, πέρα από τον συνηθισμένο κύκλο των \(cycle) ημερών."
+            } else if let s = since {
+                reasonText = "Έχουν περάσει \(s) ημέρες από το τελευταίο σου διάλειμμα."
+            } else {
+                reasonText = "Δεν έχεις καταγράψει ξεκούραση φέτος."
+            }
+        case .turkish:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Son molandan bu yana \(s) gün geçti — normal \(cycle) günlük döngünü aştın."
+            } else if let s = since {
+                reasonText = "Son molandan bu yana \(s) gün geçti."
+            } else {
+                reasonText = "Bu yıl henüz dinlenme kaydı yok."
             }
         case .dutch:
             if let s = since, a.cycleIsPersonalized {
@@ -364,6 +436,30 @@ enum NotificationService {
             case .english:
                 let h = w.holidayName.isEmpty ? "" : " around \(w.holidayName)"
                 windowText = " In \(daysFromNow(w.startDate, lang)),\(h) just \(w.leaveDaysNeeded) leave day(s) makes a \(w.totalDaysOff)-day break."
+            case .swedish:
+                let h = w.holidayName.isEmpty ? "" : " runt \(w.holidayName)"
+                windowText = " Om \(daysFromNow(w.startDate, lang)),\(h) ger bara \(w.leaveDaysNeeded) semesterdag(ar) dig \(w.totalDaysOff) dagars ledighet."
+            case .norwegian:
+                let h = w.holidayName.isEmpty ? "" : " rundt \(w.holidayName)"
+                windowText = " Om \(daysFromNow(w.startDate, lang)),\(h) gir bare \(w.leaveDaysNeeded) feriedag(er) deg \(w.totalDaysOff) dager fri."
+            case .danish:
+                let h = w.holidayName.isEmpty ? "" : " omkring \(w.holidayName)"
+                windowText = " Om \(daysFromNow(w.startDate, lang)),\(h) giver blot \(w.leaveDaysNeeded) feriedag(e) en pause på \(w.totalDaysOff) dage."
+            case .finnish:
+                let h = w.holidayName.isEmpty ? "" : " (\(w.holidayName))"
+                windowText = " \(daysFromNow(w.startDate, lang)) päästä\(h): \(w.leaveDaysNeeded) lomapäivällä saat \(w.totalDaysOff) päivän tauon."
+            case .polish:
+                let h = w.holidayName.isEmpty ? "" : " przy: \(w.holidayName),"
+                windowText = " Za \(daysFromNow(w.startDate, lang)),\(h) tylko \(w.leaveDaysNeeded) dni urlopu da Ci \(w.totalDaysOff) dni wolnego."
+            case .czech:
+                let h = w.holidayName.isEmpty ? "" : " kolem svátku \(w.holidayName)"
+                windowText = " Za \(daysFromNow(w.startDate, lang)),\(h) ti stačí dovolená (dní: \(w.leaveDaysNeeded)) a máš volno v kuse (dní: \(w.totalDaysOff))."
+            case .greek:
+                let h = w.holidayName.isEmpty ? "" : " γύρω από \(w.holidayName)"
+                windowText = " Σε \(daysFromNow(w.startDate, lang)),\(h) με μόλις \(w.leaveDaysNeeded) ημέρα(ες) άδειας έχεις διάλειμμα \(w.totalDaysOff) ημερών."
+            case .turkish:
+                let h = w.holidayName.isEmpty ? "" : " \(w.holidayName) çevresinde"
+                windowText = " \(daysFromNow(w.startDate, lang)),\(h) sadece \(w.leaveDaysNeeded) izin günüyle \(w.totalDaysOff) günlük bir mola yapabilirsin."
             case .dutch:
                 let h = w.holidayName.isEmpty ? "" : " rond \(w.holidayName)"
                 windowText = " Over \(daysFromNow(w.startDate, lang)):\(h) met slechts \(w.leaveDaysNeeded) verlofdag(en) heb je \(w.totalDaysOff) dagen vrij."
@@ -399,6 +495,14 @@ enum NotificationService {
         case .japanese: return "\(max(0, d))日"
         case .chinese:  return "\(max(0, d))天"
         case .english:  return "\(max(0, d)) day(s)"
+        case .swedish:  return "\(max(0, d)) dag(ar)"
+        case .norwegian:  return "\(max(0, d)) dag(er)"
+        case .danish:  return "\(max(0, d)) dag(e)"
+        case .finnish:  return "\(max(0, d)) pv"
+        case .polish:  return "\(max(0, d)) dni"
+        case .czech:  return "\(max(0, d)) d"
+        case .greek:  return "\(max(0, d)) ημέρα(ες)"
+        case .turkish:  return "\(max(0, d)) gün"
         case .dutch:  return "\(max(0, d)) dag(en)"
         case .german: return "\(max(0, d)) Tag(e)"
         case .french: return "\(max(0, d)) jour(s)"
