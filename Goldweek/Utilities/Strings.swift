@@ -16541,6 +16541,31 @@ case .turkish: return "Hafta Sonu"
     }
 
     /// 주말 설정 — 주말에도 일한다
+    /// 설정 — 달력 첫 요일
+    static var firstWeekdaySetting: String {
+        switch lang {
+        case .korean: return "주 시작 요일"
+        case .english: return "Week starts on"
+        case .swedish: return "Veckan börjar"
+        case .norwegian: return "Uken starter"
+        case .danish: return "Ugen starter"
+        case .finnish: return "Viikko alkaa"
+        case .polish: return "Początek tygodnia"
+        case .czech: return "Týden začíná"
+        case .greek: return "Η εβδομάδα ξεκινά"
+        case .turkish: return "Hafta başlangıcı"
+        case .dutch: return "Week begint op"
+        case .japanese: return "週の始まり"
+        case .chinese: return "每周开始于"
+        case .german: return "Woche beginnt am"
+        case .french: return "Début de semaine"
+        case .spanish: return "La semana empieza el"
+        case .italian: return "La settimana inizia il"
+        case .portuguese: return "A semana começa em"
+        case .chineseTraditional: return "每週開始於"
+        }
+    }
+
     static var weekendNone: String {
         switch lang {
         case .korean: return "주말 없음 (매일 근무)"

@@ -633,6 +633,16 @@ class HolidayService {
         set { UserDefaults.standard.set(newValue, forKey: "customWeekendDays") }
     }
 
+    /// 내가 고른 주 시작 요일 — 0 이면 나라 기본, 아니면 Calendar weekday(1=일, 2=월, 7=토)
+    static var firstWeekdayOverride: Int {
+        UserDefaults.standard.integer(forKey: "firstWeekday")
+    }
+
+    /// 달력 첫 칸의 요일. 내가 고른 값이 있으면 그것, 없으면 나라 기본.
+    static func firstWeekday(for country: Country, override: Int = firstWeekdayOverride) -> Int {
+        (1...7).contains(override) ? override : country.standardFirstWeekday
+    }
+
     /// 저장값 → 주말 요일. 나라 기본을 따르면 nil.
     static func parseWeekend(_ raw: String) -> Set<Int>? {
         if raw == "none" { return [] }

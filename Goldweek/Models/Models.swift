@@ -166,6 +166,14 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// 그 나라 달력의 첫 요일 (Calendar weekday: 1=일, 2=월, 7=토) — 스페인·유럽 대부분은 월, 미국·한국은 일.
+    /// 기기 언어와 상관없이 나라의 관습(CLDR)을 따른다.
+    var standardFirstWeekday: Int {
+        var cal = Calendar(identifier: .gregorian)
+        cal.locale = Locale(identifier: localeIdentifier)
+        return cal.firstWeekday
+    }
+
     /// 이슬람력(달 관측) 공휴일이 있는 나라 — 날짜가 공식 발표에서 하루쯤 바뀔 수 있다
     var hasMoonSightingHolidays: Bool {
         switch self {

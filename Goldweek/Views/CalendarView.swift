@@ -437,6 +437,17 @@ struct CalendarGrid: View {
 
     private let calendar = Calendar.current
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
+
+    /// 달력 첫 칸의 요일 (1=일, 2=월, 7=토)
+    private var firstWeekday: Int {
+        HolidayService.firstWeekday(for: DayOffCalendar.shared.country, override: firstWeekdayRaw)
+    }
+
+    /// 첫 요일부터 차례로 늘어선 7개 요일
+    private var orderedWeekdays: [Int] {
+        (0..<7).map { (firstWeekday - 1 + $0) % 7 + 1 }
+    }
 
     /// 내 방학 날 — 쉬는 날이지만 공휴일(빨강)과 구분해 남색으로 그린다
     private func isMyBreak(_ date: Date) -> Bool {
@@ -449,8 +460,8 @@ struct CalendarGrid: View {
             return []
         }
 
-        let firstWeekday = calendar.component(.weekday, from: firstDay) - 1
-        var days: [Date?] = Array(repeating: nil, count: firstWeekday)
+        let leadingBlanks = (calendar.component(.weekday, from: firstDay) - firstWeekday + 7) % 7
+        var days: [Date?] = Array(repeating: nil, count: leadingBlanks)
 
         for day in range {
             if let date = calendar.date(byAdding: .day, value: day - 1, to: firstDay) {
@@ -469,10 +480,10 @@ struct CalendarGrid: View {
         VStack(spacing: 8) {
             // 요일 헤더
             HStack {
-                ForEach(Array(Strings.weekdays.enumerated()), id: \.offset) { index, day in
-                    Text(day)
+                ForEach(orderedWeekdays, id: \.self) { weekday in
+                    Text(Strings.weekdays[weekday - 1])
                         .font(.body.bold())
-                        .foregroundStyle(weekdayHeaderColor(index + 1))
+                        .foregroundStyle(weekdayHeaderColor(weekday))
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -593,18 +604,18 @@ struct CalendarGrid: View {
         return nearBreak ? .indigo : AppTheme.Colors.holiday
     }
 
-    /// 전날도 막대이고 같은 주 안에서 이어지는 경우 (일요일=첫 열은 좌측 연결 없음)
+    /// 전날도 막대이고 같은 주 안에서 이어지는 경우 (첫 열은 좌측 연결 없음)
     private func restConnectsLeft(_ date: Date) -> Bool {
         guard showsRestBar(date) else { return false }
-        if calendar.component(.weekday, from: date) == 1 { return false }
+        if calendar.component(.weekday, from: date) == firstWeekday { return false }
         guard let prev = calendar.date(byAdding: .day, value: -1, to: date) else { return false }
         return showsRestBar(prev)
     }
 
-    /// 다음날도 막대이고 같은 주 안에서 이어지는 경우 (토요일=마지막 열은 우측 연결 없음)
+    /// 다음날도 막대이고 같은 주 안에서 이어지는 경우 (마지막 열은 우측 연결 없음)
     private func restConnectsRight(_ date: Date) -> Bool {
         guard showsRestBar(date) else { return false }
-        if calendar.component(.weekday, from: date) == 7 { return false }
+        if calendar.component(.weekday, from: date) == orderedWeekdays[6] { return false }
         guard let next = calendar.date(byAdding: .day, value: 1, to: date) else { return false }
         return showsRestBar(next)
     }

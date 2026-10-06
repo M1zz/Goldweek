@@ -71,6 +71,7 @@ struct SettingsView: View {
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
     /// 내 주말 ("1,7", "none", 비면 나라 기본) — HolidayService.weekendOverrideRaw 와 같은 키
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
+    @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
     @AppStorage("rest_radar_enabled") private var restRadarEnabled: Bool = true
 
     // 국가 & 언어
@@ -314,6 +315,14 @@ struct SettingsView: View {
                         Text(Strings.weekendNone).tag("none")
                     }
                     .onChange(of: customWeekendDaysRaw) { _, _ in recommendationEngine.invalidateCache() }
+
+                    // 주 시작 요일 — 달력 첫 칸. 0 이면 나라 기본(스페인은 월, 미국은 일).
+                    Picker(Strings.firstWeekdaySetting, selection: $firstWeekdayRaw) {
+                        Text(Strings.weekendCountryDefault(Strings.weekdays[selectedCountry.standardFirstWeekday - 1])).tag(0)
+                        ForEach([2, 1, 7], id: \.self) { day in
+                            Text(Strings.weekdays[day - 1]).tag(day)
+                        }
+                    }
 
                     Picker(Strings.language, selection: $selectedLanguage) {
                         ForEach(AppLanguage.allCases) { lang in

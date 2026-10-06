@@ -1118,6 +1118,17 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertEqual(HolidayService.weekendDays(for: .egypt), [6, 7])
     }
 
+    func testFirstWeekdayFollowsCountry() {
+        XCTAssertEqual(Country.spain.standardFirstWeekday, 2)
+        XCTAssertEqual(Country.sweden.standardFirstWeekday, 2)
+        XCTAssertEqual(Country.usa.standardFirstWeekday, 1)
+        XCTAssertEqual(Country.korea.standardFirstWeekday, 1)
+        // 직접 고르면 나라 기본보다 앞선다, 0 은 나라 기본
+        XCTAssertEqual(HolidayService.firstWeekday(for: .spain, override: 1), 1)
+        XCTAssertEqual(HolidayService.firstWeekday(for: .usa, override: 2), 2)
+        XCTAssertEqual(HolidayService.firstWeekday(for: .spain, override: 0), 2)
+    }
+
     func testSwedenRedDays() {
         let saved = UserDefaults.standard.string(forKey: "appLanguage")
         defer { UserDefaults.standard.set(saved, forKey: "appLanguage") }
