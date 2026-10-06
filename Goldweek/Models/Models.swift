@@ -28,6 +28,27 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case saudiArabia = "saudiarabia"   // 주말 금·토
     case qatar = "qatar"               // 주말 금·토
     case peru = "peru"
+    case netherlands = "netherlands"
+    case belgium = "belgium"
+    case austria = "austria"
+    case switzerland = "switzerland"
+    case ireland = "ireland"
+    case portugal = "portugal"
+    case sweden = "sweden"
+    case norway = "norway"
+    case denmark = "denmark"
+    case finland = "finland"
+    case poland = "poland"
+    case czechia = "czechia"
+    case greece = "greece"
+    case turkey = "turkey"
+    case egypt = "egypt"
+    case southAfrica = "southafrica"
+    case mexico = "mexico"
+    case argentina = "argentina"
+    case chile = "chile"
+    case colombia = "colombia"
+    case newZealand = "newzealand"
     /// 지원하지 않는 나라 — 기본 공휴일 없이 사용자가 직접 넣는다 (예: 남아공)
     case custom = "custom"
 
@@ -58,6 +79,27 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .saudiArabia: return "SA"
         case .qatar: return "QA"
         case .peru: return "PE"
+        case .netherlands: return "NL"
+        case .belgium: return "BE"
+        case .austria: return "AT"
+        case .switzerland: return "CH"
+        case .ireland: return "IE"
+        case .portugal: return "PT"
+        case .sweden: return "SE"
+        case .norway: return "NO"
+        case .denmark: return "DK"
+        case .finland: return "FI"
+        case .poland: return "PL"
+        case .czechia: return "CZ"
+        case .greece: return "GR"
+        case .turkey: return "TR"
+        case .egypt: return "EG"
+        case .southAfrica: return "ZA"
+        case .mexico: return "MX"
+        case .argentina: return "AR"
+        case .chile: return "CL"
+        case .colombia: return "CO"
+        case .newZealand: return "NZ"
         case .custom: return ""   // 어떤 기기 지역과도 맞지 않게
         }
     }
@@ -90,6 +132,27 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .saudiArabia: return "en_SA"
         case .qatar: return "en_QA"
         case .peru: return "es_PE"
+        case .netherlands: return "nl_NL"
+        case .belgium: return "nl_BE"
+        case .austria: return "de_AT"
+        case .switzerland: return "de_CH"
+        case .ireland: return "en_IE"
+        case .portugal: return "pt_PT"
+        case .sweden: return "sv_SE"
+        case .norway: return "nb_NO"
+        case .denmark: return "da_DK"
+        case .finland: return "fi_FI"
+        case .poland: return "pl_PL"
+        case .czechia: return "cs_CZ"
+        case .greece: return "el_GR"
+        case .turkey: return "tr_TR"
+        case .egypt: return "ar_EG"
+        case .southAfrica: return "en_ZA"
+        case .mexico: return "es_MX"
+        case .argentina: return "es_AR"
+        case .chile: return "es_CL"
+        case .colombia: return "es_CO"
+        case .newZealand: return "en_NZ"
         case .custom: return Locale.current.identifier
         }
     }
@@ -98,7 +161,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     /// 직접 입력은 사용자가 고른 값을 `HolidayService.weekendDays(for:)`가 돌려준다.
     var standardWeekendDays: Set<Int> {
         switch self {
-        case .saudiArabia, .qatar: return [6, 7]
+        case .saudiArabia, .qatar, .egypt: return [6, 7]
         default: return [1, 7]
         }
     }
@@ -106,7 +169,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     /// 이슬람력(달 관측) 공휴일이 있는 나라 — 날짜가 공식 발표에서 하루쯤 바뀔 수 있다
     var hasMoonSightingHolidays: Bool {
         switch self {
-        case .uae, .saudiArabia, .qatar: return true
+        case .uae, .saudiArabia, .qatar, .turkey, .egypt: return true
         default: return false
         }
     }
@@ -139,6 +202,15 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case "es": fallback = .spain
         case "it": fallback = .italy
         case "pt": fallback = .brazil
+        case "nl": fallback = .netherlands
+        case "sv": fallback = .sweden
+        case "nb", "nn", "no": fallback = .norway
+        case "da": fallback = .denmark
+        case "fi": fallback = .finland
+        case "pl": fallback = .poland
+        case "cs": fallback = .czechia
+        case "el": fallback = .greece
+        case "tr": fallback = .turkey
         default: fallback = .usa
         }
         return (fallback, false)
@@ -156,7 +228,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
 
 /// 국가 선택을 대륙 → 나라 2단계로 찾게 묶는다. 직접 입력(.custom)은 어느 대륙에도 넣지 않는다.
 enum Continent: String, CaseIterable, Identifiable {
-    case asia, middleEast, europe, northAmerica, southAmerica, oceania
+    case asia, middleEast, europe, africa, northAmerica, southAmerica, oceania
 
     var id: String { rawValue }
 
@@ -170,7 +242,7 @@ enum Continent: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .asia, .oceania: return "globe.asia.australia.fill"
-        case .middleEast, .europe: return "globe.europe.africa.fill"
+        case .middleEast, .europe, .africa: return "globe.europe.africa.fill"
         case .northAmerica, .southAmerica: return "globe.americas.fill"
         }
     }
@@ -180,11 +252,13 @@ extension Country {
     var continent: Continent? {
         switch self {
         case .korea, .japan, .china, .taiwan, .hongKong: return .asia
-        case .uae, .saudiArabia, .qatar: return .middleEast
-        case .germany, .france, .uk, .spain, .italy: return .europe
-        case .usa, .canada: return .northAmerica
-        case .brazil, .peru: return .southAmerica
-        case .australia: return .oceania
+        case .uae, .saudiArabia, .qatar, .turkey: return .middleEast
+        case .germany, .france, .uk, .spain, .italy, .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal,
+             .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece: return .europe
+        case .egypt, .southAfrica: return .africa
+        case .usa, .canada, .mexico: return .northAmerica
+        case .brazil, .peru, .argentina, .chile, .colombia: return .southAmerica
+        case .australia, .newZealand: return .oceania
         case .custom: return nil
         }
     }

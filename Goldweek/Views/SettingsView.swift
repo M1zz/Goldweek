@@ -69,7 +69,7 @@ struct SettingsView: View {
 
     // 홈 "연차 현황"에 보너스 연차를 합산할지 여부 (홈 화면에서 이 설정을 따른다)
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
-    /// 직접 입력 국가의 주말 요일 ("7,1") — HolidayService.customWeekendDays 와 같은 키
+    /// 내 주말 ("1,7", "none", 비면 나라 기본) — HolidayService.weekendOverrideRaw 와 같은 키
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
     @AppStorage("rest_radar_enabled") private var restRadarEnabled: Bool = true
 
@@ -154,8 +154,8 @@ struct SettingsView: View {
         return "\(Int((used / total) * 100))%"
     }
 
-    /// 직접 입력 국가에서 고를 수 있는 주말 (토·일 / 금·토 / 목·금 / 금 / 일)
-    static let weekendPresets: [Set<Int>] = [[7, 1], [6, 7], [5, 6], [6], [1]]
+    /// 고를 수 있는 주말 (토·일 / 금·토 / 목·금 / 일 / 금 / 토) — 저장값 그대로
+    static let weekendPresets: [String] = ["1,7", "6,7", "5,6", "1", "6", "7"]
 
     /// 월요일부터 순서대로 "Sat · Sun"
     static func weekendLabel(_ days: Set<Int>) -> String {
@@ -305,28 +305,15 @@ struct SettingsView: View {
                         }
                     }
 
-                    // 주말 — 나라마다 다르다(중동은 금·토). 직접 입력이면 고른다.
-                    if selectedCountry == .custom {
-                        Picker(Strings.weekendSetting, selection: Binding(
-                            get: { HolidayService.customWeekendDays },
-                            set: { newValue in
-                                HolidayService.customWeekendDays = newValue
-                                customWeekendDaysRaw = newValue.sorted().map(String.init).joined(separator: ",")
-                                recommendationEngine.invalidateCache()
-                            }
-                        )) {
-                            ForEach(Self.weekendPresets, id: \.self) { days in
-                                Text(Self.weekendLabel(days)).tag(days)
-                            }
+                    // 주말 — 나라마다 다르고(중동은 금·토), 주말에 일하는 사람도 있다. 비워 두면 나라 기본.
+                    Picker(Strings.weekendSetting, selection: $customWeekendDaysRaw) {
+                        Text(Strings.weekendCountryDefault(Self.weekendLabel(selectedCountry.standardWeekendDays))).tag("")
+                        ForEach(Self.weekendPresets, id: \.self) { raw in
+                            Text(Self.weekendLabel(HolidayService.parseWeekend(raw) ?? [])).tag(raw)
                         }
-                    } else {
-                        HStack {
-                            Text(Strings.weekendSetting)
-                            Spacer()
-                            Text(Self.weekendLabel(selectedCountry.standardWeekendDays))
-                                .foregroundStyle(.secondary)
-                        }
+                        Text(Strings.weekendNone).tag("none")
                     }
+                    .onChange(of: customWeekendDaysRaw) { _, _ in recommendationEngine.invalidateCache() }
 
                     Picker(Strings.language, selection: $selectedLanguage) {
                         ForEach(AppLanguage.allCases) { lang in
@@ -344,6 +331,8 @@ struct SettingsView: View {
                         Text(Strings.holidayRegionFooter(selectedCountry))
                     } else if selectedCountry == .custom {
                         Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.weekendSettingFooter)")
+                    } else {
+                        Text(Strings.weekendSettingFooter)
                     }
                 }
 

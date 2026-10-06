@@ -1345,6 +1345,27 @@ struct MyRealTripPromoCard: View {
         case .saudiArabia: return "RUH" // 리야드
         case .qatar: return "DOH"   // 도하
         case .peru: return "LIM"    // 리마
+        case .netherlands: return "AMS"
+        case .belgium: return "BRU"
+        case .austria: return "VIE"
+        case .switzerland: return "ZRH"
+        case .ireland: return "DUB"
+        case .portugal: return "LIS"
+        case .sweden: return "ARN"
+        case .norway: return "OSL"
+        case .denmark: return "CPH"
+        case .finland: return "HEL"
+        case .poland: return "WAW"
+        case .czechia: return "PRG"
+        case .greece: return "ATH"
+        case .turkey: return "IST"
+        case .egypt: return "CAI"
+        case .southAfrica: return "JNB"
+        case .mexico: return "MEX"
+        case .argentina: return "EZE"
+        case .chile: return "SCL"
+        case .colombia: return "BOG"
+        case .newZealand: return "AKL"
         case .custom: return "ICN"   // 출발지를 알 수 없다 — 기본값
         }
     }

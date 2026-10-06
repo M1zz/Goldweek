@@ -1082,17 +1082,40 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "zh_Hant_TW")).country, .taiwan)
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "zh_Hant_HK")).country, .hongKong)
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "fr_CA")).country, .canada)
-        let austria = Country.detect(locale: Locale(identifier: "de_AT"))
-        XCTAssertEqual(austria.country, .germany)
-        XCTAssertFalse(austria.isSupported)
+        let luxembourg = Country.detect(locale: Locale(identifier: "de_LU"))
+        XCTAssertEqual(luxembourg.country, .germany)
+        XCTAssertFalse(luxembourg.isSupported)
         XCTAssertTrue(Country.detect(locale: Locale(identifier: "pt_BR")).isSupported)
         // 지원하지 않는 지역의 영어 폰 → 미국, 걸프 지역 → 그 나라
-        let southAfrica = Country.detect(locale: Locale(identifier: "en_ZA"))
-        XCTAssertEqual(southAfrica.country, .usa)
-        XCTAssertFalse(southAfrica.isSupported)
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_ZA")).country, .southAfrica)
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "nl_NL")).country, .netherlands)
+        let kenya = Country.detect(locale: Locale(identifier: "en_KE"))
+        XCTAssertEqual(kenya.country, .usa)
+        XCTAssertFalse(kenya.isSupported)
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_US")).country, .usa)
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "ar_SA")).country, .saudiArabia)
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_AE")).country, .uae)
+    }
+
+    func testMoreCountriesKeyDates() {
+        func keys(_ c: Country, _ y: Int) -> Set<String> {
+            let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+            return Set(HolidayService().getHolidays(for: y, country: c).map { f.string(from: $0.date) })
+        }
+        // 네덜란드 2026: 부활절 4/5 → 월 4/6, 국왕의 날 4/27, 승천일 5/14, 성령강림 월 5/25
+        XCTAssertTrue(keys(.netherlands, 2026).isSuperset(of: ["2026-04-06", "2026-04-27", "2026-05-14", "2026-05-25", "2026-12-26"]))
+        XCTAssertFalse(keys(.netherlands, 2026).contains("2026-05-05"))   // 해방 기념일은 5년마다
+        XCTAssertTrue(keys(.netherlands, 2030).contains("2030-05-05"))
+        // 그리스 2026 정교회 부활절 4/12 → 성금요일 4/10, 월 4/13
+        XCTAssertTrue(keys(.greece, 2026).isSuperset(of: ["2026-04-10", "2026-04-13"]))
+        // 남아공 2026: 여성의 날 8/9 일요일 → 8/10 대체
+        XCTAssertTrue(keys(.southAfrica, 2026).isSuperset(of: ["2026-08-09", "2026-08-10"]))
+        // 콜롬비아 2026: 주현절 1/6(화) → 1/12(월)
+        XCTAssertTrue(keys(.colombia, 2026).contains("2026-01-12"))
+        // 뉴질랜드 2026 마타리키 7/10
+        XCTAssertTrue(keys(.newZealand, 2026).contains("2026-07-10"))
+        // 이집트는 금·토 주말
+        XCTAssertEqual(HolidayService.weekendDays(for: .egypt), [6, 7])
     }
 
     func testPeruHolidays() {
@@ -1359,13 +1382,24 @@ final class LeaveDeductionTests: XCTestCase {
     }
 
     func testCustomWeekendSetting() {
-        let saved = HolidayService.customWeekendDays
-        defer { HolidayService.customWeekendDays = saved }
-        HolidayService.customWeekendDays = [6]   // 금요일만
+        let saved = HolidayService.weekendOverrideRaw
+        defer { HolidayService.weekendOverrideRaw = saved }
+        HolidayService.weekendOverrideRaw = "6"   // 금요일만
         DayOffCalendar.shared.update(country: .custom, customHolidays: [], hiddenDates: [], breaks: [])
         defer { DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: []) }
         XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 9)))
         XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 10)))  // 토 — 근무일
+    }
+
+    func testWorkEveryDayOverride() {
+        let saved = HolidayService.weekendOverrideRaw
+        defer { HolidayService.weekendOverrideRaw = saved }
+        HolidayService.weekendOverrideRaw = "none"   // 주말에도 일한다
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        defer { DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: []) }
+        // 2026-10-16(금) ~ 10-19(월) → 주말도 연차로 센다
+        let r = LeaveRecord(startDate: d(2026, 10, 16), endDate: d(2026, 10, 19))
+        XCTAssertEqual(r.effectiveLeaveDays, 4)
     }
 
     private func key(_ date: Date) -> String {

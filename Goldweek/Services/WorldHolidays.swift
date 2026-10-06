@@ -1031,4 +1031,603 @@ extension HolidayService {
         list.append((day(year, 12, 25), Common.christmas))
         return list.compactMap { d, n in d.map { Holiday(date: $0, name: n.text) } }.sorted { $0.date < $1.date }
     }
+
+    // MARK: - 그 밖의 나라 (법정 공휴일 기준, 주말에 걸려도 옮기지 않는 나라는 그대로 둔다)
+
+    private enum More {
+        static let ascension = N(ko: "예수 승천일", en: "Ascension Day", ja: "キリスト昇天祭", zh: "耶稣升天节", de: "Christi Himmelfahrt", fr: "Ascension",
+                                 es: "Ascensión", it: "Ascensione", pt: "Ascensão", zht: "耶穌升天節")
+        static let whitMonday = N(ko: "성령강림절 월요일", en: "Whit Monday", ja: "聖霊降臨祭月曜日", zh: "圣灵降临节星期一", de: "Pfingstmontag", fr: "Lundi de Pentecôte",
+                                  es: "Lunes de Pentecostés", it: "Lunedì di Pentecoste", pt: "Segunda-feira de Pentecostes", zht: "聖靈降臨節星期一")
+        static let secondChristmas = N(ko: "크리스마스 다음 날", en: "Second Day of Christmas", ja: "クリスマス翌日", zh: "圣诞节第二天", de: "2. Weihnachtstag", fr: "Deuxième jour de Noël",
+                                       es: "Segundo día de Navidad", it: "Santo Stefano", pt: "Segundo dia de Natal", zht: "聖誕節翌日")
+        static let newYearsEve = N(ko: "12월 31일", en: "New Year's Eve", ja: "大晦日", zh: "除夕（12月31日）", de: "Silvester", fr: "Saint-Sylvestre",
+                                   es: "Nochevieja", it: "San Silvestro", pt: "Véspera de Ano-Novo", zht: "跨年夜")
+        static let midsummerEve = N(ko: "하지 전야", en: "Midsummer Eve", ja: "夏至祭前夜", zh: "仲夏节前夜", de: "Mittsommerabend", fr: "Veille de la Saint-Jean",
+                                    es: "Víspera de San Juan", it: "Vigilia di mezza estate", pt: "Véspera do solstício", zht: "仲夏節前夕")
+        static let independence = N(ko: "독립기념일", en: "Independence Day", ja: "独立記念日", zh: "独立日", de: "Unabhängigkeitstag", fr: "Fête de l’indépendance",
+                                    es: "Día de la Independencia", it: "Festa dell’indipendenza", pt: "Dia da Independência", zht: "獨立紀念日")
+        static let constitution = N(ko: "제헌절", en: "Constitution Day", ja: "憲法記念日", zh: "宪法日", de: "Verfassungstag", fr: "Fête de la Constitution",
+                                    es: "Día de la Constitución", it: "Festa della Costituzione", pt: "Dia da Constituição", zht: "憲法紀念日")
+        static let republicDay = N(ko: "공화국의 날", en: "Republic Day", ja: "共和国記念日", zh: "共和国日", de: "Tag der Republik", fr: "Fête de la République",
+                                   es: "Día de la República", it: "Festa della Repubblica", pt: "Dia da República", zht: "共和國日")
+        static let freedomDay = N(ko: "자유의 날", en: "Freedom Day", ja: "自由の日", zh: "自由日", de: "Tag der Freiheit", fr: "Jour de la Liberté",
+                                  es: "Día de la Libertad", it: "Giorno della Libertà", pt: "Dia da Liberdade", zht: "自由日")
+        static let cleanMonday = N(ko: "정결 월요일", en: "Clean Monday", ja: "清浄月曜日", zh: "洁净星期一", de: "Rosenmontag (orthodox)", fr: "Lundi pur",
+                                   es: "Lunes Limpio", it: "Lunedì puro", pt: "Segunda-feira Limpa", zht: "潔淨星期一")
+        static let revolution = N(ko: "혁명 기념일", en: "Revolution Day", ja: "革命記念日", zh: "革命纪念日", de: "Tag der Revolution", fr: "Fête de la Révolution",
+                                  es: "Día de la Revolución", it: "Anniversario della Rivoluzione", pt: "Dia da Revolução", zht: "革命紀念日")
+        static let columbus = N(ko: "문화 다양성의 날", en: "Day of Cultural Diversity", ja: "文化多様性の日", zh: "文化多样性日", de: "Tag der kulturellen Vielfalt", fr: "Jour de la diversité culturelle",
+                                es: "Día del Respeto a la Diversidad Cultural", it: "Giorno della diversità culturale", pt: "Dia da Diversidade Cultural", zht: "文化多樣性日")
+        static let carnival = N(ko: "카니발", en: "Carnival", ja: "カーニバル", zh: "狂欢节", de: "Karneval", fr: "Carnaval",
+                                es: "Carnaval", it: "Carnevale", pt: "Carnaval", zht: "嘉年華")
+        static let sacredHeart = N(ko: "예수 성심 대축일", en: "Sacred Heart", ja: "イエスの聖心の祭日", zh: "耶稣圣心节", de: "Herz-Jesu-Fest", fr: "Sacré-Cœur",
+                                   es: "Sagrado Corazón", it: "Sacro Cuore", pt: "Sagrado Coração", zht: "耶穌聖心節")
+        static let saintsPeterPaul = N(ko: "성 베드로와 성 바오로 축일", en: "Saints Peter and Paul", ja: "聖ペトロと聖パウロの日", zh: "圣伯多禄和圣保禄节", de: "Peter und Paul", fr: "Saints Pierre et Paul",
+                                       es: "San Pedro y San Pablo", it: "Santi Pietro e Paolo", pt: "São Pedro e São Paulo", zht: "聖伯多祿聖保祿節")
+        static let labourDay = N(ko: "노동절", en: "Labour Day", ja: "勤労感謝の日", zh: "劳动节", de: "Tag der Arbeit", fr: "Fête du Travail",
+                                 es: "Día del Trabajo", it: "Festa del Lavoro", pt: "Dia do Trabalho", zht: "勞動節")
+    }
+
+    /// 그리스 정교회 부활절 (율리우스력 계산 → 그레고리력, 1900~2099는 +13일)
+    fileprivate func orthodoxEaster(_ year: Int) -> Date? {
+        let a = year % 4, b = year % 7, c = year % 19
+        let d = (19 * c + 15) % 30
+        let e = (2 * a + 4 * b - d + 34) % 7
+        let month = (d + e + 114) / 31
+        let dayOfMonth = (d + e + 114) % 31 + 1
+        guard let julian = day(year, month, dayOfMonth) else { return nil }
+        return adding(13, to: julian)
+    }
+
+    /// 화·수면 그 주 월요일, 목·금이면 다음 주 월요일 (아르헨티나 이동 공휴일)
+    fileprivate func toNearestMonday(_ date: Date?) -> Date? {
+        guard let date else { return nil }
+        switch weekday(date) {
+        case 3: return adding(-1, to: date)
+        case 4: return adding(-2, to: date)
+        case 5: return adding(4, to: date)
+        case 6: return adding(3, to: date)
+        default: return date
+        }
+    }
+
+    private func makeList(_ list: [(Date?, N)]) -> [Holiday] {
+        var taken = Set<String>()
+        return list.compactMap { d, n -> Holiday? in
+            guard let d, taken.insert(dateKey(d)).inserted else { return nil }
+            return Holiday(date: d, name: n.text)
+        }.sorted { $0.date < $1.date }
+    }
+
+    // MARK: 네덜란드
+
+    func getNetherlandsHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        if let e = easter(year) {
+            list.append((adding(1, to: e), Common.easterMonday))
+            list.append((adding(39, to: e), More.ascension))
+            list.append((adding(50, to: e), More.whitMonday))
+        }
+        // 국왕의 날 4/27 — 일요일이면 전날 토요일
+        if let kd = day(year, 4, 27) {
+            list.append((weekday(kd) == 1 ? adding(-1, to: kd) : kd,
+                         N(ko: "국왕의 날", en: "King's Day", ja: "国王の日", zh: "国王节", de: "Königstag", fr: "Fête du Roi",
+                           es: "Día del Rey", it: "Festa del Re", pt: "Dia do Rei", zht: "國王節")))
+        }
+        // 해방 기념일 5/5 — 법정 공휴일이지만 대부분의 단체협약상 5년마다(2025, 2030…)만 쉰다
+        if year % 5 == 0 {
+            list.append((day(year, 5, 5), N(ko: "해방 기념일", en: "Liberation Day", ja: "解放記念日", zh: "解放日", de: "Befreiungstag", fr: "Fête de la Libération",
+                                            es: "Día de la Liberación", it: "Festa della Liberazione", pt: "Dia da Libertação", zht: "解放紀念日")))
+        }
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), More.secondChristmas))
+        return makeList(list)
+    }
+
+    // MARK: 벨기에
+
+    func getBelgiumHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        if let e = easter(year) {
+            list.append((adding(1, to: e), Common.easterMonday))
+            list.append((adding(39, to: e), More.ascension))
+            list.append((adding(50, to: e), More.whitMonday))
+        }
+        list.append((day(year, 5, 1), Common.labour))
+        list.append((day(year, 7, 21), Common.nationalDay))
+        list.append((day(year, 8, 15), Common.assumption))
+        list.append((day(year, 11, 1), Common.allSaints))
+        list.append((day(year, 11, 11), N(ko: "휴전 기념일", en: "Armistice Day", ja: "休戦記念日", zh: "停战纪念日", de: "Waffenstillstand", fr: "Armistice",
+                                          es: "Día del Armisticio", it: "Giorno dell’Armistizio", pt: "Dia do Armistício", zht: "停戰紀念日")))
+        list.append((day(year, 12, 25), Common.christmas))
+        return makeList(list)
+    }
+
+    // MARK: 오스트리아
+
+    func getAustriaHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear), (day(year, 1, 6), Common.epiphany)]
+        if let e = easter(year) {
+            list.append((adding(1, to: e), Common.easterMonday))
+            list.append((adding(39, to: e), More.ascension))
+            list.append((adding(50, to: e), More.whitMonday))
+            list.append((adding(60, to: e), Common.corpusChristi))
+        }
+        list.append((day(year, 5, 1), More.labourDay))
+        list.append((day(year, 8, 15), Common.assumption))
+        list.append((day(year, 10, 26), Common.nationalDay))
+        list.append((day(year, 11, 1), Common.allSaints))
+        list.append((day(year, 12, 8), Common.immaculate))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), Common.stStephen))
+        return makeList(list)
+    }
+
+    // MARK: 스위스
+
+    /// 연방 공휴일은 8/1뿐이고 나머지는 칸톤마다 다르다 — 가장 많은 사람이 쓰는 취리히 기준.
+    func getSwitzerlandHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [
+            (day(year, 1, 1), Common.newYear),
+            (day(year, 1, 2), N(ko: "베르히톨드의 날", en: "Berchtold's Day", ja: "ベルヒトルトの日", zh: "贝希托尔德节", de: "Berchtoldstag", fr: "Saint-Berchtold",
+                                es: "Día de San Bertoldo", it: "San Berclario", pt: "Dia de São Bertoldo", zht: "貝希托爾德節")),
+        ]
+        if let e = easter(year) {
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(1, to: e), Common.easterMonday))
+            list.append((adding(39, to: e), More.ascension))
+            list.append((adding(50, to: e), More.whitMonday))
+        }
+        list.append((day(year, 5, 1), More.labourDay))
+        list.append((day(year, 8, 1), Common.nationalDay))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), Common.stStephen))
+        return makeList(list)
+    }
+
+    // MARK: 아일랜드
+
+    func getIrelandHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        // 성 브리지드의 날 (2023~): 2월 첫 월요일, 2/1이 금요일이면 그날
+        if year >= 2023, let feb1 = day(year, 2, 1) {
+            list.append((weekday(feb1) == 6 ? feb1 : weekday(2, onOrAfter: feb1),
+                         N(ko: "성 브리지드의 날", en: "St Brigid's Day", ja: "聖ブリジッドの日", zh: "圣布里吉德节", de: "St.-Brigid-Tag", fr: "Sainte-Brigitte",
+                           es: "Día de Santa Brígida", it: "Santa Brigida", pt: "Dia de Santa Brígida", zht: "聖布里吉德節")))
+        }
+        list.append((day(year, 3, 17), N(ko: "성 패트릭의 날", en: "St Patrick's Day", ja: "聖パトリックの祝日", zh: "圣帕特里克节", de: "St. Patrick's Day", fr: "Saint-Patrick",
+                                         es: "Día de San Patricio", it: "San Patrizio", pt: "Dia de São Patrício", zht: "聖派翠克節")))
+        if let e = easter(year) { list.append((adding(1, to: e), Common.easterMonday)) }
+        let bank = N(ko: "공휴일 (뱅크 홀리데이)", en: "Bank Holiday", ja: "バンクホリデー", zh: "银行假日", de: "Bankfeiertag", fr: "Jour férié",
+                     es: "Festivo bancario", it: "Festività bancaria", pt: "Feriado bancário", zht: "銀行假日")
+        list.append((nthWeekday(nth: 1, weekday: 2, month: 5, year: year), bank))
+        list.append((nthWeekday(nth: 1, weekday: 2, month: 6, year: year), bank))
+        list.append((nthWeekday(nth: 1, weekday: 2, month: 8, year: year), bank))
+        list.append((lastWeekday(weekday: 2, month: 10, year: year), bank))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), Common.stStephen))
+        let base = makeList(list)
+        // 주말에 걸린 새해·성 패트릭·크리스마스·성 스테파노는 다음 평일에 쉰다
+        let movable = Set([day(year, 1, 1), day(year, 3, 17), day(year, 12, 25), day(year, 12, 26)].compactMap { $0 }.map(dateKey))
+        return (base + rollForward(base, substitutable: movable))
+            .filter { calendar.component(.year, from: $0.date) == year }
+            .sorted { $0.date < $1.date }
+    }
+
+    // MARK: 포르투갈
+
+    func getPortugalHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        if let e = easter(year) {
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(60, to: e), Common.corpusChristi))
+        }
+        list.append((day(year, 4, 25), N(ko: "자유의 날", en: "Freedom Day", ja: "自由の日", zh: "自由日", de: "Tag der Freiheit", fr: "Jour de la Liberté",
+                                         es: "Día de la Libertad", it: "Festa della Libertà", pt: "Dia da Liberdade", zht: "自由日")))
+        list.append((day(year, 5, 1), Common.labour))
+        list.append((day(year, 6, 10), N(ko: "포르투갈의 날", en: "Portugal Day", ja: "ポルトガルの日", zh: "葡萄牙日", de: "Tag Portugals", fr: "Jour du Portugal",
+                                         es: "Día de Portugal", it: "Giorno del Portogallo", pt: "Dia de Portugal", zht: "葡萄牙日")))
+        list.append((day(year, 8, 15), Common.assumption))
+        list.append((day(year, 10, 5), More.republicDay))
+        list.append((day(year, 11, 1), Common.allSaints))
+        list.append((day(year, 12, 1), N(ko: "독립 회복 기념일", en: "Restoration of Independence", ja: "独立回復記念日", zh: "恢复独立日", de: "Wiederherstellung der Unabhängigkeit", fr: "Restauration de l’indépendance",
+                                         es: "Restauración de la Independencia", it: "Restaurazione dell’indipendenza", pt: "Restauração da Independência", zht: "恢復獨立紀念日")))
+        list.append((day(year, 12, 8), Common.immaculate))
+        list.append((day(year, 12, 25), Common.christmas))
+        return makeList(list)
+    }
+
+    // MARK: 북유럽
+
+    /// 하지 전야·크리스마스 이브·12/31은 법정 공휴일은 아니지만 사실상 쉬는 날이라 넣는다.
+    func getSwedenHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear), (day(year, 1, 6), Common.epiphany)]
+        if let e = easter(year) {
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(1, to: e), Common.easterMonday))
+            list.append((adding(39, to: e), More.ascension))
+        }
+        list.append((day(year, 5, 1), Common.labour))
+        list.append((day(year, 6, 6), Common.nationalDay))
+        list.append((day(year, 6, 19).map { weekday(6, onOrAfter: $0) }, More.midsummerEve))
+        list.append((day(year, 12, 24), Common.christmasEve))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), More.secondChristmas))
+        list.append((day(year, 12, 31), More.newYearsEve))
+        return makeList(list)
+    }
+
+    func getNorwayHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        if let e = easter(year) {
+            list.append((adding(-3, to: e), Common.maundyThursday))
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(1, to: e), Common.easterMonday))
+            list.append((adding(39, to: e), More.ascension))
+            list.append((adding(50, to: e), More.whitMonday))
+        }
+        list.append((day(year, 5, 1), Common.labour))
+        list.append((day(year, 5, 17), More.constitution))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), More.secondChristmas))
+        return makeList(list)
+    }
+
+    func getDenmarkHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        if let e = easter(year) {
+            list.append((adding(-3, to: e), Common.maundyThursday))
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(1, to: e), Common.easterMonday))
+            // 대기도일 — 2024년에 폐지
+            if year < 2024 {
+                list.append((adding(26, to: e), N(ko: "대기도일", en: "Great Prayer Day", ja: "大祈祷日", zh: "大祈祷日", de: "Großer Bettag", fr: "Jour de prière",
+                                                  es: "Gran Día de Oración", it: "Grande giorno di preghiera", pt: "Grande Dia de Oração", zht: "大祈禱日")))
+            }
+            list.append((adding(39, to: e), More.ascension))
+            list.append((adding(50, to: e), More.whitMonday))
+        }
+        list.append((day(year, 6, 5), More.constitution))
+        list.append((day(year, 12, 24), Common.christmasEve))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), More.secondChristmas))
+        return makeList(list)
+    }
+
+    func getFinlandHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear), (day(year, 1, 6), Common.epiphany)]
+        if let e = easter(year) {
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(1, to: e), Common.easterMonday))
+            list.append((adding(39, to: e), More.ascension))
+        }
+        list.append((day(year, 5, 1), Common.labour))
+        list.append((day(year, 6, 19).map { weekday(6, onOrAfter: $0) }, More.midsummerEve))
+        list.append((day(year, 12, 6), More.independence))
+        list.append((day(year, 12, 24), Common.christmasEve))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), More.secondChristmas))
+        return makeList(list)
+    }
+
+    // MARK: 중·동유럽
+
+    func getPolandHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear), (day(year, 1, 6), Common.epiphany)]
+        if let e = easter(year) {
+            list.append((adding(1, to: e), Common.easterMonday))
+            list.append((adding(60, to: e), Common.corpusChristi))
+        }
+        list.append((day(year, 5, 1), Common.labour))
+        list.append((day(year, 5, 3), More.constitution))
+        list.append((day(year, 8, 15), Common.assumption))
+        list.append((day(year, 11, 1), Common.allSaints))
+        list.append((day(year, 11, 11), More.independence))
+        if year >= 2025 { list.append((day(year, 12, 24), Common.christmasEve)) }   // 2025년 신설
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), More.secondChristmas))
+        return makeList(list)
+    }
+
+    func getCzechiaHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        if let e = easter(year) {
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(1, to: e), Common.easterMonday))
+        }
+        list.append((day(year, 5, 1), Common.labour))
+        list.append((day(year, 5, 8), N(ko: "해방 기념일", en: "Liberation Day", ja: "解放記念日", zh: "解放日", de: "Tag der Befreiung", fr: "Fête de la Libération",
+                                        es: "Día de la Liberación", it: "Giorno della Liberazione", pt: "Dia da Libertação", zht: "解放紀念日")))
+        list.append((day(year, 7, 5), N(ko: "성 키릴로스와 메토디오스의 날", en: "Saints Cyril and Methodius Day", ja: "聖キュリロスと聖メトディオスの日", zh: "圣西里尔和圣美多德日",
+                                        de: "Kyrill und Method", fr: "Saints Cyrille et Méthode", es: "Santos Cirilo y Metodio", it: "Santi Cirillo e Metodio",
+                                        pt: "Santos Cirilo e Metódio", zht: "聖西里爾和聖美多德日")))
+        list.append((day(year, 7, 6), N(ko: "얀 후스의 날", en: "Jan Hus Day", ja: "ヤン・フスの日", zh: "扬·胡斯日", de: "Jan-Hus-Tag", fr: "Jour de Jan Hus",
+                                        es: "Día de Jan Hus", it: "Giorno di Jan Hus", pt: "Dia de Jan Hus", zht: "揚·胡斯日")))
+        list.append((day(year, 9, 28), N(ko: "체코 국가의 날", en: "Czech Statehood Day", ja: "チェコ国家の日", zh: "捷克国家日", de: "Tag der tschechischen Staatlichkeit", fr: "Jour de l’État tchèque",
+                                         es: "Día del Estado Checo", it: "Giorno della statualità ceca", pt: "Dia do Estado Tcheco", zht: "捷克國家日")))
+        list.append((day(year, 10, 28), More.independence))
+        list.append((day(year, 11, 17), N(ko: "자유와 민주주의 투쟁의 날", en: "Struggle for Freedom and Democracy Day", ja: "自由と民主主義のための闘争の日", zh: "争取自由民主日",
+                                          de: "Tag des Kampfes für Freiheit und Demokratie", fr: "Jour de la lutte pour la liberté et la démocratie",
+                                          es: "Día de la Lucha por la Libertad y la Democracia", it: "Giorno della lotta per la libertà e la democrazia",
+                                          pt: "Dia da Luta pela Liberdade e Democracia", zht: "爭取自由民主日")))
+        list.append((day(year, 12, 24), Common.christmasEve))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), More.secondChristmas))
+        return makeList(list)
+    }
+
+    func getGreeceHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear), (day(year, 1, 6), Common.epiphany)]
+        if let oe = orthodoxEaster(year) {
+            list.append((adding(-48, to: oe), More.cleanMonday))
+            list.append((adding(-2, to: oe), N(ko: "정교회 성금요일", en: "Orthodox Good Friday", ja: "正教会の聖金曜日", zh: "东正教耶稣受难日", de: "Orthodoxer Karfreitag", fr: "Vendredi saint orthodoxe",
+                                                es: "Viernes Santo ortodoxo", it: "Venerdì Santo ortodosso", pt: "Sexta-feira Santa ortodoxa", zht: "東正教耶穌受難日")))
+            list.append((adding(1, to: oe), N(ko: "정교회 부활절 월요일", en: "Orthodox Easter Monday", ja: "正教会の復活祭月曜日", zh: "东正教复活节星期一", de: "Orthodoxer Ostermontag", fr: "Lundi de Pâques orthodoxe",
+                                               es: "Lunes de Pascua ortodoxo", it: "Lunedì di Pasqua ortodosso", pt: "Segunda-feira de Páscoa ortodoxa", zht: "東正教復活節星期一")))
+            list.append((adding(50, to: oe), More.whitMonday))
+        }
+        list.append((day(year, 3, 25), More.independence))
+        list.append((day(year, 5, 1), Common.labour))
+        list.append((day(year, 8, 15), Common.assumption))
+        list.append((day(year, 10, 28), N(ko: "오히의 날", en: "Ochi Day", ja: "オヒの日", zh: "说不日", de: "Ochi-Tag", fr: "Jour du Non",
+                                          es: "Día del No", it: "Giorno del No", pt: "Dia do Não", zht: "說不日")))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), More.secondChristmas))
+        return makeList(list)
+    }
+
+    // MARK: 튀르키예·이집트
+
+    func getTurkeyHolidays(for year: Int) -> [Holiday] {
+        var items: [([Date], N)] = [
+            ([day(year, 1, 1)].compactMap { $0 }, Common.newYear),
+            ([day(year, 4, 23)].compactMap { $0 }, N(ko: "국가 주권과 어린이날", en: "National Sovereignty and Children's Day", ja: "国家主権と子供の日", zh: "国家主权和儿童节",
+                                                     de: "Tag der nationalen Souveränität und der Kinder", fr: "Fête de la souveraineté nationale et des enfants",
+                                                     es: "Día de la Soberanía Nacional y del Niño", it: "Festa della sovranità nazionale e dei bambini",
+                                                     pt: "Dia da Soberania Nacional e das Crianças", zht: "國家主權和兒童節")),
+            ([day(year, 5, 1)].compactMap { $0 }, Common.labour),
+            ([day(year, 5, 19)].compactMap { $0 }, N(ko: "아타튀르크 추모·청소년과 스포츠의 날", en: "Atatürk, Youth and Sports Day", ja: "アタテュルク記念・青少年とスポーツの日", zh: "阿塔图尔克纪念日暨青年体育节",
+                                                     de: "Atatürk-Gedenktag, Tag der Jugend und des Sports", fr: "Fête d’Atatürk, de la jeunesse et des sports",
+                                                     es: "Día de Atatürk, la Juventud y el Deporte", it: "Festa di Atatürk, della gioventù e dello sport",
+                                                     pt: "Dia de Atatürk, da Juventude e do Esporte", zht: "阿塔圖克紀念日暨青年體育節")),
+            ([day(year, 7, 15)].compactMap { $0 }, N(ko: "민주주의와 국민 단결의 날", en: "Democracy and National Unity Day", ja: "民主主義と国民団結の日", zh: "民主与民族团结日",
+                                                     de: "Tag der Demokratie und nationalen Einheit", fr: "Jour de la démocratie et de l’unité nationale",
+                                                     es: "Día de la Democracia y la Unidad Nacional", it: "Giorno della democrazia e dell’unità nazionale",
+                                                     pt: "Dia da Democracia e da Unidade Nacional", zht: "民主與民族團結日")),
+            ([day(year, 8, 30)].compactMap { $0 }, N(ko: "승전 기념일", en: "Victory Day", ja: "勝利の日", zh: "胜利日", de: "Tag des Sieges", fr: "Fête de la Victoire",
+                                                     es: "Día de la Victoria", it: "Giorno della Vittoria", pt: "Dia da Vitória", zht: "勝利日")),
+            ([day(year, 10, 29)].compactMap { $0 }, More.republicDay),
+        ]
+        items.append((hijri(year, month: 10, day: 1, length: 3), Gulf.eidFitr))
+        items.append((hijri(year, month: 12, day: 10, length: 4), Gulf.eidAdha))
+        return gulfList(items)
+    }
+
+    /// 이집트 — 주말 금·토. 정부가 공휴일을 목요일로 옮기는 해가 있어 실제와 하루쯤 다를 수 있다.
+    func getEgyptHolidays(for year: Int) -> [Holiday] {
+        var items: [([Date], N)] = [
+            ([day(year, 1, 7)].compactMap { $0 }, N(ko: "콥트 크리스마스", en: "Coptic Christmas", ja: "コプト正教会のクリスマス", zh: "科普特圣诞节", de: "Koptische Weihnacht", fr: "Noël copte",
+                                                    es: "Navidad copta", it: "Natale copto", pt: "Natal copta", zht: "科普特聖誕節")),
+            ([day(year, 1, 25)].compactMap { $0 }, More.revolution),
+            ([day(year, 4, 25)].compactMap { $0 }, N(ko: "시나이 해방 기념일", en: "Sinai Liberation Day", ja: "シナイ解放記念日", zh: "西奈解放日", de: "Tag der Befreiung des Sinai", fr: "Fête de la libération du Sinaï",
+                                                     es: "Día de la Liberación del Sinaí", it: "Giorno della liberazione del Sinai", pt: "Dia da Libertação do Sinai", zht: "西奈解放日")),
+            ([day(year, 5, 1)].compactMap { $0 }, Common.labour),
+            ([day(year, 6, 30)].compactMap { $0 }, N(ko: "6월 30일 혁명 기념일", en: "June 30 Revolution Day", ja: "6月30日革命記念日", zh: "六三〇革命纪念日", de: "Revolution vom 30. Juni", fr: "Révolution du 30 juin",
+                                                     es: "Revolución del 30 de junio", it: "Rivoluzione del 30 giugno", pt: "Revolução de 30 de junho", zht: "六三〇革命紀念日")),
+            ([day(year, 7, 23)].compactMap { $0 }, More.revolution),
+            ([day(year, 10, 6)].compactMap { $0 }, N(ko: "국군의 날", en: "Armed Forces Day", ja: "国軍記念日", zh: "建军节", de: "Tag der Streitkräfte", fr: "Fête des forces armées",
+                                                     es: "Día de las Fuerzas Armadas", it: "Giornata delle Forze armate", pt: "Dia das Forças Armadas", zht: "建軍節")),
+        ]
+        if let oe = orthodoxEaster(year) {
+            items.append(([adding(1, to: oe)], N(ko: "샴 엘 네심 (봄맞이 날)", en: "Sham El-Nessim", ja: "シャム・エル・ネシーム", zh: "闻风节", de: "Sham el-Nessim", fr: "Cham el-Nessim",
+                                                 es: "Sham el-Nessim", it: "Sham el-Nessim", pt: "Sham el-Nessim", zht: "聞風節")))
+        }
+        items.append((hijri(year, month: 10, day: 1, length: 3), Gulf.eidFitr))
+        items.append((hijri(year, month: 12, day: 9), Gulf.arafat))
+        items.append((hijri(year, month: 12, day: 10, length: 3), Gulf.eidAdha))
+        items.append((hijri(year, month: 1, day: 1), Gulf.hijriNewYear))
+        items.append((hijri(year, month: 3, day: 12), Gulf.prophetBirthday))
+        return gulfList(items)
+    }
+
+    // MARK: 중남미
+
+    /// 멕시코 연방노동법 의무 휴일. 성목·성금요일은 의무가 아니라 넣지 않았다(대개 쉰다 — 공휴일 관리에서 추가).
+    func getMexicoHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        list.append((nthWeekday(nth: 1, weekday: 2, month: 2, year: year), More.constitution))
+        list.append((nthWeekday(nth: 3, weekday: 2, month: 3, year: year), N(ko: "베니토 후아레스 탄생일", en: "Benito Juárez's Birthday", ja: "ベニート・フアレス生誕記念日", zh: "贝尼托·华雷斯诞辰",
+                                                                              de: "Geburtstag von Benito Juárez", fr: "Anniversaire de Benito Juárez", es: "Natalicio de Benito Juárez",
+                                                                              it: "Nascita di Benito Juárez", pt: "Aniversário de Benito Juárez", zht: "貝尼托·華雷斯誕辰")))
+        list.append((day(year, 5, 1), More.labourDay))
+        list.append((day(year, 9, 16), More.independence))
+        // 대통령 취임일 — 6년마다 (2024, 2030…)
+        if (year - 2024) % 6 == 0 {
+            list.append((day(year, 10, 1), N(ko: "대통령 취임일", en: "Inauguration Day", ja: "大統領就任の日", zh: "总统就职日", de: "Amtseinführung", fr: "Investiture présidentielle",
+                                             es: "Transmisión del Poder Ejecutivo", it: "Insediamento presidenziale", pt: "Posse presidencial", zht: "總統就職日")))
+        }
+        list.append((nthWeekday(nth: 3, weekday: 2, month: 11, year: year), More.revolution))
+        list.append((day(year, 12, 25), Common.christmas))
+        return makeList(list)
+    }
+
+    /// 아르헨티나 — 이동 가능 공휴일은 법(27.399)대로 월요일로 옮긴다. 해마다 정하는 관광 휴일은 빼고.
+    func getArgentinaHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        if let e = easter(year) {
+            list.append((adding(-48, to: e), More.carnival))
+            list.append((adding(-47, to: e), More.carnival))
+            list.append((adding(-3, to: e), Common.maundyThursday))
+            list.append((adding(-2, to: e), Common.goodFriday))
+        }
+        list.append((day(year, 3, 24), N(ko: "진실과 정의를 위한 기억의 날", en: "Day of Remembrance for Truth and Justice", ja: "真実と正義のための記憶の日", zh: "真相与正义纪念日",
+                                         de: "Tag der Erinnerung an Wahrheit und Gerechtigkeit", fr: "Jour du souvenir pour la vérité et la justice",
+                                         es: "Día Nacional de la Memoria por la Verdad y la Justicia", it: "Giorno della memoria per la verità e la giustizia",
+                                         pt: "Dia da Memória pela Verdade e Justiça", zht: "真相與正義紀念日")))
+        list.append((day(year, 4, 2), N(ko: "말비나스 전쟁 참전 용사의 날", en: "Malvinas Day", ja: "マルビナス戦没者の日", zh: "马尔维纳斯战争老兵纪念日", de: "Malvinas-Gedenktag", fr: "Jour des Malouines",
+                                        es: "Día del Veterano y de los Caídos en Malvinas", it: "Giorno delle Malvinas", pt: "Dia das Malvinas", zht: "馬爾維納斯戰爭紀念日")))
+        list.append((day(year, 5, 1), More.labourDay))
+        list.append((day(year, 5, 25), N(ko: "5월 혁명 기념일", en: "May Revolution Day", ja: "五月革命記念日", zh: "五月革命纪念日", de: "Tag der Mairevolution", fr: "Révolution de Mai",
+                                         es: "Día de la Revolución de Mayo", it: "Rivoluzione di maggio", pt: "Revolução de Maio", zht: "五月革命紀念日")))
+        list.append((toNearestMonday(day(year, 6, 17)), N(ko: "구에메스 장군 기념일", en: "Güemes Day", ja: "グエメス将軍記念日", zh: "格梅斯将军纪念日", de: "Güemes-Gedenktag", fr: "Jour de Güemes",
+                                                          es: "Paso a la Inmortalidad del General Güemes", it: "Giorno di Güemes", pt: "Dia de Güemes", zht: "格梅斯將軍紀念日")))
+        list.append((day(year, 6, 20), N(ko: "국기의 날", en: "Flag Day", ja: "国旗の日", zh: "国旗日", de: "Tag der Flagge", fr: "Jour du drapeau",
+                                         es: "Día de la Bandera", it: "Giorno della Bandiera", pt: "Dia da Bandeira", zht: "國旗日")))
+        list.append((day(year, 7, 9), More.independence))
+        list.append((toNearestMonday(day(year, 8, 17)), N(ko: "산마르틴 장군 기념일", en: "San Martín Day", ja: "サン・マルティン将軍記念日", zh: "圣马丁将军纪念日", de: "San-Martín-Gedenktag", fr: "Jour de San Martín",
+                                                          es: "Paso a la Inmortalidad del General San Martín", it: "Giorno di San Martín", pt: "Dia de San Martín", zht: "聖馬丁將軍紀念日")))
+        list.append((toNearestMonday(day(year, 10, 12)), More.columbus))
+        list.append((toNearestMonday(day(year, 11, 20)), N(ko: "국가 주권의 날", en: "National Sovereignty Day", ja: "国家主権の日", zh: "国家主权日", de: "Tag der nationalen Souveränität", fr: "Jour de la souveraineté nationale",
+                                                           es: "Día de la Soberanía Nacional", it: "Giorno della sovranità nazionale", pt: "Dia da Soberania Nacional", zht: "國家主權日")))
+        list.append((day(year, 12, 8), Common.immaculate))
+        list.append((day(year, 12, 25), Common.christmas))
+        return makeList(list)
+    }
+
+    /// 칠레 — 6/29·10/12는 법(19.668)대로 월요일로, 10/31은 화요일이면 앞 금요일·수요일이면 뒤 금요일로 옮긴다.
+    func getChileHolidays(for year: Int) -> [Holiday] {
+        func chileMonday(_ d: Date?) -> Date? {
+            guard let d else { return nil }
+            switch weekday(d) {
+            case 3, 4, 5: return weekday(2, onOrBefore: d)
+            case 6: return adding(3, to: d)
+            default: return d
+            }
+        }
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        if let e = easter(year) { list.append((adding(-2, to: e), Common.goodFriday)) }
+        list.append((day(year, 5, 1), More.labourDay))
+        list.append((day(year, 5, 21), N(ko: "해군 영웅의 날", en: "Navy Day", ja: "海軍記念日", zh: "海军英雄日", de: "Tag der Marine", fr: "Jour de la Marine",
+                                         es: "Día de las Glorias Navales", it: "Giorno della Marina", pt: "Dia da Marinha", zht: "海軍英雄日")))
+        // 원주민의 날 — 남반구 동지 (칠레 시각으로 6/20 또는 6/21)
+        let solstice = (year % 4 == 0 || year % 4 == 1) ? 20 : 21
+        list.append((day(year, 6, solstice), N(ko: "원주민의 날", en: "Indigenous Peoples' Day", ja: "先住民の日", zh: "原住民日", de: "Tag der indigenen Völker", fr: "Jour des peuples autochtones",
+                                               es: "Día Nacional de los Pueblos Indígenas", it: "Giornata dei popoli indigeni", pt: "Dia dos Povos Indígenas", zht: "原住民日")))
+        list.append((chileMonday(day(year, 6, 29)), More.saintsPeterPaul))
+        list.append((day(year, 7, 16), N(ko: "카르멘 성모 축일", en: "Our Lady of Mount Carmel", ja: "カルメル山の聖母の日", zh: "加尔默罗圣母节", de: "Unsere Liebe Frau vom Berge Karmel", fr: "Notre-Dame du Mont-Carmel",
+                                         es: "Virgen del Carmen", it: "Madonna del Carmine", pt: "Nossa Senhora do Carmo", zht: "加爾默羅聖母節")))
+        list.append((day(year, 8, 15), Common.assumption))
+        list.append((day(year, 9, 18), More.independence))
+        list.append((day(year, 9, 19), N(ko: "육군 영광의 날", en: "Army Day", ja: "陸軍記念日", zh: "陆军光荣日", de: "Tag der Armee", fr: "Jour de l’Armée",
+                                         es: "Día de las Glorias del Ejército", it: "Giorno dell’Esercito", pt: "Dia do Exército", zht: "陸軍光榮日")))
+        list.append((chileMonday(day(year, 10, 12)), More.columbus))
+        if let r = day(year, 10, 31) {
+            let moved: Date
+            switch weekday(r) {
+            case 3: moved = adding(-4, to: r)   // 화 → 앞 금요일
+            case 4: moved = adding(2, to: r)    // 수 → 뒤 금요일
+            default: moved = r
+            }
+            list.append((moved, N(ko: "종교개혁의 날", en: "Reformation Day", ja: "宗教改革記念日", zh: "宗教改革日", de: "Reformationstag", fr: "Fête de la Réforme",
+                                  es: "Día de las Iglesias Evangélicas y Protestantes", it: "Festa della Riforma", pt: "Dia da Reforma", zht: "宗教改革紀念日")))
+        }
+        list.append((day(year, 11, 1), Common.allSaints))
+        list.append((day(year, 12, 8), Common.immaculate))
+        list.append((day(year, 12, 25), Common.christmas))
+        return makeList(list).filter { calendar.component(.year, from: $0.date) == year }
+    }
+
+    /// 콜롬비아 — 에밀리아니 법: 여러 공휴일을 다음 월요일로 옮긴다.
+    func getColombiaHolidays(for year: Int) -> [Holiday] {
+        func emiliani(_ d: Date?) -> Date? { d.map { weekday(2, onOrAfter: $0) } }
+        var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
+        list.append((emiliani(day(year, 1, 6)), Common.epiphany))
+        list.append((emiliani(day(year, 3, 19)), Common.stJoseph))
+        if let e = easter(year) {
+            list.append((adding(-3, to: e), Common.maundyThursday))
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(43, to: e), More.ascension))
+            list.append((adding(64, to: e), Common.corpusChristi))
+            list.append((adding(71, to: e), More.sacredHeart))
+        }
+        list.append((day(year, 5, 1), More.labourDay))
+        list.append((emiliani(day(year, 6, 29)), More.saintsPeterPaul))
+        list.append((day(year, 7, 20), More.independence))
+        list.append((day(year, 8, 7), N(ko: "보야카 전투 기념일", en: "Battle of Boyacá", ja: "ボヤカの戦い記念日", zh: "博亚卡战役纪念日", de: "Schlacht von Boyacá", fr: "Bataille de Boyacá",
+                                        es: "Batalla de Boyacá", it: "Battaglia di Boyacá", pt: "Batalha de Boyacá", zht: "博亞卡戰役紀念日")))
+        list.append((emiliani(day(year, 8, 15)), Common.assumption))
+        list.append((emiliani(day(year, 10, 12)), More.columbus))
+        list.append((emiliani(day(year, 11, 1)), Common.allSaints))
+        list.append((emiliani(day(year, 11, 11)), N(ko: "카르타헤나 독립 기념일", en: "Independence of Cartagena", ja: "カルタヘナ独立記念日", zh: "卡塔赫纳独立日", de: "Unabhängigkeit Cartagenas", fr: "Indépendance de Carthagène",
+                                                    es: "Independencia de Cartagena", it: "Indipendenza di Cartagena", pt: "Independência de Cartagena", zht: "卡塔赫納獨立日")))
+        list.append((day(year, 12, 8), Common.immaculate))
+        list.append((day(year, 12, 25), Common.christmas))
+        return makeList(list)
+    }
+
+    // MARK: 뉴질랜드·남아공
+
+    func getNewZealandHolidays(for year: Int) -> [Holiday] {
+        // 마타리키 — 법으로 정한 날짜표 (2022~2052)
+        let matariki: [Int: (Int, Int)] = [
+            2022: (6, 24), 2023: (7, 14), 2024: (6, 28), 2025: (6, 20), 2026: (7, 10), 2027: (6, 25), 2028: (7, 14),
+            2029: (7, 6), 2030: (6, 21), 2031: (7, 11), 2032: (7, 2), 2033: (6, 24), 2034: (7, 7), 2035: (6, 29),
+        ]
+        func mondayised(_ d: Date?) -> Date? {
+            guard let d else { return nil }
+            switch weekday(d) {
+            case 7: return adding(2, to: d)
+            case 1: return adding(1, to: d)
+            default: return d
+            }
+        }
+        var list: [(Date?, N)] = [
+            (day(year, 1, 1), Common.newYear),
+            (day(year, 1, 2), N(ko: "새해 다음 날", en: "Day after New Year's Day", ja: "元日の翌日", zh: "元旦翌日", de: "Tag nach Neujahr", fr: "Lendemain du jour de l’an",
+                                es: "Día después de Año Nuevo", it: "Giorno dopo Capodanno", pt: "Dia seguinte ao Ano-Novo", zht: "元旦翌日")),
+            (mondayised(day(year, 2, 6)), N(ko: "와이탕이 데이", en: "Waitangi Day", ja: "ワイタンギ・デー", zh: "怀唐伊日", de: "Waitangi-Tag", fr: "Jour de Waitangi",
+                                            es: "Día de Waitangi", it: "Giorno di Waitangi", pt: "Dia de Waitangi", zht: "懷唐伊日")),
+        ]
+        if let e = easter(year) {
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(1, to: e), Common.easterMonday))
+        }
+        list.append((mondayised(day(year, 4, 25)), N(ko: "안작 데이", en: "ANZAC Day", ja: "アンザック・デー", zh: "澳新军团日", de: "ANZAC Day", fr: "Jour de l’ANZAC",
+                                                     es: "Día de ANZAC", it: "Giorno dell’ANZAC", pt: "Dia do ANZAC", zht: "澳紐軍團日")))
+        list.append((nthWeekday(nth: 1, weekday: 2, month: 6, year: year), Common.kingsBirthday))
+        if let m = matariki[year] {
+            list.append((day(year, m.0, m.1), N(ko: "마타리키", en: "Matariki", ja: "マタリキ", zh: "毛利新年", de: "Matariki", fr: "Matariki",
+                                                es: "Matariki", it: "Matariki", pt: "Matariki", zht: "毛利新年")))
+        }
+        list.append((nthWeekday(nth: 4, weekday: 2, month: 10, year: year), More.labourDay))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), Common.boxing))
+        let base = makeList(list)
+        let movable = Set([day(year, 1, 1), day(year, 1, 2), day(year, 12, 25), day(year, 12, 26)].compactMap { $0 }.map(dateKey))
+        return (base + rollForward(base, substitutable: movable))
+            .filter { calendar.component(.year, from: $0.date) == year }
+            .sorted { $0.date < $1.date }
+    }
+
+    /// 남아공 — 일요일에 걸린 공휴일은 다음 월요일에 쉰다.
+    func getSouthAfricaHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = [
+            (day(year, 1, 1), Common.newYear),
+            (day(year, 3, 21), N(ko: "인권의 날", en: "Human Rights Day", ja: "人権の日", zh: "人权日", de: "Tag der Menschenrechte", fr: "Journée des droits de l’homme",
+                                 es: "Día de los Derechos Humanos", it: "Giornata dei diritti umani", pt: "Dia dos Direitos Humanos", zht: "人權日")),
+        ]
+        if let e = easter(year) {
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(1, to: e), N(ko: "가족의 날", en: "Family Day", ja: "家族の日", zh: "家庭日", de: "Familientag", fr: "Jour de la famille",
+                                             es: "Día de la Familia", it: "Giorno della famiglia", pt: "Dia da Família", zht: "家庭日")))
+        }
+        list.append((day(year, 4, 27), More.freedomDay))
+        list.append((day(year, 5, 1), Common.labour))
+        list.append((day(year, 6, 16), N(ko: "청년의 날", en: "Youth Day", ja: "青年の日", zh: "青年节", de: "Tag der Jugend", fr: "Journée de la jeunesse",
+                                         es: "Día de la Juventud", it: "Giornata della gioventù", pt: "Dia da Juventude", zht: "青年節")))
+        list.append((day(year, 8, 9), N(ko: "여성의 날", en: "National Women's Day", ja: "女性の日", zh: "妇女节", de: "Nationaler Frauentag", fr: "Journée nationale des femmes",
+                                        es: "Día Nacional de la Mujer", it: "Giornata nazionale della donna", pt: "Dia Nacional da Mulher", zht: "婦女節")))
+        list.append((day(year, 9, 24), N(ko: "문화유산의 날", en: "Heritage Day", ja: "遺産の日", zh: "传统日", de: "Tag des Erbes", fr: "Journée du patrimoine",
+                                         es: "Día del Patrimonio", it: "Giornata del patrimonio", pt: "Dia do Patrimônio", zht: "傳統日")))
+        list.append((day(year, 12, 16), N(ko: "화해의 날", en: "Day of Reconciliation", ja: "和解の日", zh: "和解日", de: "Tag der Versöhnung", fr: "Jour de la réconciliation",
+                                          es: "Día de la Reconciliación", it: "Giorno della riconciliazione", pt: "Dia da Reconciliação", zht: "和解日")))
+        list.append((day(year, 12, 25), Common.christmas))
+        list.append((day(year, 12, 26), N(ko: "선의의 날", en: "Day of Goodwill", ja: "善意の日", zh: "亲善日", de: "Tag des guten Willens", fr: "Jour de la bonne volonté",
+                                          es: "Día de la Buena Voluntad", it: "Giorno della buona volontà", pt: "Dia da Boa Vontade", zht: "親善日")))
+        let base = makeList(list)
+        return (base + rollForward(base, substitutable: Set(base.map { dateKey($0.date) }), saturdayToo: false))
+            .filter { calendar.component(.year, from: $0.date) == year }
+            .sorted { $0.date < $1.date }
+    }
 }

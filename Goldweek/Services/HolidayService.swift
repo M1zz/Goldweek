@@ -100,6 +100,48 @@ class HolidayService {
                 result = getQatarHolidays(for: year)
             case .peru:
                 result = getPeruHolidays(for: year)
+            case .netherlands:
+                result = getNetherlandsHolidays(for: year)
+            case .belgium:
+                result = getBelgiumHolidays(for: year)
+            case .austria:
+                result = getAustriaHolidays(for: year)
+            case .switzerland:
+                result = getSwitzerlandHolidays(for: year)
+            case .ireland:
+                result = getIrelandHolidays(for: year)
+            case .portugal:
+                result = getPortugalHolidays(for: year)
+            case .sweden:
+                result = getSwedenHolidays(for: year)
+            case .norway:
+                result = getNorwayHolidays(for: year)
+            case .denmark:
+                result = getDenmarkHolidays(for: year)
+            case .finland:
+                result = getFinlandHolidays(for: year)
+            case .poland:
+                result = getPolandHolidays(for: year)
+            case .czechia:
+                result = getCzechiaHolidays(for: year)
+            case .greece:
+                result = getGreeceHolidays(for: year)
+            case .turkey:
+                result = getTurkeyHolidays(for: year)
+            case .egypt:
+                result = getEgyptHolidays(for: year)
+            case .southAfrica:
+                result = getSouthAfricaHolidays(for: year)
+            case .mexico:
+                result = getMexicoHolidays(for: year)
+            case .argentina:
+                result = getArgentinaHolidays(for: year)
+            case .chile:
+                result = getChileHolidays(for: year)
+            case .colombia:
+                result = getColombiaHolidays(for: year)
+            case .newZealand:
+                result = getNewZealandHolidays(for: year)
             case .custom:
                 result = []   // 전부 사용자가 직접 넣는다
             }
@@ -556,19 +598,23 @@ class HolidayService {
         return days.contains { $0.month == c.month && $0.day == c.day }
     }
 
-    /// 직접 입력 국가에서 고른 주말 요일. 원본은 UserDefaults — 프로필을 모르는 곳에서도 같은 값을 쓴다.
-    static var customWeekendDays: Set<Int> {
-        get {
-            let raw = UserDefaults.standard.string(forKey: "customWeekendDays") ?? ""
-            let days = Set(raw.split(separator: ",").compactMap { Int($0) }.filter { (1...7).contains($0) })
-            return days.isEmpty ? [1, 7] : days
-        }
-        set { UserDefaults.standard.set(newValue.sorted().map(String.init).joined(separator: ","), forKey: "customWeekendDays") }
+    /// 내가 고른 주말 — "" 이면 나라 기본, "none" 이면 주말 없이 매일 근무, 아니면 "7,1" 같은 요일 목록.
+    /// 원본은 UserDefaults — 프로필을 모르는 곳에서도 같은 값을 쓴다. (키 이름은 직접 입력 국가 전용이던 때 그대로)
+    static var weekendOverrideRaw: String {
+        get { UserDefaults.standard.string(forKey: "customWeekendDays") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "customWeekendDays") }
     }
 
-    /// 그 나라의 주말 요일 (Calendar weekday: 1=일 … 7=토)
+    /// 저장값 → 주말 요일. 나라 기본을 따르면 nil.
+    static func parseWeekend(_ raw: String) -> Set<Int>? {
+        if raw == "none" { return [] }
+        let days = Set(raw.split(separator: ",").compactMap { Int($0) }.filter { (1...7).contains($0) })
+        return days.isEmpty ? nil : days
+    }
+
+    /// 그 나라에서 쉬는 주말 요일 (Calendar weekday: 1=일 … 7=토). 내가 고른 값이 있으면 그것.
     static func weekendDays(for country: Country) -> Set<Int> {
-        country == .custom ? customWeekendDays : country.standardWeekendDays
+        parseWeekend(weekendOverrideRaw) ?? country.standardWeekendDays
     }
 
     /// 요일만 보고 주말인지 — 보충 근무일은 따지지 않는다 (달력 색칠용)
