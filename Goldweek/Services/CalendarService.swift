@@ -488,6 +488,7 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "동기화됨"
             case .english: return "Synced"
+            case .dutch: return "Gesynchroniseerd"
             case .japanese: return "同期済み"
             case .chinese: return "已同步"
             case .german: return "Synchronisiert"
@@ -501,6 +502,7 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "설정 필요"
             case .english: return "Setup Required"
+            case .dutch: return "Instellen vereist"
             case .japanese: return "設定が必要"
             case .chinese: return "需要设置"
             case .german: return "Einrichtung nötig"
@@ -514,6 +516,7 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "권한 필요"
             case .english: return "Permission Required"
+            case .dutch: return "Toestemming vereist"
             case .japanese: return "権限が必要"
             case .chinese: return "需要权限"
             case .german: return "Zugriff nötig"
@@ -527,6 +530,7 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "권한 거부됨"
             case .english: return "Permission Denied"
+            case .dutch: return "Toestemming geweigerd"
             case .japanese: return "権限が拒否"
             case .chinese: return "权限被拒绝"
             case .german: return "Zugriff verweigert"
@@ -540,6 +544,7 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "Pro 필요"
             case .english: return "Pro Required"
+            case .dutch: return "Pro vereist"
             case .japanese: return "Pro が必要"
             case .chinese: return "需要Pro版"
             case .german: return "Pro nötig"
@@ -553,6 +558,7 @@ enum CalendarSyncStatus {
             switch LanguageManager.shared.currentLanguage {
             case .korean: return "오류"
             case .english: return "Error"
+            case .dutch: return "Fout"
             case .japanese: return "エラー"
             case .chinese: return "错误"
             case .german: return "Fehler"
@@ -617,6 +623,15 @@ enum CalendarError: LocalizedError {
             case .proFeatureRequired: return "Pro feature required."
             case .eventNotFound: return "Event not found."
             case .calendarNotFound: return "Calendar not found."
+            }
+        case .dutch:
+            switch self {
+            case .permissionDenied: return "Toegang tot de agenda is geweigerd."
+            case .unknownPermissionStatus: return "Onbekende toestemmingsstatus."
+            case .noAvailableSource: return "Geen beschikbare agendabron."
+            case .proFeatureRequired: return "Pro-functie vereist."
+            case .eventNotFound: return "Afspraak niet gevonden."
+            case .calendarNotFound: return "Agenda niet gevonden."
             }
         case .japanese:
             switch self {

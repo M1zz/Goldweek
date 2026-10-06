@@ -456,6 +456,7 @@
 				it,
 				"pt-BR",
 				"zh-Hant",
+				nl,
 			);
 			mainGroup = A4000000;
 			packageReferences = (

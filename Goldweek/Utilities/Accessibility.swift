@@ -62,6 +62,7 @@ enum VoiceOverLabel {
         switch lang {
         case .korean: return "연차 \(t)일 중 \(u)일 사용, \(r)일 남음"
         case .english: return "\(u) of \(t) days used, \(r) remaining"
+        case .dutch: return "\(u) van \(t) dagen gebruikt, \(r) over"
         case .japanese: return "有給\(t)日中\(u)日使用、残り\(r)日"
         case .chinese: return "年假\(t)天中已使用\(u)天，剩余\(r)天"
         case .german: return "\(u) von \(t) Tagen genommen, \(r) übrig"
@@ -80,6 +81,7 @@ enum VoiceOverLabel {
         switch lang {
         case .korean: return "보너스 사용 가능 \(d)일"
         case .english: return "Bonus available: \(d) days"
+        case .dutch: return "Bonus beschikbaar: \(d) dagen"
         case .japanese: return "ボーナス使用可能 \(d)日"
         case .chinese: return "可用奖励 \(d) 天"
         case .german: return "Bonus verfügbar: \(d) Tage"
@@ -98,6 +100,7 @@ enum VoiceOverLabel {
         switch lang {
         case .korean: return "\(dateRange), \(typeLabel) \(d)일, \(dDay)일 남음"
         case .english: return "\(dateRange), \(typeLabel) \(d) days, in \(dDay) days"
+        case .dutch: return "\(dateRange), \(typeLabel) \(d) dagen, over \(dDay) dagen"
         case .japanese: return "\(dateRange)、\(typeLabel)\(d)日、あと\(dDay)日"
         case .chinese: return "\(dateRange)，\(typeLabel)\(d)天，还有\(dDay)天"
         case .german: return "\(dateRange), \(typeLabel) \(d) Tage, in \(dDay) Tagen"
@@ -117,6 +120,7 @@ enum VoiceOverLabel {
             switch lang {
             case .korean: return ", 추천 점수 \(score)"
             case .english: return ", recommendation score \(score)"
+            case .dutch: return ", aanbevelingsscore \(score)"
             case .japanese: return "、おすすめスコア\(score)"
             case .chinese: return "，推荐分数\(score)"
             case .german: return ", Empfehlungswert \(score)"
@@ -130,6 +134,7 @@ enum VoiceOverLabel {
         switch lang {
         case .korean: return "\(dateRange), 총 \(totalDays)일 연휴, 연차 \(leavesNeeded)일 필요\(scorePart)"
         case .english: return "\(dateRange), \(totalDays)-day holiday, \(leavesNeeded) leave days required\(scorePart)"
+        case .dutch: return "\(dateRange), vakantie van \(totalDays) dagen, \(leavesNeeded) verlofdagen nodig\(scorePart)"
         case .japanese: return "\(dateRange)、合計\(totalDays)日の連休、有給\(leavesNeeded)日必要\(scorePart)"
         case .chinese: return "\(dateRange)，共\(totalDays)天连假，需请\(leavesNeeded)天年假\(scorePart)"
         case .german: return "\(dateRange), \(totalDays) Tage frei, \(leavesNeeded) Urlaubstage nötig\(scorePart)"
@@ -150,6 +155,7 @@ enum VoiceOverLabel {
             switch lang {
             case .korean: return " 직항"
             case .english: return " direct"
+            case .dutch: return " direct"
             case .japanese: return " 直行"
             case .chinese: return " 直飞"
             case .german: return " Direktflug"
@@ -163,6 +169,7 @@ enum VoiceOverLabel {
         switch lang {
         case .korean: return "\(origin)에서 \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
         case .english: return "\(origin) to \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
+        case .dutch: return "\(origin) naar \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
         case .japanese: return "\(origin)から\(destination)、\(dateRange)、\(airlinePart)\(directPart)、\(priceText)"
         case .chinese: return "\(origin)到\(destination)，\(dateRange)，\(airlinePart)\(directPart)，\(priceText)"
         case .german: return "\(origin) nach \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
@@ -183,6 +190,7 @@ enum VoiceOverLabel {
             switch lang {
             case .korean: return ", 별점 \(r)"
             case .english: return ", rating \(r)"
+            case .dutch: return ", beoordeling \(r)"
             case .japanese: return "、評価\(r)"
             case .chinese: return "，评分\(r)"
             case .german: return ", Bewertung \(r)"
@@ -196,6 +204,7 @@ enum VoiceOverLabel {
         switch lang {
         case .korean: return "\(name)\(ratingPart), \(priceText)"
         case .english: return "\(name)\(ratingPart), \(priceText)"
+        case .dutch: return "\(name)\(ratingPart), \(priceText)"
         case .japanese: return "\(name)\(ratingPart)、\(priceText)"
         case .chinese: return "\(name)\(ratingPart)，\(priceText)"
         case .german: return "\(name)\(ratingPart), \(priceText)"
@@ -214,6 +223,7 @@ enum VoiceOverLabel {
             switch lang {
             case .korean: return "오늘"
             case .english: return "Today"
+            case .dutch: return "Vandaag"
             case .japanese: return "今日"
             case .chinese: return "今天"
             case .german: return "Heute"
@@ -229,6 +239,7 @@ enum VoiceOverLabel {
             switch lang {
             case .korean: return "\(n)일 남음"
             case .english: return "in \(n) days"
+            case .dutch: return "over \(n) dagen"
             case .japanese: return "あと\(n)日"
             case .chinese: return "还有\(n)天"
             case .german: return "in \(n) Tagen"
@@ -242,6 +253,7 @@ enum VoiceOverLabel {
             switch lang {
             case .korean: return "\(n)일 지남"
             case .english: return "\(n) days ago"
+            case .dutch: return "\(n) dagen geleden"
             case .japanese: return "\(n)日経過"
             case .chinese: return "已过\(n)天"
             case .german: return "vor \(n) Tagen"

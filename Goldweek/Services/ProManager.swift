@@ -235,6 +235,12 @@ enum ProPurchaseError: LocalizedError {
             case .verificationFailed: return "Purchase verification failed."
             case .purchaseFailed: return "Purchase failed."
             }
+        case .dutch:
+            switch self {
+            case .productNotFound: return "Product niet gevonden."
+            case .verificationFailed: return "Aankoopverificatie mislukt."
+            case .purchaseFailed: return "Aankoop mislukt."
+            }
         case .japanese:
             switch self {
             case .productNotFound: return "製品が見つかりません。"

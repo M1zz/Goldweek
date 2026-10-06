@@ -246,6 +246,7 @@ enum NotificationService {
         case .japanese: title = a.level == .critical ? "そろそろ休む時です 🌿" : "休憩を考える時期です 🌿"
         case .chinese:  title = a.level == .critical ? "该休息一下了 🌿" : "是时候安排休息了 🌿"
         case .english:  title = a.level == .critical ? "Time to recharge 🌿" : "A break is due soon 🌿"
+        case .dutch:  title = a.level == .critical ? "Tijd om op te laden 🌿" : "Je volgende vrije dagen komen eraan 🌿"
         case .german: title = a.level == .critical ? "Zeit zum Auftanken 🌿" : "Bald ist eine Pause fällig 🌿"
         case .french: title = a.level == .critical ? "Il est temps de souffler 🌿" : "Une pause approche 🌿"
         case .spanish: title = a.level == .critical ? "Es hora de recargar pilas 🌿" : "Se acerca un descanso 🌿"
@@ -288,6 +289,14 @@ enum NotificationService {
                 reasonText = "It's been \(s) days since your last break."
             } else {
                 reasonText = "No rest logged yet this year."
+            }
+        case .dutch:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Het is \(s) dagen geleden sinds je laatste vrije dagen — langer dan je gebruikelijke cyclus van \(cycle) dagen."
+            } else if let s = since {
+                reasonText = "Het is \(s) dagen geleden sinds je laatste vrije dagen."
+            } else {
+                reasonText = "Dit jaar nog geen rust geregistreerd."
             }
         case .german:
             if let s = since, a.cycleIsPersonalized {
@@ -355,6 +364,9 @@ enum NotificationService {
             case .english:
                 let h = w.holidayName.isEmpty ? "" : " around \(w.holidayName)"
                 windowText = " In \(daysFromNow(w.startDate, lang)),\(h) just \(w.leaveDaysNeeded) leave day(s) makes a \(w.totalDaysOff)-day break."
+            case .dutch:
+                let h = w.holidayName.isEmpty ? "" : " rond \(w.holidayName)"
+                windowText = " Over \(daysFromNow(w.startDate, lang)):\(h) met slechts \(w.leaveDaysNeeded) verlofdag(en) heb je \(w.totalDaysOff) dagen vrij."
             case .german:
                 let h = w.holidayName.isEmpty ? "" : " rund um \(w.holidayName)"
                 windowText = " In \(daysFromNow(w.startDate, lang)),\(h) reichen nur \(w.leaveDaysNeeded) Urlaubstag(e) für \(w.totalDaysOff) Tage frei."
@@ -387,6 +399,7 @@ enum NotificationService {
         case .japanese: return "\(max(0, d))日"
         case .chinese:  return "\(max(0, d))天"
         case .english:  return "\(max(0, d)) day(s)"
+        case .dutch:  return "\(max(0, d)) dag(en)"
         case .german: return "\(max(0, d)) Tag(e)"
         case .french: return "\(max(0, d)) jour(s)"
         case .spanish: return d == 1 ? "1 día" : "\(max(0, d)) días"

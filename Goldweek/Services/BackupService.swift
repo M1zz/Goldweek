@@ -734,6 +734,18 @@ enum BackupError: LocalizedError {
             case .backupRotationFailed: return "Backup file rotation failed."
             case .checksumMismatch: return "Backup file is corrupted. (Checksum mismatch)"
             }
+        case .dutch:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud is niet beschikbaar. Schakel iCloud Drive in via Instellingen."
+            case .localPathNotAvailable: return "Kan het lokale opslagpad niet openen."
+            case .backupNotFound: return "Back-upbestand niet gevonden."
+            case .invalidBackupData: return "Kan back-upgegevens niet lezen."
+            case .encryptionFailed: return "Back-up versleutelen mislukt."
+            case .decryptionFailed: return "Back-up ontsleutelen mislukt. Mogelijk is het een back-up van een ander apparaat."
+            case .integrityVerificationFailed: return "Integriteitscontrole van de back-up mislukt."
+            case .backupRotationFailed: return "Rouleren van het back-upbestand mislukt."
+            case .checksumMismatch: return "Back-upbestand is beschadigd. (Checksum komt niet overeen)"
+            }
         case .japanese:
             switch self {
             case .iCloudNotAvailable: return "iCloudを使用できません。設定でiCloud Driveを有効にしてください。"

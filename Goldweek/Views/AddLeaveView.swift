@@ -140,6 +140,7 @@ struct LeaveStatusHeader: View {
             switch lang {
             case .korean: return "\(Strings.basicLeave) \(formatD(remainingLeave))일, \(Strings.bonus) \(formatD(bonusLeave))일, \(Strings.totalAvailable) \(formatD(totalAvailable))일"
             case .english: return "\(Strings.basicLeave) \(formatD(remainingLeave)) days, \(Strings.bonus) \(formatD(bonusLeave)) days, \(Strings.totalAvailable) \(formatD(totalAvailable)) days"
+            case .dutch: return "\(Strings.basicLeave) \(formatD(remainingLeave)) dagen, \(Strings.bonus) \(formatD(bonusLeave)) dagen, \(Strings.totalAvailable) \(formatD(totalAvailable)) dagen"
             case .japanese: return "\(Strings.basicLeave) \(formatD(remainingLeave))日、\(Strings.bonus) \(formatD(bonusLeave))日、\(Strings.totalAvailable) \(formatD(totalAvailable))日"
             case .chinese: return "\(Strings.basicLeave) \(formatD(remainingLeave))天，\(Strings.bonus) \(formatD(bonusLeave))天，\(Strings.totalAvailable) \(formatD(totalAvailable))天"
             case .german: return "\(Strings.basicLeave) \(formatD(remainingLeave)) Tage, \(Strings.bonus) \(formatD(bonusLeave)) Tage, \(Strings.totalAvailable) \(formatD(totalAvailable)) Tage"
@@ -153,6 +154,7 @@ struct LeaveStatusHeader: View {
             switch lang {
             case .korean: return "\(Strings.totalAvailable) \(formatD(totalAvailable))일"
             case .english: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) days"
+            case .dutch: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) dagen"
             case .japanese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))日"
             case .chinese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))天"
             case .german: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) Tage"

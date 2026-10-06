@@ -19,6 +19,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     case italian = "it"
     case portuguese = "pt"
     case chineseTraditional = "zh-Hant"
+    case dutch = "nl"
 
     var id: String { rawValue }
 
@@ -26,6 +27,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         switch self {
         case .korean: return "한국어"
         case .english: return "English"
+        case .dutch: return "Nederlands"
         case .japanese: return "日本語"
         case .chinese: return "中文"
         case .german: return "Deutsch"
@@ -41,6 +43,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         switch self {
         case .korean: return "🇰🇷"
         case .english: return "🇺🇸"
+        case .dutch: return "🇳🇱"
         case .japanese: return "🇯🇵"
         case .chinese: return "🇨🇳"
         case .german: return "🇩🇪"
@@ -58,6 +61,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         switch self {
         case .korean: return "ko"
         case .english: return "en"
+        case .dutch: return "nl"
         case .japanese: return "ja"
         case .chinese: return "zh-Hans"
         case .german: return "de"
@@ -109,6 +113,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
             case "es": return .spanish
             case "it": return .italian
             case "pt": return .portuguese
+            case "nl": return .dutch
             case "en": return .english
             default: continue
             }
@@ -142,6 +147,7 @@ enum Strings {
         switch lang {
         case .korean: return "현황"
         case .english: return "Status"
+        case .dutch: return "Status"
         case .japanese: return "状況"
         case .chinese: return "概览"
         case .german: return "Status"
@@ -157,6 +163,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더"
         case .english: return "Calendar"
+        case .dutch: return "Agenda"
         case .japanese: return "カレンダー"
         case .chinese: return "日历"
         case .german: return "Kalender"
@@ -172,6 +179,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천"
         case .english: return "Recommend"
+        case .dutch: return "Advies"
         case .japanese: return "おすすめ"
         case .chinese: return "推荐"
         case .german: return "Tipps"
@@ -187,6 +195,7 @@ enum Strings {
         switch lang {
         case .korean: return "등록"
         case .english: return "Register"
+        case .dutch: return "Registreren"
         case .japanese: return "登録"
         case .chinese: return "登记"
         case .german: return "Eintragen"
@@ -202,6 +211,7 @@ enum Strings {
         switch lang {
         case .korean: return "M/d(E)"
         case .english: return "M/d(EEE)"
+        case .dutch: return "EEE d MMM"
         case .japanese: return "M/d(E)"
         case .chinese: return "M/d(E)"
         case .german: return "d.M. (EEE)"
@@ -217,6 +227,7 @@ enum Strings {
         switch lang {
         case .korean: return "설정"
         case .english: return "Settings"
+        case .dutch: return "Instellingen"
         case .japanese: return "設定"
         case .chinese: return "设置"
         case .german: return "Einstellungen"
@@ -233,6 +244,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가플래너"
         case .english: return "Leave Planner"
+        case .dutch: return "Verlofplanner"
         case .japanese: return "休暇プランナー"
         case .chinese: return "休假规划"
         case .german: return "Urlaubsplaner"
@@ -248,6 +260,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(year)년 연차 현황"
         case .english: return "\(year) Annual Leave"
+        case .dutch: return "Verlof \(year)"
         case .japanese: return "\(year)年 有給休暇"
         case .chinese: return "\(year)年 年假概况"
         case .german: return "Urlaub \(year)"
@@ -264,6 +277,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 현황"
         case .english: return "Annual Leave"
+        case .dutch: return "Vakantiedagen"
         case .japanese: return "有給休暇"
         case .chinese: return "年假概况"
         case .german: return "Urlaub"
@@ -280,6 +294,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 계획"
         case .english: return "Vacation Plan"
+        case .dutch: return "Vakantieplan"
         case .japanese: return "休暇計画"
         case .chinese: return "休假计划"
         case .german: return "Urlaubsplan"
@@ -295,6 +310,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용"
         case .english: return "Used"
+        case .dutch: return "Gebruikt"
         case .japanese: return "使用"
         case .chinese: return "已用"
         case .german: return "Genommen"
@@ -310,6 +326,7 @@ enum Strings {
         switch lang {
         case .korean: return "총"
         case .english: return "Total"
+        case .dutch: return "Totaal"
         case .japanese: return "合計"
         case .chinese: return "共"
         case .german: return "Gesamt"
@@ -325,6 +342,7 @@ enum Strings {
         switch lang {
         case .korean: return "남음"
         case .english: return "Left"
+        case .dutch: return "Over"
         case .japanese: return "残り"
         case .chinese: return "剩余"
         case .german: return "Übrig"
@@ -340,6 +358,7 @@ enum Strings {
         switch lang {
         case .korean: return "다가오는 휴가"
         case .english: return "Upcoming Leaves"
+        case .dutch: return "Aankomend verlof"
         case .japanese: return "今後の休暇"
         case .chinese: return "即将到来的假期"
         case .german: return "Bevorstehender Urlaub"
@@ -355,6 +374,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 휴가 일정"
         case .english: return "Recommended Schedule"
+        case .dutch: return "Aanbevolen planning"
         case .japanese: return "おすすめ休暇日程"
         case .chinese: return "推荐休假日程"
         case .german: return "Empfohlene Urlaubsplanung"
@@ -370,6 +390,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천을 생성 중입니다..."
         case .english: return "Generating recommendations..."
+        case .dutch: return "Aanbevelingen maken..."
         case .japanese: return "おすすめを作成中..."
         case .chinese: return "正在生成推荐..."
         case .german: return "Empfehlungen werden erstellt..."
@@ -385,6 +406,7 @@ enum Strings {
         switch lang {
         case .korean: return "일정 추가하기"
         case .english: return "Add to Schedule"
+        case .dutch: return "Aan planning toevoegen"
         case .japanese: return "予定に追加"
         case .chinese: return "添加到日程"
         case .german: return "Zum Plan hinzufügen"
@@ -400,6 +422,7 @@ enum Strings {
         switch lang {
         case .korean: return "추가됨 ✓"
         case .english: return "Added ✓"
+        case .dutch: return "Toegevoegd ✓"
         case .japanese: return "追加済み ✓"
         case .chinese: return "已添加 ✓"
         case .german: return "Hinzugefügt ✓"
@@ -415,6 +438,7 @@ enum Strings {
         switch lang {
         case .korean: return "효율"
         case .english: return "Efficiency"
+        case .dutch: return "Efficiëntie"
         case .japanese: return "効率"
         case .chinese: return "效率"
         case .german: return "Effizienz"
@@ -430,6 +454,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 사용 내역"
         case .english: return "Leave History"
+        case .dutch: return "Verlofgeschiedenis"
         case .japanese: return "休暇履歴"
         case .chinese: return "休假记录"
         case .german: return "Urlaubsverlauf"
@@ -445,6 +470,7 @@ enum Strings {
         switch lang {
         case .korean: return "지난 휴가 기록을 확인하세요"
         case .english: return "Check past leave records"
+        case .dutch: return "Bekijk eerder verlof"
         case .japanese: return "過去の休暇記録を確認"
         case .chinese: return "查看过去的休假记录"
         case .german: return "Vergangene Urlaube ansehen"
@@ -460,6 +486,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가"
         case .english: return "Leave"
+        case .dutch: return "Verlof"
         case .japanese: return "休暇"
         case .chinese: return "假期"
         case .german: return "Urlaub"
@@ -476,6 +503,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더"
         case .english: return "Calendar"
+        case .dutch: return "Agenda"
         case .japanese: return "カレンダー"
         case .chinese: return "日历"
         case .german: return "Kalender"
@@ -491,6 +519,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일"
         case .english: return "Holiday"
+        case .dutch: return "Feestdag"
         case .japanese: return "祝日"
         case .chinese: return "节假日"
         case .german: return "Feiertag"
@@ -506,6 +535,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차"
         case .english: return "Annual Leave"
+        case .dutch: return "Vakantiedagen"
         case .japanese: return "有給休暇"
         case .chinese: return "年假"
         case .german: return "Jahresurlaub"
@@ -521,6 +551,7 @@ enum Strings {
         switch lang {
         case .korean: return "주말"
         case .english: return "Weekend"
+        case .dutch: return "Weekend"
         case .japanese: return "週末"
         case .chinese: return "周末"
         case .german: return "Wochenende"
@@ -536,6 +567,7 @@ enum Strings {
         switch lang {
         case .korean: return "일정 없음"
         case .english: return "No schedule"
+        case .dutch: return "Geen planning"
         case .japanese: return "予定なし"
         case .chinese: return "无日程"
         case .german: return "Kein Termin"
@@ -551,6 +583,7 @@ enum Strings {
         switch lang {
         case .korean: return "대체공휴일"
         case .english: return "Substitute Holiday"
+        case .dutch: return "Vervangende feestdag"
         case .japanese: return "振替休日"
         case .chinese: return "补休日"
         case .german: return "Ersatzfeiertag"
@@ -566,6 +599,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 삭제"
         case .english: return "Delete Leave"
+        case .dutch: return "Verlof verwijderen"
         case .japanese: return "休暇を削除"
         case .chinese: return "删除假期"
         case .german: return "Urlaub löschen"
@@ -581,6 +615,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 휴가 기록을 삭제하시겠습니까?\n연차가 복원됩니다."
         case .english: return "Delete this leave record?\nAnnual leave will be restored."
+        case .dutch: return "Dit verlof verwijderen?\nJe vakantiedagen worden teruggezet."
         case .japanese: return "この休暇記録を削除しますか？\n有給が復元されます。"
         case .chinese: return "确定删除此休假记录吗？\n年假将被恢复。"
         case .german: return "Diesen Urlaubseintrag löschen?\nDie Urlaubstage werden zurückgebucht."
@@ -596,6 +631,7 @@ enum Strings {
         switch lang {
         case .korean: return "취소"
         case .english: return "Cancel"
+        case .dutch: return "Annuleren"
         case .japanese: return "キャンセル"
         case .chinese: return "取消"
         case .german: return "Abbrechen"
@@ -611,6 +647,7 @@ enum Strings {
         switch lang {
         case .korean: return "삭제"
         case .english: return "Delete"
+        case .dutch: return "Verwijderen"
         case .japanese: return "削除"
         case .chinese: return "删除"
         case .german: return "Löschen"
@@ -626,6 +663,7 @@ enum Strings {
         switch lang {
         case .korean: return "나의 연차 일정"
         case .english: return "My Leave Schedule"
+        case .dutch: return "Mijn verlofplanning"
         case .japanese: return "休暇スケジュール"
         case .chinese: return "我的年假日程"
         case .german: return "Mein Urlaubsplan"
@@ -641,6 +679,7 @@ enum Strings {
         switch lang {
         case .korean: return "등록된 연차가 없습니다"
         case .english: return "No leave registered"
+        case .dutch: return "Geen verlof geregistreerd"
         case .japanese: return "登録された休暇がありません"
         case .chinese: return "没有登记的年假"
         case .german: return "Kein Urlaub eingetragen"
@@ -656,6 +695,7 @@ enum Strings {
         switch lang {
         case .korean: return "탭하여 수정 · 스와이프하여 삭제"
         case .english: return "Tap to edit · Swipe to delete"
+        case .dutch: return "Tik om te bewerken · Veeg om te verwijderen"
         case .japanese: return "タップで編集 · スワイプで削除"
         case .chinese: return "点击编辑 · 滑动删除"
         case .german: return "Tippen zum Bearbeiten · Wischen zum Löschen"
@@ -671,6 +711,7 @@ enum Strings {
         switch lang {
         case .korean: return "예정된 일정"
         case .english: return "Upcoming"
+        case .dutch: return "Aankomend"
         case .japanese: return "予定"
         case .chinese: return "即将到来"
         case .german: return "Anstehend"
@@ -686,6 +727,7 @@ enum Strings {
         switch lang {
         case .korean: return "지난 일정"
         case .english: return "Past"
+        case .dutch: return "Voorbij"
         case .japanese: return "過去"
         case .chinese: return "过去"
         case .german: return "Vergangen"
@@ -701,6 +743,7 @@ enum Strings {
         switch lang {
         case .korean: return "오늘"
         case .english: return "Today"
+        case .dutch: return "Vandaag"
         case .japanese: return "今日"
         case .chinese: return "今天"
         case .german: return "Heute"
@@ -716,6 +759,7 @@ enum Strings {
         switch lang {
         case .korean: return "이전 달"
         case .english: return "Previous month"
+        case .dutch: return "Vorige maand"
         case .japanese: return "前の月"
         case .chinese: return "上个月"
         case .german: return "Vorheriger Monat"
@@ -731,6 +775,7 @@ enum Strings {
         switch lang {
         case .korean: return "이전 연도"
         case .english: return "Previous year"
+        case .dutch: return "Vorig jaar"
         case .japanese: return "前の年"
         case .chinese: return "上一年"
         case .german: return "Vorheriges Jahr"
@@ -746,6 +791,7 @@ enum Strings {
         switch lang {
         case .korean: return "다음 연도"
         case .english: return "Next year"
+        case .dutch: return "Volgend jaar"
         case .japanese: return "次の年"
         case .chinese: return "下一年"
         case .german: return "Nächstes Jahr"
@@ -762,6 +808,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 휴가에 어울리는 여행 추천"
         case .english: return "Trips that match this leave"
+        case .dutch: return "Reizen die bij dit verlof passen"
         case .japanese: return "この休暇に合う旅行のおすすめ"
         case .chinese: return "适合此假期的旅行推荐"
         case .german: return "Reisen, die zu diesem Urlaub passen"
@@ -777,6 +824,7 @@ enum Strings {
         switch lang {
         case .korean: return "기간·계절·출발 국가 기반 큐레이션"
         case .english: return "Curated by duration, season, and origin"
+        case .dutch: return "Samengesteld op basis van duur, seizoen en vertrekplaats"
         case .japanese: return "期間・季節・出発国に基づく厳選"
         case .chinese: return "根据时长、季节和出发国精选"
         case .german: return "Nach Dauer, Jahreszeit und Abflugland ausgewählt"
@@ -792,6 +840,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 날짜로 검색한 실시간 항공·숙박"
         case .english: return "Live flights & stays for these dates"
+        case .dutch: return "Actuele vluchten en verblijven voor deze data"
         case .japanese: return "この日付のリアルタイム航空券・宿泊"
         case .chinese: return "针对这些日期的实时机票和住宿"
         case .german: return "Live-Flüge & Unterkünfte für diese Tage"
@@ -807,6 +856,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 불러오는 중…"
         case .english: return "Loading recommendations…"
+        case .dutch: return "Aanbevelingen laden…"
         case .japanese: return "おすすめを読み込み中…"
         case .chinese: return "正在加载推荐…"
         case .german: return "Empfehlungen werden geladen…"
@@ -823,6 +873,7 @@ enum Strings {
         switch lang {
         case .korean: return "최적 연간 휴가 플래너"
         case .english: return "Optimal annual planner"
+        case .dutch: return "Optimale jaarplanner"
         case .japanese: return "最適な年間プランナー"
         case .chinese: return "最佳年度规划"
         case .german: return "Optimaler Jahresplaner"
@@ -839,6 +890,7 @@ enum Strings {
         switch lang {
         case .korean: return "한 해 최적 휴가 플랜"
         case .english: return "Optimal year plan"
+        case .dutch: return "Optimaal jaarplan"
         case .japanese: return "年間最適プラン"
         case .chinese: return "全年最佳计划"
         case .german: return "Optimaler Urlaubsplan fürs Jahr"
@@ -854,6 +906,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일·주말을 분석해 가장 긴 연휴 조합을 자동으로 계산"
         case .english: return "Computes the longest break combinations from holidays & weekends"
+        case .dutch: return "Berekent de langste combinaties van vrije dagen uit feestdagen en weekenden"
         case .japanese: return "祝日・週末を分析して最長の連休組み合わせを自動算出"
         case .chinese: return "分析公共假日和周末，自动计算最长假期组合"
         case .german: return "Berechnet aus Feiertagen und Wochenenden die längsten Auszeiten"
@@ -869,6 +922,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 \(leaveUsed)일로 총 \(totalDays)일 휴식 (\(breaks)개의 연휴)"
         case .english: return "\(totalDays) days off with \(leaveUsed) PTO (\(breaks) breaks)"
+        case .dutch: return "\(totalDays) dagen vrij met \(leaveUsed) verlofdagen (\(breaks) vakanties)"
         case .japanese: return "有給\(leaveUsed)日で計\(totalDays)日休み（\(breaks)回の連休）"
         case .chinese: return "用\(leaveUsed)天年假休息\(totalDays)天（\(breaks)次假期）"
         case .german: return "\(totalDays) freie Tage mit \(leaveUsed) Urlaubstagen (\(breaks) Auszeiten)"
@@ -885,6 +939,7 @@ enum Strings {
         switch lang {
         case .korean: return "일 휴식"
         case .english: return "days off"
+        case .dutch: return "dagen vrij"
         case .japanese: return "日休み"
         case .chinese: return "天假期"
         case .german: return "freie Tage"
@@ -901,6 +956,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 \(leaveUsed)일 · 연휴 \(breaks)회"
         case .english: return "\(leaveUsed) PTO · \(breaks) breaks"
+        case .dutch: return "\(leaveUsed) verlofdagen · \(breaks) vakanties"
         case .japanese: return "有給\(leaveUsed)日・\(breaks)回"
         case .chinese: return "年假\(leaveUsed)天·\(breaks)次"
         case .german: return "\(leaveUsed) Urlaubstage · \(breaks) Auszeiten"
@@ -916,6 +972,7 @@ enum Strings {
         switch lang {
         case .korean: return "이중 탭하여 펼치기"
         case .english: return "Double-tap to expand"
+        case .dutch: return "Tik twee keer om uit te klappen"
         case .japanese: return "ダブルタップで展開"
         case .chinese: return "双击展开"
         case .german: return "Doppeltippen zum Erweitern"
@@ -931,6 +988,7 @@ enum Strings {
         switch lang {
         case .korean: return "이중 탭하여 접기"
         case .english: return "Double-tap to collapse"
+        case .dutch: return "Tik twee keer om in te klappen"
         case .japanese: return "ダブルタップで折りたたむ"
         case .chinese: return "双击折叠"
         case .german: return "Doppeltippen zum Einklappen"
@@ -946,6 +1004,7 @@ enum Strings {
         switch lang {
         case .korean: return "추가 연차를 등록하면 더 긴 연휴를 만들 수 있어요"
         case .english: return "Register more PTO to unlock longer breaks"
+        case .dutch: return "Registreer meer verlofdagen voor langere vakanties"
         case .japanese: return "有給を追加すると、より長い連休が作れます"
         case .chinese: return "添加更多年假可获得更长假期"
         case .german: return "Trage mehr Urlaub ein, um längere Auszeiten zu ermöglichen"
@@ -961,6 +1020,7 @@ enum Strings {
         switch lang {
         case .korean: return "한 해 휴가를 한 번에 최적 배치"
         case .english: return "Plan your year in one tap"
+        case .dutch: return "Plan je jaar met één tik"
         case .japanese: return "1年の休暇を一度に最適配置"
         case .chinese: return "一键规划全年假期"
         case .german: return "Plane dein Jahr mit einem Tipp"
@@ -976,6 +1036,7 @@ enum Strings {
         switch lang {
         case .korean: return "남은 연차를 모든 공휴일에 최적 배치해 최장 연휴 조합을 찾아드려요"
         case .english: return "Optimally place your remaining PTO around all public holidays for the longest possible breaks"
+        case .dutch: return "Plan je resterende verlofdagen optimaal rond alle feestdagen voor de langst mogelijke vakanties"
         case .japanese: return "残りの有給を公休に最適配置し、最長の連休を計算"
         case .chinese: return "将剩余年假最佳分配在所有公假周围,获取最长假期"
         case .german: return "Verteile deine restlichen Urlaubstage optimal rund um alle Feiertage, für die längstmöglichen Auszeiten"
@@ -991,6 +1052,7 @@ enum Strings {
         switch lang {
         case .korean: return "Pro로 최적 플랜 보기"
         case .english: return "Unlock optimal plan with Pro"
+        case .dutch: return "Ontgrendel het optimale plan met Pro"
         case .japanese: return "Proで最適プランを見る"
         case .chinese: return "升级 Pro 查看最佳计划"
         case .german: return "Optimalen Plan mit Pro freischalten"
@@ -1006,6 +1068,7 @@ enum Strings {
         switch lang {
         case .korean: return "전부 캘린더에 추가"
         case .english: return "Add all to calendar"
+        case .dutch: return "Alles aan agenda toevoegen"
         case .japanese: return "すべてカレンダーに追加"
         case .chinese: return "全部添加到日历"
         case .german: return "Alle zum Kalender hinzufügen"
@@ -1021,6 +1084,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 \(leaveUsed)일 · \(totalDays)일 연휴"
         case .english: return "\(leaveUsed) PTO · \(totalDays)-day break"
+        case .dutch: return "\(leaveUsed) verlofdagen · \(totalDays) dagen vrij"
         case .japanese: return "有給\(leaveUsed)日・\(totalDays)日連休"
         case .chinese: return "\(leaveUsed)天年假·\(totalDays)天假期"
         case .german: return "\(leaveUsed) Urlaubstage · \(totalDays) Tage frei"
@@ -1036,6 +1100,7 @@ enum Strings {
         switch lang {
         case .korean: return "다음 달"
         case .english: return "Next month"
+        case .dutch: return "Volgende maand"
         case .japanese: return "次の月"
         case .chinese: return "下个月"
         case .german: return "Nächster Monat"
@@ -1051,6 +1116,7 @@ enum Strings {
         switch lang {
         case .korean: return ["일", "월", "화", "수", "목", "금", "토"]
         case .english: return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        case .dutch: return ["zo", "ma", "di", "wo", "do", "vr", "za"]
         case .japanese: return ["日", "月", "火", "水", "木", "金", "土"]
         case .chinese: return ["日", "一", "二", "三", "四", "五", "六"]
         case .german: return ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
@@ -1068,6 +1134,10 @@ enum Strings {
         case .english:
             let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            return "\(monthNames[month - 1]) \(year)"
+        case .dutch:
+            let monthNames = ["jan", "feb", "mrt", "apr", "mei", "jun",
+                              "jul", "aug", "sep", "okt", "nov", "dec"]
             return "\(monthNames[month - 1]) \(year)"
         case .japanese: return "\(year)年 \(month)月"
         case .chinese: return "\(year)年\(month)月"
@@ -1102,6 +1172,10 @@ enum Strings {
             let names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
             return names[month - 1]
+        case .dutch:
+            let names = ["jan", "feb", "mrt", "apr", "mei", "jun",
+                         "jul", "aug", "sep", "okt", "nov", "dec"]
+            return names[month - 1]
         case .japanese: return "\(month)月"
         case .chinese: return "\(month)月"
         case .german:
@@ -1132,6 +1206,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(days)일"
         case .english: return "\(days)d"
+        case .dutch: return "\(days)d"
         case .japanese: return "\(days)日"
         case .chinese: return "\(days)天"
         case .german: return "\(days) T"
@@ -1147,6 +1222,7 @@ enum Strings {
         switch lang {
         case .korean: return "일"
         case .english: return " days"
+        case .dutch: return " dagen"
         case .japanese: return "日"
         case .chinese: return "天"
         case .german: return " Tage"
@@ -1165,6 +1241,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(text)일"
         case .english: return value == 1 ? "1 day" : "\(text) days"
+        case .dutch: return value == 1 ? "1 dag" : "\(text) dagen"
         case .japanese: return "\(text)日"
         case .chinese: return "\(text)天"
         case .german: return value == 1 ? "1 Tag" : "\(text) Tage"
@@ -1181,6 +1258,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 추천"
         case .english: return "Leave Recommendations"
+        case .dutch: return "Verlofadvies"
         case .japanese: return "休暇おすすめ"
         case .chinese: return "休假推荐"
         case .german: return "Urlaubsempfehlungen"
@@ -1196,6 +1274,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(year)년 추천"
         case .english: return "\(year) Recommendations"
+        case .dutch: return "Advies \(year)"
         case .japanese: return "\(year)年 おすすめ"
         case .chinese: return "\(year)年推荐"
         case .german: return "Empfehlungen \(year)"
@@ -1211,6 +1290,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 가능한 연차"
         case .english: return "Available Leave"
+        case .dutch: return "Beschikbare vakantiedagen"
         case .japanese: return "利用可能な有給"
         case .chinese: return "可用年假"
         case .german: return "Verfügbarer Urlaub"
@@ -1226,6 +1306,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 일정 분석 중..."
         case .english: return "Analyzing schedule..."
+        case .dutch: return "Planning analyseren..."
         case .japanese: return "スケジュール分析中..."
         case .chinese: return "正在分析日程..."
         case .german: return "Plan wird analysiert..."
@@ -1241,6 +1322,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 일정이 없습니다"
         case .english: return "No recommendations"
+        case .dutch: return "Geen aanbevelingen"
         case .japanese: return "おすすめがありません"
         case .chinese: return "没有推荐日程"
         case .german: return "Keine Empfehlungen"
@@ -1256,6 +1338,7 @@ enum Strings {
         switch lang {
         case .korean: return "선호도 설정을 확인하거나\n연차를 더 확보해보세요"
         case .english: return "Check your preferences or\nsecure more leave days"
+        case .dutch: return "Controleer je voorkeuren of\nspaar meer verlofdagen"
         case .japanese: return "設定を確認するか\n有給を確保してください"
         case .chinese: return "请检查偏好设置或\n确保有更多年假"
         case .german: return "Prüfe deine Einstellungen oder\nsichere dir mehr Urlaubstage"
@@ -1271,6 +1354,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 일정 미리보기"
         case .english: return "Schedule Preview"
+        case .dutch: return "Voorbeeld van planning"
         case .japanese: return "スケジュールプレビュー"
         case .chinese: return "日程预览"
         case .german: return "Vorschau des Plans"
@@ -1286,6 +1370,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(days)일 연차"
         case .english: return "\(days)d leave"
+        case .dutch: return "\(days)d verlof"
         case .japanese: return "\(days)日有給"
         case .chinese: return "\(days)天年假"
         case .german: return "\(days) Urlaubstg."
@@ -1301,6 +1386,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(days)일 휴식"
         case .english: return "\(days)d off"
+        case .dutch: return "\(days)d vrij"
         case .japanese: return "\(days)日休み"
         case .chinese: return "\(days)天休息"
         case .german: return "\(days) Tage frei"
@@ -1316,6 +1402,7 @@ enum Strings {
         switch lang {
         case .korean: return "일정에 추가하기"
         case .english: return "Add to Schedule"
+        case .dutch: return "Aan planning toevoegen"
         case .japanese: return "予定に追加"
         case .chinese: return "添加到日程"
         case .german: return "Zum Plan hinzufügen"
@@ -1331,6 +1418,7 @@ enum Strings {
         switch lang {
         case .korean: return "일정에 추가됨"
         case .english: return "Added to Schedule"
+        case .dutch: return "Aan planning toegevoegd"
         case .japanese: return "予定に追加済み"
         case .chinese: return "已添加到日程"
         case .german: return "Zum Plan hinzugefügt"
@@ -1347,6 +1435,7 @@ enum Strings {
         switch lang {
         case .korean: return "평일"
         case .english: return "Workday"
+        case .dutch: return "Werkdag"
         case .japanese: return "平日"
         case .chinese: return "工作日"
         case .german: return "Werktag"
@@ -1363,6 +1452,7 @@ enum Strings {
         switch lang {
         case .korean: return "설정"
         case .english: return "Settings"
+        case .dutch: return "Instellingen"
         case .japanese: return "設定"
         case .chinese: return "设置"
         case .german: return "Einstellungen"
@@ -1378,6 +1468,7 @@ enum Strings {
         switch lang {
         case .korean: return "이름"
         case .english: return "Name"
+        case .dutch: return "Naam"
         case .japanese: return "名前"
         case .chinese: return "姓名"
         case .german: return "Name"
@@ -1394,6 +1485,7 @@ enum Strings {
         switch lang {
         case .korean: return "이름 수정"
         case .english: return "Edit name"
+        case .dutch: return "Naam bewerken"
         case .japanese: return "名前を編集"
         case .chinese: return "编辑姓名"
         case .german: return "Name bearbeiten"
@@ -1409,6 +1501,7 @@ enum Strings {
         switch lang {
         case .korean: return "가입일: \(dateStr)"
         case .english: return "Joined: \(dateStr)"
+        case .dutch: return "Lid sinds: \(dateStr)"
         case .japanese: return "登録日: \(dateStr)"
         case .chinese: return "注册日: \(dateStr)"
         case .german: return "Dabei seit: \(dateStr)"
@@ -1424,6 +1517,7 @@ enum Strings {
         switch lang {
         case .korean: return "국가 및 언어"
         case .english: return "Country & Language"
+        case .dutch: return "Land en taal"
         case .japanese: return "国と言語"
         case .chinese: return "国家和语言"
         case .german: return "Land & Sprache"
@@ -1439,6 +1533,7 @@ enum Strings {
         switch lang {
         case .korean: return "국가"
         case .english: return "Country"
+        case .dutch: return "Land"
         case .japanese: return "国"
         case .chinese: return "国家"
         case .german: return "Land"
@@ -1454,6 +1549,7 @@ enum Strings {
         switch lang {
         case .korean: return "언어"
         case .english: return "Language"
+        case .dutch: return "Taal"
         case .japanese: return "言語"
         case .chinese: return "语言"
         case .german: return "Sprache"
@@ -1469,6 +1565,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 설정"
         case .english: return "Annual Leave Settings"
+        case .dutch: return "Instellingen vakantiedagen"
         case .japanese: return "有給休暇設定"
         case .chinese: return "年假设置"
         case .german: return "Urlaubseinstellungen"
@@ -1484,6 +1581,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 가능 연차"
         case .english: return "Available Leave"
+        case .dutch: return "Beschikbare vakantiedagen"
         case .japanese: return "利用可能有給"
         case .chinese: return "可用年假"
         case .german: return "Verfügbarer Urlaub"
@@ -1499,6 +1597,7 @@ enum Strings {
         switch lang {
         case .korean: return "기본 \(base)일 + 보너스 \(bonus)일"
         case .english: return "Base \(base)d + Bonus \(bonus)d"
+        case .dutch: return "Basis \(base)d + bonus \(bonus)d"
         case .japanese: return "基本 \(base)日 + ボーナス \(bonus)日"
         case .chinese: return "基本 \(base)天 + 奖励 \(bonus)天"
         case .german: return "Basis \(base) T. + Bonus \(bonus) T."
@@ -1514,6 +1613,7 @@ enum Strings {
         switch lang {
         case .korean: return "총 연차"
         case .english: return "Total Leave"
+        case .dutch: return "Totaal vakantiedagen"
         case .japanese: return "有給合計"
         case .chinese: return "总年假"
         case .german: return "Urlaub gesamt"
@@ -1529,6 +1629,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용한 연차"
         case .english: return "Used Leave"
+        case .dutch: return "Gebruikte vakantiedagen"
         case .japanese: return "使用済み"
         case .chinese: return "已使用"
         case .german: return "Genommener Urlaub"
@@ -1544,6 +1645,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 기준월"
         case .english: return "Year Start Month"
+        case .dutch: return "Startmaand van het jaar"
         case .japanese: return "基準月"
         case .chinese: return "年假起始月"
         case .german: return "Startmonat des Urlaubsjahres"
@@ -1559,6 +1661,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차"
         case .english: return "Bonus Leave"
+        case .dutch: return "Bonusverlof"
         case .japanese: return "ボーナス休暇"
         case .chinese: return "奖励年假"
         case .german: return "Bonusurlaub"
@@ -1574,6 +1677,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차 추가"
         case .english: return "Add Bonus Leave"
+        case .dutch: return "Bonusverlof toevoegen"
         case .japanese: return "ボーナス休暇を追加"
         case .chinese: return "添加奖励年假"
         case .german: return "Bonusurlaub hinzufügen"
@@ -1589,6 +1693,7 @@ enum Strings {
         switch lang {
         case .korean: return "대체휴무, 포상휴가 등 추가로 받은 연차를 관리합니다."
         case .english: return "Manage additional leave from comp time, rewards, etc."
+        case .dutch: return "Beheer extra verlof uit overuren, beloningen enzovoort."
         case .japanese: return "代替休暇、報奨休暇など追加の有給を管理します。"
         case .chinese: return "管理补休、奖励假等额外年假。"
         case .german: return "Verwalte zusätzlichen Urlaub, z. B. Freizeitausgleich oder Prämien."
@@ -1604,6 +1709,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 스타일"
         case .english: return "Vacation Style"
+        case .dutch: return "Vakantiestijl"
         case .japanese: return "休暇スタイル"
         case .chinese: return "休假风格"
         case .german: return "Urlaubsstil"
@@ -1619,6 +1725,7 @@ enum Strings {
         switch lang {
         case .korean: return "선호도 설정"
         case .english: return "Preferences"
+        case .dutch: return "Voorkeuren"
         case .japanese: return "好み設定"
         case .chinese: return "偏好设置"
         case .german: return "Vorlieben"
@@ -1634,6 +1741,7 @@ enum Strings {
         switch lang {
         case .korean: return "선호 기간"
         case .english: return "Duration"
+        case .dutch: return "Duur"
         case .japanese: return "期間"
         case .chinese: return "偏好时长"
         case .german: return "Dauer"
@@ -1649,6 +1757,7 @@ enum Strings {
         switch lang {
         case .korean: return "선호 계절"
         case .english: return "Season"
+        case .dutch: return "Seizoen"
         case .japanese: return "季節"
         case .chinese: return "偏好季节"
         case .german: return "Jahreszeit"
@@ -1664,6 +1773,7 @@ enum Strings {
         switch lang {
         case .korean: return "선호 활동"
         case .english: return "Activity"
+        case .dutch: return "Activiteit"
         case .japanese: return "活動"
         case .chinese: return "偏好活动"
         case .german: return "Aktivität"
@@ -1679,6 +1789,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 통계"
         case .english: return "Usage Stats"
+        case .dutch: return "Gebruiksstatistieken"
         case .japanese: return "利用統計"
         case .chinese: return "使用统计"
         case .german: return "Nutzungsstatistik"
@@ -1694,6 +1805,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 완료"
         case .english: return "Completed"
+        case .dutch: return "Voltooid"
         case .japanese: return "使用済み"
         case .chinese: return "已完成"
         case .german: return "Genommen"
@@ -1709,6 +1821,7 @@ enum Strings {
         switch lang {
         case .korean: return "예정된 휴가"
         case .english: return "Planned Leave"
+        case .dutch: return "Gepland verlof"
         case .japanese: return "予定の休暇"
         case .chinese: return "计划中的假期"
         case .german: return "Geplanter Urlaub"
@@ -1724,6 +1837,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 소진율"
         case .english: return "Usage Rate"
+        case .dutch: return "Gebruikspercentage"
         case .japanese: return "消化率"
         case .chinese: return "使用率"
         case .german: return "Nutzungsquote"
@@ -1739,6 +1853,7 @@ enum Strings {
         switch lang {
         case .korean: return "데이터 관리"
         case .english: return "Data Management"
+        case .dutch: return "Gegevensbeheer"
         case .japanese: return "データ管理"
         case .chinese: return "数据管理"
         case .german: return "Datenverwaltung"
@@ -1754,6 +1869,7 @@ enum Strings {
         switch lang {
         case .korean: return "iCloud에 백업"
         case .english: return "Backup to iCloud"
+        case .dutch: return "Back-up naar iCloud"
         case .japanese: return "iCloudにバックアップ"
         case .chinese: return "备份到iCloud"
         case .german: return "In iCloud sichern"
@@ -1769,6 +1885,7 @@ enum Strings {
         switch lang {
         case .korean: return "iCloud에서 복원"
         case .english: return "Restore from iCloud"
+        case .dutch: return "Herstellen vanuit iCloud"
         case .japanese: return "iCloudから復元"
         case .chinese: return "从iCloud恢复"
         case .german: return "Aus iCloud wiederherstellen"
@@ -1786,6 +1903,7 @@ enum Strings {
         switch lang {
         case .korean: return "사진으로 휴가 등록"
         case .english: return "Add Leaves from a Photo"
+        case .dutch: return "Verlof toevoegen via foto"
         case .japanese: return "写真で休暇を登録"
         case .chinese: return "用照片登记休假"
         case .german: return "Urlaub per Foto eintragen"
@@ -1801,6 +1919,7 @@ enum Strings {
         switch lang {
         case .korean: return "회사 시스템의 휴가 신청 내역을 찍으면 자동으로 인식해서 등록해드려요."
         case .english: return "Snap your company's leave request history and it's recognized and added automatically."
+        case .dutch: return "Maak een foto van de verlofaanvragen van je bedrijf en ze worden automatisch herkend en toegevoegd."
         case .japanese: return "会社システムの休暇申請履歴を撮影すると、自動で認識して登録します。"
         case .chinese: return "拍摄公司系统的休假申请记录，即可自动识别并登记。"
         case .german: return "Fotografiere die Urlaubsübersicht deiner Firma, und sie wird automatisch erkannt und eingetragen."
@@ -1816,6 +1935,7 @@ enum Strings {
         switch lang {
         case .korean: return "가족에게 일정을 공유해보세요"
         case .english: return "Share Your Schedule with Family"
+        case .dutch: return "Deel je planning met familie"
         case .japanese: return "家族に予定を共有してみましょう"
         case .chinese: return "与家人共享日程"
         case .german: return "Teile deinen Plan mit der Familie"
@@ -1831,6 +1951,7 @@ enum Strings {
         switch lang {
         case .korean: return "설정 → 일정 공유에서 초대 링크를 보내면, 가족의 휴가 일정을 가족 탭에서 함께 볼 수 있어요."
         case .english: return "Send an invite from Settings → Share Schedule to see each other's leaves in the Family tab."
+        case .dutch: return "Stuur een uitnodiging via Instellingen → Planning delen om elkaars verlof te zien in het tabblad Familie."
         case .japanese: return "設定 → 予定の共有から招待リンクを送ると、家族の休暇予定を「家族」タブで一緒に見られます。"
         case .chinese: return "在设置 → 日程共享中发送邀请链接，即可在\"家人\"标签页中查看彼此的休假日程。"
         case .german: return "Sende unter Einstellungen → Plan teilen eine Einladung, um euren Urlaub im Tab „Familie“ gemeinsam zu sehen."
@@ -1846,6 +1967,7 @@ enum Strings {
         switch lang {
         case .korean: return "타임머신이 지켜드려요"
         case .english: return "Time Machine Has Your Back"
+        case .dutch: return "Time Machine staat voor je klaar"
         case .japanese: return "タイムマシンが守ります"
         case .chinese: return "时光机为您保驾护航"
         case .german: return "Die Zeitmaschine sichert dich ab"
@@ -1861,6 +1983,7 @@ enum Strings {
         switch lang {
         case .korean: return "데이터가 바뀔 때마다 자동으로 스냅샷이 저장돼요. 실수해도 원하는 시점으로 되돌릴 수 있어요."
         case .english: return "A snapshot is saved automatically whenever your data changes, so you can always roll back."
+        case .dutch: return "Er wordt automatisch een momentopname bewaard zodra je gegevens veranderen, zodat je altijd kunt terugdraaien."
         case .japanese: return "データが変更されるたびに自動でスナップショットを保存。いつでも元に戻せます。"
         case .chinese: return "每当数据变化时都会自动保存快照，随时可以恢复到任意时间点。"
         case .german: return "Bei jeder Änderung wird automatisch ein Snapshot gespeichert, sodass du jederzeit zurückgehen kannst."
@@ -1876,6 +1999,7 @@ enum Strings {
         switch lang {
         case .korean: return "날짜를 탭해서 바로 등록"
         case .english: return "Tap a Date to Register"
+        case .dutch: return "Tik op een datum om te registreren"
         case .japanese: return "日付をタップしてすぐ登録"
         case .chinese: return "点按日期即可登记"
         case .german: return "Datum antippen zum Eintragen"
@@ -1891,6 +2015,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더에서 날짜를 선택하면 그 날짜로 휴가를 바로 등록할 수 있어요."
         case .english: return "Select any date on the calendar to register a leave for that day instantly."
+        case .dutch: return "Selecteer een datum in de agenda om meteen verlof voor die dag te registreren."
         case .japanese: return "カレンダーで日付を選ぶと、その日の休暇をすぐに登録できます。"
         case .chinese: return "在日历上选择日期，即可立即为该日期登记休假。"
         case .german: return "Wähle ein Datum im Kalender, um sofort Urlaub für diesen Tag einzutragen."
@@ -1908,6 +2033,7 @@ enum Strings {
         switch lang {
         case .korean: return "사진에서 가져오기"
         case .english: return "Import from Photo"
+        case .dutch: return "Importeren via foto"
         case .japanese: return "写真から取り込む"
         case .chinese: return "从照片导入"
         case .german: return "Aus Foto importieren"
@@ -1923,6 +2049,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 신청 내역 화면을 찍으면 자동으로 인식해요"
         case .english: return "Snap your leave request history to import it automatically"
+        case .dutch: return "Maak een foto van je verlofaanvragen om ze automatisch te importeren"
         case .japanese: return "休暇申請履歴の画面を撮影すると自動で認識します"
         case .chinese: return "拍摄休假申请记录页面即可自动识别"
         case .german: return "Fotografiere deine Urlaubsübersicht für den automatischen Import"
@@ -1938,6 +2065,7 @@ enum Strings {
         switch lang {
         case .korean: return "회사 시스템의 휴가 신청 내역 화면을 촬영하거나 스크린샷을 선택하세요.\n날짜·유형·차감 일수를 자동으로 인식합니다."
         case .english: return "Take a photo or choose a screenshot of your company's leave request history.\nDates, types, and deductions are recognized automatically."
+        case .dutch: return "Maak een foto of kies een schermafbeelding van de verlofaanvragen van je bedrijf.\nData, soorten en aftrek worden automatisch herkend."
         case .japanese: return "会社システムの休暇申請履歴画面を撮影するか、スクリーンショットを選択してください。\n日付・種類・控除日数を自動で認識します。"
         case .chinese: return "拍摄或选择公司系统的休假申请记录截图。\n将自动识别日期、类型和扣除天数。"
         case .german: return "Fotografiere die Urlaubsübersicht deiner Firma oder wähle einen Screenshot.\nDaten, Arten und abgezogene Tage werden automatisch erkannt."
@@ -1953,6 +2081,7 @@ enum Strings {
         switch lang {
         case .korean: return "카메라로 촬영"
         case .english: return "Take Photo"
+        case .dutch: return "Foto maken"
         case .japanese: return "カメラで撮影"
         case .chinese: return "用相机拍摄"
         case .german: return "Foto aufnehmen"
@@ -1968,6 +2097,7 @@ enum Strings {
         switch lang {
         case .korean: return "사진 보관함에서 선택"
         case .english: return "Choose from Library"
+        case .dutch: return "Kies uit bibliotheek"
         case .japanese: return "写真ライブラリから選択"
         case .chinese: return "从相册选择"
         case .german: return "Aus Mediathek wählen"
@@ -1983,6 +2113,7 @@ enum Strings {
         switch lang {
         case .korean: return "다른 사진 선택"
         case .english: return "Choose Another Photo"
+        case .dutch: return "Kies een andere foto"
         case .japanese: return "別の写真を選択"
         case .chinese: return "选择其他照片"
         case .german: return "Anderes Foto wählen"
@@ -1998,6 +2129,7 @@ enum Strings {
         switch lang {
         case .korean: return "사진에서 휴가 내역을 인식하는 중..."
         case .english: return "Recognizing leave records in photo..."
+        case .dutch: return "Verlof in foto herkennen..."
         case .japanese: return "写真から休暇履歴を認識中..."
         case .chinese: return "正在识别照片中的休假记录..."
         case .german: return "Urlaubseinträge im Foto werden erkannt ..."
@@ -2013,6 +2145,7 @@ enum Strings {
         switch lang {
         case .korean: return "사진에서 휴가 내역을 찾지 못했습니다.\n표가 선명하게 나오도록 다시 촬영해 주세요."
         case .english: return "No leave records found in the photo.\nPlease retake it so the table is clearly visible."
+        case .dutch: return "Geen verlof gevonden in de foto.\nMaak de foto opnieuw zodat de tabel goed zichtbaar is."
         case .japanese: return "写真から休暇履歴が見つかりませんでした。\n表が鮮明に写るように撮り直してください。"
         case .chinese: return "未能在照片中找到休假记录。\n请重新拍摄，确保表格清晰可见。"
         case .german: return "Im Foto wurden keine Urlaubseinträge gefunden.\nBitte fotografiere es erneut, sodass die Tabelle gut lesbar ist."
@@ -2028,6 +2161,7 @@ enum Strings {
         switch lang {
         case .korean: return "인식된 \(count)건이 모두 이미 등록되어 있어요."
         case .english: return "All \(count) recognized records are already registered."
+        case .dutch: return "Alle \(count) herkende registraties staan al in je planning."
         case .japanese: return "認識された\(count)件はすべて登録済みです。"
         case .chinese: return "识别出的\(count)条记录均已登记。"
         case .german: return "Alle \(count) erkannten Einträge sind bereits vorhanden."
@@ -2043,6 +2177,7 @@ enum Strings {
         switch lang {
         case .korean: return "이미 등록된 \(count)건은 제외했습니다."
         case .english: return "\(count) already-registered records were excluded."
+        case .dutch: return "\(count) al geregistreerde items zijn weggelaten."
         case .japanese: return "登録済みの\(count)件は除外しました。"
         case .chinese: return "已排除\(count)条已登记的记录。"
         case .german: return "\(count) bereits vorhandene Einträge wurden ausgelassen."
@@ -2058,6 +2193,7 @@ enum Strings {
         switch lang {
         case .korean: return "실공제수가 없는 대체휴가·자녀돌봄 등은 연차 차감 없이 등록됩니다."
         case .english: return "Records without a deduction (compensatory leave, family care, etc.) are added without reducing your annual leave."
+        case .dutch: return "Registraties zonder aftrek (compensatieverlof, zorgverlof enzovoort) worden toegevoegd zonder je vakantiedagen te verminderen."
         case .japanese: return "控除のない代替休暇・子育て休暇などは、年休を減らさずに登録されます。"
         case .chinese: return "无扣除天数的调休、育儿假等将在不扣减年假的情况下登记。"
         case .german: return "Einträge ohne Abzug (Freizeitausgleich, Kinderbetreuung usw.) werden ohne Abzug vom Jahresurlaub eingetragen."
@@ -2073,6 +2209,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 차감 없음"
         case .english: return "No deduction"
+        case .dutch: return "Geen aftrek"
         case .japanese: return "年休控除なし"
         case .chinese: return "不扣年假"
         case .german: return "Kein Abzug"
@@ -2088,6 +2225,7 @@ enum Strings {
         switch lang {
         case .korean: return "사진을 불러올 수 없습니다."
         case .english: return "Unable to load the photo."
+        case .dutch: return "Kan de foto niet laden."
         case .japanese: return "写真を読み込めません。"
         case .chinese: return "无法加载照片。"
         case .german: return "Das Foto konnte nicht geladen werden."
@@ -2105,6 +2243,7 @@ enum Strings {
         switch lang {
         case .korean: return "타임머신"
         case .english: return "Time Machine"
+        case .dutch: return "Time Machine"
         case .japanese: return "タイムマシン"
         case .chinese: return "时光机"
         case .german: return "Zeitmaschine"
@@ -2120,6 +2259,7 @@ enum Strings {
         switch lang {
         case .korean: return "데이터가 바뀔 때마다 자동으로 스냅샷이 저장됩니다. 원하는 시점을 선택하면 그때의 데이터로 되돌릴 수 있습니다."
         case .english: return "A snapshot is saved automatically whenever your data changes. Select a point in time to restore your data to that moment."
+        case .dutch: return "Er wordt automatisch een momentopname bewaard zodra je gegevens veranderen. Kies een moment om je gegevens naar dat tijdstip te herstellen."
         case .japanese: return "データが変更されるたびにスナップショットが自動保存されます。時点を選択すると、その時のデータに戻せます。"
         case .chinese: return "每当数据发生变化时都会自动保存快照。选择一个时间点即可将数据恢复到当时的状态。"
         case .german: return "Bei jeder Änderung wird automatisch ein Snapshot gespeichert. Wähle einen Zeitpunkt, um deine Daten auf diesen Stand zurückzusetzen."
@@ -2135,6 +2275,7 @@ enum Strings {
         switch lang {
         case .korean: return "지금 스냅샷 만들기"
         case .english: return "Create Snapshot Now"
+        case .dutch: return "Nu momentopname maken"
         case .japanese: return "今すぐスナップショットを作成"
         case .chinese: return "立即创建快照"
         case .german: return "Jetzt Snapshot erstellen"
@@ -2150,6 +2291,7 @@ enum Strings {
         switch lang {
         case .korean: return "저장된 시점"
         case .english: return "Saved Points"
+        case .dutch: return "Bewaarde momenten"
         case .japanese: return "保存された時点"
         case .chinese: return "已保存的时间点"
         case .german: return "Gespeicherte Zeitpunkte"
@@ -2165,6 +2307,7 @@ enum Strings {
         switch lang {
         case .korean: return "저장된 스냅샷이 없습니다"
         case .english: return "No snapshots saved yet"
+        case .dutch: return "Nog geen momentopnamen bewaard"
         case .japanese: return "保存されたスナップショットはありません"
         case .chinese: return "尚无已保存的快照"
         case .german: return "Noch keine Snapshots gespeichert"
@@ -2180,6 +2323,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 시점으로 복원"
         case .english: return "Restore This Point"
+        case .dutch: return "Dit moment herstellen"
         case .japanese: return "この時点に復元"
         case .chinese: return "恢复到此时间点"
         case .german: return "Diesen Zeitpunkt wiederherstellen"
@@ -2195,6 +2339,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(date) 시점의 데이터로 되돌립니다. 복원 직전 상태도 자동으로 저장되므로 언제든 다시 되돌릴 수 있습니다."
         case .english: return "Your data will be restored to \(date). The current state is saved automatically before restoring, so you can always go back."
+        case .dutch: return "Je gegevens worden hersteld naar \(date). De huidige staat wordt voor het herstellen automatisch bewaard, zodat je altijd terug kunt."
         case .japanese: return "\(date) 時点のデータに戻します。復元直前の状態も自動保存されるため、いつでも元に戻せます。"
         case .chinese: return "数据将恢复到 \(date)。恢复前会自动保存当前状态，因此您随时可以撤销。"
         case .german: return "Deine Daten werden auf den Stand vom \(date) zurückgesetzt. Der aktuelle Stand wird vorher automatisch gespeichert, sodass du jederzeit zurückkehren kannst."
@@ -2210,6 +2355,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 \(leaves)건 · 보너스 \(bonuses)건"
         case .english: return "\(leaves) leaves · \(bonuses) bonuses"
+        case .dutch: return "\(leaves) verlofdagen · \(bonuses) bonussen"
         case .japanese: return "休暇 \(leaves)件 · ボーナス \(bonuses)件"
         case .chinese: return "休假 \(leaves)条 · 奖励 \(bonuses)条"
         case .german: return "\(leaves) Urlaube · \(bonuses) Boni"
@@ -2225,6 +2371,7 @@ enum Strings {
         switch lang {
         case .korean: return "스냅샷이 저장되었습니다."
         case .english: return "Snapshot saved."
+        case .dutch: return "Momentopname bewaard."
         case .japanese: return "スナップショットを保存しました。"
         case .chinese: return "快照已保存。"
         case .german: return "Snapshot gespeichert."
@@ -2240,6 +2387,7 @@ enum Strings {
         switch lang {
         case .korean: return "스냅샷 저장에 실패했습니다."
         case .english: return "Failed to save snapshot."
+        case .dutch: return "Momentopname bewaren mislukt."
         case .japanese: return "スナップショットの保存に失敗しました。"
         case .chinese: return "快照保存失败。"
         case .german: return "Snapshot konnte nicht gespeichert werden."
@@ -2255,6 +2403,7 @@ enum Strings {
         switch lang {
         case .korean: return "스냅샷 데이터 무결성 검증에 실패했습니다."
         case .english: return "Snapshot integrity check failed."
+        case .dutch: return "Integriteitscontrole van de back-up is mislukt."
         case .japanese: return "スナップショットの整合性検証に失敗しました。"
         case .chinese: return "快照完整性校验失败。"
         case .german: return "Integritätsprüfung des Snapshots fehlgeschlagen."
@@ -2270,6 +2419,7 @@ enum Strings {
         switch lang {
         case .korean: return "자동"
         case .english: return "Auto"
+        case .dutch: return "Auto"
         case .japanese: return "自動"
         case .chinese: return "自动"
         case .german: return "Automatisch"
@@ -2285,6 +2435,7 @@ enum Strings {
         switch lang {
         case .korean: return "앱 전환"
         case .english: return "App switch"
+        case .dutch: return "App-wissel"
         case .japanese: return "アプリ切替"
         case .chinese: return "应用切换"
         case .german: return "App-Wechsel"
@@ -2300,6 +2451,7 @@ enum Strings {
         switch lang {
         case .korean: return "수동"
         case .english: return "Manual"
+        case .dutch: return "Handmatig"
         case .japanese: return "手動"
         case .chinese: return "手动"
         case .german: return "Manuell"
@@ -2315,6 +2467,7 @@ enum Strings {
         switch lang {
         case .korean: return "복원 전 저장"
         case .english: return "Pre-restore"
+        case .dutch: return "Voor herstel"
         case .japanese: return "復元前の保存"
         case .chinese: return "恢复前保存"
         case .german: return "Vor Wiederherstellung"
@@ -2330,6 +2483,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 데이터 초기화"
         case .english: return "Reset Leave Data"
+        case .dutch: return "Verlofgegevens resetten"
         case .japanese: return "データリセット"
         case .chinese: return "重置数据"
         case .german: return "Urlaubsdaten zurücksetzen"
@@ -2345,6 +2499,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 데이터 초기화"
         case .english: return "Reset Leave Data"
+        case .dutch: return "Verlofgegevens resetten"
         case .japanese: return "データリセット"
         case .chinese: return "重置数据"
         case .german: return "Urlaubsdaten zurücksetzen"
@@ -2360,6 +2515,7 @@ enum Strings {
         switch lang {
         case .korean: return "모든 연차 기록이 삭제되고 사용한 연차가 0으로 초기화됩니다. 이 작업은 되돌릴 수 없습니다."
         case .english: return "All leave records will be deleted and used leave will be reset to 0. This cannot be undone."
+        case .dutch: return "Alle verlofregistraties worden verwijderd en opgenomen verlof wordt op 0 gezet. Dit kan niet ongedaan worden gemaakt."
         case .japanese: return "すべての休暇記録が削除され、使用済み休暇が0にリセットされます。この操作は元に戻せません。"
         case .chinese: return "所有休假记录将被删除，已使用年假将重置为0。此操作无法撤销。"
         case .german: return "Alle Urlaubseinträge werden gelöscht und der genommene Urlaub wird auf 0 gesetzt. Das lässt sich nicht rückgängig machen."
@@ -2375,6 +2531,7 @@ enum Strings {
         switch lang {
         case .korean: return "초기화"
         case .english: return "Reset"
+        case .dutch: return "Resetten"
         case .japanese: return "リセット"
         case .chinese: return "重置"
         case .german: return "Zurücksetzen"
@@ -2393,6 +2550,7 @@ enum Strings {
         switch lang {
         case .korean: return "골드위크 사용법"
         case .english: return "How to Use Goldweek"
+        case .dutch: return "Zo gebruik je Goldweek"
         case .japanese: return "Goldweekの使い方"
         case .chinese: return "Goldweek 使用方法"
         case .german: return "So funktioniert Goldweek"
@@ -2408,6 +2566,7 @@ enum Strings {
         switch lang {
         case .korean: return "시작하기"
         case .english: return "Get Started"
+        case .dutch: return "Aan de slag"
         case .japanese: return "はじめる"
         case .chinese: return "开始使用"
         case .german: return "Los geht's"
@@ -2423,6 +2582,7 @@ enum Strings {
         switch lang {
         case .korean: return "건너뛰기"
         case .english: return "Skip"
+        case .dutch: return "Overslaan"
         case .japanese: return "スキップ"
         case .chinese: return "跳过"
         case .german: return "Überspringen"
@@ -2438,6 +2598,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가는 이렇게 등록해요"
         case .english: return "Adding a Leave"
+        case .dutch: return "Verlof toevoegen"
         case .japanese: return "休暇の登録"
         case .chinese: return "登记休假"
         case .german: return "Urlaub eintragen"
@@ -2453,6 +2614,7 @@ enum Strings {
         switch lang {
         case .korean: return "홈의 + 버튼이나 캘린더에서 날짜를 눌러 등록하세요. 반차·반반차는 길이만 골라 주면 돼요."
         case .english: return "Tap + on the home card, or pick a date on the calendar. For half days, just choose the length."
+        case .dutch: return "Tik op + op de startkaart of kies een datum in de kalender. Voor halve dagen kies je gewoon de duur."
         case .japanese: return "ホームの＋、またはカレンダーで日付をタップ。半休は長さを選ぶだけです。"
         case .chinese: return "点击主页的 +，或在日历上选择日期。半天假只需选择时长。"
         case .german: return "Tippe auf der Startkarte auf + oder wähle ein Datum im Kalender. Für halbe Tage wählst du einfach die Länge."
@@ -2468,6 +2630,7 @@ enum Strings {
         switch lang {
         case .korean: return "사진 한 장이면 끝"
         case .english: return "One Photo Is Enough"
+        case .dutch: return "Eén foto is genoeg"
         case .japanese: return "写真1枚でOK"
         case .chinese: return "一张照片就够了"
         case .german: return "Ein Foto genügt"
@@ -2483,6 +2646,7 @@ enum Strings {
         switch lang {
         case .korean: return "회사 시스템의 휴가 내역을 찍으면 날짜와 종류를 알아서 읽어 등록해요."
         case .english: return "Snap your company's leave history and the dates and types are read for you."
+        case .dutch: return "Maak een foto van het verlofoverzicht van je bedrijf en de data en soorten worden voor je ingelezen."
         case .japanese: return "社内システムの休暇履歴を撮ると、日付と種類を読み取って登録します。"
         case .chinese: return "拍下公司系统的休假记录，应用会自动读取日期与类型。"
         case .german: return "Fotografiere die Urlaubsübersicht deiner Firma, und Daten und Arten werden automatisch gelesen."
@@ -2498,6 +2662,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 1일로 며칠 쉴까"
         case .english: return "Stretch One Day Off"
+        case .dutch: return "Rek één vrije dag op"
         case .japanese: return "有給1日で何日休む"
         case .chinese: return "用1天年假休几天"
         case .german: return "Mit einem Tag mehr frei"
@@ -2513,6 +2678,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더의 노란 표시는 공휴일에 연차를 붙여 만든 연휴예요. 눌러서 그대로 등록하세요."
         case .english: return "Yellow marks on the calendar are breaks built by attaching leave to holidays. Tap to add one."
+        case .dutch: return "Gele markeringen in de kalender zijn pauzes die ontstaan door verlof aan feestdagen te koppelen. Tik om er een toe te voegen."
         case .japanese: return "カレンダーの黄色は祝日に有給をつなげた連休です。タップでそのまま登録できます。"
         case .chinese: return "日历上的黄色标记是把年假接在节假日上的连休。点击即可直接登记。"
         case .german: return "Gelbe Markierungen im Kalender sind Auszeiten, bei denen Urlaub an Feiertage anschließt. Tippe darauf, um sie einzutragen."
@@ -2528,6 +2694,7 @@ enum Strings {
         switch lang {
         case .korean: return "대체휴무는 따로 관리"
         case .english: return "Bonus Leave Stays Separate"
+        case .dutch: return "Bonusverlof blijft apart"
         case .japanese: return "代休は別で管理"
         case .chinese: return "补休单独管理"
         case .german: return "Bonusurlaub bleibt separat"
@@ -2543,6 +2710,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차로 등록하면 연차를 깎지 않고 따로 세요. 만료일도 함께 챙겨 줘요."
         case .english: return "Logged as bonus leave, it never eats into your annual days — and expiry dates are tracked."
+        case .dutch: return "Als bonusverlof geregistreerd gaat het nooit af van je jaarlijkse dagen, en de vervaldata worden bijgehouden."
         case .japanese: return "ボーナス休暇として登録すれば有給を減らさず別に管理され、有効期限も追えます。"
         case .chinese: return "登记为奖励假后不会占用年假，并会一并跟踪有效期。"
         case .german: return "Als Bonusurlaub eingetragen, geht er nie von deinen Urlaubstagen ab – Ablaufdaten werden mitverfolgt."
@@ -2558,6 +2726,7 @@ enum Strings {
         switch lang {
         case .korean: return "가족과 일정 맞추기"
         case .english: return "Line Up with Family"
+        case .dutch: return "Stem af met je gezin"
         case .japanese: return "家族と予定を合わせる"
         case .chinese: return "与家人对好行程"
         case .german: return "Pläne mit der Familie abstimmen"
@@ -2573,6 +2742,7 @@ enum Strings {
         switch lang {
         case .korean: return "일정을 공유하면 가족 탭에서 서로의 휴가를 한눈에 볼 수 있어요."
         case .english: return "Share your schedule and see each other's time off in the Family tab."
+        case .dutch: return "Deel je planning en zie elkaars vrije dagen in het tabblad Gezin."
         case .japanese: return "予定を共有すると、家族タブでお互いの休暇を一覧できます。"
         case .chinese: return "共享日程后，可在家庭标签中一览彼此的假期。"
         case .german: return "Teile deinen Plan und sieh im Tab „Familie“ den Urlaub der anderen auf einen Blick."
@@ -2588,6 +2758,7 @@ enum Strings {
         switch lang {
         case .korean: return "홈 화면에서 바로 확인"
         case .english: return "Right on Your Home Screen"
+        case .dutch: return "Direct op je beginscherm"
         case .japanese: return "ホーム画面でひと目"
         case .chinese: return "在主屏幕上一眼看到"
         case .german: return "Direkt auf dem Home-Bildschirm"
@@ -2603,6 +2774,7 @@ enum Strings {
         switch lang {
         case .korean: return "위젯을 추가하면 남은 연차와 다음 휴가가 잠금화면에서도 보여요. 기록은 iCloud로 백업돼요."
         case .english: return "Add a widget to see remaining leave and your next break, even on the Lock Screen. Records back up to iCloud."
+        case .dutch: return "Voeg een widget toe om je resterende verlof en je volgende pauze te zien, zelfs op het vergrendelscherm. Registraties worden geback-upt naar iCloud."
         case .japanese: return "ウィジェットを追加すると、残りの有給と次の休暇をロック画面でも確認できます。記録はiCloudにバックアップされます。"
         case .chinese: return "添加小组件后，在锁定屏幕也能看到剩余年假和下次休假。记录会备份到 iCloud。"
         case .german: return "Mit einem Widget siehst du Resturlaub und deine nächste Auszeit, auch auf dem Sperrbildschirm. Einträge werden in iCloud gesichert."
@@ -2618,6 +2790,7 @@ enum Strings {
         switch lang {
         case .korean: return "도움말"
         case .english: return "Help"
+        case .dutch: return "Help"
         case .japanese: return "ヘルプ"
         case .chinese: return "帮助"
         case .german: return "Hilfe"
@@ -2633,6 +2806,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용법 다시 보기"
         case .english: return "How to Use Goldweek"
+        case .dutch: return "Zo gebruik je Goldweek"
         case .japanese: return "使い方をもう一度見る"
         case .chinese: return "重看使用方法"
         case .german: return "So funktioniert Goldweek"
@@ -2648,6 +2822,7 @@ enum Strings {
         switch lang {
         case .korean: return "처음 안내 다시 보기"
         case .english: return "Replay Intro"
+        case .dutch: return "Intro opnieuw afspelen"
         case .japanese: return "初回案内をもう一度"
         case .chinese: return "重看初次引导"
         case .german: return "Einführung erneut ansehen"
@@ -2663,6 +2838,7 @@ enum Strings {
         switch lang {
         case .korean: return "기능 팁 다시 보기"
         case .english: return "Show Feature Tips Again"
+        case .dutch: return "Functietips opnieuw tonen"
         case .japanese: return "機能のヒントを再表示"
         case .chinese: return "重新显示功能提示"
         case .german: return "Funktionstipps erneut anzeigen"
@@ -2678,6 +2854,7 @@ enum Strings {
         switch lang {
         case .korean: return "앱을 다시 실행하면 기능 팁이 처음부터 다시 나타나요."
         case .english: return "Feature tips will appear again the next time you open the app."
+        case .dutch: return "De functietips verschijnen opnieuw de volgende keer dat je de app opent."
         case .japanese: return "アプリを開き直すと、機能のヒントが最初から表示されます。"
         case .chinese: return "下次打开应用时，功能提示会重新出现。"
         case .german: return "Die Funktionstipps erscheinen beim nächsten Öffnen der App erneut."
@@ -2693,6 +2870,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 연휴를 눌러 보세요"
         case .english: return "Tap a Suggested Break"
+        case .dutch: return "Tik op een voorgestelde pauze"
         case .japanese: return "おすすめの連休をタップ"
         case .chinese: return "点点推荐的连休"
         case .german: return "Tippe auf eine empfohlene Auszeit"
@@ -2708,6 +2886,7 @@ enum Strings {
         switch lang {
         case .korean: return "노란 표시는 연차를 조금 써서 만든 연휴예요. 눌러 바로 등록할 수 있어요."
         case .english: return "Yellow marks are breaks made with just a day or two of leave. Tap to add one."
+        case .dutch: return "Gele markeringen zijn pauzes met slechts een of twee dagen verlof. Tik om er een toe te voegen."
         case .japanese: return "黄色の印は少ない有給で作った連休です。タップして登録できます。"
         case .chinese: return "黄色标记是只用一两天年假拼出的连休，点击即可登记。"
         case .german: return "Gelbe Markierungen sind Auszeiten mit nur ein oder zwei Urlaubstagen. Tippe darauf, um sie einzutragen."
@@ -2723,6 +2902,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 현황을 이미지로"
         case .english: return "Share Your Leave Status"
+        case .dutch: return "Deel je verlofstatus"
         case .japanese: return "有給の状況を画像で"
         case .chinese: return "把年假状况变成图片"
         case .german: return "Urlaubsstand teilen"
@@ -2738,6 +2918,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유 버튼을 누르면 카드 이미지를 만들어 친구·가족에게 보낼 수 있어요."
         case .english: return "Tap share to turn your status into a card you can send to family or friends."
+        case .dutch: return "Tik op delen om je status om te zetten in een kaart die je naar familie of vrienden kunt sturen."
         case .japanese: return "共有ボタンでカード画像を作り、家族や友人に送れます。"
         case .chinese: return "点击分享，即可生成卡片图片发给家人或朋友。"
         case .german: return "Tippe auf Teilen, um aus deinem Stand eine Karte für Familie oder Freunde zu erstellen."
@@ -2753,6 +2934,7 @@ enum Strings {
         switch lang {
         case .korean: return "대체휴무·포상휴가는 여기"
         case .english: return "Bonus Leave Goes Here"
+        case .dutch: return "Bonusverlof komt hier"
         case .japanese: return "代休・特別休暇はこちら"
         case .chinese: return "补休和奖励假在这里"
         case .german: return "Bonusurlaub kommt hierher"
@@ -2768,6 +2950,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차로 등록하면 연차와 따로 관리되고 만료일도 챙겨 줘요."
         case .english: return "Add it as bonus leave — it's tracked separately from annual days, expiry included."
+        case .dutch: return "Voeg het toe als bonusverlof. Het wordt apart van je jaarlijkse dagen bijgehouden, inclusief de vervaldatum."
         case .japanese: return "ボーナス休暇として登録すると有給とは別に管理され、期限も追えます。"
         case .chinese: return "登记为奖励假后与年假分开管理，并会跟踪有效期。"
         case .german: return "Trage ihn als Bonusurlaub ein – er wird getrennt von den Urlaubstagen verwaltet, samt Ablaufdatum."
@@ -2783,6 +2966,7 @@ enum Strings {
         switch lang {
         case .korean: return "지난 휴가 돌아보기"
         case .english: return "Look Back at Your Leave"
+        case .dutch: return "Blik terug op je verlof"
         case .japanese: return "これまでの休暇をふり返る"
         case .chinese: return "回顾过往假期"
         case .german: return "Rückblick auf deinen Urlaub"
@@ -2798,6 +2982,7 @@ enum Strings {
         switch lang {
         case .korean: return "연도별로 얼마나 썼는지, 어떤 휴가를 썼는지 한 번에 볼 수 있어요."
         case .english: return "See how much you used each year, and which kinds of leave they were."
+        case .dutch: return "Zie hoeveel je elk jaar hebt opgenomen en welke soorten verlof dat waren."
         case .japanese: return "年ごとの使用日数と休暇の種類をまとめて確認できます。"
         case .chinese: return "可以按年份查看用了多少天、用的是哪类假期。"
         case .german: return "Sieh, wie viel du pro Jahr genommen hast und welche Urlaubsarten es waren."
@@ -2813,6 +2998,7 @@ enum Strings {
         switch lang {
         case .korean: return "앱 정보"
         case .english: return "App Info"
+        case .dutch: return "Appinfo"
         case .japanese: return "アプリ情報"
         case .chinese: return "应用信息"
         case .german: return "App-Info"
@@ -2829,6 +3015,7 @@ enum Strings {
         switch lang {
         case .korean: return "지원"
         case .english: return "Support"
+        case .dutch: return "Ondersteuning"
         case .japanese: return "サポート"
         case .chinese: return "支持"
         case .german: return "Support"
@@ -2844,6 +3031,7 @@ enum Strings {
         switch lang {
         case .korean: return "피드백 보내기"
         case .english: return "Send Feedback"
+        case .dutch: return "Feedback sturen"
         case .japanese: return "フィードバックを送る"
         case .chinese: return "发送反馈"
         case .german: return "Feedback senden"
@@ -2859,6 +3047,7 @@ enum Strings {
         switch lang {
         case .korean: return "지원 페이지"
         case .english: return "Support Page"
+        case .dutch: return "Ondersteuningspagina"
         case .japanese: return "サポートページ"
         case .chinese: return "支持页面"
         case .german: return "Support-Seite"
@@ -2877,6 +3066,7 @@ enum Strings {
         switch lang {
         case .korean: return "접수된 피드백 (개발자)"
         case .english: return "Feedback Inbox (Developer)"
+        case .dutch: return "Feedbackinbox (ontwikkelaar)"
         case .japanese: return "受信フィードバック（開発者）"
         case .chinese: return "收到的反馈（开发者）"
         case .german: return "Feedback-Eingang (Entwickler)"
@@ -2892,6 +3082,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 통계 (개발자)"
         case .english: return "Usage Stats (Developer)"
+        case .dutch: return "Gebruiksstatistieken (ontwikkelaar)"
         case .japanese: return "利用統計（開発者）"
         case .chinese: return "使用统计（开发者）"
         case .german: return "Nutzungsstatistik (Entwickler)"
@@ -2907,6 +3098,7 @@ enum Strings {
         switch lang {
         case .korean: return "안정성 (개발자)"
         case .english: return "Stability (Developer)"
+        case .dutch: return "Stabiliteit (ontwikkelaar)"
         case .japanese: return "安定性（開発者）"
         case .chinese: return "稳定性（开发者）"
         case .german: return "Stabilität (Entwickler)"
@@ -2922,6 +3114,7 @@ enum Strings {
         switch lang {
         case .korean: return "버전"
         case .english: return "Version"
+        case .dutch: return "Versie"
         case .japanese: return "バージョン"
         case .chinese: return "版本"
         case .german: return "Version"
@@ -2937,6 +3130,7 @@ enum Strings {
         switch lang {
         case .korean: return "개발"
         case .english: return "Developer"
+        case .dutch: return "Ontwikkelaar"
         case .japanese: return "開発"
         case .chinese: return "开发者"
         case .german: return "Entwicklung"
@@ -2952,6 +3146,7 @@ enum Strings {
         switch lang {
         case .korean: return "앱 평가하기"
         case .english: return "Rate This App"
+        case .dutch: return "Beoordeel deze app"
         case .japanese: return "アプリを評価"
         case .chinese: return "评价应用"
         case .german: return "App bewerten"
@@ -2967,6 +3162,7 @@ enum Strings {
         switch lang {
         case .korean: return "개발자에게 문의"
         case .english: return "Contact the Developer"
+        case .dutch: return "Neem contact op met de ontwikkelaar"
         case .japanese: return "開発者に問い合わせ"
         case .chinese: return "联系开发者"
         case .german: return "Entwickler kontaktieren"
@@ -2982,6 +3178,7 @@ enum Strings {
         switch lang {
         case .korean: return "이메일로 문의하기"
         case .english: return "Contact via Email"
+        case .dutch: return "Contact via e-mail"
         case .japanese: return "メールで問い合わせ"
         case .chinese: return "通过邮件联系"
         case .german: return "Per E-Mail kontaktieren"
@@ -2997,6 +3194,7 @@ enum Strings {
         switch lang {
         case .korean: return "인스타그램 DM (@lee25_ios)"
         case .english: return "Instagram DM (@lee25_ios)"
+        case .dutch: return "Instagram DM (@lee25_ios)"
         case .japanese: return "Instagram DM (@lee25_ios)"
         case .chinese: return "Instagram 私信 (@lee25_ios)"
         case .german: return "Instagram-DM (@lee25_ios)"
@@ -3012,6 +3210,7 @@ enum Strings {
         switch lang {
         case .korean: return "버그 제보와 기능 제안을 환영합니다."
         case .english: return "Bug reports and feature suggestions are welcome."
+        case .dutch: return "Meldingen van bugs en suggesties voor functies zijn welkom."
         case .japanese: return "バグ報告や機能提案を歓迎します。"
         case .chinese: return "欢迎反馈问题和提出功能建议。"
         case .german: return "Fehlerberichte und Funktionsvorschläge sind willkommen."
@@ -3027,6 +3226,7 @@ enum Strings {
         switch lang {
         case .korean: return "확인"
         case .english: return "OK"
+        case .dutch: return "OK"
         case .japanese: return "確認"
         case .chinese: return "确认"
         case .german: return "OK"
@@ -3042,6 +3242,7 @@ enum Strings {
         switch lang {
         case .korean: return "백업"
         case .english: return "Backup"
+        case .dutch: return "Back-up"
         case .japanese: return "バックアップ"
         case .chinese: return "备份"
         case .german: return "Backup"
@@ -3057,6 +3258,7 @@ enum Strings {
         switch lang {
         case .korean: return "복원 확인"
         case .english: return "Confirm Restore"
+        case .dutch: return "Herstel bevestigen"
         case .japanese: return "復元の確認"
         case .chinese: return "确认恢复"
         case .german: return "Wiederherstellung bestätigen"
@@ -3072,6 +3274,7 @@ enum Strings {
         switch lang {
         case .korean: return "복원"
         case .english: return "Restore"
+        case .dutch: return "Herstellen"
         case .japanese: return "復元"
         case .chinese: return "恢复"
         case .german: return "Wiederherstellen"
@@ -3087,6 +3290,7 @@ enum Strings {
         switch lang {
         case .korean: return "iCloud 백업에서 데이터를 복원합니다. 현재 데이터는 모두 삭제됩니다."
         case .english: return "Restore data from iCloud backup. All current data will be deleted."
+        case .dutch: return "Herstel gegevens vanuit de iCloud-back-up. Alle huidige gegevens worden verwijderd."
         case .japanese: return "iCloudバックアップからデータを復元します。現在のデータはすべて削除されます。"
         case .chinese: return "从iCloud备份恢复数据。当前所有数据将被删除。"
         case .german: return "Daten aus dem iCloud-Backup wiederherstellen. Alle aktuellen Daten werden gelöscht."
@@ -3102,6 +3306,7 @@ enum Strings {
         switch lang {
         case .korean: return "마지막 백업: \(dateStr)"
         case .english: return "Last backup: \(dateStr)"
+        case .dutch: return "Laatste back-up: \(dateStr)"
         case .japanese: return "最終バックアップ: \(dateStr)"
         case .chinese: return "上次备份: \(dateStr)"
         case .german: return "Letztes Backup: \(dateStr)"
@@ -3118,6 +3323,7 @@ enum Strings {
         switch lang {
         case .korean: return "나의 휴가 스타일"
         case .english: return "My Vacation Style"
+        case .dutch: return "Mijn vakantiestijl"
         case .japanese: return "休暇スタイル"
         case .chinese: return "我的休假风格"
         case .german: return "Mein Urlaubsstil"
@@ -3133,6 +3339,7 @@ enum Strings {
         switch lang {
         case .korean: return "선호하는 휴가 길이"
         case .english: return "Preferred Duration"
+        case .dutch: return "Gewenste duur"
         case .japanese: return "好みの休暇期間"
         case .chinese: return "偏好休假时长"
         case .german: return "Bevorzugte Dauer"
@@ -3148,6 +3355,7 @@ enum Strings {
         switch lang {
         case .korean: return "선호하는 계절 (복수 선택)"
         case .english: return "Preferred Season (Multiple)"
+        case .dutch: return "Gewenst seizoen (meerdere)"
         case .japanese: return "好みの季節（複数選択）"
         case .chinese: return "偏好季节（可多选）"
         case .german: return "Bevorzugte Jahreszeit (Mehrfachauswahl)"
@@ -3163,6 +3371,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 스타일"
         case .english: return "Vacation Style"
+        case .dutch: return "Vakantiestijl"
         case .japanese: return "休暇スタイル"
         case .chinese: return "休假风格"
         case .german: return "Urlaubsstil"
@@ -3178,6 +3387,7 @@ enum Strings {
         switch lang {
         case .korean: return "징검다리 휴일 활용"
         case .english: return "Use Bridge Days"
+        case .dutch: return "Brugdagen gebruiken"
         case .japanese: return "飛び石連休の活用"
         case .chinese: return "利用桥接假日"
         case .german: return "Brückentage nutzen"
@@ -3193,6 +3403,7 @@ enum Strings {
         switch lang {
         case .korean: return "연속 휴가 선호"
         case .english: return "Prefer Consecutive"
+        case .dutch: return "Liever aaneengesloten"
         case .japanese: return "連続休暇を好む"
         case .chinese: return "偏好连续休假"
         case .german: return "Zusammenhängenden Urlaub bevorzugen"
@@ -3208,6 +3419,7 @@ enum Strings {
         switch lang {
         case .korean: return "성수기 회피"
         case .english: return "Avoid Peak Season"
+        case .dutch: return "Hoogseizoen vermijden"
         case .japanese: return "ピークシーズン回避"
         case .chinese: return "避开旺季"
         case .german: return "Hauptsaison meiden"
@@ -3223,6 +3435,7 @@ enum Strings {
         switch lang {
         case .korean: return "주로 하고 싶은 활동"
         case .english: return "Preferred Activities"
+        case .dutch: return "Favoriete activiteiten"
         case .japanese: return "したい活動"
         case .chinese: return "想做的活动"
         case .german: return "Bevorzugte Aktivitäten"
@@ -3238,6 +3451,7 @@ enum Strings {
         switch lang {
         case .korean: return "저장"
         case .english: return "Save"
+        case .dutch: return "Opslaan"
         case .japanese: return "保存"
         case .chinese: return "保存"
         case .german: return "Sichern"
@@ -3254,6 +3468,7 @@ enum Strings {
         switch lang {
         case .korean: return "골드위크"
         case .english: return "Goldweek"
+        case .dutch: return "Goldweek"
         case .japanese: return "ゴールドウィーク"
         case .chinese: return "Goldweek"
         case .german: return "Goldweek"
@@ -3269,6 +3484,7 @@ enum Strings {
         switch lang {
         case .korean: return "최소 연차로 최대 연휴를\n공휴일을 활용한 황금연휴 플랜"
         case .english: return "Maximum days off with minimum PTO\nAI plans your perfect long weekend"
+        case .dutch: return "Maximaal vrije dagen met minimaal verlof\nAI plant jouw perfecte lange weekend"
         case .japanese: return "最少の有給で最大の連休を\n祝日を活かしたゴールデンプラン"
         case .chinese: return "最少年假，最长假期\n善用节假日的黄金组合"
         case .german: return "Maximale freie Tage mit minimalem Urlaub\nKI plant dein perfektes langes Wochenende"
@@ -3284,6 +3500,7 @@ enum Strings {
         switch lang {
         case .korean: return "3일 연차로\n9일 연휴"
         case .english: return "3 PTO days\n9 days off"
+        case .dutch: return "3 verlofdagen\n9 dagen vrij"
         case .japanese: return "3日の有給で\n9日の連休"
         case .chinese: return "3天年假\n9天假期"
         case .german: return "3 Urlaubstage\n9 Tage frei"
@@ -3299,6 +3516,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일과 주말 사이 징검다리를 자동으로 찾아드려요"
         case .english: return "We automatically find the bridge days between holidays and weekends"
+        case .dutch: return "We vinden automatisch de brugdagen tussen feestdagen en weekenden"
         case .japanese: return "祝日と週末の間にある飛び石を自動で見つけます"
         case .chinese: return "自动找出节假日与周末之间的搭桥日"
         case .german: return "Wir finden automatisch die Brückentage zwischen Feiertagen und Wochenenden"
@@ -3314,6 +3532,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차"
         case .english: return "PTO"
+        case .dutch: return "Verlof"
         case .japanese: return "有給"
         case .chinese: return "年假"
         case .german: return "Urlaub"
@@ -3329,6 +3548,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일"
         case .english: return "Holiday"
+        case .dutch: return "Feestdag"
         case .japanese: return "祝日"
         case .chinese: return "假日"
         case .german: return "Feiertag"
@@ -3344,6 +3564,7 @@ enum Strings {
         switch lang {
         case .korean: return "주말"
         case .english: return "Weekend"
+        case .dutch: return "Weekend"
         case .japanese: return "週末"
         case .chinese: return "周末"
         case .german: return "Wochenende"
@@ -3359,6 +3580,7 @@ enum Strings {
         switch lang {
         case .korean: return "선택"
         case .english: return "Optional"
+        case .dutch: return "Optioneel"
         case .japanese: return "任意"
         case .chinese: return "选填"
         case .german: return "Optional"
@@ -3374,6 +3596,7 @@ enum Strings {
         switch lang {
         case .korean: return "황금연휴 플래너"
         case .english: return "Long weekend planner"
+        case .dutch: return "Planner voor lange weekenden"
         case .japanese: return "黄金連休プランナー"
         case .chinese: return "黄金假期规划"
         case .german: return "Planer für lange Wochenenden"
@@ -3389,6 +3612,7 @@ enum Strings {
         switch lang {
         case .korean: return "시작하기"
         case .english: return "Get Started"
+        case .dutch: return "Aan de slag"
         case .japanese: return "始める"
         case .chinese: return "开始"
         case .german: return "Los geht's"
@@ -3404,6 +3628,7 @@ enum Strings {
         switch lang {
         case .korean: return "다음"
         case .english: return "Next"
+        case .dutch: return "Volgende"
         case .japanese: return "次へ"
         case .chinese: return "下一步"
         case .german: return "Weiter"
@@ -3419,6 +3644,7 @@ enum Strings {
         switch lang {
         case .korean: return "주요 기능"
         case .english: return "Key Features"
+        case .dutch: return "Belangrijkste functies"
         case .japanese: return "主な機能"
         case .chinese: return "主要功能"
         case .german: return "Hauptfunktionen"
@@ -3434,6 +3660,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 관리"
         case .english: return "Leave Management"
+        case .dutch: return "Verlofbeheer"
         case .japanese: return "有給管理"
         case .chinese: return "年假管理"
         case .german: return "Urlaubsverwaltung"
@@ -3449,6 +3676,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차, 반차, 대체휴무 등\n다양한 휴가를 기록하세요"
         case .english: return "Track annual, half-day, and\ncompensatory leave"
+        case .dutch: return "Houd jaarlijks verlof, halve dagen en\ncompensatieverlof bij"
         case .japanese: return "有給、半休、代替休暇など\n様々な休暇を記録"
         case .chinese: return "记录年假、半天假、\n补休等各种休假"
         case .german: return "Erfasse Jahresurlaub, halbe Tage und\nFreizeitausgleich"
@@ -3464,6 +3692,7 @@ enum Strings {
         switch lang {
         case .korean: return "AI 추천"
         case .english: return "AI Recommend"
+        case .dutch: return "AI-advies"
         case .japanese: return "AIおすすめ"
         case .chinese: return "AI推荐"
         case .german: return "KI-Empfehlung"
@@ -3479,6 +3708,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일과 주말을 활용한\n최적의 휴가 조합을 추천"
         case .english: return "Optimal leave combos using\nholidays and weekends"
+        case .dutch: return "Optimale verlofcombinaties met\nfeestdagen en weekenden"
         case .japanese: return "祝日と週末を活用した\n最適な休暇の組み合わせ"
         case .chinese: return "利用节假日和周末\n推荐最佳休假组合"
         case .german: return "Optimale Urlaubskombis mit\nFeiertagen und Wochenenden"
@@ -3494,6 +3724,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차"
         case .english: return "Bonus Leave"
+        case .dutch: return "Bonusverlof"
         case .japanese: return "ボーナス休暇"
         case .chinese: return "奖励年假"
         case .german: return "Bonusurlaub"
@@ -3509,6 +3740,7 @@ enum Strings {
         switch lang {
         case .korean: return "대체휴무, 포상휴가 등\n추가 연차도 관리"
         case .english: return "Manage comp time, rewards\nand extra leave"
+        case .dutch: return "Beheer compensatie-uren, beloningen\nen extra verlof"
         case .japanese: return "代替休暇、報奨休暇など\n追加の有給も管理"
         case .chinese: return "管理补休、奖励假\n等额外年假"
         case .german: return "Verwalte Zeitausgleich, Prämien\nund Zusatzurlaub"
@@ -3524,6 +3756,7 @@ enum Strings {
         switch lang {
         case .korean: return "위젯"
         case .english: return "Widget"
+        case .dutch: return "Widget"
         case .japanese: return "ウィジェット"
         case .chinese: return "小组件"
         case .german: return "Widget"
@@ -3539,6 +3772,7 @@ enum Strings {
         switch lang {
         case .korean: return "홈 화면에서 바로\n남은 연차 확인"
         case .english: return "Check remaining leave\nright from home screen"
+        case .dutch: return "Bekijk je resterende verlof\nrechtstreeks vanaf je beginscherm"
         case .japanese: return "ホーム画面から\n残り有給を確認"
         case .chinese: return "在主屏幕上\n直接查看剩余年假"
         case .german: return "Resturlaub direkt\nauf dem Home-Bildschirm"
@@ -3554,6 +3788,7 @@ enum Strings {
         switch lang {
         case .korean: return "국가를 선택하세요"
         case .english: return "Select your country"
+        case .dutch: return "Kies je land"
         case .japanese: return "国を選んでください"
         case .chinese: return "选择您的国家"
         case .german: return "Wähle dein Land"
@@ -3569,6 +3804,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일 데이터가 국가에 맞게 설정됩니다"
         case .english: return "Holiday data will be set for your country"
+        case .dutch: return "De feestdagen worden ingesteld voor jouw land"
         case .japanese: return "祝日データが国に合わせて設定されます"
         case .chinese: return "节假日数据将根据您的国家设置"
         case .german: return "Die Feiertage werden an dein Land angepasst"
@@ -3584,6 +3820,7 @@ enum Strings {
         switch lang {
         case .korean: return "이름을 알려주세요"
         case .english: return "What's your name?"
+        case .dutch: return "Hoe heet je?"
         case .japanese: return "お名前を教えてください"
         case .chinese: return "请输入您的姓名"
         case .german: return "Wie heißt du?"
@@ -3599,6 +3836,7 @@ enum Strings {
         switch lang {
         case .korean: return "앱에서 사용할 이름을 입력해주세요"
         case .english: return "Enter the name to use in the app"
+        case .dutch: return "Vul de naam in die je in de app wilt gebruiken"
         case .japanese: return "アプリで使う名前を入力してください"
         case .chinese: return "请输入在应用中使用的姓名"
         case .german: return "Gib den Namen ein, der in der App verwendet wird"
@@ -3614,6 +3852,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 정보 설정"
         case .english: return "Leave Setup"
+        case .dutch: return "Verlof instellen"
         case .japanese: return "有給設定"
         case .chinese: return "年假设置"
         case .german: return "Urlaub einrichten"
@@ -3629,6 +3868,7 @@ enum Strings {
         switch lang {
         case .korean: return "나중에 설정에서 변경할 수 있어요"
         case .english: return "You can change this later in settings"
+        case .dutch: return "Je kunt dit later wijzigen in de instellingen"
         case .japanese: return "後で設定で変更できます"
         case .chinese: return "稍后可在设置中更改"
         case .german: return "Du kannst das später in den Einstellungen ändern"
@@ -3644,6 +3884,7 @@ enum Strings {
         switch lang {
         case .korean: return "올해 총 연차"
         case .english: return "Total Annual Leave"
+        case .dutch: return "Totaal jaarlijks verlof"
         case .japanese: return "今年の有給合計"
         case .chinese: return "今年总年假"
         case .german: return "Jahresurlaub gesamt"
@@ -3659,6 +3900,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 기준월"
         case .english: return "Year Start Month"
+        case .dutch: return "Startmaand van het jaar"
         case .japanese: return "基準月"
         case .chinese: return "年假起始月"
         case .german: return "Startmonat des Urlaubsjahrs"
@@ -3674,6 +3916,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차가 갱신되는 시작 월"
         case .english: return "Month when annual leave renews"
+        case .dutch: return "Maand waarin het jaarlijkse verlof vernieuwd wordt"
         case .japanese: return "有給が更新される月"
         case .chinese: return "年假更新的月份"
         case .german: return "Monat, in dem der Jahresurlaub erneuert wird"
@@ -3689,6 +3932,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용자"
         case .english: return "User"
+        case .dutch: return "Gebruiker"
         case .japanese: return "ユーザー"
         case .chinese: return "用户"
         case .german: return "Nutzer"
@@ -3723,6 +3967,13 @@ enum Strings {
             case .medium: return "3-4 days"
             case .long: return "5+ days"
             case .mixed: return "Mixed"
+            }
+        case .dutch:
+            switch duration {
+            case .short: return "1-2 dagen"
+            case .medium: return "3-4 dagen"
+            case .long: return "5+ dagen"
+            case .mixed: return "Gemengd"
             }
         case .japanese:
             switch duration {
@@ -3798,6 +4049,13 @@ enum Strings {
             case .spring: return "Spring"
             case .summer: return "Summer"
             case .fall: return "Fall"
+            case .winter: return "Winter"
+            }
+        case .dutch:
+            switch season {
+            case .spring: return "Lente"
+            case .summer: return "Zomer"
+            case .fall: return "Herfst"
             case .winter: return "Winter"
             }
         case .japanese:
@@ -3877,6 +4135,14 @@ enum Strings {
             case .family: return "Family"
             case .hobby: return "Hobby"
             case .selfCare: return "Self-care"
+            }
+        case .dutch:
+            switch activity {
+            case .travel: return "Reizen"
+            case .rest: return "Rust"
+            case .family: return "Gezin"
+            case .hobby: return "Hobby"
+            case .selfCare: return "Zelfzorg"
             }
         case .japanese:
             switch activity {
@@ -3969,6 +4235,17 @@ enum Strings {
             case .sick: return "Sick"
             case .special: return "Special"
             case .businessTrip: return "Trip"
+            }
+        case .dutch:
+            switch type {
+            case .annual: return "Jaarlijks"
+            case .half: return "Halve dag"
+            case .quarter: return "Kwartdag"
+            case .compensatory: return "Compensatie"
+            case .official: return "Officieel"
+            case .sick: return "Ziek"
+            case .special: return "Speciaal"
+            case .businessTrip: return "Reis"
             }
         case .japanese:
             switch type {
@@ -4076,6 +4353,12 @@ enum Strings {
             case .used: return "Used"
             case .cancelled: return "Cancelled"
             }
+        case .dutch:
+            switch status {
+            case .planned: return "Gepland"
+            case .used: return "Opgenomen"
+            case .cancelled: return "Geannuleerd"
+            }
         case .japanese:
             switch status {
             case .planned: return "予定"
@@ -4143,6 +4426,19 @@ enum Strings {
             case .familyBalance: return "Family"
             case .official: return "Official"
             case .other: return "Other"
+            }
+        case .dutch:
+            switch type {
+            case .compensatory: return "Compensatie"
+            case .reward: return "Beloning"
+            case .refresh: return "Opfrisverlof"
+            case .marriage: return "Huwelijk"
+            case .bereavement: return "Rouwverlof"
+            case .sick: return "Ziek"
+            case .maternity: return "Zwangerschap"
+            case .familyBalance: return "Gezin"
+            case .official: return "Officieel"
+            case .other: return "Overig"
             }
         case .japanese:
             switch type {
@@ -4256,6 +4552,7 @@ enum Strings {
         switch lang {
         case .korean: return "황금연휴"
         case .english: return "Golden Week"
+        case .dutch: return "Golden Week"
         case .japanese: return "ゴールデンウィーク"
         case .chinese: return "黄金周"
         case .german: return "Goldene Woche"
@@ -4271,6 +4568,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차없음"
         case .english: return "No Leave"
+        case .dutch: return "Geen verlof"
         case .japanese: return "有給不要"
         case .chinese: return "无需年假"
         case .german: return "Ohne Urlaub"
@@ -4286,6 +4584,7 @@ enum Strings {
         switch lang {
         case .korean: return "징검다리"
         case .english: return "Bridge Day"
+        case .dutch: return "Brugdag"
         case .japanese: return "飛び石"
         case .chinese: return "桥接假"
         case .german: return "Brückentag"
@@ -4301,6 +4600,7 @@ enum Strings {
         switch lang {
         case .korean: return "효율최고"
         case .english: return "Best Value"
+        case .dutch: return "Beste deal"
         case .japanese: return "最高効率"
         case .chinese: return "最高效率"
         case .german: return "Beste Ausbeute"
@@ -4316,6 +4616,7 @@ enum Strings {
         switch lang {
         case .korean: return "연속휴가"
         case .english: return "Extended Leave"
+        case .dutch: return "Langer verlof"
         case .japanese: return "連続休暇"
         case .chinese: return "连续休假"
         case .german: return "Langer Urlaub"
@@ -4331,6 +4632,7 @@ enum Strings {
         switch lang {
         case .korean: return "효율적"
         case .english: return "Efficient"
+        case .dutch: return "Efficiënt"
         case .japanese: return "効率的"
         case .chinese: return "高效"
         case .german: return "Effizient"
@@ -4346,6 +4648,7 @@ enum Strings {
         switch lang {
         case .korean: return "주말 연휴"
         case .english: return "Weekend Holiday"
+        case .dutch: return "Feestdag in weekend"
         case .japanese: return "週末休暇"
         case .chinese: return "周末假日"
         case .german: return "Feiertag am Wochenende"
@@ -4361,6 +4664,7 @@ enum Strings {
         switch lang {
         case .korean: return "가족여행"
         case .english: return "Family Trip"
+        case .dutch: return "Gezinsreis"
         case .japanese: return "家族旅行"
         case .chinese: return "家庭旅行"
         case .german: return "Familienreise"
@@ -4376,6 +4680,7 @@ enum Strings {
         switch lang {
         case .korean: return "가족"
         case .english: return "Family"
+        case .dutch: return "Gezin"
         case .japanese: return "家族"
         case .chinese: return "家庭"
         case .german: return "Familie"
@@ -4391,6 +4696,7 @@ enum Strings {
         switch lang {
         case .korean: return "명절연휴"
         case .english: return "Major Holiday"
+        case .dutch: return "Grote feestdag"
         case .japanese: return "大型連休"
         case .chinese: return "重大节日"
         case .german: return "Großer Feiertag"
@@ -4427,6 +4733,14 @@ enum Strings {
             case 6, 7, 8: return "Perfect summer vacation."
             case 9, 10, 11: return "Enjoy autumn colors."
             case 12, 1, 2: return "Year-end relaxation."
+            default: return ""
+            }
+        case .dutch:
+            switch month {
+            case 3, 4, 5: return "Geweldig voor uitstapjes in de lente."
+            case 6, 7, 8: return "Perfecte zomervakantie."
+            case 9, 10, 11: return "Geniet van de herfstkleuren."
+            case 12, 1, 2: return "Ontspanning aan het einde van het jaar."
             default: return ""
             }
         case .japanese:
@@ -4500,6 +4814,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(days)일 연휴"
         case .english: return "\(days)-day break"
+        case .dutch: return "Pauze van \(days) dagen"
         case .japanese: return "\(days)日連休"
         case .chinese: return "\(days)天假期"
         case .german: return "\(days)-Tage-Pause"
@@ -4515,6 +4830,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(holidayName) 황금연휴"
         case .english: return "\(holidayName) Golden Week"
+        case .dutch: return "\(holidayName) Golden Week"
         case .japanese: return "\(holidayName) ゴールデンウィーク"
         case .chinese: return "\(holidayName) 黄金周"
         case .german: return "Goldene Woche: \(holidayName)"
@@ -4530,6 +4846,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(name) 연휴"
         case .english: return "\(name) Break"
+        case .dutch: return "Pauze \(name)"
         case .japanese: return "\(name) 連休"
         case .chinese: return "\(name) 假期"
         case .german: return "\(name)-Pause"
@@ -4547,6 +4864,8 @@ enum Strings {
             return "\(weekdayStart)~\(weekdayEnd) \(holidayDesc)로 연차 없이 \(totalDays)일 연휴!"
         case .english:
             return "\(weekdayStart)-\(weekdayEnd): \(totalDays) days off with \(holidayDesc), no leave needed!"
+        case .dutch:
+            return "\(weekdayStart)-\(weekdayEnd): \(totalDays) dagen vrij met \(holidayDesc), zonder verlof!"
         case .japanese:
             return "\(weekdayStart)〜\(weekdayEnd) \(holidayDesc)で有給なし\(totalDays)日連休！"
         case .chinese:
@@ -4564,6 +4883,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(holidayName) 징검다리 연휴"
         case .english: return "\(holidayName) Bridge Holiday"
+        case .dutch: return "Brugdag \(holidayName)"
         case .japanese: return "\(holidayName) 飛び石連休"
         case .chinese: return "\(holidayName) 桥接假期"
         case .german: return "Brückentage: \(holidayName)"
@@ -4579,6 +4899,7 @@ enum Strings {
         switch lang {
         case .korean: return "월요일 연차 1일로 4일 연휴! \(holidayName) 앞 월요일을 활용하세요."
         case .english: return "1 day leave on Monday for 4-day weekend! Use Monday before \(holidayName)."
+        case .dutch: return "1 dag verlof op maandag voor een weekend van 4 dagen! Neem de maandag vóór \(holidayName)."
         case .japanese: return "月曜1日の有給で4連休！\(holidayName)前の月曜を活用。"
         case .chinese: return "周一请1天年假获得4天假期！利用\(holidayName)前的周一。"
         case .german: return "1 Urlaubstag am Montag für 4 freie Tage! Nutze den Montag vor \(holidayName)."
@@ -4594,6 +4915,7 @@ enum Strings {
         switch lang {
         case .korean: return "금요일 연차 1일로 4일 연휴! \(holidayName) 다음 금요일을 활용하세요."
         case .english: return "1 day leave on Friday for 4-day weekend! Use Friday after \(holidayName)."
+        case .dutch: return "1 dag verlof op vrijdag voor een weekend van 4 dagen! Neem de vrijdag na \(holidayName)."
         case .japanese: return "金曜1日の有給で4連休！\(holidayName)後の金曜を活用。"
         case .chinese: return "周五请1天年假获得4天假期！利用\(holidayName)后的周五。"
         case .german: return "1 Urlaubstag am Freitag für 4 freie Tage! Nutze den Freitag nach \(holidayName)."
@@ -4609,6 +4931,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(holidayName) 연계 휴가"
         case .english: return "\(holidayName) Extended Leave"
+        case .dutch: return "Verlof rond \(holidayName)"
         case .japanese: return "\(holidayName) 連携休暇"
         case .chinese: return "\(holidayName) 连休"
         case .german: return "Verlängerter Urlaub: \(holidayName)"
@@ -4624,6 +4947,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(holidayName) 연휴를 활용하여 연차 \(leaveDays)일로 \(totalDays)일 연휴를 만들 수 있어요."
         case .english: return "Use \(leaveDays) leave days around \(holidayName) for \(totalDays) days off."
+        case .dutch: return "Neem \(leaveDays) verlofdagen rond \(holidayName) voor \(totalDays) dagen vrij."
         case .japanese: return "\(holidayName)を活用して有給\(leaveDays)日で\(totalDays)連休。"
         case .chinese: return "利用\(holidayName)，请\(leaveDays)天年假获得\(totalDays)天假期。"
         case .german: return "Mit \(leaveDays) Urlaubstagen rund um \(holidayName) bekommst du \(totalDays) freie Tage."
@@ -4639,6 +4963,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(holidayName) 연계 주간휴가"
         case .english: return "\(holidayName) Week Off"
+        case .dutch: return "Een week vrij rond \(holidayName)"
         case .japanese: return "\(holidayName) 週間休暇"
         case .chinese: return "\(holidayName) 周假"
         case .german: return "Urlaubswoche: \(holidayName)"
@@ -4654,6 +4979,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(holidayName)이 있는 주를 활용! 연차 \(leaveDays)일로 9일 연휴."
         case .english: return "Take the week with \(holidayName)! \(leaveDays) leave days for 9 days off."
+        case .dutch: return "Neem de week rond \(holidayName)! \(leaveDays) verlofdagen voor 9 dagen vrij."
         case .japanese: return "\(holidayName)のある週を活用！有給\(leaveDays)日で9連休。"
         case .chinese: return "利用\(holidayName)所在周！请\(leaveDays)天年假获得9天假期。"
         case .german: return "Nimm die Woche mit \(holidayName)! \(leaveDays) Urlaubstage für 9 freie Tage."
@@ -4669,6 +4995,7 @@ enum Strings {
         switch lang {
         case .korean: return "어린이날과 근로자의 날을 활용한 황금연휴! 연차 \(leaveDays)일로 \(totalDays)일 연휴를 만들 수 있어요."
         case .english: return "Golden week around Children's Day! \(leaveDays) leave days for \(totalDays) days off."
+        case .dutch: return "Golden Week rond Kinderdag! \(leaveDays) verlofdagen voor \(totalDays) dagen vrij."
         case .japanese: return "こどもの日を活用したゴールデンウィーク！有給\(leaveDays)日で\(totalDays)連休。"
         case .chinese: return "利用五一黄金周！请\(leaveDays)天年假获得\(totalDays)天假期。"
         case .german: return "Goldene Woche rund um den Kindertag! \(leaveDays) Urlaubstage für \(totalDays) freie Tage."
@@ -4684,6 +5011,7 @@ enum Strings {
         switch lang {
         case .korean: return "5월 황금연휴"
         case .english: return "May Golden Week"
+        case .dutch: return "Golden Week in mei"
         case .japanese: return "5月ゴールデンウィーク"
         case .chinese: return "五月黄金周"
         case .german: return "Goldene Woche im Mai"
@@ -4700,6 +5028,7 @@ enum Strings {
         switch lang {
         case .korean: return "ko_KR"
         case .english: return "en_US"
+        case .dutch: return "nl_NL"
         case .japanese: return "ja_JP"
         case .chinese: return "zh_CN"
         case .german: return "de_DE"
@@ -4717,6 +5046,7 @@ enum Strings {
             switch lang {
             case .korean: return "M월 d일 (E)"
             case .english: return "MMM d (E)"
+            case .dutch: return "d MMM (E)"
             case .japanese: return "M月d日(E)"
             case .chinese: return "M月d日(E)"
             case .german: return "d. MMM (E)"
@@ -4730,6 +5060,7 @@ enum Strings {
             switch lang {
             case .korean: return "M월 d일"
             case .english: return "MMM d"
+            case .dutch: return "d MMM"
             case .japanese: return "M月d日"
             case .chinese: return "M月d日"
             case .german: return "d. MMM"
@@ -4743,6 +5074,7 @@ enum Strings {
             switch lang {
             case .korean: return "yyyy년 M월"
             case .english: return "MMM yyyy"
+            case .dutch: return "MMM yyyy"
             case .japanese: return "yyyy年M月"
             case .chinese: return "yyyy年M月"
             case .german: return "MMM yyyy"
@@ -4762,6 +5094,7 @@ enum Strings {
         switch lang {
         case .korean: return "황금연휴"
         case .english: return "Golden Week"
+        case .dutch: return "Golden Week"
         case .japanese: return "GW"
         case .chinese: return "黄金周"
         case .german: return "Goldene Woche"
@@ -4777,6 +5110,7 @@ enum Strings {
         switch lang {
         case .korean: return "징검다리"
         case .english: return "Bridge"
+        case .dutch: return "Brug"
         case .japanese: return "飛び石"
         case .chinese: return "桥接假"
         case .german: return "Brücke"
@@ -4792,6 +5126,7 @@ enum Strings {
         switch lang {
         case .korean: return "연속휴가"
         case .english: return "Extended"
+        case .dutch: return "Verlengd"
         case .japanese: return "連続"
         case .chinese: return "连休"
         case .german: return "Verlängert"
@@ -4808,6 +5143,7 @@ enum Strings {
         switch lang {
         case .korean: return "외 \(count)건"
         case .english: return "+\(count) more"
+        case .dutch: return "+\(count) meer"
         case .japanese: return "他\(count)件"
         case .chinese: return "另外\(count)项"
         case .german: return "+\(count) weitere"
@@ -4824,6 +5160,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(count)건"
         case .english: return "\(count)"
+        case .dutch: return "\(count)"
         case .japanese: return "\(count)件"
         case .chinese: return "\(count)项"
         case .german: return "\(count)"
@@ -4839,6 +5176,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(count)개"
         case .english: return "\(count)"
+        case .dutch: return "\(count)"
         case .japanese: return "\(count)個"
         case .chinese: return "\(count)个"
         case .german: return "\(count)"
@@ -4860,6 +5198,7 @@ enum Strings {
             switch lang {
             case .korean: parts.append("선택됨")
             case .english: parts.append("selected")
+            case .dutch: parts.append("geselecteerd")
             case .japanese: parts.append("選択中")
             case .chinese: parts.append("已选中")
             case .german: parts.append("ausgewählt")
@@ -4877,6 +5216,7 @@ enum Strings {
         switch lang {
         case .korean: return "범례: 빨간색 공휴일, 초록색 연차, 파란색 주말"
         case .english: return "Legend: Red for holidays, Green for leave, Blue for weekends"
+        case .dutch: return "Legenda: rood voor feestdagen, groen voor verlof, blauw voor weekenden"
         case .japanese: return "凡例: 赤は祝日、緑は有給、青は週末"
         case .chinese: return "图例：红色节假日，绿色年假，蓝色周末"
         case .german: return "Legende: Rot für Feiertage, Grün für Urlaub, Blau für Wochenenden"
@@ -4894,6 +5234,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 관리"
         case .english: return "Leave Management"
+        case .dutch: return "Verlofbeheer"
         case .japanese: return "休暇管理"
         case .chinese: return "年假管理"
         case .german: return "Urlaubsverwaltung"
@@ -4909,6 +5250,7 @@ enum Strings {
         switch lang {
         case .korean: return "기본 연차"
         case .english: return "Base Leave"
+        case .dutch: return "Basisverlof"
         case .japanese: return "基本有給"
         case .chinese: return "基本年假"
         case .german: return "Grundurlaub"
@@ -4924,6 +5266,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스"
         case .english: return "Bonus"
+        case .dutch: return "Bonus"
         case .japanese: return "ボーナス"
         case .chinese: return "奖励"
         case .german: return "Bonus"
@@ -4939,6 +5282,7 @@ enum Strings {
         switch lang {
         case .korean: return "총 사용 가능"
         case .english: return "Total Available"
+        case .dutch: return "Totaal beschikbaar"
         case .japanese: return "利用可能合計"
         case .chinese: return "可用总数"
         case .german: return "Insgesamt verfügbar"
@@ -4954,6 +5298,7 @@ enum Strings {
         switch lang {
         case .korean: return "관리 유형"
         case .english: return "Type"
+        case .dutch: return "Soort"
         case .japanese: return "管理タイプ"
         case .chinese: return "管理类型"
         case .german: return "Art"
@@ -4969,6 +5314,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 등록"
         case .english: return "Register Leave"
+        case .dutch: return "Verlof registreren"
         case .japanese: return "休暇登録"
         case .chinese: return "登记休假"
         case .german: return "Urlaub eintragen"
@@ -4984,6 +5330,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 추가"
         case .english: return "Add Leave"
+        case .dutch: return "Verlof toevoegen"
         case .japanese: return "有給追加"
         case .chinese: return "添加年假"
         case .german: return "Urlaub hinzufügen"
@@ -4999,6 +5346,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 유형"
         case .english: return "Leave Type"
+        case .dutch: return "Soort verlof"
         case .japanese: return "休暇タイプ"
         case .chinese: return "休假类型"
         case .german: return "Urlaubsart"
@@ -5014,6 +5362,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(typeName)은(는) 연차에서 차감되지 않습니다."
         case .english: return "\(typeName) does not deduct from annual leave."
+        case .dutch: return "\(typeName) gaat niet af van het jaarlijkse verlof."
         case .japanese: return "\(typeName)は有給から差し引かれません。"
         case .chinese: return "\(typeName)不从年假中扣除。"
         case .german: return "\(typeName) wird nicht vom Jahresurlaub abgezogen."
@@ -5029,6 +5378,7 @@ enum Strings {
         switch lang {
         case .korean: return "날짜 선택"
         case .english: return "Select Dates"
+        case .dutch: return "Data kiezen"
         case .japanese: return "日付選択"
         case .chinese: return "选择日期"
         case .german: return "Datum wählen"
@@ -5044,6 +5394,7 @@ enum Strings {
         switch lang {
         case .korean: return "시작일"
         case .english: return "Start Date"
+        case .dutch: return "Startdatum"
         case .japanese: return "開始日"
         case .chinese: return "开始日期"
         case .german: return "Startdatum"
@@ -5059,6 +5410,7 @@ enum Strings {
         switch lang {
         case .korean: return "종료일"
         case .english: return "End Date"
+        case .dutch: return "Einddatum"
         case .japanese: return "終了日"
         case .chinese: return "终止日期"
         case .german: return "Enddatum"
@@ -5074,6 +5426,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용일수"
         case .english: return "Days Used"
+        case .dutch: return "Opgenomen dagen"
         case .japanese: return "使用日数"
         case .chinese: return "使用天数"
         case .german: return "Genutzte Tage"
@@ -5089,6 +5442,7 @@ enum Strings {
         switch lang {
         case .korean: return "메모 (선택)"
         case .english: return "Note (Optional)"
+        case .dutch: return "Notitie (optioneel)"
         case .japanese: return "メモ（任意）"
         case .chinese: return "备注（可选）"
         case .german: return "Notiz (optional)"
@@ -5104,6 +5458,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 목적을 입력하세요"
         case .english: return "Enter leave purpose"
+        case .dutch: return "Vul het doel van het verlof in"
         case .japanese: return "休暇の目的を入力"
         case .chinese: return "请输入休假目的"
         case .german: return "Urlaubszweck eingeben"
@@ -5119,6 +5474,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 등록하기"
         case .english: return "Register Leave"
+        case .dutch: return "Verlof registreren"
         case .japanese: return "休暇を登録"
         case .chinese: return "登记休假"
         case .german: return "Urlaub eintragen"
@@ -5136,6 +5492,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(typeName) 등록하기"
         case .english: return "Register \(typeName)"
+        case .dutch: return "\(typeName) registreren"
         case .japanese: return "\(typeName)を登録"
         case .chinese: return "登记\(typeName)"
         case .german: return "\(typeName) eintragen"
@@ -5151,6 +5508,7 @@ enum Strings {
         switch lang {
         case .korean: return "최근 등록 내역"
         case .english: return "Recent Records"
+        case .dutch: return "Recente registraties"
         case .japanese: return "最近の登録"
         case .chinese: return "最近记录"
         case .german: return "Letzte Einträge"
@@ -5166,6 +5524,7 @@ enum Strings {
         switch lang {
         case .korean: return "알림"
         case .english: return "Alert"
+        case .dutch: return "Melding"
         case .japanese: return "お知らせ"
         case .chinese: return "提示"
         case .german: return "Hinweis"
@@ -5181,6 +5540,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차가 부족합니다."
         case .english: return "Insufficient leave days."
+        case .dutch: return "Onvoldoende verlofdagen."
         case .japanese: return "有給が不足しています。"
         case .chinese: return "年假不足。"
         case .german: return "Nicht genügend Urlaubstage."
@@ -5196,6 +5556,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(typeName)이(가) 등록되었습니다!"
         case .english: return "\(typeName) has been registered!"
+        case .dutch: return "\(typeName) is geregistreerd!"
         case .japanese: return "\(typeName)が登録されました！"
         case .chinese: return "\(typeName)已登记！"
         case .german: return "\(typeName) wurde eingetragen!"
@@ -5211,6 +5572,7 @@ enum Strings {
         switch lang {
         case .korean: return "저장에 실패했습니다. 다시 시도해주세요."
         case .english: return "Save failed. Please try again."
+        case .dutch: return "Opslaan mislukt. Probeer het opnieuw."
         case .japanese: return "保存に失敗しました。もう一度お試しください。"
         case .chinese: return "保存失败,请重试。"
         case .german: return "Speichern fehlgeschlagen. Bitte versuche es erneut."
@@ -5227,6 +5589,7 @@ enum Strings {
         switch lang {
         case .korean: return "iCloud에 백업되었습니다."
         case .english: return "Backed up to iCloud."
+        case .dutch: return "Geback-upt naar iCloud."
         case .japanese: return "iCloudにバックアップしました。"
         case .chinese: return "已备份到iCloud。"
         case .german: return "In iCloud gesichert."
@@ -5242,6 +5605,7 @@ enum Strings {
         switch lang {
         case .korean: return "복원이 완료되었습니다."
         case .english: return "Restore completed."
+        case .dutch: return "Herstel voltooid."
         case .japanese: return "復元が完了しました。"
         case .chinese: return "恢复已完成。"
         case .german: return "Wiederherstellung abgeschlossen."
@@ -5257,6 +5621,7 @@ enum Strings {
         switch lang {
         case .korean: return "저장에 실패했습니다: \(reason)"
         case .english: return "Save failed: \(reason)"
+        case .dutch: return "Opslaan mislukt: \(reason)"
         case .japanese: return "保存に失敗しました: \(reason)"
         case .chinese: return "保存失败: \(reason)"
         case .german: return "Speichern fehlgeschlagen: \(reason)"
@@ -5272,6 +5637,7 @@ enum Strings {
         switch lang {
         case .korean: return "초기화에 실패했습니다: \(reason)"
         case .english: return "Reset failed: \(reason)"
+        case .dutch: return "Resetten mislukt: \(reason)"
         case .japanese: return "リセットに失敗しました: \(reason)"
         case .chinese: return "重置失败: \(reason)"
         case .german: return "Zurücksetzen fehlgeschlagen: \(reason)"
@@ -5287,6 +5653,7 @@ enum Strings {
         switch lang {
         case .korean: return "삭제에 실패했습니다. 다시 시도해주세요."
         case .english: return "Delete failed. Please try again."
+        case .dutch: return "Verwijderen mislukt. Probeer het opnieuw."
         case .japanese: return "削除に失敗しました。もう一度お試しください。"
         case .chinese: return "删除失败,请重试。"
         case .german: return "Löschen fehlgeschlagen. Bitte versuche es erneut."
@@ -5302,6 +5669,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차 삭제"
         case .english: return "Delete Bonus Leave"
+        case .dutch: return "Bonusverlof verwijderen"
         case .japanese: return "ボーナス休暇を削除"
         case .chinese: return "删除奖励年假"
         case .german: return "Bonusurlaub löschen"
@@ -5317,6 +5685,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 보너스 연차를 삭제하시겠습니까?"
         case .english: return "Delete this bonus leave?"
+        case .dutch: return "Dit bonusverlof verwijderen?"
         case .japanese: return "このボーナス休暇を削除しますか？"
         case .chinese: return "确定删除此奖励年假吗？"
         case .german: return "Diesen Bonusurlaub löschen?"
@@ -5332,6 +5701,7 @@ enum Strings {
         switch lang {
         case .korean: return "다시 시도"
         case .english: return "Retry"
+        case .dutch: return "Opnieuw proberen"
         case .japanese: return "再試行"
         case .chinese: return "重试"
         case .german: return "Erneut versuchen"
@@ -5348,6 +5718,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 날짜로 휴가 등록"
         case .english: return "Add leave on this date"
+        case .dutch: return "Verlof toevoegen op deze datum"
         case .japanese: return "この日付で休暇を登録"
         case .chinese: return "在此日期登记休假"
         case .german: return "Urlaub für dieses Datum eintragen"
@@ -5364,6 +5735,7 @@ enum Strings {
         switch lang {
         case .korean: return "첫 휴가를 계획해보세요"
         case .english: return "Plan your first leave"
+        case .dutch: return "Plan je eerste verlof"
         case .japanese: return "最初の休暇を計画しましょう"
         case .chinese: return "计划您的第一个假期"
         case .german: return "Plane deinen ersten Urlaub"
@@ -5379,6 +5751,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가를 등록하면 잔여 연차와 다가오는 일정을 한눈에 볼 수 있어요."
         case .english: return "Register a leave to see your remaining days and upcoming plans at a glance."
+        case .dutch: return "Registreer verlof om in één oogopslag je resterende dagen en komende plannen te zien."
         case .japanese: return "休暇を登録すると、残りの有給と今後の予定が一目でわかります。"
         case .chinese: return "登记休假后,可一目了然地查看剩余年假和即将到来的日程。"
         case .german: return "Trage Urlaub ein, um verbleibende Tage und anstehende Pläne auf einen Blick zu sehen."
@@ -5394,6 +5767,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 등록하기"
         case .english: return "Add Leave"
+        case .dutch: return "Verlof toevoegen"
         case .japanese: return "休暇を登録"
         case .chinese: return "登记休假"
         case .german: return "Urlaub hinzufügen"
@@ -5410,6 +5784,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(year)년 공휴일 정보는 정확하지 않을 수 있어요. 앱을 최신 버전으로 업데이트해주세요."
         case .english: return "Holiday data for \(year) may be inaccurate. Please update the app to the latest version."
+        case .dutch: return "De feestdagen voor \(year) zijn mogelijk niet correct. Werk de app bij naar de nieuwste versie."
         case .japanese: return "\(year)年の祝日情報は正確でない可能性があります。アプリを最新版に更新してください。"
         case .chinese: return "\(year)年的节假日信息可能不准确,请将应用更新到最新版本。"
         case .german: return "Die Feiertage für \(year) sind möglicherweise ungenau. Bitte aktualisiere die App auf die neueste Version."
@@ -5426,6 +5801,7 @@ enum Strings {
         switch lang {
         case .korean: return "구매가 복원되었습니다."
         case .english: return "Purchases restored."
+        case .dutch: return "Aankopen hersteld."
         case .japanese: return "購入が復元されました。"
         case .chinese: return "购买已恢复。"
         case .german: return "Käufe wiederhergestellt."
@@ -5441,6 +5817,7 @@ enum Strings {
         switch lang {
         case .korean: return "복원할 구매 내역이 없습니다."
         case .english: return "No purchases to restore."
+        case .dutch: return "Geen aankopen om te herstellen."
         case .japanese: return "復元できる購入履歴がありません。"
         case .chinese: return "没有可恢复的购买记录。"
         case .german: return "Keine Käufe zum Wiederherstellen."
@@ -5456,6 +5833,7 @@ enum Strings {
         switch lang {
         case .korean: return "구매 복원에 실패했습니다: \(reason)"
         case .english: return "Restore failed: \(reason)"
+        case .dutch: return "Herstel mislukt: \(reason)"
         case .japanese: return "購入の復元に失敗しました: \(reason)"
         case .chinese: return "恢复购买失败: \(reason)"
         case .german: return "Wiederherstellung fehlgeschlagen: \(reason)"
@@ -5471,6 +5849,7 @@ enum Strings {
         switch lang {
         case .korean: return "가격 정보를 불러오지 못했어요. 네트워크 연결을 확인해주세요."
         case .english: return "Couldn't load price info. Please check your network connection."
+        case .dutch: return "Kan prijsinformatie niet laden. Controleer je netwerkverbinding."
         case .japanese: return "価格情報を読み込めませんでした。ネットワーク接続をご確認ください。"
         case .chinese: return "无法加载价格信息,请检查网络连接。"
         case .german: return "Preise konnten nicht geladen werden. Bitte prüfe deine Netzwerkverbindung."
@@ -5486,6 +5865,7 @@ enum Strings {
         switch lang {
         case .korean: return "이용약관"
         case .english: return "Terms of Service"
+        case .dutch: return "Gebruiksvoorwaarden"
         case .japanese: return "利用規約"
         case .chinese: return "服务条款"
         case .german: return "Nutzungsbedingungen"
@@ -5501,6 +5881,7 @@ enum Strings {
         switch lang {
         case .korean: return "개인정보처리방침"
         case .english: return "Privacy Policy"
+        case .dutch: return "Privacybeleid"
         case .japanese: return "プライバシーポリシー"
         case .chinese: return "隐私政策"
         case .german: return "Datenschutzerklärung"
@@ -5517,6 +5898,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더에서 휴가 가져오기"
         case .english: return "Import Leaves from Calendar"
+        case .dutch: return "Verlof importeren uit agenda"
         case .japanese: return "カレンダーから休暇を取り込む"
         case .chinese: return "从日历导入休假"
         case .german: return "Urlaub aus Kalender importieren"
@@ -5532,6 +5914,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더에서 휴가로 보이는 일정을 찾아 추가할 수 있어요."
         case .english: return "Find calendar events that look like leaves and add them."
+        case .dutch: return "Zoek agenda-afspraken die op verlof lijken en voeg ze toe."
         case .japanese: return "カレンダーから休暇と思われる予定を見つけて追加できます。"
         case .chinese: return "从日历中查找疑似休假的日程并添加。"
         case .german: return "Finde Kalendereinträge, die nach Urlaub aussehen, und füge sie hinzu."
@@ -5547,6 +5930,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가로 보이는 일정"
         case .english: return "Events that look like leaves"
+        case .dutch: return "Afspraken die op verlof lijken"
         case .japanese: return "休暇と思われる予定"
         case .chinese: return "疑似休假的日程"
         case .german: return "Einträge, die nach Urlaub aussehen"
@@ -5562,6 +5946,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가로 보이는 일정을 찾지 못했어요.\n(이미 등록된 휴가는 제외돼요)"
         case .english: return "No leave-like events found.\n(Already-registered leaves are excluded)"
+        case .dutch: return "Geen afspraken gevonden die op verlof lijken.\n(Al geregistreerd verlof is uitgesloten)"
         case .japanese: return "休暇と思われる予定が見つかりませんでした。\n(登録済みの休暇は除外されます)"
         case .chinese: return "未找到疑似休假的日程。\n(已登记的休假会被排除)"
         case .german: return "Keine urlaubsähnlichen Einträge gefunden.\n(Bereits eingetragener Urlaub wird ausgeschlossen)"
@@ -5577,6 +5962,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(count)건 추가"
         case .english: return "Add \(count)"
+        case .dutch: return "\(count) toevoegen"
         case .japanese: return "\(count)件を追加"
         case .chinese: return "添加\(count)项"
         case .german: return "\(count) hinzufügen"
@@ -5592,6 +5978,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 \(count)건을 추가했어요."
         case .english: return "Added \(count) leave(s)."
+        case .dutch: return "\(count) verlof toegevoegd."
         case .japanese: return "休暇\(count)件を追加しました。"
         case .chinese: return "已添加\(count)项休假。"
         case .german: return "\(count) Urlaubseintrag/-einträge hinzugefügt."
@@ -5608,6 +5995,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더에서 휴가 발견"
         case .english: return "Leaves found in your calendar"
+        case .dutch: return "Verlof gevonden in je agenda"
         case .japanese: return "カレンダーで休暇を発見"
         case .chinese: return "在日历中发现休假"
         case .german: return "Urlaub im Kalender gefunden"
@@ -5623,6 +6011,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가로 보이는 일정 \(count)건을 찾았어요. 확인 후 한 번에 추가할 수 있어요."
         case .english: return "Found \(count) event(s) that look like leaves. Review and add them in one tap."
+        case .dutch: return "\(count) afspraak/afspraken gevonden die op verlof lijken. Bekijk en voeg ze toe met één tik."
         case .japanese: return "休暇と思われる予定を\(count)件見つけました。確認してまとめて追加できます。"
         case .chinese: return "找到\(count)项疑似休假的日程,确认后可一键添加。"
         case .german: return "\(count) Eintrag/Einträge gefunden, die nach Urlaub aussehen. Prüfe sie und füge sie mit einem Tipp hinzu."
@@ -5638,6 +6027,7 @@ enum Strings {
         switch lang {
         case .korean: return "확인하기"
         case .english: return "Review"
+        case .dutch: return "Bekijken"
         case .japanese: return "確認する"
         case .chinese: return "查看"
         case .german: return "Prüfen"
@@ -5653,6 +6043,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더 자동 감지"
         case .english: return "Auto-Detect from Calendar"
+        case .dutch: return "Automatisch detecteren uit agenda"
         case .japanese: return "カレンダー自動検出"
         case .chinese: return "日历自动检测"
         case .german: return "Automatische Kalendererkennung"
@@ -5668,6 +6059,7 @@ enum Strings {
         switch lang {
         case .korean: return "앱을 열 때 캘린더에서 새 휴가 일정을 자동으로 찾아 알려드려요."
         case .english: return "Automatically finds new leave events in your calendar when you open the app."
+        case .dutch: return "Zoekt automatisch nieuwe verlofafspraken in je agenda wanneer je de app opent."
         case .japanese: return "アプリを開くとカレンダーから新しい休暇予定を自動で見つけてお知らせします。"
         case .chinese: return "打开应用时自动从日历中查找新的休假日程并提醒您。"
         case .german: return "Findet beim Öffnen der App automatisch neue Urlaubseinträge in deinem Kalender."
@@ -5683,6 +6075,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더 속 휴가 일정, Pro가 자동으로 찾아드려요"
         case .english: return "Pro automatically finds leave events in your calendar"
+        case .dutch: return "Pro vindt verlofafspraken in je agenda automatisch"
         case .japanese: return "カレンダーの休暇予定、Proが自動で見つけます"
         case .chinese: return "Pro自动为您查找日历中的休假日程"
         case .german: return "Pro findet Urlaubseinträge in deinem Kalender automatisch"
@@ -5699,6 +6092,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 플랜 공유"
         case .english: return "Share Leave Plan"
+        case .dutch: return "Verlofplan delen"
         case .japanese: return "休暇プランを共有"
         case .chinese: return "分享休假计划"
         case .german: return "Urlaubsplan teilen"
@@ -5715,6 +6109,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유 미리보기"
         case .english: return "Share Preview"
+        case .dutch: return "Voorbeeld delen"
         case .japanese: return "共有プレビュー"
         case .chinese: return "分享预览"
         case .german: return "Vorschau teilen"
@@ -5730,6 +6125,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 이미지가 공유돼요"
         case .english: return "This image will be shared"
+        case .dutch: return "Deze afbeelding wordt gedeeld"
         case .japanese: return "この画像が共有されます"
         case .chinese: return "将分享这张图片"
         case .german: return "Dieses Bild wird geteilt"
@@ -5745,6 +6141,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유하기"
         case .english: return "Share"
+        case .dutch: return "Delen"
         case .japanese: return "共有する"
         case .chinese: return "分享"
         case .german: return "Teilen"
@@ -5760,6 +6157,7 @@ enum Strings {
         switch lang {
         case .korean: return "나의 연차 현황"
         case .english: return "My Leave Status"
+        case .dutch: return "Mijn verlofstatus"
         case .japanese: return "私の休暇状況"
         case .chinese: return "我的年假概览"
         case .german: return "Mein Urlaubsstand"
@@ -5775,6 +6173,7 @@ enum Strings {
         switch lang {
         case .korean: return "Goldweek — 연차를 황금연휴로"
         case .english: return "Goldweek — Turn your leaves into golden weeks"
+        case .dutch: return "Goldweek — Maak van je verlof gouden weken"
         case .japanese: return "Goldweek — 有給をゴールデンウィークに"
         case .chinese: return "Goldweek — 把年假变成黄金周"
         case .german: return "Goldweek — Mach aus Urlaubstagen goldene Wochen"
@@ -5790,6 +6189,7 @@ enum Strings {
         switch lang {
         case .korean: return "설정 열기"
         case .english: return "Open Settings"
+        case .dutch: return "Instellingen openen"
         case .japanese: return "設定を開く"
         case .chinese: return "打开设置"
         case .german: return "Einstellungen öffnen"
@@ -5805,6 +6205,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더를 확인하는 중..."
         case .english: return "Scanning calendar..."
+        case .dutch: return "Agenda scannen..."
         case .japanese: return "カレンダーを確認中..."
         case .chinese: return "正在检查日历..."
         case .german: return "Kalender wird geprüft ..."
@@ -5821,6 +6222,7 @@ enum Strings {
         switch lang {
         case .korean: return "종료일이 시작일보다 빠릅니다."
         case .english: return "End date is before start date."
+        case .dutch: return "De einddatum ligt voor de startdatum."
         case .japanese: return "終了日が開始日より前です。"
         case .chinese: return "结束日期早于开始日期。"
         case .german: return "Das Enddatum liegt vor dem Startdatum."
@@ -5836,6 +6238,7 @@ enum Strings {
         switch lang {
         case .korean: return "이미 등록된 연차와 겹치는 기간입니다."
         case .english: return "This period overlaps with an existing leave."
+        case .dutch: return "Deze periode overlapt met bestaand verlof."
         case .japanese: return "登録済みの休暇と期間が重なっています。"
         case .chinese: return "该时间段与已登记的休假重叠。"
         case .german: return "Dieser Zeitraum überschneidet sich mit bereits eingetragenem Urlaub."
@@ -5851,6 +6254,7 @@ enum Strings {
         switch lang {
         case .korean: return "Goldweek - 연차 관리 앱"
         case .english: return "Goldweek - Annual Leave Management"
+        case .dutch: return "Goldweek - Verlofbeheer"
         case .japanese: return "Goldweek - 有給管理アプリ"
         case .chinese: return "Goldweek - 年假管理应用"
         case .german: return "Goldweek - Urlaubsplaner"
@@ -5873,6 +6277,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(n)원"
         case .english: return "₩\(n)"
+        case .dutch: return "₩\(n)"
         case .japanese: return "₩\(n)"
         case .chinese: return "₩\(n)"
         case .german: return "\(n) ₩"
@@ -5889,6 +6294,7 @@ enum Strings {
         switch lang {
         case .korean: return "마이리얼트립 API가 설정되지 않았습니다."
         case .english: return "MyRealTrip API is not configured."
+        case .dutch: return "MyRealTrip API is niet geconfigureerd."
         case .japanese: return "MyRealTrip APIが設定されていません。"
         case .chinese: return "MyRealTrip API未配置。"
         case .german: return "Die MyRealTrip-API ist nicht konfiguriert."
@@ -5904,6 +6310,7 @@ enum Strings {
         switch lang {
         case .korean: return "잘못된 URL입니다."
         case .english: return "Invalid URL."
+        case .dutch: return "Ongeldige URL."
         case .japanese: return "無効なURLです。"
         case .chinese: return "无效的URL。"
         case .german: return "Ungültige URL."
@@ -5919,6 +6326,7 @@ enum Strings {
         switch lang {
         case .korean: return "잘못된 요청입니다."
         case .english: return "Bad request."
+        case .dutch: return "Ongeldig verzoek."
         case .japanese: return "不正なリクエストです。"
         case .chinese: return "请求无效。"
         case .german: return "Ungültige Anfrage."
@@ -5934,6 +6342,7 @@ enum Strings {
         switch lang {
         case .korean: return "API 키가 유효하지 않습니다."
         case .english: return "Invalid API key."
+        case .dutch: return "Ongeldige API-sleutel."
         case .japanese: return "APIキーが無効です。"
         case .chinese: return "API密钥无效。"
         case .german: return "Ungültiger API-Schlüssel."
@@ -5949,6 +6358,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 API에 대한 접근 권한이 없습니다."
         case .english: return "Access denied to this API."
+        case .dutch: return "Toegang tot deze API geweigerd."
         case .japanese: return "このAPIへのアクセス権限がありません。"
         case .chinese: return "无权访问此API。"
         case .german: return "Zugriff auf diese API verweigert."
@@ -5964,6 +6374,7 @@ enum Strings {
         switch lang {
         case .korean: return "엔드포인트를 찾을 수 없습니다."
         case .english: return "Endpoint not found."
+        case .dutch: return "Endpoint niet gevonden."
         case .japanese: return "エンドポイントが見つかりません。"
         case .chinese: return "未找到端点。"
         case .german: return "Endpunkt nicht gefunden."
@@ -5979,6 +6390,7 @@ enum Strings {
         switch lang {
         case .korean: return "요청 한도를 초과했습니다."
         case .english: return "Request rate limit exceeded."
+        case .dutch: return "Limiet voor aantal verzoeken overschreden."
         case .japanese: return "リクエスト上限を超えました。"
         case .chinese: return "请求次数超限。"
         case .german: return "Anfragelimit überschritten."
@@ -5994,6 +6406,7 @@ enum Strings {
         switch lang {
         case .korean: return "서버 오류 (\(code))"
         case .english: return "Server error (\(code))"
+        case .dutch: return "Serverfout (\(code))"
         case .japanese: return "サーバーエラー (\(code))"
         case .chinese: return "服务器错误 (\(code))"
         case .german: return "Serverfehler (\(code))"
@@ -6009,6 +6422,7 @@ enum Strings {
         switch lang {
         case .korean: return "응답 형식 오류"
         case .english: return "Invalid response format"
+        case .dutch: return "Ongeldig antwoordformaat"
         case .japanese: return "応答形式エラー"
         case .chinese: return "响应格式错误"
         case .german: return "Ungültiges Antwortformat"
@@ -6024,6 +6438,7 @@ enum Strings {
         switch lang {
         case .korean: return "재시도 한도를 초과했습니다."
         case .english: return "Max retries exceeded."
+        case .dutch: return "Maximum aantal pogingen overschreden."
         case .japanese: return "再試行上限を超えました。"
         case .chinese: return "重试次数超限。"
         case .german: return "Maximale Anzahl an Wiederholungen überschritten."
@@ -6040,6 +6455,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 가능"
         case .english: return "Available"
+        case .dutch: return "Beschikbaar"
         case .japanese: return "利用可能"
         case .chinese: return "可用"
         case .german: return "Verfügbar"
@@ -6055,6 +6471,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 완료"
         case .english: return "Used"
+        case .dutch: return "Gebruikt"
         case .japanese: return "使用済み"
         case .chinese: return "已使用"
         case .german: return "Genommen"
@@ -6070,6 +6487,7 @@ enum Strings {
         switch lang {
         case .korean: return "등록된 보너스 연차가 없습니다"
         case .english: return "No bonus leave registered"
+        case .dutch: return "Geen bonusverlof geregistreerd"
         case .japanese: return "ボーナス有給がありません"
         case .chinese: return "没有登记的奖励假"
         case .german: return "Kein Bonusurlaub eingetragen"
@@ -6085,6 +6503,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 일수"
         case .english: return "Leave Days"
+        case .dutch: return "Verlofdagen"
         case .japanese: return "有給日数"
         case .chinese: return "年假天数"
         case .german: return "Urlaubstage"
@@ -6100,6 +6519,7 @@ enum Strings {
         switch lang {
         case .korean: return "추가할 일수"
         case .english: return "Days to Add"
+        case .dutch: return "Toe te voegen dagen"
         case .japanese: return "追加日数"
         case .chinese: return "添加天数"
         case .german: return "Hinzuzufügende Tage"
@@ -6115,6 +6535,7 @@ enum Strings {
         switch lang {
         case .korean: return "유형"
         case .english: return "Type"
+        case .dutch: return "Type"
         case .japanese: return "タイプ"
         case .chinese: return "类型"
         case .german: return "Art"
@@ -6130,6 +6551,7 @@ enum Strings {
         switch lang {
         case .korean: return "사유"
         case .english: return "Reason"
+        case .dutch: return "Reden"
         case .japanese: return "理由"
         case .chinese: return "原因"
         case .german: return "Grund"
@@ -6145,6 +6567,7 @@ enum Strings {
         switch lang {
         case .korean: return "예: 휴일근무 대체, 프로젝트 포상 등"
         case .english: return "e.g. Holiday work comp, Project reward"
+        case .dutch: return "bijv. compensatie feestdagwerk, projectbeloning"
         case .japanese: return "例：休日出勤代替、プロジェクト報奨など"
         case .chinese: return "例：节假日加班补休、项目奖励等"
         case .german: return "z. B. Ausgleich für Feiertagsarbeit, Projektprämie"
@@ -6160,6 +6583,7 @@ enum Strings {
         switch lang {
         case .korean: return "만료일 설정"
         case .english: return "Set Expiration"
+        case .dutch: return "Vervaldatum instellen"
         case .japanese: return "有効期限設定"
         case .chinese: return "设置到期日"
         case .german: return "Ablauf festlegen"
@@ -6175,6 +6599,7 @@ enum Strings {
         switch lang {
         case .korean: return "만료일"
         case .english: return "Expiration"
+        case .dutch: return "Vervaldatum"
         case .japanese: return "有効期限"
         case .chinese: return "到期日"
         case .german: return "Ablaufdatum"
@@ -6190,6 +6615,7 @@ enum Strings {
         switch lang {
         case .korean: return "만료일을 설정하지 않으면 연말까지 사용 가능합니다."
         case .english: return "If no expiration is set, it can be used until year-end."
+        case .dutch: return "Zonder vervaldatum kun je het gebruiken tot het einde van het jaar."
         case .japanese: return "有効期限を設定しない場合、年末まで使用可能です。"
         case .chinese: return "不设置到期日则可使用到年末。"
         case .german: return "Ohne Ablaufdatum kann er bis zum Jahresende genutzt werden."
@@ -6206,6 +6632,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 사용 내역"
         case .english: return "Leave History"
+        case .dutch: return "Verlofgeschiedenis"
         case .japanese: return "休暇履歴"
         case .chinese: return "休假记录"
         case .german: return "Urlaubsverlauf"
@@ -6221,6 +6648,7 @@ enum Strings {
         switch lang {
         case .korean: return "닫기"
         case .english: return "Close"
+        case .dutch: return "Sluiten"
         case .japanese: return "閉じる"
         case .chinese: return "关闭"
         case .german: return "Schließen"
@@ -6236,6 +6664,7 @@ enum Strings {
         switch lang {
         case .korean: return "전체"
         case .english: return "All"
+        case .dutch: return "Alles"
         case .japanese: return "すべて"
         case .chinese: return "全部"
         case .german: return "Alle"
@@ -6251,6 +6680,7 @@ enum Strings {
         switch lang {
         case .korean: return "전체 유형"
         case .english: return "All Types"
+        case .dutch: return "Alle types"
         case .japanese: return "全タイプ"
         case .chinese: return "全部类型"
         case .german: return "Alle Arten"
@@ -6266,6 +6696,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 완료"
         case .english: return "Used"
+        case .dutch: return "Gebruikt"
         case .japanese: return "使用済み"
         case .chinese: return "已使用"
         case .german: return "Genommen"
@@ -6281,6 +6712,7 @@ enum Strings {
         switch lang {
         case .korean: return "예정"
         case .english: return "Planned"
+        case .dutch: return "Gepland"
         case .japanese: return "予定"
         case .chinese: return "计划中"
         case .german: return "Geplant"
@@ -6296,6 +6728,7 @@ enum Strings {
         switch lang {
         case .korean: return "취소"
         case .english: return "Cancelled"
+        case .dutch: return "Geannuleerd"
         case .japanese: return "キャンセル"
         case .chinese: return "已取消"
         case .german: return "Storniert"
@@ -6311,6 +6744,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(count)건"
         case .english: return "\(count)"
+        case .dutch: return "\(count)"
         case .japanese: return "\(count)件"
         case .chinese: return "\(count)项"
         case .german: return "\(count)"
@@ -6326,6 +6760,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 기록이 없습니다"
         case .english: return "No leave records"
+        case .dutch: return "Geen verlofregistraties"
         case .japanese: return "休暇記録がありません"
         case .chinese: return "没有休假记录"
         case .german: return "Keine Urlaubseinträge"
@@ -6341,6 +6776,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(year)년에 등록된 휴가가 없습니다.\n새로운 휴가를 등록해보세요."
         case .english: return "No leave registered for \(year).\nTry registering a new leave."
+        case .dutch: return "Geen verlof geregistreerd voor \(year).\nProbeer nieuw verlof te registreren."
         case .japanese: return "\(year)年の休暇がありません。\n新しい休暇を登録してみましょう。"
         case .chinese: return "\(year)年没有登记的休假。\n请尝试登记新的休假。"
         case .german: return "Für \(year) ist kein Urlaub eingetragen.\nTrage einen neuen Urlaub ein."
@@ -6356,6 +6792,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(year)년"
         case .english: return "\(year)"
+        case .dutch: return "\(year)"
         case .japanese: return "\(year)年"
         case .chinese: return "\(year)年"
         case .german: return "\(year)"
@@ -6373,6 +6810,10 @@ enum Strings {
         case .english:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "en_US")
+            return formatter.shortMonthSymbols[month - 1]
+        case .dutch:
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "nl_NL")
             return formatter.shortMonthSymbols[month - 1]
         case .japanese: return "\(month)月"
         case .chinese: return "\(month)月"
@@ -6407,6 +6848,7 @@ enum Strings {
         switch lang {
         case .korean: return "(\(count)일)"
         case .english: return "(\(count) days)"
+        case .dutch: return "(\(count) dagen)"
         case .japanese: return "(\(count)日)"
         case .chinese: return "(\(count)天)"
         case .german: return "(\(count) Tage)"
@@ -6422,6 +6864,7 @@ enum Strings {
         switch lang {
         case .korean: return "수정"
         case .english: return "Edit"
+        case .dutch: return "Bewerken"
         case .japanese: return "編集"
         case .chinese: return "编辑"
         case .german: return "Bearbeiten"
@@ -6438,6 +6881,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 수정"
         case .english: return "Edit Leave"
+        case .dutch: return "Verlof bewerken"
         case .japanese: return "休暇編集"
         case .chinese: return "编辑休假"
         case .german: return "Urlaub bearbeiten"
@@ -6453,6 +6897,7 @@ enum Strings {
         switch lang {
         case .korean: return "상태"
         case .english: return "Status"
+        case .dutch: return "Status"
         case .japanese: return "ステータス"
         case .chinese: return "状态"
         case .german: return "Status"
@@ -6468,6 +6913,7 @@ enum Strings {
         switch lang {
         case .korean: return "날짜"
         case .english: return "Dates"
+        case .dutch: return "Data"
         case .japanese: return "日付"
         case .chinese: return "日期"
         case .german: return "Datum"
@@ -6483,6 +6929,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 \(days)일 추가 사용"
         case .english: return "\(days) more leave days used"
+        case .dutch: return "\(days) extra verlofdagen gebruikt"
         case .japanese: return "有給\(days)日追加使用"
         case .chinese: return "额外使用\(days)天年假"
         case .german: return "\(days) weitere Urlaubstage genommen"
@@ -6498,6 +6945,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 \(days)일 복원"
         case .english: return "\(days) leave days restored"
+        case .dutch: return "\(days) verlofdagen hersteld"
         case .japanese: return "有給\(days)日復元"
         case .chinese: return "恢复\(days)天年假"
         case .german: return "\(days) Urlaubstage zurückgebucht"
@@ -6513,6 +6961,7 @@ enum Strings {
         switch lang {
         case .korean: return "메모"
         case .english: return "Note"
+        case .dutch: return "Notitie"
         case .japanese: return "メモ"
         case .chinese: return "备注"
         case .german: return "Notiz"
@@ -6528,6 +6977,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 목적"
         case .english: return "Leave purpose"
+        case .dutch: return "Doel van het verlof"
         case .japanese: return "休暇の目的"
         case .chinese: return "休假目的"
         case .german: return "Urlaubszweck"
@@ -6543,6 +6993,7 @@ enum Strings {
         switch lang {
         case .korean: return "일정 미리보기"
         case .english: return "Schedule Preview"
+        case .dutch: return "Voorbeeld van planning"
         case .japanese: return "スケジュールプレビュー"
         case .chinese: return "日程预览"
         case .german: return "Terminvorschau"
@@ -6561,6 +7012,7 @@ enum Strings {
             switch lang {
             case .korean: return "토"
             case .english: return "Sat"
+            case .dutch: return "za"
             case .japanese: return "土"
             case .chinese: return "六"
             case .german: return "Sa"
@@ -6574,6 +7026,7 @@ enum Strings {
             switch lang {
             case .korean: return "일"
             case .english: return "Sun"
+            case .dutch: return "zo"
             case .japanese: return "日"
             case .chinese: return "日"
             case .german: return "So"
@@ -6587,6 +7040,7 @@ enum Strings {
             switch lang {
             case .korean: return "휴일"
             case .english: return "Holiday"
+            case .dutch: return "Feestdag"
             case .japanese: return "祝日"
             case .chinese: return "节日"
             case .german: return "Feiertag"
@@ -6605,6 +7059,7 @@ enum Strings {
         switch lang {
         case .korean: return "Pro로 업그레이드"
         case .english: return "Upgrade to Pro"
+        case .dutch: return "Upgraden naar Pro"
         case .japanese: return "Proにアップグレード"
         case .chinese: return "升级到Pro版"
         case .german: return "Auf Pro upgraden"
@@ -6620,6 +7075,7 @@ enum Strings {
         switch lang {
         case .korean: return "골드위크 Pro"
         case .english: return "Goldweek Pro"
+        case .dutch: return "Goldweek Pro"
         case .japanese: return "ゴールドウィーク Pro"
         case .chinese: return "Goldweek Pro"
         case .german: return "Goldweek Pro"
@@ -6635,6 +7091,7 @@ enum Strings {
         switch lang {
         case .korean: return "모든 기능을 잠금해제하세요"
         case .english: return "Unlock all features"
+        case .dutch: return "Ontgrendel alle functies"
         case .japanese: return "すべての機能をアンロック"
         case .chinese: return "解锁所有功能"
         case .german: return "Schalte alle Funktionen frei"
@@ -6650,6 +7107,7 @@ enum Strings {
         switch lang {
         case .korean: return "무료 버전"
         case .english: return "Free"
+        case .dutch: return "Gratis"
         case .japanese: return "無料版"
         case .chinese: return "免费版"
         case .german: return "Kostenlos"
@@ -6665,6 +7123,7 @@ enum Strings {
         switch lang {
         case .korean: return "Pro 버전"
         case .english: return "Pro"
+        case .dutch: return "Pro"
         case .japanese: return "Pro版"
         case .chinese: return "Pro版"
         case .german: return "Pro"
@@ -6680,6 +7139,7 @@ enum Strings {
         switch lang {
         case .korean: return "구매하기"
         case .english: return "Purchase"
+        case .dutch: return "Kopen"
         case .japanese: return "購入"
         case .chinese: return "购买"
         case .german: return "Kaufen"
@@ -6695,6 +7155,7 @@ enum Strings {
         switch lang {
         case .korean: return "구매 복원"
         case .english: return "Restore Purchase"
+        case .dutch: return "Aankoop herstellen"
         case .japanese: return "購入を復元"
         case .chinese: return "恢复购买"
         case .german: return "Kauf wiederherstellen"
@@ -6710,6 +7171,7 @@ enum Strings {
         switch lang {
         case .korean: return "기능 비교"
         case .english: return "Feature Comparison"
+        case .dutch: return "Functievergelijking"
         case .japanese: return "機能比較"
         case .chinese: return "功能对比"
         case .german: return "Funktionsvergleich"
@@ -6725,6 +7187,7 @@ enum Strings {
         switch lang {
         case .korean: return "기본 연차 관리"
         case .english: return "Basic Leave Management"
+        case .dutch: return "Basis verlofbeheer"
         case .japanese: return "基本的な有給管理"
         case .chinese: return "基本年假管理"
         case .german: return "Urlaubsverwaltung (Basis)"
@@ -6740,6 +7203,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 추천"
         case .english: return "Leave Recommendations"
+        case .dutch: return "Verlofsuggesties"
         case .japanese: return "有給おすすめ"
         case .chinese: return "年假推荐"
         case .german: return "Urlaubsempfehlungen"
@@ -6755,6 +7219,7 @@ enum Strings {
         switch lang {
         case .korean: return "3개 추천만 표시"
         case .english: return "3 recommendations only"
+        case .dutch: return "Slechts 3 suggesties"
         case .japanese: return "3つの推奨のみ"
         case .chinese: return "仅显示3个推荐"
         case .german: return "Nur 3 Empfehlungen"
@@ -6770,6 +7235,7 @@ enum Strings {
         switch lang {
         case .korean: return "모든 추천 표시"
         case .english: return "All recommendations"
+        case .dutch: return "Alle suggesties"
         case .japanese: return "すべての推奨"
         case .chinese: return "显示所有推荐"
         case .german: return "Alle Empfehlungen"
@@ -6785,6 +7251,7 @@ enum Strings {
         switch lang {
         case .korean: return "연도 선택"
         case .english: return "Year Selection"
+        case .dutch: return "Jaarkeuze"
         case .japanese: return "年選択"
         case .chinese: return "年份选择"
         case .german: return "Jahresauswahl"
@@ -6800,6 +7267,7 @@ enum Strings {
         switch lang {
         case .korean: return "올해만"
         case .english: return "Current year only"
+        case .dutch: return "Alleen huidig jaar"
         case .japanese: return "今年のみ"
         case .chinese: return "仅当前年"
         case .german: return "Nur aktuelles Jahr"
@@ -6815,6 +7283,7 @@ enum Strings {
         switch lang {
         case .korean: return "모든 년도"
         case .english: return "All years"
+        case .dutch: return "Alle jaren"
         case .japanese: return "すべての年"
         case .chinese: return "所有年份"
         case .german: return "Alle Jahre"
@@ -6830,6 +7299,7 @@ enum Strings {
         switch lang {
         case .korean: return "시스템 캘린더 연동"
         case .english: return "System Calendar Sync"
+        case .dutch: return "Synchronisatie met systeemagenda"
         case .japanese: return "システムカレンダー連携"
         case .chinese: return "系统日历同步"
         case .german: return "Kalender-Synchronisierung"
@@ -6845,6 +7315,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 불가"
         case .english: return "Not available"
+        case .dutch: return "Niet beschikbaar"
         case .japanese: return "利用不可"
         case .chinese: return "不可用"
         case .german: return "Nicht verfügbar"
@@ -6860,6 +7331,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차 관리"
         case .english: return "Bonus Leave Management"
+        case .dutch: return "Bonusverlofbeheer"
         case .japanese: return "ボーナス休暇管理"
         case .chinese: return "奖励年假管理"
         case .german: return "Bonusurlaub verwalten"
@@ -6875,6 +7347,7 @@ enum Strings {
         switch lang {
         case .korean: return "iCloud 백업"
         case .english: return "iCloud Backup"
+        case .dutch: return "iCloud-back-up"
         case .japanese: return "iCloudバックアップ"
         case .chinese: return "iCloud备份"
         case .german: return "iCloud-Backup"
@@ -6890,6 +7363,7 @@ enum Strings {
         switch lang {
         case .korean: return "1회 구매, 평생 사용"
         case .english: return "One-time purchase, lifetime access"
+        case .dutch: return "Eenmalige aankoop, levenslange toegang"
         case .japanese: return "一度の購入で永続利用"
         case .chinese: return "一次购买，终身使用"
         case .german: return "Einmalkauf, lebenslang nutzen"
@@ -6905,6 +7379,7 @@ enum Strings {
         switch lang {
         case .korean: return "구독 없음"
         case .english: return "No subscription"
+        case .dutch: return "Geen abonnement"
         case .japanese: return "サブスクなし"
         case .chinese: return "无订阅"
         case .german: return "Kein Abo"
@@ -6920,6 +7395,7 @@ enum Strings {
         switch lang {
         case .korean: return "구매 중..."
         case .english: return "Purchasing..."
+        case .dutch: return "Aankoop bezig..."
         case .japanese: return "購入中..."
         case .chinese: return "购买中..."
         case .german: return "Kauf läuft …"
@@ -6935,6 +7411,7 @@ enum Strings {
         switch lang {
         case .korean: return "구매 완료!"
         case .english: return "Purchase successful!"
+        case .dutch: return "Aankoop gelukt!"
         case .japanese: return "購入完了！"
         case .chinese: return "购买成功！"
         case .german: return "Kauf abgeschlossen!"
@@ -6950,6 +7427,7 @@ enum Strings {
         switch lang {
         case .korean: return "구매 실패"
         case .english: return "Purchase failed"
+        case .dutch: return "Aankoop mislukt"
         case .japanese: return "購入失敗"
         case .chinese: return "购买失败"
         case .german: return "Kauf fehlgeschlagen"
@@ -6965,6 +7443,7 @@ enum Strings {
         switch lang {
         case .korean: return "복원 완료!"
         case .english: return "Restore successful!"
+        case .dutch: return "Herstel gelukt!"
         case .japanese: return "復元完了！"
         case .chinese: return "恢复成功！"
         case .german: return "Wiederherstellung abgeschlossen!"
@@ -6980,6 +7459,7 @@ enum Strings {
         switch lang {
         case .korean: return "Pro 사용자입니다!"
         case .english: return "You are a Pro user!"
+        case .dutch: return "Je bent een Pro-gebruiker!"
         case .japanese: return "Pro ユーザーです！"
         case .chinese: return "您是Pro用户！"
         case .german: return "Du bist Pro-Nutzer!"
@@ -6995,6 +7475,7 @@ enum Strings {
         switch lang {
         case .korean: return "더 많은 기능을 원하시나요? Pro로 업그레이드하세요"
         case .english: return "Want more features? Upgrade to Pro"
+        case .dutch: return "Meer functies? Upgrade naar Pro"
         case .japanese: return "もっと機能が欲しい？Proにアップグレード"
         case .chinese: return "想要更多功能？升级到Pro版"
         case .german: return "Mehr Funktionen gewünscht? Upgrade auf Pro"
@@ -7011,6 +7492,7 @@ enum Strings {
         switch lang {
         case .korean: return "앱 공유하기"
         case .english: return "Share App"
+        case .dutch: return "App delen"
         case .japanese: return "アプリを共有"
         case .chinese: return "分享应用"
         case .german: return "App teilen"
@@ -7026,6 +7508,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 수당 받지 말고 진짜로 쉬세요. 알고리즘이 최장 연휴 조합 자동 계산 🏖️"
         case .english: return "Don't take the cash — take the days. Algorithm finds your longest possible breaks 🏖️"
+        case .dutch: return "Neem niet het geld — neem de dagen. Het algoritme vindt je langst mogelijke vakanties 🏖️"
         case .japanese: return "有給を現金じゃなく、実際の休みに。アルゴリズムが最長の連休を自動算出 🏖️"
         case .chinese: return "别拿年假补偿，真正去休假吧。算法自动计算最长假期组合 🏖️"
         case .german: return "Lass dir Urlaub nicht auszahlen – nimm ihn dir. Der Algorithmus findet deine längsten Auszeiten 🏖️"
@@ -7042,6 +7525,7 @@ enum Strings {
         switch lang {
         case .korean: return "한 번 결제로 모든 기능을 영구적으로 사용하세요"
         case .english: return "One purchase. All features. Forever."
+        case .dutch: return "Eén aankoop. Alle functies. Voor altijd."
         case .japanese: return "一度の購入ですべての機能を永続利用"
         case .chinese: return "一次购买，永久使用全部功能"
         case .german: return "Einmal zahlen. Alle Funktionen. Für immer."
@@ -7057,6 +7541,7 @@ enum Strings {
         switch lang {
         case .korean: return "나중에 알아볼게요"
         case .english: return "Maybe later"
+        case .dutch: return "Misschien later"
         case .japanese: return "あとで確認する"
         case .chinese: return "稍后了解"
         case .german: return "Vielleicht später"
@@ -7072,6 +7557,7 @@ enum Strings {
         switch lang {
         case .korean: return "무제한 AI 추천"
         case .english: return "Unlimited AI plans"
+        case .dutch: return "Onbeperkt AI-plannen"
         case .japanese: return "無制限のAI推薦"
         case .chinese: return "无限AI推荐"
         case .german: return "Unbegrenzte KI-Pläne"
@@ -7087,6 +7573,7 @@ enum Strings {
         switch lang {
         case .korean: return "무료는 3개까지"
         case .english: return "Free is limited to 3"
+        case .dutch: return "Gratis is beperkt tot 3"
         case .japanese: return "無料は3件まで"
         case .chinese: return "免费版最多3个"
         case .german: return "Kostenlos nur bis zu 3"
@@ -7102,6 +7589,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차 관리"
         case .english: return "Bonus leave tracking"
+        case .dutch: return "Bonusverlof bijhouden"
         case .japanese: return "ボーナス休暇管理"
         case .chinese: return "奖励年假管理"
         case .german: return "Bonusurlaub verwalten"
@@ -7117,6 +7605,7 @@ enum Strings {
         switch lang {
         case .korean: return "보상 휴가, 특별 휴가, 병가"
         case .english: return "Comp days, special leave, sick"
+        case .dutch: return "Compensatiedagen, bijzonder verlof, ziekte"
         case .japanese: return "代休、特別休暇、病気休暇"
         case .chinese: return "补休、特别假、病假"
         case .german: return "Ausgleichstage, Sonderurlaub, Krankheit"
@@ -7132,6 +7621,7 @@ enum Strings {
         switch lang {
         case .korean: return "멀티 연도 플래닝"
         case .english: return "Multi-year planning"
+        case .dutch: return "Meerjarenplanning"
         case .japanese: return "複数年プランニング"
         case .chinese: return "跨年度规划"
         case .german: return "Mehrjahresplanung"
@@ -7147,6 +7637,7 @@ enum Strings {
         switch lang {
         case .korean: return "지난해와 내년까지 한눈에"
         case .english: return "Last year and next year at a glance"
+        case .dutch: return "Vorig en volgend jaar in één oogopslag"
         case .japanese: return "昨年と来年まで一目で"
         case .chinese: return "去年和明年一览"
         case .german: return "Letztes und nächstes Jahr im Blick"
@@ -7162,6 +7653,7 @@ enum Strings {
         switch lang {
         case .korean: return "캘린더 연동"
         case .english: return "Calendar sync"
+        case .dutch: return "Agendasynchronisatie"
         case .japanese: return "カレンダー連携"
         case .chinese: return "日历同步"
         case .german: return "Kalender-Sync"
@@ -7177,6 +7669,7 @@ enum Strings {
         switch lang {
         case .korean: return "iOS 캘린더에 자동 동기화"
         case .english: return "Auto-sync with iOS Calendar"
+        case .dutch: return "Automatisch synchroniseren met iOS Agenda"
         case .japanese: return "iOSカレンダーに自動同期"
         case .chinese: return "自动同步到iOS日历"
         case .german: return "Automatisch mit dem iOS-Kalender synchronisieren"
@@ -7193,6 +7686,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 페이스"
         case .english: return "Vacation Pace"
+        case .dutch: return "Vakantietempo"
         case .japanese: return "休暇ペース"
         case .chinese: return "休假节奏"
         case .german: return "Urlaubstempo"
@@ -7208,6 +7702,7 @@ enum Strings {
         switch lang {
         case .korean: return "올해 진행"
         case .english: return "Year progress"
+        case .dutch: return "Voortgang van het jaar"
         case .japanese: return "今年の進捗"
         case .chinese: return "年度进度"
         case .german: return "Jahresfortschritt"
@@ -7223,6 +7718,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 사용"
         case .english: return "Leave used"
+        case .dutch: return "Verlof gebruikt"
         case .japanese: return "有給使用"
         case .chinese: return "年假使用"
         case .german: return "Urlaub genommen"
@@ -7238,6 +7734,7 @@ enum Strings {
         switch lang {
         case .korean: return "여유"
         case .english: return "Relaxed"
+        case .dutch: return "Rustig"
         case .japanese: return "ゆとり"
         case .chinese: return "宽松"
         case .german: return "Entspannt"
@@ -7253,6 +7750,7 @@ enum Strings {
         switch lang {
         case .korean: return "적정"
         case .english: return "Balanced"
+        case .dutch: return "Evenwichtig"
         case .japanese: return "適正"
         case .chinese: return "均衡"
         case .german: return "Ausgewogen"
@@ -7268,6 +7766,7 @@ enum Strings {
         switch lang {
         case .korean: return "빠름"
         case .english: return "Fast"
+        case .dutch: return "Snel"
         case .japanese: return "速い"
         case .chinese: return "偏快"
         case .german: return "Schnell"
@@ -7283,6 +7782,7 @@ enum Strings {
         switch lang {
         case .korean: return "매우 빠름"
         case .english: return "Very fast"
+        case .dutch: return "Zeer snel"
         case .japanese: return "非常に速い"
         case .chinese: return "很快"
         case .german: return "Sehr schnell"
@@ -7298,6 +7798,7 @@ enum Strings {
         switch lang {
         case .korean: return "여유롭게 사용 중이에요. 다음 휴가를 미리 계획해 보세요."
         case .english: return "You're pacing slowly. Try planning ahead so days don't pile up."
+        case .dutch: return "Je gaat rustig aan. Plan vooruit zodat dagen zich niet opstapelen."
         case .japanese: return "ゆったり使っています。次の休暇を計画してみましょう。"
         case .chinese: return "使用节奏宽松。可以提前规划下一次休假。"
         case .german: return "Du nutzt deinen Urlaub gemächlich. Plane vorausschauend, damit sich keine Tage anhäufen."
@@ -7313,6 +7814,7 @@ enum Strings {
         switch lang {
         case .korean: return "건강한 페이스로 휴가를 사용하고 있어요."
         case .english: return "Healthy pace. You're using leave at the right rate."
+        case .dutch: return "Gezond tempo. Je neemt verlof in een goed ritme op."
         case .japanese: return "健康的なペースで休暇を取れています。"
         case .chinese: return "节奏健康,休假分配合理。"
         case .german: return "Gesundes Tempo. Du nutzt deinen Urlaub im richtigen Maß."
@@ -7328,6 +7830,7 @@ enum Strings {
         switch lang {
         case .korean: return "최근 사용이 많네요. 남은 기간을 잘 안배해 보세요."
         case .english: return "You're using leave faster than average. Pace yourself for the rest of the year."
+        case .dutch: return "Je neemt sneller verlof op dan gemiddeld. Verdeel je dagen over de rest van het jaar."
         case .japanese: return "やや早めの消化です。残りの期間を見ながら配分しましょう。"
         case .chinese: return "使用较快。请合理分配剩余时间。"
         case .german: return "Du nimmst Urlaub schneller als der Durchschnitt. Teile dir den Rest des Jahres gut ein."
@@ -7343,6 +7846,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 소진이 매우 빨라요. 남은 일수가 부족할 수 있어요."
         case .english: return "Your leave is depleting very quickly. You might run short."
+        case .dutch: return "Je verlof raakt razendsnel op. Je kunt tekortkomen."
         case .japanese: return "有給の消化が非常に速いです。残日数が不足するかもしれません。"
         case .chinese: return "年假消耗非常快,剩余天数可能不足。"
         case .german: return "Dein Urlaub schwindet sehr schnell. Am Ende könnten Tage fehlen."
@@ -7359,6 +7863,7 @@ enum Strings {
         switch lang {
         case .korean: return "쉬어가는 흐름"
         case .english: return "Rest rhythm"
+        case .dutch: return "Rustritme"
         case .japanese: return "休息のリズム"
         case .chinese: return "休息节奏"
         case .german: return "Erholungsrhythmus"
@@ -7374,6 +7879,7 @@ enum Strings {
         switch lang {
         case .korean: return "지난 휴가"
         case .english: return "Last break"
+        case .dutch: return "Laatste vakantie"
         case .japanese: return "前回の休暇"
         case .chinese: return "上次休假"
         case .german: return "Zuletzt"
@@ -7389,6 +7895,7 @@ enum Strings {
         switch lang {
         case .korean: return "오늘"
         case .english: return "Today"
+        case .dutch: return "Vandaag"
         case .japanese: return "今日"
         case .chinese: return "今天"
         case .german: return "Heute"
@@ -7404,6 +7911,7 @@ enum Strings {
         switch lang {
         case .korean: return "다음 휴가"
         case .english: return "Next break"
+        case .dutch: return "Volgende vakantie"
         case .japanese: return "次の休暇"
         case .chinese: return "下次休假"
         case .german: return "Als Nächstes"
@@ -7419,6 +7927,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(days)일 전"
         case .english: return days == 1 ? "1 day ago" : "\(days) days ago"
+        case .dutch: return days == 1 ? "1 dag geleden" : "\(days) dagen geleden"
         case .japanese: return "\(days)日前"
         case .chinese: return "\(days)天前"
         case .german: return days == 1 ? "vor 1 Tag" : "vor \(days) Tagen"
@@ -7434,6 +7943,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(days)일 후"
         case .english: return days == 1 ? "in 1 day" : "in \(days) days"
+        case .dutch: return days == 1 ? "over 1 dag" : "over \(days) dagen"
         case .japanese: return "\(days)日後"
         case .chinese: return "\(days)天后"
         case .german: return days == 1 ? "in 1 Tag" : "in \(days) Tagen"
@@ -7449,6 +7959,7 @@ enum Strings {
         switch lang {
         case .korean: return "기록 없음"
         case .english: return "No record"
+        case .dutch: return "Geen gegevens"
         case .japanese: return "記録なし"
         case .chinese: return "无记录"
         case .german: return "Kein Eintrag"
@@ -7464,6 +7975,7 @@ enum Strings {
         switch lang {
         case .korean: return "계획 없음"
         case .english: return "Not planned"
+        case .dutch: return "Niet gepland"
         case .japanese: return "未計画"
         case .chinese: return "未计划"
         case .german: return "Nicht geplant"
@@ -7479,6 +7991,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 간격이 건강해요. 지금 흐름을 유지하세요."
         case .english: return "Healthy gap between breaks. Keep this rhythm."
+        case .dutch: return "Gezonde tussenpozen tussen vakanties. Houd dit ritme vast."
         case .japanese: return "休暇の間隔が健康的です。今のリズムを維持しましょう。"
         case .chinese: return "休假间隔健康,继续保持这个节奏。"
         case .german: return "Gesunder Abstand zwischen den Auszeiten. Behalte diesen Rhythmus bei."
@@ -7494,6 +8007,7 @@ enum Strings {
         switch lang {
         case .korean: return "쉬어간 지 좀 됐어요. 짧게라도 휴식을 계획해 보세요."
         case .english: return "It's been a while. Consider planning even a short break."
+        case .dutch: return "Het is alweer even geleden. Overweeg zelfs een korte pauze te plannen."
         case .japanese: return "少し休んでいません。短い休みでも計画してみましょう。"
         case .chinese: return "已经有段时间没休息了,哪怕短假也好,试着安排一下吧。"
         case .german: return "Deine letzte Auszeit ist schon eine Weile her. Plane auch mal eine kurze Pause."
@@ -7509,6 +8023,7 @@ enum Strings {
         switch lang {
         case .korean: return "오랫동안 쉬지 못했어요. 번아웃 전에 휴가를 잡으세요."
         case .english: return "You haven't rested in a long time. Schedule a break before burnout sets in."
+        case .dutch: return "Je hebt al lang niet meer gerust. Plan een pauze voordat een burn-out toeslaat."
         case .japanese: return "長い間休めていません。バーンアウト前に休暇を入れましょう。"
         case .chinese: return "好久没休息了,在倦怠之前安排一次休假吧。"
         case .german: return "Du hast dich lange nicht erholt. Plane Urlaub, bevor es zum Burnout kommt."
@@ -7524,6 +8039,7 @@ enum Strings {
         switch lang {
         case .korean: return "다음 휴가가 곧이에요. 조금만 더 힘내세요."
         case .english: return "Your next break is coming up soon. Hang in there."
+        case .dutch: return "Je volgende vakantie komt eraan. Houd vol."
         case .japanese: return "次の休暇はすぐです。もう少しがんばりましょう。"
         case .chinese: return "下次休假就快到了,再坚持一下。"
         case .german: return "Deine nächste Auszeit steht bald an. Halte noch ein bisschen durch."
@@ -7542,6 +8058,7 @@ enum Strings {
         switch lang {
         case .korean: return "평소 주기 \(days)일"
         case .english: return "Your usual cycle: \(days) days"
+        case .dutch: return "Je gebruikelijke cyclus: \(days) dagen"
         case .japanese: return "いつもの周期\(days)日"
         case .chinese: return "你通常的周期为\(days)天"
         case .german: return "Dein üblicher Zyklus: \(days) Tage"
@@ -7558,6 +8075,7 @@ enum Strings {
         switch lang {
         case .korean: return "번아웃 주의"
         case .english: return "Burnout risk"
+        case .dutch: return "Burn-outrisico"
         case .japanese: return "バーンアウト注意"
         case .chinese: return "倦怠风险"
         case .german: return "Burnout-Risiko"
@@ -7575,6 +8093,7 @@ enum Strings {
         switch lang {
         case .korean: return "요즘 얼마나 지치셨나요?"
         case .english: return "How drained do you feel lately?"
+        case .dutch: return "Hoe uitgeput voel je je de laatste tijd?"
         case .japanese: return "最近どれくらい疲れていますか?"
         case .chinese: return "最近你有多疲惫?"
         case .german: return "Wie erschöpft fühlst du dich zurzeit?"
@@ -7590,6 +8109,7 @@ enum Strings {
         switch lang {
         case .korean: return "한 번의 답이 휴식 추천을 더 정확하게 만들어요."
         case .english: return "One quick answer sharpens your rest suggestions."
+        case .dutch: return "Eén snel antwoord maakt je rustsuggesties beter."
         case .japanese: return "ひとつの回答で休息提案がより正確になります。"
         case .chinese: return "一个简单的回答能让休息建议更准确。"
         case .german: return "Eine kurze Antwort macht deine Erholungstipps treffsicherer."
@@ -7605,6 +8125,7 @@ enum Strings {
         switch lang {
         case .korean: return "괜찮아요"
         case .english: return "Fine"
+        case .dutch: return "Prima"
         case .japanese: return "元気"
         case .chinese: return "还好"
         case .german: return "Geht so gut"
@@ -7620,6 +8141,7 @@ enum Strings {
         switch lang {
         case .korean: return "완전 지침"
         case .english: return "Exhausted"
+        case .dutch: return "Uitgeput"
         case .japanese: return "限界"
         case .chinese: return "精疲力竭"
         case .german: return "Völlig erschöpft"
@@ -7635,6 +8157,7 @@ enum Strings {
         switch lang {
         case .korean: return "기록하기"
         case .english: return "Submit"
+        case .dutch: return "Verzenden"
         case .japanese: return "記録する"
         case .chinese: return "提交"
         case .german: return "Speichern"
@@ -7650,6 +8173,7 @@ enum Strings {
         switch lang {
         case .korean: return "나중에"
         case .english: return "Later"
+        case .dutch: return "Later"
         case .japanese: return "あとで"
         case .chinese: return "稍后"
         case .german: return "Später"
@@ -7667,6 +8191,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴식 알림"
         case .english: return "Rest reminders"
+        case .dutch: return "Rustherinneringen"
         case .japanese: return "休息リマインダー"
         case .chinese: return "休息提醒"
         case .german: return "Erholungserinnerungen"
@@ -7682,6 +8207,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴식 레이더"
         case .english: return "Rest Radar"
+        case .dutch: return "Rustradar"
         case .japanese: return "レストレーダー"
         case .chinese: return "休息雷达"
         case .german: return "Erholungsradar"
@@ -7697,6 +8223,7 @@ enum Strings {
         switch lang {
         case .korean: return "오래 쉬지 못했을 때, 가까운 저비용 연휴와 함께 쉬어갈 때를 알려드려요."
         case .english: return "When you've gone too long without a break, we'll nudge you with a nearby low-cost getaway."
+        case .dutch: return "Als je te lang geen pauze hebt gehad, stoten we je aan met een voordelig uitje in de buurt."
         case .japanese: return "長く休めていないとき、近くの低コストな連休とともにお知らせします。"
         case .chinese: return "当你太久没休息时,会结合就近的低成本假期提醒你。"
         case .german: return "Wenn du zu lange keine Pause hattest, erinnern wir dich an einen günstigen Kurztrip in der Nähe."
@@ -7713,6 +8240,7 @@ enum Strings {
         switch lang {
         case .korean: return "2주 뒤에 다시"
         case .english: return "Remind in 2 weeks"
+        case .dutch: return "Herinner over 2 weken"
         case .japanese: return "2週間後に再通知"
         case .chinese: return "两周后再提醒"
         case .german: return "In 2 Wochen erinnern"
@@ -7729,6 +8257,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 포함"
         case .english: return "Include bonus"
+        case .dutch: return "Bonus meetellen"
         case .japanese: return "ボーナス含む"
         case .chinese: return "包含奖励"
         case .german: return "Bonus einbeziehen"
@@ -7745,6 +8274,7 @@ enum Strings {
         switch lang {
         case .korean: return "켜면 보너스 연차가 잔여 일수에 합산됩니다"
         case .english: return "When on, bonus leave is added to your remaining days"
+        case .dutch: return "Indien aan, wordt bonusverlof bij je resterende dagen opgeteld"
         case .japanese: return "オンにするとボーナス休暇が残日数に合算されます"
         case .chinese: return "开启后奖励假期将计入剩余天数"
         case .german: return "Wenn aktiviert, wird Bonusurlaub zu deinen Resttagen addiert"
@@ -7760,6 +8290,7 @@ enum Strings {
         switch lang {
         case .korean: return "남은 목표"
         case .english: return "Goal left"
+        case .dutch: return "Doel resterend"
         case .japanese: return "残り目標"
         case .chinese: return "目标剩余"
         case .german: return "Restziel"
@@ -7775,6 +8306,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 가능"
         case .english: return "Available"
+        case .dutch: return "Beschikbaar"
         case .japanese: return "利用可能"
         case .chinese: return "可用"
         case .german: return "Verfügbar"
@@ -7790,6 +8322,7 @@ enum Strings {
         switch lang {
         case .korean: return "목표 일수 없음 · 설정에서 연간 목표를 설정할 수 있어요"
         case .english: return "No goal set · You can set a yearly goal in Settings"
+        case .dutch: return "Geen doel ingesteld · Je kunt in Instellingen een jaardoel instellen"
         case .japanese: return "目標日数なし · 設定で年間目標を設定できます"
         case .chinese: return "未设目标 · 可在设置中设定年度目标"
         case .german: return "Kein Ziel festgelegt · Du kannst in den Einstellungen ein Jahresziel setzen"
@@ -7805,6 +8338,7 @@ enum Strings {
         switch lang {
         case .korean: return "날짜별로 개별 입력하려면 + 탭을 이용하세요"
         case .english: return "Use the + tab to add leave by date"
+        case .dutch: return "Gebruik de +-tab om verlof op datum toe te voegen"
         case .japanese: return "日付別に個別入力するには + タブを使ってください"
         case .chinese: return "如需按日期单独输入,请使用 + 标签"
         case .german: return "Nutze den +-Tab, um Urlaub nach Datum einzutragen"
@@ -7821,6 +8355,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(holidayName) D-\(days) · 연차 붙여 긴 휴가 만들어 보세요"
         case .english: return "\(holidayName) in \(days)d · Add PTO for a longer break"
+        case .dutch: return "\(holidayName) over \(days) d · Neem verlof voor een langere vakantie"
         case .japanese: return "\(holidayName) あと\(days)日 · 有給を足して長い連休に"
         case .chinese: return "\(holidayName) 还有\(days)天 · 拼上年假打造长假"
         case .german: return "\(holidayName) in \(days) T. · Mit Urlaub zur längeren Auszeit"
@@ -7836,6 +8371,7 @@ enum Strings {
         switch lang {
         case .korean: return "연말까지 \(daysText)일 남았어요 · 소멸 전에 계획하세요"
         case .english: return "\(daysText) days left this year · Plan before they expire"
+        case .dutch: return "Nog \(daysText) dagen dit jaar · Plan ze voordat ze vervallen"
         case .japanese: return "年末まで\(daysText)日 · 消滅前に計画しましょう"
         case .chinese: return "今年还剩\(daysText)天 · 在到期前安排好"
         case .german: return "Noch \(daysText) Tage in diesem Jahr · Plane, bevor sie verfallen"
@@ -7851,6 +8387,7 @@ enum Strings {
         switch lang {
         case .korean: return "황금연휴"
         case .english: return "Golden Week"
+        case .dutch: return "Golden Week"
         case .japanese: return "ゴールデンウィーク"
         case .chinese: return "黄金周"
         case .german: return "Goldene Woche"
@@ -7866,6 +8403,7 @@ enum Strings {
         switch lang {
         case .korean: return "추석 연휴"
         case .english: return "Autumn Holiday"
+        case .dutch: return "Herfstvakantie"
         case .japanese: return "秋の連休"
         case .chinese: return "中秋假期"
         case .german: return "Herbstferien"
@@ -7881,6 +8419,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(seasonName) 시즌 · AI 추천으로 최적의 일정 만들어 보세요"
         case .english: return "\(seasonName) season · Try AI recommendations for the best plan"
+        case .dutch: return "Seizoen \(seasonName) · Probeer AI-suggesties voor het beste plan"
         case .japanese: return "\(seasonName)シーズン · AIおすすめで最適な日程を"
         case .chinese: return "\(seasonName)旺季 · 用AI推荐打造最佳行程"
         case .german: return "Saison: \(seasonName) · Mit KI-Empfehlungen den besten Plan finden"
@@ -7896,6 +8435,7 @@ enum Strings {
         switch lang {
         case .korean: return "남은 연차 \(daysText)일 · 효율적으로 배치해 보세요"
         case .english: return "\(daysText) days of leave left · Place them wisely"
+        case .dutch: return "Nog \(daysText) verlofdagen · Verdeel ze slim"
         case .japanese: return "残り有給\(daysText)日 · 効率的に配置しましょう"
         case .chinese: return "剩余\(daysText)天年假 · 合理安排"
         case .german: return "Noch \(daysText) Urlaubstage · Setze sie klug ein"
@@ -7911,6 +8451,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(daysText)일 연차가 비어 있어요 · AI 추천 받아보세요"
         case .english: return "\(daysText) days of leave unplanned · Get AI recommendations"
+        case .dutch: return "\(daysText) verlofdagen niet gepland · Vraag AI-suggesties op"
         case .japanese: return "\(daysText)日の有給が未計画です · AIおすすめを試してみては"
         case .chinese: return "还有\(daysText)天年假未安排 · 试试AI推荐"
         case .german: return "\(daysText) Urlaubstage noch ungeplant · Hol dir KI-Empfehlungen"
@@ -7927,6 +8468,7 @@ enum Strings {
         switch lang {
         case .korean: return "목표까지 남은 일수"
         case .english: return "Days to goal"
+        case .dutch: return "Dagen tot doel"
         case .japanese: return "目標まで残り日数"
         case .chinese: return "距目标天数"
         case .german: return "Tage bis zum Ziel"
@@ -7942,6 +8484,7 @@ enum Strings {
         switch lang {
         case .korean: return "총 계획"
         case .english: return "Total planned"
+        case .dutch: return "Totaal gepland"
         case .japanese: return "計画合計"
         case .chinese: return "计划合计"
         case .german: return "Gesamt geplant"
@@ -7957,6 +8500,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차 사용"
         case .english: return "Use bonus leave"
+        case .dutch: return "Bonusverlof gebruiken"
         case .japanese: return "ボーナス休暇を使う"
         case .chinese: return "使用奖励年假"
         case .german: return "Bonusurlaub nutzen"
@@ -7972,6 +8516,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차를 사용합니다. 연차에서 차감되지 않습니다."
         case .english: return "Bonus leave will be used. It won't be deducted from your annual leave."
+        case .dutch: return "Bonusverlof wordt gebruikt. Het wordt niet van je vakantiedagen afgetrokken."
         case .japanese: return "ボーナス休暇を使います。年次有給からは差し引かれません。"
         case .chinese: return "将使用奖励年假,不会从年假中扣除。"
         case .german: return "Bonusurlaub wird verwendet. Er wird nicht von deinem Jahresurlaub abgezogen."
@@ -7987,6 +8532,7 @@ enum Strings {
         switch lang {
         case .korean: return "탭하여 보너스 연차를 선택하면 연차 대신 사용할 수 있습니다."
         case .english: return "Tap to select bonus leave and use it instead of annual leave."
+        case .dutch: return "Tik om bonusverlof te kiezen en het te gebruiken in plaats van vakantiedagen."
         case .japanese: return "タップしてボーナス休暇を選ぶと、年次有給の代わりに使えます。"
         case .chinese: return "点击选择奖励年假即可代替年假使用。"
         case .german: return "Tippe, um Bonusurlaub auszuwählen und ihn statt Jahresurlaub zu nutzen."
@@ -8002,6 +8548,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차 사용 단위"
         case .english: return "Bonus leave unit"
+        case .dutch: return "Eenheid bonusverlof"
         case .japanese: return "ボーナス休暇の単位"
         case .chinese: return "奖励年假单位"
         case .german: return "Einheit für Bonusurlaub"
@@ -8017,6 +8564,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 기간"
         case .english: return "Vacation length"
+        case .dutch: return "Vakantieduur"
         case .japanese: return "休暇の長さ"
         case .chinese: return "休假时长"
         case .german: return "Urlaubsdauer"
@@ -8032,6 +8580,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 차감 단위"
         case .english: return "Deduction unit"
+        case .dutch: return "Aftrekeenheid"
         case .japanese: return "有給控除の単位"
         case .chinese: return "扣除单位"
         case .german: return "Abzugseinheit"
@@ -8074,6 +8623,22 @@ enum Strings {
                 case .half: return "Half PTO"
                 case .annual: return "PTO"
                 default: return "PTO"
+                }
+            }
+        case .dutch:
+            if isLeisure {
+                switch type {
+                case .quarter: return "Kwart"
+                case .half: return "Half"
+                case .annual: return "Vrije dag"
+                default: return "Vrije dag"
+                }
+            } else {
+                switch type {
+                case .quarter: return "Kwart verlof"
+                case .half: return "Half verlof"
+                case .annual: return "Verlof"
+                default: return "Verlof"
                 }
             }
         case .japanese:
@@ -8220,6 +8785,12 @@ enum Strings {
             case .half: return "Half day"
             case .quarter: return "Quarter day"
             }
+        case .dutch:
+            switch length {
+            case .full: return "Hele dag"
+            case .half: return "Halve dag"
+            case .quarter: return "Kwartdag"
+            }
         case .japanese:
             switch length {
             case .full: return "終日"
@@ -8276,6 +8847,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 종류"
         case .english: return "Leave type"
+        case .dutch: return "Verloftype"
         case .japanese: return "休暇の種類"
         case .chinese: return "休假类型"
         case .german: return "Urlaubsart"
@@ -8292,6 +8864,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용 길이"
         case .english: return "Length"
+        case .dutch: return "Duur"
         case .japanese: return "使用単位"
         case .chinese: return "使用长度"
         case .german: return "Dauer"
@@ -8307,6 +8880,7 @@ enum Strings {
         switch lang {
         case .korean: return "기타 (연차 미차감)"
         case .english: return "Other (no deduction)"
+        case .dutch: return "Overig (geen aftrek)"
         case .japanese: return "その他 (有給控除なし)"
         case .chinese: return "其他 (不扣除年假)"
         case .german: return "Sonstige (ohne Abzug)"
@@ -8322,6 +8896,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차 추가는 Pro 기능입니다. 이미 추가된 항목은 수정 가능합니다."
         case .english: return "Adding bonus leave is a Pro feature. You can still edit existing items."
+        case .dutch: return "Bonusverlof toevoegen is een Pro-functie. Je kunt bestaande items nog wel bewerken."
         case .japanese: return "ボーナス休暇の追加はPro機能です。既存項目の編集は可能です。"
         case .chinese: return "新增奖励年假为Pro功能。已添加的项目仍可编辑。"
         case .german: return "Bonusurlaub hinzuzufügen ist eine Pro-Funktion. Vorhandene Einträge kannst du weiterhin bearbeiten."
@@ -8340,6 +8915,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(used)/\(granted)일"
         case .english: return "\(used)/\(granted) days"
+        case .dutch: return "\(used)/\(granted) dagen"
         case .japanese: return "\(used)/\(granted)日"
         case .chinese: return "\(used)/\(granted)天"
         case .german: return "\(used)/\(granted) Tage"
@@ -8356,6 +8932,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(granted)\(dayUnitSuffix) 중 \(used)\(dayUnitSuffix) 사용"
         case .english: return "\(used) of \(granted) days used"
+        case .dutch: return "\(used) van \(granted) dagen gebruikt"
         case .japanese: return "\(granted)日中\(used)日使用"
         case .chinese: return "\(granted)天中已用\(used)天"
         case .german: return "\(used) von \(granted) Tagen genutzt"
@@ -8371,6 +8948,7 @@ enum Strings {
         switch lang {
         case .korean: return "이미 \(used)일 사용됨 · 잔여 \(remaining)일"
         case .english: return "\(used) days used · \(remaining) days remaining"
+        case .dutch: return "\(used) vakantiedagen gebruikt · \(remaining) vakantiedagen over"
         case .japanese: return "すでに\(used)日使用 · 残り\(remaining)日"
         case .chinese: return "已使用\(used)天 · 剩余\(remaining)天"
         case .german: return "\(used) Tage genutzt · \(remaining) Tage übrig"
@@ -8386,6 +8964,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 연차 수정"
         case .english: return "Edit bonus leave"
+        case .dutch: return "Bonusverlof bewerken"
         case .japanese: return "ボーナス休暇を編集"
         case .chinese: return "编辑奖励年假"
         case .german: return "Bonusurlaub bearbeiten"
@@ -8402,6 +8981,7 @@ enum Strings {
         switch lang {
         case .korean: return "여행 추천"
         case .english: return "Travel"
+        case .dutch: return "Reizen"
         case .japanese: return "旅行"
         case .chinese: return "旅行推荐"
         case .german: return "Reisen"
@@ -8417,6 +8997,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 연휴, 떠나볼까요?"
         case .english: return "Make the most of this break"
+        case .dutch: return "Haal het meeste uit deze vrije periode"
         case .japanese: return "この連休、出かけませんか?"
         case .chinese: return "这个假期,出发吧?"
         case .german: return "Mach das Beste aus dieser Auszeit"
@@ -8432,6 +9013,7 @@ enum Strings {
         switch lang {
         case .korean: return "마이리얼트립에서 항공·숙박·투어를 한 번에 확인해보세요"
         case .english: return "Check flights, hotels, and tours together on MyRealTrip"
+        case .dutch: return "Bekijk vluchten, hotels en tours samen op MyRealTrip"
         case .japanese: return "マイリアルトリップで航空券・ホテル・ツアーをまとめてチェック"
         case .chinese: return "在MyRealTrip上一站查看机票、酒店和旅游产品"
         case .german: return "Vergleiche Flüge, Hotels und Touren gemeinsam bei MyRealTrip"
@@ -8447,6 +9029,7 @@ enum Strings {
         switch lang {
         case .korean: return "마이리얼트립에서 보기"
         case .english: return "Open MyRealTrip"
+        case .dutch: return "MyRealTrip openen"
         case .japanese: return "マイリアルトリップで見る"
         case .chinese: return "在MyRealTrip中查看"
         case .german: return "MyRealTrip öffnen"
@@ -8463,6 +9046,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 연휴에 해보면 좋을 액티비티들이 있는데\n추천해드릴까요?"
         case .english: return "We've found some activities for this break.\nShow recommendations?"
+        case .dutch: return "We hebben activiteiten gevonden voor deze vrije periode.\nAanbevelingen tonen?"
         case .japanese: return "この連休にぴったりのアクティビティがあります。\nおすすめを表示しますか?"
         case .chinese: return "我们为这个假期找到了一些活动。\n要查看推荐吗?"
         case .german: return "Wir haben Aktivitäten für diese Auszeit gefunden.\nEmpfehlungen anzeigen?"
@@ -8478,6 +9062,7 @@ enum Strings {
         switch lang {
         case .korean: return "마이리얼트립에서 항공·숙박·투어를 함께 살펴봅니다"
         case .english: return "Flights, stays, and tours from MyRealTrip"
+        case .dutch: return "Vluchten, verblijven en tours van MyRealTrip"
         case .japanese: return "マイリアルトリップで航空券・ホテル・ツアーをまとめて確認"
         case .chinese: return "MyRealTrip上的机票、住宿和旅游产品"
         case .german: return "Flüge, Unterkünfte und Touren von MyRealTrip"
@@ -8493,6 +9078,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 받기"
         case .english: return "Show me"
+        case .dutch: return "Laat maar zien"
         case .japanese: return "見てみる"
         case .chinese: return "查看推荐"
         case .german: return "Zeig mal"
@@ -8508,6 +9094,7 @@ enum Strings {
         switch lang {
         case .korean: return "괜찮아요"
         case .english: return "No thanks"
+        case .dutch: return "Nee, bedankt"
         case .japanese: return "結構です"
         case .chinese: return "不用了"
         case .german: return "Nein danke"
@@ -8524,6 +9111,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(days)일 연휴엔 \(city) — \(season)"
         case .english: return "\(city) for a \(days)-day break — \(season)"
+        case .dutch: return "\(city) voor een vrije periode van \(days) dagen — \(season)"
         case .japanese: return "\(days)日の連休には\(city) — \(season)"
         case .chinese: return "\(days)天假期就去\(city) — \(season)"
         case .german: return "\(city) für \(days) freie Tage — \(season)"
@@ -8539,6 +9127,7 @@ enum Strings {
         switch lang {
         case .korean: return "가장 저렴"
         case .english: return "Cheapest"
+        case .dutch: return "Goedkoopst"
         case .japanese: return "最安値"
         case .chinese: return "最便宜"
         case .german: return "Am günstigsten"
@@ -8554,6 +9143,7 @@ enum Strings {
         switch lang {
         case .korean: return "직항"
         case .english: return "Direct"
+        case .dutch: return "Direct"
         case .japanese: return "直行"
         case .chinese: return "直飞"
         case .german: return "Direktflug"
@@ -8569,6 +9159,7 @@ enum Strings {
         switch lang {
         case .korean: return "베스트 평점"
         case .english: return "Top rated"
+        case .dutch: return "Hoogst beoordeeld"
         case .japanese: return "高評価"
         case .chinese: return "高分推荐"
         case .german: return "Bestbewertet"
@@ -8584,6 +9175,7 @@ enum Strings {
         switch lang {
         case .korean: return "베스트셀러"
         case .english: return "Bestseller"
+        case .dutch: return "Bestseller"
         case .japanese: return "ベストセラー"
         case .chinese: return "热销"
         case .german: return "Bestseller"
@@ -8599,6 +9191,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 패키지"
         case .english: return "Suggested package"
+        case .dutch: return "Voorgesteld pakket"
         case .japanese: return "おすすめパッケージ"
         case .chinese: return "推荐套餐"
         case .german: return "Paketvorschlag"
@@ -8614,6 +9207,7 @@ enum Strings {
         switch lang {
         case .korean: return "다음부터 자동으로 안 볼래요"
         case .english: return "Don't show automatically"
+        case .dutch: return "Niet automatisch tonen"
         case .japanese: return "次回から自動表示しない"
         case .chinese: return "不再自动显示"
         case .german: return "Nicht mehr automatisch zeigen"
@@ -8630,6 +9224,7 @@ enum Strings {
         switch lang {
         case .korean: return "직장인"
         case .english: return "Employee"
+        case .dutch: return "Werknemer"
         case .japanese: return "会社員"
         case .chinese: return "上班族"
         case .german: return "Angestellte"
@@ -8645,6 +9240,7 @@ enum Strings {
         switch lang {
         case .korean: return "자유 계획"
         case .english: return "Free Plan"
+        case .dutch: return "Gratis abonnement"
         case .japanese: return "自由計画"
         case .chinese: return "自由规划"
         case .german: return "Freie Planung"
@@ -8660,6 +9256,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용자 유형"
         case .english: return "User Type"
+        case .dutch: return "Gebruikerstype"
         case .japanese: return "ユーザータイプ"
         case .chinese: return "用户类型"
         case .german: return "Nutzertyp"
@@ -8675,6 +9272,7 @@ enum Strings {
         switch lang {
         case .korean: return "모드"
         case .english: return "Mode"
+        case .dutch: return "Modus"
         case .japanese: return "モード"
         case .chinese: return "模式"
         case .german: return "Modus"
@@ -8690,6 +9288,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 제한 없이 자유롭게 휴가를 계획하고 싶은 분을 위한 모드입니다."
         case .english: return "A mode for those who want to plan vacations freely without leave-day limits."
+        case .dutch: return "Een modus voor wie vakanties vrij wil plannen, zonder limiet aan verlofdagen."
         case .japanese: return "有給日数の制限なく自由に休暇を計画したい方向けのモードです。"
         case .chinese: return "适合不受年假天数限制、自由规划休假的用户。"
         case .german: return "Ein Modus für alle, die ihren Urlaub frei und ohne Urlaubstage-Limit planen möchten."
@@ -8705,6 +9304,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 설정"
         case .english: return "Vacation Settings"
+        case .dutch: return "Vakantie-instellingen"
         case .japanese: return "休暇設定"
         case .chinese: return "休假设置"
         case .german: return "Urlaubseinstellungen"
@@ -8720,6 +9320,7 @@ enum Strings {
         switch lang {
         case .korean: return "연간 목표 일수"
         case .english: return "Annual Goal Days"
+        case .dutch: return "Jaarlijks doel in dagen"
         case .japanese: return "年間目標日数"
         case .chinese: return "年度目标天数"
         case .german: return "Jahresziel in Tagen"
@@ -8735,6 +9336,7 @@ enum Strings {
         switch lang {
         case .korean: return "무제한"
         case .english: return "Unlimited"
+        case .dutch: return "Onbeperkt"
         case .japanese: return "無制限"
         case .chinese: return "无限"
         case .german: return "Unbegrenzt"
@@ -8750,6 +9352,7 @@ enum Strings {
         switch lang {
         case .korean: return "계획된 휴가"
         case .english: return "Planned Leave"
+        case .dutch: return "Gepland verlof"
         case .japanese: return "計画した休暇"
         case .chinese: return "计划休假"
         case .german: return "Geplanter Urlaub"
@@ -8765,6 +9368,7 @@ enum Strings {
         switch lang {
         case .korean: return "기준 연도 시작월"
         case .english: return "Year Start Month"
+        case .dutch: return "Startmaand van het jaar"
         case .japanese: return "基準年度の開始月"
         case .chinese: return "起始月份"
         case .german: return "Startmonat des Jahres"
@@ -8783,6 +9387,7 @@ enum Strings {
         switch lang {
         case .korean: return "자녀 방학"
         case .english: return "Kids' break"
+        case .dutch: return "Schoolvakantie kinderen"
         case .japanese: return "子どもの休み"
         case .chinese: return "孩子放假"
         case .german: return "Schulferien"
@@ -8799,6 +9404,7 @@ enum Strings {
         switch lang {
         case .korean: return "근무"
         case .english: return "Work"
+        case .dutch: return "Werk"
         case .japanese: return "出勤"
         case .chinese: return "班"
         case .german: return "Arbeit"
@@ -8815,6 +9421,7 @@ enum Strings {
         switch lang {
         case .korean: return "보충 근무일 (주말이지만 출근하는 날)"
         case .english: return "Make-up workday (a weekend you work)"
+        case .dutch: return "Inhaalwerkdag (een weekend waarop je werkt)"
         case .japanese: return "振替出勤日（週末ですが出勤日です）"
         case .chinese: return "调休上班日"
         case .german: return "Nachholarbeitstag (Wochenende mit Arbeit)"
@@ -8830,6 +9437,7 @@ enum Strings {
         switch lang {
         case .korean: return "내 방학"
         case .english: return "My break"
+        case .dutch: return "Mijn vakantie"
         case .japanese: return "自分の休み"
         case .chinese: return "我的假期"
         case .german: return "Meine Ferien"
@@ -8845,6 +9453,7 @@ enum Strings {
         switch lang {
         case .korean: return "방학"
         case .english: return "School Breaks"
+        case .dutch: return "Schoolvakanties"
         case .japanese: return "長期休み"
         case .chinese: return "假期"
         case .german: return "Ferien"
@@ -8860,6 +9469,7 @@ enum Strings {
         switch lang {
         case .korean: return "자녀 방학은 달력에 표시하고, 그 기간에 쉴 수 있는 추천을 먼저 보여줘요. 내 방학은 공휴일처럼 쉬는 날로 쳐서 연차에서 빠지지 않아요."
         case .english: return "Kids' breaks are shown on the calendar, and suggestions during them come first. My break counts as days off like holidays, so no leave is deducted."
+        case .dutch: return "De vakanties van je kinderen staan in de kalender en suggesties in die periodes komen eerst. Mijn vakantie telt als vrije dagen, net als feestdagen, dus er wordt geen verlof afgetrokken."
         case .japanese: return "子どもの休みはカレンダーに表示し、その期間のおすすめを優先します。自分の休みは祝日と同じく休日として扱い、有給から差し引きません。"
         case .chinese: return "孩子放假会显示在日历上，并优先推荐该期间的休假。我的假期视同节假日，不扣年假。"
         case .german: return "Schulferien der Kinder werden im Kalender angezeigt und Vorschläge in dieser Zeit zuerst gezeigt. Deine eigenen Ferien zählen wie Feiertage als frei – es wird kein Urlaub abgezogen."
@@ -8875,6 +9485,7 @@ enum Strings {
         switch lang {
         case .korean: return "추가한 방학이 없어요"
         case .english: return "No breaks added yet"
+        case .dutch: return "Nog geen vakanties toegevoegd"
         case .japanese: return "追加した長期休みはありません"
         case .chinese: return "尚未添加假期"
         case .german: return "Noch keine Ferien eingetragen"
@@ -8890,6 +9501,7 @@ enum Strings {
         switch lang {
         case .korean: return "방학 추가"
         case .english: return "Add Break"
+        case .dutch: return "Vakantie toevoegen"
         case .japanese: return "長期休みを追加"
         case .chinese: return "添加假期"
         case .german: return "Ferien hinzufügen"
@@ -8905,6 +9517,7 @@ enum Strings {
         switch lang {
         case .korean: return "방학 수정"
         case .english: return "Edit Break"
+        case .dutch: return "Vakantie bewerken"
         case .japanese: return "長期休みを編集"
         case .chinese: return "编辑假期"
         case .german: return "Ferien bearbeiten"
@@ -8920,6 +9533,7 @@ enum Strings {
         switch lang {
         case .korean: return "누구의 방학인가요?"
         case .english: return "Whose break is it?"
+        case .dutch: return "Van wie is de vakantie?"
         case .japanese: return "誰の休みですか？"
         case .chinese: return "是谁的假期？"
         case .german: return "Wessen Ferien?"
@@ -8935,6 +9549,7 @@ enum Strings {
         switch lang {
         case .korean: return "달력에 표시하고 이 기간의 추천을 앞세워요. 내 연차는 그대로 계산해요."
         case .english: return "Shown on the calendar; suggestions in this period come first. Your leave is counted as usual."
+        case .dutch: return "Staat in de kalender; suggesties in deze periode komen eerst. Je verlof wordt gewoon geteld."
         case .japanese: return "カレンダーに表示し、この期間のおすすめを優先します。有給の計算は変わりません。"
         case .chinese: return "在日历上显示，并优先推荐该期间。年假照常计算。"
         case .german: return "Wird im Kalender angezeigt, Vorschläge in diesem Zeitraum kommen zuerst. Dein Urlaub wird normal gezählt."
@@ -8950,6 +9565,7 @@ enum Strings {
         switch lang {
         case .korean: return "교사·학생처럼 나도 쉬는 기간이에요. 연차에서 빠지지 않고, 쉰 기간으로 계산해요."
         case .english: return "For teachers and students: you're off too. No leave is deducted and it counts as rest."
+        case .dutch: return "Voor leraren en studenten: jij hebt ook vrij. Er wordt geen verlof afgetrokken en het telt als rust."
         case .japanese: return "教師や学生のように自分も休む期間です。有給から差し引かず、休んだ期間として扱います。"
         case .chinese: return "像教师、学生一样自己也放假。不扣年假，并计为休息。"
         case .german: return "Für Lehrkräfte und Studierende: Du hast auch frei. Es wird kein Urlaub abgezogen, und es zählt als Erholung."
@@ -8965,6 +9581,7 @@ enum Strings {
         switch lang {
         case .korean: return "기간"
         case .english: return "Period"
+        case .dutch: return "Periode"
         case .japanese: return "期間"
         case .chinese: return "期间"
         case .german: return "Zeitraum"
@@ -8980,6 +9597,7 @@ enum Strings {
         switch lang {
         case .korean: return "이름"
         case .english: return "Name"
+        case .dutch: return "Naam"
         case .japanese: return "名前"
         case .chinese: return "名称"
         case .german: return "Name"
@@ -8995,6 +9613,7 @@ enum Strings {
         switch lang {
         case .korean: return "예: 여름방학"
         case .english: return "e.g. Summer break"
+        case .dutch: return "bijv. Zomervakantie"
         case .japanese: return "例：夏休み"
         case .chinese: return "例如：暑假"
         case .german: return "z. B. Sommerferien"
@@ -9010,6 +9629,7 @@ enum Strings {
         switch lang {
         case .korean: return "방학을 삭제할까요?"
         case .english: return "Delete this break?"
+        case .dutch: return "Deze vakantie verwijderen?"
         case .japanese: return "この長期休みを削除しますか？"
         case .chinese: return "删除此假期？"
         case .german: return "Diese Ferien löschen?"
@@ -9025,6 +9645,7 @@ enum Strings {
         switch lang {
         case .korean: return "종료일이 시작일보다 빨라요"
         case .english: return "End date is before start date"
+        case .dutch: return "Einddatum ligt voor de startdatum"
         case .japanese: return "終了日が開始日より前です"
         case .chinese: return "结束日期早于开始日期"
         case .german: return "Das Enddatum liegt vor dem Startdatum"
@@ -9040,6 +9661,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(n)일"
         case .english: return n == 1 ? "1 day" : "\(n) days"
+        case .dutch: return n == 1 ? "1 dag" : "\(n) dagen"
         case .japanese: return "\(n)日間"
         case .chinese: return "\(n)天"
         case .german: return n == 1 ? "1 Tag" : "\(n) Tage"
@@ -9055,6 +9677,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일·방학 관리"
         case .english: return "Holidays & Breaks"
+        case .dutch: return "Feestdagen en vakanties"
         case .japanese: return "祝日・長期休み管理"
         case .chinese: return "假日·假期管理"
         case .german: return "Feiertage & Ferien"
@@ -9070,6 +9693,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일 추가·숨기기, 방학 추가"
         case .english: return "Add or hide holidays, add school breaks"
+        case .dutch: return "Feestdagen toevoegen of verbergen, schoolvakanties toevoegen"
         case .japanese: return "祝日の追加・非表示、長期休みの追加"
         case .chinese: return "添加·隐藏假日，添加假期"
         case .german: return "Feiertage verwalten, Ferien eintragen"
@@ -9086,6 +9710,7 @@ enum Strings {
         switch lang {
         case .korean: return "다가오는 휴가에 공휴일 표시"
         case .english: return "Show Holidays in Upcoming"
+        case .dutch: return "Feestdagen tonen bij Komend"
         case .japanese: return "「今後の休暇」に祝日を表示"
         case .chinese: return "在即将到来的假期中显示节假日"
         case .german: return "Feiertage in Anstehendem zeigen"
@@ -9101,6 +9726,7 @@ enum Strings {
         switch lang {
         case .korean: return "홈 화면 카드에 다가오는 공휴일도 함께 보여줘요"
         case .english: return "Also list upcoming public holidays on the home card"
+        case .dutch: return "Toon ook komende feestdagen op de startkaart"
         case .japanese: return "ホームのカードに今後の祝日も表示します"
         case .chinese: return "在主页卡片中一并显示即将到来的节假日"
         case .german: return "Zeigt auf der Startseite auch anstehende Feiertage an"
@@ -9116,6 +9742,7 @@ enum Strings {
         switch lang {
         case .korean: return "기본 공휴일 모두 복원"
         case .english: return "Restore all default holidays"
+        case .dutch: return "Alle standaardfeestdagen herstellen"
         case .japanese: return "すべてのデフォルト祝日を復元"
         case .chinese: return "恢复所有默认假日"
         case .german: return "Alle Standard-Feiertage wiederherstellen"
@@ -9131,6 +9758,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일 삭제"
         case .english: return "Delete Holiday"
+        case .dutch: return "Feestdag verwijderen"
         case .japanese: return "祝日を削除"
         case .chinese: return "删除假日"
         case .german: return "Feiertag löschen"
@@ -9146,6 +9774,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 공휴일을 삭제할까요?"
         case .english: return "Delete this holiday?"
+        case .dutch: return "Deze feestdag verwijderen?"
         case .japanese: return "この祝日を削除しますか?"
         case .chinese: return "要删除此假日吗?"
         case .german: return "Diesen Feiertag löschen?"
@@ -9161,6 +9790,7 @@ enum Strings {
         switch lang {
         case .korean: return "삭제"
         case .english: return "Delete"
+        case .dutch: return "Verwijderen"
         case .japanese: return "削除"
         case .chinese: return "删除"
         case .german: return "Löschen"
@@ -9176,6 +9806,7 @@ enum Strings {
         switch lang {
         case .korean: return "추가"
         case .english: return "Add"
+        case .dutch: return "Toevoegen"
         case .japanese: return "追加"
         case .chinese: return "添加"
         case .german: return "Hinzufügen"
@@ -9191,6 +9822,7 @@ enum Strings {
         switch lang {
         case .korean: return "기본 공휴일"
         case .english: return "Default Holidays"
+        case .dutch: return "Standaardfeestdagen"
         case .japanese: return "デフォルト祝日"
         case .chinese: return "默认假日"
         case .german: return "Standard-Feiertage"
@@ -9206,6 +9838,7 @@ enum Strings {
         switch lang {
         case .korean: return "토글을 끄면 캘린더와 추천에서 해당 공휴일이 숨겨집니다."
         case .english: return "Turn off the toggle to hide the holiday from the calendar and recommendations."
+        case .dutch: return "Zet de schakelaar uit om de feestdag te verbergen in de kalender en aanbevelingen."
         case .japanese: return "トグルをオフにすると、カレンダーとおすすめから該当祝日が非表示になります。"
         case .chinese: return "关闭开关后,该假日将从日历和推荐中隐藏。"
         case .german: return "Wenn du den Schalter ausschaltest, wird der Feiertag im Kalender und in den Empfehlungen ausgeblendet."
@@ -9221,6 +9854,7 @@ enum Strings {
         switch lang {
         case .korean: return "내 공휴일"
         case .english: return "My Holidays"
+        case .dutch: return "Mijn feestdagen"
         case .japanese: return "マイ祝日"
         case .chinese: return "我的假日"
         case .german: return "Meine Feiertage"
@@ -9236,6 +9870,7 @@ enum Strings {
         switch lang {
         case .korean: return "직접 추가한 공휴일이 없습니다"
         case .english: return "No custom holidays added"
+        case .dutch: return "Geen eigen feestdagen toegevoegd"
         case .japanese: return "追加した祝日はありません"
         case .chinese: return "未添加自定义假日"
         case .german: return "Keine eigenen Feiertage hinzugefügt"
@@ -9251,6 +9886,7 @@ enum Strings {
         switch lang {
         case .korean: return "직접 추가한 공휴일은 캘린더와 추천에 반영됩니다."
         case .english: return "Custom holidays will appear in the calendar and recommendations."
+        case .dutch: return "Eigen feestdagen verschijnen in de kalender en aanbevelingen."
         case .japanese: return "追加した祝日はカレンダーとおすすめに反映されます。"
         case .chinese: return "自定义假日将显示在日历和推荐中。"
         case .german: return "Eigene Feiertage erscheinen im Kalender und in den Empfehlungen."
@@ -9266,6 +9902,7 @@ enum Strings {
         switch lang {
         case .korean: return "대체공휴일"
         case .english: return "Substitute Holiday"
+        case .dutch: return "Vervangende feestdag"
         case .japanese: return "振替休日"
         case .chinese: return "调休"
         case .german: return "Ersatzfeiertag"
@@ -9281,6 +9918,7 @@ enum Strings {
         switch lang {
         case .korean: return "내가 추가"
         case .english: return "Added by me"
+        case .dutch: return "Door mij toegevoegd"
         case .japanese: return "自分で追加"
         case .chinese: return "我添加的"
         case .german: return "Von mir hinzugefügt"
@@ -9297,6 +9935,7 @@ enum Strings {
         switch lang {
         case .korean: return "펼침"
         case .english: return "Expanded"
+        case .dutch: return "Uitgeklapt"
         case .japanese: return "展開"
         case .chinese: return "已展开"
         case .german: return "Ausgeklappt"
@@ -9312,6 +9951,7 @@ enum Strings {
         switch lang {
         case .korean: return "접힘"
         case .english: return "Collapsed"
+        case .dutch: return "Ingeklapt"
         case .japanese: return "折りたたみ"
         case .chinese: return "已折叠"
         case .german: return "Eingeklappt"
@@ -9328,6 +9968,7 @@ enum Strings {
         switch lang {
         case .korean: return "이중 탭하여 수정"
         case .english: return "Double tap to edit"
+        case .dutch: return "Dubbeltik om te bewerken"
         case .japanese: return "ダブルタップで編集"
         case .chinese: return "双击以编辑"
         case .german: return "Doppeltippen zum Bearbeiten"
@@ -9344,6 +9985,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 황금연휴"
         case .english: return "Recommended holiday"
+        case .dutch: return "Aanbevolen feestdag"
         case .japanese: return "おすすめの連休"
         case .chinese: return "推荐黄金假期"
         case .german: return "Empfohlene Brückentage"
@@ -9360,6 +10002,7 @@ enum Strings {
         switch lang {
         case .korean: return "끄면 달력에서 숨겨집니다"
         case .english: return "Turn off to hide it from the calendar"
+        case .dutch: return "Zet uit om te verbergen in de kalender"
         case .japanese: return "オフにするとカレンダーから非表示になります"
         case .chinese: return "关闭后将从日历中隐藏"
         case .german: return "Ausschalten, um ihn im Kalender auszublenden"
@@ -9375,6 +10018,7 @@ enum Strings {
         switch lang {
         case .korean: return "날짜"
         case .english: return "Date"
+        case .dutch: return "Datum"
         case .japanese: return "日付"
         case .chinese: return "日期"
         case .german: return "Datum"
@@ -9390,6 +10034,7 @@ enum Strings {
         switch lang {
         case .korean: return "날짜 선택"
         case .english: return "Select Date"
+        case .dutch: return "Datum kiezen"
         case .japanese: return "日付選択"
         case .chinese: return "选择日期"
         case .german: return "Datum wählen"
@@ -9405,6 +10050,7 @@ enum Strings {
         switch lang {
         case .korean: return "이름"
         case .english: return "Name"
+        case .dutch: return "Naam"
         case .japanese: return "名前"
         case .chinese: return "名称"
         case .german: return "Name"
@@ -9420,6 +10066,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일 이름 (예: 창립기념일)"
         case .english: return "Holiday name (e.g. Founding Day)"
+        case .dutch: return "Naam van de feestdag (bijv. Oprichtingsdag)"
         case .japanese: return "祝日名 (例: 創立記念日)"
         case .chinese: return "假日名称 (例如: 创立纪念日)"
         case .german: return "Name des Feiertags (z. B. Firmengründung)"
@@ -9435,6 +10082,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일 추가"
         case .english: return "Add Holiday"
+        case .dutch: return "Feestdag toevoegen"
         case .japanese: return "祝日を追加"
         case .chinese: return "添加假日"
         case .german: return "Feiertag hinzufügen"
@@ -9451,6 +10099,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(daysText)\(dayUnitSuffix) 사용 가능"
         case .english: return "\(daysText) days available"
+        case .dutch: return "\(daysText) dagen beschikbaar"
         case .japanese: return "\(daysText)日利用可能"
         case .chinese: return "可用\(daysText)天"
         case .german: return "\(daysText) Tage verfügbar"
@@ -9466,6 +10115,7 @@ enum Strings {
         switch lang {
         case .korean: return "~\(dateText) 만료"
         case .english: return "Until \(dateText)"
+        case .dutch: return "Tot \(dateText)"
         case .japanese: return "\(dateText)まで"
         case .chinese: return "至\(dateText)到期"
         case .german: return "Bis \(dateText)"
@@ -9481,6 +10131,7 @@ enum Strings {
         switch lang {
         case .korean: return "보너스 차감 안 함"
         case .english: return "No bonus deduction"
+        case .dutch: return "Geen bonusaftrek"
         case .japanese: return "ボーナス差引なし"
         case .chinese: return "不扣除奖励年假"
         case .german: return "Kein Bonusabzug"
@@ -9496,6 +10147,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(name)에서 \(daysText)\(dayUnitSuffix) 차감"
         case .english: return "Deduct \(daysText)\(dayUnitSuffix) from \(name)"
+        case .dutch: return "\(daysText)\(dayUnitSuffix) aftrekken van \(name)"
         case .japanese: return "\(name)から\(daysText)日差引"
         case .chinese: return "从\(name)扣除\(daysText)天"
         case .german: return "\(daysText)\(dayUnitSuffix) von \(name) abziehen"
@@ -9511,6 +10163,7 @@ enum Strings {
         switch lang {
         case .korean: return "'\(name)' 보너스의 잔여 일수가 부족합니다."
         case .english: return "Not enough remaining days in '\(name)' bonus."
+        case .dutch: return "Niet genoeg resterende dagen in bonus '\(name)'."
         case .japanese: return "「\(name)」ボーナスの残日数が不足しています。"
         case .chinese: return "「\(name)」奖励年假剩余天数不足。"
         case .german: return "Im Bonus „\(name)“ sind nicht genug Tage übrig."
@@ -9527,6 +10180,7 @@ enum Strings {
         switch lang {
         case .korean: return "항공권"
         case .english: return "Flights"
+        case .dutch: return "Vluchten"
         case .japanese: return "航空券"
         case .chinese: return "机票"
         case .german: return "Flüge"
@@ -9542,6 +10196,7 @@ enum Strings {
         switch lang {
         case .korean: return "숙박"
         case .english: return "Stays"
+        case .dutch: return "Verblijven"
         case .japanese: return "宿泊"
         case .chinese: return "住宿"
         case .german: return "Unterkünfte"
@@ -9557,6 +10212,7 @@ enum Strings {
         switch lang {
         case .korean: return "투어·티켓"
         case .english: return "Tours & Tickets"
+        case .dutch: return "Tours en tickets"
         case .japanese: return "ツアー・チケット"
         case .chinese: return "旅游·门票"
         case .german: return "Touren & Tickets"
@@ -9573,6 +10229,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(year)년 휴가 계획"
         case .english: return "\(year) Vacation Plan"
+        case .dutch: return "Vakantieplan \(year)"
         case .japanese: return "\(year)年の休暇計画"
         case .chinese: return "\(year)年休假计划"
         case .german: return "Urlaubsplan \(year)"
@@ -9589,6 +10246,7 @@ enum Strings {
         switch lang {
         case .korean: return "구매 기록을 찾을 수 없습니다."
         case .english: return "No purchase records found."
+        case .dutch: return "Geen aankopen gevonden."
         case .japanese: return "購入履歴が見つかりません。"
         case .chinese: return "未找到购买记录。"
         case .german: return "Keine Käufe gefunden."
@@ -9604,6 +10262,7 @@ enum Strings {
         switch lang {
         case .korean: return "기능"
         case .english: return "Features"
+        case .dutch: return "Functies"
         case .japanese: return "機能"
         case .chinese: return "功能"
         case .german: return "Funktionen"
@@ -9620,6 +10279,7 @@ enum Strings {
         switch lang {
         case .korean: return "골드위크"
         case .english: return "Goldweek"
+        case .dutch: return "Goldweek"
         case .japanese: return "ゴールドウィーク"
         case .chinese: return "Goldweek"
         case .german: return "Goldweek"
@@ -9635,6 +10295,7 @@ enum Strings {
         switch lang {
         case .korean: return "똑똑한 연차 관리"
         case .english: return "Smart leave management"
+        case .dutch: return "Slim verlofbeheer"
         case .japanese: return "スマートな休暇管理"
         case .chinese: return "智能年假管理"
         case .german: return "Smarte Urlaubsplanung"
@@ -9653,6 +10314,7 @@ enum Strings {
         switch lang {
         case .korean: return "지역"
         case .english: return "Region"
+        case .dutch: return "Regio"
         case .japanese: return "地域"
         case .chinese: return "地区"
         case .german: return "Bundesland"
@@ -9668,6 +10330,7 @@ enum Strings {
         switch lang {
         case .korean: return "전국 공통"
         case .english: return "Nationwide"
+        case .dutch: return "Landelijk"
         case .japanese: return "全国共通"
         case .chinese: return "全国通用"
         case .german: return "Bundesweit"
@@ -9685,6 +10348,7 @@ enum Strings {
         switch lang {
         case .korean: base = "지역마다 공휴일이 달라요. 사는 곳을 고르면 그 지역 공휴일이 더해져요."
         case .english: base = "Holidays differ by region. Pick where you work to add its local holidays."
+        case .dutch: base = "Feestdagen verschillen per regio. Kies waar je werkt om de lokale feestdagen toe te voegen."
         case .japanese: base = "地域によって祝日が異なります。勤務地を選ぶと、その地域の祝日が追加されます。"
         case .chinese: base = "各地区的假日不同。选择你工作的地区，即可加入当地假日。"
         case .german: base = "Feiertage unterscheiden sich je nach Bundesland. Wähle dein Bundesland, um seine Feiertage hinzuzufügen."
@@ -9700,6 +10364,7 @@ enum Strings {
             switch lang {
             case .korean: extra = "주 공휴일은 주 정부 기준이라 회사 휴무와 다를 수 있어요. 목록에 없는 주는 연방 공휴일을 따라요."
             case .english: extra = "State holidays follow the state government and may differ from your employer's. States not listed use federal holidays."
+            case .dutch: extra = "Feestdagen per staat volgen de deelstaatregering en kunnen afwijken van die van je werkgever. Staten die niet in de lijst staan, gebruiken de federale feestdagen."
             case .japanese: extra = "州の祝日は州政府の基準のため、会社の休日と異なる場合があります。一覧にない州は連邦の祝日に従います。"
             case .chinese: extra = "州假日以州政府为准，可能与公司休假不同。未列出的州使用联邦假日。"
             case .german: extra = "Feiertage der Bundesstaaten gelten für die Landesverwaltung und können vom Arbeitgeber abweichen. Nicht aufgeführte Staaten nutzen die Bundesfeiertage."
@@ -9713,6 +10378,7 @@ enum Strings {
             switch lang {
             case .korean: extra = "자치주 공휴일은 해마다 조금씩 바뀌어요. 해마다 반복되는 날만 넣었어요."
             case .english: extra = "Regional holidays change a little every year. Only the ones that repeat every year are included."
+            case .dutch: extra = "Regionale feestdagen veranderen elk jaar een beetje. Alleen de feestdagen die elk jaar terugkeren zijn opgenomen."
             case .japanese: extra = "自治州の祝日は毎年少しずつ変わります。毎年繰り返される日だけを入れています。"
             case .chinese: extra = "自治区假日每年略有变化，这里只收录每年固定的日子。"
             case .german: extra = "Regionale Feiertage ändern sich jedes Jahr etwas. Enthalten sind nur die, die jedes Jahr gleich sind."
@@ -9732,6 +10398,7 @@ enum Strings {
         switch lang {
         case .korean: return "일하는 지역을 골라 주세요"
         case .english: return "Choose your region"
+        case .dutch: return "Kies je regio"
         case .japanese: return "勤務地の地域を選んでください"
         case .chinese: return "请选择你工作的地区"
         case .german: return "Wähle dein Bundesland"
@@ -9747,6 +10414,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(country)은(는) 지역마다 공휴일이 달라요. 지역을 고르면 그 지역 공휴일까지 반영해 추천해 드려요."
         case .english: return "In \(country), holidays differ by region. Pick yours and recommendations will include local holidays."
+        case .dutch: return "In \(country) verschillen feestdagen per regio. Kies de jouwe, dan nemen de aanbevelingen lokale feestdagen mee."
         case .japanese: return "\(country)は地域によって祝日が異なります。地域を選ぶと、その地域の祝日も反映しておすすめします。"
         case .chinese: return "\(country)各地区的假日不同。选择地区后，推荐也会计入当地假日。"
         case .german: return "In \(country) unterscheiden sich die Feiertage je nach Region. Wähle deine, damit die Vorschläge lokale Feiertage berücksichtigen."
@@ -9762,6 +10430,7 @@ enum Strings {
         switch lang {
         case .korean: return "지역 선택"
         case .english: return "Choose Region"
+        case .dutch: return "Regio kiezen"
         case .japanese: return "地域を選ぶ"
         case .chinese: return "选择地区"
         case .german: return "Bundesland wählen"
@@ -9777,6 +10446,7 @@ enum Strings {
         switch lang {
         case .korean: return "아직 지원하지 않는 국가예요"
         case .english: return "Your country isn't supported yet"
+        case .dutch: return "Jouw land wordt nog niet ondersteund"
         case .japanese: return "まだ対応していない国です"
         case .chinese: return "暂不支持你所在的国家/地区"
         case .german: return "Dein Land wird noch nicht unterstützt"
@@ -9793,6 +10463,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(region)의 공휴일은 아직 없어서 지금은 \(country) 공휴일을 보여 드리고 있어요. 가까운 나라로 바꾸거나, 공휴일을 직접 입력할 수 있어요."
         case .english: return "We don't have holidays for \(region) yet, so you're seeing \(country) holidays. Switch to a closer country, or enter your own holidays."
+        case .dutch: return "We hebben nog geen feestdagen voor \(region), dus je ziet de feestdagen van \(country). Kies een land dichterbij, of voer je eigen feestdagen in."
         case .japanese: return "\(region)の祝日にはまだ対応していないため、\(country)の祝日を表示しています。近い国に変更するか、祝日を自分で入力できます。"
         case .chinese: return "暂不支持\(region)的假日，目前显示的是\(country)的假日。你可以改成相近的国家，或自己输入假日。"
         case .german: return "Für \(region) gibt es noch keine Feiertage, daher siehst du die Feiertage von \(country). Wähle ein näheres Land oder gib deine eigenen Feiertage ein."
@@ -9808,6 +10479,7 @@ enum Strings {
         switch lang {
         case .korean: return "국가 바꾸기"
         case .english: return "Change Country"
+        case .dutch: return "Land wijzigen"
         case .japanese: return "国を変更"
         case .chinese: return "更改国家/地区"
         case .german: return "Land ändern"
@@ -9824,6 +10496,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일 직접 입력하기"
         case .english: return "Enter My Own Holidays"
+        case .dutch: return "Eigen feestdagen invoeren"
         case .japanese: return "祝日を自分で入力"
         case .chinese: return "自己输入假日"
         case .german: return "Eigene Feiertage eingeben"
@@ -9840,6 +10513,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일을 추가해 주세요"
         case .english: return "Add Your Holidays"
+        case .dutch: return "Voeg je feestdagen toe"
         case .japanese: return "祝日を追加してください"
         case .chinese: return "请添加你的假日"
         case .german: return "Füge deine Feiertage hinzu"
@@ -9856,6 +10530,7 @@ enum Strings {
         switch lang {
         case .korean: return "직접 입력 모드에는 기본 공휴일이 없어요. 공휴일을 추가하면 달력, 연차 계산, 추천에 반영돼요."
         case .english: return "Custom mode has no built-in holidays. Holidays you add are used in the calendar, leave counts and recommendations."
+        case .dutch: return "De eigen modus heeft geen ingebouwde feestdagen. Feestdagen die je toevoegt, worden gebruikt in de kalender, de verlofberekening en de aanbevelingen."
         case .japanese: return "手動入力モードには既定の祝日がありません。追加した祝日はカレンダー、休暇日数の計算、おすすめに反映されます。"
         case .chinese: return "自定义模式没有内置假日。你添加的假日会用于日历、年假计算和推荐。"
         case .german: return "Im eigenen Modus gibt es keine vorgegebenen Feiertage. Hinzugefügte Feiertage zählen im Kalender, bei den Urlaubstagen und in den Empfehlungen."
@@ -9872,6 +10547,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일 추가하기"
         case .english: return "Add Holidays"
+        case .dutch: return "Feestdagen toevoegen"
         case .japanese: return "祝日を追加"
         case .chinese: return "添加假日"
         case .german: return "Feiertage hinzufügen"
@@ -9888,6 +10564,7 @@ enum Strings {
         switch lang {
         case .korean: return "직접 입력 모드라 기본 공휴일이 없어요. 아래 내 공휴일에 공휴일을 추가해 주세요."
         case .english: return "You're in custom mode, so there are no built-in holidays. Add your holidays under My Holidays below."
+        case .dutch: return "Je gebruikt de eigen modus, dus er zijn geen ingebouwde feestdagen. Voeg je feestdagen hieronder toe bij Mijn feestdagen."
         case .japanese: return "手動入力モードのため既定の祝日はありません。下の「マイ祝日」に追加してください。"
         case .chinese: return "当前为自定义模式，没有内置假日。请在下方“我的假日”中添加。"
         case .german: return "Im eigenen Modus gibt es keine vorgegebenen Feiertage. Füge sie unten unter Meine Feiertage hinzu."
@@ -9904,6 +10581,7 @@ enum Strings {
         switch lang {
         case .korean: return "매년 반복"
         case .english: return "Repeat Every Year"
+        case .dutch: return "Elk jaar herhalen"
         case .japanese: return "毎年繰り返す"
         case .chinese: return "每年重复"
         case .german: return "Jedes Jahr wiederholen"
@@ -9920,6 +10598,7 @@ enum Strings {
         switch lang {
         case .korean: return "날짜가 고정된 공휴일은 켜 두면 해마다 다시 넣지 않아도 돼요. 부활절처럼 날짜가 바뀌는 공휴일은 끄고 해마다 넣어 주세요."
         case .english: return "Turn this on for holidays on a fixed date so you don't have to add them every year. For holidays that move, like Easter, leave it off and add them each year."
+        case .dutch: return "Zet dit aan voor feestdagen met een vaste datum, zodat je ze niet elk jaar hoeft toe te voegen. Laat het uit voor feestdagen die verschuiven, zoals Pasen, en voeg ze elk jaar toe."
         case .japanese: return "日付が固定の祝日はオンにすると毎年追加する必要がありません。イースターのように日付が変わる祝日はオフにして毎年追加してください。"
         case .chinese: return "日期固定的假日开启后无需每年重新添加。像复活节这样日期会变的假日，请关闭并每年添加。"
         case .german: return "Für Feiertage mit festem Datum einschalten, dann musst du sie nicht jedes Jahr neu eintragen. Bewegliche Feiertage wie Ostern bitte ausgeschaltet lassen und jährlich eintragen."
@@ -9936,6 +10615,7 @@ enum Strings {
         switch lang {
         case .korean: return "매년"
         case .english: return "Every year"
+        case .dutch: return "Elk jaar"
         case .japanese: return "毎年"
         case .chinese: return "每年"
         case .german: return "Jährlich"
@@ -9954,6 +10634,7 @@ enum Strings {
         switch lang {
         case .korean: return "이용 중인 버전"
         case .english: return "Your Plan"
+        case .dutch: return "Jouw abonnement"
         case .japanese: return "ご利用中のプラン"
         case .chinese: return "当前版本"
         case .german: return "Dein Tarif"
@@ -9970,6 +10651,7 @@ enum Strings {
         switch lang {
         case .korean: return "무료 버전"
         case .english: return "Free Version"
+        case .dutch: return "Gratis versie"
         case .japanese: return "無料版"
         case .chinese: return "免费版"
         case .german: return "Kostenlose Version"
@@ -9986,6 +10668,7 @@ enum Strings {
         switch lang {
         case .korean: return "이용 중"
         case .english: return "Active"
+        case .dutch: return "Actief"
         case .japanese: return "有効"
         case .chinese: return "已启用"
         case .german: return "Aktiv"
@@ -10002,6 +10685,7 @@ enum Strings {
         switch lang {
         case .korean: return "업그레이드"
         case .english: return "Upgrade"
+        case .dutch: return "Upgraden"
         case .japanese: return "アップグレード"
         case .chinese: return "升级"
         case .german: return "Upgrade"
@@ -10018,6 +10702,7 @@ enum Strings {
         switch lang {
         case .korean: return "Pro가 활성화되어 있어요. 모든 기능을 쓸 수 있어요."
         case .english: return "Pro is active. All features are unlocked."
+        case .dutch: return "Pro is actief. Alle functies zijn ontgrendeld."
         case .japanese: return "Proが有効です。すべての機能を使えます。"
         case .chinese: return "Pro 已启用，所有功能均可使用。"
         case .german: return "Pro ist aktiv. Alle Funktionen sind freigeschaltet."
@@ -10034,6 +10719,7 @@ enum Strings {
         switch lang {
         case .korean: return "추천 일부와 올해 기록만 쓸 수 있어요."
         case .english: return "Some recommendations and the current year only."
+        case .dutch: return "Een deel van de aanbevelingen en alleen het huidige jaar."
         case .japanese: return "一部のおすすめと今年の記録のみ使えます。"
         case .chinese: return "仅可使用部分推荐和今年的记录。"
         case .german: return "Nur einige Empfehlungen und das aktuelle Jahr."
@@ -10050,6 +10736,7 @@ enum Strings {
         switch lang {
         case .korean: return "Pro 잠금 해제 · \(price)"
         case .english: return "Unlock Pro · \(price)"
+        case .dutch: return "Pro ontgrendelen · \(price)"
         case .japanese: return "Proを解除 · \(price)"
         case .chinese: return "解锁 Pro · \(price)"
         case .german: return "Pro freischalten · \(price)"
@@ -10066,6 +10753,7 @@ enum Strings {
         switch lang {
         case .korean: return "무료 버전으로 계속"
         case .english: return "Continue with Free Version"
+        case .dutch: return "Doorgaan met gratis versie"
         case .japanese: return "無料版で続ける"
         case .chinese: return "继续使用免费版"
         case .german: return "Mit der kostenlosen Version fortfahren"
@@ -10082,6 +10770,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차는 근무일 기준으로 셉니다. 휴가 기간에 낀 주말과 공휴일은 차감하지 않아요."
         case .english: return "Leave is counted in working days. Weekends and public holidays inside your time off are not deducted."
+        case .dutch: return "Verlof wordt in werkdagen geteld. Weekenden en feestdagen binnen je vrije periode worden niet afgetrokken."
         case .japanese: return "休暇は勤務日で数えます。期間中の週末と祝日は差し引きません。"
         case .chinese: return "年假按工作日计算，假期中的周末和法定假日不扣除。"
         case .german: return "Urlaub wird in Arbeitstagen gezählt. Wochenenden und Feiertage im Urlaubszeitraum werden nicht abgezogen."
@@ -10098,6 +10787,7 @@ enum Strings {
         switch lang {
         case .korean: return "달력으로 \(calendarDays)일 중 주말·공휴일을 빼고 \(deducted) 차감"
         case .english: return "\(calendarDays) calendar days, \(deducted) deducted (weekends and holidays excluded)"
+        case .dutch: return "\(calendarDays) kalenderdagen, \(deducted) afgetrokken (exclusief weekenden en feestdagen)"
         case .japanese: return "暦日\(calendarDays)日のうち週末・祝日を除いて\(deducted)を消化"
         case .chinese: return "共\(calendarDays)个日历日，扣除周末和假日后计\(deducted)"
         case .german: return "\(calendarDays) Kalendertage, \(deducted) abgezogen (ohne Wochenenden und Feiertage)"
@@ -10114,6 +10804,7 @@ enum Strings {
         switch lang {
         case .korean: return "주말"
         case .english: return "Weekend"
+        case .dutch: return "Weekend"
         case .japanese: return "週末"
         case .chinese: return "周末"
         case .german: return "Wochenende"
@@ -10130,6 +10821,7 @@ enum Strings {
         switch lang {
         case .korean: return "쉬는 요일을 고르세요. 이 요일은 연차에서 빼고 셉니다."
         case .english: return "Choose the days you normally don't work. They're never deducted from your leave."
+        case .dutch: return "Kies de dagen waarop je normaal niet werkt. Die worden nooit van je verlof afgetrokken."
         case .japanese: return "普段休む曜日を選んでください。この曜日は休暇から差し引きません。"
         case .chinese: return "请选择你平时休息的日子，这些日子不计入年假。"
         case .german: return "Wähle die Tage, an denen du normalerweise nicht arbeitest. Sie werden nie vom Urlaub abgezogen."
@@ -10146,6 +10838,7 @@ enum Strings {
         switch lang {
         case .korean: return "이슬람 명절은 움 알쿠라 달력으로 계산했어요. 공식 발표(달 관측)에 따라 하루쯤 달라질 수 있으니, 다르면 숨기고 내 공휴일로 추가해 주세요."
         case .english: return "Islamic holidays are calculated with the Umm al-Qura calendar and may shift by a day after the official moon sighting. If a date differs, hide it and add the correct one under My Holidays."
+        case .dutch: return "Islamitische feestdagen worden berekend met de Umm al-Qura-kalender en kunnen een dag verschuiven na de officiële maanwaarneming. Klopt een datum niet, verberg hem dan en voeg de juiste toe bij Mijn feestdagen."
         case .japanese: return "イスラム教の祝日はウンム・アル＝クラー暦で計算しています。公式発表（月の観測）で1日ずれることがあるので、違う場合は非表示にしてマイ祝日に追加してください。"
         case .chinese: return "伊斯兰节日按乌姆库拉历计算，可能因官方观月公告相差一天。如有不同，请隐藏后在“我的假日”中添加正确日期。"
         case .german: return "Islamische Feiertage werden nach dem Umm-al-Qura-Kalender berechnet und können sich nach der offiziellen Mondsichtung um einen Tag verschieben. Weicht ein Datum ab, blende es aus und füge das richtige unter Meine Feiertage hinzu."
@@ -10162,6 +10855,7 @@ enum Strings {
         switch lang {
         case .korean: return "공휴일 기준 나라"
         case .english: return "Holiday Country"
+        case .dutch: return "Land voor feestdagen"
         case .japanese: return "祝日の国"
         case .chinese: return "节假日国家"
         case .german: return "Feiertage für"
@@ -10178,6 +10872,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴대폰 지역 설정으로 골랐어요. 다르면 바꿔 주세요. 설정에서도 바꿀 수 있어요."
         case .english: return "Picked from your phone's region. Change it if it's wrong; you can also change it later in Settings."
+        case .dutch: return "Gekozen op basis van de regio van je telefoon. Pas het aan als het niet klopt; je kunt het later ook wijzigen in Instellingen."
         case .japanese: return "端末の地域設定から選びました。違う場合は変更してください。設定でも変更できます。"
         case .chinese: return "已根据手机的地区设置选择。如不正确请更改，之后也可在设置中更改。"
         case .german: return "Anhand der Region deines Telefons gewählt. Ändere es bei Bedarf, auch später in den Einstellungen."
@@ -10194,6 +10889,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(region)의 공휴일은 아직 없어서 휴대폰 언어로 골랐어요. 가까운 나라나 기타 (직접 입력)를 고를 수 있어요."
         case .english: return "We don't have holidays for \(region) yet, so we picked a country from your phone's language. Choose a closer country or Other (Custom) to enter your own."
+        case .dutch: return "We hebben nog geen feestdagen voor \(region), dus we hebben een land gekozen op basis van de taal van je telefoon. Kies een land dichterbij of Overig (eigen) om je eigen feestdagen in te voeren."
         case .japanese: return "\(region)の祝日にはまだ対応していないため、端末の言語から選びました。近い国か「その他（手動入力）」を選べます。"
         case .chinese: return "暂不支持\(region)的假日，已根据手机语言选择。你可以改成相近的国家或“其他（自定义）”。"
         case .german: return "Für \(region) gibt es noch keine Feiertage, daher wurde anhand der Sprache gewählt. Wähle ein näheres Land oder Andere (eigene)."
@@ -10209,19 +10905,19 @@ enum Strings {
     static func continentName(_ continent: Continent) -> String {
         let names: [Continent: [AppLanguage: String]] = [
             .asia: [.korean: "아시아", .english: "Asia", .japanese: "アジア", .chinese: "亚洲", .german: "Asien", .french: "Asie",
-                    .spanish: "Asia", .italian: "Asia", .portuguese: "Ásia", .chineseTraditional: "亞洲"],
+                    .spanish: "Asia", .italian: "Asia", .portuguese: "Ásia", .chineseTraditional: "亞洲", .dutch: "Azië"],
             .middleEast: [.korean: "중동", .english: "Middle East", .japanese: "中東", .chinese: "中东", .german: "Naher Osten", .french: "Moyen-Orient",
-                          .spanish: "Oriente Medio", .italian: "Medio Oriente", .portuguese: "Oriente Médio", .chineseTraditional: "中東"],
+                          .spanish: "Oriente Medio", .italian: "Medio Oriente", .portuguese: "Oriente Médio", .chineseTraditional: "中東", .dutch: "Midden-Oosten"],
             .europe: [.korean: "유럽", .english: "Europe", .japanese: "ヨーロッパ", .chinese: "欧洲", .german: "Europa", .french: "Europe",
-                      .spanish: "Europa", .italian: "Europa", .portuguese: "Europa", .chineseTraditional: "歐洲"],
+                      .spanish: "Europa", .italian: "Europa", .portuguese: "Europa", .chineseTraditional: "歐洲", .dutch: "Europa"],
             .africa: [.korean: "아프리카", .english: "Africa", .japanese: "アフリカ", .chinese: "非洲", .german: "Afrika", .french: "Afrique",
-                      .spanish: "África", .italian: "Africa", .portuguese: "África", .chineseTraditional: "非洲"],
+                      .spanish: "África", .italian: "Africa", .portuguese: "África", .chineseTraditional: "非洲", .dutch: "Afrika"],
             .northAmerica: [.korean: "북아메리카", .english: "North America", .japanese: "北アメリカ", .chinese: "北美洲", .german: "Nordamerika", .french: "Amérique du Nord",
-                            .spanish: "América del Norte", .italian: "America del Nord", .portuguese: "América do Norte", .chineseTraditional: "北美洲"],
+                            .spanish: "América del Norte", .italian: "America del Nord", .portuguese: "América do Norte", .chineseTraditional: "北美洲", .dutch: "Noord-Amerika"],
             .southAmerica: [.korean: "남아메리카", .english: "South America", .japanese: "南アメリカ", .chinese: "南美洲", .german: "Südamerika", .french: "Amérique du Sud",
-                            .spanish: "América del Sur", .italian: "America del Sud", .portuguese: "América do Sul", .chineseTraditional: "南美洲"],
+                            .spanish: "América del Sur", .italian: "America del Sud", .portuguese: "América do Sul", .chineseTraditional: "南美洲", .dutch: "Zuid-Amerika"],
             .oceania: [.korean: "오세아니아", .english: "Oceania", .japanese: "オセアニア", .chinese: "大洋洲", .german: "Ozeanien", .french: "Océanie",
-                       .spanish: "Oceanía", .italian: "Oceania", .portuguese: "Oceania", .chineseTraditional: "大洋洲"],
+                       .spanish: "Oceanía", .italian: "Oceania", .portuguese: "Oceania", .chineseTraditional: "大洋洲", .dutch: "Oceanië"],
         ]
         return names[continent]?[lang] ?? names[continent]?[.english] ?? continent.rawValue
     }
@@ -10231,6 +10927,7 @@ enum Strings {
         switch lang {
         case .korean: return "나라 검색"
         case .english: return "Search countries"
+        case .dutch: return "Landen zoeken"
         case .japanese: return "国を検索"
         case .chinese: return "搜索国家"
         case .german: return "Land suchen"
@@ -10247,6 +10944,7 @@ enum Strings {
         switch lang {
         case .korean: return "나라 기본 (\(days))"
         case .english: return "Country default (\(days))"
+        case .dutch: return "Standaard van het land (\(days))"
         case .japanese: return "国の標準（\(days)）"
         case .chinese: return "国家默认（\(days)）"
         case .german: return "Landesstandard (\(days))"
@@ -10263,6 +10961,7 @@ enum Strings {
         switch lang {
         case .korean: return "주말 없음 (매일 근무)"
         case .english: return "No weekend (I work every day)"
+        case .dutch: return "Geen weekend (ik werk elke dag)"
         case .japanese: return "週末なし（毎日勤務）"
         case .chinese: return "无周末（每天上班）"
         case .german: return "Kein Wochenende (ich arbeite jeden Tag)"
@@ -10282,6 +10981,8 @@ enum Strings {
             names = ["한국", "일본", "중국", "미국", "독일", "프랑스", "영국", "캐나다", "호주", "스페인", "이탈리아", "브라질", "대만", "홍콩", "아랍에미리트", "사우디아라비아", "카타르", "페루", "네덜란드", "벨기에", "오스트리아", "스위스", "아일랜드", "포르투갈", "스웨덴", "노르웨이", "덴마크", "핀란드", "폴란드", "체코", "그리스", "튀르키예", "이집트", "남아프리카 공화국", "멕시코", "아르헨티나", "칠레", "콜롬비아", "뉴질랜드", "기타 (직접 입력)"]
         case .english:
             names = ["Korea", "Japan", "China", "USA", "Germany", "France", "United Kingdom", "Canada", "Australia", "Spain", "Italy", "Brazil", "Taiwan", "Hong Kong", "United Arab Emirates", "Saudi Arabia", "Qatar", "Peru", "Netherlands", "Belgium", "Austria", "Switzerland", "Ireland", "Portugal", "Sweden", "Norway", "Denmark", "Finland", "Poland", "Czechia", "Greece", "Türkiye", "Egypt", "South Africa", "Mexico", "Argentina", "Chile", "Colombia", "New Zealand", "Other (Custom)"]
+        case .dutch:
+            names = ["Korea", "Japan", "China", "VS", "Duitsland", "Frankrijk", "Verenigd Koninkrijk", "Canada", "Australië", "Spanje", "Italië", "Brazilië", "Taiwan", "Hongkong", "Verenigde Arabische Emiraten", "Saoedi-Arabië", "Qatar", "Peru", "Nederland", "België", "Oostenrijk", "Zwitserland", "Ierland", "Portugal", "Zweden", "Noorwegen", "Denemarken", "Finland", "Polen", "Tsjechië", "Griekenland", "Turkije", "Egypte", "Zuid-Afrika", "Mexico", "Argentinië", "Chili", "Colombia", "Nieuw-Zeeland", "Overig (eigen)"]
         case .japanese:
             names = ["韓国", "日本", "中国", "アメリカ", "ドイツ", "フランス", "イギリス", "カナダ", "オーストラリア", "スペイン", "イタリア", "ブラジル", "台湾", "香港", "アラブ首長国連邦", "サウジアラビア", "カタール", "ペルー", "オランダ", "ベルギー", "オーストリア", "スイス", "アイルランド", "ポルトガル", "スウェーデン", "ノルウェー", "デンマーク", "フィンランド", "ポーランド", "チェコ", "ギリシャ", "トルコ", "エジプト", "南アフリカ", "メキシコ", "アルゼンチン", "チリ", "コロンビア", "ニュージーランド", "その他（手動入力）"]
         case .chinese:
@@ -10308,6 +11009,7 @@ enum Strings {
         switch lang {
         case .korean: return "이 연휴에 어울리는 여행"
         case .english: return "Trips that fit this break"
+        case .dutch: return "Reizen die bij deze vrije periode passen"
         case .japanese: return "この連休にぴったりの旅"
         case .chinese: return "适合此假期的旅行"
         case .german: return "Reisen für diese freien Tage"
@@ -10323,6 +11025,7 @@ enum Strings {
         switch lang {
         case .korean: return "연휴 길이와 시즌에 맞춰 골랐어요. 탭하면 마이리얼트립에서 상품을 확인할 수 있어요."
         case .english: return "Picked for this break's length and season. Tap to see options on MyRealTrip."
+        case .dutch: return "Gekozen op basis van de lengte en het seizoen van deze vrije periode. Tik om opties te zien op MyRealTrip."
         case .japanese: return "連休の長さと季節に合わせて選びました。タップでマイリアルトリップの商品を確認。"
         case .chinese: return "根据假期长度和季节精选。点击可在MyRealTrip中查看商品。"
         case .german: return "Passend zu Länge und Jahreszeit dieser freien Tage ausgewählt. Tippe, um Angebote bei MyRealTrip zu sehen."
@@ -10357,6 +11060,26 @@ enum Strings {
             default: return key
             }
         case .english:
+            switch key {
+            case "osaka": return "Osaka"
+            case "fukuoka": return "Fukuoka"
+            case "tokyo": return "Tokyo"
+            case "sapporo": return "Sapporo"
+            case "kyoto": return "Kyoto"
+            case "okinawa": return "Okinawa"
+            case "danang": return "Da Nang"
+            case "bangkok": return "Bangkok"
+            case "taipei": return "Taipei"
+            case "bali": return "Bali"
+            case "jeju": return "Jeju"
+            case "busan": return "Busan"
+            case "guam": return "Guam"
+            case "saipan": return "Saipan"
+            case "hanoi": return "Hanoi"
+            case "phuket": return "Phuket"
+            default: return key.capitalized
+            }
+        case .dutch:
             switch key {
             case "osaka": return "Osaka"
             case "fukuoka": return "Fukuoka"
@@ -10565,6 +11288,18 @@ enum Strings {
             case "activity": return "Activity"
             default: return key.capitalized
             }
+        case .dutch:
+            switch key {
+            case "family": return "Familie"
+            case "rest": return "Resort"
+            case "foodie": return "Lekker eten"
+            case "shopping": return "Winkelen"
+            case "nature": return "Natuur"
+            case "romantic": return "Romantisch"
+            case "culture": return "Cultuur"
+            case "activity": return "Activiteit"
+            default: return key.capitalized
+            }
         case .japanese:
             switch key {
             case "family": return "家族旅行"
@@ -10692,6 +11427,20 @@ enum Strings {
             case "weekendEscape": return "Long weekend ready"
             case "foodieParadise": return "Foodie paradise"
             case "cultureExplore": return "Culture & history"
+            default: return ""
+            }
+        case .dutch:
+            switch key {
+            case "bestSeason": return "Nu hoogseizoen"
+            case "shortNearby": return "Dichtbij en makkelijk"
+            case "longResort": return "Perfect voor lange vakanties"
+            case "burnoutRecovery": return "Reset en opladen"
+            case "offSeasonDeal": return "Aanbiedingen buiten het seizoen"
+            case "familyTime": return "Gezinsvriendelijk"
+            case "couplesTrip": return "Romantisch uitje"
+            case "weekendEscape": return "Klaar voor een lang weekend"
+            case "foodieParadise": return "Paradijs voor foodies"
+            case "cultureExplore": return "Cultuur en geschiedenis"
             default: return ""
             }
         case .japanese:
@@ -10825,6 +11574,13 @@ enum Strings {
             case "premium": return "Premium"
             default: return key.capitalized
             }
+        case .dutch:
+            switch key {
+            case "budget": return "Budget"
+            case "mid": return "Middenklasse"
+            case "premium": return "Premium"
+            default: return key.capitalized
+            }
         case .japanese:
             switch key {
             case "budget": return "お手頃"
@@ -10889,6 +11645,7 @@ enum Strings {
         switch lang {
         case .korean: return "올해 사용한 연차가 있나요?"
         case .english: return "Did you take any leave this year?"
+        case .dutch: return "Heb je dit jaar verlof opgenomen?"
         case .japanese: return "今年すでに有給を使いましたか？"
         case .chinese: return "今年已经使用过年假吗？"
         case .german: return "Hast du dieses Jahr schon Urlaub genommen?"
@@ -10904,6 +11661,7 @@ enum Strings {
         switch lang {
         case .korean: return "지금까지 사용한 연차를 입력하면 남은 연차를 정확히 파악할 수 있어요"
         case .english: return "Log your past leave to see your accurate remaining balance"
+        case .dutch: return "Voer je eerdere verlof in voor een nauwkeurig resterend saldo"
         case .japanese: return "過去の有給を入力して正確な残日数を確認しましょう"
         case .chinese: return "输入已使用的年假以准确查看剩余天数"
         case .german: return "Trag deinen bisherigen Urlaub ein, um den Resturlaub genau zu sehen"
@@ -10919,6 +11677,7 @@ enum Strings {
         switch lang {
         case .korean: return "빠른 입력"
         case .english: return "Quick Entry"
+        case .dutch: return "Snel invoeren"
         case .japanese: return "クイック入力"
         case .chinese: return "快速输入"
         case .german: return "Schnelleingabe"
@@ -10934,6 +11693,7 @@ enum Strings {
         switch lang {
         case .korean: return "사용한 연차"
         case .english: return "Leave days used"
+        case .dutch: return "Gebruikte verlofdagen"
         case .japanese: return "使用した有給日数"
         case .chinese: return "已使用年假"
         case .german: return "Genommene Urlaubstage"
@@ -10949,6 +11709,7 @@ enum Strings {
         switch lang {
         case .korean: return "이전 연차 입력"
         case .english: return "Add Past Leave"
+        case .dutch: return "Eerder verlof toevoegen"
         case .japanese: return "過去の有給を入力"
         case .chinese: return "输入过去的年假"
         case .german: return "Bisherigen Urlaub eintragen"
@@ -10964,6 +11725,7 @@ enum Strings {
         switch lang {
         case .korean: return "올해 이미 사용한 연차 일수를 입력하세요.\n정확한 날짜는 + 탭에서 개별 입력할 수 있어요."
         case .english: return "Enter the total leave days already used this year.\nFor exact dates, add them individually in the + tab."
+        case .dutch: return "Voer het totaal aan verlofdagen in dat je dit jaar al hebt gebruikt.\nVoeg exacte data apart toe via het + tabblad."
         case .japanese: return "今年すでに使用した有給日数を入力してください。\n正確な日付は＋タブから個別入力できます。"
         case .chinese: return "请输入今年已使用的年假天数。\n精确日期可在+标签中单独输入。"
         case .german: return "Gib die Gesamtzahl der dieses Jahr bereits genommenen Urlaubstage ein.\nGenaue Daten kannst du einzeln im Tab + hinzufügen."
@@ -10979,6 +11741,7 @@ enum Strings {
         switch lang {
         case .korean: return "반영하기"
         case .english: return "Confirm"
+        case .dutch: return "Bevestigen"
         case .japanese: return "反映する"
         case .chinese: return "确认"
         case .german: return "Bestätigen"
@@ -10994,6 +11757,7 @@ enum Strings {
         switch lang {
         case .korean: return "이전 사용 연차 (일괄 입력)"
         case .english: return "Prior leave (bulk entry)"
+        case .dutch: return "Eerder verlof (bulkinvoer)"
         case .japanese: return "過去の有給（一括入力）"
         case .chinese: return "过去的年假（批量录入）"
         case .german: return "Früherer Urlaub (Sammeleingabe)"
@@ -11009,6 +11773,7 @@ enum Strings {
         switch lang {
         case .korean: return "과거 날짜 선택 시 자동으로 '사용 완료' 처리됩니다"
         case .english: return "Past dates are automatically marked as 'Used'"
+        case .dutch: return "Datums in het verleden worden automatisch als 'Gebruikt' gemarkeerd"
         case .japanese: return "過去の日付は自動的に「使用済み」になります"
         case .chinese: return "过去日期会自动标记为「已使用」"
         case .german: return "Vergangene Daten werden automatisch als „Genommen“ markiert"
@@ -11025,6 +11790,7 @@ enum Strings {
         switch lang {
         case .korean: return "연차 없이 쉬는 날"
         case .english: return "Free Days Off"
+        case .dutch: return "Gratis vrije dagen"
         case .japanese: return "有給不要の連休"
         case .chinese: return "无需年假的假期"
         case .german: return "Freie Tage ohne Urlaub"
@@ -11041,6 +11807,7 @@ enum Strings {
         switch lang {
         case .korean: return "한 해 전체 보기 (지난 휴가 포함)"
         case .english: return "Show whole year (include past)"
+        case .dutch: return "Heel jaar tonen (incl. verleden)"
         case .japanese: return "1年分すべて表示(過去も含む)"
         case .chinese: return "查看全年(包含过去)"
         case .german: return "Ganzes Jahr zeigen (inkl. Vergangenes)"
@@ -11056,6 +11823,7 @@ enum Strings {
         switch lang {
         case .korean: return "이미 연휴가 있어요. 연차를 추가하면 더 길게 쉴 수 있어요."
         case .english: return "Holidays are already here. Add leave to extend them."
+        case .dutch: return "De feestdagen zijn er al. Voeg verlof toe om ze te verlengen."
         case .japanese: return "連休があります。有給を追加して延ばせます。"
         case .chinese: return "已有假期。添加年假可以延长假期。"
         case .german: return "Hier sind schon freie Tage. Mit Urlaub wird die Auszeit länger."
@@ -11071,6 +11839,7 @@ enum Strings {
         switch lang {
         case .korean: return "Pro로 일정 추가"
         case .english: return "Add with Pro"
+        case .dutch: return "Toevoegen met Pro"
         case .japanese: return "Proで追加"
         case .chinese: return "Pro版添加"
         case .german: return "Mit Pro hinzufügen"
@@ -11086,6 +11855,7 @@ enum Strings {
         switch lang {
         case .korean: return "Pro로 업그레이드하면 모든 추천을 일정에 추가할 수 있어요"
         case .english: return "Upgrade to Pro to add all recommendations to your schedule"
+        case .dutch: return "Upgrade naar Pro om alle aanbevelingen aan je planning toe te voegen"
         case .japanese: return "Proにアップグレードしてすべての推薦を追加できます"
         case .chinese: return "升级Pro版即可添加所有推荐到日程"
         case .german: return "Mit Pro kannst du alle Empfehlungen zu deinem Plan hinzufügen"
@@ -11102,6 +11872,7 @@ enum Strings {
         switch lang {
         case .korean: return "일정 공유"
         case .english: return "Schedule Sharing"
+        case .dutch: return "Planning delen"
         case .japanese: return "スケジュール共有"
         case .chinese: return "日程共享"
         case .german: return "Plan teilen"
@@ -11117,6 +11888,7 @@ enum Strings {
         switch lang {
         case .korean: return "가족·친구와 휴가 일정을 실시간으로 공유"
         case .english: return "Share your leave schedule with family & friends in real time"
+        case .dutch: return "Deel je verlofplanning in realtime met familie en vrienden"
         case .japanese: return "家族や友達と休暇予定をリアルタイムで共有"
         case .chinese: return "与家人朋友实时共享休假日程"
         case .german: return "Teile deinen Urlaubsplan in Echtzeit mit Familie und Freunden"
@@ -11132,6 +11904,7 @@ enum Strings {
         switch lang {
         case .korean: return "내 일정 공유"
         case .english: return "Share My Schedule"
+        case .dutch: return "Mijn planning delen"
         case .japanese: return "自分の予定を共有"
         case .chinese: return "共享我的日程"
         case .german: return "Meinen Plan teilen"
@@ -11147,6 +11920,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유 시작하기"
         case .english: return "Start Sharing"
+        case .dutch: return "Beginnen met delen"
         case .japanese: return "共有を開始"
         case .chinese: return "开始共享"
         case .german: return "Teilen starten"
@@ -11162,6 +11936,7 @@ enum Strings {
         switch lang {
         case .korean: return "초대 링크 보내기"
         case .english: return "Send Invite Link"
+        case .dutch: return "Uitnodigingslink sturen"
         case .japanese: return "招待リンクを送る"
         case .chinese: return "发送邀请链接"
         case .german: return "Einladungslink senden"
@@ -11177,6 +11952,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유 중"
         case .english: return "Sharing Active"
+        case .dutch: return "Delen actief"
         case .japanese: return "共有中"
         case .chinese: return "共享中"
         case .german: return "Teilen aktiv"
@@ -11192,6 +11968,7 @@ enum Strings {
         switch lang {
         case .korean: return "참여자 \(count)명"
         case .english: return count == 1 ? "1 participant" : "\(count) participants"
+        case .dutch: return count == 1 ? "1 deelnemer" : "\(count) deelnemers"
         case .japanese: return "参加者\(count)人"
         case .chinese: return "\(count)位参与者"
         case .german: return count == 1 ? "1 Teilnehmer" : "\(count) Teilnehmer"
@@ -11207,6 +11984,7 @@ enum Strings {
         switch lang {
         case .korean: return "아직 참여자가 없어요. 초대 링크를 보내보세요."
         case .english: return "No participants yet. Send an invite link."
+        case .dutch: return "Nog geen deelnemers. Stuur een uitnodigingslink."
         case .japanese: return "まだ参加者がいません。招待リンクを送ってみましょう。"
         case .chinese: return "还没有参与者。发送邀请链接试试吧。"
         case .german: return "Noch keine Teilnehmer. Sende einen Einladungslink."
@@ -11222,6 +12000,7 @@ enum Strings {
         switch lang {
         case .korean: return "지금 동기화"
         case .english: return "Sync Now"
+        case .dutch: return "Nu synchroniseren"
         case .japanese: return "今すぐ同期"
         case .chinese: return "立即同步"
         case .german: return "Jetzt synchronisieren"
@@ -11237,6 +12016,7 @@ enum Strings {
         switch lang {
         case .korean: return "마지막 동기화: \(date)"
         case .english: return "Last synced: \(date)"
+        case .dutch: return "Laatst gesynchroniseerd: \(date)"
         case .japanese: return "最終同期: \(date)"
         case .chinese: return "上次同步: \(date)"
         case .german: return "Zuletzt synchronisiert: \(date)"
@@ -11252,6 +12032,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유 중지"
         case .english: return "Stop Sharing"
+        case .dutch: return "Delen stoppen"
         case .japanese: return "共有を停止"
         case .chinese: return "停止共享"
         case .german: return "Teilen beenden"
@@ -11267,6 +12048,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유를 중지할까요?"
         case .english: return "Stop sharing?"
+        case .dutch: return "Delen stoppen?"
         case .japanese: return "共有を停止しますか?"
         case .chinese: return "要停止共享吗?"
         case .german: return "Teilen beenden?"
@@ -11282,6 +12064,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유된 일정이 모든 참여자의 기기에서 제거됩니다. 내 기기의 데이터는 그대로 유지됩니다."
         case .english: return "Your shared schedule will be removed from all participants' devices. Data on your device stays intact."
+        case .dutch: return "Je gedeelde planning wordt van de apparaten van alle deelnemers verwijderd. De gegevens op je apparaat blijven behouden."
         case .japanese: return "共有された予定はすべての参加者のデバイスから削除されます。自分のデバイスのデータはそのまま残ります。"
         case .chinese: return "共享的日程将从所有参与者的设备中移除。您设备上的数据保持不变。"
         case .german: return "Dein geteilter Plan wird von den Geräten aller Teilnehmer entfernt. Die Daten auf deinem Gerät bleiben erhalten."
@@ -11297,6 +12080,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유받은 일정"
         case .english: return "Shared With Me"
+        case .dutch: return "Met mij gedeeld"
         case .japanese: return "共有された予定"
         case .chinese: return "收到的共享"
         case .german: return "Mit mir geteilt"
@@ -11312,6 +12096,7 @@ enum Strings {
         switch lang {
         case .korean: return "아직 공유받은 일정이 없어요.\n가족이나 친구가 보낸 초대 링크를 열면 여기에 표시됩니다."
         case .english: return "No shared schedules yet.\nOpen an invite link from family or friends and it will appear here."
+        case .dutch: return "Nog geen gedeelde planningen.\nOpen een uitnodigingslink van familie of vrienden en die verschijnt hier."
         case .japanese: return "まだ共有された予定がありません。\n家族や友達からの招待リンクを開くとここに表示されます。"
         case .chinese: return "还没有收到共享的日程。\n打开家人或朋友发送的邀请链接后会显示在这里。"
         case .german: return "Noch keine geteilten Pläne.\nÖffne einen Einladungslink von Familie oder Freunden, dann erscheint er hier."
@@ -11327,6 +12112,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유 나가기"
         case .english: return "Leave Share"
+        case .dutch: return "Delen verlaten"
         case .japanese: return "共有から退出"
         case .chinese: return "退出共享"
         case .german: return "Teilen verlassen"
@@ -11342,6 +12128,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(name)님의 일정 공유에서 나갑니다. 다시 보려면 새 초대 링크가 필요합니다."
         case .english: return "You will leave \(name)'s shared schedule. You'll need a new invite link to see it again."
+        case .dutch: return "Je verlaat de gedeelde planning van \(name). Je hebt een nieuwe uitnodigingslink nodig om hem weer te zien."
         case .japanese: return "\(name)さんの予定共有から退出します。再度見るには新しい招待リンクが必要です。"
         case .chinese: return "您将退出\(name)的日程共享。再次查看需要新的邀请链接。"
         case .german: return "Du verlässt den geteilten Plan von \(name). Um ihn wieder zu sehen, brauchst du einen neuen Einladungslink."
@@ -11357,6 +12144,7 @@ enum Strings {
         switch lang {
         case .korean: return "iCloud 로그인이 필요합니다. 설정 앱에서 iCloud에 로그인해주세요."
         case .english: return "iCloud sign-in required. Please sign in to iCloud in the Settings app."
+        case .dutch: return "Inloggen bij iCloud vereist. Log in bij iCloud in de Instellingen-app."
         case .japanese: return "iCloudへのサインインが必要です。設定アプリでiCloudにサインインしてください。"
         case .chinese: return "需要登录iCloud。请在设置应用中登录iCloud。"
         case .german: return "iCloud-Anmeldung erforderlich. Bitte melde dich in den Einstellungen bei iCloud an."
@@ -11372,6 +12160,7 @@ enum Strings {
         switch lang {
         case .korean: return "\(name)님의 휴가 일정"
         case .english: return "\(name)'s Leave Schedule"
+        case .dutch: return "Verlofplanning van \(name)"
         case .japanese: return "\(name)さんの休暇予定"
         case .chinese: return "\(name)的休假日程"
         case .german: return "Urlaubsplan von \(name)"
@@ -11387,6 +12176,7 @@ enum Strings {
         switch lang {
         case .korean: return "이름 없는 사용자"
         case .english: return "Unknown User"
+        case .dutch: return "Onbekende gebruiker"
         case .japanese: return "名前のないユーザー"
         case .chinese: return "未知用户"
         case .german: return "Unbekannter Nutzer"
@@ -11402,6 +12192,7 @@ enum Strings {
         switch lang {
         case .korean: return "예정된 휴가가 없어요"
         case .english: return "No upcoming leaves"
+        case .dutch: return "Geen komend verlof"
         case .japanese: return "予定されている休暇はありません"
         case .chinese: return "没有即将到来的休假"
         case .german: return "Kein anstehender Urlaub"
@@ -11417,6 +12208,7 @@ enum Strings {
         switch lang {
         case .korean: return "다가오는 휴가 \(count)건"
         case .english: return count == 1 ? "1 upcoming leave" : "\(count) upcoming leaves"
+        case .dutch: return count == 1 ? "1 komend verlof" : "\(count) komende verloven"
         case .japanese: return "今後の休暇\(count)件"
         case .chinese: return "\(count)个即将到来的休假"
         case .german: return count == 1 ? "1 anstehender Urlaub" : "\(count) anstehende Urlaube"
@@ -11432,6 +12224,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유 오류"
         case .english: return "Sharing Error"
+        case .dutch: return "Deelfout"
         case .japanese: return "共有エラー"
         case .chinese: return "共享错误"
         case .german: return "Fehler beim Teilen"
@@ -11447,6 +12240,7 @@ enum Strings {
         switch lang {
         case .korean: return "공유 작업에 실패했습니다: \(message)"
         case .english: return "Sharing operation failed: \(message)"
+        case .dutch: return "Delen mislukt: \(message)"
         case .japanese: return "共有操作に失敗しました: \(message)"
         case .chinese: return "共享操作失败: \(message)"
         case .german: return "Teilen fehlgeschlagen: \(message)"
@@ -11462,6 +12256,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 날짜와 종류만 공유되며, 메모는 공유되지 않습니다."
         case .english: return "Only leave dates and types are shared. Notes are never shared."
+        case .dutch: return "Alleen verlofdata en -types worden gedeeld. Notities worden nooit gedeeld."
         case .japanese: return "休暇の日付と種類のみ共有され、メモは共有されません。"
         case .chinese: return "仅共享休假日期和类型，备注不会被共享。"
         case .german: return "Nur Urlaubsdaten und -arten werden geteilt. Notizen bleiben privat."
@@ -11478,6 +12273,7 @@ enum Strings {
         switch lang {
         case .korean: return "가족"
         case .english: return "Family"
+        case .dutch: return "Familie"
         case .japanese: return "家族"
         case .chinese: return "家人"
         case .german: return "Familie"
@@ -11493,6 +12289,7 @@ enum Strings {
         switch lang {
         case .korean: return "가족 일정"
         case .english: return "Family Schedules"
+        case .dutch: return "Familieplanningen"
         case .japanese: return "家族の予定"
         case .chinese: return "家人日程"
         case .german: return "Familienpläne"
@@ -11508,6 +12305,7 @@ enum Strings {
         switch lang {
         case .korean: return "휴가 중"
         case .english: return "On Leave"
+        case .dutch: return "Met verlof"
         case .japanese: return "休暇中"
         case .chinese: return "休假中"
         case .german: return "Im Urlaub"
@@ -11523,6 +12321,7 @@ enum Strings {
         switch lang {
         case .korean: return "D-\(days)"
         case .english: return days == 1 ? "in 1 day" : "in \(days) days"
+        case .dutch: return days == 1 ? "over 1 dag" : "over \(days) dagen"
         case .japanese: return "あと\(days)日"
         case .chinese: return "还有\(days)天"
         case .german: return days == 1 ? "in 1 Tag" : "in \(days) Tagen"

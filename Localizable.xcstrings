@@ -62,6 +62,12 @@
             "state": "translated",
             "value": "%1$@ · 特休 %2$@ 天"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@ vakantiedagen"
+          }
         }
       }
     },
@@ -119,6 +125,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ 天"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ dagen"
           }
         }
       }
@@ -178,6 +190,12 @@
             "state": "translated",
             "value": "剩 %@ 天"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog %@ dagen"
+          }
         }
       }
     },
@@ -232,6 +250,12 @@
           }
         },
         "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld"
@@ -294,6 +318,12 @@
             "state": "translated",
             "value": "%lld%%"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
         }
       }
     },
@@ -351,6 +381,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "剩餘 %lld%%"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog %lld%%"
           }
         }
       }
@@ -410,6 +446,12 @@
             "state": "translated",
             "value": "%lld 天"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld dagen"
+          }
         }
       }
     },
@@ -467,6 +509,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld 天"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld dagen"
           }
         }
       }
@@ -526,6 +574,12 @@
             "state": "translated",
             "value": "+%@ 天"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ dagen"
+          }
         }
       }
     },
@@ -580,6 +634,12 @@
           }
         },
         "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "D-"
@@ -641,6 +701,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "天"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DAG"
           }
         }
       }
@@ -706,6 +772,12 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -763,6 +835,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "距離重置"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tot reset"
           }
         }
       }
@@ -822,6 +900,12 @@
             "state": "translated",
             "value": "距離重置還有 %lld 天"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog %lld dagen tot reset"
+          }
         }
       }
     },
@@ -879,6 +963,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "預期"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwacht"
           }
         }
       }
@@ -938,6 +1028,12 @@
             "state": "translated",
             "value": "剩餘特休"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resterend verlof"
+          }
         }
       }
     },
@@ -995,6 +1091,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "剩餘特休 %@ 天"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog %@ vakantiedagen"
           }
         }
       }
@@ -1054,6 +1156,12 @@
             "state": "translated",
             "value": "查看剩餘特休和即將到來的休假"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bekijk je resterende verlof en komende vakanties"
+          }
         }
       }
     },
@@ -1111,6 +1219,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "即將到來的休假"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Komend verlof"
           }
         }
       }
@@ -1170,6 +1284,12 @@
             "state": "translated",
             "value": "下次休假"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volgende vakantie"
+          }
         }
       }
     },
@@ -1227,6 +1347,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "倒數距離下次休假還有幾天"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tel af tot je volgende vrije dagen"
           }
         }
       }
@@ -1286,6 +1412,12 @@
             "state": "translated",
             "value": "額外"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonus"
+          }
         }
       }
     },
@@ -1343,6 +1475,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "使用進度"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbruik"
           }
         }
       }
@@ -1402,6 +1540,12 @@
             "state": "translated",
             "value": "使用進度：%@"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbruik: %@"
+          }
         }
       }
     },
@@ -1459,6 +1603,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "實際"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Werkelijk"
           }
         }
       }
@@ -1518,6 +1668,12 @@
             "state": "translated",
             "value": "在 App 中新增休假計畫"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan je vakantie in de app"
+          }
         }
       }
     },
@@ -1575,6 +1731,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "特休"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlof"
           }
         }
       }
@@ -1634,6 +1796,12 @@
             "state": "translated",
             "value": "特休 %@ 天"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ vakantiedagen"
+          }
         }
       }
     },
@@ -1691,6 +1859,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "特休剩 %@ 天"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog %@ vakantiedagen"
           }
         }
       }
@@ -1750,6 +1924,12 @@
             "state": "translated",
             "value": "查看到特休重置日前的使用進度"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bekijk je verlofverbruik tot de volgende reset"
+          }
         }
       }
     },
@@ -1807,6 +1987,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "特休使用進度"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlofverbruik"
           }
         }
       }
@@ -1866,6 +2052,12 @@
             "state": "translated",
             "value": "特休概況"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlofoverzicht"
+          }
         }
       }
     },
@@ -1923,6 +2115,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "天"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dagen"
           }
         }
       }
@@ -1982,6 +2180,12 @@
             "state": "translated",
             "value": "剩餘比例"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resterend"
+          }
         }
       }
     },
@@ -2039,6 +2243,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "在鎖定畫面查看倒數和剩餘特休"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aftellen en resterend verlof op je vergrendelscherm"
           }
         }
       }
@@ -2099,6 +2309,12 @@
             "state": "translated",
             "value": "在鎖定畫面查看剩餘特休"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resterend verlof op je vergrendelscherm"
+          }
         }
       }
     },
@@ -2156,6 +2372,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "特休總數"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Totaal verlof"
           }
         }
       }
@@ -2216,6 +2438,12 @@
             "state": "translated",
             "value": "休假"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlof"
+          }
         }
       }
     },
@@ -2273,6 +2501,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "休假倒數"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vakantie-aftelling"
           }
         }
       }
@@ -2332,6 +2566,12 @@
             "state": "translated",
             "value": "來規劃下次休假吧？"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan je volgende vrije tijd"
+          }
         }
       }
     },
@@ -2389,6 +2629,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "尚無休假計畫"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geen vakantie gepland"
           }
         }
       }
@@ -2448,6 +2694,12 @@
             "state": "translated",
             "value": "沒有休假"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geen verlof"
+          }
         }
       }
     },
@@ -2506,6 +2758,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "休假行事曆"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlofkalender"
           }
         }
       }

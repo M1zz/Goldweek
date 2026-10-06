@@ -55,6 +55,7 @@ enum ScreenshotMode {
             switch lang {
             case .korean: return (.korea, "민지", 20)
             case .english: return (.usa, "Emily", 20)
+            case .dutch: return (.usa, "Emma", 20)
             case .japanese: return (.japan, "ゆき", 20)
             case .chinese: return (.china, "小雨", 15)
             case .german: return (.germany, "Lena", 30)

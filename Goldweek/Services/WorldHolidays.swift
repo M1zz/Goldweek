@@ -20,10 +20,10 @@ struct HolidayName {
     let names: [AppLanguage: String]
 
     init(ko: String, en: String, ja: String? = nil, zh: String? = nil, de: String? = nil, fr: String? = nil,
-         es: String? = nil, it: String? = nil, pt: String? = nil, zht: String? = nil) {
+         es: String? = nil, it: String? = nil, pt: String? = nil, zht: String? = nil, nl: String? = nil) {
         var n: [AppLanguage: String] = [.korean: ko, .english: en]
         n[.japanese] = ja; n[.chinese] = zh; n[.german] = de; n[.french] = fr
-        n[.spanish] = es; n[.italian] = it; n[.portuguese] = pt; n[.chineseTraditional] = zht
+        n[.spanish] = es; n[.italian] = it; n[.portuguese] = pt; n[.chineseTraditional] = zht; n[.dutch] = nl
         names = n
     }
 
@@ -37,29 +37,29 @@ private typealias N = HolidayName
 // 여러 나라가 같이 쓰는 이름
 private enum Common {
     static let newYear = N(ko: "신정", en: "New Year's Day", ja: "元日", zh: "元旦", de: "Neujahr", fr: "Jour de l’an",
-                           es: "Año Nuevo", it: "Capodanno", pt: "Confraternização Universal", zht: "元旦")
+                           es: "Año Nuevo", it: "Capodanno", pt: "Confraternização Universal", zht: "元旦", nl: "Nieuwjaarsdag")
     static let goodFriday = N(ko: "성금요일", en: "Good Friday", ja: "聖金曜日", zh: "耶稣受难日", de: "Karfreitag", fr: "Vendredi saint",
-                              es: "Viernes Santo", it: "Venerdì Santo", pt: "Sexta-feira Santa", zht: "耶穌受難節")
+                              es: "Viernes Santo", it: "Venerdì Santo", pt: "Sexta-feira Santa", zht: "耶穌受難節", nl: "Goede Vrijdag")
     static let holySaturday = N(ko: "부활절 전 토요일", en: "Easter Saturday", ja: "聖土曜日", zh: "复活节前夕", de: "Karsamstag", fr: "Samedi saint",
                                 es: "Sábado Santo", it: "Sabato Santo", pt: "Sábado de Aleluia", zht: "耶穌受難節翌日")
     static let easterMonday = N(ko: "부활절 월요일", en: "Easter Monday", ja: "イースターマンデー", zh: "复活节星期一", de: "Ostermontag", fr: "Lundi de Pâques",
-                                es: "Lunes de Pascua", it: "Lunedì dell’Angelo", pt: "Segunda-feira de Páscoa", zht: "復活節星期一")
+                                es: "Lunes de Pascua", it: "Lunedì dell’Angelo", pt: "Segunda-feira de Páscoa", zht: "復活節星期一", nl: "Tweede paasdag")
     static let labour = N(ko: "노동절", en: "Labour Day", ja: "メーデー", zh: "劳动节", de: "Tag der Arbeit", fr: "Fête du Travail",
-                          es: "Día del Trabajador", it: "Festa dei Lavoratori", pt: "Dia do Trabalhador", zht: "勞動節")
+                          es: "Día del Trabajador", it: "Festa dei Lavoratori", pt: "Dia do Trabalhador", zht: "勞動節", nl: "Dag van de Arbeid")
     static let christmas = N(ko: "크리스마스", en: "Christmas Day", ja: "クリスマス", zh: "圣诞节", de: "1. Weihnachtstag", fr: "Noël",
-                             es: "Navidad", it: "Natale", pt: "Natal", zht: "聖誕節")
+                             es: "Navidad", it: "Natale", pt: "Natal", zht: "聖誕節", nl: "Eerste kerstdag")
     static let boxing = N(ko: "박싱 데이", en: "Boxing Day", ja: "ボクシング・デー", zh: "节礼日", de: "2. Weihnachtstag", fr: "Lendemain de Noël",
-                          es: "San Esteban", it: "Santo Stefano", pt: "Boxing Day", zht: "節禮日")
+                          es: "San Esteban", it: "Santo Stefano", pt: "Boxing Day", zht: "節禮日", nl: "Tweede kerstdag")
     static let assumption = N(ko: "성모승천일", en: "Assumption Day", ja: "聖母被昇天祭", zh: "圣母升天节", de: "Mariä Himmelfahrt", fr: "Assomption",
-                              es: "Asunción de la Virgen", it: "Ferragosto", pt: "Assunção de Nossa Senhora", zht: "聖母升天節")
+                              es: "Asunción de la Virgen", it: "Ferragosto", pt: "Assunção de Nossa Senhora", zht: "聖母升天節", nl: "Maria-Tenhemelopneming")
     static let allSaints = N(ko: "만성절", en: "All Saints' Day", ja: "諸聖人の日", zh: "诸圣节", de: "Allerheiligen", fr: "Toussaint",
-                             es: "Todos los Santos", it: "Ognissanti", pt: "Dia de Todos os Santos", zht: "諸聖節")
+                             es: "Todos los Santos", it: "Ognissanti", pt: "Dia de Todos os Santos", zht: "諸聖節", nl: "Allerheiligen")
     static let epiphany = N(ko: "주현절", en: "Epiphany", ja: "公現祭", zh: "主显节", de: "Heilige Drei Könige", fr: "Épiphanie",
-                            es: "Epifanía del Señor", it: "Epifania", pt: "Dia de Reis", zht: "主顯節")
+                            es: "Epifanía del Señor", it: "Epifania", pt: "Dia de Reis", zht: "主顯節", nl: "Driekoningen")
     static let corpusChristi = N(ko: "성체 축일", en: "Corpus Christi", ja: "聖体の祝日", zh: "基督圣体节", de: "Fronleichnam", fr: "Fête-Dieu",
-                                 es: "Corpus Christi", it: "Corpus Domini", pt: "Corpus Christi", zht: "基督聖體節")
+                                 es: "Corpus Christi", it: "Corpus Domini", pt: "Corpus Christi", zht: "基督聖體節", nl: "Sacramentsdag")
     static let immaculate = N(ko: "원죄 없는 잉태 대축일", en: "Immaculate Conception", ja: "無原罪の聖母", zh: "圣母无原罪瞻礼", de: "Mariä Empfängnis", fr: "Immaculée Conception",
-                              es: "Inmaculada Concepción", it: "Immacolata Concezione", pt: "Imaculada Conceição", zht: "聖母無原罪始胎節")
+                              es: "Inmaculada Concepción", it: "Immacolata Concezione", pt: "Imaculada Conceição", zht: "聖母無原罪始胎節", nl: "Onbevlekte Ontvangenis")
     static let stStephen = N(ko: "성 스테파노 축일", en: "St. Stephen's Day", ja: "聖ステファノの日", zh: "圣斯德望日", de: "Stephanstag", fr: "Saint-Étienne",
                              es: "Sant Esteve", it: "Santo Stefano", pt: "Dia de Santo Estêvão", zht: "聖斯德望日")
     static let stJohn = N(ko: "성 요한 축일", en: "St. John's Day", ja: "聖ヨハネの日", zh: "圣约翰节", de: "Johannistag", fr: "Saint-Jean",
@@ -67,7 +67,7 @@ private enum Common {
     static let stJoseph = N(ko: "성 요셉 축일", en: "St. Joseph's Day", ja: "聖ヨセフの日", zh: "圣若瑟节", de: "Josefstag", fr: "Saint-Joseph",
                             es: "San José", it: "San Giuseppe", pt: "Dia de São José", zht: "聖若瑟節")
     static let maundyThursday = N(ko: "성목요일", en: "Maundy Thursday", ja: "聖木曜日", zh: "濯足节", de: "Gründonnerstag", fr: "Jeudi saint",
-                                  es: "Jueves Santo", it: "Giovedì Santo", pt: "Quinta-feira Santa", zht: "濯足節")
+                                  es: "Jueves Santo", it: "Giovedì Santo", pt: "Quinta-feira Santa", zht: "濯足節", nl: "Witte Donderdag")
     static let thanksgiving = N(ko: "추수감사절", en: "Thanksgiving", ja: "感謝祭", zh: "感恩节", de: "Erntedankfest", fr: "Action de grâce",
                                 es: "Acción de Gracias", it: "Ringraziamento", pt: "Ação de Graças", zht: "感恩節")
     static let remembrance = N(ko: "현충일", en: "Remembrance Day", ja: "リメンブランス・デー", zh: "阵亡将士纪念日", de: "Gedenktag", fr: "Jour du Souvenir",
@@ -77,15 +77,16 @@ private enum Common {
     static let dayAfterThanksgiving = N(ko: "추수감사절 다음 날", en: "Day after Thanksgiving", ja: "感謝祭翌日", zh: "感恩节翌日", de: "Tag nach Thanksgiving", fr: "Lendemain de Thanksgiving",
                                         es: "Día después de Acción de Gracias", it: "Giorno dopo il Ringraziamento", pt: "Dia após Ação de Graças", zht: "感恩節翌日")
     static let christmasEve = N(ko: "크리스마스 이브", en: "Christmas Eve", ja: "クリスマス・イブ", zh: "平安夜", de: "Heiligabend", fr: "Veille de Noël",
-                                es: "Nochebuena", it: "Vigilia di Natale", pt: "Véspera de Natal", zht: "平安夜")
+                                es: "Nochebuena", it: "Vigilia di Natale", pt: "Véspera de Natal", zht: "平安夜", nl: "Kerstavond")
     static let nationalDay = N(ko: "국경일", en: "National Day", ja: "国慶節", zh: "国庆日", de: "Nationalfeiertag", fr: "Fête nationale",
-                               es: "Fiesta Nacional", it: "Festa nazionale", pt: "Dia Nacional", zht: "國慶日")
+                               es: "Fiesta Nacional", it: "Festa nazionale", pt: "Dia Nacional", zht: "國慶日", nl: "Nationale feestdag")
 
     /// 대체 휴일 표기 — "Christmas Day (substitute day)"
     static var substitute: String {
         switch AppLanguage.current {
         case .korean: return "대체 휴일"
         case .english: return "substitute day"
+        case .dutch: return "vervangende dag"
         case .japanese: return "振替休日"
         case .chinese: return "补休"
         case .german: return "Ersatztag"
@@ -1036,17 +1037,17 @@ extension HolidayService {
 
     private enum More {
         static let ascension = N(ko: "예수 승천일", en: "Ascension Day", ja: "キリスト昇天祭", zh: "耶稣升天节", de: "Christi Himmelfahrt", fr: "Ascension",
-                                 es: "Ascensión", it: "Ascensione", pt: "Ascensão", zht: "耶穌升天節")
+                                 es: "Ascensión", it: "Ascensione", pt: "Ascensão", zht: "耶穌升天節", nl: "Hemelvaartsdag")
         static let whitMonday = N(ko: "성령강림절 월요일", en: "Whit Monday", ja: "聖霊降臨祭月曜日", zh: "圣灵降临节星期一", de: "Pfingstmontag", fr: "Lundi de Pentecôte",
-                                  es: "Lunes de Pentecostés", it: "Lunedì di Pentecoste", pt: "Segunda-feira de Pentecostes", zht: "聖靈降臨節星期一")
+                                  es: "Lunes de Pentecostés", it: "Lunedì di Pentecoste", pt: "Segunda-feira de Pentecostes", zht: "聖靈降臨節星期一", nl: "Tweede pinksterdag")
         static let secondChristmas = N(ko: "크리스마스 다음 날", en: "Second Day of Christmas", ja: "クリスマス翌日", zh: "圣诞节第二天", de: "2. Weihnachtstag", fr: "Deuxième jour de Noël",
-                                       es: "Segundo día de Navidad", it: "Santo Stefano", pt: "Segundo dia de Natal", zht: "聖誕節翌日")
+                                       es: "Segundo día de Navidad", it: "Santo Stefano", pt: "Segundo dia de Natal", zht: "聖誕節翌日", nl: "Tweede kerstdag")
         static let newYearsEve = N(ko: "12월 31일", en: "New Year's Eve", ja: "大晦日", zh: "除夕（12月31日）", de: "Silvester", fr: "Saint-Sylvestre",
                                    es: "Nochevieja", it: "San Silvestro", pt: "Véspera de Ano-Novo", zht: "跨年夜")
         static let midsummerEve = N(ko: "하지 전야", en: "Midsummer Eve", ja: "夏至祭前夜", zh: "仲夏节前夜", de: "Mittsommerabend", fr: "Veille de la Saint-Jean",
                                     es: "Víspera de San Juan", it: "Vigilia di mezza estate", pt: "Véspera do solstício", zht: "仲夏節前夕")
         static let independence = N(ko: "독립기념일", en: "Independence Day", ja: "独立記念日", zh: "独立日", de: "Unabhängigkeitstag", fr: "Fête de l’indépendance",
-                                    es: "Día de la Independencia", it: "Festa dell’indipendenza", pt: "Dia da Independência", zht: "獨立紀念日")
+                                    es: "Día de la Independencia", it: "Festa dell’indipendenza", pt: "Dia da Independência", zht: "獨立紀念日", nl: "Onafhankelijkheidsdag")
         static let constitution = N(ko: "제헌절", en: "Constitution Day", ja: "憲法記念日", zh: "宪法日", de: "Verfassungstag", fr: "Fête de la Constitution",
                                     es: "Día de la Constitución", it: "Festa della Costituzione", pt: "Dia da Constituição", zht: "憲法紀念日")
         static let republicDay = N(ko: "공화국의 날", en: "Republic Day", ja: "共和国記念日", zh: "共和国日", de: "Tag der Republik", fr: "Fête de la République",
@@ -1113,12 +1114,12 @@ extension HolidayService {
         if let kd = day(year, 4, 27) {
             list.append((weekday(kd) == 1 ? adding(-1, to: kd) : kd,
                          N(ko: "국왕의 날", en: "King's Day", ja: "国王の日", zh: "国王节", de: "Königstag", fr: "Fête du Roi",
-                           es: "Día del Rey", it: "Festa del Re", pt: "Dia do Rei", zht: "國王節")))
+                           es: "Día del Rey", it: "Festa del Re", pt: "Dia do Rei", zht: "國王節", nl: "Koningsdag")))
         }
         // 해방 기념일 5/5 — 법정 공휴일이지만 대부분의 단체협약상 5년마다(2025, 2030…)만 쉰다
         if year % 5 == 0 {
             list.append((day(year, 5, 5), N(ko: "해방 기념일", en: "Liberation Day", ja: "解放記念日", zh: "解放日", de: "Befreiungstag", fr: "Fête de la Libération",
-                                            es: "Día de la Liberación", it: "Festa della Liberazione", pt: "Dia da Libertação", zht: "解放紀念日")))
+                                            es: "Día de la Liberación", it: "Festa della Liberazione", pt: "Dia da Libertação", zht: "解放紀念日", nl: "Bevrijdingsdag")))
         }
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), More.secondChristmas))
@@ -1139,7 +1140,7 @@ extension HolidayService {
         list.append((day(year, 8, 15), Common.assumption))
         list.append((day(year, 11, 1), Common.allSaints))
         list.append((day(year, 11, 11), N(ko: "휴전 기념일", en: "Armistice Day", ja: "休戦記念日", zh: "停战纪念日", de: "Waffenstillstand", fr: "Armistice",
-                                          es: "Día del Armisticio", it: "Giorno dell’Armistizio", pt: "Dia do Armistício", zht: "停戰紀念日")))
+                                          es: "Día del Armisticio", it: "Giorno dell’Armistizio", pt: "Dia do Armistício", zht: "停戰紀念日", nl: "Wapenstilstand")))
         list.append((day(year, 12, 25), Common.christmas))
         return makeList(list)
     }

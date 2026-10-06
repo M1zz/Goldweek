@@ -548,6 +548,9 @@ class RecommendationEngine {
         case .english:
             title = "Golden Week"
             desc = "Japan's Golden Week! \(Int(requiredLeave)) leave days for \(totalDays) days off."
+        case .dutch:
+            title = "Golden Week"
+            desc = "Japans Golden Week! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
         case .japanese:
             title = "ゴールデンウィーク"
             desc = "ゴールデンウィーク！有給\(Int(requiredLeave))日で\(totalDays)連休。"
@@ -611,6 +614,7 @@ class RecommendationEngine {
                 switch lang {
                 case .korean: title = "오봉 연휴"; desc = "일본 오봉 기간! 연차 \(Int(requiredLeave))일로 \(totalDays)일 연휴."
                 case .english: title = "Obon Break"; desc = "Obon season! \(Int(requiredLeave)) leave days for \(totalDays) days off."
+                case .dutch: title = "Obon-vakantie"; desc = "Obon-seizoen! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
                 case .japanese: title = "お盆休み"; desc = "お盆休み！有給\(Int(requiredLeave))日で\(totalDays)連休。"
                 case .chinese: title = "盂兰盆节假期"; desc = "盂兰盆节！请\(Int(requiredLeave))天年假获得\(totalDays)天假期。"
                 case .german: title = "Obon-Auszeit"; desc = "Obon-Zeit! \(Int(requiredLeave)) Urlaubstage für \(totalDays) freie Tage."
@@ -653,6 +657,7 @@ class RecommendationEngine {
                 switch lang {
                 case .korean: title = "추수감사절 연휴"; desc = "금요일 연차 1일로 4일 연휴!"
                 case .english: title = "Thanksgiving Break"; desc = "1 leave day (Friday) for a 4-day weekend!"
+                case .dutch: title = "Thanksgiving-vakantie"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                 case .japanese: title = "感謝祭連休"; desc = "金曜1日の有給で4連休！"
                 case .chinese: title = "感恩节假期"; desc = "周五请1天年假获得4天假期！"
                 case .german: title = "Thanksgiving-Auszeit"; desc = "1 Urlaubstag (Freitag) für 4 freie Tage!"
@@ -690,6 +695,7 @@ class RecommendationEngine {
                     switch lang {
                     case .korean: title = "독립기념일 연휴"; desc = "월요일 연차 1일로 4일 연휴!"
                     case .english: title = "July 4th Long Weekend"; desc = "1 leave day (Monday) for 4-day weekend!"
+                    case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (maandag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "月曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周一请1天年假获得4天假期！"
                     case .german: title = "Langes Wochenende am 4. Juli"; desc = "1 Urlaubstag (Montag) für 4 freie Tage!"
@@ -715,6 +721,7 @@ class RecommendationEngine {
                     switch lang {
                     case .korean: title = "독립기념일 연휴"; desc = "금요일 연차 1일로 4일 연휴!"
                     case .english: title = "July 4th Long Weekend"; desc = "1 leave day (Friday) for 4-day weekend!"
+                    case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "金曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周五请1天年假获得4天假期！"
                     case .german: title = "Langes Wochenende am 4. Juli"; desc = "1 Urlaubstag (Freitag) für 4 freie Tage!"

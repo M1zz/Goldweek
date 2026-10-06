@@ -378,6 +378,7 @@ class HolidayService {
         switch lang {
         case .korean: subLabel = "대체공휴일"
         case .english: subLabel = "Substitute Holiday"
+        case .dutch: subLabel = "Vervangende feestdag"
         case .japanese: subLabel = "振替休日"
         case .chinese: subLabel = "补休日"
         case .german: subLabel = "Ersatzfeiertag"
@@ -518,6 +519,7 @@ class HolidayService {
             switch lang {
             case .korean: return "대체휴일"
             case .english: return "Substitute Holiday"
+            case .dutch: return "Vervangende feestdag"
             case .japanese: return "振替休日"
             case .chinese: return "补休日"
             case .german: return "Ersatzfeiertag"
@@ -546,6 +548,7 @@ class HolidayService {
             switch lang {
             case .korean: return "국민의 휴일"
             case .english: return "Citizens' Holiday"
+            case .dutch: return "Burgerfeestdag"
             case .japanese: return "国民の休日"
             case .chinese: return "国民休息日"
             case .german: return "Brückenfeiertag"
@@ -807,6 +810,7 @@ class HolidayService {
         switch AppLanguage.current {
         case .korean: return "대체휴일"
         case .english: return "Observed"
+        case .dutch: return "Vrije dag"
         case .japanese: return "振替"
         case .chinese: return "补休"
         case .german: return "Ersatztag"

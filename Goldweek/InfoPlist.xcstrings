@@ -63,6 +63,12 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -124,6 +130,12 @@
           }
         },
         "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "Goldweek"
@@ -193,6 +205,12 @@
             "state": "translated",
             "value": "Goldweek 需要存取你的行事曆，才能找出看起來像休假的行程並匯入，也能把已登記的休假同步到行事曆。"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek heeft toegang tot je agenda nodig om verlofachtige afspraken te vinden die je kunt importeren en om je ingevoerde verlof met je agenda te synchroniseren."
+          }
         }
       }
     },
@@ -258,6 +276,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "需要使用相機拍攝你的休假申請紀錄，並自動登記休假。"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cameratoegang is nodig om je verlofaanvragen te fotograferen en je verlof automatisch in te voeren."
           }
         }
       }
