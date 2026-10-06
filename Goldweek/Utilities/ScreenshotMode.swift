@@ -63,6 +63,8 @@ enum ScreenshotMode {
             case .czech: return (.usa, "Tereza", 20)
             case .greek: return (.usa, "Ελένη", 20)
             case .turkish: return (.usa, "Elif", 20)
+            case .russian: return (.russia, "Анна", 20)
+            case .indonesian: return (.indonesia, "Putri", 12)
             case .dutch: return (.usa, "Emma", 20)
             case .japanese: return (.japan, "ゆき", 20)
             case .chinese: return (.china, "小雨", 15)

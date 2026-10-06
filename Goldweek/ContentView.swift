@@ -379,7 +379,8 @@ struct WideMainView: View {
     @Bindable var profile: UserProfile
     let hasSharedSchedules: Bool
 
-    @State private var showingSettings = false
+    /// 두 칸 화면엔 설정 탭이 없다 — 스크린샷 모드에서 설정(탭 3)을 찍을 땐 시트로 열어 둔다
+    @State private var showingSettings = ScreenshotMode.initialTab == 3
     @State private var showingFamily = false
 
     /// 오른쪽 대시보드 폭 — 현황 카드가 아이폰 폭과 비슷할 때 가장 읽기 좋다

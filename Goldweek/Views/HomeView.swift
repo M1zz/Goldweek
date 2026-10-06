@@ -868,6 +868,8 @@ struct LeaveStatusCard: View {
                     Text(Strings.statUsed)
                         .font(.body)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                     Text("\(Strings.dayCount(displayUsed))")
                         .font(.title2.bold())
                         .foregroundStyle(.blue)
@@ -879,6 +881,8 @@ struct LeaveStatusCard: View {
                     Text(Strings.statPlanned)
                         .font(.body)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                     Text("\(Strings.dayCount(plannedLeave))")
                         .font(.title2.bold())
                         .foregroundStyle(.cyan)
@@ -890,6 +894,8 @@ struct LeaveStatusCard: View {
                     Text(isLeisure ? (hasGoal ? Strings.statRemainingGoal : Strings.statPlanned) : Strings.remaining)
                         .font(.body)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                     if isLeisure && !hasGoal {
                         // 무제한 모드: 총 계획/완료일 표시
                         Text("\(Strings.dayCount(actualUsed + plannedLeave))")
@@ -1865,6 +1871,8 @@ struct BurnoutPaceCard: View {
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)   // "Сегодня" 가 "Сегодн/я" 로 끊기지 않게
                 .fixedSize(horizontal: false, vertical: true)
         }
     }

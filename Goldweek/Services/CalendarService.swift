@@ -496,6 +496,8 @@ enum CalendarSyncStatus {
             case .czech: return "Synchronizováno"
             case .greek: return "Συγχρονίστηκε"
             case .turkish: return "Senkronize"
+            case .russian: return "Синхронизировано"
+            case .indonesian: return "Tersinkron"
             case .dutch: return "Gesynchroniseerd"
             case .japanese: return "同期済み"
             case .chinese: return "已同步"
@@ -518,6 +520,8 @@ enum CalendarSyncStatus {
             case .czech: return "Vyžaduje nastavení"
             case .greek: return "Απαιτείται ρύθμιση"
             case .turkish: return "Kurulum Gerekli"
+            case .russian: return "Нужна настройка"
+            case .indonesian: return "Perlu Diatur"
             case .dutch: return "Instellen vereist"
             case .japanese: return "設定が必要"
             case .chinese: return "需要设置"
@@ -540,6 +544,8 @@ enum CalendarSyncStatus {
             case .czech: return "Vyžaduje oprávnění"
             case .greek: return "Απαιτείται άδεια πρόσβασης"
             case .turkish: return "İzin Gerekli"
+            case .russian: return "Нужен доступ"
+            case .indonesian: return "Perlu Izin"
             case .dutch: return "Toestemming vereist"
             case .japanese: return "権限が必要"
             case .chinese: return "需要权限"
@@ -562,6 +568,8 @@ enum CalendarSyncStatus {
             case .czech: return "Oprávnění zamítnuto"
             case .greek: return "Η πρόσβαση απορρίφθηκε"
             case .turkish: return "İzin Reddedildi"
+            case .russian: return "Доступ запрещён"
+            case .indonesian: return "Izin Ditolak"
             case .dutch: return "Toestemming geweigerd"
             case .japanese: return "権限が拒否"
             case .chinese: return "权限被拒绝"
@@ -584,6 +592,8 @@ enum CalendarSyncStatus {
             case .czech: return "Vyžaduje Pro"
             case .greek: return "Απαιτείται Pro"
             case .turkish: return "Pro Gerekli"
+            case .russian: return "Нужен Pro"
+            case .indonesian: return "Perlu Pro"
             case .dutch: return "Pro vereist"
             case .japanese: return "Pro が必要"
             case .chinese: return "需要Pro版"
@@ -606,6 +616,8 @@ enum CalendarSyncStatus {
             case .czech: return "Chyba"
             case .greek: return "Σφάλμα"
             case .turkish: return "Hata"
+            case .russian: return "Ошибка"
+            case .indonesian: return "Error"
             case .dutch: return "Fout"
             case .japanese: return "エラー"
             case .chinese: return "错误"
@@ -743,6 +755,24 @@ enum CalendarError: LocalizedError {
             case .proFeatureRequired: return "Pro özelliği gerekli."
             case .eventNotFound: return "Etkinlik bulunamadı."
             case .calendarNotFound: return "Takvim bulunamadı."
+            }
+        case .russian:
+            switch self {
+            case .permissionDenied: return "Доступ к календарю запрещён."
+            case .unknownPermissionStatus: return "Неизвестный статус доступа."
+            case .noAvailableSource: return "Нет доступного источника календарей."
+            case .proFeatureRequired: return "Нужна подписка Pro."
+            case .eventNotFound: return "Событие не найдено."
+            case .calendarNotFound: return "Календарь не найден."
+            }
+        case .indonesian:
+            switch self {
+            case .permissionDenied: return "Akses kalender ditolak."
+            case .unknownPermissionStatus: return "Status izin tidak diketahui."
+            case .noAvailableSource: return "Tidak ada sumber kalender yang tersedia."
+            case .proFeatureRequired: return "Fitur ini butuh Pro."
+            case .eventNotFound: return "Acara tidak ditemukan."
+            case .calendarNotFound: return "Kalender tidak ditemukan."
             }
         case .dutch:
             switch self {

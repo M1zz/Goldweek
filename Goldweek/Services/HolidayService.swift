@@ -19,6 +19,9 @@ class HolidayService {
     func isHolidayDataReliable(for year: Int, country: Country = .korea) -> Bool {
         // 중국은 调休(주말 대체 근무) 때문에 정부 발표 전에는 실제 휴무일을 알 수 없다
         if country == .china { return year <= Self.chinaOfficialLastYear }
+        // 러시아는 휴일 이동, 인도네시아는 공휴일 날짜 자체를 정부가 해마다 정한다
+        if country == .russia { return year <= Self.russiaOfficialLastYear }
+        if country == .indonesia { return Self.hasIndonesiaOfficialSchedule(year) }
         if country == .custom { return true }   // 기본 공휴일이 없으니 틀릴 것도 없다
         return year <= Self.reliableDataLastYear
     }
@@ -143,6 +146,10 @@ class HolidayService {
                 result = getColombiaHolidays(for: year)
             case .newZealand:
                 result = getNewZealandHolidays(for: year)
+            case .russia:
+                result = getRussiaHolidays(for: year)
+            case .indonesia:
+                result = getIndonesiaHolidays(for: year)
             case .custom:
                 result = []   // 전부 사용자가 직접 넣는다
             }
@@ -387,6 +394,8 @@ class HolidayService {
         case .czech: subLabel = "Náhradní volno"
         case .greek: subLabel = "Αναπληρωματική αργία"
         case .turkish: subLabel = "İkame Tatil"
+        case .russian: subLabel = "Перенесённый выходной"
+        case .indonesian: subLabel = "Libur Pengganti"
         case .dutch: subLabel = "Vervangende feestdag"
         case .japanese: subLabel = "振替休日"
         case .chinese: subLabel = "补休日"
@@ -536,6 +545,8 @@ class HolidayService {
             case .czech: return "Náhradní volno"
             case .greek: return "Αναπληρωματική αργία"
             case .turkish: return "Telafi Tatili"
+            case .russian: return "Перенесённый выходной"
+            case .indonesian: return "Libur Pengganti"
             case .dutch: return "Vervangende feestdag"
             case .japanese: return "振替休日"
             case .chinese: return "补休日"
@@ -573,6 +584,8 @@ class HolidayService {
             case .czech: return "Občanský svátek"
             case .greek: return "Αργία των πολιτών"
             case .turkish: return "Vatandaş Tatili"
+            case .russian: return "Народный выходной"
+            case .indonesian: return "Hari Libur Warga"
             case .dutch: return "Burgerfeestdag"
             case .japanese: return "国民の休日"
             case .chinese: return "国民休息日"
@@ -618,11 +631,24 @@ class HolidayService {
         2026: [(1, 4), (2, 14), (2, 28), (5, 9), (9, 20), (10, 10)],
     ]
 
-    /// 주말이지만 출근하는 날인지 (중국 调休 补班)
+    /// 러시아 휴일 이동으로 출근하는 토요일 (рабочая суббота) — 같은 정부 결정 원문
+    private static let russiaMakeupWorkdays: [Int: [(month: Int, day: Int)]] = [
+        2025: [(11, 1)],
+        2027: [(2, 20)],
+    ]
+
+    private static func makeupTable(_ country: Country) -> [Int: [(month: Int, day: Int)]] {
+        switch country {
+        case .china: return chinaMakeupWorkdays
+        case .russia: return russiaMakeupWorkdays
+        default: return [:]
+        }
+    }
+
+    /// 주말이지만 출근하는 날인지 (중국 调休 补班 · 러시아 рабочая суббота)
     static func isMakeupWorkday(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
-        guard country == .china else { return false }
         let c = calendar.dateComponents([.year, .month, .day], from: date)
-        guard let year = c.year, let days = chinaMakeupWorkdays[year] else { return false }
+        guard let year = c.year, let days = makeupTable(country)[year] else { return false }
         return days.contains { $0.month == c.month && $0.day == c.day }
     }
 
@@ -667,7 +693,7 @@ class HolidayService {
 
     /// 한 해의 보충 근무일 (startOfDay) — 연휴 플래너용
     static func makeupWorkdays(for year: Int, country: Country, calendar: Calendar = .current) -> Set<Date> {
-        guard country == .china, let days = chinaMakeupWorkdays[year] else { return [] }
+        guard let days = makeupTable(country)[year] else { return [] }
         return Set(days.compactMap { calendar.date(from: DateComponents(year: year, month: $0.month, day: $0.day)) })
     }
 
@@ -853,6 +879,8 @@ class HolidayService {
         case .czech: return "Přeloženo"
         case .greek: return "Τηρείται"
         case .turkish: return "Uygulanan Gün"
+        case .russian: return "Перенесённый"
+        case .indonesian: return "Pengganti"
         case .dutch: return "Vrije dag"
         case .japanese: return "振替"
         case .chinese: return "补休"

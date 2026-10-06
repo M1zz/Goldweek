@@ -94,6 +94,8 @@ private enum Common {
         case .czech: return "náhradní den"
         case .greek: return "ημέρα αναπλήρωσης"
         case .turkish: return "ikame gün"
+        case .russian: return "перенесённый выходной"
+        case .indonesian: return "hari pengganti"
         case .dutch: return "vervangende dag"
         case .japanese: return "振替休日"
         case .chinese: return "补休"
@@ -1705,5 +1707,171 @@ extension HolidayService {
         return (base + rollForward(base, substitutable: Set(base.map { dateKey($0.date) }), saturdayToo: false))
             .filter { calendar.component(.year, from: $0.date) == year }
             .sorted { $0.date < $1.date }
+    }
+}
+
+// MARK: - 러시아·인도네시아 (정부가 해마다 발표하는 날짜표 + 규칙 폴백)
+
+extension HolidayService {
+
+    private enum RU {
+        static let newYearHolidays = N(ko: "새해 연휴", en: "New Year Holidays", ja: "新年休暇", zh: "新年假期", de: "Neujahrsferien", fr: "Vacances du Nouvel An",
+                                       es: "Vacaciones de Año Nuevo", it: "Vacanze di Capodanno", pt: "Feriado de Ano-Novo", zht: "新年假期")
+        static let orthodoxChristmas = N(ko: "정교회 성탄절", en: "Orthodox Christmas", ja: "正教会のクリスマス", zh: "东正教圣诞节", de: "Orthodoxe Weihnacht", fr: "Noël orthodoxe",
+                                         es: "Navidad ortodoxa", it: "Natale ortodosso", pt: "Natal ortodoxo", zht: "東正教聖誕節")
+        static let defender = N(ko: "조국 수호자의 날", en: "Defender of the Fatherland Day", ja: "祖国防衛者の日", zh: "祖国保卫者日", de: "Tag des Verteidigers des Vaterlandes", fr: "Jour du défenseur de la patrie",
+                                es: "Día del Defensor de la Patria", it: "Giorno del difensore della patria", pt: "Dia do Defensor da Pátria", zht: "祖國保衛者日")
+        static let womensDay = N(ko: "세계 여성의 날", en: "International Women's Day", ja: "国際女性デー", zh: "国际妇女节", de: "Internationaler Frauentag", fr: "Journée internationale des femmes",
+                                 es: "Día Internacional de la Mujer", it: "Giornata internazionale della donna", pt: "Dia Internacional da Mulher", zht: "國際婦女節")
+        static let springLabour = N(ko: "봄과 노동의 날", en: "Spring and Labour Day", ja: "春と労働の日", zh: "春天和劳动节", de: "Fest des Frühlings und der Arbeit", fr: "Fête du Printemps et du Travail",
+                                    es: "Fiesta de la Primavera y del Trabajo", it: "Festa della primavera e del lavoro", pt: "Dia da Primavera e do Trabalho", zht: "春天和勞動節")
+        static let victory = N(ko: "전승 기념일", en: "Victory Day", ja: "戦勝記念日", zh: "胜利日", de: "Tag des Sieges", fr: "Jour de la Victoire",
+                               es: "Día de la Victoria", it: "Giorno della Vittoria", pt: "Dia da Vitória", zht: "勝利日")
+        static let russiaDay = N(ko: "러시아의 날", en: "Russia Day", ja: "ロシアの日", zh: "俄罗斯日", de: "Tag Russlands", fr: "Jour de la Russie",
+                                 es: "Día de Rusia", it: "Giorno della Russia", pt: "Dia da Rússia", zht: "俄羅斯日")
+        static let unity = N(ko: "국민 화합의 날", en: "Unity Day", ja: "民族統一の日", zh: "民族团结日", de: "Tag der Einheit des Volkes", fr: "Jour de l’unité nationale",
+                             es: "Día de la Unidad Nacional", it: "Giorno dell’unità nazionale", pt: "Dia da Unidade Nacional", zht: "民族團結日")
+        static let transferred = N(ko: "이동 휴일", en: "Transferred day off", ja: "振替休日", zh: "调休休息日", de: "Verlegter freier Tag", fr: "Jour de repos reporté",
+                                   es: "Día libre trasladado", it: "Giorno libero spostato", pt: "Folga transferida", zht: "調移休息日")
+
+        static let local = ["New Year Holidays": "Новогодние каникулы", "Orthodox Christmas": "Рождество Христово",
+                            "Defender of the Fatherland Day": "День защитника Отечества", "International Women's Day": "Международный женский день",
+                            "Spring and Labour Day": "Праздник Весны и Труда", "Victory Day": "День Победы", "Russia Day": "День России",
+                            "Unity Day": "День народного единства", "Transferred day off": "Перенесённый выходной"]
+
+        /// 정부 «О переносе выходных дней» 결정으로 **추가로 쉬는 평일** (자동 이동분 포함).
+        /// 결정이 노동법 자동 이동을 덮어쓰기도 해서(2025년 2/23 → 5/8) 발표된 해는 이 표만 쓴다.
+        /// 2025: 2024-10-04 №1335 · 2026: 2025-09-24 №1466 · 2027: 2026-09-17 №1187
+        static let transfers: [Int: [(Int, Int)]] = [
+            2025: [(5, 2), (5, 8), (6, 13), (11, 3), (12, 31)],
+            2026: [(1, 9), (3, 9), (5, 11), (12, 31)],
+            2027: [(2, 22), (5, 3), (5, 10), (6, 14), (11, 5), (12, 31)],
+        ]
+    }
+
+    /// 러시아 휴일 이동표가 발표된 마지막 연도
+    static let russiaOfficialLastYear = 2027
+
+    /// 러시아 — 노동법 제112조 법정 공휴일. 1월 1~8일 연휴.
+    /// 발표된 해는 정부 결정의 이동표, 그 밖의 해는 '주말에 걸린 공휴일(1월 제외)은 다음 평일로' 규칙으로 계산한다.
+    func getRussiaHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = []
+        for d in [1, 2, 3, 4, 5, 6, 8] { list.append((day(year, 1, d), RU.newYearHolidays)) }
+        list.append((day(year, 1, 7), RU.orthodoxChristmas))
+        list.append((day(year, 2, 23), RU.defender))
+        list.append((day(year, 3, 8), RU.womensDay))
+        list.append((day(year, 5, 1), RU.springLabour))
+        list.append((day(year, 5, 9), RU.victory))
+        list.append((day(year, 6, 12), RU.russiaDay))
+        list.append((day(year, 11, 4), RU.unity))
+        let base = makeList(list)
+
+        let extra: [Holiday]
+        if let table = RU.transfers[year] {
+            extra = table.compactMap { m, d in day(year, m, d).map { Holiday(date: $0, name: RU.transferred.text, isSubstitute: true) } }
+        } else {
+            let movable = base.filter { calendar.component(.month, from: $0.date) != 1 }
+            extra = rollForward(base, substitutable: Set(movable.map { dateKey($0.date) }))
+        }
+        return localized((base + extra).sorted { $0.date < $1.date }, .russian, RU.local)
+    }
+
+    private enum ID {
+        static let israMiraj = N(ko: "이스라 미라즈", en: "Isra and Mi'raj", ja: "イスラー・ミウラージュ", zh: "登霄节", de: "Isra und Miradsch", fr: "Isra et Miraj",
+                                 es: "Isra y Miraj", it: "Isra e Mi'raj", pt: "Isra e Miraj", zht: "登霄節")
+        static let lunarNewYear = N(ko: "음력 설", en: "Chinese New Year", ja: "春節", zh: "春节", de: "Chinesisches Neujahr", fr: "Nouvel An chinois",
+                                    es: "Año Nuevo chino", it: "Capodanno cinese", pt: "Ano-Novo Chinês", zht: "農曆新年")
+        static let nyepi = N(ko: "녜삐 (발리 새해)", en: "Nyepi (Day of Silence)", ja: "ニュピ（静寂の日）", zh: "静居日", de: "Nyepi (Tag der Stille)", fr: "Nyepi (jour du silence)",
+                             es: "Nyepi (día del silencio)", it: "Nyepi (giorno del silenzio)", pt: "Nyepi (dia do silêncio)", zht: "靜居日")
+        static let vesak = N(ko: "와이삭 (석가탄신일)", en: "Vesak Day", ja: "ウェーサーカ祭", zh: "卫塞节", de: "Vesakh", fr: "Vesak",
+                             es: "Vesak", it: "Vesak", pt: "Vesak", zht: "衛塞節")
+        static let pancasila = N(ko: "판짜실라의 날", en: "Pancasila Day", ja: "パンチャシラの日", zh: "建国五项原则日", de: "Pancasila-Tag", fr: "Jour de la Pancasila",
+                                 es: "Día de la Pancasila", it: "Giorno della Pancasila", pt: "Dia da Pancasila", zht: "建國五項原則日")
+        static let collective = N(ko: "공동 휴가", en: "Collective leave", ja: "政府指定休暇", zh: "集体休假", de: "Kollektiver Urlaubstag", fr: "Congé collectif",
+                                  es: "Permiso colectivo", it: "Ferie collettive", pt: "Folga coletiva", zht: "集體休假")
+
+        static let local = ["New Year's Day": "Tahun Baru Masehi", "Isra and Mi'raj": "Isra Mikraj Nabi Muhammad SAW", "Chinese New Year": "Tahun Baru Imlek",
+                            "Nyepi (Day of Silence)": "Hari Suci Nyepi", "Eid al-Fitr": "Idulfitri", "Good Friday": "Wafat Yesus Kristus",
+                            "Easter Sunday": "Kebangkitan Yesus Kristus (Paskah)", "Labour Day": "Hari Buruh Internasional",
+                            "Ascension Day": "Kenaikan Yesus Kristus", "Eid al-Adha": "Iduladha", "Vesak Day": "Hari Raya Waisak",
+                            "Pancasila Day": "Hari Lahir Pancasila", "Islamic New Year": "Tahun Baru Islam", "Independence Day": "Hari Kemerdekaan RI",
+                            "Prophet's Birthday": "Maulid Nabi Muhammad SAW", "Christmas Day": "Hari Raya Natal", "Collective leave": "Cuti bersama"]
+
+        /// 공동 휴가 이름에 붙는 짧은 이름
+        static let shortLocal = ["imlek": "Imlek", "nyepi": "Nyepi", "fitr": "Idulfitri", "goodFriday": "Wafat Yesus Kristus",
+                                 "ascension": "Kenaikan Yesus Kristus", "adha": "Iduladha", "vesak": "Waisak", "christmas": "Natal"]
+
+        /// SKB 3 Menteri (Menag·Menaker·MenPANRB) — 해마다 9~11월께 다음 해 날짜를 정한다.
+        /// libur: 법정 공휴일, cuti: 공동 휴가(cuti bersama — 민간은 회사 재량, 연차에서 빠질 수 있다).
+        /// 키는 아래 `names` 의 이름표 키. 2026: SKB 2025-09 · 2027: SKB 2026-09-15
+        static let official: [Int: (libur: [(Int, Int, String)], cuti: [(Int, Int, String)])] = [
+            2026: (libur: [(1, 1, "newYear"), (1, 16, "isra"), (2, 17, "imlek"), (3, 19, "nyepi"), (3, 21, "fitr"), (3, 22, "fitr"),
+                           (4, 3, "goodFriday"), (4, 5, "easter"), (5, 1, "labour"), (5, 14, "ascension"), (5, 27, "adha"), (5, 31, "vesak"),
+                           (6, 1, "pancasila"), (6, 16, "hijri"), (8, 17, "independence"), (8, 25, "maulid"), (12, 25, "christmas")],
+                   cuti: [(2, 16, "imlek"), (3, 18, "nyepi"), (3, 20, "fitr"), (3, 23, "fitr"), (3, 24, "fitr"),
+                          (5, 15, "ascension"), (5, 28, "adha"), (12, 24, "christmas")]),
+            2027: (libur: [(1, 1, "newYear"), (1, 5, "isra"), (2, 6, "imlek"), (3, 8, "nyepi"), (3, 10, "fitr"), (3, 11, "fitr"),
+                           (3, 26, "goodFriday"), (3, 28, "easter"), (5, 1, "labour"), (5, 6, "ascension"), (5, 17, "adha"), (5, 20, "vesak"),
+                           (6, 1, "pancasila"), (6, 6, "hijri"), (8, 15, "maulid"), (8, 17, "independence"), (12, 25, "christmas"), (12, 26, "isra")],
+                   cuti: [(2, 5, "imlek"), (3, 9, "fitr"), (3, 12, "fitr"), (3, 15, "fitr"), (3, 25, "goodFriday"),
+                          (5, 18, "adha"), (5, 19, "vesak"), (12, 24, "christmas")]),
+        ]
+    }
+
+    /// 인도네시아 공휴일 날짜표가 발표된 연도
+    static func hasIndonesiaOfficialSchedule(_ year: Int) -> Bool { ID.official[year] != nil }
+
+    /// 인도네시아 — 발표된 해는 SKB 날짜표(공휴일 + 공동 휴가), 그 밖의 해는 계산 추정치
+    /// (이슬람력은 움 알쿠라 기준이라 정부 발표와 하루쯤 다를 수 있고, 녜삐·와이삭은 빠진다).
+    func getIndonesiaHolidays(for year: Int) -> [Holiday] {
+        let names: [String: N] = [
+            "newYear": Common.newYear, "isra": ID.israMiraj, "imlek": ID.lunarNewYear, "nyepi": ID.nyepi, "fitr": Gulf.eidFitr,
+            "goodFriday": Common.goodFriday, "easter": More.easterSunday, "labour": Common.labour, "ascension": More.ascension,
+            "adha": Gulf.eidAdha, "vesak": ID.vesak, "pancasila": ID.pancasila, "hijri": Gulf.hijriNewYear,
+            "independence": More.independence, "maulid": Gulf.prophetBirthday, "christmas": Common.christmas,
+        ]
+        let isIndonesian = AppLanguage.current == .indonesian
+        func text(_ n: N) -> String {
+            let en = n.names[.english] ?? n.text
+            return isIndonesian ? (ID.local[en] ?? n.text) : n.text
+        }
+
+        if let table = ID.official[year] {
+            var taken = Set<String>()
+            var holidays: [Holiday] = []
+            for (m, d, key) in table.libur {
+                guard let date = day(year, m, d), let n = names[key], taken.insert(dateKey(date)).inserted else { continue }
+                holidays.append(Holiday(date: date, name: text(n)))
+            }
+            for (m, d, key) in table.cuti {
+                guard let date = day(year, m, d), let n = names[key], taken.insert(dateKey(date)).inserted else { continue }
+                // 인도네시아 사람이 부르는 대로 "Cuti bersama Idulfitri"
+                let name = isIndonesian ? "Cuti bersama \(ID.shortLocal[key] ?? text(n))" : "\(text(ID.collective)) (\(text(n)))"
+                var h = Holiday(date: date, name: name)
+                h.isCollective = true
+                holidays.append(h)
+            }
+            return holidays.sorted { $0.date < $1.date }
+        }
+
+        var items: [([Date], N)] = [
+            ([day(year, 1, 1)].compactMap { $0 }, Common.newYear),
+            (hijri(year, month: 7, day: 27), ID.israMiraj),
+            ([lunar(year, month: 1, day: 1)].compactMap { $0 }, ID.lunarNewYear),
+            (hijri(year, month: 10, day: 1, length: 2), Gulf.eidFitr),
+            ([day(year, 5, 1)].compactMap { $0 }, Common.labour),
+            (hijri(year, month: 12, day: 10), Gulf.eidAdha),
+            ([day(year, 6, 1)].compactMap { $0 }, ID.pancasila),
+            (hijri(year, month: 1, day: 1), Gulf.hijriNewYear),
+            ([day(year, 8, 17)].compactMap { $0 }, More.independence),
+            (hijri(year, month: 3, day: 12), Gulf.prophetBirthday),
+            ([day(year, 12, 25)].compactMap { $0 }, Common.christmas),
+        ]
+        if let e = easter(year) {
+            items.append(([adding(-2, to: e)], Common.goodFriday))
+            items.append(([e], More.easterSunday))
+            items.append(([adding(39, to: e)], More.ascension))
+        }
+        return localized(gulfList(items), .indonesian, ID.local)
     }
 }

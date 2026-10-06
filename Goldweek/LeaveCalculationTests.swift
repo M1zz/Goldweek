@@ -1118,11 +1118,55 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertEqual(HolidayService.weekendDays(for: .egypt), [6, 7])
     }
 
+    func testRussiaTransfers() {
+        func keys(_ y: Int) -> Set<String> {
+            let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+            return Set(HolidayService().getHolidays(for: y, country: .russia).map { f.string(from: $0.date) })
+        }
+        // 2026 (№1466): 1/1~1/9 연휴, 3/8(일) → 3/9, 5/9(토) → 5/11, 1/4 → 12/31
+        let y26 = keys(2026)
+        XCTAssertTrue(y26.isSuperset(of: ["2026-01-01", "2026-01-08", "2026-01-09", "2026-03-09", "2026-05-11", "2026-12-31"]))
+        XCTAssertEqual(y26.count, 18)
+        // 2025 (№1335): 2/23(일)은 2/24 가 아니라 5/8 로 — 정부 결정이 자동 이동을 덮어쓴다
+        let y25 = keys(2025)
+        XCTAssertTrue(y25.isSuperset(of: ["2025-05-02", "2025-05-08", "2025-06-13", "2025-11-03", "2025-12-31"]))
+        XCTAssertFalse(y25.contains("2025-02-24"))
+        // 2027 (№1187): 2/20(토) 출근, 2/22 휴무
+        XCTAssertTrue(keys(2027).isSuperset(of: ["2027-02-22", "2027-05-03", "2027-05-10", "2027-06-14", "2027-11-05", "2027-12-31"]))
+        let cal = Calendar.current
+        XCTAssertTrue(HolidayService.isMakeupWorkday(cal.date(from: DateComponents(year: 2027, month: 2, day: 20))!, country: .russia))
+        // 발표 전 해(2028)는 노동법 규칙: 11/4(토) → 11/6(월)
+        XCTAssertTrue(keys(2028).contains("2028-11-06"))
+        XCTAssertFalse(HolidayService().isHolidayDataReliable(for: 2028, country: .russia))
+    }
+
+    func testIndonesiaOfficialSchedule() {
+        let saved = UserDefaults.standard.string(forKey: "appLanguage")
+        defer { UserDefaults.standard.set(saved, forKey: "appLanguage") }
+        UserDefaults.standard.set("id", forKey: "appLanguage")
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+        let y26 = Dictionary(uniqueKeysWithValues: HolidayService().getHolidays(for: 2026, country: .indonesia).map { (f.string(from: $0.date), $0.name) })
+        // SKB 2026: 공휴일 17일 + 공동 휴가 8일
+        XCTAssertEqual(y26.count, 25)
+        XCTAssertEqual(y26["2026-03-21"], "Idulfitri")
+        XCTAssertEqual(y26["2026-03-20"], "Cuti bersama Idulfitri")
+        XCTAssertEqual(y26["2026-08-17"], "Hari Kemerdekaan RI")
+        // SKB 2027: 18 + 8 — 이슬람력이 한 해에 두 번 오는 이스라 미라즈(1/5, 12/26)
+        let y27 = HolidayService().getHolidays(for: 2027, country: .indonesia).map { f.string(from: $0.date) }
+        XCTAssertEqual(y27.count, 26)
+        XCTAssertTrue(Set(y27).isSuperset(of: ["2027-01-05", "2027-12-26", "2027-03-15"]))
+        XCTAssertTrue(HolidayService().isHolidayDataReliable(for: 2027, country: .indonesia))
+        XCTAssertFalse(HolidayService().isHolidayDataReliable(for: 2028, country: .indonesia))
+        UserDefaults.standard.set("ru", forKey: "appLanguage")
+        XCTAssertTrue(HolidayService().getHolidays(for: 2026, country: .russia).contains { $0.name == "День Победы" })
+    }
+
     func testFirstWeekdayFollowsCountry() {
         XCTAssertEqual(Country.spain.standardFirstWeekday, 2)
         XCTAssertEqual(Country.sweden.standardFirstWeekday, 2)
         XCTAssertEqual(Country.usa.standardFirstWeekday, 1)
         XCTAssertEqual(Country.korea.standardFirstWeekday, 1)
+        XCTAssertEqual(Country.russia.standardFirstWeekday, 2)
         // 직접 고르면 나라 기본보다 앞선다, 0 은 나라 기본
         XCTAssertEqual(HolidayService.firstWeekday(for: .spain, override: 1), 1)
         XCTAssertEqual(HolidayService.firstWeekday(for: .usa, override: 2), 2)

@@ -734,7 +734,8 @@ struct RecommendationDatePreview: View {
                 }
             }
 
-            HStack(spacing: 12) {
+            // 긴 언어(러시아어 등)에서 "Празд-ник"처럼 단어가 끊기지 않게 자리가 모자라면 다음 줄로
+            LeaveFlowLayout(spacing: 12, lineSpacing: 4) {
                 MiniLegend(color: .gray.opacity(0.5), text: Strings.workday)
                 MiniLegend(color: .green, text: Strings.annualLeave)
                 MiniLegend(color: .red.opacity(0.7), text: Strings.holiday)
@@ -1366,6 +1367,8 @@ struct MyRealTripPromoCard: View {
         case .chile: return "SCL"
         case .colombia: return "BOG"
         case .newZealand: return "AKL"
+        case .russia: return "SVO"   // 모스크바 셰레메티예보
+        case .indonesia: return "CGK" // 자카르타
         case .custom: return "ICN"   // 출발지를 알 수 없다 — 기본값
         }
     }

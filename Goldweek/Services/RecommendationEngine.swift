@@ -473,7 +473,7 @@ class RecommendationEngine {
             opportunities.append(contentsOf: findUSAOpportunities(holidays: holidays, year: year))
 
         case .germany, .france, .uk, .canada, .australia, .spain, .italy, .brazil, .taiwan, .hongKong, .uae, .saudiArabia, .qatar, .peru,
-             .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal, .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .turkey, .egypt, .southAfrica, .mexico, .argentina, .chile, .colombia, .newZealand, .custom:
+             .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal, .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .turkey, .egypt, .southAfrica, .mexico, .argentina, .chile, .colombia, .newZealand, .russia, .indonesia, .custom:
             // 알고리즘 기반 OptimalLeavePlannerCard가 자동 처리 (Brückentag / pont / puente / ponte)
             // 여기서는 일반적인 공휴일 연장만 제공
             opportunities.append(contentsOf: findMajorHolidayExtensions(holidays: holidays, year: year, country: country))
@@ -572,6 +572,12 @@ class RecommendationEngine {
         case .turkish:
             title = "Golden Week"
             desc = "Japonya'nın Golden Week'i! \(Int(requiredLeave)) izin günüyle \(totalDays) gün tatil."
+        case .russian:
+            title = "Золотая неделя"
+            desc = "Золотая неделя в Японии! \(Int(requiredLeave)) \(ruPlural(Int(requiredLeave), "день", "дня", "дней")) отпуска — и \(totalDays) \(ruPlural(totalDays, "день", "дня", "дней")) отдыха."
+        case .indonesian:
+            title = "Golden Week"
+            desc = "Golden Week Jepang! Cuti \(Int(requiredLeave)) hari, libur \(totalDays) hari."
         case .dutch:
             title = "Golden Week"
             desc = "Japans Golden Week! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
@@ -646,6 +652,8 @@ class RecommendationEngine {
                 case .czech: title = "Volno Obon"; desc = "Sezóna Obon! Dovolená (dní: \(Int(requiredLeave))) = volno v kuse (dní: \(totalDays))."
                 case .greek: title = "Διάλειμμα Ομπόν"; desc = "Εποχή του Ομπόν! \(Int(requiredLeave)) ημέρες άδειας για \(totalDays) ημέρες ρεπό."
                 case .turkish: title = "Obon Tatili"; desc = "Obon sezonu! \(Int(requiredLeave)) izin günüyle \(totalDays) gün tatil."
+                case .russian: title = "Каникулы Обон"; desc = "Сезон Обон! \(Int(requiredLeave)) \(ruPlural(Int(requiredLeave), "день", "дня", "дней")) отпуска — и \(totalDays) \(ruPlural(totalDays, "день", "дня", "дней")) отдыха."
+                case .indonesian: title = "Libur Obon"; desc = "Musim Obon! Cuti \(Int(requiredLeave)) hari, libur \(totalDays) hari."
                 case .dutch: title = "Obon-vakantie"; desc = "Obon-seizoen! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
                 case .japanese: title = "お盆休み"; desc = "お盆休み！有給\(Int(requiredLeave))日で\(totalDays)連休。"
                 case .chinese: title = "盂兰盆节假期"; desc = "盂兰盆节！请\(Int(requiredLeave))天年假获得\(totalDays)天假期。"
@@ -697,6 +705,8 @@ class RecommendationEngine {
                 case .czech: title = "Volno na Díkůvzdání"; desc = "1 den dovolené (pátek) a máš 4denní víkend!"
                 case .greek: title = "Διάλειμμα Ημέρας των Ευχαριστιών"; desc = "1 ημέρα άδειας (Παρασκευή) για τετραήμερο!"
                 case .turkish: title = "Şükran Günü Tatili"; desc = "1 izin günüyle (Cuma) 4 günlük uzun hafta sonu!"
+                case .russian: title = "Выходные на День благодарения"; desc = "1 день отпуска (пятница) — и 4 дня отдыха!"
+                case .indonesian: title = "Libur Thanksgiving"; desc = "Cuti 1 hari (Jumat), libur panjang 4 hari!"
                 case .dutch: title = "Thanksgiving-vakantie"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                 case .japanese: title = "感謝祭連休"; desc = "金曜1日の有給で4連休！"
                 case .chinese: title = "感恩节假期"; desc = "周五请1天年假获得4天假期！"
@@ -743,6 +753,8 @@ class RecommendationEngine {
                     case .czech: title = "Prodloužený víkend 4. července"; desc = "1 den dovolené (pondělí) a máš 4denní víkend!"
                     case .greek: title = "Μακρύ Σαββατοκύριακο 4ης Ιουλίου"; desc = "1 ημέρα άδειας (Δευτέρα) για τετραήμερο!"
                     case .turkish: title = "4 Temmuz Uzun Hafta Sonu"; desc = "1 izin günüyle (Pazartesi) 4 günlük uzun hafta sonu!"
+                    case .russian: title = "Длинные выходные 4 июля"; desc = "1 день отпуска (понедельник) — и 4 дня отдыха!"
+                    case .indonesian: title = "Libur Panjang 4 Juli"; desc = "Cuti 1 hari (Senin), libur panjang 4 hari!"
                     case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (maandag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "月曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周一请1天年假获得4天假期！"
@@ -777,6 +789,8 @@ class RecommendationEngine {
                     case .czech: title = "Prodloužený víkend 4. července"; desc = "1 den dovolené (pátek) a máš 4denní víkend!"
                     case .greek: title = "Μακρύ Σαββατοκύριακο 4ης Ιουλίου"; desc = "1 ημέρα άδειας (Παρασκευή) για τετραήμερο!"
                     case .turkish: title = "July 4th Long Weekend"; desc = "1 izin günüyle (Cuma) 4 günlük uzun hafta sonu!"
+                    case .russian: title = "Длинные выходные 4 июля"; desc = "1 день отпуска (пятница) — и 4 дня отдыха!"
+                    case .indonesian: title = "Libur Panjang 4 Juli"; desc = "Cuti 1 hari (Jumat), libur panjang 4 hari!"
                     case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "金曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周五请1天年假获得4天假期！"
@@ -915,6 +929,10 @@ class RecommendationEngine {
             if weekday == 3 {
                 if let bridgeDay = calendar.date(byAdding: .day, value: -1, to: holiday.date) {
                     let weekendStart = calendar.date(byAdding: .day, value: -2, to: bridgeDay)!
+                    // 월요일이 이미 쉬는 날(이동 휴일)이거나 토·일이 쉬는 주말이 아니면(출근 토요일, 금·토 주말) 징검다리가 아니다
+                    guard !isNonWorkingDay(bridgeDay, holidays: holidays),
+                          isNonWorkingDay(weekendStart, holidays: holidays),
+                          isNonWorkingDay(calendar.date(byAdding: .day, value: 1, to: weekendStart)!, holidays: holidays) else { continue }
 
                     opportunities.append(LeaveRecommendation(
                         title: Strings.bridgeDayTitle(holidayName: holiday.name),
@@ -933,6 +951,9 @@ class RecommendationEngine {
             if weekday == 5 {
                 if let bridgeDay = calendar.date(byAdding: .day, value: 1, to: holiday.date) {
                     let weekendEnd = calendar.date(byAdding: .day, value: 2, to: bridgeDay)!
+                    guard !isNonWorkingDay(bridgeDay, holidays: holidays),
+                          isNonWorkingDay(weekendEnd, holidays: holidays),
+                          isNonWorkingDay(calendar.date(byAdding: .day, value: -1, to: weekendEnd)!, holidays: holidays) else { continue }
 
                     opportunities.append(LeaveRecommendation(
                         title: Strings.bridgeDayTitle(holidayName: holiday.name),
@@ -1103,12 +1124,15 @@ class RecommendationEngine {
 
     /// 범위 내 공휴일 이름들 (대체공휴일 라벨 제외, 중복 제거)
     private func holidayNamesInRange(start: Date, end: Date, holidays: [Holiday]) -> [String] {
-        var names: [String] = []
+        // 대체·이동 휴일과 공동 휴가는 이름 뒤로 — 연휴 이름은 진짜 공휴일을 따른다
+        var names: [String] = [], secondary: [String] = []
         for h in holidays where h.date >= start && h.date <= end {
             if h.name.contains(Strings.substituteHoliday) { continue }
-            if !names.contains(h.name) { names.append(h.name) }
+            if h.isSubstitute || h.isCollective {
+                if !secondary.contains(h.name) { secondary.append(h.name) }
+            } else if !names.contains(h.name) { names.append(h.name) }
         }
-        return names
+        return names + secondary.filter { !names.contains($0) }
     }
 
     private func rangeContainsAnyDay(start: Date, end: Date, days: Set<Date>) -> Bool {

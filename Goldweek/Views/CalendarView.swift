@@ -845,25 +845,36 @@ struct LeaveFlowLayout: Layout {
             }
         }
         maxLineWidth = max(maxLineWidth, lineWidth)
+        // 줄이 넘어가면 제안 폭을 그대로 쓴다 — 가장 긴 줄 폭으로 줄이면 배치 때 그 좁은 폭으로
+        // 다시 줄바꿈해 한 줄이 더 생기고, 계산한 높이를 넘쳐 아래 카드와 겹친다.
+        let wrapped = totalHeight > 0
         totalHeight += lineHeight
-        return CGSize(width: min(maxLineWidth, maxWidth), height: totalHeight)
+        return CGSize(width: wrapped && maxWidth.isFinite ? maxWidth : min(maxLineWidth, maxWidth), height: totalHeight)
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        var x = bounds.minX
-        var y = bounds.minY
-        var lineHeight: CGFloat = 0
-
+        // 줄을 먼저 나눈 뒤 줄마다 가운데로 놓는다
+        var lines: [[(Subviews.Element, CGSize)]] = [[]]
+        var lineWidth: CGFloat = 0
         for subview in subviews {
             let size = subview.sizeThatFits(.unspecified)
-            if x > bounds.minX, x + size.width > bounds.maxX {
-                x = bounds.minX
-                y += lineHeight + lineSpacing
-                lineHeight = 0
+            if lineWidth > 0, lineWidth + spacing + size.width > bounds.width {
+                lines.append([])
+                lineWidth = 0
             }
-            subview.place(at: CGPoint(x: x, y: y), anchor: .topLeading, proposal: ProposedViewSize(size))
-            x += size.width + spacing
-            lineHeight = max(lineHeight, size.height)
+            lineWidth += (lineWidth > 0 ? spacing : 0) + size.width
+            lines[lines.count - 1].append((subview, size))
+        }
+        var y = bounds.minY
+        for line in lines where !line.isEmpty {
+            let width = line.map(\.1.width).reduce(0, +) + spacing * CGFloat(line.count - 1)
+            var x = bounds.minX + max(0, (bounds.width - width) / 2)
+            let lineHeight = line.map(\.1.height).max() ?? 0
+            for (subview, size) in line {
+                subview.place(at: CGPoint(x: x, y: y), anchor: .topLeading, proposal: ProposedViewSize(size))
+                x += size.width + spacing
+            }
+            y += lineHeight + lineSpacing
         }
     }
 }

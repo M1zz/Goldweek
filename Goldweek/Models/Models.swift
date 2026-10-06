@@ -49,6 +49,8 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case chile = "chile"
     case colombia = "colombia"
     case newZealand = "newzealand"
+    case russia = "russia"           // 정부가 해마다 휴일을 옮긴다 (перенос выходных)
+    case indonesia = "indonesia"     // 공휴일·공동 휴가를 해마다 SKB 로 정한다
     /// 지원하지 않는 나라 — 기본 공휴일 없이 사용자가 직접 넣는다 (예: 남아공)
     case custom = "custom"
 
@@ -100,6 +102,8 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .chile: return "CL"
         case .colombia: return "CO"
         case .newZealand: return "NZ"
+        case .russia: return "RU"
+        case .indonesia: return "ID"
         case .custom: return ""   // 어떤 기기 지역과도 맞지 않게
         }
     }
@@ -153,6 +157,8 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .chile: return "es_CL"
         case .colombia: return "es_CO"
         case .newZealand: return "en_NZ"
+        case .russia: return "ru_RU"
+        case .indonesia: return "id_ID"
         case .custom: return Locale.current.identifier
         }
     }
@@ -219,6 +225,8 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case "cs": fallback = .czechia
         case "el": fallback = .greece
         case "tr": fallback = .turkey
+        case "ru": fallback = .russia
+        case "id": fallback = .indonesia
         default: fallback = .usa
         }
         return (fallback, false)
@@ -259,10 +267,10 @@ enum Continent: String, CaseIterable, Identifiable {
 extension Country {
     var continent: Continent? {
         switch self {
-        case .korea, .japan, .china, .taiwan, .hongKong: return .asia
+        case .korea, .japan, .china, .taiwan, .hongKong, .indonesia: return .asia
         case .uae, .saudiArabia, .qatar, .turkey: return .middleEast
         case .germany, .france, .uk, .spain, .italy, .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal,
-             .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece: return .europe
+             .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .russia: return .europe
         case .egypt, .southAfrica: return .africa
         case .usa, .canada, .mexico: return .northAmerica
         case .brazil, .peru, .argentina, .chile, .colombia: return .southAmerica
@@ -1033,6 +1041,8 @@ struct Holiday: Identifiable {
     let isCustom: Bool
     /// 내 방학(교사·학생) — 공휴일처럼 쉬는 날이지만 달력에서 색을 달리한다
     let isBreak: Bool
+    /// 정부가 정한 공동 휴가(인도네시아 cuti bersama) — 쉬는 날이지만 연휴 이름은 진짜 공휴일을 따른다
+    var isCollective = false
 
     init(date: Date, name: String, isSubstitute: Bool = false, isCustom: Bool = false, isBreak: Bool = false) {
         self.date = date

@@ -116,6 +116,18 @@
             "state": "translated",
             "value": "%1$@ · %2$@ gün izin"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · отпуск: %2$@ дн."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · cuti %2$@ hari"
+          }
         }
       }
     },
@@ -227,6 +239,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ gün"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ дн."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ hari"
           }
         }
       }
@@ -340,6 +364,18 @@
             "state": "translated",
             "value": "%@ gün kaldı"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осталось: %@ дн."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sisa %@ hari"
+          }
         }
       }
     },
@@ -448,6 +484,18 @@
           }
         },
         "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "id": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld"
@@ -564,6 +612,18 @@
             "state": "translated",
             "value": "%lld%%"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
         }
       }
     },
@@ -675,6 +735,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld%% kaldı"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осталось %lld%%"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sisa %lld%%"
           }
         }
       }
@@ -788,6 +860,42 @@
             "state": "translated",
             "value": "%lld gün"
           }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld день"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня"
+                }
+              }
+            }
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld hari"
+          }
         }
       }
     },
@@ -899,6 +1007,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld gün"
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld день"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня"
+                }
+              }
+            }
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld hari"
           }
         }
       }
@@ -1012,6 +1156,18 @@
             "state": "translated",
             "value": "+%@ gün"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ дн."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ hari"
+          }
         }
       }
     },
@@ -1120,6 +1276,18 @@
           }
         },
         "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "id": {
           "stringUnit": {
             "state": "translated",
             "value": "D-"
@@ -1235,6 +1403,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "GÜN"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ДЕНЬ"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HARI"
           }
         }
       }
@@ -1354,6 +1534,18 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -1465,6 +1657,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yenilenmeye Kalan"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "До обновления"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hingga diperbarui"
           }
         }
       }
@@ -1578,6 +1782,42 @@
             "state": "translated",
             "value": "Yenilenmeye %lld gün"
           }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "До обновления %lld день"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "До обновления %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "До обновления %lld дней"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "До обновления %lld дня"
+                }
+              }
+            }
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld hari lagi hingga diperbarui"
+          }
         }
       }
     },
@@ -1689,6 +1929,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Beklenen"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "План"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Target"
           }
         }
       }
@@ -1802,6 +2054,18 @@
             "state": "translated",
             "value": "Kalan İzin"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осталось отпуска"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sisa cuti"
+          }
         }
       }
     },
@@ -1913,6 +2177,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ gün izin kaldı"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осталось отпуска: %@ дн."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sisa cuti %@ hari"
           }
         }
       }
@@ -2026,6 +2302,18 @@
             "state": "translated",
             "value": "Kalan izinlerini ve yaklaşan tatillerini gör"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Остаток отпуска и ближайший отдых"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lihat sisa cuti dan liburan berikutnya"
+          }
         }
       }
     },
@@ -2137,6 +2425,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yaklaşan İzin"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ближайший отпуск"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuti mendatang"
           }
         }
       }
@@ -2250,6 +2550,18 @@
             "state": "translated",
             "value": "Sonraki İzin"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Следующий отпуск"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuti berikutnya"
+          }
         }
       }
     },
@@ -2362,6 +2674,18 @@
             "state": "translated",
             "value": "Bir sonraki tatiline kalan günleri geri sayımla gör"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обратный отсчёт до следующего отпуска"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hitung mundur menuju cuti berikutnya"
+          }
         }
       }
     },
@@ -2470,6 +2794,18 @@
           }
         },
         "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonus"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Бонус"
+          }
+        },
+        "id": {
           "stringUnit": {
             "state": "translated",
             "value": "Bonus"
@@ -2586,6 +2922,18 @@
             "state": "translated",
             "value": "Tüketim Hızı"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Темп расхода"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laju pemakaian"
+          }
         }
       }
     },
@@ -2697,6 +3045,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tüketim hızı: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Темп расхода: %@"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laju pemakaian: %@"
           }
         }
       }
@@ -2810,6 +3170,18 @@
             "state": "translated",
             "value": "Gerçek"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Факт"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktual"
+          }
         }
       }
     },
@@ -2921,6 +3293,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uygulamada bir izin planı ekle"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добавьте план отпуска в приложении"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tambahkan rencana cuti di aplikasi"
           }
         }
       }
@@ -3034,6 +3418,18 @@
             "state": "translated",
             "value": "İzin"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отпуск"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuti"
+          }
         }
       }
     },
@@ -3145,6 +3541,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ gün izin"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отпуск: %@ дн."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuti %@ hari"
           }
         }
       }
@@ -3258,6 +3666,18 @@
             "state": "translated",
             "value": "%@ gün izin kaldı"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осталось отпуска: %@ дн."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sisa cuti %@ hari"
+          }
         }
       }
     },
@@ -3369,6 +3789,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bir sonraki yenilenme tarihine kadar izin tüketim hızını gör"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Темп расхода отпуска до даты обновления"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lihat laju pemakaian cuti hingga jatah diperbarui"
           }
         }
       }
@@ -3482,6 +3914,18 @@
             "state": "translated",
             "value": "İzin Tüketim Hızı"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Темп расхода отпуска"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laju pemakaian cuti"
+          }
         }
       }
     },
@@ -3593,6 +4037,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "İzin Durumu"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обзор отпуска"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ringkasan cuti"
           }
         }
       }
@@ -3706,6 +4162,18 @@
             "state": "translated",
             "value": "gün"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "дн."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hari"
+          }
         }
       }
     },
@@ -3818,6 +4286,18 @@
             "state": "translated",
             "value": "Kalan"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осталось"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sisa"
+          }
         }
       }
     },
@@ -3929,6 +4409,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "D-day'ini ve kalan izinlerini Kilit Ekranı'nda gör"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-day и остаток отпуска на экране блокировки"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lihat D-day dan sisa cuti di Layar Terkunci"
           }
         }
       }
@@ -4043,6 +4535,18 @@
             "state": "translated",
             "value": "Kalan izni Kilit Ekranı'nda gör"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Остаток отпуска на экране блокировки"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sisa cuti di Layar Terkunci"
+          }
         }
       }
     },
@@ -4154,6 +4658,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Toplam İzin"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Всего отпуска"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total cuti"
           }
         }
       }
@@ -4268,6 +4784,18 @@
             "state": "translated",
             "value": "İzin"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отпуск"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuti"
+          }
         }
       }
     },
@@ -4379,6 +4907,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "İzin D-Day"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отпуск: D-Day"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-Day Cuti"
           }
         }
       }
@@ -4492,6 +5032,18 @@
             "state": "translated",
             "value": "Bir sonraki tatilini planla"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запланируйте следующий отпуск"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yuk, rencanakan cuti berikutnya"
+          }
         }
       }
     },
@@ -4603,6 +5155,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Planlı İzin Yok"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отпуск не запланирован"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Belum ada rencana cuti"
           }
         }
       }
@@ -4716,6 +5280,18 @@
             "state": "translated",
             "value": "İzin Yok"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет отпуска"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tidak ada cuti"
+          }
         }
       }
     },
@@ -4828,6 +5404,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "İzin Takvimi"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Календарь отпусков"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender Cuti"
           }
         }
       }

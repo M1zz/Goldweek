@@ -830,6 +830,30 @@ enum BackupError: LocalizedError {
             case .backupRotationFailed: return "Yedek dosyası döndürme işlemi başarısız oldu."
             case .checksumMismatch: return "Yedek dosyası bozuk. (Sağlama toplamı uyuşmuyor)"
             }
+        case .russian:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud недоступен. Включите iCloud Drive в Настройках."
+            case .localPathNotAvailable: return "Нет доступа к локальному хранилищу."
+            case .backupNotFound: return "Файл резервной копии не найден."
+            case .invalidBackupData: return "Не удалось прочитать данные резервной копии."
+            case .encryptionFailed: return "Не удалось зашифровать резервную копию."
+            case .decryptionFailed: return "Не удалось расшифровать резервную копию. Возможно, она создана на другом устройстве."
+            case .integrityVerificationFailed: return "Резервная копия не прошла проверку целостности."
+            case .backupRotationFailed: return "Не удалось обновить файлы резервных копий."
+            case .checksumMismatch: return "Файл резервной копии повреждён (контрольная сумма не совпадает)."
+            }
+        case .indonesian:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud tidak tersedia. Aktifkan iCloud Drive di Pengaturan."
+            case .localPathNotAvailable: return "Tidak bisa mengakses penyimpanan lokal."
+            case .backupNotFound: return "File backup tidak ditemukan."
+            case .invalidBackupData: return "Data backup tidak bisa dibaca."
+            case .encryptionFailed: return "Enkripsi backup gagal."
+            case .decryptionFailed: return "Dekripsi backup gagal. Mungkin ini backup dari perangkat lain."
+            case .integrityVerificationFailed: return "Verifikasi integritas backup gagal."
+            case .backupRotationFailed: return "Rotasi file backup gagal."
+            case .checksumMismatch: return "File backup rusak. (Checksum tidak cocok)"
+            }
         case .dutch:
             switch self {
             case .iCloudNotAvailable: return "iCloud is niet beschikbaar. Schakel iCloud Drive in via Instellingen."
