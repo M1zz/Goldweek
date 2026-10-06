@@ -46,8 +46,8 @@ COPY = {
         ("언제 쉬어야<br>할까?", "마지막 휴가와 다음 휴가로 쉴 때를 알려 드려요"),
         ("최소 연차로<br>최대 연휴", "공휴일과 주말을 엮은 조합을 추천해요"),
         ("한눈에 보는<br>휴가 달력", "날짜를 눌러 바로 등록하고 고쳐요"),
-        ("14개 나라<br>공휴일", "지역마다 다른 공휴일도 골라 맞춰요"),
-        ("내 나라,<br>내 언어로", "10개 언어로 쓸 수 있어요"),
+        ("41개 나라<br>공휴일", "지역마다 다른 공휴일도 골라 맞춰요"),
+        ("내 나라,<br>내 언어로", "21개 언어로 쓸 수 있어요"),
     ],
     "en": [
         ("When should you<br>take a break?", "Your last break, your next one, and when to rest"),
@@ -60,8 +60,8 @@ COPY = {
         ("いつ休むのが<br>いい？", "前回と次の休みから、休みどきをお知らせ"),
         ("最少の有給で<br>最長の連休", "祝日と週末を組み合わせて提案します"),
         ("休みがひと目で<br>わかるカレンダー", "日付をタップしてすぐ登録・編集"),
-        ("14か国・地域の<br>祝日に対応", "地域で異なる祝日も選べます"),
-        ("あなたの国、<br>あなたの言語で", "10言語に対応しています"),
+        ("41か国・地域の<br>祝日に対応", "地域で異なる祝日も選べます"),
+        ("あなたの国、<br>あなたの言語で", "21言語に対応しています"),
     ],
     "zh-Hans": [
         ("什么时候<br>该休息了？", "看看上次休假和下次休假，提醒你该歇歇了"),
@@ -261,6 +261,15 @@ TEXT = '<div class="text"><div class="bar"></div><div class="headline">{h}</div>
 PHONE = '<div class="wrap"><div class="phone"><img src="{img}"></div></div>'
 PAGE = '<!doctype html><html><head><meta charset="utf-8"><style>{css}</style></head><body>{body}</body></html>'
 
+# 헤드리스 Chrome 은 -apple-system 을 못 찾아 다음 글꼴(한글)로 그린다 — 그 글꼴엔 그리스 문자·체코 악센트가 없다.
+# 한중일이 아닌 언어는 라틴·그리스·키릴을 다 가진 Helvetica Neue 로 먼저 그린다.
+CJK = {"ko", "ja", "zh-Hans", "zh-Hant"}
+LATIN_FONT = 'body { font-family:"Helvetica Neue",-apple-system,sans-serif; }'
+
+
+def page(locale, css, body):
+    return PAGE.format(css=css + ("" if locale in CJK else LATIN_FONT), body=body)
+
 
 # ── iPad 13" ─────────────────────────────────────────────
 IW, IH = 2064, 2752
@@ -339,7 +348,7 @@ def render_ipad(locale):
                 sys.exit(f"원본 없음: {img} — IPAD=1 scripts/take_screenshots.sh 먼저")
             body = text + f'<div class="wrap"><div class="tablet"><img src="{img.as_uri()}"></div></div>'
             css, name = IPAD_CSS, src[3:-4]
-        shoot(PAGE.format(css=css, body=body), out_dir / f"{i:02d}-ipad-{name}.png", IW, IH)
+        shoot(page(locale, css, body), out_dir / f"{i:02d}-ipad-{name}.png", IW, IH)
 
 
 def render(locale):
@@ -360,7 +369,7 @@ def render(locale):
             phone = PHONE.format(img=img.as_uri())
             body = phone + text if layout == "text-bottom" else text + phone
             name = src[3:-4]
-        shoot(PAGE.format(css=BASE_CSS + LAYOUTS[layout], body=body), out_dir / f"{i:02d}-{name}.png", W, H)
+        shoot(page(locale, BASE_CSS + LAYOUTS[layout], body), out_dir / f"{i:02d}-{name}.png", W, H)
 
 
 if __name__ == "__main__":
