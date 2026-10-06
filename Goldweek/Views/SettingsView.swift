@@ -274,9 +274,15 @@ struct SettingsView: View {
 
                 // 국가 및 언어
                 Section {
-                    Picker(Strings.country, selection: $selectedCountry) {
-                        ForEach(Country.allCases) { country in
-                            Text("\(country.flag) \(country.displayName)").tag(country)
+                    // 대륙 → 나라 2단계로 찾는다 (나라가 늘어 한 줄 목록은 찾기 어렵다)
+                    NavigationLink {
+                        CountrySelectionView(selection: $selectedCountry)
+                    } label: {
+                        HStack {
+                            Text(Strings.country)
+                            Spacer()
+                            Text("\(selectedCountry.flag) \(selectedCountry.displayName)")
+                                .foregroundStyle(.secondary)
                         }
                     }
                     .onChange(of: selectedCountry) { _, newValue in

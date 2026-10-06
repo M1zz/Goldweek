@@ -1095,6 +1095,19 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_AE")).country, .uae)
     }
 
+    func testPeruHolidays() {
+        // 2026년 16일 (El Peruano 발표와 같은 수), 2021년은 신설 4일이 없다
+        XCTAssertEqual(HolidayService().getHolidays(for: 2026, country: .peru).count, 16)
+        XCTAssertEqual(HolidayService().getHolidays(for: 2021, country: .peru).count, 12)
+    }
+
+    func testEveryCountryHasOneContinent() {
+        for country in Country.allCases where country != .custom {
+            XCTAssertNotNil(country.continent, "\(country)")
+        }
+        XCTAssertEqual(Continent.allCases.flatMap(\.countries).count, Country.allCases.count - 1)
+    }
+
     func testEveryCountryHasHolidays() {
         for country in Country.allCases where country != .custom {   // 직접 입력은 기본 공휴일이 없다
             for region in [""] + country.holidayRegions.map(\.code) {

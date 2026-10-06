@@ -979,4 +979,56 @@ extension HolidayService {
             ([day(year, 12, 18)].compactMap { $0 }, Gulf.nationalDay),
         ])
     }
+
+    // MARK: - 페루
+
+    /// 공·민간 공통 국가 공휴일 (Decreto Legislativo 713과 이후 개정). 주말과 겹쳐도 옮기지 않는다.
+    /// 정부가 해마다 따로 정하는 공공부문 "días no laborables"는 넣지 않았다.
+    func getPeruHolidays(for year: Int) -> [Holiday] {
+        var list: [(Date?, N)] = []
+        list.append((day(year, 1, 1), Common.newYear))
+        if let e = easter(year) {
+            list.append((adding(-3, to: e), Common.maundyThursday))
+            list.append((adding(-2, to: e), Common.goodFriday))
+        }
+        list.append((day(year, 5, 1), Common.labour))
+        if year >= 2023 {
+            list.append((day(year, 6, 7), N(ko: "아리카 전투·국기의 날", en: "Battle of Arica and Flag Day", ja: "アリカの戦い・国旗の日", zh: "阿里卡战役暨国旗日",
+                                            de: "Schlacht von Arica und Tag der Flagge", fr: "Bataille d’Arica et Jour du drapeau", es: "Batalla de Arica y Día de la Bandera",
+                                            it: "Battaglia di Arica e Giorno della Bandiera", pt: "Batalha de Arica e Dia da Bandeira", zht: "阿里卡戰役暨國旗日")))
+        }
+        list.append((day(year, 6, 29), N(ko: "성 베드로와 성 바오로 축일", en: "Saints Peter and Paul", ja: "聖ペトロと聖パウロの日", zh: "圣伯多禄和圣保禄节",
+                                         de: "Peter und Paul", fr: "Saints Pierre et Paul", es: "San Pedro y San Pablo",
+                                         it: "Santi Pietro e Paolo", pt: "São Pedro e São Paulo", zht: "聖伯多祿聖保祿節")))
+        if year >= 2024 {
+            list.append((day(year, 7, 23), N(ko: "페루 공군의 날", en: "Peruvian Air Force Day", ja: "ペルー空軍の日", zh: "秘鲁空军日",
+                                             de: "Tag der Peruanischen Luftwaffe", fr: "Jour de l’armée de l’air péruvienne", es: "Día de la Fuerza Aérea del Perú",
+                                             it: "Giorno dell’Aeronautica peruviana", pt: "Dia da Força Aérea do Peru", zht: "秘魯空軍日")))
+        }
+        let patrias = N(ko: "독립기념일 (피에스타스 파트리아스)", en: "Independence Day (Fiestas Patrias)", ja: "独立記念日", zh: "独立日",
+                        de: "Unabhängigkeitstag", fr: "Fête de l’indépendance", es: "Fiestas Patrias",
+                        it: "Festa dell’indipendenza", pt: "Dia da Independência", zht: "獨立紀念日")
+        list.append((day(year, 7, 28), patrias))
+        list.append((day(year, 7, 29), patrias))
+        if year >= 2022 {
+            list.append((day(year, 8, 6), N(ko: "후닌 전투 기념일", en: "Battle of Junín", ja: "フニンの戦い記念日", zh: "胡宁战役纪念日",
+                                            de: "Schlacht von Junín", fr: "Bataille de Junín", es: "Batalla de Junín",
+                                            it: "Battaglia di Junín", pt: "Batalha de Junín", zht: "胡寧戰役紀念日")))
+        }
+        list.append((day(year, 8, 30), N(ko: "리마의 성녀 로사 축일", en: "Saint Rose of Lima", ja: "リマの聖ロサの日", zh: "利马的圣罗撒节",
+                                         de: "Heilige Rosa von Lima", fr: "Sainte Rose de Lima", es: "Santa Rosa de Lima",
+                                         it: "Santa Rosa da Lima", pt: "Santa Rosa de Lima", zht: "利馬聖羅撒節")))
+        list.append((day(year, 10, 8), N(ko: "앙가모스 해전 기념일", en: "Battle of Angamos", ja: "アンガモスの海戦記念日", zh: "安加莫斯海战纪念日",
+                                         de: "Seeschlacht von Angamos", fr: "Combat d’Angamos", es: "Combate de Angamos",
+                                         it: "Battaglia di Angamos", pt: "Combate de Angamos", zht: "安加莫斯海戰紀念日")))
+        list.append((day(year, 11, 1), Common.allSaints))
+        list.append((day(year, 12, 8), Common.immaculate))
+        if year >= 2022 {
+            list.append((day(year, 12, 9), N(ko: "아야쿠초 전투 기념일", en: "Battle of Ayacucho", ja: "アヤクーチョの戦い記念日", zh: "阿亚库乔战役纪念日",
+                                             de: "Schlacht von Ayacucho", fr: "Bataille d’Ayacucho", es: "Batalla de Ayacucho",
+                                             it: "Battaglia di Ayacucho", pt: "Batalha de Ayacucho", zht: "阿亞庫喬戰役紀念日")))
+        }
+        list.append((day(year, 12, 25), Common.christmas))
+        return list.compactMap { d, n in d.map { Holiday(date: $0, name: n.text) } }.sorted { $0.date < $1.date }
+    }
 }

@@ -1344,6 +1344,7 @@ struct MyRealTripPromoCard: View {
         case .uae: return "DXB"     // 두바이
         case .saudiArabia: return "RUH" // 리야드
         case .qatar: return "DOH"   // 도하
+        case .peru: return "LIM"    // 리마
         case .custom: return "ICN"   // 출발지를 알 수 없다 — 기본값
         }
     }

@@ -10205,30 +10205,65 @@ enum Strings {
         }
     }
 
+    /// 대륙 이름 — 국가 선택 대분류
+    static func continentName(_ continent: Continent) -> String {
+        let names: [Continent: [AppLanguage: String]] = [
+            .asia: [.korean: "아시아", .english: "Asia", .japanese: "アジア", .chinese: "亚洲", .german: "Asien", .french: "Asie",
+                    .spanish: "Asia", .italian: "Asia", .portuguese: "Ásia", .chineseTraditional: "亞洲"],
+            .middleEast: [.korean: "중동", .english: "Middle East", .japanese: "中東", .chinese: "中东", .german: "Naher Osten", .french: "Moyen-Orient",
+                          .spanish: "Oriente Medio", .italian: "Medio Oriente", .portuguese: "Oriente Médio", .chineseTraditional: "中東"],
+            .europe: [.korean: "유럽", .english: "Europe", .japanese: "ヨーロッパ", .chinese: "欧洲", .german: "Europa", .french: "Europe",
+                      .spanish: "Europa", .italian: "Europa", .portuguese: "Europa", .chineseTraditional: "歐洲"],
+            .northAmerica: [.korean: "북아메리카", .english: "North America", .japanese: "北アメリカ", .chinese: "北美洲", .german: "Nordamerika", .french: "Amérique du Nord",
+                            .spanish: "América del Norte", .italian: "America del Nord", .portuguese: "América do Norte", .chineseTraditional: "北美洲"],
+            .southAmerica: [.korean: "남아메리카", .english: "South America", .japanese: "南アメリカ", .chinese: "南美洲", .german: "Südamerika", .french: "Amérique du Sud",
+                            .spanish: "América del Sur", .italian: "America del Sud", .portuguese: "América do Sul", .chineseTraditional: "南美洲"],
+            .oceania: [.korean: "오세아니아", .english: "Oceania", .japanese: "オセアニア", .chinese: "大洋洲", .german: "Ozeanien", .french: "Océanie",
+                       .spanish: "Oceanía", .italian: "Oceania", .portuguese: "Oceania", .chineseTraditional: "大洋洲"],
+        ]
+        return names[continent]?[lang] ?? names[continent]?[.english] ?? continent.rawValue
+    }
+
+    /// 국가 선택 — 검색창 안내
+    static var countrySearchPrompt: String {
+        switch lang {
+        case .korean: return "나라 검색"
+        case .english: return "Search countries"
+        case .japanese: return "国を検索"
+        case .chinese: return "搜索国家"
+        case .german: return "Land suchen"
+        case .french: return "Rechercher un pays"
+        case .spanish: return "Buscar país"
+        case .italian: return "Cerca paese"
+        case .portuguese: return "Buscar país"
+        case .chineseTraditional: return "搜尋國家"
+        }
+    }
+
     /// 나라 이름 — 표의 순서는 `Country.allCases` 순서와 같다
     static func countryDisplayName(_ country: Country) -> String {
         let names: [String]
         switch lang {
         case .korean:
-            names = ["한국", "일본", "중국", "미국", "독일", "프랑스", "영국", "캐나다", "호주", "스페인", "이탈리아", "브라질", "대만", "홍콩", "아랍에미리트", "사우디아라비아", "카타르", "기타 (직접 입력)"]
+            names = ["한국", "일본", "중국", "미국", "독일", "프랑스", "영국", "캐나다", "호주", "스페인", "이탈리아", "브라질", "대만", "홍콩", "아랍에미리트", "사우디아라비아", "카타르", "페루", "기타 (직접 입력)"]
         case .english:
-            names = ["Korea", "Japan", "China", "USA", "Germany", "France", "United Kingdom", "Canada", "Australia", "Spain", "Italy", "Brazil", "Taiwan", "Hong Kong", "United Arab Emirates", "Saudi Arabia", "Qatar", "Other (Custom)"]
+            names = ["Korea", "Japan", "China", "USA", "Germany", "France", "United Kingdom", "Canada", "Australia", "Spain", "Italy", "Brazil", "Taiwan", "Hong Kong", "United Arab Emirates", "Saudi Arabia", "Qatar", "Peru", "Other (Custom)"]
         case .japanese:
-            names = ["韓国", "日本", "中国", "アメリカ", "ドイツ", "フランス", "イギリス", "カナダ", "オーストラリア", "スペイン", "イタリア", "ブラジル", "台湾", "香港", "アラブ首長国連邦", "サウジアラビア", "カタール", "その他（手動入力）"]
+            names = ["韓国", "日本", "中国", "アメリカ", "ドイツ", "フランス", "イギリス", "カナダ", "オーストラリア", "スペイン", "イタリア", "ブラジル", "台湾", "香港", "アラブ首長国連邦", "サウジアラビア", "カタール", "ペルー", "その他（手動入力）"]
         case .chinese:
-            names = ["韩国", "日本", "中国", "美国", "德国", "法国", "英国", "加拿大", "澳大利亚", "西班牙", "意大利", "巴西", "中国台湾", "中国香港", "阿联酋", "沙特阿拉伯", "卡塔尔", "其他（自定义）"]
+            names = ["韩国", "日本", "中国", "美国", "德国", "法国", "英国", "加拿大", "澳大利亚", "西班牙", "意大利", "巴西", "中国台湾", "中国香港", "阿联酋", "沙特阿拉伯", "卡塔尔", "秘鲁", "其他（自定义）"]
         case .german:
-            names = ["Südkorea", "Japan", "China", "USA", "Deutschland", "Frankreich", "Vereinigtes Königreich", "Kanada", "Australien", "Spanien", "Italien", "Brasilien", "Taiwan", "Hongkong", "Vereinigte Arabische Emirate", "Saudi-Arabien", "Katar", "Andere (eigene)"]
+            names = ["Südkorea", "Japan", "China", "USA", "Deutschland", "Frankreich", "Vereinigtes Königreich", "Kanada", "Australien", "Spanien", "Italien", "Brasilien", "Taiwan", "Hongkong", "Vereinigte Arabische Emirate", "Saudi-Arabien", "Katar", "Peru", "Andere (eigene)"]
         case .french:
-            names = ["Corée du Sud", "Japon", "Chine", "États-Unis", "Allemagne", "France", "Royaume-Uni", "Canada", "Australie", "Espagne", "Italie", "Brésil", "Taïwan", "Hong Kong", "Émirats arabes unis", "Arabie saoudite", "Qatar", "Autre (personnalisé)"]
+            names = ["Corée du Sud", "Japon", "Chine", "États-Unis", "Allemagne", "France", "Royaume-Uni", "Canada", "Australie", "Espagne", "Italie", "Brésil", "Taïwan", "Hong Kong", "Émirats arabes unis", "Arabie saoudite", "Qatar", "Pérou", "Autre (personnalisé)"]
         case .spanish:
-            names = ["Corea del Sur", "Japón", "China", "Estados Unidos", "Alemania", "Francia", "Reino Unido", "Canadá", "Australia", "España", "Italia", "Brasil", "Taiwán", "Hong Kong", "Emiratos Árabes Unidos", "Arabia Saudí", "Catar", "Otro (personalizado)"]
+            names = ["Corea del Sur", "Japón", "China", "Estados Unidos", "Alemania", "Francia", "Reino Unido", "Canadá", "Australia", "España", "Italia", "Brasil", "Taiwán", "Hong Kong", "Emiratos Árabes Unidos", "Arabia Saudí", "Catar", "Perú", "Otro (personalizado)"]
         case .italian:
-            names = ["Corea del Sud", "Giappone", "Cina", "Stati Uniti", "Germania", "Francia", "Regno Unito", "Canada", "Australia", "Spagna", "Italia", "Brasile", "Taiwan", "Hong Kong", "Emirati Arabi Uniti", "Arabia Saudita", "Qatar", "Altro (personalizzato)"]
+            names = ["Corea del Sud", "Giappone", "Cina", "Stati Uniti", "Germania", "Francia", "Regno Unito", "Canada", "Australia", "Spagna", "Italia", "Brasile", "Taiwan", "Hong Kong", "Emirati Arabi Uniti", "Arabia Saudita", "Qatar", "Perù", "Altro (personalizzato)"]
         case .portuguese:
-            names = ["Coreia do Sul", "Japão", "China", "Estados Unidos", "Alemanha", "França", "Reino Unido", "Canadá", "Austrália", "Espanha", "Itália", "Brasil", "Taiwan", "Hong Kong", "Emirados Árabes Unidos", "Arábia Saudita", "Catar", "Outro (personalizado)"]
+            names = ["Coreia do Sul", "Japão", "China", "Estados Unidos", "Alemanha", "França", "Reino Unido", "Canadá", "Austrália", "Espanha", "Itália", "Brasil", "Taiwan", "Hong Kong", "Emirados Árabes Unidos", "Arábia Saudita", "Catar", "Peru", "Outro (personalizado)"]
         case .chineseTraditional:
-            names = ["韓國", "日本", "中國", "美國", "德國", "法國", "英國", "加拿大", "澳洲", "西班牙", "義大利", "巴西", "臺灣", "香港", "阿拉伯聯合大公國", "沙烏地阿拉伯", "卡達", "其他（自訂）"]
+            names = ["韓國", "日本", "中國", "美國", "德國", "法國", "英國", "加拿大", "澳洲", "西班牙", "義大利", "巴西", "臺灣", "香港", "阿拉伯聯合大公國", "沙烏地阿拉伯", "卡達", "秘魯", "其他（自訂）"]
         }
         let index = Country.allCases.firstIndex(of: country) ?? 0
         return names[index]

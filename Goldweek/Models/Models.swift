@@ -27,6 +27,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case uae = "uae"                   // 주말 토·일 (2022~)
     case saudiArabia = "saudiarabia"   // 주말 금·토
     case qatar = "qatar"               // 주말 금·토
+    case peru = "peru"
     /// 지원하지 않는 나라 — 기본 공휴일 없이 사용자가 직접 넣는다 (예: 남아공)
     case custom = "custom"
 
@@ -56,6 +57,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .uae: return "AE"
         case .saudiArabia: return "SA"
         case .qatar: return "QA"
+        case .peru: return "PE"
         case .custom: return ""   // 어떤 기기 지역과도 맞지 않게
         }
     }
@@ -87,6 +89,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .uae: return "en_AE"
         case .saudiArabia: return "en_SA"
         case .qatar: return "en_QA"
+        case .peru: return "es_PE"
         case .custom: return Locale.current.identifier
         }
     }
@@ -146,6 +149,44 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         guard let region = Locale.current.region?.identifier,
               !allCases.contains(where: { $0.regionCode == region }) else { return nil }
         return region
+    }
+}
+
+// MARK: - 대륙 (국가 선택 대분류)
+
+/// 국가 선택을 대륙 → 나라 2단계로 찾게 묶는다. 직접 입력(.custom)은 어느 대륙에도 넣지 않는다.
+enum Continent: String, CaseIterable, Identifiable {
+    case asia, middleEast, europe, northAmerica, southAmerica, oceania
+
+    var id: String { rawValue }
+
+    var countries: [Country] {
+        Country.allCases.filter { $0.continent == self }
+            .sorted { $0.displayName.localizedStandardCompare($1.displayName) == .orderedAscending }
+    }
+
+    var displayName: String { Strings.continentName(self) }
+
+    var icon: String {
+        switch self {
+        case .asia, .oceania: return "globe.asia.australia.fill"
+        case .middleEast, .europe: return "globe.europe.africa.fill"
+        case .northAmerica, .southAmerica: return "globe.americas.fill"
+        }
+    }
+}
+
+extension Country {
+    var continent: Continent? {
+        switch self {
+        case .korea, .japan, .china, .taiwan, .hongKong: return .asia
+        case .uae, .saudiArabia, .qatar: return .middleEast
+        case .germany, .france, .uk, .spain, .italy: return .europe
+        case .usa, .canada: return .northAmerica
+        case .brazil, .peru: return .southAmerica
+        case .australia: return .oceania
+        case .custom: return nil
+        }
     }
 }
 

@@ -522,12 +522,10 @@ struct HolidayRegionNoticeCard: View {
             switch notice {
             case .unsupported:
                 Menu {
-                    ForEach(Country.allCases.filter { $0 != .custom }) { country in
-                        Button("\(country.flag) \(country.displayName)") {
-                            profile.country = country
-                            save()
-                            onDismiss()
-                        }
+                    CountryMenuItems(includeCustom: false) { country in
+                        profile.country = country
+                        save()
+                        onDismiss()
                     }
                 } label: {
                     actionLabel(icon: "arrow.left.arrow.right", text: Strings.changeCountry, filled: true)

@@ -572,11 +572,7 @@ struct SetupPage: View {
                             .font(.headline)
                         Spacer()
                         Menu {
-                            Picker(Strings.country, selection: $country) {
-                                ForEach(Country.allCases) { c in
-                                    Text("\(c.flag) \(c.displayName)").tag(c)
-                                }
-                            }
+                            CountryMenuItems(selected: country) { country = $0 }
                         } label: {
                             HStack(spacing: 4) {
                                 Text("\(country.flag) \(country.displayName)")

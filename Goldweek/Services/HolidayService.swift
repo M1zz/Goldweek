@@ -98,6 +98,8 @@ class HolidayService {
                 result = getSaudiArabiaHolidays(for: year)
             case .qatar:
                 result = getQatarHolidays(for: year)
+            case .peru:
+                result = getPeruHolidays(for: year)
             case .custom:
                 result = []   // 전부 사용자가 직접 넣는다
             }
