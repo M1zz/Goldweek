@@ -98,7 +98,7 @@ Goldweek fungerar nu på iPad
 Välj veckostart och helg
 Saknas landet? Lägg in egna helgdagar
 
-### 앱스토어 (노르웨이어)
+### 앱스토어 (노르웨이어 보크말)
 
 Helligdager for 41 land
 11 nye språk, blant annet russisk

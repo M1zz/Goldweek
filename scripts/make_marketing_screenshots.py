@@ -7,7 +7,7 @@
   01 홈(쉴 때)          hero-bleed
   02 추천 연휴          left-text
   03 캘린더             text-bottom
-  04 14개국 공휴일       flags (화면 대신 국기 그리드)
+  04 41개국 공휴일       flags-many (화면 대신 국기 그리드)
   05 설정(국가·언어)     flat-rotate
 
 iPad: 원본 docs/screenshots/raw/ipad/<로케일>/ → 제출본 marketing/<로케일>/1x-ipad-….png (2064×2752)
@@ -27,10 +27,9 @@ PROFILE = tempfile.mkdtemp(prefix="goldweek-chrome-")
 
 # 지원 국가 — 앱의 Country 순서와 같게, 모든 언어에서 같은 순서
 FLAGS = ["🇰🇷", "🇺🇸", "🇯🇵", "🇨🇳", "🇩🇪", "🇫🇷", "🇬🇧", "🇨🇦", "🇦🇺", "🇪🇸", "🇮🇹", "🇧🇷", "🇹🇼", "🇭🇰"]
-# 지금 지원하는 41개 나라 전부 (Country 순서, 직접 입력 제외) — 새로 만드는 장(ru·id·iPad)에 쓴다
+# 지금 지원하는 41개 나라 전부 (Country 순서, 직접 입력 제외)
 ALL_FLAGS = FLAGS + ["🇦🇪", "🇸🇦", "🇶🇦", "🇵🇪", "🇳🇱", "🇧🇪", "🇦🇹", "🇨🇭", "🇮🇪", "🇵🇹", "🇸🇪", "🇳🇴", "🇩🇰", "🇫🇮",
                      "🇵🇱", "🇨🇿", "🇬🇷", "🇹🇷", "🇪🇬", "🇿🇦", "🇲🇽", "🇦🇷", "🇨🇱", "🇨🇴", "🇳🇿", "🇷🇺", "🇮🇩"]
-MANY_FLAGS = {"ru", "id"}
 
 # (원본 파일, 레이아웃) — 5장 구성은 모든 언어에서 같다
 SLIDES = [
@@ -54,8 +53,8 @@ COPY = {
         ("When should you<br>take a break?", "Your last break, your next one, and when to rest"),
         ("Fewest days off,<br>longest break", "Holidays and weekends, combined for you"),
         ("Your time off<br>at a glance", "Tap any date to add or edit leave"),
-        ("Holidays for<br>14 countries", "Pick your state or region where it matters"),
-        ("Your country,<br>your language", "Available in 10 languages"),
+        ("Holidays for<br>41 countries", "Pick your state or region where it matters"),
+        ("Your country,<br>your language", "Available in 21 languages"),
     ],
     "ja": [
         ("いつ休むのが<br>いい？", "前回と次の休みから、休みどきをお知らせ"),
@@ -68,43 +67,43 @@ COPY = {
         ("什么时候<br>该休息了？", "看看上次休假和下次休假，提醒你该歇歇了"),
         ("最少年假<br>拼出最长假期", "把节假日和周末串起来推荐给你"),
         ("休假安排<br>一目了然", "点一下日期即可登记或修改"),
-        ("14 个国家和地区<br>的节假日", "还会标出调休补班日"),
-        ("你的国家<br>你的语言", "支持 10 种语言"),
+        ("41 个国家和地区<br>的节假日", "还会标出调休补班日"),
+        ("你的国家<br>你的语言", "支持 21 种语言"),
     ],
     "zh-Hant": [
         ("什麼時候<br>該休息了？", "看看上次和下次休假，提醒你該休息了"),
         ("最少特休<br>排出最長連假", "串起國定假日和週末推薦給你"),
         ("休假安排<br>一目了然", "點一下日期就能登記或修改"),
-        ("14 個國家與地區<br>的假日", "各地不同的假日也能選擇"),
-        ("你的國家<br>你的語言", "支援 10 種語言"),
+        ("41 個國家與地區<br>的假日", "各地不同的假日也能選擇"),
+        ("你的國家<br>你的語言", "支援 21 種語言"),
     ],
     "de": [
         ("Wann brauchst du<br>eine Pause?", "Letzter Urlaub, nächster Urlaub und wann es Zeit wird"),
         ("Wenig Urlaub,<br>lange frei", "Feiertage und Wochenenden clever verbunden"),
         ("Dein Urlaub<br>auf einen Blick", "Tippe auf ein Datum zum Eintragen"),
-        ("Feiertage in<br>14 Ländern", "Auch je nach Bundesland"),
-        ("Dein Land,<br>deine Sprache", "In 10 Sprachen verfügbar"),
+        ("Feiertage in<br>41 Ländern", "Auch je nach Bundesland"),
+        ("Dein Land,<br>deine Sprache", "In 21 Sprachen verfügbar"),
     ],
     "fr": [
         ("Quand faut-il<br>souffler ?", "Dernier congé, prochain congé : on vous dit quand"),
         ("Moins de congés,<br>plus de repos", "Fériés et week-ends combinés pour vous"),
         ("Vos congés<br>en un coup d'œil", "Touchez une date pour poser un congé"),
-        ("Les fériés<br>de 14 pays", "Chacun avec ses propres règles"),
-        ("Votre pays,<br>votre langue", "Disponible en 10 langues"),
+        ("Les fériés<br>de 41 pays", "Chacun avec ses propres règles"),
+        ("Votre pays,<br>votre langue", "Disponible en 21 langues"),
     ],
     "es": [
         ("¿Cuándo deberías<br>descansar?", "Tu último descanso, el próximo y cuándo parar"),
         ("Menos días,<br>puentes más largos", "Festivos y fines de semana, combinados"),
         ("Tus vacaciones<br>de un vistazo", "Toca una fecha para añadir o editar"),
-        ("Festivos de<br>14 países", "También por comunidad autónoma"),
-        ("Tu país,<br>tu idioma", "Disponible en 10 idiomas"),
+        ("Festivos de<br>41 países", "También por comunidad autónoma"),
+        ("Tu país,<br>tu idioma", "Disponible en 21 idiomas"),
     ],
     "it": [
         ("Quando dovresti<br>fermarti?", "Ultima pausa, prossima pausa e quando staccare"),
         ("Meno ferie,<br>ponti più lunghi", "Festivi e weekend combinati per te"),
         ("Le tue ferie<br>a colpo d'occhio", "Tocca una data per aggiungere o modificare"),
-        ("Festività di<br>14 Paesi", "Ognuno con le sue regole"),
-        ("Il tuo Paese,<br>la tua lingua", "Disponibile in 10 lingue"),
+        ("Festività di<br>41 Paesi", "Ognuno con le sue regole"),
+        ("Il tuo Paese,<br>la tua lingua", "Disponibile in 21 lingue"),
     ],
     "ru": [
         ("Когда пора<br>отдохнуть?", "Прошлый отпуск, следующий и подсказка, когда отдыхать"),
@@ -124,8 +123,71 @@ COPY = {
         ("Quando você<br>deve descansar?", "Sua última folga, a próxima e a hora de parar"),
         ("Menos dias,<br>feriadões maiores", "Feriados e fins de semana combinados"),
         ("Suas férias<br>num piscar de olhos", "Toque numa data para lançar ou editar"),
-        ("Feriados de<br>14 países", "Cada um com suas regras"),
-        ("Seu país,<br>seu idioma", "Disponível em 10 idiomas"),
+        ("Feriados de<br>41 países", "Cada um com suas regras"),
+        ("Seu país,<br>seu idioma", "Disponível em 21 idiomas"),
+    ],
+    "nl": [
+        ("Wanneer neem jij<br>weer vrij?", "Vorige vakantie, de volgende en het beste moment"),
+        ("Minder verlof,<br>langer vrij", "Feestdagen en weekenden slim voor je gecombineerd"),
+        ("Al je verlof<br>in één oogopslag", "Tik een datum aan om verlof toe te voegen"),
+        ("Feestdagen in<br>41 landen", "Van Koningsdag tot Hemelvaart, per land en regio"),
+        ("Jouw land,<br>jouw taal", "Beschikbaar in 21 talen"),
+    ],
+    "sv": [
+        ("När ska du<br>ta ledigt?", "Senaste ledigheten, nästa och när du behöver vila"),
+        ("Färre dagar,<br>längre ledighet", "Helgdagar och helger kombineras åt dig"),
+        ("Din ledighet<br>i överblick", "Tryck på ett datum för att lägga till eller ändra"),
+        ("Helgdagar i<br>41 länder", "Röda dagar för varje land och region"),
+        ("Ditt land,<br>ditt språk", "Finns på 21 språk"),
+    ],
+    "nb": [
+        ("Når skal du<br>ta fri?", "Forrige ferie, den neste og når du bør hvile"),
+        ("Færre dager,<br>lengre ferie", "Helligdager og helger satt sammen for deg"),
+        ("Oversikt over<br>all ferien", "Trykk på en dato for å legge inn eller endre"),
+        ("Helligdager i<br>41 land", "Røde dager for hvert land og hver region"),
+        ("Ditt land,<br>ditt språk", "Tilgjengelig på 21 språk"),
+    ],
+    "da": [
+        ("Hvornår skal du<br>holde fri?", "Seneste ferie, næste ferie og tid til en pause"),
+        ("Færre feriedage,<br>længere fri", "Helligdage og weekender lagt sammen for dig"),
+        ("Hele ferien<br>på ét blik", "Tryk på en dato for at tilføje eller rette ferie"),
+        ("Helligdage<br>i 41 lande", "Med danske navne, fra påske til juleaften"),
+        ("Dit land,<br>dit sprog", "Fås på 21 sprog"),
+    ],
+    "fi": [
+        ("Milloin pitäisit<br>lomaa?", "Edellinen loma, seuraava ja milloin levätä"),
+        ("Vähin lomapäivin<br>pisin vapaa", "Pyhäpäivät ja viikonloput yhdistettyinä puolestasi"),
+        ("Lomat yhdellä<br>silmäyksellä", "Napauta päivää lisätäksesi tai muokataksesi lomaa"),
+        ("Pyhäpäivät<br>41 maasta", "Virallisin nimin loppiaisesta juhannukseen"),
+        ("Sinun maasi,<br>sinun kielesi", "Saatavilla 21 kielellä"),
+    ],
+    "pl": [
+        ("Kiedy wziąć<br>wolne?", "Ostatni urlop, następny i kiedy odpocząć"),
+        ("Mniej urlopu,<br>dłuższe wolne", "Święta i weekendy połączone za Ciebie"),
+        ("Urlop<br>w jednym miejscu", "Stuknij datę, by dodać lub zmienić urlop"),
+        ("Święta<br>w 41 krajach", "Z polskimi nazwami, od majówki po Wigilię"),
+        ("Twój kraj,<br>Twój język", "Dostępne w 21 językach"),
+    ],
+    "cs": [
+        ("Kdy si<br>dát volno?", "Poslední volno, to příští a kdy si odpočinout"),
+        ("Méně dovolené,<br>delší volno", "Svátky a víkendy spojíme za tebe"),
+        ("Dovolená<br>na první pohled", "Klepnutím na datum přidáš nebo upravíš volno"),
+        ("Svátky<br>41 zemí", "České svátky pod oficiálními názvy"),
+        ("Tvoje země,<br>tvůj jazyk", "K dispozici ve 21 jazycích"),
+    ],
+    "el": [
+        ("Πότε να πάρεις<br>ρεπό;", "Το τελευταίο, το επόμενο και πότε να ξεκουραστείς"),
+        ("Λιγότερη άδεια,<br>μεγαλύτερο ρεπό", "Ενώνουμε αργίες και Σαββατοκύριακα για σένα"),
+        ("Οι άδειές σου<br>με μια ματιά", "Πάτα μια ημερομηνία για προσθήκη ή αλλαγή"),
+        ("Αργίες για<br>41 χώρες", "Με το ορθόδοξο Πάσχα και τις κινητές γιορτές"),
+        ("Η χώρα σου,<br>η γλώσσα σου", "Διαθέσιμο σε 21 γλώσσες"),
+    ],
+    "tr": [
+        ("Ne zaman<br>izin almalı?", "Son tatilin, sıradaki tatilin ve dinlenme zamanın"),
+        ("En az izinle<br>en uzun tatil", "Resmî tatil ve hafta sonları senin için birleşir"),
+        ("İzinlerin<br>tek bakışta", "İzin eklemek ya da düzenlemek için tarihe dokun"),
+        ("41 ülkenin<br>resmî tatilleri", "Ramazan ve Kurban Bayramı dahil"),
+        ("Senin ülken,<br>senin dilin", "21 dilde kullanılabilir"),
     ],
 }
 
@@ -208,8 +270,6 @@ IPAD_SLIDES = [   # (원본, 레이아웃, COPY 의 몇 번째 문구)
     (None, "ipad-flags", 3),
     ("03-settings.png", "ipad", 4),
 ]
-# iPad 장은 이번에 새로 만든다 — 숫자는 지금 앱에 맞춘다 (나라 41개, 언어 21개)
-IPAD_NUMBERS = {"14": "41", "10": "21"}
 
 IPAD_CSS = f"""
 * {{ margin:0; padding:0; box-sizing:border-box; }}
@@ -269,9 +329,6 @@ def render_ipad(locale):
     for i, (src, layout, k) in enumerate(IPAD_SLIDES, start=11):
         h, s = COPY[locale][k]
         h = h.replace("<br>", " ")   # iPad 는 폭이 넓어 한 줄로
-        if k in (3, 4):
-            for a, b in IPAD_NUMBERS.items():
-                h, s = h.replace(a, b), s.replace(a, b)
         text = TEXT.format(h=h, s=s)
         if layout == "ipad-flags":
             body = text + '<div class="grid">' + "".join(f"<div>{f}</div>" for f in ALL_FLAGS) + "</div>"
@@ -293,11 +350,8 @@ def render(locale):
     for i, ((src, layout), (h, s)) in enumerate(zip(SLIDES, COPY[locale]), start=1):
         text = TEXT.format(h=h, s=s)
         if layout == "flags":
-            many = locale in MANY_FLAGS
-            flags = ALL_FLAGS if many else FLAGS
-            if many:
-                layout = "flags-many"
-            body = text + '<div class="grid">' + "".join(f"<div>{f}</div>" for f in flags) + "</div>"
+            layout = "flags-many"
+            body = text + '<div class="grid">' + "".join(f"<div>{f}</div>" for f in ALL_FLAGS) + "</div>"
             name = "countries"
         else:
             img = RAW / locale / src
