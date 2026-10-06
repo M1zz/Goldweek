@@ -58,7 +58,8 @@ class HolidayService {
                      customHolidays: [CustomHoliday] = [],
                      hiddenDates: Set<String> = []) -> [Holiday] {
         let region = Self.activeRegion(for: country)?.code
-        let baseKey = "\(year)-\(country.rawValue)-\(region ?? "")"
+        // 이름이 앱 언어를 따르므로 언어도 키에 넣는다 — 실행 중 언어를 바꿔도 예전 이름이 남지 않게
+        let baseKey = "\(year)-\(country.rawValue)-\(region ?? "")-\(AppLanguage.current.rawValue)"
         var result: [Holiday]
         if let cached = baseHolidaysCache[baseKey] {
             result = cached

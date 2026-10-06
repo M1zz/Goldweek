@@ -1109,6 +1109,58 @@ extension HolidayService {
         }.sorted { $0.date < $1.date }
     }
 
+    // MARK: 현지어 공휴일 이름
+
+    /// 앱 언어가 그 나라 말일 때 공식 명칭으로 바꾼다. 이 언어들은 `HolidayName`에 칸이 없어
+    /// 이름이 영어로 떨어지므로, 영어 이름을 키로 현지 이름을 찾는다.
+    private func localized(_ holidays: [Holiday], _ language: AppLanguage, _ names: [String: String]) -> [Holiday] {
+        guard AppLanguage.current == language else { return holidays }
+        return holidays.map { h in
+            guard let local = names[h.name] else { return h }
+            return Holiday(date: h.date, name: local, isSubstitute: h.isSubstitute, isCustom: h.isCustom, isBreak: h.isBreak)
+        }
+    }
+
+    private enum Local {
+        static let sv = ["New Year's Day": "Nyårsdagen", "Epiphany": "Trettondedag jul", "Good Friday": "Långfredagen",
+                         "Easter Monday": "Annandag påsk", "Ascension Day": "Kristi himmelsfärdsdag", "Labour Day": "Första maj",
+                         "National Day": "Sveriges nationaldag", "Midsummer Eve": "Midsommarafton", "Christmas Eve": "Julafton",
+                         "Christmas Day": "Juldagen", "Second Day of Christmas": "Annandag jul", "New Year's Eve": "Nyårsafton"]
+        static let nb = ["New Year's Day": "Første nyttårsdag", "Maundy Thursday": "Skjærtorsdag", "Good Friday": "Langfredag",
+                         "Easter Monday": "Andre påskedag", "Ascension Day": "Kristi himmelfartsdag", "Whit Monday": "Andre pinsedag",
+                         "Labour Day": "Arbeidernes dag", "Constitution Day": "Grunnlovsdagen", "Christmas Day": "Første juledag",
+                         "Second Day of Christmas": "Andre juledag"]
+        static let da = ["New Year's Day": "Nytårsdag", "Maundy Thursday": "Skærtorsdag", "Good Friday": "Langfredag",
+                         "Easter Monday": "2. påskedag", "Great Prayer Day": "Store bededag", "Ascension Day": "Kristi himmelfartsdag",
+                         "Whit Monday": "2. pinsedag", "Constitution Day": "Grundlovsdag", "Christmas Eve": "Juleaften",
+                         "Christmas Day": "1. juledag", "Second Day of Christmas": "2. juledag"]
+        static let fi = ["New Year's Day": "Uudenvuodenpäivä", "Epiphany": "Loppiainen", "Good Friday": "Pitkäperjantai",
+                         "Easter Monday": "Toinen pääsiäispäivä", "Labour Day": "Vappu", "Ascension Day": "Helatorstai",
+                         "Midsummer Eve": "Juhannusaatto", "Independence Day": "Itsenäisyyspäivä", "Christmas Eve": "Jouluaatto",
+                         "Christmas Day": "Joulupäivä", "Second Day of Christmas": "Tapaninpäivä"]
+        static let pl = ["New Year's Day": "Nowy Rok", "Epiphany": "Święto Trzech Króli", "Easter Monday": "Poniedziałek Wielkanocny",
+                         "Corpus Christi": "Boże Ciało", "Labour Day": "Święto Pracy", "Constitution Day": "Święto Konstytucji 3 Maja",
+                         "Assumption Day": "Wniebowzięcie Najświętszej Maryi Panny", "All Saints' Day": "Wszystkich Świętych",
+                         "Independence Day": "Narodowe Święto Niepodległości", "Christmas Eve": "Wigilia Bożego Narodzenia",
+                         "Christmas Day": "Boże Narodzenie", "Second Day of Christmas": "Drugi dzień Bożego Narodzenia"]
+        static let cs = ["New Year's Day": "Nový rok", "Good Friday": "Velký pátek", "Easter Monday": "Velikonoční pondělí",
+                         "Labour Day": "Svátek práce", "Liberation Day": "Den vítězství",
+                         "Saints Cyril and Methodius Day": "Den slovanských věrozvěstů Cyrila a Metoděje",
+                         "Jan Hus Day": "Den upálení mistra Jana Husa", "Czech Statehood Day": "Den české státnosti",
+                         "Independence Day": "Den vzniku samostatného československého státu",
+                         "Struggle for Freedom and Democracy Day": "Den boje za svobodu a demokracii",
+                         "Christmas Eve": "Štědrý den", "Christmas Day": "1. svátek vánoční", "Second Day of Christmas": "2. svátek vánoční"]
+        static let el = ["New Year's Day": "Πρωτοχρονιά", "Epiphany": "Θεοφάνεια", "Clean Monday": "Καθαρά Δευτέρα",
+                         "Orthodox Good Friday": "Μεγάλη Παρασκευή", "Orthodox Easter Monday": "Δευτέρα του Πάσχα",
+                         "Whit Monday": "Δευτέρα του Αγίου Πνεύματος", "Independence Day": "Εθνική Επέτειος 25ης Μαρτίου",
+                         "Labour Day": "Πρωτομαγιά", "Assumption Day": "Κοίμηση της Θεοτόκου", "Ochi Day": "Επέτειος του Όχι",
+                         "Christmas Day": "Χριστούγεννα", "Second Day of Christmas": "Σύναξη της Θεοτόκου"]
+        static let tr = ["New Year's Day": "Yılbaşı", "National Sovereignty and Children's Day": "Ulusal Egemenlik ve Çocuk Bayramı",
+                         "Labour Day": "Emek ve Dayanışma Günü", "Atatürk, Youth and Sports Day": "Atatürk'ü Anma, Gençlik ve Spor Bayramı",
+                         "Democracy and National Unity Day": "Demokrasi ve Millî Birlik Günü", "Victory Day": "Zafer Bayramı",
+                         "Republic Day": "Cumhuriyet Bayramı", "Eid al-Fitr": "Ramazan Bayramı", "Eid al-Adha": "Kurban Bayramı"]
+    }
+
     // MARK: 네덜란드
 
     func getNetherlandsHolidays(for year: Int) -> [Holiday] {
@@ -1264,7 +1316,7 @@ extension HolidayService {
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), More.secondChristmas))
         list.append((day(year, 12, 31), More.newYearsEve))
-        return makeList(list)
+        return localized(makeList(list), .swedish, Local.sv)
     }
 
     func getNorwayHolidays(for year: Int) -> [Holiday] {
@@ -1280,7 +1332,7 @@ extension HolidayService {
         list.append((day(year, 5, 17), More.constitution))
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), More.secondChristmas))
-        return makeList(list)
+        return localized(makeList(list), .norwegian, Local.nb)
     }
 
     func getDenmarkHolidays(for year: Int) -> [Holiday] {
@@ -1301,7 +1353,7 @@ extension HolidayService {
         list.append((day(year, 12, 24), Common.christmasEve))
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), More.secondChristmas))
-        return makeList(list)
+        return localized(makeList(list), .danish, Local.da)
     }
 
     func getFinlandHolidays(for year: Int) -> [Holiday] {
@@ -1317,7 +1369,7 @@ extension HolidayService {
         list.append((day(year, 12, 24), Common.christmasEve))
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), More.secondChristmas))
-        return makeList(list)
+        return localized(makeList(list), .finnish, Local.fi)
     }
 
     // MARK: 중·동유럽
@@ -1336,7 +1388,7 @@ extension HolidayService {
         if year >= 2025 { list.append((day(year, 12, 24), Common.christmasEve)) }   // 2025년 신설
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), More.secondChristmas))
-        return makeList(list)
+        return localized(makeList(list), .polish, Local.pl)
     }
 
     func getCzechiaHolidays(for year: Int) -> [Holiday] {
@@ -1363,7 +1415,7 @@ extension HolidayService {
         list.append((day(year, 12, 24), Common.christmasEve))
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), More.secondChristmas))
-        return makeList(list)
+        return localized(makeList(list), .czech, Local.cs)
     }
 
     func getGreeceHolidays(for year: Int) -> [Holiday] {
@@ -1383,7 +1435,7 @@ extension HolidayService {
                                           es: "Día del No", it: "Giorno del No", pt: "Dia do Não", zht: "說不日")))
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), More.secondChristmas))
-        return makeList(list)
+        return localized(makeList(list), .greek, Local.el)
     }
 
     // MARK: 튀르키예·이집트
@@ -1410,7 +1462,7 @@ extension HolidayService {
         ]
         items.append((hijri(year, month: 10, day: 1, length: 3), Gulf.eidFitr))
         items.append((hijri(year, month: 12, day: 10, length: 4), Gulf.eidAdha))
-        return gulfList(items)
+        return localized(gulfList(items), .turkish, Local.tr)
     }
 
     /// 이집트 — 주말 금·토. 정부가 공휴일을 목요일로 옮기는 해가 있어 실제와 하루쯤 다를 수 있다.

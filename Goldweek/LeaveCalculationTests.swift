@@ -1118,6 +1118,17 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertEqual(HolidayService.weekendDays(for: .egypt), [6, 7])
     }
 
+    func testLocalHolidayNamesFollowAppLanguage() {
+        let saved = UserDefaults.standard.string(forKey: "appLanguage")
+        defer { UserDefaults.standard.set(saved, forKey: "appLanguage") }
+        UserDefaults.standard.set("sv", forKey: "appLanguage")
+        XCTAssertTrue(HolidayService().getHolidays(for: 2026, country: .sweden).contains { $0.name == "Midsommarafton" })
+        UserDefaults.standard.set("tr", forKey: "appLanguage")
+        XCTAssertTrue(HolidayService().getHolidays(for: 2026, country: .turkey).contains { $0.name == "Cumhuriyet Bayramı" })
+        UserDefaults.standard.set("en", forKey: "appLanguage")
+        XCTAssertTrue(HolidayService().getHolidays(for: 2026, country: .sweden).contains { $0.name == "Midsummer Eve" })
+    }
+
     func testPeruHolidays() {
         // 2026년 16일 (El Peruano 발표와 같은 수), 2021년은 신설 4일이 없다
         XCTAssertEqual(HolidayService().getHolidays(for: 2026, country: .peru).count, 16)
