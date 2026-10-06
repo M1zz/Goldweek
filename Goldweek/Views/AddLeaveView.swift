@@ -281,6 +281,12 @@ struct LeaveRegistrationView: View {
         }
     }
 
+    /// 시작~끝 달력 일수
+    var calendarDays: Int {
+        let cal = Calendar.current
+        return (cal.dateComponents([.day], from: cal.startOfDay(for: startDate), to: cal.startOfDay(for: endDate)).day ?? 0) + 1
+    }
+
     /// 차감 일수 — 주말·공휴일·내 방학은 빼고 센다 (LeaveRecord.effectiveLeaveDays 와 같은 기준)
     var leaveDays: Double {
         if length != .full { return length.fraction }
@@ -511,6 +517,14 @@ struct LeaveRegistrationView: View {
                             .foregroundStyle(.blue)
                             .fontWeight(.semibold)
                     }
+                }
+
+                // 달력 일수와 차감 일수가 다르면 왜 다른지 보여 준다 (근무일 기준)
+                if length == .full, calendarDays > Int(leaveDays) {
+                    Text(Strings.leaveCountingDetail(calendarDays: calendarDays, deducted: Strings.dayCount(leaveDays)))
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 if startDate < Calendar.current.startOfDay(for: Date()) {

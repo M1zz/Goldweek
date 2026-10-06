@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct OnboardingView: View {
     @Environment(\.modelContext) private var modelContext
@@ -16,6 +17,9 @@ struct OnboardingView: View {
     @State private var userName = ""
     @State private var totalLeave: Double = 15
     @State private var yearStartMonth = 1
+    /// 공휴일 기준 나라 — 기기 지역을 먼저, 지원하지 않는 지역이면 언어로 고른다 (영어 → 미국)
+    @State private var country = Country.fromDeviceLocale()
+    @State private var didLoadExisting = false
     @State private var showingSaveError = false
     @FocusState private var isNameFieldFocused: Bool
 
@@ -51,6 +55,7 @@ struct OnboardingView: View {
                         userName: $userName,
                         totalLeave: $totalLeave,
                         yearStartMonth: $yearStartMonth,
+                        country: $country,
                         isNameFocused: $isNameFieldFocused
                     )
                     .tag(3)
@@ -74,6 +79,7 @@ struct OnboardingView: View {
         .onTapGesture {
             isNameFieldFocused = false
         }
+        .onAppear(perform: loadExistingProfile)
         .onChange(of: currentPage) { _, newPage in
             HapticFeedback.selection()
             if newPage != 3 {
@@ -157,10 +163,20 @@ struct OnboardingView: View {
         }
     }
 
+    /// 설정에서 "처음 안내 다시 보기"로 들어오면 지금 값으로 채운다 —
+    /// 안 그러면 고른 나라·연차가 감지값과 기본값(15일)으로 덮어써진다
+    private func loadExistingProfile() {
+        guard !didLoadExisting else { return }
+        didLoadExisting = true
+        guard let existing = (try? modelContext.fetch(FetchDescriptor<UserProfile>()))?.first else { return }
+        totalLeave = existing.totalAnnualLeave
+        yearStartMonth = existing.yearStartMonth
+        country = existing.country
+    }
+
     // MARK: - 완료 처리
     private func completeOnboarding() {
         UsageReportingService.record(event: "onboarding_complete")
-        let country = Country.fromDeviceLocale()
         // 기기 언어를 그대로 따른다 — 지원하지 않는 언어면 영어
         AppLanguage.current = AppLanguage.fromDeviceLocale()
 
@@ -172,7 +188,7 @@ struct OnboardingView: View {
             existing.name = userName.isEmpty ? existing.name : userName
             existing.yearStartMonth = yearStartMonth
             existing.totalAnnualLeave = totalLeave
-            existing.country = country
+            if existing.country != country { existing.country = country }   // 같으면 고른 주·지역 유지
             profile = existing
         } else {
             profile = UserProfile(
@@ -498,7 +514,14 @@ struct SetupPage: View {
     @Binding var userName: String
     @Binding var totalLeave: Double
     @Binding var yearStartMonth: Int
+    @Binding var country: Country
     var isNameFocused: FocusState<Bool>.Binding
+
+    /// 기기 지역을 지원하지 않아 언어로 고른 경우 그 지역 이름 (예: 남아프리카 공화국)
+    private var unsupportedRegionName: String? {
+        guard let code = Country.unsupportedDeviceRegion else { return nil }
+        return Locale(identifier: AppLanguage.current.bundleLanguageCode).localizedString(forRegionCode: code) ?? code
+    }
 
     var body: some View {
         ScrollView {
@@ -542,6 +565,39 @@ struct SetupPage: View {
                 .background(Color(.systemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 18))
 
+                // 공휴일 기준 나라 카드 — 자동으로 골랐다는 걸 보여 주고 바로 바꿀 수 있게
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Label(Strings.onboardingHolidayCountry, systemImage: "globe")
+                            .font(.headline)
+                        Spacer()
+                        Menu {
+                            Picker(Strings.country, selection: $country) {
+                                ForEach(Country.allCases) { c in
+                                    Text("\(c.flag) \(c.displayName)").tag(c)
+                                }
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Text("\(country.flag) \(country.displayName)")
+                                    .font(.body.weight(.semibold))
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .font(.body)
+                                    .voDecorative()
+                            }
+                            .foregroundStyle(AppTheme.Colors.bonus)
+                        }
+                    }
+
+                    Text(unsupportedRegionName.map(Strings.onboardingCountryByLanguage) ?? Strings.onboardingCountryByRegion)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(18)
+                .background(Color(.systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
                 // 총 연차 카드
                 VStack(alignment: .leading, spacing: 14) {
                     Label(Strings.totalAnnualLeave, systemImage: "calendar")
@@ -560,6 +616,11 @@ struct SetupPage: View {
                         Stepper("", value: $totalLeave, in: 1...30, step: 1)
                             .labelsHidden()
                     }
+
+                    Text(Strings.leaveCountingFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(18)
                 .background(Color(.systemBackground))
@@ -617,6 +678,62 @@ struct ProShowcasePage: View {
 
     @State private var proManager = ProManager.shared
     @State private var animateFeatures = false
+    @State private var isPurchasing = false
+    @State private var alertMessage: String?
+
+    private func primaryButton(_ title: String, showsProgress: Bool = false, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 8) {
+                if showsProgress {
+                    ProgressView().tint(.white)
+                }
+                Text(title)
+            }
+            .font(.headline)
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .frame(height: 56)
+            .background(
+                LinearGradient(
+                    colors: [AppTheme.Colors.bonus, AppTheme.Colors.bonus.opacity(0.85)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: AppTheme.Colors.bonus.opacity(0.3), radius: 12, y: 6)
+        }
+    }
+
+    /// 결제 시트를 띄운다. 끝나면 이 페이지에 Pro 상태가 보이고 "시작하기"로 넘어간다.
+    private func purchase() {
+        isPurchasing = true
+        Task {
+            defer { isPurchasing = false }
+            do {
+                try await proManager.purchase()
+                if proManager.isPro {
+                    UsageReportingService.record(event: "onboarding_purchase:success")
+                    HapticFeedback.success()
+                }
+            } catch {
+                if let skError = error as? StoreKitError, case .userCancelled = skError { return }
+                alertMessage = error.localizedDescription
+            }
+        }
+    }
+
+    private func restore() {
+        isPurchasing = true
+        Task {
+            defer { isPurchasing = false }
+            switch await proManager.restorePurchases() {
+            case .restored: HapticFeedback.success()
+            case .nothingToRestore: alertMessage = Strings.restorePurchasesNone
+            case .failed(let reason): alertMessage = Strings.restorePurchasesFailed(reason)
+            }
+        }
+    }
 
     private var proFeatures: [(String, String, String, Color)] {
         [
@@ -688,48 +805,77 @@ struct ProShowcasePage: View {
                 }
                 .padding(.horizontal, 24)
 
-                // 가격
-                if !proManager.proPrice.isEmpty {
-                    VStack(spacing: 4) {
-                        Text(proManager.proPrice)
-                            .font(.title2.bold())
-                            .foregroundStyle(AppTheme.Colors.bonus)
-                        Text(Strings.oneTimePurchase)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
+                // 이미 Pro면(오퍼 코드를 먼저 리딤한 경우 등) 그 사실을 보여 주고, 아니면 가격
+                if proManager.isPro {
+                    HStack(spacing: 8) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .foregroundStyle(AppTheme.Colors.success)
+                            .voDecorative()
+                        Text(Strings.proActiveMessage)
+                            .font(.body.weight(.semibold))
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(.top, 4)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(AppTheme.Colors.success.opacity(0.12))
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .padding(.horizontal, 24)
+                } else if !proManager.proPrice.isEmpty {
+                    Text(Strings.oneTimePurchase)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 4)
                 }
 
-                // CTA
+                // CTA — 구매 버튼과 시작 버튼을 분리한다. 예전엔 가격 아래 큰 버튼이 "시작하기"라
+                // 결제를 기대한 사람에게 아무 일도 안 일어나는 것처럼 보였다.
                 VStack(spacing: 10) {
-                    Button(action: onComplete) {
-                        Text(Strings.getStarted)
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 56)
-                            .background(
-                                LinearGradient(
-                                    colors: [AppTheme.Colors.bonus, AppTheme.Colors.bonus.opacity(0.85)],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .shadow(color: AppTheme.Colors.bonus.opacity(0.3), radius: 12, y: 6)
-                    }
+                    if proManager.isPro {
+                        primaryButton(Strings.getStarted, action: onComplete)
+                    } else {
+                        primaryButton(
+                            isPurchasing ? Strings.purchasing
+                                : proManager.proPrice.isEmpty ? Strings.purchase
+                                : Strings.unlockProWithPrice(proManager.proPrice),
+                            showsProgress: isPurchasing,
+                            action: purchase
+                        )
+                        .disabled(isPurchasing || proManager.proPrice.isEmpty)
 
-                    Button(action: onComplete) {
-                        Text(Strings.proOnboardingSkip)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                            .padding(.vertical, 8)
+                        Button(action: onComplete) {
+                            Text(Strings.continueWithFree)
+                                .font(.body.weight(.semibold))
+                                .foregroundStyle(AppTheme.Colors.brand)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 48)
+                                .background(Color(.systemBackground))
+                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                                .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color(.systemGray4), lineWidth: 1))
+                        }
+                        .disabled(isPurchasing)
+
+                        Button(action: restore) {
+                            Text(Strings.restorePurchase)
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                                .padding(.vertical, 6)
+                        }
+                        .disabled(isPurchasing)
                     }
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 16)
             }
+        }
+        // 앱 밖에서 리딤한 코드도 여기서 바로 반영되게 한 번 더 확인한다
+        .task { await proManager.checkEntitlement() }
+        .alert(Strings.alert, isPresented: Binding(
+            get: { alertMessage != nil },
+            set: { if !$0 { alertMessage = nil } }
+        )) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(alertMessage ?? "")
         }
         .onAppear {
             withAnimation { animateFeatures = true }

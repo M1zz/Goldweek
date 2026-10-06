@@ -93,8 +93,8 @@ struct CalendarView: View {
             var d = calendar.startOfDay(for: rec.startDate)
             let end = calendar.startOfDay(for: rec.endDate)
             while d <= end {
-                let wd = calendar.component(.weekday, from: d)
-                if wd != 1 && wd != 7 && !holidaySet.contains(d) {
+                if !HolidayService.isWeekendDay(d, country: DayOffCalendar.shared.country, calendar: calendar)
+                    && !holidaySet.contains(d) {
                     set.insert(d)
                 }
                 guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
@@ -147,8 +147,7 @@ struct CalendarView: View {
             DayOffCalendar.shared.holidays(for: $0, country: profile.country)
         }.map { calendar.startOfDay(for: $0.date) })
         return Set(days.filter { d in
-            let weekday = calendar.component(.weekday, from: d)
-            return weekday != 1 && weekday != 7 && !dayOff.contains(d)
+            !HolidayService.isWeekendDay(d, country: profile.country, calendar: calendar) && !dayOff.contains(d)
         })
     }
 
@@ -473,7 +472,7 @@ struct CalendarGrid: View {
                 ForEach(Array(Strings.weekdays.enumerated()), id: \.offset) { index, day in
                     Text(day)
                         .font(.body.bold())
-                        .foregroundStyle(index == 0 ? .red : (index == 6 ? .blue : .primary))
+                        .foregroundStyle(weekdayHeaderColor(index + 1))
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -527,6 +526,12 @@ struct CalendarGrid: View {
             let recordEnd = calendar.startOfDay(for: record.endDate)
             return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
         }
+    }
+
+    /// 요일 헤더 색 — 그 나라 주말만 칠한다 (토요일 파랑, 다른 주말 빨강)
+    private func weekdayHeaderColor(_ weekday: Int) -> Color {
+        guard HolidayService.weekendDays(for: DayOffCalendar.shared.country).contains(weekday) else { return .primary }
+        return weekday == 7 ? .blue : .red
     }
 
     private func isWeekendDate(_ date: Date) -> Bool {
@@ -637,18 +642,18 @@ struct DayCell: View {
     }
 
     var isWeekend: Bool {
-        let weekday = calendar.component(.weekday, from: date)
-        return weekday == 1 || weekday == 7
+        HolidayService.isWeekendDay(date, country: DayOffCalendar.shared.country, calendar: calendar)
     }
 
+    /// 주말 중 토요일은 파랑, 나머지 주말(일요일·중동의 금요일)은 공휴일 색
     var textColor: Color {
         if isSelected {
             return .white
         } else if isMakeupWorkday && !isHoliday {
             return .primary
-        } else if isHoliday || calendar.component(.weekday, from: date) == 1 {
+        } else if isHoliday || (isWeekend && calendar.component(.weekday, from: date) != 7) {
             return AppTheme.Colors.holiday
-        } else if calendar.component(.weekday, from: date) == 7 {
+        } else if isWeekend {
             return AppTheme.Colors.weekend
         }
         return .primary

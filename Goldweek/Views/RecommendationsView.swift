@@ -470,10 +470,9 @@ struct HolidayInfoCard: View {
     /// 추천 카드와 동일한 색상 규칙: 주말(토/일) 우선 파랑 → 평일 공휴일은 빨강 → 평일
     func dayType(for date: Date) -> DayType {
         // 중국 调休 보충 근무일은 토·일이어도 평일로 칠한다
-        let weekday = HolidayService.isMakeupWorkday(date, country: country, calendar: calendar)
-            ? 0 : calendar.component(.weekday, from: date)
-        if weekday == 1 { return .sunday }
-        if weekday == 7 { return .saturday }
+        if HolidayService.isRestWeekend(date, country: country, calendar: calendar) {
+            return calendar.component(.weekday, from: date) == 7 ? .saturday : .sunday
+        }
         let isHoliday = publicHolidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
         if isHoliday { return .holiday }
         return .workday
@@ -750,16 +749,16 @@ struct RecommendationDatePreview: View {
 
     private func getDayType(for date: Date) -> DayType {
         // 중국 调休 보충 근무일은 토·일이어도 평일로 칠한다
-        let weekday = HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country, calendar: calendar)
-            ? 0 : calendar.component(.weekday, from: date)
+        let isRestWeekend = HolidayService.isRestWeekend(date, country: DayOffCalendar.shared.country, calendar: calendar)
+        let weekday = isRestWeekend ? calendar.component(.weekday, from: date) : 0
         let isHoliday = holidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
         let isInLeaveRange = date >= startDate && date <= endDate
 
         // 사용자 요청: 토/일은 공휴일과 겹쳐도 항상 파랑 (주말 우선).
         // 공휴일은 평일에 떨어진 경우에만 빨강으로 표시.
-        if weekday == 1 {
+        if isRestWeekend && weekday != 7 {
             return .sunday
-        } else if weekday == 7 {
+        } else if isRestWeekend {
             return .saturday
         } else if isHoliday {
             return .holiday
@@ -1342,6 +1341,9 @@ struct MyRealTripPromoCard: View {
         case .brazil: return "GRU"  // 상파울루
         case .taiwan: return "TPE"  // 타오위안
         case .hongKong: return "HKG"
+        case .uae: return "DXB"     // 두바이
+        case .saudiArabia: return "RUH" // 리야드
+        case .qatar: return "DOH"   // 도하
         case .custom: return "ICN"   // 출발지를 알 수 없다 — 기본값
         }
     }
@@ -2520,9 +2522,8 @@ struct OptimalLeavePlannerCard: View {
         }
         var leaveN = 0, weekendN = 0, holidayN = 0
         for d in days {
-            let wd = cal.component(.weekday, from: d)
             if leaveSet.contains(cal.startOfDay(for: d)) { leaveN += 1 }
-            else if wd == 1 || wd == 7 { weekendN += 1 }
+            else if HolidayService.isRestWeekend(d, country: DayOffCalendar.shared.country, calendar: cal) { weekendN += 1 }
             else { holidayN += 1 }  // 주말도 연차도 아닌 휴일 = 공휴일
         }
 
@@ -2640,6 +2641,7 @@ struct OptimalLeavePlannerCard: View {
         }
 
         let makeupDays = HolidayService.makeupWorkdays(for: year, country: profile.country, calendar: cal)
+        let weekendDays = HolidayService.weekendDays(for: profile.country)
 
         // 백그라운드 계산 (DP는 가볍지만 main 스레드 차단 방지)
         let computed = await Task.detached(priority: .userInitiated) { () -> OptimalLeavePlan in
@@ -2649,6 +2651,7 @@ struct OptimalLeavePlannerCard: View {
                 holidays: holidayDates,
                 excludedDates: excluded,
                 makeupWorkdays: makeupDays,
+                weekendDays: weekendDays,
                 minBreakLength: 3,
                 earliestDate: Date(),
                 calendar: cal

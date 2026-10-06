@@ -69,6 +69,8 @@ struct SettingsView: View {
 
     // 홈 "연차 현황"에 보너스 연차를 합산할지 여부 (홈 화면에서 이 설정을 따른다)
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
+    /// 직접 입력 국가의 주말 요일 ("7,1") — HolidayService.customWeekendDays 와 같은 키
+    @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
     @AppStorage("rest_radar_enabled") private var restRadarEnabled: Bool = true
 
     // 국가 & 언어
@@ -152,6 +154,16 @@ struct SettingsView: View {
         return "\(Int((used / total) * 100))%"
     }
 
+    /// 직접 입력 국가에서 고를 수 있는 주말 (토·일 / 금·토 / 목·금 / 금 / 일)
+    static let weekendPresets: [Set<Int>] = [[7, 1], [6, 7], [5, 6], [6], [1]]
+
+    /// 월요일부터 순서대로 "Sat · Sun"
+    static func weekendLabel(_ days: Set<Int>) -> String {
+        days.sorted { ($0 + 5) % 7 < ($1 + 5) % 7 }
+            .map { Strings.weekdays[$0 - 1] }
+            .joined(separator: " · ")
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -213,6 +225,53 @@ struct SettingsView: View {
                     .padding(.vertical, 8)
                 }
 
+                // 이용 중인 버전 — 오퍼 코드를 리딤한 사람도 Pro가 켜졌는지 바로 알 수 있게
+                Section(Strings.planStatusTitle) {
+                    if ProManager.shared.isPro {
+                        HStack(spacing: 12) {
+                            Image(systemName: "crown.fill")
+                                .foregroundStyle(AppTheme.Colors.bonus)
+                                .frame(width: 28)
+                                .voDecorative()
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.goldweekPro)
+                                    .fontWeight(.semibold)
+                                Text(Strings.proActiveMessage)
+                                    .font(.body)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Text(Strings.planActive)
+                                .font(.body.weight(.semibold))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 4)
+                                .background(Color.green.opacity(0.15))
+                                .foregroundStyle(.green)
+                                .clipShape(Capsule())
+                        }
+                        .accessibilityElement(children: .combine)
+                    } else {
+                        HStack(spacing: 12) {
+                            Image(systemName: "person.crop.circle")
+                                .foregroundStyle(.secondary)
+                                .frame(width: 28)
+                                .voDecorative()
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.planFree)
+                                    .fontWeight(.semibold)
+                                Text(Strings.freePlanMessage)
+                                    .font(.body)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .accessibilityElement(children: .combine)
+                            Spacer()
+                            Button(Strings.planUpgrade) { showingPaywall = true }
+                                .buttonStyle(.borderedProminent)
+                                .tint(AppTheme.Colors.bonus)
+                        }
+                    }
+                }
+
                 // 국가 및 언어
                 Section {
                     Picker(Strings.country, selection: $selectedCountry) {
@@ -240,6 +299,29 @@ struct SettingsView: View {
                         }
                     }
 
+                    // 주말 — 나라마다 다르다(중동은 금·토). 직접 입력이면 고른다.
+                    if selectedCountry == .custom {
+                        Picker(Strings.weekendSetting, selection: Binding(
+                            get: { HolidayService.customWeekendDays },
+                            set: { newValue in
+                                HolidayService.customWeekendDays = newValue
+                                customWeekendDaysRaw = newValue.sorted().map(String.init).joined(separator: ",")
+                                recommendationEngine.invalidateCache()
+                            }
+                        )) {
+                            ForEach(Self.weekendPresets, id: \.self) { days in
+                                Text(Self.weekendLabel(days)).tag(days)
+                            }
+                        }
+                    } else {
+                        HStack {
+                            Text(Strings.weekendSetting)
+                            Spacer()
+                            Text(Self.weekendLabel(selectedCountry.standardWeekendDays))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
                     Picker(Strings.language, selection: $selectedLanguage) {
                         ForEach(AppLanguage.allCases) { lang in
                             Text("\(lang.flag) \(lang.displayName)").tag(lang)
@@ -255,7 +337,7 @@ struct SettingsView: View {
                     if !selectedCountry.holidayRegions.isEmpty {
                         Text(Strings.holidayRegionFooter(selectedCountry))
                     } else if selectedCountry == .custom {
-                        Text(Strings.customCountryBuiltInInfo)
+                        Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.weekendSettingFooter)")
                     }
                 }
 
@@ -388,6 +470,11 @@ struct SettingsView: View {
                             Text(Strings.monthShort(month)).tag(month)
                         }
                     }
+
+                    // 연차를 달력 일수로 세는지 근무일로 세는지 — 묻는 사람이 많다
+                    Text(Strings.leaveCountingFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
                 }
 
                 // 보너스 연차 관리 (Pro 전용, 직장인 모드만)

@@ -19,6 +19,8 @@ struct ContentView: View {
     @Query private var customHolidays: [CustomHoliday]
     @Query private var schoolBreaks: [SchoolBreak]
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
+    /// 직접 입력 국가의 주말 요일 — 바뀌면 쉬는 날 판정을 다시 채운다
+    @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
 
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     /// 사용법 시트를 이미 봤는지 — 온보딩 직후 딱 한 번 자동으로 띄운다.
@@ -212,7 +214,7 @@ struct ContentView: View {
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
-        return "\(profile.countryRaw)|\(profile.holidayRegionRaw)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(profile.holidayRegionRaw)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {
@@ -284,6 +286,7 @@ struct ContentView: View {
             holidays: holidays,
             excludedDates: excluded,
             makeupWorkdays: HolidayService.makeupWorkdays(for: year, country: profile.country),
+            weekendDays: HolidayService.weekendDays(for: profile.country),
             earliestDate: today
         )
 

@@ -266,7 +266,28 @@ struct PaywallView: View {
 
     // MARK: - Purchase Buttons
 
+    @ViewBuilder
     private var purchaseButtons: some View {
+        if proManager.isPro {
+            // 이미 Pro — 구매 버튼 대신 상태를 분명히 보여 준다
+            HStack(spacing: 8) {
+                Image(systemName: "checkmark.seal.fill")
+                    .foregroundColor(.green)
+                    .voDecorative()
+                Text(Strings.proActiveMessage)
+                    .fontWeight(.semibold)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.green.opacity(0.12))
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+        } else {
+            purchaseActions
+        }
+    }
+
+    private var purchaseActions: some View {
         VStack(spacing: 12) {
             Button(action: purchasePro) {
                 HStack(spacing: 8) {

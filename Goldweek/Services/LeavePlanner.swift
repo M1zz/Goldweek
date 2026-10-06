@@ -71,6 +71,7 @@ enum LeavePlanner {
         holidays: [Date],
         excludedDates: Set<Date> = [],
         makeupWorkdays: Set<Date> = [],
+        weekendDays: Set<Int> = [1, 7],
         minBreakLength: Int = 3,
         earliestDate: Date? = nil,
         calendar: Calendar = .current
@@ -86,6 +87,7 @@ enum LeavePlanner {
         let dayInfo = buildDayIndex(year: year, holidays: holidays,
                                      excludedDates: excludedDates,
                                      makeupWorkdays: makeupWorkdays,
+                                     weekendDays: weekendDays,
                                      calendar: calendar)
 
         // 2. 다리 후보 추출
@@ -172,6 +174,7 @@ private extension LeavePlanner {
     static func buildDayIndex(year: Int, holidays: [Date],
                               excludedDates: Set<Date>,
                               makeupWorkdays: Set<Date> = [],
+                              weekendDays: Set<Int> = [1, 7],
                               calendar: Calendar) -> [DayInfo] {
         let holidaySet: Set<Date> = Set(holidays.map { calendar.startOfDay(for: $0) })
         let makeupSet: Set<Date> = Set(makeupWorkdays.map { calendar.startOfDay(for: $0) })
@@ -195,7 +198,7 @@ private extension LeavePlanner {
             let day = calendar.startOfDay(for: date)
             let weekday = calendar.component(.weekday, from: day)
             // 중국 调休 보충 근무일은 토·일이어도 출근하는 날이다
-            let isWeekend = (weekday == 1 || weekday == 7) && !makeupSet.contains(day)
+            let isWeekend = weekendDays.contains(weekday) && !makeupSet.contains(day)
             let isHoliday = holidaySet.contains(day)
             let isExcluded = excludedSet.contains(day)
 

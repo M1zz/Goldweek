@@ -60,10 +60,9 @@ extension Date {
         return Calendar.current.date(byAdding: components, to: startOfMonth) ?? self
     }
     
-    /// 주말 여부
+    /// 주말 여부 — 지금 나라의 주말 요일 기준 (중동은 금·토)
     var isWeekend: Bool {
-        let weekday = Calendar.current.component(.weekday, from: self)
-        return weekday == 1 || weekday == 7
+        HolidayService.isWeekendDay(self, country: DayOffCalendar.shared.country)
     }
     
     /// 해당 계절

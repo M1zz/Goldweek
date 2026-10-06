@@ -337,6 +337,13 @@ struct HolidayManagementView: View {
                     .padding(.horizontal)
                     .padding(.top, 6)
             }
+            if country.hasMoonSightingHolidays {
+                Text(Strings.moonSightingNote)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal)
+                    .padding(.top, 6)
+            }
         }
     }
 

@@ -874,4 +874,109 @@ extension HolidayService {
         }
         return holidays.filter { calendar.component(.year, from: $0.date) == year }.sorted { $0.date < $1.date }
     }
+
+    // MARK: - 걸프 (UAE·사우디·카타르)
+
+    /// 이슬람력(움 알쿠라) 날짜 → 그해 양력 날짜들. 이슬람력 1년은 약 354일이라
+    /// 같은 명절이 한 양력 해에 두 번 올 수도 있다(예: 2030년 이드 알피트르).
+    /// 실제 날짜는 달 관측 발표로 하루쯤 달라질 수 있다 — 공휴일 관리에서 고칠 수 있다.
+    fileprivate func hijri(_ year: Int, month: Int, day: Int, length: Int = 1) -> [Date] {
+        let islamic = Calendar(identifier: .islamicUmmAlQura)
+        let approx = year - 579   // 양력 2026 ≈ 이슬람력 1447~1448
+        var result: [Date] = []
+        for hy in (approx - 1)...(approx + 1) {
+            guard let d = islamic.date(from: DateComponents(year: hy, month: month, day: day)),
+                  islamic.component(.day, from: d) == day else { continue }
+            let start = calendar.startOfDay(for: d)
+            for i in 0..<length {
+                let x = adding(i, to: start)
+                if calendar.component(.year, from: x) == year { result.append(x) }
+            }
+        }
+        return result
+    }
+
+    /// 라마단 29일 다음 날 — 라마단이 29일로 끝나면 샤왈 1일, 30일까지면 라마단 30일
+    fileprivate func dayAfterRamadan29(_ year: Int, length: Int) -> [Date] {
+        let islamic = Calendar(identifier: .islamicUmmAlQura)
+        let approx = year - 579
+        var result: [Date] = []
+        for hy in (approx - 1)...(approx + 1) {
+            guard let d = islamic.date(from: DateComponents(year: hy, month: 9, day: 29)) else { continue }
+            let start = adding(1, to: calendar.startOfDay(for: d))
+            for i in 0..<length {
+                let x = adding(i, to: start)
+                if calendar.component(.year, from: x) == year { result.append(x) }
+            }
+        }
+        return result
+    }
+
+    private enum Gulf {
+        static let eidFitr = N(ko: "이드 알피트르", en: "Eid al-Fitr", ja: "イード・アル＝フィトル", zh: "开斋节", de: "Zuckerfest (Eid al-Fitr)", fr: "Aïd el-Fitr",
+                               es: "Eid al-Fitr", it: "Eid al-Fitr", pt: "Eid al-Fitr", zht: "開齋節")
+        static let eidAdha = N(ko: "이드 알아드하", en: "Eid al-Adha", ja: "イード・アル＝アドハー", zh: "宰牲节", de: "Opferfest (Eid al-Adha)", fr: "Aïd el-Kébir",
+                               es: "Eid al-Adha", it: "Eid al-Adha", pt: "Eid al-Adha", zht: "宰牲節")
+        static let arafat = N(ko: "아라파트의 날", en: "Arafat Day", ja: "アラファの日", zh: "阿拉法特日", de: "Arafat-Tag", fr: "Jour d’Arafat",
+                              es: "Día de Arafat", it: "Giorno di Arafat", pt: "Dia de Arafat", zht: "阿拉法特日")
+        static let hijriNewYear = N(ko: "이슬람 새해", en: "Islamic New Year", ja: "イスラム新年", zh: "伊斯兰新年", de: "Islamisches Neujahr", fr: "Nouvel An islamique",
+                                    es: "Año Nuevo islámico", it: "Capodanno islamico", pt: "Ano Novo Islâmico", zht: "伊斯蘭新年")
+        static let prophetBirthday = N(ko: "예언자 탄신일", en: "Prophet's Birthday", ja: "預言者生誕祭", zh: "圣纪节", de: "Geburtstag des Propheten", fr: "Mawlid (naissance du Prophète)",
+                                       es: "Nacimiento del Profeta", it: "Nascita del Profeta", pt: "Nascimento do Profeta", zht: "聖紀節")
+        static let commemoration = N(ko: "순국자 추모일", en: "Commemoration Day", ja: "殉教者追悼の日", zh: "烈士纪念日", de: "Gedenktag für die Gefallenen", fr: "Jour de commémoration",
+                                     es: "Día de la Conmemoración", it: "Giorno della Commemorazione", pt: "Dia da Comemoração", zht: "烈士紀念日")
+        static let nationalDay = N(ko: "국경일", en: "National Day", ja: "ナショナルデー", zh: "国庆日", de: "Nationalfeiertag", fr: "Fête nationale",
+                                   es: "Día Nacional", it: "Festa nazionale", pt: "Dia Nacional", zht: "國慶日")
+        static let foundingDay = N(ko: "건국 기념일", en: "Founding Day", ja: "建国記念日", zh: "建国日", de: "Gründungstag", fr: "Jour de la Fondation",
+                                   es: "Día de la Fundación", it: "Giorno della Fondazione", pt: "Dia da Fundação", zht: "建國日")
+        static let sportDay = N(ko: "국가 스포츠의 날", en: "National Sport Day", ja: "ナショナル・スポーツ・デー", zh: "全国体育日", de: "Nationaler Sporttag", fr: "Journée nationale du sport",
+                                es: "Día Nacional del Deporte", it: "Giornata nazionale dello sport", pt: "Dia Nacional do Esporte", zht: "全國體育日")
+    }
+
+    private func gulfList(_ items: [([Date], N)]) -> [Holiday] {
+        var taken = Set<String>()
+        var holidays: [Holiday] = []
+        for (dates, n) in items {
+            for d in dates where taken.insert(dateKey(d)).inserted {
+                holidays.append(Holiday(date: d, name: n.text))
+            }
+        }
+        return holidays.sorted { $0.date < $1.date }
+    }
+
+    /// UAE 공·민간 공통 공휴일 (내각 결정). 주말 토·일.
+    func getUAEHolidays(for year: Int) -> [Holiday] {
+        gulfList([
+            ([day(year, 1, 1)].compactMap { $0 }, Common.newYear),
+            (hijri(year, month: 10, day: 1, length: 3), Gulf.eidFitr),
+            (hijri(year, month: 12, day: 9), Gulf.arafat),
+            (hijri(year, month: 12, day: 10, length: 3), Gulf.eidAdha),
+            (hijri(year, month: 1, day: 1), Gulf.hijriNewYear),
+            (hijri(year, month: 3, day: 12), Gulf.prophetBirthday),
+            ([day(year, 12, 1)].compactMap { $0 }, Gulf.commemoration),
+            ([day(year, 12, 2), day(year, 12, 3)].compactMap { $0 }, Gulf.nationalDay),
+        ])
+    }
+
+    /// 사우디 민간 부문 (노동법 시행규칙): 이드 알피트르 라마단 29일 다음 날부터 4일,
+    /// 이드 알아드하 아라파트의 날부터 4일, 건국 기념일, 국경일. 주말 금·토.
+    func getSaudiArabiaHolidays(for year: Int) -> [Holiday] {
+        gulfList([
+            ([day(year, 2, 22)].compactMap { $0 }, Gulf.foundingDay),
+            (dayAfterRamadan29(year, length: 4), Gulf.eidFitr),
+            (hijri(year, month: 12, day: 9), Gulf.arafat),
+            (hijri(year, month: 12, day: 10, length: 3), Gulf.eidAdha),
+            ([day(year, 9, 23)].compactMap { $0 }, Gulf.nationalDay),
+        ])
+    }
+
+    /// 카타르 노동법 최소 공휴일 + 국가 스포츠의 날(2월 둘째 화요일). 주말 금·토.
+    func getQatarHolidays(for year: Int) -> [Holiday] {
+        gulfList([
+            ([nthWeekday(nth: 2, weekday: 3, month: 2, year: year)].compactMap { $0 }, Gulf.sportDay),
+            (hijri(year, month: 10, day: 1, length: 3), Gulf.eidFitr),
+            (hijri(year, month: 12, day: 10, length: 3), Gulf.eidAdha),
+            ([day(year, 12, 18)].compactMap { $0 }, Gulf.nationalDay),
+        ])
+    }
 }

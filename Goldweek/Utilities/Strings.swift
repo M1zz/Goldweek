@@ -9947,30 +9947,288 @@ enum Strings {
         }
     }
 
+    // MARK: - 이용 중인 버전 · 연차 계산 기준 · 주말
+
+    /// 설정 — 무료/Pro 상태 섹션 제목
+    static var planStatusTitle: String {
+        switch lang {
+        case .korean: return "이용 중인 버전"
+        case .english: return "Your Plan"
+        case .japanese: return "ご利用中のプラン"
+        case .chinese: return "当前版本"
+        case .german: return "Dein Tarif"
+        case .french: return "Votre formule"
+        case .spanish: return "Tu plan"
+        case .italian: return "Il tuo piano"
+        case .portuguese: return "Seu plano"
+        case .chineseTraditional: return "目前方案"
+        }
+    }
+
+    /// 무료 버전 이름
+    static var planFree: String {
+        switch lang {
+        case .korean: return "무료 버전"
+        case .english: return "Free Version"
+        case .japanese: return "無料版"
+        case .chinese: return "免费版"
+        case .german: return "Kostenlose Version"
+        case .french: return "Version gratuite"
+        case .spanish: return "Versión gratuita"
+        case .italian: return "Versione gratuita"
+        case .portuguese: return "Versão gratuita"
+        case .chineseTraditional: return "免費版"
+        }
+    }
+
+    /// Pro 상태 배지
+    static var planActive: String {
+        switch lang {
+        case .korean: return "이용 중"
+        case .english: return "Active"
+        case .japanese: return "有効"
+        case .chinese: return "已启用"
+        case .german: return "Aktiv"
+        case .french: return "Active"
+        case .spanish: return "Activa"
+        case .italian: return "Attiva"
+        case .portuguese: return "Ativa"
+        case .chineseTraditional: return "已啟用"
+        }
+    }
+
+    /// 무료 버전 행의 업그레이드 버튼
+    static var planUpgrade: String {
+        switch lang {
+        case .korean: return "업그레이드"
+        case .english: return "Upgrade"
+        case .japanese: return "アップグレード"
+        case .chinese: return "升级"
+        case .german: return "Upgrade"
+        case .french: return "Passer à Pro"
+        case .spanish: return "Mejorar"
+        case .italian: return "Passa a Pro"
+        case .portuguese: return "Fazer upgrade"
+        case .chineseTraditional: return "升級"
+        }
+    }
+
+    /// Pro 사용자에게 — 온보딩·페이월·설정
+    static var proActiveMessage: String {
+        switch lang {
+        case .korean: return "Pro가 활성화되어 있어요. 모든 기능을 쓸 수 있어요."
+        case .english: return "Pro is active. All features are unlocked."
+        case .japanese: return "Proが有効です。すべての機能を使えます。"
+        case .chinese: return "Pro 已启用，所有功能均可使用。"
+        case .german: return "Pro ist aktiv. Alle Funktionen sind freigeschaltet."
+        case .french: return "Pro est actif. Toutes les fonctionnalités sont débloquées."
+        case .spanish: return "Pro está activo. Todas las funciones están desbloqueadas."
+        case .italian: return "Pro è attivo. Tutte le funzioni sono sbloccate."
+        case .portuguese: return "O Pro está ativo. Todos os recursos estão liberados."
+        case .chineseTraditional: return "Pro 已啟用，所有功能皆可使用。"
+        }
+    }
+
+    /// 설정 — 무료 버전 설명
+    static var freePlanMessage: String {
+        switch lang {
+        case .korean: return "추천 일부와 올해 기록만 쓸 수 있어요."
+        case .english: return "Some recommendations and the current year only."
+        case .japanese: return "一部のおすすめと今年の記録のみ使えます。"
+        case .chinese: return "仅可使用部分推荐和今年的记录。"
+        case .german: return "Nur einige Empfehlungen und das aktuelle Jahr."
+        case .french: return "Quelques recommandations et l’année en cours uniquement."
+        case .spanish: return "Solo algunas recomendaciones y el año actual."
+        case .italian: return "Solo alcuni suggerimenti e l’anno in corso."
+        case .portuguese: return "Apenas algumas sugestões e o ano atual."
+        case .chineseTraditional: return "僅可使用部分推薦與今年的紀錄。"
+        }
+    }
+
+    /// 온보딩 Pro 구매 버튼 — 눌러야 결제가 시작된다
+    static func unlockProWithPrice(_ price: String) -> String {
+        switch lang {
+        case .korean: return "Pro 잠금 해제 · \(price)"
+        case .english: return "Unlock Pro · \(price)"
+        case .japanese: return "Proを解除 · \(price)"
+        case .chinese: return "解锁 Pro · \(price)"
+        case .german: return "Pro freischalten · \(price)"
+        case .french: return "Débloquer Pro · \(price)"
+        case .spanish: return "Desbloquear Pro · \(price)"
+        case .italian: return "Sblocca Pro · \(price)"
+        case .portuguese: return "Desbloquear Pro · \(price)"
+        case .chineseTraditional: return "解鎖 Pro · \(price)"
+        }
+    }
+
+    /// 온보딩 — 결제 없이 시작
+    static var continueWithFree: String {
+        switch lang {
+        case .korean: return "무료 버전으로 계속"
+        case .english: return "Continue with Free Version"
+        case .japanese: return "無料版で続ける"
+        case .chinese: return "继续使用免费版"
+        case .german: return "Mit der kostenlosen Version fortfahren"
+        case .french: return "Continuer avec la version gratuite"
+        case .spanish: return "Continuar con la versión gratuita"
+        case .italian: return "Continua con la versione gratuita"
+        case .portuguese: return "Continuar com a versão gratuita"
+        case .chineseTraditional: return "繼續使用免費版"
+        }
+    }
+
+    /// 연차 계산 기준 — 설정·온보딩
+    static var leaveCountingFooter: String {
+        switch lang {
+        case .korean: return "연차는 근무일 기준으로 셉니다. 휴가 기간에 낀 주말과 공휴일은 차감하지 않아요."
+        case .english: return "Leave is counted in working days. Weekends and public holidays inside your time off are not deducted."
+        case .japanese: return "休暇は勤務日で数えます。期間中の週末と祝日は差し引きません。"
+        case .chinese: return "年假按工作日计算，假期中的周末和法定假日不扣除。"
+        case .german: return "Urlaub wird in Arbeitstagen gezählt. Wochenenden und Feiertage im Urlaubszeitraum werden nicht abgezogen."
+        case .french: return "Les congés sont comptés en jours ouvrés. Les week-ends et jours fériés compris dans la période ne sont pas déduits."
+        case .spanish: return "Las vacaciones se cuentan en días laborables. Los fines de semana y festivos dentro del periodo no se descuentan."
+        case .italian: return "Le ferie si contano in giorni lavorativi. Weekend e festività nel periodo non vengono scalati."
+        case .portuguese: return "As folgas são contadas em dias úteis. Fins de semana e feriados dentro do período não são descontados."
+        case .chineseTraditional: return "特休以工作日計算，假期中的週末與國定假日不扣除。"
+        }
+    }
+
+    /// 휴가 등록 — 달력 일수와 실제 차감 일수가 다를 때
+    static func leaveCountingDetail(calendarDays: Int, deducted: String) -> String {
+        switch lang {
+        case .korean: return "달력으로 \(calendarDays)일 중 주말·공휴일을 빼고 \(deducted) 차감"
+        case .english: return "\(calendarDays) calendar days, \(deducted) deducted (weekends and holidays excluded)"
+        case .japanese: return "暦日\(calendarDays)日のうち週末・祝日を除いて\(deducted)を消化"
+        case .chinese: return "共\(calendarDays)个日历日，扣除周末和假日后计\(deducted)"
+        case .german: return "\(calendarDays) Kalendertage, \(deducted) abgezogen (ohne Wochenenden und Feiertage)"
+        case .french: return "\(calendarDays) jours calendaires, \(deducted) déduits (hors week-ends et jours fériés)"
+        case .spanish: return "\(calendarDays) días naturales, se descuentan \(deducted) (sin fines de semana ni festivos)"
+        case .italian: return "\(calendarDays) giorni di calendario, \(deducted) scalati (esclusi weekend e festività)"
+        case .portuguese: return "\(calendarDays) dias corridos, \(deducted) descontados (sem fins de semana e feriados)"
+        case .chineseTraditional: return "共\(calendarDays)個日曆日，扣除週末與假日後計\(deducted)"
+        }
+    }
+
+    /// 설정 — 주말 요일
+    static var weekendSetting: String {
+        switch lang {
+        case .korean: return "주말"
+        case .english: return "Weekend"
+        case .japanese: return "週末"
+        case .chinese: return "周末"
+        case .german: return "Wochenende"
+        case .french: return "Week-end"
+        case .spanish: return "Fin de semana"
+        case .italian: return "Fine settimana"
+        case .portuguese: return "Fim de semana"
+        case .chineseTraditional: return "週末"
+        }
+    }
+
+    /// 설정 — 직접 입력 국가 주말 설명
+    static var weekendSettingFooter: String {
+        switch lang {
+        case .korean: return "쉬는 요일을 고르세요. 이 요일은 연차에서 빼고 셉니다."
+        case .english: return "Choose the days you normally don't work. They're never deducted from your leave."
+        case .japanese: return "普段休む曜日を選んでください。この曜日は休暇から差し引きません。"
+        case .chinese: return "请选择你平时休息的日子，这些日子不计入年假。"
+        case .german: return "Wähle die Tage, an denen du normalerweise nicht arbeitest. Sie werden nie vom Urlaub abgezogen."
+        case .french: return "Choisissez vos jours de repos habituels. Ils ne sont jamais déduits de vos congés."
+        case .spanish: return "Elige los días en que normalmente no trabajas. Nunca se descuentan de tus vacaciones."
+        case .italian: return "Scegli i giorni in cui di solito non lavori. Non vengono mai scalati dalle ferie."
+        case .portuguese: return "Escolha os dias em que você normalmente não trabalha. Eles nunca são descontados das folgas."
+        case .chineseTraditional: return "請選擇平常休息的日子，這些日子不計入特休。"
+        }
+    }
+
+    /// 공휴일 관리 — 걸프 국가 이슬람 명절 안내
+    static var moonSightingNote: String {
+        switch lang {
+        case .korean: return "이슬람 명절은 움 알쿠라 달력으로 계산했어요. 공식 발표(달 관측)에 따라 하루쯤 달라질 수 있으니, 다르면 숨기고 내 공휴일로 추가해 주세요."
+        case .english: return "Islamic holidays are calculated with the Umm al-Qura calendar and may shift by a day after the official moon sighting. If a date differs, hide it and add the correct one under My Holidays."
+        case .japanese: return "イスラム教の祝日はウンム・アル＝クラー暦で計算しています。公式発表（月の観測）で1日ずれることがあるので、違う場合は非表示にしてマイ祝日に追加してください。"
+        case .chinese: return "伊斯兰节日按乌姆库拉历计算，可能因官方观月公告相差一天。如有不同，请隐藏后在“我的假日”中添加正确日期。"
+        case .german: return "Islamische Feiertage werden nach dem Umm-al-Qura-Kalender berechnet und können sich nach der offiziellen Mondsichtung um einen Tag verschieben. Weicht ein Datum ab, blende es aus und füge das richtige unter Meine Feiertage hinzu."
+        case .french: return "Les fêtes islamiques sont calculées avec le calendrier Umm al-Qura et peuvent être décalées d’un jour après l’observation officielle de la lune. Si une date diffère, masquez-la et ajoutez la bonne dans Mes jours fériés."
+        case .spanish: return "Las fiestas islámicas se calculan con el calendario Umm al-Qura y pueden moverse un día tras el avistamiento oficial de la luna. Si una fecha no coincide, ocúltala y añade la correcta en Mis festivos."
+        case .italian: return "Le festività islamiche sono calcolate con il calendario Umm al-Qura e possono spostarsi di un giorno dopo l’avvistamento ufficiale della luna. Se una data è diversa, nascondila e aggiungi quella corretta in Le mie festività."
+        case .portuguese: return "Os feriados islâmicos são calculados pelo calendário Umm al-Qura e podem mudar um dia após o avistamento oficial da lua. Se uma data for diferente, oculte-a e adicione a correta em Meus feriados."
+        case .chineseTraditional: return "伊斯蘭節日依烏姆庫拉曆計算，可能因官方觀月公告相差一天。若日期不同，請隱藏後在「我的假日」新增正確日期。"
+        }
+    }
+
+    /// 온보딩 — 공휴일 나라 카드 제목
+    static var onboardingHolidayCountry: String {
+        switch lang {
+        case .korean: return "공휴일 기준 나라"
+        case .english: return "Holiday Country"
+        case .japanese: return "祝日の国"
+        case .chinese: return "节假日国家"
+        case .german: return "Feiertage für"
+        case .french: return "Pays des jours fériés"
+        case .spanish: return "País de los festivos"
+        case .italian: return "Paese delle festività"
+        case .portuguese: return "País dos feriados"
+        case .chineseTraditional: return "假日國家"
+        }
+    }
+
+    /// 온보딩 — 기기 지역으로 나라를 골랐을 때
+    static var onboardingCountryByRegion: String {
+        switch lang {
+        case .korean: return "휴대폰 지역 설정으로 골랐어요. 다르면 바꿔 주세요. 설정에서도 바꿀 수 있어요."
+        case .english: return "Picked from your phone's region. Change it if it's wrong; you can also change it later in Settings."
+        case .japanese: return "端末の地域設定から選びました。違う場合は変更してください。設定でも変更できます。"
+        case .chinese: return "已根据手机的地区设置选择。如不正确请更改，之后也可在设置中更改。"
+        case .german: return "Anhand der Region deines Telefons gewählt. Ändere es bei Bedarf, auch später in den Einstellungen."
+        case .french: return "Choisi d’après la région de votre téléphone. Modifiez-le si besoin, aussi plus tard dans les Réglages."
+        case .spanish: return "Elegido según la región de tu teléfono. Cámbialo si no es correcto; también puedes hacerlo luego en Ajustes."
+        case .italian: return "Scelto in base alla regione del telefono. Cambialo se non è corretto, anche più tardi nelle Impostazioni."
+        case .portuguese: return "Escolhido pela região do seu telefone. Troque se estiver errado; também dá para mudar depois em Ajustes."
+        case .chineseTraditional: return "已依手機的地區設定選擇。如不正確請更改，之後也可在設定中更改。"
+        }
+    }
+
+    /// 온보딩 — 지원하지 않는 지역이라 언어로 골랐을 때
+    static func onboardingCountryByLanguage(_ region: String) -> String {
+        switch lang {
+        case .korean: return "\(region)의 공휴일은 아직 없어서 휴대폰 언어로 골랐어요. 가까운 나라나 기타 (직접 입력)를 고를 수 있어요."
+        case .english: return "We don't have holidays for \(region) yet, so we picked a country from your phone's language. Choose a closer country or Other (Custom) to enter your own."
+        case .japanese: return "\(region)の祝日にはまだ対応していないため、端末の言語から選びました。近い国か「その他（手動入力）」を選べます。"
+        case .chinese: return "暂不支持\(region)的假日，已根据手机语言选择。你可以改成相近的国家或“其他（自定义）”。"
+        case .german: return "Für \(region) gibt es noch keine Feiertage, daher wurde anhand der Sprache gewählt. Wähle ein näheres Land oder Andere (eigene)."
+        case .french: return "Les jours fériés de ce pays (\(region)) ne sont pas encore disponibles : le choix vient de la langue du téléphone. Choisissez un pays proche ou Autre (personnalisé)."
+        case .spanish: return "Aún no tenemos los festivos de \(region), así que elegimos según el idioma del teléfono. Elige un país cercano u Otro (personalizado)."
+        case .italian: return "Non abbiamo ancora le festività per \(region), quindi abbiamo scelto in base alla lingua del telefono. Scegli un paese vicino o Altro (personalizzato)."
+        case .portuguese: return "Ainda não temos os feriados de \(region), então escolhemos pelo idioma do telefone. Escolha um país próximo ou Outro (personalizado)."
+        case .chineseTraditional: return "目前還沒有\(region)的假日，所以依手機語言選擇。你可以改成相近的國家或「其他（自訂）」。"
+        }
+    }
+
     /// 나라 이름 — 표의 순서는 `Country.allCases` 순서와 같다
     static func countryDisplayName(_ country: Country) -> String {
         let names: [String]
         switch lang {
         case .korean:
-            names = ["한국", "일본", "중국", "미국", "독일", "프랑스", "영국", "캐나다", "호주", "스페인", "이탈리아", "브라질", "대만", "홍콩", "기타 (직접 입력)"]
+            names = ["한국", "일본", "중국", "미국", "독일", "프랑스", "영국", "캐나다", "호주", "스페인", "이탈리아", "브라질", "대만", "홍콩", "아랍에미리트", "사우디아라비아", "카타르", "기타 (직접 입력)"]
         case .english:
-            names = ["Korea", "Japan", "China", "USA", "Germany", "France", "United Kingdom", "Canada", "Australia", "Spain", "Italy", "Brazil", "Taiwan", "Hong Kong", "Other (Custom)"]
+            names = ["Korea", "Japan", "China", "USA", "Germany", "France", "United Kingdom", "Canada", "Australia", "Spain", "Italy", "Brazil", "Taiwan", "Hong Kong", "United Arab Emirates", "Saudi Arabia", "Qatar", "Other (Custom)"]
         case .japanese:
-            names = ["韓国", "日本", "中国", "アメリカ", "ドイツ", "フランス", "イギリス", "カナダ", "オーストラリア", "スペイン", "イタリア", "ブラジル", "台湾", "香港", "その他（手動入力）"]
+            names = ["韓国", "日本", "中国", "アメリカ", "ドイツ", "フランス", "イギリス", "カナダ", "オーストラリア", "スペイン", "イタリア", "ブラジル", "台湾", "香港", "アラブ首長国連邦", "サウジアラビア", "カタール", "その他（手動入力）"]
         case .chinese:
-            names = ["韩国", "日本", "中国", "美国", "德国", "法国", "英国", "加拿大", "澳大利亚", "西班牙", "意大利", "巴西", "中国台湾", "中国香港", "其他（自定义）"]
+            names = ["韩国", "日本", "中国", "美国", "德国", "法国", "英国", "加拿大", "澳大利亚", "西班牙", "意大利", "巴西", "中国台湾", "中国香港", "阿联酋", "沙特阿拉伯", "卡塔尔", "其他（自定义）"]
         case .german:
-            names = ["Südkorea", "Japan", "China", "USA", "Deutschland", "Frankreich", "Vereinigtes Königreich", "Kanada", "Australien", "Spanien", "Italien", "Brasilien", "Taiwan", "Hongkong", "Andere (eigene)"]
+            names = ["Südkorea", "Japan", "China", "USA", "Deutschland", "Frankreich", "Vereinigtes Königreich", "Kanada", "Australien", "Spanien", "Italien", "Brasilien", "Taiwan", "Hongkong", "Vereinigte Arabische Emirate", "Saudi-Arabien", "Katar", "Andere (eigene)"]
         case .french:
-            names = ["Corée du Sud", "Japon", "Chine", "États-Unis", "Allemagne", "France", "Royaume-Uni", "Canada", "Australie", "Espagne", "Italie", "Brésil", "Taïwan", "Hong Kong", "Autre (personnalisé)"]
+            names = ["Corée du Sud", "Japon", "Chine", "États-Unis", "Allemagne", "France", "Royaume-Uni", "Canada", "Australie", "Espagne", "Italie", "Brésil", "Taïwan", "Hong Kong", "Émirats arabes unis", "Arabie saoudite", "Qatar", "Autre (personnalisé)"]
         case .spanish:
-            names = ["Corea del Sur", "Japón", "China", "Estados Unidos", "Alemania", "Francia", "Reino Unido", "Canadá", "Australia", "España", "Italia", "Brasil", "Taiwán", "Hong Kong", "Otro (personalizado)"]
+            names = ["Corea del Sur", "Japón", "China", "Estados Unidos", "Alemania", "Francia", "Reino Unido", "Canadá", "Australia", "España", "Italia", "Brasil", "Taiwán", "Hong Kong", "Emiratos Árabes Unidos", "Arabia Saudí", "Catar", "Otro (personalizado)"]
         case .italian:
-            names = ["Corea del Sud", "Giappone", "Cina", "Stati Uniti", "Germania", "Francia", "Regno Unito", "Canada", "Australia", "Spagna", "Italia", "Brasile", "Taiwan", "Hong Kong", "Altro (personalizzato)"]
+            names = ["Corea del Sud", "Giappone", "Cina", "Stati Uniti", "Germania", "Francia", "Regno Unito", "Canada", "Australia", "Spagna", "Italia", "Brasile", "Taiwan", "Hong Kong", "Emirati Arabi Uniti", "Arabia Saudita", "Qatar", "Altro (personalizzato)"]
         case .portuguese:
-            names = ["Coreia do Sul", "Japão", "China", "Estados Unidos", "Alemanha", "França", "Reino Unido", "Canadá", "Austrália", "Espanha", "Itália", "Brasil", "Taiwan", "Hong Kong", "Outro (personalizado)"]
+            names = ["Coreia do Sul", "Japão", "China", "Estados Unidos", "Alemanha", "França", "Reino Unido", "Canadá", "Austrália", "Espanha", "Itália", "Brasil", "Taiwan", "Hong Kong", "Emirados Árabes Unidos", "Arábia Saudita", "Catar", "Outro (personalizado)"]
         case .chineseTraditional:
-            names = ["韓國", "日本", "中國", "美國", "德國", "法國", "英國", "加拿大", "澳洲", "西班牙", "義大利", "巴西", "臺灣", "香港", "其他（自訂）"]
+            names = ["韓國", "日本", "中國", "美國", "德國", "法國", "英國", "加拿大", "澳洲", "西班牙", "義大利", "巴西", "臺灣", "香港", "阿拉伯聯合大公國", "沙烏地阿拉伯", "卡達", "其他（自訂）"]
         }
         let index = Country.allCases.firstIndex(of: country) ?? 0
         return names[index]

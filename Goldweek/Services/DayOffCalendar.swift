@@ -77,7 +77,8 @@ final class DayOffCalendar {
         }
         children.sort { $0.start < $1.start }
 
-        let newFingerprint = "\(country.rawValue)|\(HolidayService.selectedRegionCode)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
+        let weekend = HolidayService.weekendDays(for: country).sorted().map(String.init).joined()
+        let newFingerprint = "\(country.rawValue)|\(weekend)|\(HolidayService.selectedRegionCode)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
             + children.map { "\(key($0.start))~\(key($0.end))" }.joined(separator: ",")
         guard newFingerprint != fingerprint else { return }
 

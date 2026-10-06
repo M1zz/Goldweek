@@ -24,6 +24,9 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case brazil = "brazil"     // Enforcado(징검다리) 문화
     case taiwan = "taiwan"
     case hongKong = "hongkong"
+    case uae = "uae"                   // 주말 토·일 (2022~)
+    case saudiArabia = "saudiarabia"   // 주말 금·토
+    case qatar = "qatar"               // 주말 금·토
     /// 지원하지 않는 나라 — 기본 공휴일 없이 사용자가 직접 넣는다 (예: 남아공)
     case custom = "custom"
 
@@ -50,6 +53,9 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .brazil: return "BR"
         case .taiwan: return "TW"
         case .hongKong: return "HK"
+        case .uae: return "AE"
+        case .saudiArabia: return "SA"
+        case .qatar: return "QA"
         case .custom: return ""   // 어떤 기기 지역과도 맞지 않게
         }
     }
@@ -78,7 +84,27 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .brazil: return "pt_BR"
         case .taiwan: return "zh_TW"
         case .hongKong: return "zh_HK"
+        case .uae: return "en_AE"
+        case .saudiArabia: return "en_SA"
+        case .qatar: return "en_QA"
         case .custom: return Locale.current.identifier
+        }
+    }
+
+    /// 주말 요일 (Calendar weekday: 1=일 … 7=토). 사우디·카타르 등 걸프 지역 다수는 금·토.
+    /// 직접 입력은 사용자가 고른 값을 `HolidayService.weekendDays(for:)`가 돌려준다.
+    var standardWeekendDays: Set<Int> {
+        switch self {
+        case .saudiArabia, .qatar: return [6, 7]
+        default: return [1, 7]
+        }
+    }
+
+    /// 이슬람력(달 관측) 공휴일이 있는 나라 — 날짜가 공식 발표에서 하루쯤 바뀔 수 있다
+    var hasMoonSightingHolidays: Bool {
+        switch self {
+        case .uae, .saudiArabia, .qatar: return true
+        default: return false
         }
     }
 

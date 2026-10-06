@@ -92,6 +92,12 @@ class HolidayService {
                 result = getTaiwanHolidays(for: year)
             case .hongKong:
                 result = getHongKongHolidays(for: year)
+            case .uae:
+                result = getUAEHolidays(for: year)
+            case .saudiArabia:
+                result = getSaudiArabiaHolidays(for: year)
+            case .qatar:
+                result = getQatarHolidays(for: year)
             case .custom:
                 result = []   // 전부 사용자가 직접 넣는다
             }
@@ -548,10 +554,29 @@ class HolidayService {
         return days.contains { $0.month == c.month && $0.day == c.day }
     }
 
-    /// 쉬는 주말인지 — 토·일 중 보충 근무일이 아닌 날
+    /// 직접 입력 국가에서 고른 주말 요일. 원본은 UserDefaults — 프로필을 모르는 곳에서도 같은 값을 쓴다.
+    static var customWeekendDays: Set<Int> {
+        get {
+            let raw = UserDefaults.standard.string(forKey: "customWeekendDays") ?? ""
+            let days = Set(raw.split(separator: ",").compactMap { Int($0) }.filter { (1...7).contains($0) })
+            return days.isEmpty ? [1, 7] : days
+        }
+        set { UserDefaults.standard.set(newValue.sorted().map(String.init).joined(separator: ","), forKey: "customWeekendDays") }
+    }
+
+    /// 그 나라의 주말 요일 (Calendar weekday: 1=일 … 7=토)
+    static func weekendDays(for country: Country) -> Set<Int> {
+        country == .custom ? customWeekendDays : country.standardWeekendDays
+    }
+
+    /// 요일만 보고 주말인지 — 보충 근무일은 따지지 않는다 (달력 색칠용)
+    static func isWeekendDay(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
+        weekendDays(for: country).contains(calendar.component(.weekday, from: date))
+    }
+
+    /// 쉬는 주말인지 — 그 나라 주말 중 보충 근무일이 아닌 날
     static func isRestWeekend(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
-        let weekday = calendar.component(.weekday, from: date)
-        return (weekday == 1 || weekday == 7) && !isMakeupWorkday(date, country: country, calendar: calendar)
+        isWeekendDay(date, country: country, calendar: calendar) && !isMakeupWorkday(date, country: country, calendar: calendar)
     }
 
     /// 한 해의 보충 근무일 (startOfDay) — 연휴 플래너용

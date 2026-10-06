@@ -20,6 +20,10 @@ struct GoldweekApp: App {
     init() {
         AppLogger.shared.info("Goldweek 앱 초기화 시작", category: .app)
 
+        // StoreKit 거래 리스너를 실행 즉시 붙인다 — 앱 밖에서 리딤한 오퍼 코드·대기 중 구매가
+        // Transaction.updates 로 들어오는데, Pro 화면을 처음 열 때까지 미루면 놓치거나 늦게 반영된다.
+        _ = ProManager.shared
+
         // 휴식 레이더 알림 델리게이트 등록 (포그라운드 표시 + 탭/스누즈 추적)
         NotificationService.registerDelegate()
 
