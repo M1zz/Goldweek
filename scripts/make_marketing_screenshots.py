@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Goldweek App Store 마케팅 스크린샷 — 10개 언어 × 5장, 같은 구성·같은 디자인.
+"""Goldweek App Store 마케팅 스크린샷 — 12개 언어 × (iPhone 5장 + iPad 4장), 같은 구성·같은 디자인.
 
 원본: docs/screenshots/raw/<로케일>/01-home.png …  (scripts/take_screenshots.sh 가 찍는다)
 제출본: docs/screenshots/marketing/<로케일>/01-….png  (DeployBar 가 이 폴더를 올린다)
@@ -10,18 +10,27 @@
   04 14개국 공휴일       flags (화면 대신 국기 그리드)
   05 설정(국가·언어)     flat-rotate
 
-사용법: python3 scripts/make_marketing_screenshots.py [로케일...]
+iPad: 원본 docs/screenshots/raw/ipad/<로케일>/ → 제출본 marketing/<로케일>/1x-ipad-….png (2064×2752)
+  (DeployBar 는 픽셀 크기로 기기를 가린다 — 같은 폴더에 둬도 iPhone 자리와 섞이지 않는다)
+
+사용법: python3 scripts/make_marketing_screenshots.py [--ipad] [로케일...]
 """
-import pathlib, subprocess, sys, tempfile
+import pathlib, subprocess, sys, tempfile, time
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "docs" / "screenshots" / "raw"
 OUT = ROOT / "docs" / "screenshots" / "marketing"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 W, H = 1242, 2688   # App Store 6.5" 제출 규격
+# 사용자가 쓰는 Chrome 과 프로필이 겹치면 헤드리스가 멈춘다 — 따로 쓴다
+PROFILE = tempfile.mkdtemp(prefix="goldweek-chrome-")
 
 # 지원 국가 — 앱의 Country 순서와 같게, 모든 언어에서 같은 순서
 FLAGS = ["🇰🇷", "🇺🇸", "🇯🇵", "🇨🇳", "🇩🇪", "🇫🇷", "🇬🇧", "🇨🇦", "🇦🇺", "🇪🇸", "🇮🇹", "🇧🇷", "🇹🇼", "🇭🇰"]
+# 지금 지원하는 41개 나라 전부 (Country 순서, 직접 입력 제외) — 새로 만드는 장(ru·id·iPad)에 쓴다
+ALL_FLAGS = FLAGS + ["🇦🇪", "🇸🇦", "🇶🇦", "🇵🇪", "🇳🇱", "🇧🇪", "🇦🇹", "🇨🇭", "🇮🇪", "🇵🇹", "🇸🇪", "🇳🇴", "🇩🇰", "🇫🇮",
+                     "🇵🇱", "🇨🇿", "🇬🇷", "🇹🇷", "🇪🇬", "🇿🇦", "🇲🇽", "🇦🇷", "🇨🇱", "🇨🇴", "🇳🇿", "🇷🇺", "🇮🇩"]
+MANY_FLAGS = {"ru", "id"}
 
 # (원본 파일, 레이아웃) — 5장 구성은 모든 언어에서 같다
 SLIDES = [
@@ -97,6 +106,20 @@ COPY = {
         ("Festività di<br>14 Paesi", "Ognuno con le sue regole"),
         ("Il tuo Paese,<br>la tua lingua", "Disponibile in 10 lingue"),
     ],
+    "ru": [
+        ("Когда пора<br>отдохнуть?", "Прошлый отпуск, следующий и подсказка, когда отдыхать"),
+        ("Меньше отпуска,<br>больше отдыха", "Праздники и выходные складываются в длинный отдых"),
+        ("Весь отпуск<br>на одном экране", "Нажмите на дату, чтобы добавить или изменить"),
+        ("Праздники<br>41 страны", "С переносами выходных по постановлению"),
+        ("Ваша страна,<br>ваш язык", "21 язык интерфейса"),
+    ],
+    "id": [
+        ("Kapan waktunya<br>istirahat?", "Libur terakhir, libur berikutnya, dan kapan harus rehat"),
+        ("Cuti sedikit,<br>libur panjang", "Tanggal merah dan akhir pekan dirangkai untukmu"),
+        ("Semua cutimu<br>dalam satu layar", "Ketuk tanggal untuk mencatat atau mengubah cuti"),
+        ("Hari libur<br>41 negara", "Termasuk cuti bersama sesuai SKB"),
+        ("Negaramu,<br>bahasamu", "Tersedia dalam 21 bahasa"),
+    ],
     "pt-BR": [
         ("Quando você<br>deve descansar?", "Sua última folga, a próxima e a hora de parar"),
         ("Menos dias,<br>feriadões maiores", "Feriados e fins de semana combinados"),
@@ -158,6 +181,18 @@ body { background:linear-gradient(160deg,#0B57E3 0%,#0A7BD8 50%,#05A86A 100%); }
   box-shadow:0 18px 40px rgba(0,0,0,.18); border:3px solid rgba(255,255,255,.35); }
 .grid div:nth-child(13) { grid-column:2; }
 """,
+    # 41개 국기 — 6열로 촘촘히
+    "flags-many": """
+body { background:linear-gradient(160deg,#0B57E3 0%,#0A7BD8 50%,#05A86A 100%); }
+.headline { color:#fff; } .sub { color:rgba(255,255,255,.82); }
+.bar { background:#fff; opacity:.9; }
+.text { text-align:center; padding:250px 80px 0; } .bar { margin:0 auto 56px; }
+.sub { margin-top:44px; }
+.grid { display:grid; grid-template-columns:repeat(6,136px); gap:34px 34px; justify-content:center; margin-top:130px; }
+.grid div { width:136px; height:136px; border-radius:50%; background:rgba(255,255,255,.16);
+  display:flex; align-items:center; justify-content:center; font-size:86px;
+  box-shadow:0 12px 28px rgba(0,0,0,.18); border:3px solid rgba(255,255,255,.35); }
+""",
 }
 
 TEXT = '<div class="text"><div class="bar"></div><div class="headline">{h}</div><div class="sub">{s}</div></div>'
@@ -165,15 +200,104 @@ PHONE = '<div class="wrap"><div class="phone"><img src="{img}"></div></div>'
 PAGE = '<!doctype html><html><head><meta charset="utf-8"><style>{css}</style></head><body>{body}</body></html>'
 
 
+# ── iPad 13" ─────────────────────────────────────────────
+IW, IH = 2064, 2752
+IPAD_SLIDES = [   # (원본, 레이아웃, COPY 의 몇 번째 문구)
+    ("01-calendar.png", "ipad", 2),
+    ("02-recommend.png", "ipad", 1),
+    (None, "ipad-flags", 3),
+    ("03-settings.png", "ipad", 4),
+]
+# iPad 장은 이번에 새로 만든다 — 숫자는 지금 앱에 맞춘다 (나라 41개, 언어 21개)
+IPAD_NUMBERS = {"14": "41", "10": "21"}
+
+IPAD_CSS = f"""
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+html,body {{ width:{IW}px; height:{IH}px; overflow:hidden; }}
+body {{ background:linear-gradient(180deg,#EEF4FF 0%,#F7FAFF 55%,#EFFAF4 100%);
+  font-family:-apple-system,"Apple SD Gothic Neo","Hiragino Sans","PingFang SC","PingFang TC",sans-serif; }}
+.headline {{ font-size:124px; font-weight:800; color:#121A2B; letter-spacing:-2px; line-height:1.15; }}
+.sub {{ font-size:58px; font-weight:500; color:#5E6B80; line-height:1.35; margin-top:36px; }}
+.bar {{ width:140px; height:16px; border-radius:8px; background:linear-gradient(90deg,{BRAND},#00C471); margin:0 auto 48px; }}
+.text {{ text-align:center; padding:150px 120px 0; }}
+.wrap {{ display:flex; justify-content:center; margin-top:90px; }}
+.tablet {{ width:1480px; background:#14161B; border-radius:72px; border:3px solid #3A3D45; padding:30px;
+  box-shadow:50px 80px 110px rgba(10,40,100,.22),16px 26px 46px rgba(10,40,100,.14); }}
+.tablet img {{ width:100%; display:block; border-radius:44px; }}
+"""
+IPAD_FLAGS_CSS = """
+body { background:linear-gradient(160deg,#0B57E3 0%,#0A7BD8 50%,#05A86A 100%); }
+.headline { color:#fff; } .sub { color:rgba(255,255,255,.82); } .bar { background:#fff; opacity:.9; }
+.grid { display:grid; grid-template-columns:repeat(7,190px); gap:48px 48px; justify-content:center; margin-top:170px; }
+.grid div { width:190px; height:190px; border-radius:50%; background:rgba(255,255,255,.16);
+  display:flex; align-items:center; justify-content:center; font-size:120px;
+  box-shadow:0 14px 32px rgba(0,0,0,.18); border:3px solid rgba(255,255,255,.35); }
+"""
+
+
+def shoot(html, png, w, h):
+    with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
+        f.write(html)
+    # 헤드리스 Chrome 은 그림을 다 쓰고도 끝나지 않을 때가 있다 — 파일이 생기면 끝낸다
+    png.unlink(missing_ok=True)
+    for _ in range(3):
+        proc = subprocess.Popen([CHROME, "--headless=new", f"--screenshot={png}", f"--window-size={w},{h}",
+                                 "--force-device-scale-factor=1", "--hide-scrollbars", "--disable-gpu",
+                                 "--allow-file-access-from-files", f"--user-data-dir={PROFILE}", pathlib.Path(f.name).as_uri()],
+                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        for _ in range(600):
+            if proc.poll() is not None or (png.exists() and png.stat().st_size > 0):
+                break
+            time.sleep(0.5)
+        time.sleep(1)   # 쓰는 중일 수 있다
+        if proc.poll() is None:
+            proc.kill()
+            proc.wait()
+        if png.exists() and png.stat().st_size > 0:
+            break
+    else:
+        sys.exit(f"그리기 실패: {png}")
+    pathlib.Path(f.name).unlink()
+    print(f"  ✓ {png.relative_to(ROOT)}")
+
+
+def render_ipad(locale):
+    out_dir = OUT / locale
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for old in out_dir.glob("*-ipad-*.png"):
+        old.unlink()
+    for i, (src, layout, k) in enumerate(IPAD_SLIDES, start=11):
+        h, s = COPY[locale][k]
+        h = h.replace("<br>", " ")   # iPad 는 폭이 넓어 한 줄로
+        if k in (3, 4):
+            for a, b in IPAD_NUMBERS.items():
+                h, s = h.replace(a, b), s.replace(a, b)
+        text = TEXT.format(h=h, s=s)
+        if layout == "ipad-flags":
+            body = text + '<div class="grid">' + "".join(f"<div>{f}</div>" for f in ALL_FLAGS) + "</div>"
+            css, name = IPAD_CSS + IPAD_FLAGS_CSS, "countries"
+        else:
+            img = RAW / "ipad" / locale / src
+            if not img.exists():
+                sys.exit(f"원본 없음: {img} — IPAD=1 scripts/take_screenshots.sh 먼저")
+            body = text + f'<div class="wrap"><div class="tablet"><img src="{img.as_uri()}"></div></div>'
+            css, name = IPAD_CSS, src[3:-4]
+        shoot(PAGE.format(css=css, body=body), out_dir / f"{i:02d}-ipad-{name}.png", IW, IH)
+
+
 def render(locale):
     out_dir = OUT / locale
     out_dir.mkdir(parents=True, exist_ok=True)
-    for old in out_dir.glob("*.png"):
+    for old in out_dir.glob("0*.png"):
         old.unlink()
     for i, ((src, layout), (h, s)) in enumerate(zip(SLIDES, COPY[locale]), start=1):
         text = TEXT.format(h=h, s=s)
         if layout == "flags":
-            body = text + '<div class="grid">' + "".join(f"<div>{f}</div>" for f in FLAGS) + "</div>"
+            many = locale in MANY_FLAGS
+            flags = ALL_FLAGS if many else FLAGS
+            if many:
+                layout = "flags-many"
+            body = text + '<div class="grid">' + "".join(f"<div>{f}</div>" for f in flags) + "</div>"
             name = "countries"
         else:
             img = RAW / locale / src
@@ -182,18 +306,12 @@ def render(locale):
             phone = PHONE.format(img=img.as_uri())
             body = phone + text if layout == "text-bottom" else text + phone
             name = src[3:-4]
-        html = PAGE.format(css=BASE_CSS + LAYOUTS[layout], body=body)
-        with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
-            f.write(html)
-        png = out_dir / f"{i:02d}-{name}.png"
-        subprocess.run([CHROME, "--headless=new", f"--screenshot={png}", f"--window-size={W},{H}",
-                        "--force-device-scale-factor=1", "--hide-scrollbars", "--disable-gpu",
-                        "--allow-file-access-from-files", pathlib.Path(f.name).as_uri()],
-                       check=True, capture_output=True)
-        pathlib.Path(f.name).unlink()
-        print(f"  ✓ {png.relative_to(ROOT)}")
+        shoot(PAGE.format(css=BASE_CSS + LAYOUTS[layout], body=body), out_dir / f"{i:02d}-{name}.png", W, H)
 
 
 if __name__ == "__main__":
-    for loc in (sys.argv[1:] or list(COPY)):
-        render(loc)
+    args = sys.argv[1:]
+    ipad = "--ipad" in args
+    locales = [a for a in args if a != "--ipad"] or list(COPY)
+    for loc in locales:
+        render_ipad(loc) if ipad else render(loc)

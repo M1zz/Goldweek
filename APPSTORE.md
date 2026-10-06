@@ -453,3 +453,93 @@ https://m1zz.github.io/Goldweek/support.html
 ### 개인정보처리방침 URL
 
 https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+
+## ru
+
+### 이름
+
+Goldweek: планер отпуска
+
+### 부제
+
+Больше отдыха за меньше дней
+
+### 키워드
+
+праздники,выходные,календарь,производственный,перенос,каникулы,майские,график,учет,мост,виджет
+
+### 프로모션 텍스트
+
+Скоро праздник? Goldweek сложит праздники с выходными и подскажет, какие дни взять, чтобы отдыхать дольше. Остаток отпуска виден прямо в виджете.
+
+### 설명
+
+Goldweek подскажет, в какие дни взять отпуск, чтобы отдохнуть как можно дольше.
+Приложение складывает праздники с выходными и показывает, как получить самый длинный отдых за наименьшее число дней отпуска.
+
+Подсказки к каждому празднику
+Для каждого ближайшего праздника видно, сколько дней отпуска нужно взять и сколько дней подряд вы будете отдыхать. Удобные дни-мостики больше не пройдут мимо.
+
+Праздники 41 страны
+Россия и ещё 40 стран Европы, Азии, Америки, Ближнего Востока, Африки и Океании. Для России учтены переносы выходных по постановлению правительства, включая рабочие субботы. Если праздники зависят от региона, выберите свой. Страны, которой нет в списке, можно настроить вручную.
+
+Учет отпуска
+Всего, использовано и осталось — на одном экране. Можно отмечать полдня и четверть дня, а дополнительные дни отдыха вести вместе со сроком действия. Нажмите на дату в календаре, чтобы добавить или изменить отпуск, или загрузите прошлые отпуска по фото экрана из кадровой системы.
+
+Виджет и резервная копия
+Остаток отпуска и ближайший отдых видны прямо на экране «Домой». Записи сохраняются в iCloud, а графиком отпусков можно поделиться с семьей. Работает на iPhone и iPad.
+
+Планируйте заранее, тратьте меньше дней и отдыхайте дольше.
+
+### 지원 URL
+
+https://m1zz.github.io/Goldweek/support.html
+
+### 개인정보처리방침 URL
+
+https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+
+## id
+
+### 이름
+
+Goldweek: Perencana Cuti
+
+### 부제
+
+Libur panjang, cuti hemat
+
+### 키워드
+
+tanggal,merah,kalender,bersama,nasional,harpitnas,kejepit,akhir,pekan,jadwal,liburan,widget,kantor
+
+### 프로모션 텍스트
+
+Ada tanggal merah? Goldweek merangkai hari libur dan akhir pekan, lalu menunjukkan hari cuti yang bikin liburanmu paling panjang. Sisa cuti terlihat di widget.
+
+### 설명
+
+Goldweek membantumu memilih hari cuti yang paling menguntungkan.
+Hari libur nasional dan akhir pekan dirangkai, lalu Goldweek menunjukkan cara libur paling lama dengan jatah cuti paling sedikit.
+
+Rekomendasi untuk setiap tanggal merah
+Untuk setiap hari libur yang akan datang, lihat berapa hari cuti yang perlu diambil dan berapa hari kamu bisa libur berturut-turut. Hari kejepit tidak akan terlewat lagi.
+
+Hari libur 41 negara
+Indonesia dan 40 negara lain di Asia, Eropa, Amerika, Timur Tengah, Afrika, dan Oseania. Untuk Indonesia, libur nasional dan cuti bersama mengikuti SKB 3 Menteri. Kalau hari libur berbeda menurut wilayah, pilih wilayahmu. Negara yang belum ada di daftar bisa diatur sendiri.
+
+Catatan cuti
+Lihat total cuti, cuti terpakai, dan sisa cuti dalam satu layar. Kamu bisa mencatat cuti setengah hari dan seperempat hari, serta mengelola cuti tambahan beserta tanggal kedaluwarsanya. Ketuk tanggal di kalender untuk mencatat atau mengubah cuti, atau impor riwayat cuti dari foto layar sistem HR kantormu.
+
+Widget dan cadangan
+Sisa cuti dan liburan berikutnya langsung terlihat di Layar Utama. Catatanmu dicadangkan ke iCloud, dan jadwal cuti bisa dibagikan ke keluarga. Bisa dipakai di iPhone dan iPad.
+
+Rencanakan lebih awal, pakai cuti lebih sedikit, dan nikmati libur lebih lama.
+
+### 지원 URL
+
+https://m1zz.github.io/Goldweek/support.html
+
+### 개인정보처리방침 URL
+
+https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
