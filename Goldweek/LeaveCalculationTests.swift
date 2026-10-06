@@ -1118,6 +1118,22 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertEqual(HolidayService.weekendDays(for: .egypt), [6, 7])
     }
 
+    func testSwedenRedDays() {
+        let saved = UserDefaults.standard.string(forKey: "appLanguage")
+        defer { UserDefaults.standard.set(saved, forKey: "appLanguage") }
+        UserDefaults.standard.set("sv", forKey: "appLanguage")
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+        let days = Dictionary(uniqueKeysWithValues: HolidayService().getHolidays(for: 2026, country: .sweden).map { (f.string(from: $0.date), $0.name) })
+        // 2026 부활절 4/5, 성령강림절 5/24, 하지 6/19~20, 만성절 10/31
+        XCTAssertEqual(days["2026-04-04"], "Påskafton")
+        XCTAssertEqual(days["2026-04-05"], "Påskdagen")
+        XCTAssertEqual(days["2026-05-24"], "Pingstdagen")
+        XCTAssertEqual(days["2026-06-19"], "Midsommarafton")
+        XCTAssertEqual(days["2026-06-20"], "Midsommardagen")
+        XCTAssertEqual(days["2026-10-31"], "Alla helgons dag")
+        XCTAssertEqual(days.count, 17)
+    }
+
     func testLocalHolidayNamesFollowAppLanguage() {
         let saved = UserDefaults.standard.string(forKey: "appLanguage")
         defer { UserDefaults.standard.set(saved, forKey: "appLanguage") }

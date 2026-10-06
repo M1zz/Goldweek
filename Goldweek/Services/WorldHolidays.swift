@@ -1052,6 +1052,12 @@ extension HolidayService {
                                        es: "Segundo día de Navidad", it: "Santo Stefano", pt: "Segundo dia de Natal", zht: "聖誕節翌日", nl: "Tweede kerstdag")
         static let newYearsEve = N(ko: "12월 31일", en: "New Year's Eve", ja: "大晦日", zh: "除夕（12月31日）", de: "Silvester", fr: "Saint-Sylvestre",
                                    es: "Nochevieja", it: "San Silvestro", pt: "Véspera de Ano-Novo", zht: "跨年夜")
+        static let easterSunday = N(ko: "부활절", en: "Easter Sunday", ja: "復活祭", zh: "复活节", de: "Ostersonntag", fr: "Pâques",
+                                    es: "Domingo de Resurrección", it: "Pasqua", pt: "Domingo de Páscoa", zht: "復活節", nl: "Eerste paasdag")
+        static let pentecost = N(ko: "성령강림절", en: "Whit Sunday", ja: "聖霊降臨祭", zh: "圣灵降临节", de: "Pfingstsonntag", fr: "Pentecôte",
+                                 es: "Domingo de Pentecostés", it: "Pentecoste", pt: "Domingo de Pentecostes", zht: "聖靈降臨節", nl: "Eerste pinksterdag")
+        static let midsummerDay = N(ko: "하지 축일", en: "Midsummer Day", ja: "夏至祭", zh: "仲夏节", de: "Mittsommertag", fr: "Saint-Jean",
+                                    es: "Día de San Juan", it: "Festa di mezza estate", pt: "Dia do solstício", zht: "仲夏節")
         static let midsummerEve = N(ko: "하지 전야", en: "Midsummer Eve", ja: "夏至祭前夜", zh: "仲夏节前夜", de: "Mittsommerabend", fr: "Veille de la Saint-Jean",
                                     es: "Víspera de San Juan", it: "Vigilia di mezza estate", pt: "Véspera do solstício", zht: "仲夏節前夕")
         static let independence = N(ko: "독립기념일", en: "Independence Day", ja: "独立記念日", zh: "独立日", de: "Unabhängigkeitstag", fr: "Fête de l’indépendance",
@@ -1123,8 +1129,10 @@ extension HolidayService {
 
     private enum Local {
         static let sv = ["New Year's Day": "Nyårsdagen", "Epiphany": "Trettondedag jul", "Good Friday": "Långfredagen",
-                         "Easter Monday": "Annandag påsk", "Ascension Day": "Kristi himmelsfärdsdag", "Labour Day": "Första maj",
-                         "National Day": "Sveriges nationaldag", "Midsummer Eve": "Midsommarafton", "Christmas Eve": "Julafton",
+                         "Easter Saturday": "Påskafton", "Easter Sunday": "Påskdagen",
+                         "Easter Monday": "Annandag påsk", "Ascension Day": "Kristi himmelsfärdsdag", "Whit Sunday": "Pingstdagen",
+                         "Labour Day": "Första maj", "National Day": "Sveriges nationaldag", "Midsummer Eve": "Midsommarafton",
+                         "Midsummer Day": "Midsommardagen", "All Saints' Day": "Alla helgons dag", "Christmas Eve": "Julafton",
                          "Christmas Day": "Juldagen", "Second Day of Christmas": "Annandag jul", "New Year's Eve": "Nyårsafton"]
         static let nb = ["New Year's Day": "Første nyttårsdag", "Maundy Thursday": "Skjærtorsdag", "Good Friday": "Langfredag",
                          "Easter Monday": "Andre påskedag", "Ascension Day": "Kristi himmelfartsdag", "Whit Monday": "Andre pinsedag",
@@ -1301,17 +1309,24 @@ extension HolidayService {
 
     // MARK: 북유럽
 
-    /// 하지 전야·크리스마스 이브·12/31은 법정 공휴일은 아니지만 사실상 쉬는 날이라 넣는다.
+    /// 부활절 전야·하지 전야·크리스마스 이브·12/31은 법정 공휴일은 아니지만 사실상 쉬는 날이라 넣는다.
+    /// 부활절·성령강림절·하지 축일·만성절은 늘 주말이지만 법정 공휴일(röda dagar)이라 달력에 보이고,
+    /// 주말을 다르게 고른 사람에게는 쉬는 날이 된다.
     func getSwedenHolidays(for year: Int) -> [Holiday] {
         var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear), (day(year, 1, 6), Common.epiphany)]
         if let e = easter(year) {
             list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(-1, to: e), Common.holySaturday))
+            list.append((e, More.easterSunday))
             list.append((adding(1, to: e), Common.easterMonday))
             list.append((adding(39, to: e), More.ascension))
+            list.append((adding(49, to: e), More.pentecost))
         }
         list.append((day(year, 5, 1), Common.labour))
         list.append((day(year, 6, 6), Common.nationalDay))
         list.append((day(year, 6, 19).map { weekday(6, onOrAfter: $0) }, More.midsummerEve))
+        list.append((day(year, 6, 20).map { weekday(7, onOrAfter: $0) }, More.midsummerDay))
+        list.append((day(year, 10, 31).map { weekday(7, onOrAfter: $0) }, Common.allSaints))
         list.append((day(year, 12, 24), Common.christmasEve))
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), More.secondChristmas))
