@@ -67,7 +67,9 @@ struct HomeView: View {
         let now = Date()
         let month = cal.component(.month, from: now)
         let year = cal.component(.year, from: now)
-        let remaining = max(0, profile.totalAnnualLeave - committedLeave)
+        let remaining = LeaveUsageCalculator.currentSummary(records: Array(leaveRecords), startMonth: profile.yearStartMonth,
+                                                            annualGrant: profile.totalAnnualLeave)
+            .remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)
         let hasPlanned = leaveRecords.contains { $0.status == .planned }
 
         // 1. 14일 이내 공휴일 임박
@@ -725,7 +727,8 @@ struct LeaveStatusCard: View {
     var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: allLeaveRecords,
                                             bonuses: allBonusLeaves,
-                                            startMonth: profile.yearStartMonth)
+                                            startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
     }
 
     /// 현재 연차 연도에 해당하는 레코드만 필터

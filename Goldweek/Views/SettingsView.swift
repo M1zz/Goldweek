@@ -86,6 +86,9 @@ struct SettingsView: View {
     @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
     /// 하루 근무 시간(분) — 시간 단위 휴가를 일수로 바꾸는 기준. LeaveLength.workdayMinutes 와 같은 키
     @AppStorage("workdayMinutes") private var workdayMinutes = 480
+    /// 남은 연차 이월 상한(0 안 함, -1 전부)·사용 기한(개월) — LeaveUsageCalculator 와 같은 키
+    @AppStorage("carryOverMaxDays") private var carryOverMaxDays = 0
+    @AppStorage("carryOverExpiryMonths") private var carryOverExpiryMonths = 0
     /// 파트타임 매주 쉬는 요일 — HolidayService.partTimeDaysOffRaw 와 같은 키
     @AppStorage("partTimeDaysOff") private var partTimeDaysOffRaw = ""
     @State private var selectedLanguage: AppLanguage
@@ -140,7 +143,8 @@ struct SettingsView: View {
     var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
                                             bonuses: Array(bonusLeaves),
-                                            startMonth: profile.yearStartMonth)
+                                            startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
     }
 
     var committedLeave: Double { usage.annualCommitted }
@@ -508,7 +512,7 @@ struct SettingsView: View {
                                     .foregroundStyle(includeBonusInStatus && activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
                                 if includeBonusInStatus && activeBonusLeave > 0 {
                                     Text(Strings.baseAndBonus(
-                                        base: formatLeave(max(0, profile.totalAnnualLeave - committedLeave)),
+                                        base: formatLeave(usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)),
                                         bonus: formatLeave(activeBonusLeave)
                                     ))
                                     .font(.body)
@@ -563,6 +567,30 @@ struct SettingsView: View {
                         }
                     }
                     .onChange(of: holidayBlackoutDays) { _, _ in recommendationEngine.invalidateCache() }
+
+                    // 남은 연차 이월 — 회사가 허락하는 만큼 (네덜란드 피드백). 기한이 있으면 그 전에 쓴 만큼만 남는다.
+                    if !isLeisure {
+                        Picker(Strings.carryOverSetting, selection: $carryOverMaxDays) {
+                            Text(Strings.carryOverOff).tag(0)
+                            ForEach([1, 2, 3, 5, 10, 20], id: \.self) { n in
+                                Text(Strings.carryOverUpTo(Strings.dayCount(Double(n)))).tag(n)
+                            }
+                            Text(Strings.carryOverAll).tag(-1)
+                        }
+                        .onChange(of: carryOverMaxDays) { _, _ in recommendationEngine.invalidateCache() }
+                        if carryOverMaxDays != 0 {
+                            Picker(Strings.carryOverExpirySetting, selection: $carryOverExpiryMonths) {
+                                Text(Strings.carryOverNoExpiry).tag(0)
+                                ForEach([3, 4, 6, 12], id: \.self) { n in
+                                    Text(Strings.carryOverExpiryMonths(n)).tag(n)
+                                }
+                            }
+                            .onChange(of: carryOverExpiryMonths) { _, _ in recommendationEngine.invalidateCache() }
+                        }
+                        Text(Strings.carryOverFooter)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    }
 
                     // 하루 근무 시간 — 시간·분 단위로 쓴 휴가를 일수로 바꾸는 기준 (이탈리아 permessi 등)
                     Stepper(value: $workdayMinutes, in: 180...720, step: 15) {

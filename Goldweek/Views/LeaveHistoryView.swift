@@ -655,15 +655,12 @@ struct EditLeaveSheet: View {
         return newDeduction - originalDeduction
     }
 
-    /// 현재 레코드를 제외한 다른 기록들의 확정 연차 — 편집 중인 값과 비교하려고 자기 자신만 뺀다.
-    var committedExcludingSelf: Double {
-        LeaveUsageCalculator.currentSummary(records: allLeaveRecords.filter { $0.id != record.id },
-                                            startMonth: profile?.yearStartMonth ?? 1).annualCommitted
-    }
-
+    /// 고친 시작일이 속한 해의 연차 기준 (내년 휴가는 내년 연차, 넘어온 연차 포함)
     var availableForEdit: Double {
         guard let profile = profile else { return 0 }
-        return max(0, profile.totalAnnualLeave - committedExcludingSelf)
+        return LeaveUsageCalculator.availableAnnual(on: startDate, records: allLeaveRecords,
+                                                    annualGrant: profile.totalAnnualLeave,
+                                                    startMonth: profile.yearStartMonth, excluding: record.id)
     }
 
     var body: some View {

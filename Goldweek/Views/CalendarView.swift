@@ -69,10 +69,18 @@ struct CalendarView: View {
     private var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: leaveRecords,
                                             bonuses: allBonusLeaves,
-                                            startMonth: profile.yearStartMonth)
+                                            startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
     }
+    /// 보고 있는 달이 내년(다음 연차 해)이면 내년 연차로 추천한다 — 해가 바뀌기 전에도 미리 계획할 수 있게
     private var availableLeave: Double {
-        usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: true)
+        let cal = Calendar.current
+        let viewing = LeaveUsageCalculator.fiscalYear(for: currentMonth, startMonth: profile.yearStartMonth, calendar: cal)
+        let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
+        guard viewing > now else { return usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: true) }
+        let start = LeaveUsageCalculator.fiscalYearStart(year: viewing, startMonth: profile.yearStartMonth, calendar: cal)
+        return LeaveUsageCalculator.availableAnnual(on: start, records: leaveRecords, annualGrant: profile.totalAnnualLeave,
+                                                    startMonth: profile.yearStartMonth) + usage.remainingBonus
     }
 
     /// MRT 여행 큐레이션 노출 조건: 한국어 + 한국 거주 + 직장인 (마이리얼트립은 한국 시장 위주)

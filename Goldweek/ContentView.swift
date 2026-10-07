@@ -290,7 +290,11 @@ struct ContentView: View {
         let bonus = bonusLeaves
             .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > Date()) }
             .reduce(0.0) { $0 + $1.remainingDays }
-        let available = Int((max(0, profile.totalAnnualLeave - committed) + bonus).rounded(.down))
+        // 지난해에서 넘어온 연차도 쓸 수 있는 양에 든다
+        let carry = LeaveUsageCalculator.carryOverUsable(year: LeaveUsageCalculator.fiscalYear(for: today, startMonth: profile.yearStartMonth),
+                                                         on: today, records: leaveRecords, annualGrant: profile.totalAnnualLeave,
+                                                         startMonth: profile.yearStartMonth)
+        let available = Int((max(0, profile.totalAnnualLeave + carry - committed) + bonus).rounded(.down))
         guard available >= 1 else { return nil }
 
         let holidays = HolidayService().getHolidays(for: year, country: profile.country).map { $0.date }

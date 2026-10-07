@@ -101,6 +101,9 @@ enum LeaveUsageCalculator {
         /// **아직 쓸 수 있는** 보너스 — 만료된 건 빠진다.
         /// ⚠️ `grantedBonus - usedBonus`로 계산하면 만료돼 사라진 날을 남은 것처럼 보여 준다.
         let remainingBonus: Double
+        /// 지난해에서 넘어와 **지금 쓸 수 있는** 연차 (이월 설정이 꺼져 있거나 grant 를 안 주면 0).
+        /// 사용 기한이 지났으면 그 전에 쓴 만큼만 남는다 — `carryOverUsable` 참고.
+        var carryOver: Double = 0
 
         /// 연차에서 이미 나갔거나 나갈 예정인 총량 — 잔여 계산의 분자.
         var annualCommitted: Double { annualUsed + annualPlanned }
@@ -116,12 +119,13 @@ enum LeaveUsageCalculator {
 
         /// 화면에 "총 연차"로 띄우는 값.
         func total(annualGrant: Double, includingBonus: Bool) -> Double {
-            includingBonus ? annualGrant + grantedBonus : annualGrant
+            let grant = annualGrant + carryOver
+            return includingBonus ? grant + grantedBonus : grant
         }
 
         /// 화면에 "남음"으로 띄우는 값 (예정분까지 뺀 실제 쓸 수 있는 양).
         func remaining(annualGrant: Double, includingBonus: Bool) -> Double {
-            let annualRemaining = max(0, annualGrant - annualCommitted)
+            let annualRemaining = max(0, annualGrant + carryOver - annualCommitted)
             return includingBonus ? annualRemaining + remainingBonus : annualRemaining
         }
     }
@@ -135,6 +139,7 @@ enum LeaveUsageCalculator {
                         bonuses: [BonusLeave] = [],
                         year: Int,
                         startMonth: Int,
+                        annualGrant: Double? = nil,
                         asOf now: Date = Date(),
                         calendar: Calendar = .current) -> Summary {
         let scoped = self.records(records, inFiscalYear: year, startMonth: startMonth, calendar: calendar)
@@ -152,7 +157,7 @@ enum LeaveUsageCalculator {
                 .reduce(0.0) { $0 + $1.effectiveLeaveDays }
         }
 
-        return Summary(
+        var summary = Summary(
             annualUsed: days(completed, annualOnly: true),
             annualPlanned: days(upcoming, annualOnly: true),
             allTypesUsed: days(completed, annualOnly: false),
@@ -169,19 +174,104 @@ enum LeaveUsageCalculator {
                 .filter { $0.expirationDate == nil || $0.expirationDate! > now }
                 .reduce(0) { $0 + $1.remainingDays }
         )
+        if let annualGrant {
+            summary.carryOver = carryOverUsable(year: year, on: now, records: records, annualGrant: annualGrant,
+                                                startMonth: startMonth, calendar: calendar)
+        }
+        return summary
     }
 
     /// 오늘이 속한 회계연도의 요약 — 홈·설정처럼 "지금"만 보는 화면용.
     static func currentSummary(records: [LeaveRecord],
                                bonuses: [BonusLeave] = [],
                                startMonth: Int,
+                               annualGrant: Double? = nil,
                                asOf now: Date = Date(),
                                calendar: Calendar = .current) -> Summary {
         summary(records: records,
                 bonuses: bonuses,
                 year: fiscalYear(for: now, startMonth: startMonth, calendar: calendar),
                 startMonth: startMonth,
+                annualGrant: annualGrant,
                 asOf: now,
                 calendar: calendar)
+    }
+
+    // MARK: - 미리 계획 · 이월 (네덜란드 사용자 피드백)
+    //
+    // · 휴가는 **그 휴가가 속한 해**의 연차에서 빠진다. 10월에 내년 1월 휴가를 잡으면 내년 연차로 센다
+    //   (예전엔 등록 화면이 올해 잔여로 막아서, 해가 바뀌기 전엔 내년 계획을 못 세웠다).
+    // · 이월: 지난해 남은 연차를 회사 규정만큼 넘긴다 — 상한(일)과 사용 기한(새 해 시작 후 N개월).
+    //   기한이 있으면 그 전에 시작한 휴가가 넘어온 연차부터 쓰고, 기한 뒤에는 못 쓴 만큼 사라진다.
+
+    /// 이월 상한 (일). 0 = 이월 안 함, -1 = 남은 만큼 전부.
+    static var carryOverMaxDays: Int {
+        get { UserDefaults.standard.integer(forKey: "carryOverMaxDays") }
+        set { UserDefaults.standard.set(newValue, forKey: "carryOverMaxDays") }
+    }
+
+    /// 넘어온 연차를 쓸 수 있는 기간 (새 해 시작 후 개월). 0 = 기한 없음.
+    static var carryOverExpiryMonths: Int {
+        get { UserDefaults.standard.integer(forKey: "carryOverExpiryMonths") }
+        set { UserDefaults.standard.set(newValue, forKey: "carryOverExpiryMonths") }
+    }
+
+    /// 넘어온 연차의 사용 기한 (그 시각부터는 못 쓴다). 기한이 없으면 nil.
+    static func carryOverExpiry(year: Int, startMonth: Int, calendar: Calendar = .current) -> Date? {
+        guard carryOverExpiryMonths > 0 else { return nil }
+        return calendar.date(byAdding: .month, value: carryOverExpiryMonths,
+                             to: fiscalYearStart(year: year, startMonth: startMonth, calendar: calendar))
+    }
+
+    /// 그 해의 연차 차감 확정량 (사용 + 예정, 취소 제외) — 날짜 조건을 주면 그 전에 시작한 것만
+    private static func committed(_ records: [LeaveRecord], year: Int, startMonth: Int,
+                                  before limit: Date? = nil, calendar: Calendar) -> Double {
+        self.records(records, inFiscalYear: year, startMonth: startMonth, calendar: calendar)
+            .filter { $0.status != .cancelled && $0.deductsFromAnnualLeave && (limit == nil || $0.startDate < limit!) }
+            .reduce(0) { $0 + $1.effectiveLeaveDays }
+    }
+
+    /// 지난해에서 그 해로 넘어오는 연차 (기한과 상관없이 넘어온 양). 앞의 해를 몇 해까지 거슬러 계산한다.
+    static func carryOverIn(year: Int, records: [LeaveRecord], annualGrant: Double, startMonth: Int,
+                            depth: Int = 3, calendar: Calendar = .current) -> Double {
+        let cap = carryOverMaxDays
+        guard cap != 0, depth > 0, annualGrant > 0 else { return 0 }
+        let previous = year - 1
+        // 기록이 하나도 없는 해부터는 이 앱을 안 쓴 해라 넘길 게 없다고 본다
+        guard !self.records(records, inFiscalYear: previous, startMonth: startMonth, calendar: calendar).isEmpty else { return 0 }
+        let prevCarry = carryOverIn(year: previous, records: records, annualGrant: annualGrant,
+                                    startMonth: startMonth, depth: depth - 1, calendar: calendar)
+        // 지난해 안에서 기한이 지나 사라진 몫은 빼고 남은 양
+        let prevUsable = carryOverUsableAtYearEnd(carryIn: prevCarry, year: previous, records: records,
+                                                  startMonth: startMonth, calendar: calendar)
+        let left = max(0, annualGrant + prevUsable - committed(records, year: previous, startMonth: startMonth, calendar: calendar))
+        return cap < 0 ? left : min(Double(cap), left)
+    }
+
+    /// 넘어온 연차 중 해가 끝날 때 살아 있는 몫 — 기한이 있으면 기한 전에 쓴 만큼만
+    private static func carryOverUsableAtYearEnd(carryIn: Double, year: Int, records: [LeaveRecord],
+                                                 startMonth: Int, calendar: Calendar) -> Double {
+        guard carryIn > 0, let expiry = carryOverExpiry(year: year, startMonth: startMonth, calendar: calendar) else { return carryIn }
+        return min(carryIn, committed(records, year: year, startMonth: startMonth, before: expiry, calendar: calendar))
+    }
+
+    /// 그 해의 넘어온 연차 중 `date` 에 쓸 수 있는 양 — 기한 전이면 전부, 기한 뒤면 그 전에 쓴 만큼만
+    static func carryOverUsable(year: Int, on date: Date, records: [LeaveRecord], annualGrant: Double,
+                                startMonth: Int, calendar: Calendar = .current) -> Double {
+        let carryIn = carryOverIn(year: year, records: records, annualGrant: annualGrant, startMonth: startMonth, calendar: calendar)
+        guard carryIn > 0, let expiry = carryOverExpiry(year: year, startMonth: startMonth, calendar: calendar),
+              date >= expiry else { return carryIn }
+        return min(carryIn, committed(records, year: year, startMonth: startMonth, before: expiry, calendar: calendar))
+    }
+
+    /// `date` 에 시작하는 휴가에 쓸 수 있는 연차 — **그 휴가가 속한 해** 기준 (내년 휴가는 내년 연차).
+    /// - Parameter excluding: 고치는 중인 기록은 빼고 센다.
+    static func availableAnnual(on date: Date, records: [LeaveRecord], annualGrant: Double, startMonth: Int,
+                                excluding: UUID? = nil, calendar: Calendar = .current) -> Double {
+        let others = excluding.map { id in records.filter { $0.id != id } } ?? records
+        let year = fiscalYear(for: date, startMonth: startMonth, calendar: calendar)
+        let carry = carryOverUsable(year: year, on: date, records: others, annualGrant: annualGrant,
+                                    startMonth: startMonth, calendar: calendar)
+        return max(0, annualGrant + carry - committed(others, year: year, startMonth: startMonth, calendar: calendar))
     }
 }

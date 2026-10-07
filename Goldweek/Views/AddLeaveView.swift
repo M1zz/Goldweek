@@ -24,6 +24,13 @@ struct AddLeaveView: View {
                                             startMonth: profile.yearStartMonth).annualCommitted
     }
 
+    /// 올해 남은 연차 (지난해에서 넘어온 몫 포함)
+    var remainingAnnualLeave: Double {
+        LeaveUsageCalculator.currentSummary(records: Array(leaveRecords), startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
+            .remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)
+    }
+
     var totalBonusLeave: Double {
         let now = Date()
         let available = bonusLeaves.filter { !$0.isUsed }
@@ -32,7 +39,7 @@ struct AddLeaveView: View {
     }
 
     var totalAvailableLeave: Double {
-        max(0, profile.totalAnnualLeave - committedLeave) + totalBonusLeave
+        remainingAnnualLeave + totalBonusLeave
     }
 
     private var isLeisure: Bool { profile.userType == .leisure }
@@ -48,7 +55,7 @@ struct AddLeaveView: View {
                     )
                 } else {
                     LeaveStatusHeader(
-                        remainingLeave: max(0, profile.totalAnnualLeave - committedLeave),
+                        remainingLeave: remainingAnnualLeave,
                         bonusLeave: totalBonusLeave,
                         totalAvailable: totalAvailableLeave
                     )
@@ -336,6 +343,20 @@ struct LeaveRegistrationView: View {
         return Double(DayOffCalendar.shared.workdays(from: startDate, to: endDate))
     }
 
+    /// 고른 시작일이 속한 해에 쓸 수 있는 연차 (넘어온 연차 포함)
+    var availableForStartDate: Double {
+        LeaveUsageCalculator.availableAnnual(on: startDate, records: Array(allLeaveRecords),
+                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStartMonth)
+    }
+
+    /// 시작일이 올해가 아닌 해에 속하면 그 해 (예: 10월에 잡는 내년 1월 휴가)
+    var futureFiscalYear: Int? {
+        let cal = Calendar.current
+        let target = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: profile.yearStartMonth, calendar: cal)
+        let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
+        return target > now ? target : nil
+    }
+
     /// 고른 종류 이름 — 직접 만든 종류면 그 이름
     private var categoryName: String {
         customType?.name ?? Strings.leaveTypeName(category)
@@ -367,9 +388,9 @@ struct LeaveRegistrationView: View {
         // 자유 계획 모드: 한도 없음
         if profile.userType == .leisure { return nil }
         // 직장인: 연차 차감 유형이면 잔여 연차 초과 불가
+        // 휴가가 속한 해의 연차로 본다 — 내년 휴가는 내년 연차에서 빠진다 (미리 계획)
         if category.deductsFromAnnual {
-            return max(0, profile.totalAnnualLeave - committedLeave) >= leaveDays
-                ? nil : Strings.insufficientLeave
+            return availableForStartDate >= leaveDays ? nil : Strings.insufficientLeave
         }
         return nil
     }
@@ -654,6 +675,15 @@ struct LeaveRegistrationView: View {
                             .foregroundStyle(.blue)
                             .fontWeight(.semibold)
                     }
+                }
+
+                // 내년 휴가를 미리 잡는 중이면 어느 해 연차에서 빠지는지 알린다
+                if let year = futureFiscalYear, profile.userType != .leisure, category.deductsFromAnnual, selectedBonusLeave == nil {
+                    Label(Strings.futureYearLeaveNote(year: year, remaining: Strings.dayCount(availableForStartDate)),
+                          systemImage: "calendar.badge.plus")
+                        .font(.body)
+                        .foregroundStyle(AppTheme.Colors.brand)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 // 직장 규정상 공휴일 앞뒤로 못 쉬는 날이 끼어 있으면 알린다 (막지는 않는다 — 예외 승인이 있을 수 있다)

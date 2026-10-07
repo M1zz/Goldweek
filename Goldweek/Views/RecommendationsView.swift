@@ -30,9 +30,12 @@ struct RecommendationsView: View {
     }
 
     /// 사용 확정 연차 — 홈·설정과 **같은 계산기**를 쓴다.
-    private var committedLeave: Double {
-        LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords),
-                                            startMonth: profile.yearStartMonth).annualCommitted
+    private var committedLeave: Double { usage.annualCommitted }
+
+    /// 지난해에서 넘어온 연차를 포함한 올해 현황
+    private var usage: LeaveUsageCalculator.Summary {
+        LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords), startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
     }
 
     private var activeBonusLeave: Double {
@@ -44,7 +47,7 @@ struct RecommendationsView: View {
 
     /// 사용 가능 연차 = 설정·현황과 동일한 계산
     private var availableLeave: Double {
-        max(0, profile.totalAnnualLeave - committedLeave) + activeBonusLeave
+        usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false) + activeBonusLeave
     }
 
     private var freeHolidays: [LeaveRecommendation] {
@@ -91,7 +94,7 @@ struct RecommendationsView: View {
                     }
 
                     // 남은 연차 정보 — records 기반으로 계산
-                    RemainingLeaveInfo(available: availableLeave, total: profile.totalAnnualLeave, committed: committedLeave, hasBonus: activeBonusLeave > 0)
+                    RemainingLeaveInfo(available: availableLeave, total: profile.totalAnnualLeave + usage.carryOver, committed: committedLeave, hasBonus: activeBonusLeave > 0)
 
                     // 최적 연간 휴가 플래너 (Pro 기능 — 알고리즘 기반)
                     OptimalLeavePlannerCard(

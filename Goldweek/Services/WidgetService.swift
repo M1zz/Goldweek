@@ -41,7 +41,9 @@ class WidgetService {
         let annualYearStart = cal.date(from: DateComponents(year: startYear, month: sm, day: 1)) ?? now
         let annualYearEnd = cal.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
 
-        let total = profile.totalAnnualLeave
+        // 지난해에서 넘어온 연차도 올해 총량에 든다 (이월 설정이 켜져 있을 때)
+        let total = profile.totalAnnualLeave + LeaveUsageCalculator.carryOverUsable(
+            year: startYear, on: now, records: leaveRecords, annualGrant: profile.totalAnnualLeave, startMonth: sm)
         let used = leaveRecords
             .filter { $0.startDate >= annualYearStart && $0.startDate <= annualYearEnd }
             .filter { ($0.status == .used || $0.status == .planned) && $0.type.deductsFromAnnual }

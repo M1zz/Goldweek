@@ -1756,3 +1756,56 @@ final class PartTimeDaysTests: XCTestCase {
         XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 14)))
     }
 }
+
+// MARK: - 미리 계획(내년 연차) · 남은 연차 이월 (네덜란드 사용자 피드백)
+
+final class PlanAheadCarryOverTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    override func setUp() {
+        DayOffCalendar.shared.update(country: .netherlands, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    override func tearDown() {
+        LeaveUsageCalculator.carryOverMaxDays = 0
+        LeaveUsageCalculator.carryOverExpiryMonths = 0
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    /// 올해 연차를 다 써도 내년 1월 휴가는 내년 연차로 잡을 수 있다
+    func testNextYearLeaveUsesNextYearBudget() {
+        LeaveUsageCalculator.carryOverMaxDays = 0
+        // 2026년: 20일을 다 씀 — 3월에 월~금 5일씩 4주
+        let used = (0..<4).map { w in
+            LeaveRecord(startDate: d(2026, 3, 2 + w * 7), endDate: d(2026, 3, 6 + w * 7), status: .used)
+        }
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2026, 11, 9), records: used, annualGrant: 20, startMonth: 1), 0)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2027, 1, 11), records: used, annualGrant: 20, startMonth: 1), 20)
+    }
+
+    func testCarryOverWithCapAndExpiry() {
+        // 2026년에 20일 중 12일만 씀 → 8일 남음
+        let y2026 = [
+            LeaveRecord(startDate: d(2026, 3, 2), endDate: d(2026, 3, 6), status: .used),   // 5
+            LeaveRecord(startDate: d(2026, 8, 3), endDate: d(2026, 8, 7), status: .used),   // 5
+            LeaveRecord(startDate: d(2026, 9, 7), endDate: d(2026, 9, 8), status: .used),   // 2
+        ]
+        LeaveUsageCalculator.carryOverMaxDays = -1
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: y2026, annualGrant: 20, startMonth: 1), 8)
+        LeaveUsageCalculator.carryOverMaxDays = 5
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: y2026, annualGrant: 20, startMonth: 1), 5)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2027, 2, 1), records: y2026, annualGrant: 20, startMonth: 1), 25)
+
+        // 기한 6개월: 7월 1일 전에 3일만 썼으면 그 뒤로는 넘어온 5일 중 3일만 남는다
+        LeaveUsageCalculator.carryOverExpiryMonths = 6
+        let early = LeaveRecord(startDate: d(2027, 2, 1), endDate: d(2027, 2, 3), status: .used)   // 3
+        let all = y2026 + [early]
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2027, 3, 1), records: all, annualGrant: 20, startMonth: 1), 22)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2027, 8, 2), records: all, annualGrant: 20, startMonth: 1), 20)
+
+        // 이월을 끄면 넘어오는 게 없다
+        LeaveUsageCalculator.carryOverMaxDays = 0
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: y2026, annualGrant: 20, startMonth: 1), 0)
+    }
+}
