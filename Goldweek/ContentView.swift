@@ -21,12 +21,18 @@ struct ContentView: View {
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
     /// 직접 입력 국가의 주말 요일 — 바뀌면 쉬는 날 판정을 다시 채운다
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
+    /// 사는 곳 공휴일에도 쉬는지 — 바뀌면 쉬는 날 판정을 다시 채운다
+    @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
+    /// 공휴일 앞뒤 휴가 제한 근무일 수
+    @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
 
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     /// 사용법 시트를 이미 봤는지 — 온보딩 직후 딱 한 번 자동으로 띄운다.
     /// (그 뒤로는 설정 > 도움말에서 사용자가 원할 때만 연다)
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var showingTutorial = false
+    /// 만족 순간에 띄우는 만족도 프롬프트 (추천 등록·플랜 등록·휴가 복귀)
+    @State private var reviewMoments = ReviewMoments.shared
 
     var currentProfile: UserProfile? {
         profiles.first
@@ -49,10 +55,10 @@ struct ContentView: View {
                         try? await Task.sleep(nanoseconds: 700_000_000)
                         showingTutorial = true
                     }
-                    // 만족도 프롬프트 — 조건이 맞으면 "즐겁게 쓰고 계신가요?"를 묻고,
-                    // 좋다면 App Store 리뷰로, 아쉽다면 피드백 화면으로 보낸다.
-                    // 불만인 사람을 별점 대신 피드백으로 흡수하는 게 이 프롬프트의 목적이다.
-                    .leeoSatisfactionCheck(GoldweekSpec.self)
+                    // 만족도 프롬프트 — "즐겁게 쓰고 계신가요?"를 묻고, 좋다면 App Store 리뷰로,
+                    // 아쉽다면 피드백 화면으로 보낸다(불만은 별점 대신 피드백으로 흡수).
+                    // 앱을 열자마자가 아니라 만족한 순간(추천·플랜 등록, 휴가 복귀)에 띄운다 — ReviewMoments.
+                    .leeoReviewGate(GoldweekSpec.self, isPresented: $reviewMoments.isPresented)
                     .onAppear {
                         syncDayOffCalendar(profile: profile)
                         LeaveMigrations.splitRecommendedLeavesIfNeeded(records: leaveRecords, context: modelContext)
@@ -61,6 +67,7 @@ struct ContentView: View {
                         ReviewManager.shared.recordLaunch()
                         // 사람이 앱을 실제로 연 순간 — 실행 횟수·활동일·설치 스냅샷이 여기서 나간다.
                         UsageReportingService.reportForegroundOpen(context: modelContext)
+                        reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
                         if !hasCompletedOnboarding {
                             hasCompletedOnboarding = true
                         }
@@ -72,6 +79,7 @@ struct ContentView: View {
                             LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                             updateWidget()
                             UsageReportingService.reportForegroundOpen(context: modelContext)
+                            reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
                             refreshRestRadar(profile: profile)
                             syncSharedSchedules(profile: profile)
                         } else if newPhase == .background {
@@ -214,13 +222,14 @@ struct ContentView: View {
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
-        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(profile.holidayRegionRaw)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {
         let hidden = Set(hiddenHolidayDatesRaw.split(separator: ",").map(String.init).filter { !$0.isEmpty })
         // 백업 복원·타임머신처럼 프로필이 통째로 바뀐 경우에도 공휴일 계산이 같은 지역을 쓰도록 맞춘다
         HolidayService.selectedRegionCode = profile.holidayRegion?.code ?? ""
+        HolidayService.homeRegionCode = profile.homeRegion?.code ?? ""
         DayOffCalendar.shared.update(country: profile.country, customHolidays: customHolidays,
                                      hiddenDates: hidden, breaks: schoolBreaks)
     }
@@ -279,6 +288,9 @@ struct ContentView: View {
                 d = n
             }
         }
+
+        // 직장 규정상 공휴일 앞뒤로 못 쉬는 날도 제외
+        excluded.formUnion(DayOffCalendar.shared.blockedDates(in: year))
 
         let plan = LeavePlanner.optimalPlan(
             year: year,

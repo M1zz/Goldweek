@@ -118,6 +118,21 @@ class RecommendationEngine {
             }
         }
 
+        // 6-2. 공휴일 앞뒤 휴가 제한 — 연차를 내야 하는 날 중 하나라도 제한일이면 뺀다
+        if dayOff.leaveBlackoutDays > 0 {
+            scoredRecommendations = scoredRecommendations.filter { rec in
+                !rec.leaveSegments(holidays: rangeHolidays, country: targetCountry, calendar: calendar).contains { seg in
+                    var d = seg.start
+                    while d <= seg.end {
+                        if dayOff.isLeaveBlocked(d) { return true }
+                        guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+                        d = next
+                    }
+                    return false
+                }
+            }
+        }
+
         // 7. 현재 날짜 이후만 (includePast가 false일 때) — true면 한 해 전체 노출
         if !includePast {
             let today = Date()

@@ -192,6 +192,7 @@ struct RecommendationsView: View {
             try modelContext.save()
             UsageReportingService.record(event: "recommendation_added")
             HapticFeedback.success()
+            ReviewMoments.shared.trigger(.recommendationAdded)
         } catch {
             addedRecommendations.remove(recommendation.id)
             records.forEach { modelContext.delete($0) }
@@ -2665,6 +2666,9 @@ struct OptimalLeavePlannerCard: View {
             }
         }
 
+        // 직장 규정상 공휴일 앞뒤로 못 쉬는 날도 제외
+        excluded.formUnion(DayOffCalendar.shared.blockedDates(in: year))
+
         let makeupDays = HolidayService.makeupWorkdays(for: year, country: profile.country, calendar: cal)
         let weekendDays = HolidayService.weekendDays(for: profile.country)
 
@@ -2725,6 +2729,7 @@ struct OptimalLeavePlannerCard: View {
             try? modelContext.save()
             HapticFeedback.success()
             didBatchAdd = true
+            ReviewMoments.shared.trigger(.optimalPlanAdded, delay: 1.5)
         }
     }
 }

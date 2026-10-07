@@ -50,6 +50,32 @@ class HolidayService {
         set { UserDefaults.standard.set(newValue, forKey: "holidayRegion") }
     }
 
+    /// 사는 곳 지역 (원본은 `UserProfile.homeRegionRaw`) — 일하는 곳과 다르면 그 지역에만 있는 공휴일을 따로 보여 준다
+    static var homeRegionCode: String {
+        get { UserDefaults.standard.string(forKey: "homeHolidayRegion") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "homeHolidayRegion") }
+    }
+
+    /// 사는 곳 공휴일에도 쉬는지 — 기본은 아니다(연차는 일하는 곳 기준)
+    static var homeHolidaysAreDaysOff: Bool {
+        get { UserDefaults.standard.bool(forKey: "homeHolidaysDaysOff") }
+        set { UserDefaults.standard.set(newValue, forKey: "homeHolidaysDaysOff") }
+    }
+
+    /// 공휴일 앞뒤로 휴가를 낼 수 없는 근무일 수 (0 = 제한 없음) — 공무원 등 직장 규정
+    static var leaveBlackoutDays: Int {
+        get { UserDefaults.standard.integer(forKey: "holidayBlackoutDays") }
+        set { UserDefaults.standard.set(newValue, forKey: "holidayBlackoutDays") }
+    }
+
+    /// 사는 곳에만 있는 공휴일 — 일하는 곳 공휴일과 날짜가 겹치지 않는 것
+    func homeOnlyHolidays(for year: Int, country: Country) -> [Holiday] {
+        guard let home = HolidayRegion.find(Self.homeRegionCode), home.country == country,
+              home.code != Self.activeRegion(for: country)?.code else { return [] }
+        let work = Set(getHolidays(for: year, country: country).map { dateKey($0.date) })
+        return getHolidays(for: year, country: country, region: home).filter { !work.contains(dateKey($0.date)) }
+    }
+
     /// 그 나라에 적용할 지역 — 고른 지역이 다른 나라 것이면 없다
     static func activeRegion(for country: Country) -> HolidayRegion? {
         guard let region = HolidayRegion.find(selectedRegionCode), region.country == country else { return nil }
@@ -57,10 +83,12 @@ class HolidayService {
     }
 
     /// 해당 연도의 공휴일 목록 반환 (국가별, 커스텀 포함)
+    /// `region` 을 주면 고른 지역 대신 그 지역으로 계산한다 (사는 곳 공휴일용)
     func getHolidays(for year: Int, country: Country = .korea,
                      customHolidays: [CustomHoliday] = [],
-                     hiddenDates: Set<String> = []) -> [Holiday] {
-        let region = Self.activeRegion(for: country)?.code
+                     hiddenDates: Set<String> = [],
+                     region regionOverride: HolidayRegion? = nil) -> [Holiday] {
+        let region = regionOverride?.code ?? Self.activeRegion(for: country)?.code
         // 이름이 앱 언어를 따르므로 언어도 키에 넣는다 — 실행 중 언어를 바꿔도 예전 이름이 남지 않게
         let baseKey = "\(year)-\(country.rawValue)-\(region ?? "")-\(AppLanguage.current.rawValue)"
         var result: [Holiday]

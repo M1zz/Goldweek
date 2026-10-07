@@ -77,6 +77,11 @@ struct SettingsView: View {
     // 국가 & 언어
     @State private var selectedCountry: Country
     @State private var selectedRegionCode: String
+    /// 사는 곳 지역 — 일하는 곳과 공휴일이 다를 때
+    @State private var selectedHomeRegionCode: String
+    @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
+    /// 공휴일 앞뒤 휴가 제한 근무일 수 (0 = 없음) — HolidayService.leaveBlackoutDays 와 같은 키
+    @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
     @State private var selectedLanguage: AppLanguage
 
     private let recommendationEngine = RecommendationEngine()
@@ -86,6 +91,7 @@ struct SettingsView: View {
         self.showsCloseButton = showsCloseButton
         _selectedCountry = State(initialValue: profile.country)
         _selectedRegionCode = State(initialValue: profile.holidayRegion?.code ?? "")
+        _selectedHomeRegionCode = State(initialValue: profile.homeRegion?.code ?? "")
         _selectedLanguage = State(initialValue: AppLanguage.current)
     }
 
@@ -289,6 +295,7 @@ struct SettingsView: View {
                     .onChange(of: selectedCountry) { _, newValue in
                         profile.country = newValue
                         selectedRegionCode = profile.holidayRegion?.code ?? ""
+                        selectedHomeRegionCode = profile.homeRegion?.code ?? ""
                         recommendationEngine.invalidateCache()
                     }
 
@@ -302,7 +309,28 @@ struct SettingsView: View {
                         }
                         .onChange(of: selectedRegionCode) { _, newValue in
                             profile.holidayRegion = HolidayRegion.find(newValue)
+                            selectedHomeRegionCode = profile.homeRegion?.code ?? ""
                             recommendationEngine.invalidateCache()
+                        }
+
+                        // 사는 곳이 일하는 곳과 다르면 (예: 스페인 자치주) 그 지역 공휴일도 달력에 보여 준다
+                        Picker(Strings.homeRegionSetting, selection: $selectedHomeRegionCode) {
+                            Text(Strings.homeRegionNone).tag("")
+                            ForEach(selectedCountry.holidayRegions.filter { $0.code != selectedRegionCode }) { region in
+                                Text(region.displayName).tag(region.code)
+                            }
+                        }
+                        .onChange(of: selectedHomeRegionCode) { _, newValue in
+                            profile.homeRegion = HolidayRegion.find(newValue)
+                            recommendationEngine.invalidateCache()
+                        }
+
+                        if !selectedHomeRegionCode.isEmpty {
+                            Toggle(Strings.homeHolidaysDaysOff, isOn: $homeHolidaysDaysOff)
+                                .onChange(of: homeHolidaysDaysOff) { _, newValue in
+                                    HolidayService.homeHolidaysAreDaysOff = newValue
+                                    recommendationEngine.invalidateCache()
+                                }
                         }
                     }
 
@@ -337,7 +365,7 @@ struct SettingsView: View {
                     Text(Strings.countryAndLanguage)
                 } footer: {
                     if !selectedCountry.holidayRegions.isEmpty {
-                        Text(Strings.holidayRegionFooter(selectedCountry))
+                        Text("\(Strings.holidayRegionFooter(selectedCountry))\n\(Strings.homeRegionFooter)")
                     } else if selectedCountry == .custom {
                         Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.weekendSettingFooter)")
                     } else {
@@ -475,8 +503,20 @@ struct SettingsView: View {
                         }
                     }
 
+                    // 공휴일 앞뒤로 휴가를 못 내는 직장(공무원 등) — 추천·최적 플랜이 그 날을 피한다
+                    Picker(Strings.blackoutSetting, selection: $holidayBlackoutDays) {
+                        Text(Strings.blackoutOff).tag(0)
+                        ForEach([1, 2, 3, 5], id: \.self) { n in
+                            Text(Strings.blackoutDays(n)).tag(n)
+                        }
+                    }
+                    .onChange(of: holidayBlackoutDays) { _, _ in recommendationEngine.invalidateCache() }
+
                     // 연차를 달력 일수로 세는지 근무일로 세는지 — 묻는 사람이 많다
                     Text(Strings.leaveCountingFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                    Text(Strings.blackoutFooter)
                         .font(.body)
                         .foregroundStyle(.secondary)
                 }

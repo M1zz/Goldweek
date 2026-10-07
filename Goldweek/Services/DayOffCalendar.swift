@@ -33,6 +33,14 @@ final class DayOffCalendar {
     private(set) var myBreaks: [(name: String, start: Date, end: Date)] = []
 
     @ObservationIgnored private var yearCache: [Int: Set<String>] = [:]
+    /// 사는 곳에만 있는 공휴일 (연도 → dateKey → 이름)
+    @ObservationIgnored private var homeCache: [Int: [String: String]] = [:]
+    /// 사는 곳 공휴일에도 쉬는지
+    private(set) var homeHolidaysAreDaysOff = false
+    /// 공휴일 앞뒤로 휴가를 낼 수 없는 근무일 수 (0 = 제한 없음)
+    private(set) var leaveBlackoutDays = 0
+    /// 휴가 제한일 (연도 → dateKey)
+    @ObservationIgnored private var blackoutCache: [Int: Set<String>] = [:]
     @ObservationIgnored private let lock = NSLock()
     @ObservationIgnored private let service = HolidayService()
     @ObservationIgnored private let calendar = Calendar.current
@@ -78,12 +86,16 @@ final class DayOffCalendar {
         children.sort { $0.start < $1.start }
 
         let weekend = HolidayService.weekendDays(for: country).sorted().map(String.init).joined()
-        let newFingerprint = "\(country.rawValue)|\(weekend)|\(HolidayService.selectedRegionCode)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
+        let homeDaysOff = HolidayService.homeHolidaysAreDaysOff
+        let blackout = HolidayService.leaveBlackoutDays
+        let newFingerprint = "\(country.rawValue)|\(weekend)|blackout\(blackout)|\(HolidayService.selectedRegionCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
             + children.map { "\(key($0.start))~\(key($0.end))" }.joined(separator: ",")
         guard newFingerprint != fingerprint else { return }
 
-        lock.lock(); yearCache = [:]; lock.unlock()
+        lock.lock(); yearCache = [:]; homeCache = [:]; blackoutCache = [:]; lock.unlock()
         self.country = country
+        self.homeHolidaysAreDaysOff = homeDaysOff
+        self.leaveBlackoutDays = blackout
         self.customDays = custom
         self.yearlyCustomDays = yearly
         self.breakDays = mine
@@ -120,6 +132,10 @@ final class DayOffCalendar {
         let hidden = country == self.country ? hiddenDays : []
         var result = service.getHolidays(for: year, country: country, hiddenDates: hidden)
         guard country == self.country else { return result }
+        // 사는 곳 공휴일에도 쉬면 그날들도 쉬는 날 목록에 넣는다 (숨긴 날은 빼고)
+        if homeHolidaysAreDaysOff {
+            result += service.homeOnlyHolidays(for: year, country: country).filter { !hidden.contains(key($0.date)) }
+        }
         let taken = Set(result.map { key($0.date) })
         for (k, name) in customDays where k.hasPrefix("\(year)-") && !taken.contains(k) {
             guard let d = keyFormatter.date(from: k) else { continue }
@@ -140,6 +156,58 @@ final class DayOffCalendar {
         return result.sorted { $0.date < $1.date }
     }
 
+    /// 공휴일 앞뒤 휴가 제한일인지 — 공휴일 바로 앞뒤의 근무일 N개 (주말·쉬는 날은 건너뛰고 센다)
+    func isLeaveBlocked(_ date: Date) -> Bool {
+        guard leaveBlackoutDays > 0 else { return false }
+        return blackoutKeys(for: calendar.component(.year, from: date)).contains(key(date))
+    }
+
+    /// 한 해의 휴가 제한일 (startOfDay) — 최적 플랜에서 제외할 날
+    func blockedDates(in year: Int) -> Set<Date> {
+        guard leaveBlackoutDays > 0 else { return [] }
+        return Set(blackoutKeys(for: year).compactMap { keyFormatter.date(from: $0) }.map { calendar.startOfDay(for: $0) })
+    }
+
+    private func blackoutKeys(for year: Int) -> Set<String> {
+        lock.lock()
+        if let cached = blackoutCache[year] { lock.unlock(); return cached }
+        lock.unlock()
+        var blocked = Set<String>()
+        // 연말·연초 공휴일이 이웃 해의 날을 막을 수 있어 앞뒤 해도 본다
+        for y in (year - 1)...(year + 1) {
+            for k in holidayKeys(for: y) {
+                guard let h = keyFormatter.date(from: k) else { continue }
+                for step in [-1, 1] {
+                    var d = h, count = 0, guardrail = 0
+                    while count < leaveBlackoutDays && guardrail < 60 {
+                        guard let next = calendar.date(byAdding: .day, value: step, to: d) else { break }
+                        d = next; guardrail += 1
+                        if isDayOff(d) { continue }
+                        if calendar.component(.year, from: d) == year { blocked.insert(key(d)) }
+                        count += 1
+                    }
+                }
+            }
+        }
+        lock.lock(); blackoutCache[year] = blocked; lock.unlock()
+        return blocked
+    }
+
+    /// 그 날이 사는 곳에만 있는 공휴일이면 이름 — 달력 표시·날짜 상세용
+    func homeHolidayName(on date: Date) -> String? {
+        let year = calendar.component(.year, from: date)
+        lock.lock()
+        let cached = homeCache[year]
+        lock.unlock()
+        let names = cached ?? {
+            let map = Dictionary(service.homeOnlyHolidays(for: year, country: country).map { (key($0.date), $0.name) },
+                                 uniquingKeysWith: { a, _ in a })
+            lock.lock(); homeCache[year] = map; lock.unlock()
+            return map
+        }()
+        return names[key(date)]
+    }
+
     /// 그 날이 속한 자녀 방학 이름
     func childBreakName(on date: Date) -> String? {
         let d = calendar.startOfDay(for: date)
@@ -158,7 +226,10 @@ final class DayOffCalendar {
         lock.lock()
         if let cached = yearCache[year] { lock.unlock(); return cached }
         lock.unlock()
-        let keys = Set(service.getHolidays(for: year, country: country, hiddenDates: hiddenDays).map { key($0.date) })
+        var keys = Set(service.getHolidays(for: year, country: country, hiddenDates: hiddenDays).map { key($0.date) })
+        if homeHolidaysAreDaysOff {
+            keys.formUnion(service.homeOnlyHolidays(for: year, country: country).map { key($0.date) }.filter { !hiddenDays.contains($0) })
+        }
         lock.lock(); yearCache[year] = keys; lock.unlock()
         return keys
     }

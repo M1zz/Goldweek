@@ -80,6 +80,18 @@ struct CalendarView: View {
     }
 
     /// 추천 일정 중 노란색으로 표시할 "연차일" — 범위 내 평일(주말·공휴일 제외)
+    /// 이 달에 사는 곳 공휴일이 있는지 — 있을 때만 범례에 넣는다
+    private var monthHasHomeHoliday: Bool {
+        guard let interval = calendar.dateInterval(of: .month, for: currentMonth) else { return false }
+        var d = interval.start
+        while d < interval.end {
+            if DayOffCalendar.shared.homeHolidayName(on: d) != nil { return true }
+            guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+            d = next
+        }
+        return false
+    }
+
     private var monthHasChildBreak: Bool {
         guard let interval = calendar.dateInterval(of: .month, for: currentMonth) else { return false }
         let lastDay = calendar.date(byAdding: .day, value: -1, to: interval.end) ?? interval.end
@@ -223,6 +235,7 @@ struct CalendarView: View {
             UsageReportingService.record(event: "recommendation_added")
             AppTips.recommendation.invalidate(reason: .actionPerformed)
             HapticFeedback.success()
+            ReviewMoments.shared.trigger(.recommendationAdded)
         } catch {
             addedRecommendationIDs.remove(recommendation.id)
             records.forEach { modelContext.delete($0) }
@@ -263,7 +276,8 @@ struct CalendarView: View {
                     LegendView(showsRecommendation: !recommendedDates.isEmpty,
                                showsWarning: !burnoutWarningDates.isEmpty,
                                showsMyBreak: holidays.contains { $0.isBreak && calendar.isDate($0.date, equalTo: currentMonth, toGranularity: .month) },
-                               showsChildBreak: monthHasChildBreak)
+                               showsChildBreak: monthHasChildBreak,
+                               showsHomeHoliday: monthHasHomeHoliday)
 
                     // 추천이 실제로 있을 때만 안내한다 — 없는 기능을 설명하면 소음이다
                     if !recommendedDates.isEmpty {
@@ -502,6 +516,7 @@ struct CalendarGrid: View {
                                 isLeave: isLeave(date),
                                 isMakeupWorkday: HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country),
                                 isChildBreak: DayOffCalendar.shared.childBreakName(on: date) != nil,
+                                isHomeHoliday: DayOffCalendar.shared.homeHolidayName(on: date) != nil,
                                 barVisible: showsRestBar(date),
                                 barColor: restBarColor(date),
                                 leaveConnectsLeft: restConnectsLeft(date),
@@ -631,6 +646,8 @@ struct DayCell: View {
     var isMakeupWorkday: Bool = false
     /// 자녀 방학 — 날짜 위쪽에 청록 선 (참고 표시라 배경은 건드리지 않는다)
     var isChildBreak: Bool = false
+    /// 사는 곳에만 있는 공휴일 — 쉬는 날로 치지 않으면 빈 링으로, 치면 일반 공휴일처럼 보인다
+    var isHomeHoliday: Bool = false
     var barVisible: Bool = false
     var barColor: Color = AppTheme.Colors.leave
     var leaveConnectsLeft: Bool = false
@@ -717,6 +734,12 @@ struct DayCell: View {
                     .fill(AppTheme.Colors.holiday)
                     .frame(width: 6, height: 6)
                     .offset(y: markOffset)
+            } else if isHomeHoliday && !isHoliday && !isSelected && !barVisible {
+                // 사는 곳 공휴일(참고) — 빈 링
+                Circle()
+                    .stroke(AppTheme.Colors.holiday, lineWidth: 1.5)
+                    .frame(width: 7, height: 7)
+                    .offset(y: markOffset)
             }
 
             Text("\(dayNumber)")
@@ -765,6 +788,7 @@ struct LegendView: View {
     var showsWarning: Bool = false
     var showsMyBreak: Bool = false
     var showsChildBreak: Bool = false
+    var showsHomeHoliday: Bool = false
 
     var body: some View {
         // 본문 크기 글자로는 5개가 한 줄에 안 들어간다 — 한 줄을 고집하면 "Holid/ay"처럼
@@ -785,6 +809,9 @@ struct LegendView: View {
             if showsChildBreak {
                 LegendItem(color: .teal.opacity(0.35), text: Strings.childBreakTag)
             }
+            if showsHomeHoliday {
+                LegendItem(color: AppTheme.Colors.holiday, text: Strings.homeHolidayTag, hollow: true)
+            }
         }
         .font(.body)
         .accessibilityElement(children: .combine)
@@ -797,10 +824,16 @@ struct LegendItem: View {
     let text: String
     /// 달력의 번아웃 주의 표시처럼 점선 링으로 그린다 — 범례가 점이면 링과 연결이 안 된다
     var dashed = false
+    /// 사는 곳 공휴일처럼 빈 링으로 그린다
+    var hollow = false
 
     var body: some View {
         HStack(spacing: 4) {
-            if dashed {
+            if hollow {
+                Circle()
+                    .stroke(color, lineWidth: 1.5)
+                    .frame(width: 8, height: 8)
+            } else if dashed {
                 Circle()
                     .stroke(color.opacity(0.7), style: StrokeStyle(lineWidth: 1.5, dash: [3, 2]))
                     .frame(width: 12, height: 12)
@@ -948,6 +981,31 @@ struct SelectedDateInfo: View {
                         .foregroundStyle(.secondary)
                         .voDecorative()
                     Text(Strings.makeupWorkday)
+                }
+                .accessibilityElement(children: .combine)
+            }
+
+            if DayOffCalendar.shared.isLeaveBlocked(date) {
+                HStack {
+                    Image(systemName: "nosign")
+                        .foregroundStyle(.orange)
+                        .voDecorative()
+                    Text(Strings.blackoutDayLabel)
+                }
+                .accessibilityElement(children: .combine)
+            }
+
+            // 사는 곳 공휴일 — 쉬는 날로 치면 위 공휴일 줄에 이미 이름이 있으니 표시만 덧붙인다
+            if let homeHoliday = DayOffCalendar.shared.homeHolidayName(on: date) {
+                HStack {
+                    Image(systemName: "house.fill")
+                        .foregroundStyle(AppTheme.Colors.holiday)
+                        .voDecorative()
+                    if holidayOnDate?.name != homeHoliday {
+                        Text(homeHoliday)
+                    }
+                    Text("(\(Strings.homeHolidayTag))")
+                        .foregroundStyle(.secondary)
                 }
                 .accessibilityElement(children: .combine)
             }
