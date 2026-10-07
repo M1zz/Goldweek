@@ -88,7 +88,7 @@ final class DayOffCalendar {
         let weekend = HolidayService.weekendDays(for: country).sorted().map(String.init).joined()
         let homeDaysOff = HolidayService.homeHolidaysAreDaysOff
         let blackout = HolidayService.leaveBlackoutDays
-        let newFingerprint = "\(country.rawValue)|\(weekend)|blackout\(blackout)|\(HolidayService.selectedRegionCode)|\(HolidayService.homeCountryCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
+        let newFingerprint = "\(country.rawValue)|\(weekend)|blackout\(blackout)|\(HolidayService.selectedRegionCode)|\(HolidayService.partTimeSwapsRaw)|\(HolidayService.homeCountryCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
             + children.map { "\(key($0.start))~\(key($0.end))" }.joined(separator: ",")
         guard newFingerprint != fingerprint else { return }
 

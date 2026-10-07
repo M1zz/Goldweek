@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */; };
+		3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F973B8901CC9124460DC0A /* PartTimeDays.swift */; };
 		5CDAC8A0B908A3183B17E747 /* LeaveKinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79243653112DBACB8C8953B /* LeaveKinds.swift */; };
+		7BC4167236E5FF0979D0BFFC /* Strings+PartTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */; };
 		9C2035682F29933E00AF1279 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9C2035672F29933E00AF1279 /* Localizable.xcstrings */; };
 		9C5397B92F4E825600905CF0 /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5397B82F4E825600905CF0 /* ReviewManager.swift */; };
 		9C61C0042EDD629400BC5930 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C61C0032EDD629400BC5930 /* WidgetKit.framework */; };
@@ -109,7 +111,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		09F973B8901CC9124460DC0A /* PartTimeDays.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PartTimeDays.swift; sourceTree = "<group>"; };
 		0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+LeaveCustomization.swift"; sourceTree = "<group>"; };
+		3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+PartTime.swift"; sourceTree = "<group>"; };
 		584ABA642F211E0C008AD1DB /* Goldweek.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Goldweek.entitlements; sourceTree = "<group>"; };
 		584ABA652F211E1E008AD1DB /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
 		9C2035672F29933E00AF1279 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -324,6 +328,7 @@
 				B2000006 /* CrashReportsView.swift */,
 				DA3B5BBD68F2C9CD75F7A10A /* LeaveKindsView.swift */,
 				E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */,
+				09F973B8901CC9124460DC0A /* PartTimeDays.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -367,6 +372,7 @@
 				A2000050 /* Accessibility.swift */,
 				A2000064 /* AppTips.swift */,
 				0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */,
+				3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -600,6 +606,8 @@
 				EFCC106F139C9439F277D6BF /* Strings+LeaveCustomization.swift in Sources */,
 				9CA11B8BA50188BC875C430D /* LeaveKindsView.swift in Sources */,
 				236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */,
+				3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */,
+				7BC4167236E5FF0979D0BFFC /* Strings+PartTime.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

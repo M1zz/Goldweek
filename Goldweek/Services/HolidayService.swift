@@ -700,8 +700,9 @@ class HolidayService {
         }
     }
 
-    /// 주말이지만 출근하는 날인지 (중국 调休 补班 · 러시아 рабочая суббота)
+    /// 주말이지만 출근하는 날인지 (중국 调休 补班 · 러시아 рабочая суббота · 파트타임 쉬는 날을 옮겨 일하는 날)
     static func isMakeupWorkday(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
+        if partTimeSwapWorkKeys.contains(partTimeKey(date)) { return true }
         let c = calendar.dateComponents([.year, .month, .day], from: date)
         guard let year = c.year, let days = makeupTable(country)[year] else { return false }
         return days.contains { $0.month == c.month && $0.day == c.day }
@@ -732,24 +733,83 @@ class HolidayService {
     }
 
     /// 그 나라에서 쉬는 주말 요일 (Calendar weekday: 1=일 … 7=토). 내가 고른 값이 있으면 그것.
+    /// 파트타임으로 매주 쉬는 요일도 여기 더한다 — 연차 차감·추천·달력이 주말과 똑같이 다룬다.
     static func weekendDays(for country: Country) -> Set<Int> {
-        parseWeekend(weekendOverrideRaw) ?? country.standardWeekendDays
+        (parseWeekend(weekendOverrideRaw) ?? country.standardWeekendDays).union(partTimeDaysOff)
     }
+
+    // MARK: - 파트타임 쉬는 요일 (네덜란드 사용자 피드백: 금요일마다 쉬고, 가끔 다른 날로 바꾼다)
+
+    /// 매주 일하지 않는 요일 ("6" = 금요일, "4,6" 처럼 여럿). 주말과 따로 둔다 — 주말 설정은 나라 기본을 따를 수 있다.
+    static var partTimeDaysOffRaw: String {
+        get { UserDefaults.standard.string(forKey: "partTimeDaysOff") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "partTimeDaysOff") }
+    }
+
+    static var partTimeDaysOff: Set<Int> {
+        Set(partTimeDaysOffRaw.split(separator: ",").compactMap { Int($0) }.filter { (1...7).contains($0) })
+    }
+
+    /// 이번 주만 쉬는 날을 옮긴 기록 — "원래 쉬는 날>대신 쉬는 날" (yyyy-MM-dd) 쌍을 쉼표로
+    static var partTimeSwapsRaw: String {
+        get { UserDefaults.standard.string(forKey: "partTimeSwaps") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "partTimeSwaps") }
+    }
+
+    /// (원래 쉬는 날 → 대신 쉬는 날)
+    static var partTimeSwaps: [(from: String, to: String)] {
+        partTimeSwapsRaw.split(separator: ",").compactMap { pair in
+            let parts = pair.split(separator: ">").map(String.init)
+            return parts.count == 2 ? (parts[0], parts[1]) : nil
+        }
+    }
+
+    /// 옮겨서 일하게 된 날 (원래는 쉬는 요일)
+    static var partTimeSwapWorkKeys: Set<String> { Set(partTimeSwaps.map(\.from)) }
+    /// 옮겨서 쉬게 된 날
+    static var partTimeSwapOffKeys: Set<String> { Set(partTimeSwaps.map(\.to)) }
+
+    static func addPartTimeSwap(from: Date, to: Date) {
+        let f = partTimeKey(from), t = partTimeKey(to)
+        // 같은 날을 두 번 옮기면 앞의 것을 지운다
+        let kept = partTimeSwaps.filter { $0.from != f && $0.to != t }
+        partTimeSwapsRaw = (kept + [(f, t)]).map { "\($0.from)>\($0.to)" }.joined(separator: ",")
+    }
+
+    /// 그 날이 낀 옮김을 되돌린다 (원래 쉬는 날이든 대신 쉬는 날이든)
+    static func removePartTimeSwap(involving date: Date) {
+        let k = partTimeKey(date)
+        partTimeSwapsRaw = partTimeSwaps.filter { $0.from != k && $0.to != k }
+            .map { "\($0.from)>\($0.to)" }.joined(separator: ",")
+    }
+
+    private static let partTimeKeyFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        f.locale = Locale(identifier: "en_US_POSIX")
+        return f
+    }()
+
+    static func partTimeKey(_ date: Date) -> String { partTimeKeyFormatter.string(from: date) }
 
     /// 요일만 보고 주말인지 — 보충 근무일은 따지지 않는다 (달력 색칠용)
     static func isWeekendDay(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
         weekendDays(for: country).contains(calendar.component(.weekday, from: date))
     }
 
-    /// 쉬는 주말인지 — 그 나라 주말 중 보충 근무일이 아닌 날
+    /// 쉬는 주말인지 — 그 나라 주말 중 보충 근무일이 아닌 날. 파트타임 쉬는 날을 옮겨 쉬는 날도 여기 든다.
     static func isRestWeekend(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
-        isWeekendDay(date, country: country, calendar: calendar) && !isMakeupWorkday(date, country: country, calendar: calendar)
+        if partTimeSwapOffKeys.contains(partTimeKey(date)) { return true }
+        return isWeekendDay(date, country: country, calendar: calendar) && !isMakeupWorkday(date, country: country, calendar: calendar)
     }
 
-    /// 한 해의 보충 근무일 (startOfDay) — 연휴 플래너용
+    /// 한 해의 보충 근무일 (startOfDay) — 연휴 플래너용. 파트타임 쉬는 날을 옮겨 일하는 날도 포함.
     static func makeupWorkdays(for year: Int, country: Country, calendar: Calendar = .current) -> Set<Date> {
-        guard let days = makeupTable(country)[year] else { return [] }
-        return Set(days.compactMap { calendar.date(from: DateComponents(year: year, month: $0.month, day: $0.day)) })
+        let swapped = partTimeSwaps.compactMap { partTimeKeyFormatter.date(from: $0.from) }
+            .filter { calendar.component(.year, from: $0) == year }
+            .map { calendar.startOfDay(for: $0) }
+        guard let days = makeupTable(country)[year] else { return Set(swapped) }
+        return Set(days.compactMap { calendar.date(from: DateComponents(year: year, month: $0.month, day: $0.day)) }).union(swapped)
     }
 
     private func getChineseHolidays(for year: Int) -> [Holiday] {

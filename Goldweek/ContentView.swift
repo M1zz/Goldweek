@@ -23,6 +23,9 @@ struct ContentView: View {
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
     /// 직접 입력 국가의 주말 요일 — 바뀌면 쉬는 날 판정을 다시 채운다
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
+    /// 파트타임 쉬는 요일·이번 주만 옮긴 날 — 바뀌면 쉬는 날 판정을 다시 채운다
+    @AppStorage("partTimeDaysOff") private var partTimeDaysOffRaw = ""
+    @AppStorage("partTimeSwaps") private var partTimeSwapsRaw = ""
     /// 사는 곳 공휴일에도 쉬는지 — 바뀌면 쉬는 날 판정을 다시 채운다
     @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
     /// 공휴일 앞뒤 휴가 제한 근무일 수
@@ -236,7 +239,7 @@ struct ContentView: View {
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
-        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {

@@ -1068,6 +1068,9 @@ struct SelectedDateInfo: View {
                 .accessibilityElement(children: .combine)
             }
 
+            // 파트타임 쉬는 요일 — 이번 주만 다른 날로 옮기기 / 원래대로
+            PartTimeDayRow(date: date, country: originCountry)
+
             if let childBreak = DayOffCalendar.shared.childBreakName(on: date) {
                 HStack {
                     Image(systemName: "figure.and.child.holdinghands")

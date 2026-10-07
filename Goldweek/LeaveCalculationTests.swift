@@ -1719,3 +1719,40 @@ final class LeaveCustomizationTests: XCTestCase {
         XCTAssertEqual(CalendarSpan.one.periodStart(containing: d(2026, 8, 20)), d(2026, 8, 1))
     }
 }
+
+// MARK: - 파트타임 쉬는 요일 · 이번 주만 옮기기 (네덜란드 사용자 피드백)
+
+final class PartTimeDaysTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    override func tearDown() {
+        HolidayService.partTimeDaysOffRaw = ""
+        HolidayService.partTimeSwapsRaw = ""
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    func testFridayOffIsNotDeductedAndCanMoveForOneWeek() {
+        HolidayService.partTimeDaysOffRaw = "6"   // 금요일
+        DayOffCalendar.shared.update(country: .netherlands, customHolidays: [], hiddenDates: [], breaks: [])
+        // 2026-10-12(월) ~ 10-16(금): 금요일은 쉬는 날이라 4일만 차감
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 16)))
+        XCTAssertEqual(DayOffCalendar.shared.workdays(from: d(2026, 10, 12), to: d(2026, 10, 16)), 4)
+
+        // 이번 주만 금 → 수 로 옮긴다
+        HolidayService.addPartTimeSwap(from: d(2026, 10, 16), to: d(2026, 10, 14))
+        DayOffCalendar.shared.update(country: .netherlands, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 16)))
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 14)))
+        XCTAssertEqual(DayOffCalendar.shared.workdays(from: d(2026, 10, 12), to: d(2026, 10, 16)), 4)
+        // 다음 주 금요일은 그대로 쉰다
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 23)))
+        XCTAssertTrue(HolidayService.makeupWorkdays(for: 2026, country: .netherlands).contains(cal.startOfDay(for: d(2026, 10, 16))))
+
+        // 원래대로
+        HolidayService.removePartTimeSwap(involving: d(2026, 10, 14))
+        DayOffCalendar.shared.update(country: .netherlands, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 16)))
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 14)))
+    }
+}

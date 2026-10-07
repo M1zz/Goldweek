@@ -86,6 +86,8 @@ struct SettingsView: View {
     @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
     /// 하루 근무 시간(분) — 시간 단위 휴가를 일수로 바꾸는 기준. LeaveLength.workdayMinutes 와 같은 키
     @AppStorage("workdayMinutes") private var workdayMinutes = 480
+    /// 파트타임 매주 쉬는 요일 — HolidayService.partTimeDaysOffRaw 와 같은 키
+    @AppStorage("partTimeDaysOff") private var partTimeDaysOffRaw = ""
     @State private var selectedLanguage: AppLanguage
 
     private let recommendationEngine = RecommendationEngine()
@@ -386,6 +388,13 @@ struct SettingsView: View {
                         Text(Strings.weekendNone).tag("none")
                     }
                     .onChange(of: customWeekendDaysRaw) { _, _ in recommendationEngine.invalidateCache() }
+
+                    // 파트타임 — 매주 일하지 않는 요일 (주말처럼 연차에서 빠지지 않는다)
+                    PartTimeDaysPicker(country: selectedCountry)
+                        .onChange(of: partTimeDaysOffRaw) { _, _ in recommendationEngine.invalidateCache() }
+                    Text(Strings.partTimeDaysFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
 
                     // 주 시작 요일 — 달력 첫 칸. 0 이면 나라 기본(스페인은 월, 미국은 일).
                     Picker(Strings.firstWeekdaySetting, selection: $firstWeekdayRaw) {
