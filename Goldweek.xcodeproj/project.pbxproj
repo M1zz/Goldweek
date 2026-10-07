@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */; };
 		236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */; };
 		3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F973B8901CC9124460DC0A /* PartTimeDays.swift */; };
 		5CDAC8A0B908A3183B17E747 /* LeaveKinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79243653112DBACB8C8953B /* LeaveKinds.swift */; };
@@ -116,6 +117,7 @@
 		09F973B8901CC9124460DC0A /* PartTimeDays.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PartTimeDays.swift; sourceTree = "<group>"; };
 		0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+LeaveCustomization.swift"; sourceTree = "<group>"; };
 		3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+PartTime.swift"; sourceTree = "<group>"; };
+		4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+CountryRequest.swift"; sourceTree = "<group>"; };
 		584ABA642F211E0C008AD1DB /* Goldweek.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Goldweek.entitlements; sourceTree = "<group>"; };
 		584ABA652F211E1E008AD1DB /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
 		9C2035672F29933E00AF1279 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 				0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */,
 				3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */,
 				017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */,
+				4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -612,6 +615,7 @@
 				3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */,
 				7BC4167236E5FF0979D0BFFC /* Strings+PartTime.swift in Sources */,
 				F0AB849B5E6EB9CF20DDE9A3 /* Strings+PlanAhead.swift in Sources */,
+				10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import LeeoKit
 
 struct HomeView: View {
     @Bindable var profile: UserProfile
@@ -450,6 +451,40 @@ struct AutoDetectBanner: View {
 
 /// 기기 지역을 지원하지 않거나(다른 나라 공휴일을 보여 주는 중), 지역마다 공휴일이 다른 나라에서
 /// 지역을 아직 안 골랐을 때. 카드 안에서 바로 고를 수 있게 메뉴를 둔다.
+/// 지원하지 않는 나라 — 피드백(기능 제안)으로 그 나라 지원을 요청한다. 지역 코드는 자동으로 붙는다.
+struct CountrySupportRequestButton<Label: View>: View {
+    let regionCode: String
+    @ViewBuilder let label: () -> Label
+    @State private var showingFeedback = false
+
+    /// 지역 코드 → 앱 언어의 나라 이름 (예: "KE" → "케냐")
+    static func regionName(_ code: String) -> String {
+        Locale(identifier: AppLanguage.current.bundleLanguageCode).localizedString(forRegionCode: code) ?? code
+    }
+
+    var body: some View {
+        Button {
+            UsageReportingService.record(event: "country_request_open:\(regionCode)")
+            showingFeedback = true
+        } label: {
+            label()
+        }
+        .sheet(isPresented: $showingFeedback) {
+            NavigationStack {
+                LeeoFeedbackView<GoldweekSpec>(
+                    initialType: .feature,
+                    extraInfo: ["Country request: \(regionCode) (\(Locale(identifier: "en").localizedString(forRegionCode: regionCode) ?? regionCode))"]
+                )
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(Strings.close) { showingFeedback = false }
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct HolidayRegionNoticeCard: View {
     enum Notice: Equatable {
         case unsupported(regionCode: String)
@@ -483,9 +518,8 @@ struct HolidayRegionNoticeCard: View {
     private var message: String {
         switch notice {
         case .unsupported(let code):
-            let locale = Locale(identifier: AppLanguage.current.bundleLanguageCode)
-            let regionName = locale.localizedString(forRegionCode: code) ?? code
-            return Strings.unsupportedCountryMessage(region: regionName, country: profile.country.displayName)
+            // 지원하지 않는 나라 — 피드백으로 지원을 요청하게 한다 (요청이 모이면 그 나라부터 넣는다)
+            return Strings.unsupportedCountryRequest(region: CountrySupportRequestButton<EmptyView>.regionName(code))
         case .chooseRegion:
             return Strings.chooseRegionMessage(profile.country.displayName)
         case .addCustomHolidays:
@@ -522,7 +556,11 @@ struct HolidayRegionNoticeCard: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             switch notice {
-            case .unsupported:
+            case .unsupported(let code):
+                CountrySupportRequestButton(regionCode: code) {
+                    actionLabel(icon: "paperplane", text: Strings.requestCountrySupport, filled: true)
+                }
+                // 지원될 때까지는 가까운 나라를 고르거나 공휴일을 직접 넣어 쓴다
                 Menu {
                     CountryMenuItems(includeCustom: false) { country in
                         profile.country = country
@@ -530,7 +568,7 @@ struct HolidayRegionNoticeCard: View {
                         onDismiss()
                     }
                 } label: {
-                    actionLabel(icon: "arrow.left.arrow.right", text: Strings.changeCountry, filled: true)
+                    actionLabel(icon: "arrow.left.arrow.right", text: Strings.changeCountry, filled: false)
                 }
                 Button {
                     // 나라가 바뀌면 이 카드는 '공휴일 추가' 안내로 바뀐다

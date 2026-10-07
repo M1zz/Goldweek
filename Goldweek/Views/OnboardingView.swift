@@ -517,12 +517,6 @@ struct SetupPage: View {
     @Binding var country: Country
     var isNameFocused: FocusState<Bool>.Binding
 
-    /// 기기 지역을 지원하지 않아 언어로 고른 경우 그 지역 이름 (예: 남아프리카 공화국)
-    private var unsupportedRegionName: String? {
-        guard let code = Country.unsupportedDeviceRegion else { return nil }
-        return Locale(identifier: AppLanguage.current.bundleLanguageCode).localizedString(forRegionCode: code) ?? code
-    }
-
     var body: some View {
         ScrollView {
             VStack(spacing: 22) {
@@ -585,10 +579,23 @@ struct SetupPage: View {
                         }
                     }
 
-                    Text(unsupportedRegionName.map(Strings.onboardingCountryByLanguage) ?? Strings.onboardingCountryByRegion)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                    // 지원하지 않는 나라면 그렇다고 말하고, 피드백으로 지원을 요청하게 한다
+                    if let code = Country.unsupportedDeviceRegion {
+                        Text(Strings.unsupportedCountryRequest(region: CountrySupportRequestButton<EmptyView>.regionName(code)))
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        CountrySupportRequestButton(regionCode: code) {
+                            Label(Strings.requestCountrySupport, systemImage: "paperplane")
+                                .font(.body.weight(.semibold))
+                        }
+                        .buttonStyle(.bordered)
+                    } else {
+                        Text(Strings.onboardingCountryByRegion)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
                 .padding(18)
                 .background(Color(.systemBackground))

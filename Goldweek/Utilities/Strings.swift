@@ -17194,33 +17194,6 @@ enum Strings {
         }
     }
 
-    /// `region`: 기기 지역 이름(예: 오스트리아), `country`: 지금 대신 보여 주는 나라
-    static func unsupportedCountryMessage(region: String, country: String) -> String {
-        switch lang {
-        case .korean: return "\(region)의 공휴일은 아직 없어서 지금은 \(country) 공휴일을 보여 드리고 있어요. 가까운 나라로 바꾸거나, 공휴일을 직접 입력할 수 있어요."
-        case .english: return "We don't have holidays for \(region) yet, so you're seeing \(country) holidays. Switch to a closer country, or enter your own holidays."
-        case .swedish: return "Vi har inga helgdagar för \(region) ännu, så du ser helgdagar för \(country). Byt till ett närmare land eller ange dina egna helgdagar."
-        case .norwegian: return "Vi har ikke helligdager for \(region) ennå, så du ser helligdager for \(country). Bytt til et land i nærheten, eller legg inn dine egne helligdager."
-        case .danish: return "Vi har endnu ikke helligdage for \(region), så du ser helligdage for \(country). Skift til et nærliggende land, eller indtast dine egne helligdage."
-        case .finnish: return "Alueelle \(region) ei ole vielä pyhäpäivätietoja, joten näet pyhäpäivät: \(country). Vaihda lähempään maahan tai syötä omat pyhäpäivät."
-        case .polish: return "Nie mamy jeszcze świąt dla: \(region), więc widzisz święta kraju: \(country). Zmień na bliższy kraj lub wpisz własne święta."
-        case .czech: return "Pro \(region) zatím svátky nemáme, takže vidíš svátky: \(country). Přepni na bližší zemi nebo zadej vlastní svátky."
-        case .greek: return "Δεν έχουμε ακόμη αργίες για \(region), οπότε βλέπεις τις αργίες της χώρας \(country). Άλλαξε σε πιο κοντινή χώρα ή πρόσθεσε τις δικές σου αργίες."
-        case .turkish: return "\(region) için henüz tatil verimiz yok, bu yüzden \(country) tatillerini görüyorsun. Daha yakın bir ülkeye geç veya kendi tatillerini gir."
-        case .russian: return "Праздников для «\(region)» пока нет, поэтому показаны праздники страны «\(country)». Выберите страну поближе или добавьте свои праздники."
-        case .indonesian: return "Kami belum punya data hari libur untuk \(region), jadi yang tampil sekarang hari libur \(country). Ganti ke negara yang lebih dekat, atau masukkan hari liburmu sendiri."
-        case .dutch: return "We hebben nog geen feestdagen voor \(region), dus je ziet de feestdagen van \(country). Kies een land dichterbij, of voer je eigen feestdagen in."
-        case .japanese: return "\(region)の祝日にはまだ対応していないため、\(country)の祝日を表示しています。近い国に変更するか、祝日を自分で入力できます。"
-        case .chinese: return "暂不支持\(region)的假日，目前显示的是\(country)的假日。你可以改成相近的国家，或自己输入假日。"
-        case .german: return "Für \(region) gibt es noch keine Feiertage, daher siehst du die Feiertage von \(country). Wähle ein näheres Land oder gib deine eigenen Feiertage ein."
-        case .french: return "Les jours fériés de ce pays (\(region)) ne sont pas encore disponibles : vous voyez ceux de \(country). Choisissez un pays plus proche ou saisissez vos propres jours fériés."
-        case .spanish: return "Aún no tenemos los festivos de \(region), así que ves los de \(country). Cambia a un país más cercano o introduce tus propios festivos."
-        case .italian: return "Non abbiamo ancora le festività per \(region), quindi vedi quelle di \(country). Passa a un paese più vicino o inserisci le tue festività."
-        case .portuguese: return "Ainda não temos os feriados de \(region), então você está vendo os de \(country). Troque para um país mais próximo ou insira seus próprios feriados."
-        case .chineseTraditional: return "目前還沒有\(region)的假日，所以顯示的是\(country)的假日。你可以改成相近的國家，或自行輸入假日。"
-        }
-    }
-
     static var changeCountry: String {
         switch lang {
         case .korean: return "국가 바꾸기"
@@ -17867,33 +17840,6 @@ enum Strings {
         case .italian: return "Scelto in base alla regione del telefono. Cambialo se non è corretto, anche più tardi nelle Impostazioni."
         case .portuguese: return "Escolhido pela região do seu telefone. Troque se estiver errado; também dá para mudar depois em Ajustes."
         case .chineseTraditional: return "已依手機的地區設定選擇。如不正確請更改，之後也可在設定中更改。"
-        }
-    }
-
-    /// 온보딩 — 지원하지 않는 지역이라 언어로 골랐을 때
-    static func onboardingCountryByLanguage(_ region: String) -> String {
-        switch lang {
-        case .korean: return "\(region)의 공휴일은 아직 없어서 휴대폰 언어로 골랐어요. 가까운 나라나 기타 (직접 입력)를 고를 수 있어요."
-        case .english: return "We don't have holidays for \(region) yet, so we picked a country from your phone's language. Choose a closer country or Other (Custom) to enter your own."
-        case .swedish: return "Vi har inga helgdagar för \(region) ännu, så vi valde ett land utifrån din telefons språk. Välj ett närmare land eller Övrigt (eget) för att ange egna."
-        case .norwegian: return "Vi har ikke helligdager for \(region) ennå, så vi valgte et land ut fra telefonens språk. Velg et land i nærheten eller Annet (egendefinert) for å legge inn dine egne."
-        case .danish: return "Vi har endnu ikke helligdage for \(region), så vi har valgt et land ud fra din telefons sprog. Vælg et nærmere land eller Andet (tilpasset) for at indtaste dine egne."
-        case .finnish: return "Alueelle \(region) ei ole vielä pyhäpäivätietoja, joten valitsimme maan puhelimesi kielen perusteella. Valitse lähempi maa tai Muu (oma) syöttääksesi omat."
-        case .polish: return "Nie mamy jeszcze świąt dla: \(region), więc wybraliśmy kraj na podstawie języka telefonu. Wybierz bliższy kraj lub Inny (własny), aby wpisać własne."
-        case .czech: return "Pro \(region) zatím svátky nemáme, proto jsme zemi vybrali podle jazyka telefonu. Vyber bližší zemi nebo Jiná (vlastní) a zadej vlastní svátky."
-        case .greek: return "Δεν έχουμε ακόμη αργίες για \(region), οπότε επιλέξαμε χώρα με βάση τη γλώσσα του τηλεφώνου σου. Διάλεξε πιο κοντινή χώρα ή Άλλο (προσαρμοσμένο) για να βάλεις τις δικές σου."
-        case .turkish: return "\(region) için henüz tatil verimiz yok, bu yüzden telefonunun diline göre bir ülke seçtik. Daha yakın bir ülke veya kendi tatillerini girmek için Diğer (Özel)'i seç."
-        case .russian: return "Праздников для «\(region)» пока нет, поэтому страна выбрана по языку телефона. Выберите страну поближе или «Другая (вручную)», чтобы ввести праздники самостоятельно."
-        case .indonesian: return "Kami belum punya data hari libur untuk \(region), jadi negara dipilih dari bahasa ponselmu. Pilih negara yang lebih dekat, atau Lainnya (Atur Sendiri) untuk memasukkan sendiri."
-        case .dutch: return "We hebben nog geen feestdagen voor \(region), dus we hebben een land gekozen op basis van de taal van je telefoon. Kies een land dichterbij of Overig (eigen) om je eigen feestdagen in te voeren."
-        case .japanese: return "\(region)の祝日にはまだ対応していないため、端末の言語から選びました。近い国か「その他（手動入力）」を選べます。"
-        case .chinese: return "暂不支持\(region)的假日，已根据手机语言选择。你可以改成相近的国家或“其他（自定义）”。"
-        case .german: return "Für \(region) gibt es noch keine Feiertage, daher wurde anhand der Sprache gewählt. Wähle ein näheres Land oder Andere (eigene)."
-        case .french: return "Les jours fériés de ce pays (\(region)) ne sont pas encore disponibles : le choix vient de la langue du téléphone. Choisissez un pays proche ou Autre (personnalisé)."
-        case .spanish: return "Aún no tenemos los festivos de \(region), así que elegimos según el idioma del teléfono. Elige un país cercano u Otro (personalizado)."
-        case .italian: return "Non abbiamo ancora le festività per \(region), quindi abbiamo scelto in base alla lingua del telefono. Scegli un paese vicino o Altro (personalizzato)."
-        case .portuguese: return "Ainda não temos os feriados de \(region), então escolhemos pelo idioma do telefone. Escolha um país próximo ou Outro (personalizado)."
-        case .chineseTraditional: return "目前還沒有\(region)的假日，所以依手機語言選擇。你可以改成相近的國家或「其他（自訂）」。"
         }
     }
 
