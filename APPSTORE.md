@@ -43,11 +43,15 @@ DeployBar 가 이 파일을 읽어 App Store Connect 의 언어별 칸에 올린
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/ko/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/ko/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/ko/
 
 ## en
 
@@ -88,11 +92,15 @@ Plan ahead, use fewer days and enjoy more time off.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/en/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/en/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/en/
 
 ## de
 
@@ -133,11 +141,15 @@ Früh planen, weniger Urlaub nehmen, mehr freie Tage genießen.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/de/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/de/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/de/
 
 ## es
 
@@ -178,11 +190,15 @@ Planifica con tiempo, pide menos días y disfruta más.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/es/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/es/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/es/
 
 ## fr
 
@@ -223,11 +239,15 @@ Anticipez, posez moins de jours et profitez de plus de repos.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/fr/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/fr/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/fr/
 
 ## it
 
@@ -268,11 +288,15 @@ Pianifica in anticipo, usa meno ferie e goditi più tempo libero.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/it/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/it/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/it/
 
 ## ja
 
@@ -313,11 +337,15 @@ Goldweekは、祝日と週末のあいだのどこで有給を取れば一番長
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/ja/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/ja/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/ja/
 
 ## pt-BR
 
@@ -358,11 +386,15 @@ Planeje com antecedência, use menos dias e aproveite mais.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/pt-BR/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/pt-BR/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/pt-BR/
 
 ## zh-Hans
 
@@ -403,11 +435,15 @@ Goldweek 帮你找到在节假日和周末之间请哪几天假，才能休得�
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/zh-Hans/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/zh-Hans/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/zh-Hans/
 
 ## zh-Hant
 
@@ -448,11 +484,15 @@ Goldweek 幫你找出在國定假日和週末之間該請哪幾天假，才能�
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/zh-Hant/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/zh-Hant/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/zh-Hant/
 
 ## ru
 
@@ -493,11 +533,15 @@ Goldweek подскажет, в какие дни взять отпуск, чт�
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/ru/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/ru/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/ru/
 
 ## id
 
@@ -538,11 +582,15 @@ Rencanakan lebih awal, pakai cuti lebih sedikit, dan nikmati libur lebih lama.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/id/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/id/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/id/
 
 ## nl
 
@@ -583,11 +631,15 @@ Plan vooruit, gebruik minder verlof en geniet langer van je vrije tijd.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/nl/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/nl/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/nl/
 
 ## sv
 
@@ -628,11 +680,15 @@ Planera i god tid, ta ut färre dagar och njut av mer ledighet.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/sv/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/sv/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/sv/
 
 ## nb
 
@@ -673,11 +729,15 @@ Planlegg i god tid, bruk færre dager og nyt mer fri.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/nb/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/nb/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/nb/
 
 ## da
 
@@ -718,11 +778,15 @@ Planlæg i god tid, brug færre feriedage og nyd mere fri.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/da/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/da/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/da/
 
 ## fi
 
@@ -763,11 +827,15 @@ Suunnittele ajoissa, käytä vähemmän lomapäiviä ja nauti pidemmistä vapais
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/fi/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/fi/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/fi/
 
 ## pl
 
@@ -808,11 +876,15 @@ Planuj z wyprzedzeniem, wykorzystuj mniej dni urlopu i ciesz się dłuższym wyp
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/pl/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/pl/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/pl/
 
 ## cs
 
@@ -855,11 +927,15 @@ Plánuj dopředu, čerpej méně dní a užij si víc volna.
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/cs/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/cs/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/cs/
 
 ## el
 
@@ -902,11 +978,15 @@ Widget και αντίγραφο ασφαλείας
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/el/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/el/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/el/
 
 ## tr
 
@@ -949,8 +1029,12 @@ Kalan iznin ve yaklaşan tatilin doğrudan Ana Ekran'da. Kayıtların iCloud'a y
 
 ### 지원 URL
 
-https://m1zz.github.io/Goldweek/support.html
+https://m1zz.github.io/Goldweek/tr/support.html
 
 ### 개인정보처리방침 URL
 
-https://leeo75.notion.site/2a9e264a0fdc8026b547d9340edbb0fd
+https://m1zz.github.io/Goldweek/tr/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/tr/
