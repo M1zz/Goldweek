@@ -500,6 +500,8 @@
 				tr,
 				ru,
 				id,
+				th,
+				vi,
 			);
 			mainGroup = A4000000;
 			packageReferences = (
