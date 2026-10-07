@@ -18,6 +18,8 @@ struct ContentView: View {
     @Query private var bonusLeaves: [BonusLeave]
     @Query private var customHolidays: [CustomHoliday]
     @Query private var schoolBreaks: [SchoolBreak]
+    /// 직접 만든 휴가 종류 — 달력 색·이름이 읽는 LeaveStyleStore 에 맞춰 둔다
+    @Query(sort: \CustomLeaveType.createdAt) private var customLeaveTypes: [CustomLeaveType]
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
     /// 직접 입력 국가의 주말 요일 — 바뀌면 쉬는 날 판정을 다시 채운다
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
@@ -91,6 +93,9 @@ struct ContentView: View {
                     .onChange(of: dayOffInputs(profile: profile)) { _, _ in
                         syncDayOffCalendar(profile: profile)
                         updateWidget()
+                    }
+                    .onChange(of: customLeaveTypes.map { "\($0.id)\($0.name)\($0.colorHex)" }, initial: true) { _, _ in
+                        LeaveStyleStore.shared.update(customTypes: customLeaveTypes)
                     }
                     .onChange(of: timeMachineFingerprint) { _, _ in
                         TimeMachineService.shared.scheduleAutoSnapshot(context: modelContext)
@@ -174,6 +179,15 @@ struct ContentView: View {
             hasher.combine(record.statusRaw)
             hasher.combine(record.note)
             hasher.combine(record.bonusLeaveId)
+            hasher.combine(record.lengthRaw)
+            hasher.combine(record.durationMinutes)
+            hasher.combine(record.customTypeId)
+        }
+        for kind in customLeaveTypes {
+            hasher.combine(kind.id)
+            hasher.combine(kind.name)
+            hasher.combine(kind.colorHex)
+            hasher.combine(kind.deductsFromAnnual)
         }
         for bonus in bonusLeaves {
             hasher.combine(bonus.id)

@@ -41,6 +41,9 @@ struct LeaveRecordBackup: Codable {
     let statusRaw: String
     let note: String
     let isRecommended: Bool
+    /// 길이·시간 — 나중에 추가된 필드라 예전 백업에는 없다
+    var lengthRaw: String? = nil
+    var durationMinutes: Int? = nil
 }
 
 struct BonusLeaveBackup: Codable {
@@ -151,7 +154,9 @@ class BackupService {
                 typeRaw: record.typeRaw,
                 statusRaw: record.statusRaw,
                 note: record.note,
-                isRecommended: record.isRecommended
+                isRecommended: record.isRecommended,
+                lengthRaw: record.lengthRaw,
+                durationMinutes: record.durationMinutes
             )
         }
 
@@ -373,8 +378,10 @@ class BackupService {
                 type: LeaveType(rawValue: record.typeRaw) ?? .annual,
                 status: LeaveStatus(rawValue: record.statusRaw) ?? .planned,
                 note: record.note,
-                isRecommended: record.isRecommended
+                isRecommended: record.isRecommended,
+                durationMinutes: record.durationMinutes
             )
+            newRecord.lengthRaw = record.lengthRaw
             modelContext.insert(newRecord)
         }
 

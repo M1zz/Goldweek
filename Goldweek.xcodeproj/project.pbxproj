@@ -7,20 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B1000021 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000021 /* TutorialView.swift */; };
-		B1000020 /* LeaveUsageCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000020 /* LeaveUsageCalculator.swift */; };
-		B1000001 /* GoldweekSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000001 /* GoldweekSpec.swift */; };
-		B1000002 /* UsageReportingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000002 /* UsageReportingService.swift */; };
-		B1000003 /* UsageInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000003 /* UsageInsights.swift */; };
-		B1000004 /* UsageStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000004 /* UsageStatsView.swift */; };
-		B1000006 /* CrashReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000006 /* CrashReportsView.swift */; };
-		B1000005 /* UsageInsightsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000005 /* UsageInsightsTests.swift */; };
-		B1000010 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B1000011 /* LeeoKit */; };
+		236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */; };
+		5CDAC8A0B908A3183B17E747 /* LeaveKinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79243653112DBACB8C8953B /* LeaveKinds.swift */; };
 		9C2035682F29933E00AF1279 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9C2035672F29933E00AF1279 /* Localizable.xcstrings */; };
 		9C5397B92F4E825600905CF0 /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5397B82F4E825600905CF0 /* ReviewManager.swift */; };
 		9C61C0042EDD629400BC5930 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C61C0032EDD629400BC5930 /* WidgetKit.framework */; };
 		9C61C0062EDD629400BC5930 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C61C0052EDD629400BC5930 /* SwiftUI.framework */; };
 		9C61C0172EDD629600BC5930 /* widgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9C61C0012EDD629400BC5930 /* widgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9CA11B8BA50188BC875C430D /* LeaveKindsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA3B5BBD68F2C9CD75F7A10A /* LeaveKindsView.swift */; };
 		A1000001 /* GoldweekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* GoldweekApp.swift */; };
 		A1000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* ContentView.swift */; };
 		A1000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000003 /* Assets.xcassets */; };
@@ -32,15 +26,9 @@
 		A1000009 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000009 /* SettingsView.swift */; };
 		A1000010 /* LeaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010 /* LeaveManager.swift */; };
 		A1000011 /* RecommendationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000011 /* RecommendationEngine.swift */; };
-		A1000060 /* BurnoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000060 /* BurnoutEngine.swift */; };
-		A1000061 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000061 /* NotificationService.swift */; };
-		A1000062 /* BurnoutEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000062 /* BurnoutEngineTests.swift */; };
 		A1000012 /* HolidayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* HolidayService.swift */; };
-		A10000W1 /* WorldHolidays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000W1 /* WorldHolidays.swift */; };
-		A1000098 /* DayOffCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000098 /* DayOffCalendar.swift */; };
 		A1000013 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000013 /* Components.swift */; };
 		A1000014 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000014 /* Extensions.swift */; };
-		A1000099 /* ScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000099 /* ScreenshotMode.swift */; };
 		A1000015 /* RecommendationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000015 /* RecommendationsView.swift */; };
 		A1000016 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000016 /* OnboardingView.swift */; };
 		A1000017 /* WidgetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000017 /* WidgetService.swift */; };
@@ -57,7 +45,6 @@
 		A1000034 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000034 /* PaywallView.swift */; };
 		A1000035 /* HolidayManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000035 /* HolidayManagementView.swift */; };
 		A1000036 /* LeaveCalculationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000036 /* LeaveCalculationTests.swift */; };
-		A1000063 /* LeaveTableParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000063 /* LeaveTableParserTests.swift */; };
 		A1000040 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A2000040 /* InfoPlist.xcstrings */; };
 		A1000041 /* GoldweekSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000041 /* GoldweekSecrets.swift */; };
 		A1000050 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000050 /* Accessibility.swift */; };
@@ -70,7 +57,24 @@
 		A1000057 /* LeaveTableParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000057 /* LeaveTableParser.swift */; };
 		A1000058 /* PhotoImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000058 /* PhotoImportService.swift */; };
 		A1000059 /* PhotoImportSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000059 /* PhotoImportSheet.swift */; };
+		A1000060 /* BurnoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000060 /* BurnoutEngine.swift */; };
+		A1000061 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000061 /* NotificationService.swift */; };
+		A1000062 /* BurnoutEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000062 /* BurnoutEngineTests.swift */; };
+		A1000063 /* LeaveTableParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000063 /* LeaveTableParserTests.swift */; };
 		A1000064 /* AppTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000064 /* AppTips.swift */; };
+		A1000098 /* DayOffCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000098 /* DayOffCalendar.swift */; };
+		A1000099 /* ScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000099 /* ScreenshotMode.swift */; };
+		A10000W1 /* WorldHolidays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000W1 /* WorldHolidays.swift */; };
+		B1000001 /* GoldweekSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000001 /* GoldweekSpec.swift */; };
+		B1000002 /* UsageReportingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000002 /* UsageReportingService.swift */; };
+		B1000003 /* UsageInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000003 /* UsageInsights.swift */; };
+		B1000004 /* UsageStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000004 /* UsageStatsView.swift */; };
+		B1000005 /* UsageInsightsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000005 /* UsageInsightsTests.swift */; };
+		B1000006 /* CrashReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000006 /* CrashReportsView.swift */; };
+		B1000010 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B1000011 /* LeeoKit */; };
+		B1000020 /* LeaveUsageCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000020 /* LeaveUsageCalculator.swift */; };
+		B1000021 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000021 /* TutorialView.swift */; };
+		EFCC106F139C9439F277D6BF /* Strings+LeaveCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,15 +109,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B2000030 /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
-		B2000021 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
-		B2000020 /* LeaveUsageCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveUsageCalculator.swift; sourceTree = "<group>"; };
-		B2000001 /* GoldweekSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldweekSpec.swift; sourceTree = "<group>"; };
-		B2000002 /* UsageReportingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageReportingService.swift; sourceTree = "<group>"; };
-		B2000003 /* UsageInsights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageInsights.swift; sourceTree = "<group>"; };
-		B2000004 /* UsageStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStatsView.swift; sourceTree = "<group>"; };
-		B2000006 /* CrashReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReportsView.swift; sourceTree = "<group>"; };
-		B2000005 /* UsageInsightsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageInsightsTests.swift; sourceTree = "<group>"; };
+		0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+LeaveCustomization.swift"; sourceTree = "<group>"; };
 		584ABA642F211E0C008AD1DB /* Goldweek.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Goldweek.entitlements; sourceTree = "<group>"; };
 		584ABA652F211E1E008AD1DB /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
 		9C2035672F29933E00AF1279 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -133,15 +129,9 @@
 		A2000009 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A2000010 /* LeaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveManager.swift; sourceTree = "<group>"; };
 		A2000011 /* RecommendationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationEngine.swift; sourceTree = "<group>"; };
-		A2000060 /* BurnoutEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngine.swift; sourceTree = "<group>"; };
-		A2000061 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		A2000062 /* BurnoutEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngineTests.swift; sourceTree = "<group>"; };
 		A2000012 /* HolidayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayService.swift; sourceTree = "<group>"; };
-		A20000W1 /* WorldHolidays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldHolidays.swift; sourceTree = "<group>"; };
-		A2000098 /* DayOffCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOffCalendar.swift; sourceTree = "<group>"; };
 		A2000013 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		A2000014 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		A2000099 /* ScreenshotMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotMode.swift; sourceTree = "<group>"; };
 		A2000015 /* RecommendationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationsView.swift; sourceTree = "<group>"; };
 		A2000016 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		A2000017 /* WidgetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetService.swift; sourceTree = "<group>"; };
@@ -158,7 +148,6 @@
 		A2000034 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		A2000035 /* HolidayManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayManagementView.swift; sourceTree = "<group>"; };
 		A2000036 /* LeaveCalculationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveCalculationTests.swift; sourceTree = "<group>"; };
-		A2000063 /* LeaveTableParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveTableParserTests.swift; sourceTree = "<group>"; };
 		A2000037 /* GoldweekTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GoldweekTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2000040 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		A2000041 /* GoldweekSecrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldweekSecrets.swift; sourceTree = "<group>"; };
@@ -172,11 +161,30 @@
 		A2000057 /* LeaveTableParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveTableParser.swift; sourceTree = "<group>"; };
 		A2000058 /* PhotoImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoImportService.swift; sourceTree = "<group>"; };
 		A2000059 /* PhotoImportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoImportSheet.swift; sourceTree = "<group>"; };
+		A2000060 /* BurnoutEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngine.swift; sourceTree = "<group>"; };
+		A2000061 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		A2000062 /* BurnoutEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngineTests.swift; sourceTree = "<group>"; };
+		A2000063 /* LeaveTableParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveTableParserTests.swift; sourceTree = "<group>"; };
 		A2000064 /* AppTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTips.swift; sourceTree = "<group>"; };
+		A2000098 /* DayOffCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOffCalendar.swift; sourceTree = "<group>"; };
+		A2000099 /* ScreenshotMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotMode.swift; sourceTree = "<group>"; };
+		A20000W1 /* WorldHolidays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldHolidays.swift; sourceTree = "<group>"; };
+		B2000001 /* GoldweekSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldweekSpec.swift; sourceTree = "<group>"; };
+		B2000002 /* UsageReportingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageReportingService.swift; sourceTree = "<group>"; };
+		B2000003 /* UsageInsights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageInsights.swift; sourceTree = "<group>"; };
+		B2000004 /* UsageStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStatsView.swift; sourceTree = "<group>"; };
+		B2000005 /* UsageInsightsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageInsightsTests.swift; sourceTree = "<group>"; };
+		B2000006 /* CrashReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReportsView.swift; sourceTree = "<group>"; };
+		B2000020 /* LeaveUsageCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveUsageCalculator.swift; sourceTree = "<group>"; };
+		B2000021 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
+		B2000030 /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		D79243653112DBACB8C8953B /* LeaveKinds.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LeaveKinds.swift; sourceTree = "<group>"; };
+		DA3B5BBD68F2C9CD75F7A10A /* LeaveKindsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LeaveKindsView.swift; sourceTree = "<group>"; };
+		E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarOverview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		9C61C01B2EDD629600BC5930 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		9C61C01B2EDD629600BC5930 /* Exceptions for "widget" folder in "widgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -186,7 +194,18 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		9C61C0072EDD629400BC5930 /* widget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (9C61C01B2EDD629600BC5930 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = widget; sourceTree = "<group>"; };
+		9C61C0072EDD629400BC5930 /* widget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9C61C01B2EDD629600BC5930 /* Exceptions for "widget" folder in "widgetExtension" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = widget;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -276,6 +295,7 @@
 			children = (
 				A2000004 /* Models.swift */,
 				A2000030 /* SchemaVersioning.swift */,
+				D79243653112DBACB8C8953B /* LeaveKinds.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -302,6 +322,8 @@
 				B2000004 /* UsageStatsView.swift */,
 				B2000021 /* TutorialView.swift */,
 				B2000006 /* CrashReportsView.swift */,
+				DA3B5BBD68F2C9CD75F7A10A /* LeaveKindsView.swift */,
+				E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -344,6 +366,7 @@
 				A2000023 /* Strings.swift */,
 				A2000050 /* Accessibility.swift */,
 				A2000064 /* AppTips.swift */,
+				0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -375,8 +398,6 @@
 				9C61C0072EDD629400BC5930 /* widget */,
 			);
 			name = widgetExtension;
-			packageProductDependencies = (
-			);
 			productName = widgetExtension;
 			productReference = 9C61C0012EDD629400BC5930 /* widgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -575,6 +596,10 @@
 				A1000041 /* GoldweekSecrets.swift in Sources */,
 				A1000050 /* Accessibility.swift in Sources */,
 				A1000051 /* LeavePlanner.swift in Sources */,
+				5CDAC8A0B908A3183B17E747 /* LeaveKinds.swift in Sources */,
+				EFCC106F139C9439F277D6BF /* Strings+LeaveCustomization.swift in Sources */,
+				9CA11B8BA50188BC875C430D /* LeaveKindsView.swift in Sources */,
+				236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,9 +637,8 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = widgetExtension.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "widgetExtension-macOS.entitlements";
-				SUPPORTS_MACCATALYST = YES;
-				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
@@ -629,6 +653,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -644,9 +669,8 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = widgetExtension.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "widgetExtension-macOS.entitlements";
-				SUPPORTS_MACCATALYST = YES;
-				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
@@ -661,6 +685,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -804,15 +829,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Goldweek/Goldweek.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Goldweek/Goldweek-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Goldweek;
-				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "캘린더에서 휴가로 보이는 일정을 찾아 가져오고, 등록한 휴가를 캘린더에 동기화하기 위해 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "휴가 신청 내역 화면을 촬영해 휴가 기록을 자동으로 등록하기 위해 카메라 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -825,8 +852,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
-				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Goldweek/Goldweek-macOS.entitlements";
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -840,15 +865,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Goldweek/Goldweek.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Goldweek/Goldweek-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Goldweek;
-				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "캘린더에서 휴가로 보이는 일정을 찾아 가져오고, 등록한 휴가를 캘린더에 동기화하기 위해 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "휴가 신청 내역 화면을 촬영해 휴가 기록을 자동으로 등록하기 위해 카메라 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -861,8 +888,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
-				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Goldweek/Goldweek-macOS.entitlements";
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -944,7 +969,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
 
 /* Begin XCRemoteSwiftPackageReference section */
 		B1000012 /* XCRemoteSwiftPackageReference "LeeoKit" */ = {

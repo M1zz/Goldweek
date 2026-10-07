@@ -14443,126 +14443,147 @@ enum Strings {
             case .full: return "종일"
             case .half: return "반차"
             case .quarter: return "반반차"
+            case .hours: return hoursLengthName
             }
         case .english:
             switch length {
             case .full: return "Full day"
             case .half: return "Half day"
             case .quarter: return "Quarter day"
+            case .hours: return hoursLengthName
             }
         case .swedish:
             switch length {
             case .full: return "Hel dag"
             case .half: return "Halv dag"
             case .quarter: return "Kvartsdag"
+            case .hours: return hoursLengthName
             }
         case .norwegian:
             switch length {
             case .full: return "Hel dag"
             case .half: return "Halv dag"
             case .quarter: return "Kvart dag"
+            case .hours: return hoursLengthName
             }
         case .danish:
             switch length {
             case .full: return "Hel dag"
             case .half: return "Halv dag"
             case .quarter: return "Kvart dag"
+            case .hours: return hoursLengthName
             }
         case .finnish:
             switch length {
             case .full: return "Koko päivä"
             case .half: return "Puoli päivää"
             case .quarter: return "Neljäsosapäivä"
+            case .hours: return hoursLengthName
             }
         case .polish:
             switch length {
             case .full: return "Cały dzień"
             case .half: return "Pół dnia"
             case .quarter: return "Ćwierć dnia"
+            case .hours: return hoursLengthName
             }
         case .czech:
             switch length {
             case .full: return "Celý den"
             case .half: return "Půl dne"
             case .quarter: return "Čtvrt dne"
+            case .hours: return hoursLengthName
             }
         case .greek:
             switch length {
             case .full: return "Ολόκληρη ημέρα"
             case .half: return "Μισή ημέρα"
             case .quarter: return "Τέταρτο ημέρας"
+            case .hours: return hoursLengthName
             }
         case .turkish:
             switch length {
             case .full: return "Tam gün"
             case .half: return "Yarım gün"
             case .quarter: return "Çeyrek gün"
+            case .hours: return hoursLengthName
             }
         case .russian:
             switch length {
             case .full: return "Весь день"
             case .half: return "Полдня"
             case .quarter: return "Четверть дня"
+            case .hours: return hoursLengthName
             }
         case .indonesian:
             switch length {
             case .full: return "Sehari penuh"
             case .half: return "Setengah hari"
             case .quarter: return "Seperempat hari"
+            case .hours: return hoursLengthName
             }
         case .dutch:
             switch length {
             case .full: return "Hele dag"
             case .half: return "Halve dag"
             case .quarter: return "Kwartdag"
+            case .hours: return hoursLengthName
             }
         case .japanese:
             switch length {
             case .full: return "終日"
             case .half: return "半休"
             case .quarter: return "四半休"
+            case .hours: return hoursLengthName
             }
         case .chinese:
             switch length {
             case .full: return "全天"
             case .half: return "半天"
             case .quarter: return "四分之一天"
+            case .hours: return hoursLengthName
             }
         case .german:
             switch length {
             case .full: return "Ganzer Tag"
             case .half: return "Halber Tag"
             case .quarter: return "Viertel Tag"
+            case .hours: return hoursLengthName
             }
         case .french:
             switch length {
             case .full: return "Journée entière"
             case .half: return "Demi-journée"
             case .quarter: return "Quart de journée"
+            case .hours: return hoursLengthName
             }
         case .spanish:
             switch length {
             case .full: return "Día completo"
             case .half: return "Media jornada"
             case .quarter: return "Cuarto de jornada"
+            case .hours: return hoursLengthName
             }
         case .italian:
             switch length {
             case .full: return "Giornata intera"
             case .half: return "Mezza giornata"
             case .quarter: return "Quarto di giornata"
+            case .hours: return hoursLengthName
             }
         case .portuguese:
             switch length {
             case .full: return "Dia inteiro"
             case .half: return "Meio período"
             case .quarter: return "Quarto de dia"
+            case .hours: return hoursLengthName
             }
         case .chineseTraditional:
             switch length {
             case .full: return "全天"
             case .half: return "半天"
             case .quarter: return "四分之一天"
+            case .hours: return hoursLengthName
             }
         }
     }

@@ -1580,7 +1580,7 @@ final class RecommendedLeaveMigrationTests: XCTestCase {
         UserDefaults.standard.removeObject(forKey: "migration.splitRecommendedLeaves.v1")
         defer { UserDefaults.standard.removeObject(forKey: "migration.splitRecommendedLeaves.v1") }
 
-        let schema = Schema([UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self])
+        let schema = Schema([UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self, CustomLeaveType.self])
         let container = try ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let context = container.mainContext
         // 10/8(목) ~ 10/12(월): 10/9 한글날, 10/10·11 주말 → 10/8, 10/12 두 구간
@@ -1656,5 +1656,66 @@ final class ChinaMakeupWorkdayTests: XCTestCase {
             XCTAssertTrue(brk.leaveDates.contains { cal.isDate($0, inSameDayAs: feb14) }, "补班 날을 공짜로 쉬는 날로 셌다")
         }
         XCTAssertTrue(plan.breaks.contains { $0.startDate <= feb14 && $0.endDate >= feb14 })
+    }
+}
+
+// MARK: - 시간 단위 휴가 · 직접 만든 휴가 종류 · 여러 달 보기 (이탈리아 permessi 피드백)
+
+@MainActor
+final class LeaveCustomizationTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    func testHoursLeaveIsDeductedByWorkdayLength() {
+        let saved = UserDefaults.standard.object(forKey: "workdayMinutes")
+        defer { UserDefaults.standard.set(saved, forKey: "workdayMinutes") }
+        LeaveLength.workdayMinutes = 480
+        let r = LeaveRecord(startDate: d(2026, 10, 14), endDate: d(2026, 10, 14), length: .hours, durationMinutes: 150)
+        XCTAssertEqual(r.effectiveLeaveDays, 150.0 / 480.0, accuracy: 0.0001)
+        // 하루가 7시간 12분(432분)인 회사
+        LeaveLength.workdayMinutes = 432
+        XCTAssertEqual(r.effectiveLeaveDays, 150.0 / 432.0, accuracy: 0.0001)
+        XCTAssertTrue(r.deductsFromAnnualLeave)
+    }
+
+    func testCustomLeaveTypeFollowsDeductionAndStyle() throws {
+        let schema = Schema([UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self, CustomLeaveType.self])
+        let container = try ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+        let context = container.mainContext
+        let rol = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
+        context.insert(rol)
+        let r = LeaveRecord(startDate: d(2026, 10, 14), endDate: d(2026, 10, 14), type: rol.baseType,
+                            length: .hours, durationMinutes: 120, customTypeId: rol.id)
+        context.insert(r)
+        try context.save()
+        defer { LeaveStyleStore.shared.update(customTypes: []) }
+        LeaveStyleStore.shared.update(customTypes: [rol])
+        XCTAssertEqual(r.displayTypeName, "ROL")
+        XCTAssertEqual(r.displayColor.leaveHex, "AF52DE")
+        XCTAssertFalse(r.deductsFromAnnualLeave)   // 연차에서 안 뺀다
+        // 종류를 지우면 이름은 기본 유형으로 돌아간다
+        LeaveStyleStore.shared.update(customTypes: [])
+        XCTAssertEqual(r.displayTypeName, Strings.leaveTypeName(.special))
+    }
+
+    func testTimeMachineKeepsLengthMinutesAndKind() {
+        let kindID = UUID()
+        let r = LeaveRecord(startDate: d(2026, 10, 14), endDate: d(2026, 10, 14), length: .hours,
+                            durationMinutes: 90, customTypeId: kindID)
+        let half = LeaveRecord(startDate: d(2026, 10, 15), endDate: d(2026, 10, 15), length: .half)
+        let restored = TMLeaveData(from: r).materialize()
+        XCTAssertEqual(restored.length, .hours)
+        XCTAssertEqual(restored.durationMinutes, 90)
+        XCTAssertEqual(restored.customTypeId, kindID)
+        // 예전엔 반차가 복원 후 종일이 됐다
+        XCTAssertEqual(TMLeaveData(from: half).materialize().length, .half)
+    }
+
+    func testCalendarSpanPeriodsStartInJanuary() {
+        XCTAssertEqual(CalendarSpan.three.periodStart(containing: d(2026, 8, 20)), d(2026, 7, 1))
+        XCTAssertEqual(CalendarSpan.six.periodStart(containing: d(2026, 8, 20)), d(2026, 7, 1))
+        XCTAssertEqual(CalendarSpan.two.periodStart(containing: d(2026, 8, 20)), d(2026, 7, 1))
+        XCTAssertEqual(CalendarSpan.twelve.periodStart(containing: d(2026, 8, 20)), d(2026, 1, 1))
+        XCTAssertEqual(CalendarSpan.one.periodStart(containing: d(2026, 8, 20)), d(2026, 8, 1))
     }
 }

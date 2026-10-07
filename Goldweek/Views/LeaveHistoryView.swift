@@ -484,11 +484,17 @@ struct HistoryRecordRow: View {
             // 정보
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    Text(Strings.leaveTypeName(record.category))
+                    if record.customTypeId != nil {
+                        Circle()
+                            .fill(record.displayColor)
+                            .frame(width: 10, height: 10)
+                            .voDecorative()
+                    }
+                    Text(record.displayTypeName)
                         .font(.body.weight(.semibold))
 
                     if record.length != .full {
-                        Text(Strings.leaveLengthName(record.length))
+                        Text(record.lengthLabel)
                             .font(.body.weight(.semibold))
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
@@ -535,8 +541,8 @@ struct HistoryRecordRow: View {
     private var accessibilityText: String {
         var parts = [
             record.length != .full
-                ? "\(Strings.leaveTypeName(record.category)) \(Strings.leaveLengthName(record.length))"
-                : Strings.leaveTypeName(record.category),
+                ? "\(record.displayTypeName) \(record.lengthLabel)"
+                : record.displayTypeName,
             Strings.leaveStatusName(record.status),
             dateString,
             "\(Strings.dayCount(record.effectiveLeaveDays))"
@@ -601,6 +607,8 @@ struct EditLeaveSheet: View {
     @State private var endDate: Date
     @State private var leaveType: LeaveType
     @State private var length: LeaveLength
+    /// 시간 단위 휴가의 길이(분)
+    @State private var durationMinutes: Int
     @State private var leaveStatus: LeaveStatus
     @State private var note: String
     @State private var showingAlert = false
@@ -616,6 +624,7 @@ struct EditLeaveSheet: View {
         _endDate = State(initialValue: record.endDate)
         _leaveType = State(initialValue: record.category)
         _length = State(initialValue: record.length)
+        _durationMinutes = State(initialValue: record.durationMinutes ?? 120)
         _leaveStatus = State(initialValue: record.status)
         _note = State(initialValue: record.note)
     }
@@ -625,6 +634,7 @@ struct EditLeaveSheet: View {
     }
 
     var newLeaveDays: Double {
+        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes) }
         if length != .full { return length.fraction }
         // 일괄 입력 요약 기록은 달력 일수, 그 외엔 쉬는 날을 뺀 평일 수 (effectiveLeaveDays 와 같은 기준)
         if record.isBulkSummary {
@@ -700,10 +710,31 @@ struct EditLeaveSheet: View {
                         DatePicker(Strings.endDate, selection: $endDate, in: startDate..., displayedComponents: .date)
                     }
 
+                    if length == .hours {
+                        Stepper(value: Binding(get: { durationMinutes / 60 },
+                                               set: { durationMinutes = max(5, $0 * 60 + durationMinutes % 60) }),
+                                in: 0...12) {
+                            HStack {
+                                Text(Strings.leaveHoursLabel)
+                                Spacer()
+                                Text("\(durationMinutes / 60)").monospacedDigit().foregroundStyle(.secondary)
+                            }
+                        }
+                        Stepper(value: Binding(get: { durationMinutes % 60 },
+                                               set: { durationMinutes = max(5, (durationMinutes / 60) * 60 + $0) }),
+                                in: 0...55, step: 5) {
+                            HStack {
+                                Text(Strings.leaveMinutesLabel)
+                                Spacer()
+                                Text("\(durationMinutes % 60)").monospacedDigit().foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+
                     HStack {
                         Text(Strings.daysUsed)
                         Spacer()
-                        Text("\(String(format: "%.1f", newLeaveDays))\(Strings.dayUnitSuffix)")
+                        Text("\(newLeaveDays == newLeaveDays.rounded() || length != .hours ? String(format: "%.1f", newLeaveDays) : String(format: "%.2f", newLeaveDays))\(Strings.dayUnitSuffix)")
                             .foregroundStyle(.blue)
                             .fontWeight(.semibold)
                     }
@@ -800,8 +831,11 @@ struct EditLeaveSheet: View {
         // 기록 업데이트 (records가 source of truth이므로 profile.usedLeave 조정 불필요)
         record.startDate = startDate
         record.endDate = length != .full ? startDate : endDate
+        // 종류를 다른 기본 종류로 바꾸면 직접 만든 종류 연결은 끊는다
+        if leaveType != record.category { record.customTypeId = nil }
         record.type = leaveType
         record.length = length
+        record.durationMinutes = length == .hours ? durationMinutes : nil
         record.status = leaveStatus
         record.note = note
 

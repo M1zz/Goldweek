@@ -84,6 +84,8 @@ struct SettingsView: View {
     @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
     /// 공휴일 앞뒤 휴가 제한 근무일 수 (0 = 없음) — HolidayService.leaveBlackoutDays 와 같은 키
     @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
+    /// 하루 근무 시간(분) — 시간 단위 휴가를 일수로 바꾸는 기준. LeaveLength.workdayMinutes 와 같은 키
+    @AppStorage("workdayMinutes") private var workdayMinutes = 480
     @State private var selectedLanguage: AppLanguage
 
     private let recommendationEngine = RecommendationEngine()
@@ -552,6 +554,25 @@ struct SettingsView: View {
                         }
                     }
                     .onChange(of: holidayBlackoutDays) { _, _ in recommendationEngine.invalidateCache() }
+
+                    // 하루 근무 시간 — 시간·분 단위로 쓴 휴가를 일수로 바꾸는 기준 (이탈리아 permessi 등)
+                    Stepper(value: $workdayMinutes, in: 180...720, step: 15) {
+                        HStack {
+                            Text(Strings.workdayLengthSetting)
+                            Spacer()
+                            Text(Strings.durationText(minutes: workdayMinutes))
+                                .monospacedDigit()
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .onChange(of: workdayMinutes) { _, _ in recommendationEngine.invalidateCache() }
+
+                    // 휴가 종류 만들기·색 바꾸기 — 달력에서 종류별로 다른 색
+                    NavigationLink {
+                        LeaveKindsView()
+                    } label: {
+                        Label(Strings.leaveKindsTitle, systemImage: "paintpalette")
+                    }
 
                     // 연차를 달력 일수로 세는지 근무일로 세는지 — 묻는 사람이 많다
                     Text(Strings.leaveCountingFooter)

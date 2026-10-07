@@ -577,8 +577,13 @@ final class LeaveRecord {
     var isRecommended: Bool
     /// 보너스 연차 사용 시 연결된 BonusLeave.id (일반 연차는 nil)
     var bonusLeaveId: UUID?
-    /// 휴가 길이(종일/반차/반반차). nil이면 레거시 기록으로, typeRaw의 반차/반반차에서 추론한다.
+    /// 휴가 길이(종일/반차/반반차/시간). nil이면 레거시 기록으로, typeRaw의 반차/반반차에서 추론한다.
     var lengthRaw: String?
+    /// 시간 단위 휴가의 길이(분) — length 가 .hours 일 때만 쓴다
+    var durationMinutes: Int?
+    /// 직접 만든 휴가 종류(CustomLeaveType.id) — 있으면 이름·색은 그 종류를 따른다.
+    /// 연차 차감 여부는 typeRaw(.annual / .special)로 함께 저장해 기존 계산이 그대로 돈다.
+    var customTypeId: UUID?
 
     init(
         startDate: Date,
@@ -588,9 +593,13 @@ final class LeaveRecord {
         note: String = "",
         isRecommended: Bool = false,
         length: LeaveLength? = nil,
-        bonusLeaveId: UUID? = nil
+        bonusLeaveId: UUID? = nil,
+        durationMinutes: Int? = nil,
+        customTypeId: UUID? = nil
     ) {
         self.id = UUID()
+        self.durationMinutes = durationMinutes
+        self.customTypeId = customTypeId
         self.startDate = startDate
         self.endDate = endDate
         self.typeRaw = type.rawValue
@@ -642,6 +651,7 @@ final class LeaveRecord {
     /// 금~월로 등록해도 주말·공휴일·내 방학은 차감하지 않는다 (쉬는 날 판정: `DayOffCalendar`).
     /// 예외: "이전 사용 연차 일괄 입력"은 N일을 달력 일수로 펼쳐 저장한 요약 기록이라 달력 일수 그대로 센다.
     var effectiveLeaveDays: Double {
+        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes ?? 0) }
         if length != .full { return length.fraction }
         if isBulkSummary { return Double(daysCount) }
         return Double(DayOffCalendar.shared.workdays(from: startDate, to: endDate))
@@ -797,15 +807,19 @@ enum LeaveLength: String, Codable, CaseIterable, Identifiable {
     case full = "종일"
     case half = "반차"
     case quarter = "반반차"
+    /// 시간·분 단위 (이탈리아 permessi 처럼 몇 시간만 쓰는 휴가) — 길이는 LeaveRecord.durationMinutes
+    case hours = "시간"
 
     var id: String { rawValue }
 
-    /// 하루 대비 사용 비율 (종일 1.0, 반차 0.5, 반반차 0.25)
+    /// 하루 대비 사용 비율 (종일 1.0, 반차 0.5, 반반차 0.25).
+    /// 시간 단위는 기록마다 다르다 — `days(forMinutes:)` 로 계산한다 (여기서는 0).
     var fraction: Double {
         switch self {
         case .full: return 1.0
         case .half: return 0.5
         case .quarter: return 0.25
+        case .hours: return 0
         }
     }
 
@@ -814,7 +828,22 @@ enum LeaveLength: String, Codable, CaseIterable, Identifiable {
         case .full: return "sun.max"
         case .half: return "clock.badge"
         case .quarter: return "clock"
+        case .hours: return "hourglass"
         }
+    }
+
+    /// 하루 근무 시간(분) — 시간 단위 휴가를 일수로 바꾸는 기준. 설정에서 바꾼다 (기본 8시간).
+    static var workdayMinutes: Int {
+        get {
+            let v = UserDefaults.standard.integer(forKey: "workdayMinutes")
+            return v > 0 ? v : 480
+        }
+        set { UserDefaults.standard.set(newValue, forKey: "workdayMinutes") }
+    }
+
+    /// 분 → 차감 일수 (하루 근무 시간 기준)
+    static func days(forMinutes minutes: Int) -> Double {
+        Double(max(0, minutes)) / Double(workdayMinutes)
     }
 }
 
