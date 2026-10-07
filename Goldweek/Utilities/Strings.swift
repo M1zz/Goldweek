@@ -18005,6 +18005,141 @@ enum Strings {
         }
     }
 
+    /// 설정 — 사는 곳 지역
+    static var homeRegionSetting: String {
+        switch lang {
+        case .korean: return "사는 곳"
+        case .english: return "Home Region"
+        case .japanese: return "住んでいる地域"
+        case .chinese: return "居住地区"
+        case .german: return "Wohnort"
+        case .french: return "Région de résidence"
+        case .spanish: return "Región donde vives"
+        case .italian: return "Regione di residenza"
+        case .portuguese: return "Região onde mora"
+        case .chineseTraditional: return "居住地區"
+        case .dutch: return "Woonregio"
+        case .swedish: return "Hemregion"
+        case .norwegian: return "Bostedsregion"
+        case .danish: return "Bopælsregion"
+        case .finnish: return "Asuinalue"
+        case .polish: return "Region zamieszkania"
+        case .czech: return "Region bydliště"
+        case .greek: return "Περιοχή κατοικίας"
+        case .turkish: return "Yaşadığın bölge"
+        case .russian: return "Регион проживания"
+        case .indonesian: return "Wilayah tempat tinggal"
+        }
+    }
+
+    /// 설정 — 사는 곳 없음
+    static var homeRegionNone: String {
+        switch lang {
+        case .korean: return "없음 (일하는 곳과 같음)"
+        case .english: return "None (same as work)"
+        case .japanese: return "なし（勤務地と同じ）"
+        case .chinese: return "无（与工作地相同）"
+        case .german: return "Keiner (wie Arbeitsort)"
+        case .french: return "Aucune (comme le travail)"
+        case .spanish: return "Ninguna (igual que el trabajo)"
+        case .italian: return "Nessuna (come il lavoro)"
+        case .portuguese: return "Nenhuma (igual ao trabalho)"
+        case .chineseTraditional: return "無（與工作地相同）"
+        case .dutch: return "Geen (zelfde als werk)"
+        case .swedish: return "Ingen (samma som jobbet)"
+        case .norwegian: return "Ingen (samme som jobb)"
+        case .danish: return "Ingen (samme som arbejde)"
+        case .finnish: return "Ei mitään (sama kuin työpaikka)"
+        case .polish: return "Brak (jak miejsce pracy)"
+        case .czech: return "Žádný (stejný jako práce)"
+        case .greek: return "Καμία (ίδια με τη δουλειά)"
+        case .turkish: return "Yok (iş yeriyle aynı)"
+        case .russian: return "Нет (как место работы)"
+        case .indonesian: return "Tidak ada (sama dengan tempat kerja)"
+        }
+    }
+
+    /// 설정 — 사는 곳 공휴일도 쉬는 날로
+    static var homeHolidaysDaysOff: String {
+        switch lang {
+        case .korean: return "사는 곳 공휴일에도 쉬어요"
+        case .english: return "I also get home region holidays off"
+        case .japanese: return "居住地の祝日も休み"
+        case .chinese: return "居住地的节假日也休息"
+        case .german: return "Auch an Feiertagen am Wohnort frei"
+        case .french: return "Congé aussi les jours fériés de ma région"
+        case .spanish: return "También libro los festivos de donde vivo"
+        case .italian: return "Libero anche nelle festività di residenza"
+        case .portuguese: return "Também folgo nos feriados de onde moro"
+        case .chineseTraditional: return "居住地的假日也休息"
+        case .dutch: return "Ook vrij op feestdagen van mijn woonregio"
+        case .swedish: return "Ledig även på hemregionens helgdagar"
+        case .norwegian: return "Fri også på helligdager der jeg bor"
+        case .danish: return "Fri også på helligdage, hvor jeg bor"
+        case .finnish: return "Vapaa myös asuinalueen pyhäpäivinä"
+        case .polish: return "Wolne także w święta regionu zamieszkania"
+        case .czech: return "Volno i o svátcích v místě bydliště"
+        case .greek: return "Ελεύθερος και στις αργίες της περιοχής μου"
+        case .turkish: return "Yaşadığım bölgenin tatillerinde de izinliyim"
+        case .russian: return "Выходной и в праздники региона проживания"
+        case .indonesian: return "Juga libur pada hari libur tempat tinggal"
+        }
+    }
+
+    /// 설정 — 일하는 곳/사는 곳 설명
+    static var homeRegionFooter: String {
+        switch lang {
+        case .korean: return "위 지역은 일하는 곳이에요. 연차는 이 지역 공휴일로 계산하고, 사는 곳이 다르면 그 지역에만 있는 공휴일을 달력에 따로 표시해요."
+        case .english: return "The region above is where you work, and your leave is counted with its holidays. If you live in another region, holidays that only apply there are marked on the calendar too."
+        case .japanese: return "上の地域は勤務地です。休暇はこの地域の祝日で計算し、住んでいる地域だけの祝日はカレンダーに別に表示します。"
+        case .chinese: return "上面的地区是工作地，年假按该地区的节假日计算。如果居住地不同，只在居住地放假的日子会在日历中另外标出。"
+        case .german: return "Die Region oben ist dein Arbeitsort, danach wird dein Urlaub berechnet. Wohnst du woanders, werden die nur dort geltenden Feiertage zusätzlich im Kalender markiert."
+        case .french: return "La région ci-dessus est celle de votre travail : vos congés sont calculés avec ses jours fériés. Si vous habitez ailleurs, les jours fériés propres à votre région sont aussi indiqués dans le calendrier."
+        case .spanish: return "La región de arriba es donde trabajas y con sus festivos se calculan tus vacaciones. Si vives en otra, sus festivos propios también se marcan en el calendario."
+        case .italian: return "La regione sopra è quella in cui lavori e le ferie si calcolano con le sue festività. Se vivi altrove, le festività valide solo lì sono segnate anche nel calendario."
+        case .portuguese: return "A região acima é onde você trabalha, e suas folgas usam os feriados dela. Se você mora em outra, os feriados só de lá também aparecem no calendário."
+        case .chineseTraditional: return "上面的地區是工作地，特休依該地區的假日計算。如果居住地不同，只在居住地放假的日子會在行事曆中另外標出。"
+        case .dutch: return "De regio hierboven is waar je werkt; je verlof telt met die feestdagen. Woon je ergens anders, dan worden feestdagen die alleen daar gelden ook in de kalender gemarkeerd."
+        case .swedish: return "Regionen ovan är där du jobbar och används för din semester. Bor du någon annanstans visas helgdagar som bara gäller där också i kalendern."
+        case .norwegian: return "Regionen over er der du jobber, og ferien regnes med helligdagene der. Bor du et annet sted, vises helligdager som bare gjelder der, også i kalenderen."
+        case .danish: return "Regionen ovenfor er, hvor du arbejder, og din ferie regnes ud fra dens helligdage. Bor du et andet sted, vises helligdage, der kun gælder der, også i kalenderen."
+        case .finnish: return "Yllä oleva alue on työpaikkasi, ja loma lasketaan sen pyhäpäivien mukaan. Jos asut muualla, vain siellä olevat pyhäpäivät merkitään myös kalenteriin."
+        case .polish: return "Region powyżej to miejsce pracy i według jego świąt liczony jest urlop. Jeśli mieszkasz gdzie indziej, święta obowiązujące tylko tam też są zaznaczone w kalendarzu."
+        case .czech: return "Region nahoře je místo, kde pracuješ, a podle jeho svátků se počítá dovolená. Pokud bydlíš jinde, svátky platné jen tam se v kalendáři také označí."
+        case .greek: return "Η παραπάνω περιοχή είναι εκεί που δουλεύεις και με τις αργίες της υπολογίζεται η άδειά σου. Αν μένεις αλλού, οι αργίες που ισχύουν μόνο εκεί σημειώνονται επίσης στο ημερολόγιο."
+        case .turkish: return "Yukarıdaki bölge çalıştığın yer; iznin bu bölgenin tatillerine göre hesaplanır. Başka bir yerde yaşıyorsan, yalnızca orada geçerli tatiller de takvimde işaretlenir."
+        case .russian: return "Регион выше — место работы, отпуск считается по его праздникам. Если вы живёте в другом регионе, праздники только этого региона тоже отмечаются в календаре."
+        case .indonesian: return "Wilayah di atas adalah tempat kerjamu, dan cuti dihitung dengan hari liburnya. Jika kamu tinggal di wilayah lain, hari libur yang hanya berlaku di sana juga ditandai di kalender."
+        }
+    }
+
+    /// 달력 범례·날짜 상세 — 사는 곳 공휴일
+    static var homeHolidayTag: String {
+        switch lang {
+        case .korean: return "사는 곳 공휴일"
+        case .english: return "Home holiday"
+        case .japanese: return "居住地の祝日"
+        case .chinese: return "居住地假日"
+        case .german: return "Feiertag am Wohnort"
+        case .french: return "Férié de résidence"
+        case .spanish: return "Festivo donde vives"
+        case .italian: return "Festività di residenza"
+        case .portuguese: return "Feriado onde mora"
+        case .chineseTraditional: return "居住地假日"
+        case .dutch: return "Feestdag woonregio"
+        case .swedish: return "Helgdag hemma"
+        case .norwegian: return "Helligdag der du bor"
+        case .danish: return "Helligdag hvor du bor"
+        case .finnish: return "Asuinalueen pyhäpäivä"
+        case .polish: return "Święto w miejscu zamieszkania"
+        case .czech: return "Svátek v místě bydliště"
+        case .greek: return "Αργία κατοικίας"
+        case .turkish: return "Yaşadığın yerin tatili"
+        case .russian: return "Праздник по месту жительства"
+        case .indonesian: return "Libur tempat tinggal"
+        }
+    }
+
     /// 나라 이름 — 표의 순서는 `Country.allCases` 순서와 같다
     static func countryDisplayName(_ country: Country) -> String {
         let names: [String]

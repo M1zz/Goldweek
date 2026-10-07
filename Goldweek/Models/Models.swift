@@ -431,6 +431,8 @@ final class UserProfile {
     var userTypeRaw: String = UserType.employee.rawValue  // 사용자 유형
     /// 공휴일 지역 (ISO 3166-2, 예: "DE-BY"). 빈 문자열이면 전국 공통 공휴일만 쓴다.
     var holidayRegionRaw: String = ""
+    /// 사는 곳 지역 — 일하는 곳(holidayRegionRaw)과 공휴일이 다를 때. 비면 없음.
+    var homeRegionRaw: String = ""
 
     // 선호도 설정
     var preferredDurationRaw: String
@@ -481,7 +483,7 @@ final class UserProfile {
         get { Country(rawValue: countryRaw) ?? .korea }
         set {
             // 나라가 바뀌면 이전 나라의 지역은 의미가 없다
-            if newValue.rawValue != countryRaw { holidayRegion = nil }
+            if newValue.rawValue != countryRaw { holidayRegion = nil; homeRegion = nil }
             countryRaw = newValue.rawValue
         }
     }
@@ -496,6 +498,21 @@ final class UserProfile {
         set {
             holidayRegionRaw = newValue?.code ?? ""
             HolidayService.selectedRegionCode = holidayRegionRaw
+            // 일하는 곳과 같아지면 사는 곳은 따로 둘 이유가 없다
+            if homeRegionRaw == holidayRegionRaw { homeRegion = nil }
+        }
+    }
+
+    /// 사는 곳 지역 — 같은 나라, 일하는 곳과 다른 지역일 때만 의미가 있다.
+    var homeRegion: HolidayRegion? {
+        get {
+            guard let region = HolidayRegion.find(homeRegionRaw), region.country == country,
+                  region.code != holidayRegionRaw else { return nil }
+            return region
+        }
+        set {
+            homeRegionRaw = newValue?.code ?? ""
+            HolidayService.homeRegionCode = homeRegionRaw
         }
     }
 

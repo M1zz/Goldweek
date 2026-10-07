@@ -1473,6 +1473,29 @@ final class LeaveDeductionTests: XCTestCase {
         XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 10)))  // 토 — 근무일
     }
 
+    func testHomeRegionHolidays() {
+        let saved = (HolidayService.selectedRegionCode, HolidayService.homeRegionCode, HolidayService.homeHolidaysAreDaysOff)
+        defer {
+            HolidayService.selectedRegionCode = saved.0
+            HolidayService.homeRegionCode = saved.1
+            HolidayService.homeHolidaysAreDaysOff = saved.2
+            DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        }
+        // 마드리드에서 일하고 카탈루냐에 산다 — 2026-09-11(금) 카탈루냐의 날
+        HolidayService.selectedRegionCode = "ES-MD"
+        HolidayService.homeRegionCode = "ES-CT"
+        HolidayService.homeHolidaysAreDaysOff = false
+        DayOffCalendar.shared.update(country: .spain, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertNotNil(DayOffCalendar.shared.homeHolidayName(on: d(2026, 9, 11)))
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 9, 11)))      // 연차는 일하는 곳 기준
+        XCTAssertNil(DayOffCalendar.shared.homeHolidayName(on: d(2026, 5, 1)))  // 둘 다 쉬는 날은 사는 곳 전용이 아니다
+        // 사는 곳 공휴일에도 쉰다
+        HolidayService.homeHolidaysAreDaysOff = true
+        DayOffCalendar.shared.update(country: .spain, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 9, 11)))
+        XCTAssertEqual(LeaveRecord(startDate: d(2026, 9, 10), endDate: d(2026, 9, 11)).effectiveLeaveDays, 1)
+    }
+
     func testWorkEveryDayOverride() {
         let saved = HolidayService.weekendOverrideRaw
         defer { HolidayService.weekendOverrideRaw = saved }
