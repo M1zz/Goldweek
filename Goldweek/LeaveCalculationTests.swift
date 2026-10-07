@@ -1816,3 +1816,56 @@ final class PlanAheadCarryOverTests: XCTestCase {
         XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: y2026, annualGrant: 20, startMonth: 1), 0)
     }
 }
+
+// MARK: - 최적 연차 플랜이 죽지 않는다 (이탈리아 사용자: 1월부터 휴가를 넣다가 5월쯤에서 크래시)
+
+final class LeavePlannerCrashTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    /// 후보 연휴가 하나도 없으면 예전엔 knapsack 의 `1...0` 에서 죽었다
+    func testNoCandidatesReturnsEmptyPlan() {
+        // 이탈리아 2026: 남은 평일을 전부 휴가로 막아 후보가 남지 않게 한다
+        var excluded = Set<Date>()
+        var day = d(2026, 1, 1)
+        while day <= d(2026, 12, 31) {
+            excluded.insert(cal.startOfDay(for: day))
+            day = cal.date(byAdding: .day, value: 1, to: day)!
+        }
+        let holidays = HolidayService().getHolidays(for: 2026, country: .italy).map(\.date)
+        let plan = LeavePlanner.optimalPlan(year: 2026, availableLeaveDays: 5, holidays: holidays, excludedDates: excluded)
+        XCTAssertTrue(plan.breaks.isEmpty)
+    }
+
+    /// 1월부터 휴가를 하나씩 넣으며 매번 다시 계산해도 죽지 않는다 (남은 연차가 0이 될 때까지)
+    func testAddingLeaveDayByDayNeverCrashes() {
+        let holidays = HolidayService().getHolidays(for: 2026, country: .italy).map(\.date)
+        var excluded = Set<Date>()
+        var day = d(2026, 1, 5)
+        var available = 26
+        while day <= d(2026, 6, 30) {
+            if !HolidayService.isRestWeekend(day, country: .italy) {
+                excluded.insert(cal.startOfDay(for: day))
+                available = max(0, available - 1)
+                for earliest in [d(2026, 1, 1), day] {
+                    _ = LeavePlanner.optimalPlan(year: 2026, availableLeaveDays: available, holidays: holidays,
+                                                 excludedDates: excluded, earliestDate: earliest)
+                }
+            }
+            day = cal.date(byAdding: .day, value: 1, to: day)!
+        }
+    }
+
+    /// 추천 화면(백그라운드)과 홈 휴식 레이더(메인)가 동시에 돌려도 서로의 계산을 읽지 않는다
+    func testConcurrentPlansDoNotInterfere() {
+        let holidays = HolidayService().getHolidays(for: 2026, country: .italy).map(\.date)
+        let expected = LeavePlanner.optimalPlan(year: 2026, availableLeaveDays: 10, holidays: holidays).totalDaysOff
+        let lock = NSLock()
+        var results: [Int] = []
+        DispatchQueue.concurrentPerform(iterations: 40) { i in
+            let plan = LeavePlanner.optimalPlan(year: 2026, availableLeaveDays: i % 2 == 0 ? 10 : 3, holidays: holidays)
+            lock.lock(); if i % 2 == 0 { results.append(plan.totalDaysOff) }; lock.unlock()
+        }
+        XCTAssertEqual(Set(results), [expected])
+    }
+}
