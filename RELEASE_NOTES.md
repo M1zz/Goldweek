@@ -1,5 +1,184 @@
 # Goldweek 릴리즈 노트
 
+## 2.2.1
+
+### 앱스토어 (한국어)
+
+시간 단위로도 휴가를 기록할 수 있어요
+휴가 종류를 직접 만들고 색을 고를 수 있어요
+달력을 석 달, 반년, 한 해로 넓게 볼 수 있어요
+내년 휴가 계획과 남은 연차 이월을 지원해요
+휴가를 많이 넣으면 앱이 닫히던 문제를 고쳤어요
+
+### App Store (English)
+
+Log time off by the hour and minute
+Create your own leave types and colors
+See 2, 3, 6 or 12 months at a glance
+Plan next year and carry over leave
+Fixed a crash when adding lots of leave
+
+### 앱스토어 (일본어)
+
+休暇を時間や分の単位でも記録できます
+休暇の種類を作って色を選べます
+カレンダーを3か月や1年で広く見られます
+来年の計画と残った休暇の繰り越しに対応
+たくさん休暇を入れると落ちる問題を直しました
+
+### 앱스토어 (중국어 간체)
+
+可以按小时和分钟记录请假
+可以自建假期类型并设置颜色
+日历可按三个月、半年或一年查看
+支持提前规划明年和结转剩余年假
+修复了添加大量假期时闪退的问题
+
+### 앱스토어 (독일어)
+
+Urlaub auch stundenweise eintragen
+Eigene Urlaubsarten mit Farben anlegen
+Kalender für 3, 6 oder 12 Monate
+Vorausplanen und Resturlaub übertragen
+Absturz bei vielen Einträgen behoben
+
+### 앱스토어 (프랑스어)
+
+Saisissez vos congés à l’heure près
+Créez vos types de congé en couleur
+Affichez 3, 6 ou 12 mois d’un coup
+Planifiez l’an prochain et vos reports
+Plantage corrigé lors de nombreux ajouts
+
+### 앱스토어 (스페인어)
+
+Registra permisos por horas y minutos
+Crea tus tipos de permiso con colores
+Ve 3, 6 o 12 meses de un vistazo
+Planifica el próximo año y arrastra días
+Ya no se cierra al añadir muchos días
+
+### 앱스토어 (이탈리아어)
+
+Inserisci permessi a ore e minuti
+Crea tipi di permesso con i tuoi colori
+Vedi 3, 6 o 12 mesi in un colpo d’occhio
+Pianifica l’anno dopo e riporta le ferie
+Risolta la chiusura con molti permessi
+
+### 앱스토어 (포르투갈어 브라질)
+
+Registre folgas por horas e minutos
+Crie tipos de folga com suas cores
+Veja 3, 6 ou 12 meses de uma vez
+Planeje o próximo ano e transfira dias
+Corrigido o fechamento com muitas folgas
+
+### 앱스토어 (중국어 번체)
+
+可以用小時和分鐘記錄請假
+可以自訂假別並設定顏色
+行事曆可用三個月、半年或一年檢視
+支援提前規劃明年與遞延剩餘特休
+修正新增大量假期時閃退的問題
+
+### 앱스토어 (네덜란드어)
+
+Verlof ook per uur en minuut invoeren
+Maak eigen verloftypes met kleuren
+Bekijk 3, 6 of 12 maanden tegelijk
+Plan volgend jaar en neem dagen mee
+Crash bij veel verlof opgelost
+
+### 앱스토어 (스웨덴어)
+
+Registrera ledighet per timme och minut
+Skapa egna ledighetstyper med färger
+Se 3, 6 eller 12 månader på en gång
+Planera nästa år och spara dagar
+Åtgärdat en krasch vid många poster
+
+### 앱스토어 (노르웨이어 보크말)
+
+Før fravær i timer og minutter
+Lag egne fraværstyper med farger
+Se 3, 6 eller 12 måneder samtidig
+Planlegg neste år og overfør dager
+Rettet krasj ved mange registreringer
+
+### 앱스토어 (덴마크어)
+
+Registrér fravær i timer og minutter
+Opret egne fraværstyper med farver
+Se 3, 6 eller 12 måneder ad gangen
+Planlæg næste år og overfør dage
+Rettet nedbrud ved mange registreringer
+
+### 앱스토어 (핀란드어)
+
+Kirjaa vapaat tunteina ja minuutteina
+Luo omat vapaatyypit ja valitse värit
+Näytä 3, 6 tai 12 kuukautta kerralla
+Suunnittele ensi vuotta ja siirrä päiviä
+Korjattu kaatuminen monilla merkinnöillä
+
+### 앱스토어 (폴란드어)
+
+Zapisuj urlop w godzinach i minutach
+Twórz własne rodzaje urlopu z kolorami
+Zobacz 3, 6 lub 12 miesięcy naraz
+Planuj przyszły rok i przenoś urlop
+Naprawiono awarię przy wielu wpisach
+
+### 앱스토어 (체코어)
+
+Zapisuj volno po hodinách a minutách
+Vytvoř si vlastní typy volna a barvy
+Zobraz 3, 6 nebo 12 měsíců najednou
+Plánuj příští rok a převáděj volno
+Opraven pád při zadání mnoha dnů
+
+### 앱스토어 (그리스어)
+
+Καταχώρισε άδειες σε ώρες και λεπτά
+Φτιάξε δικούς σου τύπους άδειας με χρώμα
+Δες 3, 6 ή 12 μήνες με μια ματιά
+Προγραμμάτισε του χρόνου, μετέφερε μέρες
+Διορθώθηκε κλείσιμο με πολλές άδειες
+
+### 앱스토어 (튀르키예어)
+
+İzinleri saat ve dakika olarak gir
+Kendi izin türlerini renkleriyle oluştur
+3, 6 veya 12 ayı bir arada gör
+Gelecek yılı planla, kalan izni devret
+Çok izin eklerken çökme giderildi
+
+### 앱스토어 (러시아어)
+
+Записывайте отпуск по часам и минутам
+Создавайте свои виды отпуска с цветом
+Смотрите 3, 6 или 12 месяцев сразу
+Планы на следующий год и перенос остатка
+Исправлен вылет при множестве записей
+
+### 앱스토어 (인도네시아어)
+
+Catat cuti per jam dan menit
+Buat jenis cuti sendiri dengan warnanya
+Lihat 3, 6, atau 12 bulan sekaligus
+Rencanakan tahun depan, bawa sisa cuti
+Perbaikan tutup paksa saat banyak cuti
+
+### 개발 메모 (스토어에 올라가지 않음)
+
+- 시간 단위 휴가(LeaveLength.hours, 하루 근무 시간 설정) · 직접 만든 휴가 종류와 색(CustomLeaveType) · 1/2/3/6/12개월 보기
+- 내년 휴가는 그해 연차로 검사 · 남은 연차 이월(상한·기한) · 파트타임 매주 쉬는 요일과 주별 옮기기
+- 함께 볼 공휴일(다른 나라·지역) · 공휴일 앞뒤 휴가 제한 · 모로코 추가(42개 나라)
+- 크래시: LeavePlanner knapsack `1...0`(후보 0개) · 공유 TracebackContext 동시 접근 제거
+- 번아웃이 공휴일 연휴도 휴식으로 셈 · 지원 안 되는 나라는 피드백으로 지원 요청 · 리뷰 프롬프트를 만족 순간에
+- 타임머신 스냅샷이 반차·시간·종류를 보존 (예전엔 반차가 복원 후 종일이 됐다)
+
 ## 2.2.0
 
 ### 앱스토어 (한국어)

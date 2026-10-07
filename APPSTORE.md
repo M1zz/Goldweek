@@ -30,8 +30,8 @@ DeployBar 가 이 파일을 읽어 App Store Connect 의 언어별 칸에 올린
 연휴 추천
 다가오는 공휴일마다 연차를 며칠 쓰면 며칠을 이어서 쉴 수 있는지 알려 드립니다. 징검다리 휴일도 놓치지 않습니다.
 
-41개 나라 공휴일
-한국과 일본, 미국, 유럽, 중동, 남미, 오세아니아까지 41개 나라의 공휴일을 담았습니다. 주나 지역마다 공휴일이 다른 나라는 내 지역을 고르고, 목록에 없는 나라는 공휴일을 직접 넣어 쓸 수 있습니다. 주말 요일과 한 주의 시작 요일도 고를 수 있습니다.
+42개 나라 공휴일
+한국과 일본, 미국, 유럽, 중동, 남미, 오세아니아까지 42개 나라의 공휴일을 담았습니다. 주나 지역마다 공휴일이 다른 나라는 내 지역을 고르고, 목록에 없는 나라는 공휴일을 직접 넣어 쓸 수 있습니다. 주말 요일과 한 주의 시작 요일도 고를 수 있습니다.
 
 연차 관리
 총 연차, 쓴 연차, 남은 연차를 한 화면에서 확인하세요. 반차와 반반차도 기록할 수 있고, 대체휴무나 포상휴가처럼 따로 받은 휴가는 만료일과 함께 관리합니다. 캘린더에서 날짜를 눌러 바로 등록하고 고칠 수 있으며, 회사 휴가 내역 화면을 찍은 사진으로 기록을 한 번에 불러올 수도 있습니다.
@@ -75,7 +75,7 @@ It pairs public holidays with weekends and shows you how to get the longest brea
 Smart suggestions
 For every upcoming holiday, see how many days to take off and how many days in a row you will get. You will never miss a bridge day again.
 
-Holidays in 41 countries
+Holidays in 42 countries
 Public holidays for the US, the UK, Canada, Australia, New Zealand and 36 more countries across Europe, Asia, Latin America, the Middle East and Africa. Where holidays vary by state or region, just pick yours. Country not listed? Add your own holidays. You can also choose your weekend days and the first day of the week.
 
 PTO tracking
@@ -120,7 +120,7 @@ Die App verbindet Feiertage und Wochenenden und zeigt dir, wie du mit möglichst
 Clevere Vorschläge
 Für jeden kommenden Feiertag siehst du, wie viele Urlaubstage du brauchst und wie viele Tage am Stück du dann frei hast. So verpasst du keinen Brückentag mehr.
 
-Feiertage in 41 Ländern
+Feiertage in 42 Ländern
 Deutschland, Österreich, die Schweiz und 38 weitere Länder in Europa, Amerika, Asien, Afrika und Ozeanien. Wo Feiertage je nach Bundesland oder Region abweichen, wählst du einfach deine Region. Dein Land fehlt? Dann trägst du die Feiertage selbst ein. Auch Wochenendtage und Wochenbeginn kannst du festlegen.
 
 Urlaub im Blick
@@ -165,7 +165,7 @@ Combina festivos y fines de semana y te muestra cómo conseguir el descanso más
 Sugerencias inteligentes
 Para cada festivo que se acerca, ves cuántos días tienes que pedir y cuántos días seguidos vas a descansar. Ningún puente se te escapa.
 
-Festivos de 41 países
+Festivos de 42 países
 España, México, Argentina, Chile, Colombia, Perú y otros 35 países de Europa, América, Asia, África y Oceanía. Si los festivos cambian según la comunidad autónoma o la región, elige la tuya. ¿Tu país no está? Añade tus propios festivos. También puedes elegir tus días de fin de semana y el día en que empieza la semana.
 
 Control de tus vacaciones
@@ -210,7 +210,7 @@ L'app combine jours fériés et week-ends et vous montre comment profiter de la 
 Des suggestions malines
 Pour chaque jour férié à venir, voyez combien de jours poser et combien de jours d'affilée vous serez au repos. Plus aucun pont ne vous échappe.
 
-Les jours fériés de 41 pays
+Les jours fériés de 42 pays
 France, Belgique, Suisse, Canada et 37 autres pays d'Europe, d'Amérique, d'Asie, d'Afrique et d'Océanie. Là où les jours fériés varient selon la région, choisissez la vôtre. Votre pays n'est pas dans la liste ? Ajoutez vos propres jours fériés. Vous pouvez aussi choisir vos jours de week-end et le premier jour de la semaine.
 
 Le suivi de vos congés
@@ -255,7 +255,7 @@ Unisce festività e weekend e ti mostra come ottenere la pausa più lunga usando
 Suggerimenti intelligenti
 Per ogni festività in arrivo vedi quanti giorni di ferie servono e quanti giorni di fila potrai staccare. Nessun ponte ti sfuggirà.
 
-Festività di 41 Paesi
+Festività di 42 Paesi
 Italia, Svizzera e altri 39 Paesi di Europa, America, Asia, Africa e Oceania. Dove le festività cambiano da regione a regione, scegli la tua. Il tuo Paese non c'è? Aggiungi tu le festività. Puoi scegliere anche i giorni del weekend e il primo giorno della settimana.
 
 Ferie sotto controllo
@@ -300,8 +300,8 @@ Goldweekは、祝日と週末のあいだのどこで有給を取れば一番長
 連休の提案
 これからの祝日ごとに、有給を何日取れば何連休になるかを表示します。飛び石連休も見逃しません。
 
-41か国・地域の祝日
-日本、韓国、中国、台湾、香港をはじめ、ヨーロッパ、アメリカ大陸、中東、オセアニアなど41か国・地域の祝日を収録しています。州や地域で祝日が異なる国では、お住まいの地域を選べます。リストにない国は祝日を自分で追加でき、週末の曜日や週の始まりも選べます。
+42か国・地域の祝日
+日本、韓国、中国、台湾、香港をはじめ、ヨーロッパ、アメリカ大陸、中東、オセアニアなど42か国・地域の祝日を収録しています。州や地域で祝日が異なる国では、お住まいの地域を選べます。リストにない国は祝日を自分で追加でき、週末の曜日や週の始まりも選べます。
 
 有給の管理
 付与日数、取得日数、残り日数をひとつの画面で確認できます。半休や4分の1日単位の休みも記録でき、代休や特別休暇などは有効期限とあわせて管理できます。カレンダーの日付をタップしてすぐに登録・修正でき、会社の休暇履歴画面の写真から記録をまとめて読み込むこともできます。
@@ -345,7 +345,7 @@ Ele junta feriados e fins de semana e mostra como conseguir o maior descanso usa
 Sugestões inteligentes
 Para cada feriado que vem por aí, veja quantos dias você precisa tirar e quantos dias seguidos vai descansar. Nenhuma ponte passa batido.
 
-Feriados de 41 países
+Feriados de 42 países
 Brasil, Portugal, Argentina, México e outros 37 países da Europa, das Américas, da Ásia, da África e da Oceania. Onde os feriados mudam conforme o estado ou a região, escolha o seu. Seu país não está na lista? Adicione seus próprios feriados. Você também escolhe os dias de fim de semana e o dia em que a semana começa.
 
 Controle das férias
@@ -390,8 +390,8 @@ Goldweek 帮你找到在节假日和周末之间请哪几天假，才能休得�
 拼假推荐
 针对每个即将到来的节假日，告诉你需要请几天假、可以连休几天。不会错过任何一次拼假机会。
 
-41 个国家和地区的节假日
-收录中国大陆、中国香港、中国台湾、日本、韩国，以及欧洲、美洲、中东、大洋洲等 41 个国家和地区的节假日，中国大陆还会标出调休补班日。节假日因州或地区而异的国家，可以选择你所在的地区。列表里没有的国家可以自己添加节假日，周末和一周的第一天也能自己选。
+42 个国家和地区的节假日
+收录中国大陆、中国香港、中国台湾、日本、韩国，以及欧洲、美洲、中东、大洋洲等 42 个国家和地区的节假日，中国大陆还会标出调休补班日。节假日因州或地区而异的国家，可以选择你所在的地区。列表里没有的国家可以自己添加节假日，周末和一周的第一天也能自己选。
 
 年假管理
 总天数、已休天数和剩余天数在一个页面上清清楚楚。支持半天和四分之一天的假期记录，调休、奖励假等额外假期也能连同有效期一起管理。在日历上点一下日期即可登记或修改，还能从公司休假记录页面的照片中一次导入记录。
@@ -435,8 +435,8 @@ Goldweek 幫你找出在國定假日和週末之間該請哪幾天假，才能�
 連假推薦
 每個即將到來的國定假日，都會告訴你要請幾天假、可以連放幾天。不錯過任何可以串起來的假期。
 
-41 個國家與地區的假日
-收錄台灣、香港、中國大陸、日本、韓國，以及歐洲、美洲、中東、大洋洲等 41 個國家與地區的國定假日。假日依州或地區而不同的國家，可以選擇你所在的地區。清單中沒有的國家可以自行新增假日，週末和一週的第一天也能自己選。
+42 個國家與地區的假日
+收錄台灣、香港、中國大陸、日本、韓國，以及歐洲、美洲、中東、大洋洲等 42 個國家與地區的國定假日。假日依州或地區而不同的國家，可以選擇你所在的地區。清單中沒有的國家可以自行新增假日，週末和一週的第一天也能自己選。
 
 特休管理
 總天數、已休天數和剩餘天數，在同一個畫面就能掌握。可以記錄半天和四分之一天的假，補休、獎勵假等額外假期也能連同有效期限一起管理。在行事曆點一下日期就能登記或修改，也能從公司休假紀錄畫面的照片一次匯入紀錄。
@@ -480,7 +480,7 @@ Goldweek подскажет, в какие дни взять отпуск, чт�
 Подсказки к каждому празднику
 Для каждого ближайшего праздника видно, сколько дней отпуска нужно взять и сколько дней подряд вы будете отдыхать. Удобные дни-мостики больше не пройдут мимо.
 
-Праздники 41 страны
+Праздники 42 стран
 Россия и ещё 40 стран Европы, Азии, Америки, Ближнего Востока, Африки и Океании. Для России учтены переносы выходных по постановлению правительства, включая рабочие субботы. Если праздники зависят от региона, выберите свой. Страны, которой нет в списке, можно настроить вручную.
 
 Учет отпуска
@@ -525,7 +525,7 @@ Hari libur nasional dan akhir pekan dirangkai, lalu Goldweek menunjukkan cara li
 Rekomendasi untuk setiap tanggal merah
 Untuk setiap hari libur yang akan datang, lihat berapa hari cuti yang perlu diambil dan berapa hari kamu bisa libur berturut-turut. Hari kejepit tidak akan terlewat lagi.
 
-Hari libur 41 negara
+Hari libur 42 negara
 Indonesia dan 40 negara lain di Asia, Eropa, Amerika, Timur Tengah, Afrika, dan Oseania. Untuk Indonesia, libur nasional dan cuti bersama mengikuti SKB 3 Menteri. Kalau hari libur berbeda menurut wilayah, pilih wilayahmu. Negara yang belum ada di daftar bisa diatur sendiri.
 
 Catatan cuti
@@ -570,7 +570,7 @@ De app combineert feestdagen en weekenden en laat zien hoe je met zo min mogelij
 Slimme voorstellen
 Voor elke feestdag die eraan komt, zie je hoeveel dagen je vrij moet nemen en hoeveel dagen je dan achter elkaar vrij bent. Zo mis je nooit meer een brugdag.
 
-Feestdagen in 41 landen
+Feestdagen in 42 landen
 Nederland, België en nog 39 landen in Europa, Azië, Amerika, het Midden-Oosten, Afrika en Oceanië. Gebruik je de app in het Nederlands, dan zie je de officiële namen, zoals Koningsdag, Bevrijdingsdag, Hemelvaartsdag en tweede pinksterdag. Verschillen de feestdagen per regio, kies dan gewoon je eigen regio. Staat je land er niet bij, dan voer je de feestdagen zelf in.
 
 Je verlof in beeld
@@ -615,7 +615,7 @@ Appen kombinerar helgdagar och helger och visar hur du får den längsta ledighe
 Smarta förslag
 För varje helgdag som närmar sig ser du hur många semesterdagar du behöver ta ut och hur många dagar i rad du sedan är ledig. Du missar aldrig en klämdag igen.
 
-Helgdagar i 41 länder
+Helgdagar i 42 länder
 Sverige och 40 andra länder i Europa, Asien, Amerika, Mellanöstern, Afrika och Oceanien. Använder du appen på svenska visas de officiella namnen, som trettondedag jul, Kristi himmelsfärdsdag, Sveriges nationaldag och midsommardagen. Där helgdagarna skiljer sig mellan regioner väljer du bara din egen. Saknas ditt land i listan lägger du in helgdagarna själv.
 
 Koll på semestern
@@ -660,7 +660,7 @@ Appen setter sammen helligdager og helger og viser hvordan du får lengst mulig 
 Smarte forslag
 For hver helligdag som nærmer seg, ser du hvor mange feriedager du må ta ut og hvor mange dager på rad du da har fri. Du går aldri glipp av en inneklemt dag igjen.
 
-Helligdager i 41 land
+Helligdager i 42 land
 Norge og 40 andre land i Europa, Asia, Amerika, Midtøsten, Afrika og Oseania. Bruker du appen på norsk, vises de offisielle navnene, som skjærtorsdag, grunnlovsdagen, Kristi himmelfartsdag og andre pinsedag. Der helligdagene varierer mellom regioner, velger du bare din egen. Mangler landet ditt i listen, legger du inn helligdagene selv.
 
 Oversikt over ferien
@@ -705,7 +705,7 @@ Appen kobler helligdage og weekender sammen og viser, hvordan du får den længs
 Smarte forslag
 Ved hver kommende helligdag kan du se, hvor mange feriedage du skal bruge, og hvor mange dage i træk du så har fri. Du går aldrig glip af en klemmedag igen.
 
-Helligdage i 41 lande
+Helligdage i 42 lande
 Danmark og 40 andre lande i Europa, Asien, Amerika, Mellemøsten, Afrika og Oceanien. Når du bruger appen på dansk, står helligdagene med deres danske navne, fra skærtorsdag og Kristi himmelfartsdag til grundlovsdag og juleaften. Hvor helligdagene varierer fra region til region, vælger du blot din egen. Bor du i et land, der ikke er på listen, kan du selv lægge helligdagene ind.
 
 Styr på ferien
@@ -750,7 +750,7 @@ Sovellus yhdistää pyhäpäivät ja viikonloput ja näyttää, miten saat pisim
 Fiksut ehdotukset
 Näet jokaisen tulevan pyhäpäivän kohdalla, montako lomapäivää tarvitset ja montako päivää putkeen olet silloin vapaalla. Yksikään välipäivä ei enää mene ohi.
 
-Pyhäpäivät 41 maasta
+Pyhäpäivät 42 maasta
 Suomi ja 40 muuta maata Euroopasta, Aasiasta, Amerikasta, Lähi-idästä, Afrikasta ja Oseaniasta. Kun käytät sovellusta suomeksi, pyhäpäivät näkyvät virallisilla nimillään loppiaisesta ja helatorstaista juhannusaattoon ja itsenäisyyspäivään. Jos pyhäpäivät vaihtelevat alueittain, valitset vain oman alueesi. Jos maatasi ei ole listalla, voit lisätä pyhäpäivät itse.
 
 Lomat hallinnassa
@@ -795,7 +795,7 @@ Aplikacja łączy święta z weekendami i pokazuje, jak uzyskać najdłuższą p
 Sprytne podpowiedzi
 Przy każdym nadchodzącym święcie widzisz, ile dni urlopu potrzebujesz i ile dni z rzędu będziesz mieć wolne. Żaden długi weekend ani dzień pomostowy już Ci nie umknie.
 
-Święta w 41 krajach
+Święta w 42 krajach
 Polska i 40 innych krajów Europy, Azji, obu Ameryk, Bliskiego Wschodu, Afryki i Oceanii. Gdy korzystasz z aplikacji po polsku, święta mają swoje oficjalne nazwy, od Święta Trzech Króli i Święta Konstytucji 3 Maja po Boże Ciało i Wigilię Bożego Narodzenia. Jeśli święta różnią się w zależności od regionu, po prostu wybierz swój. Kraj spoza listy możesz ustawić samodzielnie, dodając własne święta.
 
 Urlop pod kontrolą
@@ -840,7 +840,7 @@ Spojí státní svátky s víkendy a najde nejdelší volno za co nejméně dní
 Doporučení ke každému svátku
 U každého blížícího se svátku vidíš, kolik dní dovolené si vzít a kolik dní v kuse budeš mít volno. Žádný den mezi svátkem a víkendem ti už neuteče.
 
-Svátky 41 zemí
+Svátky 42 zemí
 Česko a dalších 40 zemí Evropy, Asie, Ameriky, Blízkého východu, Afriky a Oceánie. České svátky uvidíš pod oficiálními názvy, od Dne slovanských věrozvěstů Cyrila a Metoděje po Den boje za svobodu a demokracii. Kde se svátky liší podle regionu, vyber si ten svůj. Zemi, která v seznamu chybí, si nastavíš ručně.
 
 Přehled dovolené
@@ -887,7 +887,7 @@ Goldweek: Πλάνο άδειας
 Προτάσεις για κάθε αργία
 Για κάθε αργία που έρχεται βλέπεις πόσες μέρες άδειας χρειάζεσαι και πόσες συνεχόμενες μέρες ρεπό θα έχεις. Καμία γέφυρα δεν θα σου ξεφύγει ξανά.
 
-Αργίες για 41 χώρες
+Αργίες για 42 χώρες
 Η Ελλάδα και άλλες 40 χώρες της Ευρώπης, της Ασίας, της Αμερικής, της Μέσης Ανατολής, της Αφρικής και της Ωκεανίας. Οι ελληνικές αργίες εμφανίζονται με τα επίσημα ονόματά τους, από την Καθαρά Δευτέρα και τη Δευτέρα του Πάσχα ως την Επέτειο του Όχι, και οι κινητές γιορτές υπολογίζονται με βάση το ορθόδοξο Πάσχα. Όπου οι αργίες διαφέρουν ανά περιοχή, διαλέγεις τη δική σου. Αν η χώρα σου δεν είναι στη λίστα, προσθέτεις τις αργίες χειροκίνητα.
 
 Παρακολούθηση άδειας
@@ -934,7 +934,7 @@ Resmî tatilleri hafta sonlarıyla birleştirir ve en az izin günüyle en uzun 
 Her tatil için öneri
 Yaklaşan her resmî tatilde kaç gün izin alman gerektiğini ve kaç gün üst üste tatil yapacağını görürsün. Köprü günlerini artık kaçırmazsın.
 
-41 ülkenin resmî tatilleri
+42 ülkenin resmî tatilleri
 Türkiye ve Avrupa, Asya, Amerika, Orta Doğu, Afrika ve Okyanusya'dan 40 ülke daha. Türkiye'nin tatilleri resmî adlarıyla gelir: Ulusal Egemenlik ve Çocuk Bayramı'ndan Zafer Bayramı'na, Ramazan Bayramı'ndan Kurban Bayramı'na kadar. Tatillerin bölgeye göre değiştiği ülkelerde kendi bölgeni seçersin. Listede olmayan bir ülkenin tatillerini de kendin ekleyebilirsin.
 
 Yıllık izin takibi
