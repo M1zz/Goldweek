@@ -1095,6 +1095,11 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_US")).country, .usa)
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "ar_SA")).country, .saudiArabia)
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_AE")).country, .uae)
+        // 지원하지 않는 아랍 나라 → 미국이 아니라 주말·명절이 맞는 이웃 나라 (안내 카드는 그대로 뜬다)
+        let kuwait = Country.detect(locale: Locale(identifier: "ar_KW"))
+        XCTAssertEqual(kuwait.country, .saudiArabia)
+        XCTAssertFalse(kuwait.isSupported)
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "ar_TN")).country, .morocco)
     }
 
     func testMoreCountriesKeyDates() {
@@ -1867,5 +1872,47 @@ final class LeavePlannerCrashTests: XCTestCase {
             lock.lock(); if i % 2 == 0 { results.append(plan.totalDaysOff) }; lock.unlock()
         }
         XCTAssertEqual(Set(results), [expected])
+    }
+}
+
+// MARK: - 번아웃: 공휴일도 휴식이다 (휴가만 세던 문제)
+
+final class BurnoutHolidayRestTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    override func setUp() {
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    private func has(_ blocks: [RestBlock], _ start: Date, _ end: Date) -> Bool {
+        blocks.contains { cal.isDate($0.start, inSameDayAs: start) && cal.isDate($0.end, inSameDayAs: end) }
+    }
+
+    func testHolidaysWithAttachedWeekendsAreRest() {
+        let blocks = BurnoutEngine.restBlocks(from: [], around: d(2026, 10, 7))
+        // 추석 9/24(목)~26(토) + 일요일 → 4일 (토요일과 겹친 추석은 대체공휴일이 없다)
+        XCTAssertTrue(has(blocks, d(2026, 9, 24), d(2026, 9, 27)), "\(blocks.map { ($0.start, $0.end) })")
+        // 개천절 10/3(토) → 대체공휴일 10/5(월) → 토·일·월
+        XCTAssertTrue(has(blocks, d(2026, 10, 3), d(2026, 10, 5)))
+        // 한글날 10/9(금) → 금·토·일
+        XCTAssertTrue(has(blocks, d(2026, 10, 9), d(2026, 10, 11)))
+        // 평범한 주말만은 휴식 블록이 아니다
+        XCTAssertFalse(blocks.contains { cal.isDate($0.start, inSameDayAs: d(2026, 10, 17)) })
+    }
+
+    func testLeaveMergesWithWeekendsAndHolidays() {
+        // 10/5(월)~10/8(목) 휴가 → 앞 주말(10/3 개천절·10/4)과 뒤 한글날 연휴(10/9~11)까지 한 번에 9일
+        let leave = LeaveRecord(startDate: d(2026, 10, 5), endDate: d(2026, 10, 8), status: .used)
+        let blocks = BurnoutEngine.restBlocks(from: [leave], around: d(2026, 10, 20))
+        XCTAssertTrue(has(blocks, d(2026, 10, 3), d(2026, 10, 11)), "\(blocks.map { ($0.start, $0.end) })")
+    }
+
+    func testHolidayOnlyHistoryIsNotNeverRested() {
+        // 휴가를 한 번도 안 넣은 사람도 지난 공휴일 연휴만큼은 쉰 것으로 본다
+        let today = d(2026, 10, 13)
+        let a = BurnoutEngine().assess(breaks: BurnoutEngine.restBlocks(from: [], around: today), asOf: today)
+        XCTAssertNotEqual(a.primaryReason, .neverRested)
+        XCTAssertEqual(a.daysSinceLastBreak, 2)   // 한글날 연휴 10/11 끝
     }
 }

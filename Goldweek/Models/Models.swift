@@ -230,6 +230,11 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case "tr": fallback = .turkey
         case "ru": fallback = .russia
         case "id": fallback = .indonesia
+        // 아랍어 — 지원하지 않는 아랍 나라(쿠웨이트·요르단 등)라도 미국보다 주말(금·토)과 이슬람 명절이 맞는
+        // 이웃 나라가 낫다. 마그레브는 모로코, 그 밖은 사우디.
+        case "ar":
+            let region = locale.region?.identifier ?? ""
+            fallback = ["TN", "DZ", "LY", "MR"].contains(region) ? .morocco : .saudiArabia
         default: fallback = .usa
         }
         return (fallback, false)

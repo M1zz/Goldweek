@@ -12942,7 +12942,7 @@ enum Strings {
 
     static var burnoutLast: String {
         switch lang {
-        case .korean: return "지난 휴가"
+        case .korean: return "지난 휴식"
         case .english: return "Last break"
         case .swedish: return "Senaste pausen"
         case .norwegian: return "Siste pause"
@@ -12954,15 +12954,15 @@ enum Strings {
         case .turkish: return "Son mola"
         case .russian: return "Прошлый"
         case .indonesian: return "Libur terakhir"
-        case .dutch: return "Laatste vakantie"
-        case .japanese: return "前回の休暇"
-        case .chinese: return "上次休假"
+        case .dutch: return "Laatste rustpauze"
+        case .japanese: return "前回の休み"
+        case .chinese: return "上次休息"
         case .german: return "Zuletzt"
         case .french: return "Dernière"
         case .spanish: return "Último"
         case .italian: return "Ultima"
         case .portuguese: return "Última"
-        case .chineseTraditional: return "上次休假"
+        case .chineseTraditional: return "上次休息"
         }
     }
 
@@ -12994,7 +12994,7 @@ enum Strings {
 
     static var burnoutNext: String {
         switch lang {
-        case .korean: return "다음 휴가"
+        case .korean: return "다음 휴식"
         case .english: return "Next break"
         case .swedish: return "Nästa paus"
         case .norwegian: return "Neste pause"
@@ -13006,15 +13006,15 @@ enum Strings {
         case .turkish: return "Sonraki mola"
         case .russian: return "Следующий"
         case .indonesian: return "Berikutnya"
-        case .dutch: return "Volgende vakantie"
-        case .japanese: return "次の休暇"
-        case .chinese: return "下次休假"
+        case .dutch: return "Volgende rustpauze"
+        case .japanese: return "次の休み"
+        case .chinese: return "下次休息"
         case .german: return "Als Nächstes"
         case .french: return "Prochaine"
         case .spanish: return "Próximo"
         case .italian: return "Prossima"
         case .portuguese: return "Próxima"
-        case .chineseTraditional: return "下次休假"
+        case .chineseTraditional: return "下次休息"
         }
     }
 

@@ -1570,12 +1570,16 @@ struct BurnoutPaceCard: View {
 
     /// 번아웃 평가 — 렌더당 1회만 계산 (예측 루프 중복 방지)
     private let assessment: BurnoutAssessment
+    /// 휴식 블록 (휴가·공휴일 + 붙은 주말) — 평가와 "마지막/다음 휴식" 표시가 같은 기준을 쓴다
+    private let restBlocks: [RestBlock]
 
     init(profile: UserProfile, allLeaveRecords: [LeaveRecord]) {
         self._profile = Bindable(wrappedValue: profile)
         self.allLeaveRecords = allLeaveRecords
+        let blocks = BurnoutEngine.restBlocks(from: allLeaveRecords)
+        self.restBlocks = blocks
         self.assessment = BurnoutEngine().assess(
-            breaks: BurnoutEngine.restBlocks(from: allLeaveRecords),
+            breaks: blocks,
             asOf: Date(),
             subjectiveFatigue: FatigueCheckIn.recentValue
         )
@@ -1661,28 +1665,15 @@ struct BurnoutPaceCard: View {
     // MARK: 휴가 텀 (번아웃 지표)
     /// 쉬어가는 흐름에서 "사무실에서 벗어난 시간"으로 카운트할 레코드.
     /// 일이긴 하지만 일상 루틴에서 벗어나는 출장도 리프레시 효과가 있어 포함.
-    private func countsAsBreak(_ record: LeaveRecord) -> Bool {
-        record.deductsFromAnnualLeave || record.type == .businessTrip
-    }
-
+    /// 마지막으로 쉰 날 — 휴가뿐 아니라 공휴일 연휴도 휴식이다 (BurnoutEngine.restBlocks)
     private var lastLeaveDate: Date? {
         let today = cal.startOfDay(for: Date())
-        return allLeaveRecords.compactMap { record -> Date? in
-            guard countsAsBreak(record) else { return nil }
-            let endDay = cal.startOfDay(for: record.endDate)
-            guard endDay <= today else { return nil }
-            guard record.status == .used || record.status == .planned else { return nil }
-            return record.endDate
-        }.max()
+        return restBlocks.map(\.end).filter { cal.startOfDay(for: $0) <= today }.max()
     }
+    /// 다음에 쉬는 날 — 잡아 둔 휴가나 다가오는 공휴일 연휴
     private var nextPlannedLeave: Date? {
         let today = cal.startOfDay(for: Date())
-        return allLeaveRecords.compactMap { record -> Date? in
-            guard countsAsBreak(record) else { return nil }
-            let startDay = cal.startOfDay(for: record.startDate)
-            guard startDay > today, record.status == .planned else { return nil }
-            return record.startDate
-        }.min()
+        return restBlocks.map(\.start).filter { cal.startOfDay(for: $0) > today }.min()
     }
     private var daysSinceLastLeave: Int? {
         guard let last = lastLeaveDate else { return nil }
