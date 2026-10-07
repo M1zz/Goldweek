@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>골드위크 - 황금연휴 플래너</title>
 <meta name="description" content="다가오는 공휴일, 연차 며칠이면 긴 연휴가 될까요? 공휴일과 주말을 엮어 가장 적은 연차로 가장 오래 쉬는 조합을 찾아 드려요. 남은 연차는 홈 위젯에서 바로 확인하세요.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/">
+<link rel="canonical" href="https://m1zz.github.io/Goldweek/ko/">
 <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
 <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
 <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
@@ -31,40 +31,16 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="골드위크 - 황금연휴 플래너">
 <meta property="og:description" content="다가오는 공휴일, 연차 며칠이면 긴 연휴가 될까요? 공휴일과 주말을 엮어 가장 적은 연차로 가장 오래 쉬는 조합을 찾아 드려요. 남은 연차는 홈 위젯에서 바로 확인하세요.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/">
+<meta property="og:url" content="https://m1zz.github.io/Goldweek/ko/">
 <meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="images/app-icon.png">
-<link rel="apple-touch-icon" href="images/app-icon.png">
-<script>
-(function () {
-  var supported = ["ko", "en", "de", "es", "fr", "it", "ja", "pt-BR", "zh-Hans", "zh-Hant", "ru", "id", "nl", "sv", "nb", "da", "fi", "pl", "cs", "el", "tr"];
-  function pick(tag) {
-    var t = String(tag || '').toLowerCase();
-    if (/^zh-(tw|hk|mo|hant)/.test(t)) return 'zh-Hant';
-    if (/^zh/.test(t)) return 'zh-Hans';
-    if (/^pt/.test(t)) return 'pt-BR';
-    if (/^(nb|no|nn)/.test(t)) return 'nb';
-    var p = t.split('-')[0];
-    for (var i = 0; i < supported.length; i++) if (supported[i].toLowerCase() === p) return supported[i];
-    return null;
-  }
-  var prefs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
-  for (var i = 0; i < prefs.length; i++) {
-    var l = pick(prefs[i]);
-    if (l) {
-      if (l !== 'ko') location.replace(l + '/' + location.hash);
-      return;
-    }
-  }
-  location.replace('en/' + location.hash);
-})();
-</script>
-<link rel="stylesheet" href="home.css">
+<link rel="icon" type="image/png" href="../images/app-icon.png">
+<link rel="apple-touch-icon" href="../images/app-icon.png">
+<link rel="stylesheet" href="../home.css">
 </head>
 <body>
 <header>
 <div class="header-inner">
-<a href="./" class="logo"><img src="images/app-icon.png" alt="골드위크 앱 아이콘"><span>Goldweek</span></a>
+<a href="./" class="logo"><img src="../images/app-icon.png" alt="골드위크 앱 아이콘"><span>Goldweek</span></a>
 <nav class="nav-links">
 <a href="#features" class="hide-mobile">기능</a>
 <a href="#screenshots" class="hide-mobile">스크린샷</a>
@@ -74,27 +50,27 @@
 </div>
 </header>
 <div class="lang-bar"><nav class="langs" aria-label="언어">
-<a href="ko/" hreflang="ko" lang="ko" aria-current="true">한국어</a>
-<a href="en/" hreflang="en" lang="en">English</a>
-<a href="de/" hreflang="de" lang="de">Deutsch</a>
-<a href="es/" hreflang="es" lang="es">Español</a>
-<a href="fr/" hreflang="fr" lang="fr">Français</a>
-<a href="it/" hreflang="it" lang="it">Italiano</a>
-<a href="ja/" hreflang="ja" lang="ja">日本語</a>
-<a href="pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-<a href="zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
-<a href="zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-<a href="ru/" hreflang="ru" lang="ru">Русский</a>
-<a href="id/" hreflang="id" lang="id">Bahasa Indonesia</a>
-<a href="nl/" hreflang="nl" lang="nl">Nederlands</a>
-<a href="sv/" hreflang="sv" lang="sv">Svenska</a>
-<a href="nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
-<a href="da/" hreflang="da" lang="da">Dansk</a>
-<a href="fi/" hreflang="fi" lang="fi">Suomi</a>
-<a href="pl/" hreflang="pl" lang="pl">Polski</a>
-<a href="cs/" hreflang="cs" lang="cs">Čeština</a>
-<a href="el/" hreflang="el" lang="el">Ελληνικά</a>
-<a href="tr/" hreflang="tr" lang="tr">Türkçe</a>
+<a href="../ko/" hreflang="ko" lang="ko" aria-current="true">한국어</a>
+<a href="../en/" hreflang="en" lang="en">English</a>
+<a href="../de/" hreflang="de" lang="de">Deutsch</a>
+<a href="../es/" hreflang="es" lang="es">Español</a>
+<a href="../fr/" hreflang="fr" lang="fr">Français</a>
+<a href="../it/" hreflang="it" lang="it">Italiano</a>
+<a href="../ja/" hreflang="ja" lang="ja">日本語</a>
+<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="../ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
+<a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="../da/" hreflang="da" lang="da">Dansk</a>
+<a href="../fi/" hreflang="fi" lang="fi">Suomi</a>
+<a href="../pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 </nav></div>
 
 <section class="hero">
@@ -132,11 +108,11 @@
 <section class="screenshots" id="screenshots">
 <div class="section-title"><h2>앱 미리보기</h2></div>
 <div class="screenshot-slider">
-<img src="screenshots/marketing/ko/01-home.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
-<img src="screenshots/marketing/ko/02-recommend.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
-<img src="screenshots/marketing/ko/03-calendar.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
-<img src="screenshots/marketing/ko/04-countries.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
-<img src="screenshots/marketing/ko/05-settings.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+<img src="../screenshots/marketing/ko/01-home.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+<img src="../screenshots/marketing/ko/02-recommend.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+<img src="../screenshots/marketing/ko/03-calendar.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+<img src="../screenshots/marketing/ko/04-countries.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+<img src="../screenshots/marketing/ko/05-settings.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
 </div>
 </section>
 
