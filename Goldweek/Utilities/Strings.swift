@@ -18140,6 +18140,168 @@ enum Strings {
         }
     }
 
+    /// 설정 — 공휴일 앞뒤 휴가 제한
+    static var blackoutSetting: String {
+        switch lang {
+        case .korean: return "공휴일 앞뒤 휴가 제한"
+        case .english: return "No leave near holidays"
+        case .japanese: return "祝日前後の休暇制限"
+        case .chinese: return "节假日前后禁休"
+        case .german: return "Kein Urlaub rund um Feiertage"
+        case .french: return "Pas de congé autour des jours fériés"
+        case .spanish: return "Sin vacaciones junto a festivos"
+        case .italian: return "Niente ferie vicino alle festività"
+        case .portuguese: return "Sem folga perto de feriados"
+        case .chineseTraditional: return "假日前後禁休"
+        case .dutch: return "Geen verlof rond feestdagen"
+        case .swedish: return "Ingen ledighet kring helgdagar"
+        case .norwegian: return "Ingen ferie rundt helligdager"
+        case .danish: return "Ingen ferie omkring helligdage"
+        case .finnish: return "Ei lomaa pyhäpäivien ympärillä"
+        case .polish: return "Bez urlopu przy świętach"
+        case .czech: return "Bez dovolené kolem svátků"
+        case .greek: return "Χωρίς άδεια κοντά σε αργίες"
+        case .turkish: return "Tatil çevresinde izin yok"
+        case .russian: return "Без отпуска рядом с праздниками"
+        case .indonesian: return "Tanpa cuti di sekitar hari libur"
+        }
+    }
+
+    /// 설정 — 제한 없음
+    static var blackoutOff: String {
+        switch lang {
+        case .korean: return "제한 없음"
+        case .english: return "Off"
+        case .japanese: return "制限なし"
+        case .chinese: return "不限制"
+        case .german: return "Aus"
+        case .french: return "Désactivé"
+        case .spanish: return "Desactivado"
+        case .italian: return "Disattivato"
+        case .portuguese: return "Desativado"
+        case .chineseTraditional: return "不限制"
+        case .dutch: return "Uit"
+        case .swedish: return "Av"
+        case .norwegian: return "Av"
+        case .danish: return "Fra"
+        case .finnish: return "Pois"
+        case .polish: return "Wyłączone"
+        case .czech: return "Vypnuto"
+        case .greek: return "Ανενεργό"
+        case .turkish: return "Kapalı"
+        case .russian: return "Выкл."
+        case .indonesian: return "Nonaktif"
+        }
+    }
+
+    /// 설정 — 휴가 제한 설명
+    static var blackoutFooter: String {
+        switch lang {
+        case .korean: return "직장 규정상 공휴일 앞뒤로 휴가를 낼 수 없다면 켜세요. 추천과 최적 연차 플랜이 그 날을 피하고, 휴가를 등록할 때 알려 드려요."
+        case .english: return "Turn this on if your workplace doesn't allow leave right before or after public holidays. Suggestions and the optimal plan will avoid those days, and you'll get a warning when adding leave."
+        case .japanese: return "職場の規定で祝日の前後に休暇を取れない場合はオンにしてください。おすすめと最適プランがその日を避け、休暇登録時にお知らせします。"
+        case .chinese: return "如果单位规定节假日前后不能请假，请开启。推荐和最佳年假计划会避开这些日子，登记休假时也会提醒你。"
+        case .german: return "Aktiviere das, wenn dein Arbeitgeber direkt vor oder nach Feiertagen keinen Urlaub erlaubt. Vorschläge und der optimale Plan meiden diese Tage, und beim Eintragen bekommst du einen Hinweis."
+        case .french: return "Activez cette option si votre employeur interdit les congés juste avant ou après les jours fériés. Les suggestions et le plan optimal éviteront ces jours, et un avertissement s’affichera lors de l’ajout d’un congé."
+        case .spanish: return "Actívalo si en tu trabajo no se permiten vacaciones justo antes o después de los festivos. Las sugerencias y el plan óptimo evitarán esos días y te avisaremos al añadir vacaciones."
+        case .italian: return "Attivalo se sul lavoro non puoi prendere ferie subito prima o dopo le festività. I suggerimenti e il piano ottimale eviteranno quei giorni e riceverai un avviso quando aggiungi ferie."
+        case .portuguese: return "Ative se no seu trabalho não é permitido tirar folga logo antes ou depois de feriados. As sugestões e o plano ideal evitarão esses dias, e você será avisado ao adicionar uma folga."
+        case .chineseTraditional: return "如果職場規定假日前後不能請假，請開啟。推薦和最佳特休計畫會避開這些日子，登記休假時也會提醒你。"
+        case .dutch: return "Zet dit aan als je werkgever geen verlof toestaat vlak voor of na feestdagen. Suggesties en het optimale plan vermijden die dagen, en je krijgt een waarschuwing bij het invoeren van verlof."
+        case .swedish: return "Slå på detta om din arbetsgivare inte tillåter ledighet precis före eller efter helgdagar. Förslagen och den optimala planen undviker de dagarna, och du får en varning när du lägger till ledighet."
+        case .norwegian: return "Slå på dette hvis arbeidsgiveren din ikke tillater ferie rett før eller etter helligdager. Forslagene og den optimale planen unngår de dagene, og du får en advarsel når du legger inn ferie."
+        case .danish: return "Slå dette til, hvis din arbejdsplads ikke tillader ferie lige før eller efter helligdage. Forslagene og den optimale plan undgår de dage, og du får en advarsel, når du tilføjer ferie."
+        case .finnish: return "Ota käyttöön, jos työpaikkasi ei salli lomaa juuri ennen tai jälkeen pyhäpäivien. Ehdotukset ja paras suunnitelma välttävät nämä päivät, ja saat varoituksen lomaa lisätessäsi."
+        case .polish: return "Włącz, jeśli w pracy nie możesz brać urlopu tuż przed świętami lub po nich. Sugestie i optymalny plan ominą te dni, a przy dodawaniu urlopu zobaczysz ostrzeżenie."
+        case .czech: return "Zapni, pokud v práci nesmíš čerpat dovolenou těsně před svátky nebo po nich. Návrhy a optimální plán se těmto dnům vyhnou a při přidávání dovolené uvidíš upozornění."
+        case .greek: return "Ενεργοποίησέ το αν η δουλειά σου δεν επιτρέπει άδεια ακριβώς πριν ή μετά τις αργίες. Οι προτάσεις και το βέλτιστο πλάνο θα αποφεύγουν αυτές τις μέρες και θα βλέπεις προειδοποίηση όταν προσθέτεις άδεια."
+        case .turkish: return "İş yerin resmî tatillerin hemen öncesinde veya sonrasında izne izin vermiyorsa bunu aç. Öneriler ve en iyi plan bu günlerden kaçınır, izin eklerken de uyarı görürsün."
+        case .russian: return "Включите, если на работе нельзя брать отпуск непосредственно до или после праздников. Рекомендации и оптимальный план обойдут эти дни, а при добавлении отпуска появится предупреждение."
+        case .indonesian: return "Aktifkan jika tempat kerjamu tidak mengizinkan cuti tepat sebelum atau sesudah hari libur. Saran dan rencana terbaik akan menghindari hari-hari itu, dan kamu akan diberi peringatan saat menambah cuti."
+        }
+    }
+
+    /// 휴가 등록 — 제한일 포함 경고
+    static var blackoutWarning: String {
+        switch lang {
+        case .korean: return "공휴일 앞뒤 휴가 제한일이 들어 있어요"
+        case .english: return "This includes days when leave isn't allowed near a holiday"
+        case .japanese: return "祝日前後の休暇制限日が含まれています"
+        case .chinese: return "包含节假日前后的禁休日"
+        case .german: return "Enthält Tage, an denen rund um Feiertage kein Urlaub erlaubt ist"
+        case .french: return "Inclut des jours où le congé n’est pas permis près d’un jour férié"
+        case .spanish: return "Incluye días en los que no se permiten vacaciones junto a un festivo"
+        case .italian: return "Include giorni in cui non sono permesse ferie vicino a una festività"
+        case .portuguese: return "Inclui dias em que não é permitida folga perto de um feriado"
+        case .chineseTraditional: return "包含假日前後的禁休日"
+        case .dutch: return "Bevat dagen waarop geen verlof mag rond een feestdag"
+        case .swedish: return "Innehåller dagar då ledighet inte tillåts kring en helgdag"
+        case .norwegian: return "Inneholder dager der ferie ikke er tillatt rundt en helligdag"
+        case .danish: return "Indeholder dage, hvor ferie ikke er tilladt omkring en helligdag"
+        case .finnish: return "Sisältää päiviä, joina lomaa ei sallita pyhäpäivän ympärillä"
+        case .polish: return "Obejmuje dni, w które urlop przy święcie jest niedozwolony"
+        case .czech: return "Zahrnuje dny, kdy u svátku není dovolená povolena"
+        case .greek: return "Περιλαμβάνει μέρες χωρίς δικαίωμα άδειας κοντά σε αργία"
+        case .turkish: return "Tatil çevresinde izin alınamayan günleri içeriyor"
+        case .russian: return "Включает дни, когда отпуск рядом с праздником запрещён"
+        case .indonesian: return "Termasuk hari yang tidak boleh cuti di sekitar hari libur"
+        }
+    }
+
+    /// 날짜 상세 — 휴가 제한일
+    static var blackoutDayLabel: String {
+        switch lang {
+        case .korean: return "공휴일 앞뒤 휴가 제한일"
+        case .english: return "No leave allowed (near a holiday)"
+        case .japanese: return "祝日前後の休暇制限日"
+        case .chinese: return "节假日前后禁休日"
+        case .german: return "Kein Urlaub erlaubt (Feiertag in der Nähe)"
+        case .french: return "Congé non permis (près d’un jour férié)"
+        case .spanish: return "Sin vacaciones (junto a un festivo)"
+        case .italian: return "Ferie non permesse (vicino a una festività)"
+        case .portuguese: return "Folga não permitida (perto de feriado)"
+        case .chineseTraditional: return "假日前後禁休日"
+        case .dutch: return "Geen verlof toegestaan (rond feestdag)"
+        case .swedish: return "Ingen ledighet (nära helgdag)"
+        case .norwegian: return "Ingen ferie (nær helligdag)"
+        case .danish: return "Ingen ferie (nær helligdag)"
+        case .finnish: return "Ei lomaa (pyhäpäivän lähellä)"
+        case .polish: return "Urlop niedozwolony (przy święcie)"
+        case .czech: return "Dovolená nepovolena (u svátku)"
+        case .greek: return "Δεν επιτρέπεται άδεια (κοντά σε αργία)"
+        case .turkish: return "İzin yok (tatile yakın)"
+        case .russian: return "Отпуск запрещён (рядом с праздником)"
+        case .indonesian: return "Tidak boleh cuti (dekat hari libur)"
+        }
+    }
+
+    /// 설정 — 공휴일 앞뒤 제한 근무일 수
+    static func blackoutDays(_ n: Int) -> String {
+        switch lang {
+        case .korean: return n == 1 ? "앞뒤 \(n) 근무일" : "앞뒤 \(n) 근무일"
+        case .english: return n == 1 ? "1 working day before and after" : "\(n) working days before and after"
+        case .japanese: return n == 1 ? "前後\(n)営業日" : "前後\(n)営業日"
+        case .chinese: return n == 1 ? "前后\(n)个工作日" : "前后\(n)个工作日"
+        case .german: return n == 1 ? "1 Arbeitstag davor und danach" : "\(n) Arbeitstage davor und danach"
+        case .french: return n == 1 ? "1 jour ouvré avant et après" : "\(n) jours ouvrés avant et après"
+        case .spanish: return n == 1 ? "1 día laborable antes y después" : "\(n) días laborables antes y después"
+        case .italian: return n == 1 ? "1 giorno lavorativo prima e dopo" : "\(n) giorni lavorativi prima e dopo"
+        case .portuguese: return n == 1 ? "1 dia útil antes e depois" : "\(n) dias úteis antes e depois"
+        case .chineseTraditional: return n == 1 ? "前後\(n)個工作日" : "前後\(n)個工作日"
+        case .dutch: return n == 1 ? "1 werkdag ervoor en erna" : "\(n) werkdagen ervoor en erna"
+        case .swedish: return n == 1 ? "1 arbetsdag före och efter" : "\(n) arbetsdagar före och efter"
+        case .norwegian: return n == 1 ? "1 arbeidsdag før og etter" : "\(n) arbeidsdager før og etter"
+        case .danish: return n == 1 ? "1 arbejdsdag før og efter" : "\(n) arbejdsdage før og efter"
+        case .finnish: return n == 1 ? "1 työpäivä ennen ja jälkeen" : "\(n) työpäivää ennen ja jälkeen"
+        case .polish: return n == 1 ? "1 dzień roboczy przed i po" : "Dni robocze przed i po: \(n)"
+        case .czech: return n == 1 ? "1 pracovní den před a po" : "Pracovní dny před a po: \(n)"
+        case .greek: return n == 1 ? "1 εργάσιμη πριν και μετά" : "\(n) εργάσιμες πριν και μετά"
+        case .turkish: return n == 1 ? "Öncesi ve sonrası \(n) iş günü" : "Öncesi ve sonrası \(n) iş günü"
+        case .russian: return n == 1 ? "1 рабочий день до и после" : "Рабочих дней до и после: \(n)"
+        case .indonesian: return n == 1 ? "\(n) hari kerja sebelum dan sesudah" : "\(n) hari kerja sebelum dan sesudah"
+        }
+    }
+
     /// 나라 이름 — 표의 순서는 `Country.allCases` 순서와 같다
     static func countryDisplayName(_ country: Country) -> String {
         let names: [String]

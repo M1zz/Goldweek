@@ -37,6 +37,10 @@ final class DayOffCalendar {
     @ObservationIgnored private var homeCache: [Int: [String: String]] = [:]
     /// 사는 곳 공휴일에도 쉬는지
     private(set) var homeHolidaysAreDaysOff = false
+    /// 공휴일 앞뒤로 휴가를 낼 수 없는 근무일 수 (0 = 제한 없음)
+    private(set) var leaveBlackoutDays = 0
+    /// 휴가 제한일 (연도 → dateKey)
+    @ObservationIgnored private var blackoutCache: [Int: Set<String>] = [:]
     @ObservationIgnored private let lock = NSLock()
     @ObservationIgnored private let service = HolidayService()
     @ObservationIgnored private let calendar = Calendar.current
@@ -83,13 +87,15 @@ final class DayOffCalendar {
 
         let weekend = HolidayService.weekendDays(for: country).sorted().map(String.init).joined()
         let homeDaysOff = HolidayService.homeHolidaysAreDaysOff
-        let newFingerprint = "\(country.rawValue)|\(weekend)|\(HolidayService.selectedRegionCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
+        let blackout = HolidayService.leaveBlackoutDays
+        let newFingerprint = "\(country.rawValue)|\(weekend)|blackout\(blackout)|\(HolidayService.selectedRegionCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
             + children.map { "\(key($0.start))~\(key($0.end))" }.joined(separator: ",")
         guard newFingerprint != fingerprint else { return }
 
-        lock.lock(); yearCache = [:]; homeCache = [:]; lock.unlock()
+        lock.lock(); yearCache = [:]; homeCache = [:]; blackoutCache = [:]; lock.unlock()
         self.country = country
         self.homeHolidaysAreDaysOff = homeDaysOff
+        self.leaveBlackoutDays = blackout
         self.customDays = custom
         self.yearlyCustomDays = yearly
         self.breakDays = mine
@@ -148,6 +154,43 @@ final class DayOffCalendar {
             result.append(Holiday(date: d, name: name, isCustom: true, isBreak: true))
         }
         return result.sorted { $0.date < $1.date }
+    }
+
+    /// 공휴일 앞뒤 휴가 제한일인지 — 공휴일 바로 앞뒤의 근무일 N개 (주말·쉬는 날은 건너뛰고 센다)
+    func isLeaveBlocked(_ date: Date) -> Bool {
+        guard leaveBlackoutDays > 0 else { return false }
+        return blackoutKeys(for: calendar.component(.year, from: date)).contains(key(date))
+    }
+
+    /// 한 해의 휴가 제한일 (startOfDay) — 최적 플랜에서 제외할 날
+    func blockedDates(in year: Int) -> Set<Date> {
+        guard leaveBlackoutDays > 0 else { return [] }
+        return Set(blackoutKeys(for: year).compactMap { keyFormatter.date(from: $0) }.map { calendar.startOfDay(for: $0) })
+    }
+
+    private func blackoutKeys(for year: Int) -> Set<String> {
+        lock.lock()
+        if let cached = blackoutCache[year] { lock.unlock(); return cached }
+        lock.unlock()
+        var blocked = Set<String>()
+        // 연말·연초 공휴일이 이웃 해의 날을 막을 수 있어 앞뒤 해도 본다
+        for y in (year - 1)...(year + 1) {
+            for k in holidayKeys(for: y) {
+                guard let h = keyFormatter.date(from: k) else { continue }
+                for step in [-1, 1] {
+                    var d = h, count = 0, guardrail = 0
+                    while count < leaveBlackoutDays && guardrail < 60 {
+                        guard let next = calendar.date(byAdding: .day, value: step, to: d) else { break }
+                        d = next; guardrail += 1
+                        if isDayOff(d) { continue }
+                        if calendar.component(.year, from: d) == year { blocked.insert(key(d)) }
+                        count += 1
+                    }
+                }
+            }
+        }
+        lock.lock(); blackoutCache[year] = blocked; lock.unlock()
+        return blocked
     }
 
     /// 그 날이 사는 곳에만 있는 공휴일이면 이름 — 달력 표시·날짜 상세용

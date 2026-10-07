@@ -80,6 +80,8 @@ struct SettingsView: View {
     /// 사는 곳 지역 — 일하는 곳과 공휴일이 다를 때
     @State private var selectedHomeRegionCode: String
     @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
+    /// 공휴일 앞뒤 휴가 제한 근무일 수 (0 = 없음) — HolidayService.leaveBlackoutDays 와 같은 키
+    @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
     @State private var selectedLanguage: AppLanguage
 
     private let recommendationEngine = RecommendationEngine()
@@ -501,8 +503,20 @@ struct SettingsView: View {
                         }
                     }
 
+                    // 공휴일 앞뒤로 휴가를 못 내는 직장(공무원 등) — 추천·최적 플랜이 그 날을 피한다
+                    Picker(Strings.blackoutSetting, selection: $holidayBlackoutDays) {
+                        Text(Strings.blackoutOff).tag(0)
+                        ForEach([1, 2, 3, 5], id: \.self) { n in
+                            Text(Strings.blackoutDays(n)).tag(n)
+                        }
+                    }
+                    .onChange(of: holidayBlackoutDays) { _, _ in recommendationEngine.invalidateCache() }
+
                     // 연차를 달력 일수로 세는지 근무일로 세는지 — 묻는 사람이 많다
                     Text(Strings.leaveCountingFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                    Text(Strings.blackoutFooter)
                         .font(.body)
                         .foregroundStyle(.secondary)
                 }

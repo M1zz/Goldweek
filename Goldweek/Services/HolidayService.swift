@@ -62,6 +62,12 @@ class HolidayService {
         set { UserDefaults.standard.set(newValue, forKey: "homeHolidaysDaysOff") }
     }
 
+    /// 공휴일 앞뒤로 휴가를 낼 수 없는 근무일 수 (0 = 제한 없음) — 공무원 등 직장 규정
+    static var leaveBlackoutDays: Int {
+        get { UserDefaults.standard.integer(forKey: "holidayBlackoutDays") }
+        set { UserDefaults.standard.set(newValue, forKey: "holidayBlackoutDays") }
+    }
+
     /// 사는 곳에만 있는 공휴일 — 일하는 곳 공휴일과 날짜가 겹치지 않는 것
     func homeOnlyHolidays(for year: Int, country: Country) -> [Holiday] {
         guard let home = HolidayRegion.find(Self.homeRegionCode), home.country == country,

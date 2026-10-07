@@ -23,6 +23,8 @@ struct ContentView: View {
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
     /// 사는 곳 공휴일에도 쉬는지 — 바뀌면 쉬는 날 판정을 다시 채운다
     @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
+    /// 공휴일 앞뒤 휴가 제한 근무일 수
+    @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
 
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     /// 사용법 시트를 이미 봤는지 — 온보딩 직후 딱 한 번 자동으로 띄운다.
@@ -216,7 +218,7 @@ struct ContentView: View {
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
-        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {
@@ -282,6 +284,9 @@ struct ContentView: View {
                 d = n
             }
         }
+
+        // 직장 규정상 공휴일 앞뒤로 못 쉬는 날도 제외
+        excluded.formUnion(DayOffCalendar.shared.blockedDates(in: year))
 
         let plan = LeavePlanner.optimalPlan(
             year: year,

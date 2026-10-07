@@ -303,6 +303,21 @@ struct LeaveRegistrationView: View {
         }
     }
 
+    /// 고른 기간에 공휴일 앞뒤 휴가 제한일이 있는지 (쉬는 날은 연차가 아니니 보지 않는다)
+    var rangeHasBlockedDay: Bool {
+        let dayOff = DayOffCalendar.shared
+        guard dayOff.leaveBlackoutDays > 0 else { return false }
+        let cal = Calendar.current
+        var d = cal.startOfDay(for: startDate)
+        let end = cal.startOfDay(for: length == .full ? endDate : startDate)
+        while d <= end {
+            if dayOff.isLeaveBlocked(d) { return true }
+            guard let next = cal.date(byAdding: .day, value: 1, to: d) else { break }
+            d = next
+        }
+        return false
+    }
+
     /// 시작~끝 달력 일수
     var calendarDays: Int {
         let cal = Calendar.current
@@ -539,6 +554,14 @@ struct LeaveRegistrationView: View {
                             .foregroundStyle(.blue)
                             .fontWeight(.semibold)
                     }
+                }
+
+                // 직장 규정상 공휴일 앞뒤로 못 쉬는 날이 끼어 있으면 알린다 (막지는 않는다 — 예외 승인이 있을 수 있다)
+                if rangeHasBlockedDay {
+                    Label(Strings.blackoutWarning, systemImage: "exclamationmark.triangle.fill")
+                        .font(.body)
+                        .foregroundStyle(.orange)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 // 달력 일수와 차감 일수가 다르면 왜 다른지 보여 준다 (근무일 기준)

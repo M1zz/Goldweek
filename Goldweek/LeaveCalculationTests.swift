@@ -1496,6 +1496,27 @@ final class LeaveDeductionTests: XCTestCase {
         XCTAssertEqual(LeaveRecord(startDate: d(2026, 9, 10), endDate: d(2026, 9, 11)).effectiveLeaveDays, 1)
     }
 
+    func testLeaveBlackoutAroundHolidays() {
+        let saved = (HolidayService.leaveBlackoutDays, HolidayService.selectedRegionCode)
+        defer {
+            HolidayService.leaveBlackoutDays = saved.0
+            HolidayService.selectedRegionCode = saved.1
+            DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        }
+        HolidayService.selectedRegionCode = ""
+        // 미국 2026: 7/4(토) → 7/3(금) 대체. 앞뒤 1 근무일 = 7/2(목), 7/6(월)
+        HolidayService.leaveBlackoutDays = 1
+        DayOffCalendar.shared.update(country: .usa, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertTrue(DayOffCalendar.shared.isLeaveBlocked(d(2026, 7, 2)))
+        XCTAssertTrue(DayOffCalendar.shared.isLeaveBlocked(d(2026, 7, 6)))
+        XCTAssertFalse(DayOffCalendar.shared.isLeaveBlocked(d(2026, 7, 7)))
+        XCTAssertTrue(DayOffCalendar.shared.blockedDates(in: 2026).contains(d(2026, 7, 2)))
+        // 끄면 제한 없음
+        HolidayService.leaveBlackoutDays = 0
+        DayOffCalendar.shared.update(country: .usa, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertFalse(DayOffCalendar.shared.isLeaveBlocked(d(2026, 7, 2)))
+    }
+
     func testWorkEveryDayOverride() {
         let saved = HolidayService.weekendOverrideRaw
         defer { HolidayService.weekendOverrideRaw = saved }

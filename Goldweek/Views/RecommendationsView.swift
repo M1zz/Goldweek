@@ -2665,6 +2665,9 @@ struct OptimalLeavePlannerCard: View {
             }
         }
 
+        // 직장 규정상 공휴일 앞뒤로 못 쉬는 날도 제외
+        excluded.formUnion(DayOffCalendar.shared.blockedDates(in: year))
+
         let makeupDays = HolidayService.makeupWorkdays(for: year, country: profile.country, calendar: cal)
         let weekendDays = HolidayService.weekendDays(for: profile.country)
 

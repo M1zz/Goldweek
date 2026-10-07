@@ -984,6 +984,16 @@ struct SelectedDateInfo: View {
                 .accessibilityElement(children: .combine)
             }
 
+            if DayOffCalendar.shared.isLeaveBlocked(date) {
+                HStack {
+                    Image(systemName: "nosign")
+                        .foregroundStyle(.orange)
+                        .voDecorative()
+                    Text(Strings.blackoutDayLabel)
+                }
+                .accessibilityElement(children: .combine)
+            }
+
             // 사는 곳 공휴일 — 쉬는 날로 치면 위 공휴일 줄에 이미 이름이 있으니 표시만 덧붙인다
             if let homeHoliday = DayOffCalendar.shared.homeHolidayName(on: date) {
                 HStack {
