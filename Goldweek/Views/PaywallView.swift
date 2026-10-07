@@ -357,7 +357,7 @@ struct PaywallView: View {
                 }
                 // 구매 완료 직후 리뷰 요청 — 가장 만족도 높은 시점
                 try? await Task.sleep(for: .seconds(1.5))
-                await ReviewManager.shared.requestReviewAfterPurchase(using: requestReview)
+                ReviewManager.shared.requestReviewAfterPurchase(using: requestReview)
             } catch {
                 // 사용자 취소는 에러가 아니므로 알림을 띄우지 않는다
                 if let skError = error as? StoreKitError, case .userCancelled = skError {

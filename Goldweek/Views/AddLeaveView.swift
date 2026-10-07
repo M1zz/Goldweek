@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit   // @Environment(\.requestReview) 의 RequestReviewAction
 
 struct AddLeaveView: View {
     @Bindable var profile: UserProfile

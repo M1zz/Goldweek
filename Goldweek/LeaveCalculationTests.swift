@@ -656,7 +656,6 @@ final class LeaveCalculationTests: XCTestCase {
         totalAnnual: Double,
         includeBonusInStatus: Bool
     ) -> Double {
-        let today = Calendar.current.startOfDay(for: Date())
         let committed = records.filter { record in
             guard record.deductsFromAnnualLeave else { return false }
             return record.status == .used ||

@@ -23,8 +23,9 @@ class CalendarService {
         EKEventStore.authorizationStatus(for: .event)
     }
     
+    /// iOS 17 부터 전체 접근은 `.fullAccess` 로만 온다 (최소 지원 iOS 17 — 옛 `.authorized` 는 오지 않는다)
     var isAuthorized: Bool {
-        authorizationStatus == .fullAccess || authorizationStatus == .authorized
+        authorizationStatus == .fullAccess
     }
     
     private init() {}
