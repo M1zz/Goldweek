@@ -1517,6 +1517,35 @@ final class LeaveDeductionTests: XCTestCase {
         XCTAssertFalse(DayOffCalendar.shared.isLeaveBlocked(d(2026, 7, 2)))
     }
 
+    func testHomeCountryHolidays() {
+        let saved = (HolidayService.selectedRegionCode, HolidayService.homeRegionCode,
+                     HolidayService.homeHolidaysAreDaysOff, HolidayService.homeCountryCode)
+        defer {
+            HolidayService.selectedRegionCode = saved.0
+            HolidayService.homeRegionCode = saved.1
+            HolidayService.homeHolidaysAreDaysOff = saved.2
+            HolidayService.homeCountryCode = saved.3
+            DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        }
+        // 스페인에서 일하고 회사 본사는 한국 — 2026-10-09(금) 한글날
+        HolidayService.selectedRegionCode = ""
+        HolidayService.homeRegionCode = ""
+        HolidayService.homeCountryCode = Country.korea.rawValue
+        HolidayService.homeHolidaysAreDaysOff = false
+        DayOffCalendar.shared.update(country: .spain, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertNotNil(DayOffCalendar.shared.homeHolidayName(on: d(2026, 10, 9)))
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 9)))       // 연차는 일하는 나라 기준
+        XCTAssertNil(DayOffCalendar.shared.homeHolidayName(on: d(2026, 12, 25)))  // 두 나라 다 쉬는 날
+        XCTAssertNotNil(HolidayService.homePlaceName(for: .spain))
+        // 본사 공휴일에도 쉰다
+        HolidayService.homeHolidaysAreDaysOff = true
+        DayOffCalendar.shared.update(country: .spain, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 9)))
+        XCTAssertEqual(LeaveRecord(startDate: d(2026, 10, 8), endDate: d(2026, 10, 9)).effectiveLeaveDays, 1)
+        // 일하는 나라와 같으면 함께 볼 게 없다
+        XCTAssertNil(HolidayService.homePlace(for: .korea))
+    }
+
     func testWorkEveryDayOverride() {
         let saved = HolidayService.weekendOverrideRaw
         defer { HolidayService.weekendOverrideRaw = saved }

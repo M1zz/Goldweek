@@ -810,7 +810,8 @@ struct LegendView: View {
                 LegendItem(color: .teal.opacity(0.35), text: Strings.childBreakTag)
             }
             if showsHomeHoliday {
-                LegendItem(color: AppTheme.Colors.holiday, text: Strings.homeHolidayTag, hollow: true)
+                LegendItem(color: AppTheme.Colors.holiday,
+                           text: HolidayService.homePlaceName(for: DayOffCalendar.shared.country) ?? "", hollow: true)
             }
         }
         .font(.body)
@@ -995,17 +996,19 @@ struct SelectedDateInfo: View {
                 .accessibilityElement(children: .combine)
             }
 
-            // 사는 곳 공휴일 — 쉬는 날로 치면 위 공휴일 줄에 이미 이름이 있으니 표시만 덧붙인다
+            // 함께 보는 곳(사는 곳·본사 나라) 공휴일 — 쉬는 날로 치면 위 공휴일 줄에 이미 이름이 있으니 표시만 덧붙인다
             if let homeHoliday = DayOffCalendar.shared.homeHolidayName(on: date) {
                 HStack {
-                    Image(systemName: "house.fill")
+                    Image(systemName: "mappin.circle.fill")
                         .foregroundStyle(AppTheme.Colors.holiday)
                         .voDecorative()
                     if holidayOnDate?.name != homeHoliday {
                         Text(homeHoliday)
                     }
-                    Text("(\(Strings.homeHolidayTag))")
-                        .foregroundStyle(.secondary)
+                    if let place = HolidayService.homePlaceName(for: DayOffCalendar.shared.country) {
+                        Text("(\(place))")
+                            .foregroundStyle(.secondary)
+                    }
                 }
                 .accessibilityElement(children: .combine)
             }

@@ -56,6 +56,12 @@ class HolidayService {
         set { UserDefaults.standard.set(newValue, forKey: "homeHolidayRegion") }
     }
 
+    /// 함께 볼 공휴일의 나라 (원본은 `UserProfile.homeCountryRaw`) — 비면 일하는 나라 안의 다른 지역(`homeRegionCode`)
+    static var homeCountryCode: String {
+        get { UserDefaults.standard.string(forKey: "homeHolidayCountry") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "homeHolidayCountry") }
+    }
+
     /// 사는 곳 공휴일에도 쉬는지 — 기본은 아니다(연차는 일하는 곳 기준)
     static var homeHolidaysAreDaysOff: Bool {
         get { UserDefaults.standard.bool(forKey: "homeHolidaysDaysOff") }
@@ -68,12 +74,33 @@ class HolidayService {
         set { UserDefaults.standard.set(newValue, forKey: "holidayBlackoutDays") }
     }
 
-    /// 사는 곳에만 있는 공휴일 — 일하는 곳 공휴일과 날짜가 겹치지 않는 것
+    /// 함께 볼 공휴일의 나라·지역 — 사는 곳(같은 나라 다른 지역) 또는 회사 본사가 있는 다른 나라.
+    /// 일하는 곳과 같거나 고른 게 없으면 nil.
+    static func homePlace(for country: Country) -> (country: Country, region: HolidayRegion?)? {
+        if let other = Country(rawValue: homeCountryCode), other != country, other != .custom {
+            let region = HolidayRegion.find(homeRegionCode).flatMap { $0.country == other ? $0 : nil }
+            return (other, region)
+        }
+        guard let home = HolidayRegion.find(homeRegionCode), home.country == country,
+              home.code != activeRegion(for: country)?.code else { return nil }
+        return (country, home)
+    }
+
+    /// 달력 범례·날짜 상세에 쓸 함께 보는 곳 이름 (예: "카탈루냐", "🇩🇪 독일")
+    static func homePlaceName(for country: Country) -> String? {
+        guard let place = homePlace(for: country) else { return nil }
+        if place.country == country { return place.region?.displayName }
+        let name = place.region.map { "\(place.country.displayName) \($0.displayName)" } ?? place.country.displayName
+        return "\(place.country.flag) \(name)"
+    }
+
+    /// 함께 보는 곳에만 있는 공휴일 — 일하는 곳 공휴일과 날짜가 겹치지 않는 것
     func homeOnlyHolidays(for year: Int, country: Country) -> [Holiday] {
-        guard let home = HolidayRegion.find(Self.homeRegionCode), home.country == country,
-              home.code != Self.activeRegion(for: country)?.code else { return [] }
+        guard let place = Self.homePlace(for: country) else { return [] }
         let work = Set(getHolidays(for: year, country: country).map { dateKey($0.date) })
-        return getHolidays(for: year, country: country, region: home).filter { !work.contains(dateKey($0.date)) }
+        // 다른 나라에 지역을 안 골랐으면 전국 공휴일 — 일하는 곳 지역은 그 나라 것이 아니라 끼어들지 않는다
+        return getHolidays(for: year, country: place.country, region: place.region)
+            .filter { !work.contains(dateKey($0.date)) }
     }
 
     /// 그 나라에 적용할 지역 — 고른 지역이 다른 나라 것이면 없다

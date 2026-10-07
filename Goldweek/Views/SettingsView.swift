@@ -77,7 +77,9 @@ struct SettingsView: View {
     // 국가 & 언어
     @State private var selectedCountry: Country
     @State private var selectedRegionCode: String
-    /// 사는 곳 지역 — 일하는 곳과 공휴일이 다를 때
+    /// 함께 볼 공휴일의 나라 — "" 없음, 일하는 나라면 그 나라 다른 지역, 아니면 다른 나라 (본사·사는 곳)
+    @State private var selectedHomeCountryRaw: String
+    /// 함께 볼 공휴일의 지역 — 일하는 곳과 공휴일이 다를 때
     @State private var selectedHomeRegionCode: String
     @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
     /// 공휴일 앞뒤 휴가 제한 근무일 수 (0 = 없음) — HolidayService.leaveBlackoutDays 와 같은 키
@@ -92,6 +94,8 @@ struct SettingsView: View {
         _selectedCountry = State(initialValue: profile.country)
         _selectedRegionCode = State(initialValue: profile.holidayRegion?.code ?? "")
         _selectedHomeRegionCode = State(initialValue: profile.homeRegion?.code ?? "")
+        _selectedHomeCountryRaw = State(initialValue: profile.homeCountry?.rawValue
+                                        ?? (profile.homeRegion != nil ? profile.country.rawValue : ""))
         _selectedLanguage = State(initialValue: AppLanguage.current)
     }
 
@@ -159,6 +163,12 @@ struct SettingsView: View {
         guard total > 0 else { return "0%" }
         let used = includeBonusInStatus ? committedLeave + usage.usedBonus : committedLeave
         return "\(Int((used / total) * 100))%"
+    }
+
+    /// 함께 볼 공휴일 선택을 프로필에 맞춘다 — 나라·지역이 바뀌어 프로필이 값을 지웠을 때
+    private func syncHomeSelection() {
+        selectedHomeCountryRaw = profile.homeCountry?.rawValue ?? (profile.homeRegion != nil ? profile.country.rawValue : "")
+        selectedHomeRegionCode = profile.homeRegion?.code ?? ""
     }
 
     /// 고를 수 있는 주말 (토·일 / 금·토 / 목·금 / 일 / 금 / 토) — 저장값 그대로
@@ -295,7 +305,7 @@ struct SettingsView: View {
                     .onChange(of: selectedCountry) { _, newValue in
                         profile.country = newValue
                         selectedRegionCode = profile.holidayRegion?.code ?? ""
-                        selectedHomeRegionCode = profile.homeRegion?.code ?? ""
+                        syncHomeSelection()
                         recommendationEngine.invalidateCache()
                     }
 
@@ -309,14 +319,45 @@ struct SettingsView: View {
                         }
                         .onChange(of: selectedRegionCode) { _, newValue in
                             profile.holidayRegion = HolidayRegion.find(newValue)
-                            selectedHomeRegionCode = profile.homeRegion?.code ?? ""
+                            syncHomeSelection()
                             recommendationEngine.invalidateCache()
                         }
+                    }
 
-                        // 사는 곳이 일하는 곳과 다르면 (예: 스페인 자치주) 그 지역 공휴일도 달력에 보여 준다
-                        Picker(Strings.homeRegionSetting, selection: $selectedHomeRegionCode) {
-                            Text(Strings.homeRegionNone).tag("")
-                            ForEach(selectedCountry.holidayRegions.filter { $0.code != selectedRegionCode }) { region in
+                    // 함께 볼 공휴일 — 사는 곳이 다른 지역이거나(스페인 자치주), 회사 본사가 다른 나라일 때
+                    Picker(Strings.homeRegionSetting, selection: $selectedHomeCountryRaw) {
+                        Text(Strings.homeRegionNone).tag("")
+                        if !selectedCountry.holidayRegions.isEmpty {
+                            Text(Strings.homeSameCountryOtherRegion(selectedCountry)).tag(selectedCountry.rawValue)
+                        }
+                        ForEach(Country.allCases.filter { $0 != selectedCountry && $0 != .custom }) { country in
+                            Text("\(country.flag) \(country.displayName)").tag(country.rawValue)
+                        }
+                    }
+                    .pickerStyle(.navigationLink)
+                    .onChange(of: selectedHomeCountryRaw) { _, newValue in
+                        if newValue == selectedCountry.rawValue {
+                            // 같은 나라 다른 지역 — 지역이 있어야 의미가 있으니 일하는 곳이 아닌 첫 지역을 고른다
+                            profile.homeCountry = nil
+                            if profile.homeRegion == nil {
+                                profile.homeRegion = selectedCountry.holidayRegions.first { $0.code != selectedRegionCode }
+                            }
+                        } else {
+                            profile.homeCountry = Country(rawValue: newValue)
+                            profile.homeRegion = nil
+                        }
+                        syncHomeSelection()
+                        recommendationEngine.invalidateCache()
+                    }
+
+                    // 함께 보는 나라에 지역이 있으면 지역도 고른다 (다른 나라는 전국 공통도 된다)
+                    if let homeCountry = Country(rawValue: selectedHomeCountryRaw), !homeCountry.holidayRegions.isEmpty {
+                        let isSameCountry = homeCountry == selectedCountry
+                        Picker(Strings.holidayRegion, selection: $selectedHomeRegionCode) {
+                            if !isSameCountry {
+                                Text(Strings.holidayRegionNationwide).tag("")
+                            }
+                            ForEach(homeCountry.holidayRegions.filter { !isSameCountry || $0.code != selectedRegionCode }) { region in
                                 Text(region.displayName).tag(region.code)
                             }
                         }
@@ -324,14 +365,14 @@ struct SettingsView: View {
                             profile.homeRegion = HolidayRegion.find(newValue)
                             recommendationEngine.invalidateCache()
                         }
+                    }
 
-                        if !selectedHomeRegionCode.isEmpty {
-                            Toggle(Strings.homeHolidaysDaysOff, isOn: $homeHolidaysDaysOff)
-                                .onChange(of: homeHolidaysDaysOff) { _, newValue in
-                                    HolidayService.homeHolidaysAreDaysOff = newValue
-                                    recommendationEngine.invalidateCache()
-                                }
-                        }
+                    if !selectedHomeCountryRaw.isEmpty {
+                        Toggle(Strings.homeHolidaysDaysOff, isOn: $homeHolidaysDaysOff)
+                            .onChange(of: homeHolidaysDaysOff) { _, newValue in
+                                HolidayService.homeHolidaysAreDaysOff = newValue
+                                recommendationEngine.invalidateCache()
+                            }
                     }
 
                     // 주말 — 나라마다 다르고(중동은 금·토), 주말에 일하는 사람도 있다. 비워 두면 나라 기본.
@@ -367,9 +408,9 @@ struct SettingsView: View {
                     if !selectedCountry.holidayRegions.isEmpty {
                         Text("\(Strings.holidayRegionFooter(selectedCountry))\n\(Strings.homeRegionFooter)")
                     } else if selectedCountry == .custom {
-                        Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.weekendSettingFooter)")
+                        Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
                     } else {
-                        Text(Strings.weekendSettingFooter)
+                        Text("\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
                     }
                 }
 

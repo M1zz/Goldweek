@@ -222,13 +222,14 @@ struct ContentView: View {
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
-        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {
         let hidden = Set(hiddenHolidayDatesRaw.split(separator: ",").map(String.init).filter { !$0.isEmpty })
         // 백업 복원·타임머신처럼 프로필이 통째로 바뀐 경우에도 공휴일 계산이 같은 지역을 쓰도록 맞춘다
         HolidayService.selectedRegionCode = profile.holidayRegion?.code ?? ""
+        HolidayService.homeCountryCode = profile.homeCountry?.rawValue ?? ""
         HolidayService.homeRegionCode = profile.homeRegion?.code ?? ""
         DayOffCalendar.shared.update(country: profile.country, customHolidays: customHolidays,
                                      hiddenDates: hidden, breaks: schoolBreaks)

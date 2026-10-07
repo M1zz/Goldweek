@@ -88,7 +88,7 @@ final class DayOffCalendar {
         let weekend = HolidayService.weekendDays(for: country).sorted().map(String.init).joined()
         let homeDaysOff = HolidayService.homeHolidaysAreDaysOff
         let blackout = HolidayService.leaveBlackoutDays
-        let newFingerprint = "\(country.rawValue)|\(weekend)|blackout\(blackout)|\(HolidayService.selectedRegionCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
+        let newFingerprint = "\(country.rawValue)|\(weekend)|blackout\(blackout)|\(HolidayService.selectedRegionCode)|\(HolidayService.homeCountryCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
             + children.map { "\(key($0.start))~\(key($0.end))" }.joined(separator: ",")
         guard newFingerprint != fingerprint else { return }
 
@@ -193,7 +193,7 @@ final class DayOffCalendar {
         return blocked
     }
 
-    /// 그 날이 사는 곳에만 있는 공휴일이면 이름 — 달력 표시·날짜 상세용
+    /// 그 날이 함께 보는 곳(사는 곳·본사 나라)에만 있는 공휴일이면 이름 — 달력 표시·날짜 상세용
     func homeHolidayName(on date: Date) -> String? {
         let year = calendar.component(.year, from: date)
         lock.lock()

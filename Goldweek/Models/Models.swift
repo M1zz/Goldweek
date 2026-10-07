@@ -433,6 +433,8 @@ final class UserProfile {
     var holidayRegionRaw: String = ""
     /// 사는 곳 지역 — 일하는 곳(holidayRegionRaw)과 공휴일이 다를 때. 비면 없음.
     var homeRegionRaw: String = ""
+    /// 함께 볼 공휴일의 나라 — 회사 본사가 다른 나라거나 다른 나라에 살 때. 비면 일하는 나라와 같다.
+    var homeCountryRaw: String = ""
 
     // 선호도 설정
     var preferredDurationRaw: String
@@ -482,8 +484,12 @@ final class UserProfile {
     var country: Country {
         get { Country(rawValue: countryRaw) ?? .korea }
         set {
-            // 나라가 바뀌면 이전 나라의 지역은 의미가 없다
-            if newValue.rawValue != countryRaw { holidayRegion = nil; homeRegion = nil }
+            // 나라가 바뀌면 이전 나라의 지역은 의미가 없다.
+            // 함께 볼 공휴일은 다른 나라 것이면 그대로 두고, 같은 나라 지역이거나 새 나라와 같아지면 지운다.
+            if newValue.rawValue != countryRaw {
+                holidayRegion = nil
+                if homeCountry == nil || homeCountry == newValue { homeCountry = nil; homeRegion = nil }
+            }
             countryRaw = newValue.rawValue
         }
     }
@@ -503,10 +509,22 @@ final class UserProfile {
         }
     }
 
-    /// 사는 곳 지역 — 같은 나라, 일하는 곳과 다른 지역일 때만 의미가 있다.
+    /// 함께 볼 공휴일의 나라 — 일하는 나라와 다를 때만 값이 있다 (같은 나라 다른 지역이면 nil + homeRegion)
+    var homeCountry: Country? {
+        get {
+            guard let c = Country(rawValue: homeCountryRaw), c != country, c != .custom else { return nil }
+            return c
+        }
+        set {
+            homeCountryRaw = newValue?.rawValue ?? ""
+            HolidayService.homeCountryCode = homeCountryRaw
+        }
+    }
+
+    /// 함께 볼 공휴일의 지역 — 다른 나라면 그 나라의 지역(없으면 전국), 같은 나라면 일하는 곳과 다른 지역일 때만 의미가 있다.
     var homeRegion: HolidayRegion? {
         get {
-            guard let region = HolidayRegion.find(homeRegionRaw), region.country == country,
+            guard let region = HolidayRegion.find(homeRegionRaw), region.country == (homeCountry ?? country),
                   region.code != holidayRegionRaw else { return nil }
             return region
         }
