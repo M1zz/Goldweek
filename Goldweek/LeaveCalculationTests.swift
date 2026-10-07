@@ -1116,6 +1116,13 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertTrue(keys(.newZealand, 2026).contains("2026-07-10"))
         // 이집트는 금·토 주말
         XCTAssertEqual(HolidayService.weekendDays(for: .egypt), [6, 7])
+        // 모로코 2026: 고정 국경일 + 통일의 날(2026년부터) + 이드 알피트르 3/20~21 · 이드 알아드하 5/27~28
+        let morocco = keys(.morocco, 2026)
+        XCTAssertTrue(morocco.isSuperset(of: ["2026-01-11", "2026-01-14", "2026-07-30", "2026-08-14", "2026-08-20", "2026-08-21",
+                                              "2026-10-31", "2026-11-06", "2026-11-18", "2026-03-20", "2026-03-21", "2026-05-27", "2026-05-28"]))
+        XCTAssertFalse(keys(.morocco, 2025).contains("2025-10-31"))
+        XCTAssertEqual(HolidayService.weekendDays(for: .morocco), [1, 7])
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "fr_MA")).country, .morocco)
     }
 
     func testRussiaTransfers() {

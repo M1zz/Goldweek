@@ -1509,6 +1509,48 @@ extension HolidayService {
         return gulfList(items)
     }
 
+    /// 모로코 — 주말 토·일. 고정 국경일 11개 + 이슬람 명절(이드 알피트르·이드 알아드하·예언자 탄신일 2일씩, 이슬람 새해).
+    /// 이슬람 명절은 모로코가 직접 달을 보고 정해 움 알쿠라보다 하루 늦는 해가 있다 — 공휴일 관리에서 고칠 수 있다.
+    /// 통일의 날(10월 31일)은 2025년 11월 4일 왕령으로 생겨 2026년부터 쉰다.
+    func getMoroccoHolidays(for year: Int) -> [Holiday] {
+        var items: [([Date], N)] = [
+            ([day(year, 1, 1)].compactMap { $0 }, Common.newYear),
+            ([day(year, 1, 11)].compactMap { $0 }, N(ko: "독립 선언 기념일", en: "Independence Manifesto Day", ja: "独立宣言記念日", zh: "独立宣言纪念日",
+                                                      de: "Jahrestag des Unabhängigkeitsmanifests", fr: "Manifeste de l’Indépendance",
+                                                      es: "Aniversario del Manifiesto de la Independencia", it: "Anniversario del Manifesto dell’Indipendenza",
+                                                      pt: "Aniversário do Manifesto da Independência", zht: "獨立宣言紀念日", nl: "Dag van het Onafhankelijkheidsmanifest")),
+            ([day(year, 1, 14)].compactMap { $0 }, N(ko: "아마지그 새해 (옌나예르)", en: "Amazigh New Year (Yennayer)", ja: "アマジグ新年（イェナイェル）", zh: "阿马齐格新年",
+                                                      de: "Amazigh-Neujahr (Yennayer)", fr: "Nouvel An amazigh (Yennayer)", es: "Año Nuevo amazigh (Yennayer)",
+                                                      it: "Capodanno amazigh (Yennayer)", pt: "Ano Novo amazigh (Yennayer)", zht: "阿馬齊格新年", nl: "Amazigh Nieuwjaar (Yennayer)")),
+            ([day(year, 5, 1)].compactMap { $0 }, Common.labour),
+            ([day(year, 7, 30)].compactMap { $0 }, N(ko: "왕좌의 날", en: "Throne Day", ja: "即位記念日", zh: "登基节", de: "Thronfest", fr: "Fête du Trône",
+                                                     es: "Fiesta del Trono", it: "Festa del Trono", pt: "Festa do Trono", zht: "登基節", nl: "Troonfeest")),
+            ([day(year, 8, 14)].compactMap { $0 }, N(ko: "와디 에드다합 회복 기념일", en: "Oued Ed-Dahab Day", ja: "ワディ・エッダハブ回復記念日", zh: "瓦迪达哈卜回归纪念日",
+                                                     de: "Jahrestag der Rückgewinnung von Oued Ed-Dahab", fr: "Allégeance de Oued Eddahab",
+                                                     es: "Aniversario de la recuperación de Oued Ed-Dahab", it: "Anniversario del recupero di Oued Ed-Dahab",
+                                                     pt: "Aniversário da recuperação de Oued Ed-Dahab", zht: "瓦迪達哈卜回歸紀念日", nl: "Dag van Oued Ed-Dahab")),
+            ([day(year, 8, 20)].compactMap { $0 }, N(ko: "왕과 국민의 혁명 기념일", en: "Revolution of the King and the People", ja: "国王と人民の革命記念日", zh: "国王与人民革命纪念日",
+                                                     de: "Revolution des Königs und des Volkes", fr: "Révolution du Roi et du Peuple",
+                                                     es: "Revolución del Rey y del Pueblo", it: "Rivoluzione del Re e del Popolo",
+                                                     pt: "Revolução do Rei e do Povo", zht: "國王與人民革命紀念日", nl: "Revolutie van de Koning en het Volk")),
+            ([day(year, 8, 21)].compactMap { $0 }, N(ko: "청년의 날", en: "Youth Day", ja: "青年の日", zh: "青年节", de: "Tag der Jugend", fr: "Fête de la Jeunesse",
+                                                     es: "Día de la Juventud", it: "Festa della Gioventù", pt: "Dia da Juventude", zht: "青年節", nl: "Dag van de Jeugd")),
+            ([day(year, 11, 6)].compactMap { $0 }, N(ko: "녹색 행진 기념일", en: "Green March Day", ja: "緑の行進記念日", zh: "绿色进军纪念日", de: "Jahrestag des Grünen Marsches",
+                                                     fr: "Anniversaire de la Marche verte", es: "Aniversario de la Marcha Verde", it: "Anniversario della Marcia Verde",
+                                                     pt: "Aniversário da Marcha Verde", zht: "綠色進軍紀念日", nl: "Dag van de Groene Mars")),
+            ([day(year, 11, 18)].compactMap { $0 }, More.independence),
+        ]
+        if year >= 2026 {
+            items.append(([day(year, 10, 31)].compactMap { $0 }, N(ko: "통일의 날", en: "Unity Day", ja: "統一の日", zh: "统一日", de: "Tag der Einheit", fr: "Fête de l’Unité",
+                                                                    es: "Día de la Unidad", it: "Giorno dell’Unità", pt: "Dia da Unidade", zht: "統一日", nl: "Dag van de Eenheid")))
+        }
+        items.append((hijri(year, month: 10, day: 1, length: 2), Gulf.eidFitr))
+        items.append((hijri(year, month: 12, day: 10, length: 2), Gulf.eidAdha))
+        items.append((hijri(year, month: 1, day: 1), Gulf.hijriNewYear))
+        items.append((hijri(year, month: 3, day: 12, length: 2), Gulf.prophetBirthday))
+        return gulfList(items)
+    }
+
     // MARK: 중남미
 
     /// 멕시코 연방노동법 의무 휴일. 성목·성금요일은 의무가 아니라 넣지 않았다(대개 쉰다 — 공휴일 관리에서 추가).

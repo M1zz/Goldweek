@@ -44,6 +44,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case turkey = "turkey"
     case egypt = "egypt"
     case southAfrica = "southafrica"
+    case morocco = "morocco"         // 이슬람 명절은 모로코가 직접 달을 보고 정한다
     case mexico = "mexico"
     case argentina = "argentina"
     case chile = "chile"
@@ -97,6 +98,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .turkey: return "TR"
         case .egypt: return "EG"
         case .southAfrica: return "ZA"
+        case .morocco: return "MA"
         case .mexico: return "MX"
         case .argentina: return "AR"
         case .chile: return "CL"
@@ -152,6 +154,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .turkey: return "tr_TR"
         case .egypt: return "ar_EG"
         case .southAfrica: return "en_ZA"
+        case .morocco: return "fr_MA"
         case .mexico: return "es_MX"
         case .argentina: return "es_AR"
         case .chile: return "es_CL"
@@ -183,7 +186,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     /// 이슬람력(달 관측) 공휴일이 있는 나라 — 날짜가 공식 발표에서 하루쯤 바뀔 수 있다
     var hasMoonSightingHolidays: Bool {
         switch self {
-        case .uae, .saudiArabia, .qatar, .turkey, .egypt: return true
+        case .uae, .saudiArabia, .qatar, .turkey, .egypt, .morocco: return true
         default: return false
         }
     }
@@ -271,7 +274,7 @@ extension Country {
         case .uae, .saudiArabia, .qatar, .turkey: return .middleEast
         case .germany, .france, .uk, .spain, .italy, .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal,
              .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .russia: return .europe
-        case .egypt, .southAfrica: return .africa
+        case .egypt, .southAfrica, .morocco: return .africa
         case .usa, .canada, .mexico: return .northAmerica
         case .brazil, .peru, .argentina, .chile, .colombia: return .southAmerica
         case .australia, .newZealand: return .oceania

@@ -189,6 +189,8 @@ class HolidayService {
                 result = getTurkeyHolidays(for: year)
             case .egypt:
                 result = getEgyptHolidays(for: year)
+            case .morocco:
+                result = getMoroccoHolidays(for: year)
             case .southAfrica:
                 result = getSouthAfricaHolidays(for: year)
             case .mexico:

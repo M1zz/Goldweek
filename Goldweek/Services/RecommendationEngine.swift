@@ -488,7 +488,7 @@ class RecommendationEngine {
             opportunities.append(contentsOf: findUSAOpportunities(holidays: holidays, year: year))
 
         case .germany, .france, .uk, .canada, .australia, .spain, .italy, .brazil, .taiwan, .hongKong, .uae, .saudiArabia, .qatar, .peru,
-             .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal, .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .turkey, .egypt, .southAfrica, .mexico, .argentina, .chile, .colombia, .newZealand, .russia, .indonesia, .custom:
+             .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal, .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .turkey, .egypt, .southAfrica, .morocco, .mexico, .argentina, .chile, .colombia, .newZealand, .russia, .indonesia, .custom:
             // 알고리즘 기반 OptimalLeavePlannerCard가 자동 처리 (Brückentag / pont / puente / ponte)
             // 여기서는 일반적인 공휴일 연장만 제공
             opportunities.append(contentsOf: findMajorHolidayExtensions(holidays: holidays, year: year, country: country))

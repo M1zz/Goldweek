@@ -1366,6 +1366,7 @@ struct MyRealTripPromoCard: View {
         case .turkey: return "IST"
         case .egypt: return "CAI"
         case .southAfrica: return "JNB"
+        case .morocco: return "CMN"
         case .mexico: return "MEX"
         case .argentina: return "EZE"
         case .chile: return "SCL"
