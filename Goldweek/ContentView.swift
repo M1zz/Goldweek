@@ -31,6 +31,8 @@ struct ContentView: View {
     /// (그 뒤로는 설정 > 도움말에서 사용자가 원할 때만 연다)
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var showingTutorial = false
+    /// 만족 순간에 띄우는 만족도 프롬프트 (추천 등록·플랜 등록·휴가 복귀)
+    @State private var reviewMoments = ReviewMoments.shared
 
     var currentProfile: UserProfile? {
         profiles.first
@@ -53,10 +55,10 @@ struct ContentView: View {
                         try? await Task.sleep(nanoseconds: 700_000_000)
                         showingTutorial = true
                     }
-                    // 만족도 프롬프트 — 조건이 맞으면 "즐겁게 쓰고 계신가요?"를 묻고,
-                    // 좋다면 App Store 리뷰로, 아쉽다면 피드백 화면으로 보낸다.
-                    // 불만인 사람을 별점 대신 피드백으로 흡수하는 게 이 프롬프트의 목적이다.
-                    .leeoSatisfactionCheck(GoldweekSpec.self)
+                    // 만족도 프롬프트 — "즐겁게 쓰고 계신가요?"를 묻고, 좋다면 App Store 리뷰로,
+                    // 아쉽다면 피드백 화면으로 보낸다(불만은 별점 대신 피드백으로 흡수).
+                    // 앱을 열자마자가 아니라 만족한 순간(추천·플랜 등록, 휴가 복귀)에 띄운다 — ReviewMoments.
+                    .leeoReviewGate(GoldweekSpec.self, isPresented: $reviewMoments.isPresented)
                     .onAppear {
                         syncDayOffCalendar(profile: profile)
                         LeaveMigrations.splitRecommendedLeavesIfNeeded(records: leaveRecords, context: modelContext)
@@ -65,6 +67,7 @@ struct ContentView: View {
                         ReviewManager.shared.recordLaunch()
                         // 사람이 앱을 실제로 연 순간 — 실행 횟수·활동일·설치 스냅샷이 여기서 나간다.
                         UsageReportingService.reportForegroundOpen(context: modelContext)
+                        reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
                         if !hasCompletedOnboarding {
                             hasCompletedOnboarding = true
                         }
@@ -76,6 +79,7 @@ struct ContentView: View {
                             LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                             updateWidget()
                             UsageReportingService.reportForegroundOpen(context: modelContext)
+                            reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
                             refreshRestRadar(profile: profile)
                             syncSharedSchedules(profile: profile)
                         } else if newPhase == .background {

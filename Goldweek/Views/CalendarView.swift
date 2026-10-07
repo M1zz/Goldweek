@@ -235,6 +235,7 @@ struct CalendarView: View {
             UsageReportingService.record(event: "recommendation_added")
             AppTips.recommendation.invalidate(reason: .actionPerformed)
             HapticFeedback.success()
+            ReviewMoments.shared.trigger(.recommendationAdded)
         } catch {
             addedRecommendationIDs.remove(recommendation.id)
             records.forEach { modelContext.delete($0) }

@@ -192,6 +192,7 @@ struct RecommendationsView: View {
             try modelContext.save()
             UsageReportingService.record(event: "recommendation_added")
             HapticFeedback.success()
+            ReviewMoments.shared.trigger(.recommendationAdded)
         } catch {
             addedRecommendations.remove(recommendation.id)
             records.forEach { modelContext.delete($0) }
@@ -2728,6 +2729,7 @@ struct OptimalLeavePlannerCard: View {
             try? modelContext.save()
             HapticFeedback.success()
             didBatchAdd = true
+            ReviewMoments.shared.trigger(.optimalPlanAdded, delay: 1.5)
         }
     }
 }
