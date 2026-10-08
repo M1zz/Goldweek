@@ -28,7 +28,7 @@ final class PhotoImportService {
         let parsed = LeaveTableParser.parseRows(rows)
         logInfo("사진 OCR: 조각 \(fragments.count)개 → 행 \(rows.count)개 → 휴가 \(parsed.count)건", category: .data)
 
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let activeRecords = existingRecords.filter { $0.status != .cancelled }
 
         var candidates: [DetectedLeaveCandidate] = []

@@ -59,7 +59,7 @@ struct SharedSchedule: Identifiable {
 
     /// 오늘 이후 끝나는 휴가 (진행 중 포함)
     var upcomingLeaves: [SharedLeaveItem] {
-        let today = Calendar.current.startOfDay(for: Date())
+        let today = Calendar.app.startOfDay(for: Date())
         return leaves.filter { $0.endDate >= today && $0.status != .cancelled }
     }
 }

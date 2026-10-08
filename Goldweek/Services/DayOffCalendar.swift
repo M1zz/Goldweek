@@ -43,7 +43,7 @@ final class DayOffCalendar {
     @ObservationIgnored private var blackoutCache: [Int: Set<String>] = [:]
     @ObservationIgnored private let lock = NSLock()
     @ObservationIgnored private let service = HolidayService()
-    @ObservationIgnored private let calendar = Calendar.current
+    @ObservationIgnored private let calendar = Calendar.app
     @ObservationIgnored private let keyFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd"

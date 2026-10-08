@@ -96,6 +96,8 @@ private enum Common {
         case .turkish: return "ikame gün"
         case .russian: return "перенесённый выходной"
         case .indonesian: return "hari pengganti"
+        case .thai: return "วันหยุดชดเชย"
+        case .vietnamese: return "ngày nghỉ bù"
         case .dutch: return "vervangende dag"
         case .japanese: return "振替休日"
         case .chinese: return "补休"

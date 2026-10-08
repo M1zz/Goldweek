@@ -9,7 +9,7 @@ import Foundation
 
 class HolidayService {
 
-    let calendar = Calendar.current
+    let calendar = Calendar.app
 
     /// 음력 공휴일 테이블(한국 설날/추석, 중국 춘절 등)이 정확하게 수록된 마지막 연도.
     /// 이후 연도는 근사치 폴백이라 실제 날짜와 다를 수 있다 — 테이블 확장 시 함께 갱신할 것.
@@ -453,6 +453,8 @@ class HolidayService {
         case .turkish: subLabel = "İkame Tatil"
         case .russian: subLabel = "Перенесённый выходной"
         case .indonesian: subLabel = "Libur Pengganti"
+        case .thai: subLabel = "วันหยุดชดเชย"
+        case .vietnamese: subLabel = "Nghỉ bù"
         case .dutch: subLabel = "Vervangende feestdag"
         case .japanese: subLabel = "振替休日"
         case .chinese: subLabel = "补休日"
@@ -604,6 +606,8 @@ class HolidayService {
             case .turkish: return "Telafi Tatili"
             case .russian: return "Перенесённый выходной"
             case .indonesian: return "Libur Pengganti"
+            case .thai: return "วันหยุดชดเชย"
+            case .vietnamese: return "Nghỉ bù"
             case .dutch: return "Vervangende feestdag"
             case .japanese: return "振替休日"
             case .chinese: return "补休日"
@@ -643,6 +647,8 @@ class HolidayService {
             case .turkish: return "Vatandaş Tatili"
             case .russian: return "Народный выходной"
             case .indonesian: return "Hari Libur Warga"
+            case .thai: return "วันหยุดของประชาชน"
+            case .vietnamese: return "Ngày nghỉ của công dân"
             case .dutch: return "Burgerfeestdag"
             case .japanese: return "国民の休日"
             case .chinese: return "国民休息日"
@@ -998,6 +1004,8 @@ class HolidayService {
         case .turkish: return "Uygulanan Gün"
         case .russian: return "Перенесённый"
         case .indonesian: return "Pengganti"
+        case .thai: return "ชดเชย"
+        case .vietnamese: return "Nghỉ bù"
         case .dutch: return "Vrije dag"
         case .japanese: return "振替"
         case .chinese: return "补休"

@@ -15,7 +15,7 @@ struct HolidayManagementView: View {
     @Query(sort: \SchoolBreak.startDate) private var schoolBreaks: [SchoolBreak]
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
 
-    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    @State private var selectedYear: Int = Calendar.app.component(.year, from: Date())
     @State private var showingAddSheet = false
     @State private var holidayToDelete: CustomHoliday?
     @State private var showingDeleteAlert = false
@@ -26,7 +26,7 @@ struct HolidayManagementView: View {
     @State private var showingErrorAlert = false
 
     private let holidayService = HolidayService()
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     // MARK: - Hidden dates helpers
 
@@ -523,7 +523,7 @@ private struct SchoolBreakRow: View {
     private var tint: Color { item.kind == .mine ? .indigo : .teal }
 
     private var days: Int {
-        (Calendar.current.dateComponents([.day], from: item.startDate, to: item.endDate).day ?? 0) + 1
+        (Calendar.app.dateComponents([.day], from: item.startDate, to: item.endDate).day ?? 0) + 1
     }
 
     var body: some View {
@@ -580,7 +580,7 @@ struct SchoolBreakEditSheet: View {
     init(defaultYear: Int, existing: SchoolBreak?, onSave: @escaping (String, Date, Date, SchoolBreakKind) -> Void) {
         self.existing = existing
         self.onSave = onSave
-        let cal = Calendar.current
+        let cal = Calendar.app
         let thisYear = cal.component(.year, from: Date())
         // 기본값: 올해면 오늘부터 4주, 다른 해면 그해 7월 말부터 4주(여름방학 즈음)
         let start = existing?.startDate
@@ -668,7 +668,7 @@ struct AddCustomHolidaySheet: View {
         _repeatsYearly = State(initialValue: defaultRepeats)
         var comps = DateComponents()
         comps.year = defaultYear; comps.month = 1; comps.day = 1
-        _date = State(initialValue: Calendar.current.date(from: comps) ?? Date())
+        _date = State(initialValue: Calendar.app.date(from: comps) ?? Date())
     }
 
     var body: some View {

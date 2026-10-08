@@ -650,7 +650,7 @@ final class LeaveRecord {
     }
 
     var daysCount: Int {
-        let components = Calendar.current.dateComponents([.day], from: startDate, to: endDate)
+        let components = Calendar.app.dateComponents([.day], from: startDate, to: endDate)
         return (components.day ?? 0) + 1
     }
 
@@ -962,7 +962,7 @@ enum LeaveRecordMaintenance {
     @discardableResult
     static func backfillLengths(records: [LeaveRecord]) -> Bool {
         var changed = false
-        let cal = Calendar.current
+        let cal = Calendar.app
         for r in records {
             // 이미 반차/반반차로 지정된 기록·다일 기간은 건드리지 않는다
             guard r.length == .full,
@@ -1148,8 +1148,8 @@ final class SchoolBreak {
     init(name: String, startDate: Date, endDate: Date, kind: SchoolBreakKind) {
         self.id = UUID()
         self.name = name
-        self.startDate = Calendar.current.startOfDay(for: startDate)
-        self.endDate = Calendar.current.startOfDay(for: endDate)
+        self.startDate = Calendar.app.startOfDay(for: startDate)
+        self.endDate = Calendar.app.startOfDay(for: endDate)
         self.kindRaw = kind.rawValue
         self.createdAt = Date()
     }
@@ -1160,8 +1160,8 @@ final class SchoolBreak {
     }
 
     func contains(_ date: Date) -> Bool {
-        let d = Calendar.current.startOfDay(for: date)
-        return d >= Calendar.current.startOfDay(for: startDate) && d <= Calendar.current.startOfDay(for: endDate)
+        let d = Calendar.app.startOfDay(for: date)
+        return d >= Calendar.app.startOfDay(for: startDate) && d <= Calendar.app.startOfDay(for: endDate)
     }
 }
 

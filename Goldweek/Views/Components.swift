@@ -225,7 +225,7 @@ struct DateRangeLabel: View {
         HStack(spacing: 4) {
             Text(formatter.string(from: startDate))
             
-            if !Calendar.current.isDate(startDate, inSameDayAs: endDate) {
+            if !Calendar.app.isDate(startDate, inSameDayAs: endDate) {
                 Text("-")
                 Text(formatter.string(from: endDate))
             }
@@ -240,7 +240,7 @@ struct DDayLabel: View {
     let targetDate: Date
     
     private var daysRemaining: Int {
-        Calendar.current.dateComponents([.day], from: Date(), to: targetDate).day ?? 0
+        Calendar.app.dateComponents([.day], from: Date(), to: targetDate).day ?? 0
     }
     
     var body: some View {
@@ -280,10 +280,10 @@ struct DDayLabel: View {
         
         DateRangeLabel(
             startDate: Date(),
-            endDate: Calendar.current.date(byAdding: .day, value: 3, to: Date())!
+            endDate: Calendar.app.date(byAdding: .day, value: 3, to: Date())!
         )
         
-        DDayLabel(targetDate: Calendar.current.date(byAdding: .day, value: 5, to: Date())!)
+        DDayLabel(targetDate: Calendar.app.date(byAdding: .day, value: 5, to: Date())!)
     }
     .padding()
 }

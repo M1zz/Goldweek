@@ -279,7 +279,7 @@ struct ContentView: View {
 
     /// 오늘 이후 가장 가까운 "연차 1~N일로 만드는 연휴" 창. LeavePlanner 재사용.
     private func bestRestWindow(profile: UserProfile) -> RestWindowHint? {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let today = cal.startOfDay(for: Date())
         let year = cal.component(.year, from: today)
 

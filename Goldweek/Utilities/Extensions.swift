@@ -8,6 +8,27 @@
 import Foundation
 import SwiftUI
 
+// MARK: - Calendar
+
+extension Calendar {
+    /// 앱이 날짜 계산에 쓰는 달력 — 언제나 양력(그레고리력).
+    ///
+    /// ⚠️ `Calendar.current` 를 그냥 쓰면 안 된다 — 태국 지역 폰은 기본이 불기(佛紀) 달력이라
+    ///    올해가 2569년이 되고, 일본식 달력을 고른 폰은 연호로 센다. 공휴일·연차 계산이
+    ///    전부 `DateComponents(year: 2026 …)` 같은 양력 숫자를 쓰므로 어긋난다.
+    ///    양력 폰이면 그대로 `Calendar.current`(주 시작 요일·시간대 포함)를 돌려준다.
+    static var app: Calendar {
+        let current = Calendar.current
+        if current.identifier == .gregorian { return current }
+        var cal = Calendar(identifier: .gregorian)
+        cal.locale = current.locale
+        cal.timeZone = current.timeZone
+        cal.firstWeekday = current.firstWeekday
+        cal.minimumDaysInFirstWeek = current.minimumDaysInFirstWeek
+        return cal
+    }
+}
+
 // MARK: - Date Extensions
 
 extension Date {
@@ -35,7 +56,7 @@ extension Date {
     
     /// 해당 날짜의 시작 (00:00:00)
     var startOfDay: Date {
-        Calendar.current.startOfDay(for: self)
+        Calendar.app.startOfDay(for: self)
     }
     
     /// 해당 날짜의 끝 (23:59:59)
@@ -43,13 +64,13 @@ extension Date {
         var components = DateComponents()
         components.day = 1
         components.second = -1
-        return Calendar.current.date(byAdding: components, to: startOfDay) ?? self
+        return Calendar.app.date(byAdding: components, to: startOfDay) ?? self
     }
     
     /// 해당 월의 첫 날
     var startOfMonth: Date {
-        let components = Calendar.current.dateComponents([.year, .month], from: self)
-        return Calendar.current.date(from: components) ?? self
+        let components = Calendar.app.dateComponents([.year, .month], from: self)
+        return Calendar.app.date(from: components) ?? self
     }
     
     /// 해당 월의 마지막 날
@@ -57,7 +78,7 @@ extension Date {
         var components = DateComponents()
         components.month = 1
         components.day = -1
-        return Calendar.current.date(byAdding: components, to: startOfMonth) ?? self
+        return Calendar.app.date(byAdding: components, to: startOfMonth) ?? self
     }
     
     /// 주말 여부 — 지금 나라의 주말 요일 기준 (중동은 금·토)
@@ -67,7 +88,7 @@ extension Date {
     
     /// 해당 계절
     var season: Season {
-        let month = Calendar.current.component(.month, from: self)
+        let month = Calendar.app.component(.month, from: self)
         switch month {
         case 3, 4, 5: return .spring
         case 6, 7, 8: return .summer

@@ -51,7 +51,7 @@ struct CalendarView: View {
 
     private let holidayService = HolidayService()
     private let recommendationEngine = RecommendationEngine()
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var hiddenDates: Set<String> {
         Set(hiddenHolidayDatesRaw.split(separator: ",").map(String.init).filter { !$0.isEmpty })
@@ -74,7 +74,7 @@ struct CalendarView: View {
     }
     /// 보고 있는 달이 내년(다음 연차 해)이면 내년 연차로 추천한다 — 해가 바뀌기 전에도 미리 계획할 수 있게
     private var availableLeave: Double {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let viewing = LeaveUsageCalculator.fiscalYear(for: currentMonth, startMonth: profile.yearStartMonth, calendar: cal)
         let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
         guard viewing > now else { return usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: true) }
@@ -440,7 +440,7 @@ struct HolidayDataNoticeBanner: View {
 struct MonthNavigator: View {
     @Binding var currentMonth: Date
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var monthYearString: String {
         let year = calendar.component(.year, from: currentMonth)
@@ -499,7 +499,7 @@ struct CalendarGrid: View {
     var recommendedDates: Set<Date> = []
     var warningDates: Set<Date> = []
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
 
@@ -711,7 +711,7 @@ struct DayCell: View {
     var isBurnoutWarning: Bool = false
     let isToday: Bool
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     // iPad·Mac 처럼 넓으면 칸을 키운다 — 폰 크기 그대로면 넓은 화면에서 달력이 작고 허전하다
     @Environment(\.horizontalSizeClass) private var sizeClass
@@ -991,7 +991,7 @@ struct SelectedDateInfo: View {
     var onEditLeave: ((LeaveRecord) -> Void)? = nil
     var onDeleteLeave: ((LeaveRecord) -> Void)? = nil
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var holidayOnDate: Holiday? {
         holidays.first { calendar.isDate($0.date, inSameDayAs: date) }
@@ -1328,7 +1328,7 @@ struct LeaveListRow: View {
     let leave: LeaveRecord
     let isUpcoming: Bool
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var dateText: String {
         let formatter = DateFormatter()

@@ -25,7 +25,7 @@ struct LeaveHistoryView: View {
     @State private var recordToEdit: LeaveRecord?
     @State private var showingDeleteError = false
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
     private let initYearStartMonth: Int
 
     private var profile: UserProfile? { profiles.first }
@@ -34,7 +34,7 @@ struct LeaveHistoryView: View {
 
     init(yearStartMonth: Int = 1) {
         self.initYearStartMonth = yearStartMonth
-        let cal = Calendar.current
+        let cal = Calendar.app
         let now = Date()
         let month = cal.component(.month, from: now)
         let year = cal.component(.year, from: now)
@@ -614,7 +614,7 @@ struct EditLeaveSheet: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     init(record: LeaveRecord, profile: UserProfile?, onSave: @escaping () -> Void) {
         self.record = record

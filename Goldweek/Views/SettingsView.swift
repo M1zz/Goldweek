@@ -43,7 +43,7 @@ struct SettingsView: View {
     @State private var bonusType: BonusLeaveType = .compensatory
     @State private var bonusReason = ""
     @State private var hasExpiration = false
-    @State private var expirationDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())!
+    @State private var expirationDate = Calendar.app.date(byAdding: .month, value: 3, to: Date())!
 
     // 백업 관련 상태
     @State private var isBackingUp = false
@@ -126,7 +126,7 @@ struct SettingsView: View {
 
     /// 현재 회계연도 시작일 (yearStartMonth 기준) — LeaveStatusCard와 동일 계산
     var annualYearStart: Date {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let now = Date()
         let year = cal.component(.year, from: now)
         let month = cal.component(.month, from: now)
@@ -136,7 +136,7 @@ struct SettingsView: View {
     }
 
     var annualYearEnd: Date {
-        Calendar.current.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
+        Calendar.app.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
     }
 
     /// 이 화면이 쓰는 모든 숫자의 출처 — 홈 카드와 같은 계산기, 같은 입력.
@@ -1452,7 +1452,7 @@ struct CalendarImportSheet: View {
     @State private var showingResultAlert = false
     @State private var importSucceeded = false
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var body: some View {
         NavigationStack {

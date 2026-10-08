@@ -26,7 +26,7 @@ struct RecommendationsView: View {
 
     init(profile: UserProfile) {
         self.profile = profile
-        _selectedYear = State(initialValue: Calendar.current.component(.year, from: Date()))
+        _selectedYear = State(initialValue: Calendar.app.component(.year, from: Date()))
     }
 
     /// 사용 확정 연차 — 홈·설정과 **같은 계산기**를 쓴다.
@@ -174,7 +174,7 @@ struct RecommendationsView: View {
 
     /// 주말·공휴일을 뺀 **연차 내는 날만** 휴가로 잡는다 (캘린더 탭과 같은 규칙).
     private func addLeave(from recommendation: LeaveRecommendation) {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let years = Set([recommendation.startDate, recommendation.endDate].map { calendar.component(.year, from: $0) })
         let rangeHolidays = years.flatMap { HolidayService().getHolidays(for: $0, country: profile.country) }
         let records = recommendation.leaveSegments(holidays: rangeHolidays).map {
@@ -211,7 +211,7 @@ struct YearPicker: View {
     
     @State private var showingPaywall = false
     private let proManager = ProManager.shared
-    private let currentYear = Calendar.current.component(.year, from: Date())
+    private let currentYear = Calendar.app.component(.year, from: Date())
 
     var body: some View {
         HStack {
@@ -451,7 +451,7 @@ struct HolidayInfoCard: View {
     let formatter: DateFormatter
     let country: Country
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
     private let holidayService = HolidayService()
 
     /// 카드의 시작일~종료일 사이의 모든 날짜
@@ -680,7 +680,7 @@ struct RecommendationDatePreview: View {
     /// 공휴일 판정 국가 — 빠뜨리면 한국 공휴일로 칠해진다(미국 추수감사절이 "연차"로 보이던 원인)
     let country: Country
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
     private let holidayService = HolidayService()
 
     var extendedDateRange: [Date] {
@@ -802,7 +802,7 @@ struct DatePreviewCell: View {
     let date: Date
     let dayType: DayType
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var dayNumber: Int {
         calendar.component(.day, from: date)
@@ -871,7 +871,7 @@ struct RecommendationCalendarPreview: View {
     let recommendations: [LeaveRecommendation]
     let selectedYear: Int
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -925,7 +925,7 @@ struct MonthPreviewCell: View {
     let recommendations: [LeaveRecommendation]
     let year: Int
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var isPastMonth: Bool {
         let now = Date()
@@ -1134,7 +1134,7 @@ enum TravelSuggestionEngine {
         daysSinceLastLeave: Int? = nil,  // 마지막 휴가 후 경과 일수 (번아웃 컨텍스트)
         limit: Int = 6
     ) -> [(TravelSuggestion, String)] {
-        let month = Calendar.current.component(.month, from: recommendation.startDate)
+        let month = Calendar.app.component(.month, from: recommendation.startDate)
         let season = TravelSeason.from(month: month)
         let days = recommendation.totalDaysOff
         let isOffSeason: (TravelSuggestion) -> Bool = { $0.offSeasonMonths.contains(month) }
@@ -1255,7 +1255,7 @@ struct MyRealTripPromoCard: View {
     @State private var dismissed = false   // 이번 세션 숨김 (현재 코드에선 트리거 없음)
 
     private var daysSinceLastLeave: Int? {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let today = cal.startOfDay(for: Date())
         let lastDate: Date? = allLeaveRecords
             .filter { $0.deductsFromAnnualLeave }
@@ -2173,7 +2173,7 @@ struct LeaveActivityRecommendations: View {
     @State private var isLoading = false
 
     private var totalDaysOff: Int {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let days = cal.dateComponents([.day], from: leave.startDate, to: leave.endDate).day ?? 0
         return max(1, days + 1)
     }
@@ -2544,7 +2544,7 @@ struct OptimalLeavePlannerCard: View {
 
     /// 연휴 1건을 시각화한 카드 — 날짜 · 총 휴식일 · 구성(주말/공휴일/연차) 막대 · 포함 공휴일
     private func breakCard(brk: LeaveBreak) -> some View {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let start = cal.startOfDay(for: brk.startDate)
         let leaveSet = Set(brk.leaveDates.map { cal.startOfDay(for: $0) })
         let days = (0..<max(brk.totalDays, 1)).compactMap {
@@ -2658,7 +2658,7 @@ struct OptimalLeavePlannerCard: View {
         let holidayDates = holidays.map { $0.date }
 
         // 이미 등록된 휴가 날짜는 제외 (중복 방지)
-        let cal = Calendar.current
+        let cal = Calendar.app
         var excluded: Set<Date> = []
         for record in existingLeaveRecords where record.status != .cancelled {
             var d = cal.startOfDay(for: record.startDate)
@@ -2695,7 +2695,7 @@ struct OptimalLeavePlannerCard: View {
     }
 
     private func batchAdd(plan: OptimalLeavePlan) {
-        let cal = Calendar.current
+        let cal = Calendar.app
         var addedAny = false
         for brk in plan.breaks {
             // 각 연휴마다 1개 LeaveRecord (연속된 leaveDates를 합쳐서)

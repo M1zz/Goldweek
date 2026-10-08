@@ -145,12 +145,12 @@ class CalendarService {
         event.isAllDay = true
         
         // 시작일과 종료일 설정
-        let startOfDay = Calendar.current.startOfDay(for: leaveRecord.startDate)
+        let startOfDay = Calendar.app.startOfDay(for: leaveRecord.startDate)
         event.startDate = startOfDay
         
         // 종일 이벤트는 다음 날 자정으로 설정
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: leaveRecord.endDate) ?? leaveRecord.endDate
-        event.endDate = Calendar.current.startOfDay(for: endOfDay)
+        let endOfDay = Calendar.app.date(byAdding: .day, value: 1, to: leaveRecord.endDate) ?? leaveRecord.endDate
+        event.endDate = Calendar.app.startOfDay(for: endOfDay)
         
         // 알림 설정 (연차 하루 전)
         if leaveRecord.type == .annual {
@@ -178,8 +178,8 @@ class CalendarService {
         let eventTitle = generateEventTitle(for: leaveRecord)
         
         // 해당 날짜 범위의 이벤트 검색
-        let startDate = Calendar.current.startOfDay(for: leaveRecord.startDate)
-        let endDate = Calendar.current.date(byAdding: .day, value: 1, to: leaveRecord.endDate) ?? leaveRecord.endDate
+        let startDate = Calendar.app.startOfDay(for: leaveRecord.startDate)
+        let endDate = Calendar.app.date(byAdding: .day, value: 1, to: leaveRecord.endDate) ?? leaveRecord.endDate
         
         let predicate = eventStore.predicateForEvents(
             withStart: startDate,
@@ -308,7 +308,7 @@ class CalendarService {
             guard granted else { throw CalendarError.permissionDenied }
         }
 
-        let cal = Calendar.current
+        let cal = Calendar.app
         let now = Date()
         let scanStart = cal.date(byAdding: .month, value: -monthsBack, to: now) ?? now
         let scanEnd = cal.date(byAdding: .month, value: monthsAhead, to: now) ?? now
@@ -453,7 +453,7 @@ struct DetectedLeaveCandidate: Identifiable {
     var suggestedLength: LeaveLength = .full
 
     var daysCount: Int {
-        (Calendar.current.dateComponents([.day], from: startDate, to: endDate).day ?? 0) + 1
+        (Calendar.app.dateComponents([.day], from: startDate, to: endDate).day ?? 0) + 1
     }
 
     /// 유형·길이를 반영한 실제 차감 일수
@@ -499,6 +499,8 @@ enum CalendarSyncStatus {
             case .turkish: return "Senkronize"
             case .russian: return "Синхронизировано"
             case .indonesian: return "Tersinkron"
+            case .thai: return "ซิงค์แล้ว"
+            case .vietnamese: return "Đã đồng bộ"
             case .dutch: return "Gesynchroniseerd"
             case .japanese: return "同期済み"
             case .chinese: return "已同步"
@@ -523,6 +525,8 @@ enum CalendarSyncStatus {
             case .turkish: return "Kurulum Gerekli"
             case .russian: return "Нужна настройка"
             case .indonesian: return "Perlu Diatur"
+            case .thai: return "ต้องตั้งค่า"
+            case .vietnamese: return "Cần thiết lập"
             case .dutch: return "Instellen vereist"
             case .japanese: return "設定が必要"
             case .chinese: return "需要设置"
@@ -547,6 +551,8 @@ enum CalendarSyncStatus {
             case .turkish: return "İzin Gerekli"
             case .russian: return "Нужен доступ"
             case .indonesian: return "Perlu Izin"
+            case .thai: return "ต้องขออนุญาต"
+            case .vietnamese: return "Cần cấp quyền"
             case .dutch: return "Toestemming vereist"
             case .japanese: return "権限が必要"
             case .chinese: return "需要权限"
@@ -571,6 +577,8 @@ enum CalendarSyncStatus {
             case .turkish: return "İzin Reddedildi"
             case .russian: return "Доступ запрещён"
             case .indonesian: return "Izin Ditolak"
+            case .thai: return "ไม่ได้รับอนุญาต"
+            case .vietnamese: return "Bị từ chối quyền"
             case .dutch: return "Toestemming geweigerd"
             case .japanese: return "権限が拒否"
             case .chinese: return "权限被拒绝"
@@ -595,6 +603,8 @@ enum CalendarSyncStatus {
             case .turkish: return "Pro Gerekli"
             case .russian: return "Нужен Pro"
             case .indonesian: return "Perlu Pro"
+            case .thai: return "ต้องใช้ Pro"
+            case .vietnamese: return "Cần bản Pro"
             case .dutch: return "Pro vereist"
             case .japanese: return "Pro が必要"
             case .chinese: return "需要Pro版"
@@ -619,6 +629,8 @@ enum CalendarSyncStatus {
             case .turkish: return "Hata"
             case .russian: return "Ошибка"
             case .indonesian: return "Error"
+            case .thai: return "ข้อผิดพลาด"
+            case .vietnamese: return "Lỗi"
             case .dutch: return "Fout"
             case .japanese: return "エラー"
             case .chinese: return "错误"
@@ -774,6 +786,24 @@ enum CalendarError: LocalizedError {
             case .proFeatureRequired: return "Fitur ini butuh Pro."
             case .eventNotFound: return "Acara tidak ditemukan."
             case .calendarNotFound: return "Kalender tidak ditemukan."
+            }
+        case .thai:
+            switch self {
+            case .permissionDenied: return "ไม่ได้รับอนุญาตให้เข้าถึงปฏิทิน"
+            case .unknownPermissionStatus: return "ไม่ทราบสถานะการอนุญาต"
+            case .noAvailableSource: return "ไม่มีแหล่งปฏิทินที่ใช้ได้"
+            case .proFeatureRequired: return "ฟีเจอร์นี้ต้องใช้ Pro"
+            case .eventNotFound: return "ไม่พบกิจกรรม"
+            case .calendarNotFound: return "ไม่พบปฏิทิน"
+            }
+        case .vietnamese:
+            switch self {
+            case .permissionDenied: return "Quyền truy cập lịch bị từ chối."
+            case .unknownPermissionStatus: return "Không rõ trạng thái quyền."
+            case .noAvailableSource: return "Không có nguồn lịch nào khả dụng."
+            case .proFeatureRequired: return "Tính năng này cần bản Pro."
+            case .eventNotFound: return "Không tìm thấy sự kiện."
+            case .calendarNotFound: return "Không tìm thấy lịch."
             }
         case .dutch:
             switch self {

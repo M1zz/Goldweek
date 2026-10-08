@@ -295,6 +295,18 @@ enum ProPurchaseError: LocalizedError {
             case .verificationFailed: return "Verifikasi pembelian gagal."
             case .purchaseFailed: return "Pembelian gagal."
             }
+        case .thai:
+            switch self {
+            case .productNotFound: return "ไม่พบสินค้า"
+            case .verificationFailed: return "ยืนยันการซื้อไม่สำเร็จ"
+            case .purchaseFailed: return "การซื้อไม่สำเร็จ"
+            }
+        case .vietnamese:
+            switch self {
+            case .productNotFound: return "Không tìm thấy sản phẩm."
+            case .verificationFailed: return "Xác minh giao dịch mua thất bại."
+            case .purchaseFailed: return "Mua không thành công."
+            }
         case .dutch:
             switch self {
             case .productNotFound: return "Product niet gevonden."

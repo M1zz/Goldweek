@@ -158,6 +158,8 @@ struct LeaveStatusHeader: View {
             case .turkish: return "\(Strings.basicLeave) \(formatD(remainingLeave)) gün, \(Strings.bonus) \(formatD(bonusLeave)) gün, \(Strings.totalAvailable) \(formatD(totalAvailable)) gün"
             case .russian: return "\(Strings.basicLeave) \(formatD(remainingLeave)) \(ruPlural(remainingLeave, "день", "дня", "дней")), \(Strings.bonus) \(formatD(bonusLeave)) \(ruPlural(bonusLeave, "день", "дня", "дней")), \(Strings.totalAvailable) \(formatD(totalAvailable)) \(ruPlural(totalAvailable, "день", "дня", "дней"))"
             case .indonesian: return "\(Strings.basicLeave) \(formatD(remainingLeave)) hari, \(Strings.bonus) \(formatD(bonusLeave)) hari, \(Strings.totalAvailable) \(formatD(totalAvailable)) hari"
+            case .thai: return "\(Strings.basicLeave) \(formatD(remainingLeave)) วัน, \(Strings.bonus) \(formatD(bonusLeave)) วัน, \(Strings.totalAvailable) \(formatD(totalAvailable)) วัน"
+            case .vietnamese: return "\(Strings.basicLeave) \(formatD(remainingLeave)) ngày, \(Strings.bonus) \(formatD(bonusLeave)) ngày, \(Strings.totalAvailable) \(formatD(totalAvailable)) ngày"
             case .dutch: return "\(Strings.basicLeave) \(formatD(remainingLeave)) dagen, \(Strings.bonus) \(formatD(bonusLeave)) dagen, \(Strings.totalAvailable) \(formatD(totalAvailable)) dagen"
             case .japanese: return "\(Strings.basicLeave) \(formatD(remainingLeave))日、\(Strings.bonus) \(formatD(bonusLeave))日、\(Strings.totalAvailable) \(formatD(totalAvailable))日"
             case .chinese: return "\(Strings.basicLeave) \(formatD(remainingLeave))天，\(Strings.bonus) \(formatD(bonusLeave))天，\(Strings.totalAvailable) \(formatD(totalAvailable))天"
@@ -182,6 +184,8 @@ struct LeaveStatusHeader: View {
             case .turkish: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) gün"
             case .russian: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) \(ruPlural(totalAvailable, "день", "дня", "дней"))"
             case .indonesian: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) hari"
+            case .thai: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) วัน"
+            case .vietnamese: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) ngày"
             case .dutch: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) dagen"
             case .japanese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))日"
             case .chinese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))天"
@@ -320,7 +324,7 @@ struct LeaveRegistrationView: View {
     var rangeHasBlockedDay: Bool {
         let dayOff = DayOffCalendar.shared
         guard dayOff.leaveBlackoutDays > 0 else { return false }
-        let cal = Calendar.current
+        let cal = Calendar.app
         var d = cal.startOfDay(for: startDate)
         let end = cal.startOfDay(for: length == .full ? endDate : startDate)
         while d <= end {
@@ -333,7 +337,7 @@ struct LeaveRegistrationView: View {
 
     /// 시작~끝 달력 일수
     var calendarDays: Int {
-        let cal = Calendar.current
+        let cal = Calendar.app
         return (cal.dateComponents([.day], from: cal.startOfDay(for: startDate), to: cal.startOfDay(for: endDate)).day ?? 0) + 1
     }
 
@@ -352,7 +356,7 @@ struct LeaveRegistrationView: View {
 
     /// 시작일이 올해가 아닌 해에 속하면 그 해 (예: 10월에 잡는 내년 1월 휴가)
     var futureFiscalYear: Int? {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let target = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: profile.yearStartMonth, calendar: cal)
         let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
         return target > now ? target : nil
@@ -703,7 +707,7 @@ struct LeaveRegistrationView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                if startDate < Calendar.current.startOfDay(for: Date()) {
+                if startDate < Calendar.app.startOfDay(for: Date()) {
                     HStack(spacing: 6) {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
@@ -766,7 +770,7 @@ struct LeaveRegistrationView: View {
             }
         }
         .onChange(of: startDate) { oldStart, newStart in
-            let calendar = Calendar.current
+            let calendar = Calendar.app
             if length != .full {
                 endDate = newStart
             } else {
@@ -833,13 +837,13 @@ struct LeaveRegistrationView: View {
         isNoteFocused = false
 
         let actualEndDate = length != .full ? startDate : endDate
-        let today = Calendar.current.startOfDay(for: Date())
+        let today = Calendar.app.startOfDay(for: Date())
         let isPastLeave = startDate < today
         let status: LeaveStatus = isPastLeave ? .used : .planned
 
         let record = LeaveRecord(
-            startDate: Calendar.current.startOfDay(for: startDate),
-            endDate: Calendar.current.startOfDay(for: actualEndDate),
+            startDate: Calendar.app.startOfDay(for: startDate),
+            endDate: Calendar.app.startOfDay(for: actualEndDate),
             type: category,
             status: status,
             note: note,
@@ -962,7 +966,7 @@ struct BonusLeaveView: View {
     @State private var bonusType: BonusLeaveType = .compensatory
     @State private var bonusReason = ""
     @State private var hasExpiration = false
-    @State private var expirationDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())!
+    @State private var expirationDate = Calendar.app.date(byAdding: .month, value: 3, to: Date())!
     @State private var pendingDeleteOffsets: IndexSet?
     @State private var showingDeleteConfirm = false
     @State private var errorMessage = ""
@@ -1242,7 +1246,7 @@ struct EditBonusLeaveSheet: View {
         _editedType = State(initialValue: bonus.type)
         _editedReason = State(initialValue: bonus.reason)
         _editedHasExpiration = State(initialValue: bonus.expirationDate != nil)
-        _editedExpirationDate = State(initialValue: bonus.expirationDate ?? Calendar.current.date(byAdding: .month, value: 3, to: Date())!)
+        _editedExpirationDate = State(initialValue: bonus.expirationDate ?? Calendar.app.date(byAdding: .month, value: 3, to: Date())!)
     }
 
     var body: some View {
@@ -1430,7 +1434,7 @@ struct LeaveRecordRow: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "M/d"
 
-        if record.type == .half || record.type == .quarter || Calendar.current.isDate(record.startDate, inSameDayAs: record.endDate) {
+        if record.type == .half || record.type == .quarter || Calendar.app.isDate(record.startDate, inSameDayAs: record.endDate) {
             return formatter.string(from: record.startDate)
         }
         return "\(formatter.string(from: record.startDate)) - \(formatter.string(from: record.endDate))"

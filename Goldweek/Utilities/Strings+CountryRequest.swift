@@ -34,6 +34,8 @@ extension Strings {
         case .turkish: return "\(r) henüz desteklenmiyor. İstemek için bize geri bildirim gönder."
         case .russian: return "\(r) пока не поддерживается. Напишите нам отзыв, чтобы попросить добавить."
         case .indonesian: return "\(r) belum didukung. Kirim masukan untuk memintanya."
+        case .thai: return "ยังไม่รองรับ \(r) ส่งความคิดเห็นมาขอให้เพิ่มได้เลย"
+        case .vietnamese: return "Chưa hỗ trợ \(r). Hãy gửi góp ý để đề xuất."
         }
     }
 
@@ -61,6 +63,8 @@ extension Strings {
         case .turkish: return "Bu ülkeyi iste"
         case .russian: return "Попросить эту страну"
         case .indonesian: return "Minta negara ini"
+        case .thai: return "ขอให้รองรับประเทศนี้"
+        case .vietnamese: return "Đề xuất hỗ trợ nước này"
         }
     }
 }

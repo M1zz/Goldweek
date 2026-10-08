@@ -64,7 +64,7 @@ struct HomeView: View {
             return ("📅", Strings.proBannerAutoDetect)
         }
 
-        let cal = Calendar.current
+        let cal = Calendar.app
         let now = Date()
         let month = cal.component(.month, from: now)
         let year = cal.component(.year, from: now)
@@ -112,7 +112,7 @@ struct HomeView: View {
     }
 
     var upcomingLeaves: [LeaveRecord] {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let currentYear = calendar.component(.year, from: Date())
         let today = calendar.startOfDay(for: Date())
 
@@ -134,7 +134,7 @@ struct HomeView: View {
     private var upcomingHolidayBlocks: [UpcomingItem] {
         guard showHolidaysInUpcoming else { return [] }
 
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let today = calendar.startOfDay(for: Date())
         let year = calendar.component(.year, from: today)
         let holidays = holidayService.getHolidays(for: year, country: profile.country,
@@ -185,7 +185,7 @@ struct HomeView: View {
     var shouldShowPastLeavePrompt: Bool {
         guard !hasSeenPastLeavePrompt, leaveRecords.isEmpty else { return false }
         guard profile.userType == .employee else { return false }
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let month = calendar.component(.month, from: Date())
         let startMonth = profile.yearStartMonth
         let monthsElapsed = (month - startMonth + 12) % 12
@@ -1029,7 +1029,7 @@ struct LeaveStatusCard: View {
     /// 연차 현황 + 다가오는 휴가를 담은 공유용 이미지 렌더링
     @MainActor
     private func renderShareImage() -> UIImage? {
-        let today = Calendar.current.startOfDay(for: Date())
+        let today = Calendar.app.startOfDay(for: Date())
         let upcoming = allLeaveRecords
             .filter { $0.status == .planned && $0.startDate >= today }
             .sorted { $0.startDate < $1.startDate }
@@ -1296,7 +1296,7 @@ struct UpcomingLeaveRow: View {
     let item: UpcomingItem
 
     var daysUntil: Int {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         return calendar.dateComponents([.day],
                                        from: calendar.startOfDay(for: Date()),
                                        to: calendar.startOfDay(for: item.startDate)).day ?? 0
@@ -1304,7 +1304,7 @@ struct UpcomingLeaveRow: View {
 
     /// 올해 일정이면 연도를 뺀다 — "Sep 24, 2026 - Sep 26, 2026"은 한 줄에 안 들어가 두 줄로 접힌다.
     private var dateRangeText: String {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let thisYear = calendar.component(.year, from: Date())
         let sameYear = calendar.component(.year, from: item.startDate) == thisYear
             && calendar.component(.year, from: item.endDate) == thisYear
@@ -1322,9 +1322,9 @@ struct UpcomingLeaveRow: View {
             let days = item.days.map { Strings.dayCount($0) } ?? ""
             return [item.typeLabel, days].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " ")
         case .holiday:
-            let count = (Calendar.current.dateComponents([.day],
-                                                         from: Calendar.current.startOfDay(for: item.startDate),
-                                                         to: Calendar.current.startOfDay(for: item.endDate)).day ?? 0) + 1
+            let count = (Calendar.app.dateComponents([.day],
+                                                         from: Calendar.app.startOfDay(for: item.startDate),
+                                                         to: Calendar.app.startOfDay(for: item.endDate)).day ?? 0) + 1
             return "\(Strings.holiday) \(Strings.dayCount(Double(count)))"
         }
     }
@@ -1476,7 +1476,7 @@ struct PastLeaveQuickEntrySheet: View {
     @State private var isSaving = false
     @State private var showingSaveError = false
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var yearStartDate: Date {
         let year = calendar.component(.year, from: Date())
@@ -1577,7 +1577,7 @@ struct PastLeaveQuickEntrySheet: View {
         isSaving = true
 
         // effectiveLeaveDays = daysUsed가 되도록 endDate를 계산
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let adjustedEnd = calendar.date(byAdding: .day, value: max(0, Int(daysUsed) - 1), to: yearStartDate) ?? yearStartDate
         let record = LeaveRecord(
             startDate: yearStartDate,
@@ -1623,7 +1623,7 @@ struct BurnoutPaceCard: View {
         )
     }
 
-    private let cal = Calendar.current
+    private let cal = Calendar.app
 
     // MARK: 회계연도 범위
     private var annualYearStart: Date {

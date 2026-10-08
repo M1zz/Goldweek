@@ -129,6 +129,18 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -256,6 +268,18 @@
           }
         },
         "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "vi": {
           "stringUnit": {
             "state": "translated",
             "value": "Goldweek"
@@ -391,6 +415,18 @@
             "state": "translated",
             "value": "Goldweek perlu akses kalender untuk menemukan acara yang mirip cuti agar bisa diimpor, dan untuk menyinkronkan cuti yang kamu catat ke kalender."
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek ขอเข้าถึงปฏิทินเพื่อหากิจกรรมที่ดูเหมือนวันลามานำเข้า และซิงค์วันลาที่คุณบันทึกไปยังปฏิทิน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek cần truy cập lịch để tìm các sự kiện giống ngày nghỉ mà bạn có thể nhập, và đồng bộ các ngày nghỉ bạn đã ghi vào lịch."
+          }
         }
       }
     },
@@ -522,6 +558,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Akses kamera diperlukan untuk memotret riwayat pengajuan cuti dan mencatat cutimu secara otomatis."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ต้องใช้กล้องเพื่อถ่ายรูปประวัติการขอลาและบันทึกวันลาของคุณให้อัตโนมัติ"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cần quyền camera để chụp lịch sử đơn xin nghỉ và tự động ghi ngày nghỉ của bạn."
           }
         }
       }

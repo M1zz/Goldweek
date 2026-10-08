@@ -55,6 +55,8 @@ HEADER = {
     "cs":      ("Plánovač dovolené", "Méně dní dovolené,<br>delší volno"),
     "el":      ("Πλάνο άδειας", "Λιγότερη άδεια,<br>περισσότερη ξεκούραση"),
     "tr":      ("İzin planlayıcı", "Daha az izin,<br>daha uzun tatil"),
+    "th":      ("วางแผนวันลา", "ลาน้อย<br>ได้หยุดยาว"),
+    "vi":      ("Lịch nghỉ phép", "Ít ngày phép,<br>nghỉ thật dài"),
 }
 
 # 검색 결과: 스크린샷 1장(홈 · "언제 쉬어야 할까?")과 **같은 이야기**. 눈썹글은 그 나라 사람이 검색창에 치는 말.
@@ -80,6 +82,8 @@ SEARCH = {
     "cs":      ("Kalendář dovolené", "Kdy si<br>dát volno?", "Poslední volno, to příští a kdy si odpočinout"),
     "el":      ("Ημερολόγιο αργιών", "Πότε να πάρεις<br>ρεπό;", "Το τελευταίο, το επόμενο και πότε να ξεκουραστείς"),
     "tr":      ("Yıllık izin", "Ne zaman<br>izin almalı?", "Son tatilin, sıradaki tatilin ve dinlenme zamanın"),
+    "th":      ("ปฏิทินวันลา", "ถึงเวลาพัก<br>หรือยัง?", "หยุดครั้งก่อน ครั้งถัดไป และเวลาที่ควรพัก"),
+    "vi":      ("Quản lý phép năm", "Khi nào nên<br>nghỉ ngơi?", "Lần nghỉ trước, lần nghỉ tới và lúc cần nghỉ"),
 }
 
 BRAND = "#0066FF"

@@ -34,6 +34,8 @@ extension Strings {
         case .turkish: return "Kalan izni devret"
         case .russian: return "Перенос остатка отпуска"
         case .indonesian: return "Bawa sisa cuti"
+        case .thai: return "ยกวันลาที่เหลือไปปีหน้า"
+        case .vietnamese: return "Chuyển phép còn lại sang năm sau"
         }
     }
 
@@ -61,6 +63,8 @@ extension Strings {
         case .turkish: return "Kapalı"
         case .russian: return "Нет"
         case .indonesian: return "Tidak"
+        case .thai: return "ปิด"
+        case .vietnamese: return "Tắt"
         }
     }
 
@@ -88,6 +92,8 @@ extension Strings {
         case .turkish: return "Kalan tüm günler"
         case .russian: return "Все оставшиеся дни"
         case .indonesian: return "Semua sisa hari"
+        case .thai: return "ทุกวันที่เหลือ"
+        case .vietnamese: return "Toàn bộ số ngày còn lại"
         }
     }
 
@@ -115,6 +121,8 @@ extension Strings {
         case .turkish: return "Devreden günleri kullanma süresi"
         case .russian: return "Перенесённые дни использовать в течение"
         case .indonesian: return "Sisa cuti dipakai paling lambat"
+        case .thai: return "ใช้วันลาที่ยกมาได้ถึง"
+        case .vietnamese: return "Hạn dùng phép chuyển sang"
         }
     }
 
@@ -142,6 +150,8 @@ extension Strings {
         case .turkish: return "Süresiz"
         case .russian: return "Без ограничения"
         case .indonesian: return "Tanpa batas"
+        case .thai: return "ไม่จำกัด"
+        case .vietnamese: return "Không giới hạn"
         }
     }
 
@@ -169,6 +179,8 @@ extension Strings {
         case .turkish: return "İşverenin izin veriyorsa bu yıl kullanmadığın günler gelecek yıla devreder. Yeni yılın iznine eklenir; süresi dolarsa yalnızca o zamana kadar kullandığın kısım sayılır. Gelecek yılı şimdiden planlayabilirsin – gelecek yılın izninden düşülür."
         case .russian: return "Если работодатель разрешает, неиспользованные дни переходят на следующий год. Они добавляются к отпуску нового года, а если у них есть срок, учитывается только то, что вы успели использовать. Следующий год можно планировать уже сейчас — дни спишутся из отпуска следующего года."
         case .indonesian: return "Jika perusahaanmu mengizinkan, sisa cuti tahun ini dibawa ke tahun berikutnya. Sisa itu ditambahkan ke cuti tahun baru, dan jika ada batas waktu, hanya yang terpakai sebelum batas itu yang dihitung. Cuti tahun depan sudah bisa direncanakan sekarang dan diambil dari jatah tahun depan."
+        case .thai: return "ถ้าบริษัทอนุญาต วันลาที่ไม่ได้ใช้ในปีนี้จะยกไปปีหน้า โดยบวกเพิ่มในวันลาของปีหน้า และถ้ามีวันหมดอายุ จะนับเฉพาะวันที่ใช้ก่อนถึงกำหนด วางแผนวันลาของปีหน้าได้ตั้งแต่ตอนนี้ โดยจะหักจากวันลาของปีหน้า"
+        case .vietnamese: return "Nếu công ty cho phép, số phép chưa dùng năm nay sẽ được chuyển sang năm sau và cộng vào phép năm mới. Nếu có hạn dùng, chỉ phần đã dùng trước hạn được tính. Bạn có thể lên kế hoạch nghỉ năm sau ngay từ bây giờ, số ngày đó sẽ trừ vào phép năm sau."
         }
     }
 
@@ -196,6 +208,8 @@ extension Strings {
         case .turkish: return "En fazla \(d)"
         case .russian: return "До \(d)"
         case .indonesian: return "Hingga \(d)"
+        case .thai: return "สูงสุด \(d)"
+        case .vietnamese: return "Tối đa \(d)"
         }
     }
 
@@ -223,6 +237,8 @@ extension Strings {
         case .turkish: return "Yeni yılın ilk \(n) ayı"
         case .russian: return "\(n) мес. с начала года"
         case .indonesian: return "\(n) bulan sejak awal tahun"
+        case .thai: return "\(n) เดือนแรกของปีใหม่"
+        case .vietnamese: return "\(n) tháng đầu năm mới"
         }
     }
 
@@ -250,6 +266,8 @@ extension Strings {
         case .turkish: return "\(String(y)) izninden düşülür · o yıl kalan \(r)"
         case .russian: return "Спишется из отпуска на \(String(y)) · останется \(r)"
         case .indonesian: return "Diambil dari cuti \(String(y)) · sisa \(r) tahun itu"
+        case .thai: return "หักจากวันลาปี \(String(y)) · ปีนั้นเหลือ \(r)"
+        case .vietnamese: return "Trừ vào phép năm \(String(y)) · năm đó còn \(r)"
         }
     }
 }

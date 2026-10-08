@@ -34,7 +34,7 @@ struct PhotoImportSheet: View {
     @State private var showingResultAlert = false
     @State private var importSucceeded = false
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var body: some View {
         NavigationStack {

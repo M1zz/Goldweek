@@ -170,6 +170,22 @@ Lihat 3, 6, atau 12 bulan sekaligus
 Rencanakan tahun depan, bawa sisa cuti
 Perbaikan tutup paksa saat banyak cuti
 
+### 앱스토어 (태국어)
+
+บันทึกวันลาเป็นชั่วโมงและนาทีได้แล้ว
+สร้างประเภทการลาและเลือกสีได้เอง
+ดูปฏิทิน 3, 6 หรือ 12 เดือนพร้อมกัน
+วางแผนปีหน้าและยกวันลาที่เหลือไปได้
+แก้ปัญหาแอปปิดเองเมื่อมีวันลาเยอะ
+
+### 앱스토어 (베트남어)
+
+Ghi nghỉ phép theo giờ và phút
+Tự tạo loại nghỉ và chọn màu riêng
+Xem lịch 3, 6 hoặc 12 tháng cùng lúc
+Lên kế hoạch năm sau, chuyển phép dư
+Sửa lỗi văng app khi có nhiều ngày nghỉ
+
 ### 개발 메모 (스토어에 올라가지 않음)
 
 - 시간 단위 휴가(LeaveLength.hours, 하루 근무 시간 설정) · 직접 만든 휴가 종류와 색(CustomLeaveType) · 1/2/3/6/12개월 보기

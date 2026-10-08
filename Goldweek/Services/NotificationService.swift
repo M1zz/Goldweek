@@ -36,7 +36,7 @@ enum FatigueCheckIn {
     static var recentValue: Int? {
         guard UserDefaults.standard.object(forKey: valueKey) != nil,
               let answered = UserDefaults.standard.object(forKey: answeredKey) as? Date else { return nil }
-        let days = Calendar.current.dateComponents([.day], from: answered, to: Date()).day ?? 999
+        let days = Calendar.app.dateComponents([.day], from: answered, to: Date()).day ?? 999
         guard days <= recencyDays else { return nil }
         return UserDefaults.standard.integer(forKey: valueKey)
     }
@@ -45,7 +45,7 @@ enum FatigueCheckIn {
     static func isDue(hasHistory: Bool) -> Bool {
         guard hasHistory, recentValue == nil else { return false }
         guard let prompted = UserDefaults.standard.object(forKey: promptKey) as? Date else { return true }
-        let days = Calendar.current.dateComponents([.day], from: prompted, to: Date()).day ?? 999
+        let days = Calendar.app.dateComponents([.day], from: prompted, to: Date()).day ?? 999
         return days >= promptIntervalDays
     }
 
@@ -102,7 +102,7 @@ enum NotificationService {
 
     /// "나중에" — N일간 알림 보류.
     static func snooze(days: Int = 14) {
-        let until = Calendar.current.date(byAdding: .day, value: days, to: Date()) ?? Date()
+        let until = Calendar.app.date(byAdding: .day, value: days, to: Date()) ?? Date()
         UserDefaults.standard.set(until, forKey: snoozeKey)
         cancelPending()
         logInfo("휴식 레이더 \(days)일 스누즈", category: .app)
@@ -115,7 +115,7 @@ enum NotificationService {
 
     private static var inCooldown: Bool {
         guard let last = UserDefaults.standard.object(forKey: lastShownKey) as? Date else { return false }
-        let days = Calendar.current.dateComponents([.day], from: last, to: Date()).day ?? 999
+        let days = Calendar.app.dateComponents([.day], from: last, to: Date()).day ?? 999
         return days < cooldownDays
     }
 
@@ -208,7 +208,7 @@ enum NotificationService {
         content.userInfo = ["type": "rest_radar"]
 
         // 내일 오전 10시 — 업무 시작 직후, 휴식 계획에 적당한 시간
-        var comps = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        var comps = Calendar.app.dateComponents([.year, .month, .day], from: Date())
         comps.day = (comps.day ?? 1) + 1
         comps.hour = 10
         comps.minute = 0
@@ -256,6 +256,8 @@ enum NotificationService {
         case .turkish:  title = a.level == .critical ? "Şarj olma zamanı 🌿" : "Yakında bir moladan yararlanma zamanı 🌿"
         case .russian:  title = a.level == .critical ? "Пора отдохнуть 🌿" : "Скоро пора отдохнуть 🌿"
         case .indonesian:  title = a.level == .critical ? "Waktunya isi ulang tenaga 🌿" : "Sebentar lagi waktunya istirahat 🌿"
+        case .thai:  title = a.level == .critical ? "ถึงเวลาชาร์จพลังแล้ว 🌿" : "อีกไม่นานก็ถึงเวลาพักแล้ว 🌿"
+        case .vietnamese:  title = a.level == .critical ? "Đến lúc nạp lại năng lượng 🌿" : "Sắp đến lúc nghỉ ngơi rồi 🌿"
         case .dutch:  title = a.level == .critical ? "Tijd om op te laden 🌿" : "Je volgende vrije dagen komen eraan 🌿"
         case .german: title = a.level == .critical ? "Zeit zum Auftanken 🌿" : "Bald ist eine Pause fällig 🌿"
         case .french: title = a.level == .critical ? "Il est temps de souffler 🌿" : "Une pause approche 🌿"
@@ -380,6 +382,22 @@ enum NotificationService {
             } else {
                 reasonText = "Belum ada istirahat yang tercatat tahun ini."
             }
+        case .thai:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "ผ่านมา \(s) วันแล้วตั้งแต่พักครั้งล่าสุด เกินรอบปกติของคุณที่ \(cycle) วัน"
+            } else if let s = since {
+                reasonText = "ผ่านมา \(s) วันแล้วตั้งแต่พักครั้งล่าสุด"
+            } else {
+                reasonText = "ปีนี้ยังไม่มีบันทึกการพักเลย"
+            }
+        case .vietnamese:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Đã \(s) ngày kể từ lần nghỉ gần nhất, vượt chu kỳ \(cycle) ngày quen thuộc của bạn."
+            } else if let s = since {
+                reasonText = "Đã \(s) ngày kể từ lần nghỉ gần nhất."
+            } else {
+                reasonText = "Năm nay bạn chưa ghi lại lần nghỉ nào."
+            }
         case .dutch:
             if let s = since, a.cycleIsPersonalized {
                 reasonText = "Het is \(s) dagen geleden sinds je laatste vrije dagen — langer dan je gebruikelijke cyclus van \(cycle) dagen."
@@ -484,6 +502,12 @@ enum NotificationService {
             case .indonesian:
                 let h = w.holidayName.isEmpty ? "" : " sekitar \(w.holidayName)"
                 windowText = " Dalam \(daysFromNow(w.startDate, lang)),\(h) cukup \(w.leaveDaysNeeded) hari cuti untuk libur \(w.totalDaysOff) hari."
+            case .thai:
+                let h = w.holidayName.isEmpty ? "" : " ช่วง\(w.holidayName)"
+                windowText = " อีก \(daysFromNow(w.startDate, lang))\(h) ลาเพียง \(w.leaveDaysNeeded) วันก็ได้หยุดยาว \(w.totalDaysOff) วัน"
+            case .vietnamese:
+                let h = w.holidayName.isEmpty ? "" : " quanh dịp \(w.holidayName)"
+                windowText = " Trong \(daysFromNow(w.startDate, lang)),\(h) chỉ cần \(w.leaveDaysNeeded) ngày phép là được nghỉ \(w.totalDaysOff) ngày."
             case .dutch:
                 let h = w.holidayName.isEmpty ? "" : " rond \(w.holidayName)"
                 windowText = " Over \(daysFromNow(w.startDate, lang)):\(h) met slechts \(w.leaveDaysNeeded) verlofdag(en) heb je \(w.totalDaysOff) dagen vrij."
@@ -512,8 +536,8 @@ enum NotificationService {
     }
 
     private static func daysFromNow(_ date: Date, _ lang: AppLanguage) -> String {
-        let d = Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()),
-                                                to: Calendar.current.startOfDay(for: date)).day ?? 0
+        let d = Calendar.app.dateComponents([.day], from: Calendar.app.startOfDay(for: Date()),
+                                                to: Calendar.app.startOfDay(for: date)).day ?? 0
         switch lang {
         case .korean:   return "\(max(0, d))일"
         case .japanese: return "\(max(0, d))日"
@@ -529,6 +553,8 @@ enum NotificationService {
         case .turkish:  return "\(max(0, d)) gün"
         case .russian:  return "\(max(0, d)) \(ruPlural(max(0, d), "день", "дня", "дней"))"
         case .indonesian:  return "\(max(0, d)) hari"
+        case .thai:  return "\(max(0, d)) วัน"
+        case .vietnamese:  return "\(max(0, d)) ngày"
         case .dutch:  return "\(max(0, d)) dag(en)"
         case .german: return "\(max(0, d)) Tag(e)"
         case .french: return "\(max(0, d)) jour(s)"

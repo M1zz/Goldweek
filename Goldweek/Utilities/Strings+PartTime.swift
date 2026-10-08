@@ -34,6 +34,8 @@ extension Strings {
         case .turkish: return "Sabit izin günleri"
         case .russian: return "Постоянные выходные"
         case .indonesian: return "Hari libur tetap"
+        case .thai: return "วันหยุดประจำ"
+        case .vietnamese: return "Ngày nghỉ cố định"
         }
     }
 
@@ -61,6 +63,8 @@ extension Strings {
         case .turkish: return "Yarı zamanlı gibi çalışmadığın günleri seç. Hafta sonu gibi izninden düşülmez. Bir iş arkadaşınla değiştirirsen takvimde o güne dokunup yalnızca o hafta için taşıyabilirsin."
         case .russian: return "Выберите дни недели, когда вы не работаете, например при неполной занятости. Как и выходные, они не вычитаются из отпуска. Если меняетесь с коллегой, нажмите на этот день в календаре и перенесите его только на эту неделю."
         case .indonesian: return "Pilih hari yang kamu tidak bekerja, seperti kerja paruh waktu. Sama seperti akhir pekan, hari itu tidak memotong cuti. Jika bertukar dengan rekan, ketuk hari itu di kalender untuk memindahkannya hanya minggu itu."
+        case .thai: return "เลือกวันที่คุณไม่ต้องทำงาน เช่น วันหยุดของงานพาร์ตไทม์ วันเหล่านี้ไม่หักวันลาเหมือนวันหยุดสุดสัปดาห์ ถ้าสลับวันกับเพื่อนร่วมงาน แตะวันนั้นในปฏิทินเพื่อย้ายเฉพาะสัปดาห์นั้น"
+        case .vietnamese: return "Chọn những ngày trong tuần bạn không đi làm, như ngày nghỉ của công việc bán thời gian. Giống cuối tuần, những ngày này không bị trừ phép. Nếu đổi ca với đồng nghiệp, hãy chạm vào ngày đó trên lịch để dời riêng tuần đó."
         }
     }
 
@@ -88,6 +92,8 @@ extension Strings {
         case .turkish: return "Sabit izin günü"
         case .russian: return "Постоянный выходной"
         case .indonesian: return "Hari libur tetap"
+        case .thai: return "วันหยุดประจำ"
+        case .vietnamese: return "Ngày nghỉ cố định"
         }
     }
 
@@ -115,6 +121,8 @@ extension Strings {
         case .turkish: return "Yalnızca bu hafta taşı"
         case .russian: return "Перенести только на этой неделе"
         case .indonesian: return "Pindahkan untuk minggu ini saja"
+        case .thai: return "ย้ายเฉพาะสัปดาห์นี้"
+        case .vietnamese: return "Chỉ dời trong tuần này"
         }
     }
 
@@ -142,6 +150,8 @@ extension Strings {
         case .turkish: return "Bunun yerine hangi gün izinlisin?"
         case .russian: return "Какой день будет выходным вместо него?"
         case .indonesian: return "Hari apa kamu libur sebagai gantinya?"
+        case .thai: return "จะหยุดวันไหนแทน"
+        case .vietnamese: return "Bạn nghỉ bù vào ngày nào?"
         }
     }
 
@@ -169,6 +179,8 @@ extension Strings {
         case .turkish: return "İzin günü (taşındı)"
         case .russian: return "Выходной (перенесён)"
         case .indonesian: return "Hari libur (dipindah)"
+        case .thai: return "วันหยุด (ย้ายมา)"
+        case .vietnamese: return "Ngày nghỉ (đã dời sang)"
         }
     }
 
@@ -196,6 +208,8 @@ extension Strings {
         case .turkish: return "Bu hafta çalışıyorsun (izin taşındı)"
         case .russian: return "На этой неделе рабочий (выходной перенесён)"
         case .indonesian: return "Minggu ini hari kerja (libur dipindah)"
+        case .thai: return "สัปดาห์นี้ทำงาน (ย้ายวันหยุดแล้ว)"
+        case .vietnamese: return "Tuần này đi làm (đã dời ngày nghỉ)"
         }
     }
 
@@ -223,6 +237,8 @@ extension Strings {
         case .turkish: return "Geri al"
         case .russian: return "Отменить перенос"
         case .indonesian: return "Batalkan pindah"
+        case .thai: return "ยกเลิกการย้าย"
+        case .vietnamese: return "Hoàn tác dời ngày"
         }
     }
 }

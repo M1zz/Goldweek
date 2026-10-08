@@ -276,7 +276,7 @@ struct SharedScheduleRow: View {
 
     private func dateRangeText(_ leave: SharedLeaveItem) -> String {
         let start = leave.startDate.appFormatted()
-        if Calendar.current.isDate(leave.startDate, inSameDayAs: leave.endDate) {
+        if Calendar.app.isDate(leave.startDate, inSameDayAs: leave.endDate) {
             return start
         }
         let end = leave.endDate.appFormatted()

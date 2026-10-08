@@ -32,7 +32,7 @@ class WidgetService {
         }
 
         // 기본 연차 정보 (현재 회계연도 기준 — LeaveStatusCard/SettingsView와 동일 계산)
-        let cal = Calendar.current
+        let cal = Calendar.app
         let now = Date()
         let currentMonth = cal.component(.month, from: now)
         let currentYear = cal.component(.year, from: now)
@@ -66,7 +66,7 @@ class WidgetService {
         defaults.set(profile.name, forKey: "userName")
 
         // 다가오는 휴가
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let today = calendar.startOfDay(for: Date())
         let upcomingLeave = leaveRecords
             .filter { $0.status == .planned && $0.startDate >= today }
@@ -123,7 +123,7 @@ class WidgetService {
         totalLeave: Double,
         usedLeave: Double
     ) -> (elapsedRatio: Double, idealUsedRatio: Double, actualUsedRatio: Double, burnRate: Double, remainingDays: Int) {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let now = Date()
         let currentYear = calendar.component(.year, from: now)
         let currentMonth = calendar.component(.month, from: now)

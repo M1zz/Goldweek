@@ -105,7 +105,7 @@ struct BurnoutEngine {
     }
 
     var config = Config()
-    var calendar = Calendar.current
+    var calendar = Calendar.app
 
     /// 핵심 평가.
     /// - breaks: 과거~미래 휴식 블록 전체 (취소 제외해서 주입)

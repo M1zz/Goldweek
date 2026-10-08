@@ -110,7 +110,7 @@ enum UsageReportingService {
         let bonuses = (try? context.fetch(FetchDescriptor<BonusLeave>())) ?? []
         let holidays = (try? context.fetch(FetchDescriptor<CustomHoliday>())) ?? []
 
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let thisYear = calendar.component(.year, from: Date())
         let active = records.filter { $0.status != .cancelled }
         let thisYearRecords = active.filter { calendar.component(.year, from: $0.startDate) == thisYear }

@@ -1038,3 +1038,101 @@ https://m1zz.github.io/Goldweek/tr/privacy.html
 ### 마케팅 URL
 
 https://m1zz.github.io/Goldweek/tr/
+
+## th
+
+### 이름
+
+Goldweek: วางแผนวันลา
+
+### 부제
+
+ลาน้อย ได้หยุดยาวกว่าเดิม
+
+### 키워드
+
+ปฏิทิน,วันหยุดนักขัตฤกษ์,ลาพักร้อน,เสาร์อาทิตย์,วันหยุดชดเชย,เที่ยว,มนุษย์เงินเดือน,วิดเจ็ต,สงกรานต์
+
+### 프로모션 텍스트
+
+มีวันหยุดใกล้เข้ามาไหม Goldweek ต่อวันหยุดเข้ากับเสาร์-อาทิตย์ แล้วบอกว่าควรลาวันไหนถึงจะได้หยุดติดกันนานที่สุด ดูวันลาคงเหลือได้จากวิดเจ็ต
+
+### 설명
+
+Goldweek ช่วยหาว่าควรลาวันไหน ถึงจะได้หยุดยาวที่สุดด้วยวันลาน้อยที่สุด
+แอปจะต่อวันหยุดเข้ากับเสาร์-อาทิตย์ แล้วแสดงชุดวันลาที่คุ้มที่สุดให้เห็นในหน้าเดียว ไม่ต้องนั่งไล่ดูปฏิทินเอง
+
+คำแนะนำสำหรับทุกวันหยุด
+สำหรับวันหยุดแต่ละครั้งที่กำลังจะถึง ดูได้ว่าต้องลากี่วัน และจะได้หยุดติดกันกี่วัน วันที่ควรลาเชื่อมวันหยุดจะไม่หลุดสายตาอีก
+
+วันหยุดของ 42 ประเทศ และวันหยุดที่ใส่เอง
+มีวันหยุดนักขัตฤกษ์ของ 42 ประเทศในเอเชีย ยุโรป อเมริกา ตะวันออกกลาง แอฟริกา และโอเชียเนีย ประเทศไทยยังไม่อยู่ในรายการ แต่ใส่วันหยุดของไทยเองได้ในโหมดกำหนดเอง วันหยุดที่ตรงกับวันที่เดิมทุกปี เช่น วันจักรีหรือวันสงกรานต์ ตั้งให้ซ้ำทุกปีได้ แล้วแอปจะนำไปใช้ทั้งในปฏิทิน การนับวันลา และคำแนะนำ เลือกวันหยุดสุดสัปดาห์และวันเริ่มต้นสัปดาห์ได้เอง
+
+ติดตามวันลา
+ดูวันลาทั้งหมด วันลาที่ใช้แล้ว และวันลาคงเหลือในหน้าเดียว บันทึกลาครึ่งวัน ลาเป็นชั่วโมง และสร้างประเภทการลาพร้อมสีของตัวเองได้ วันลาเพิ่มเติม เช่น ลาชดเชย ติดตามพร้อมวันหมดอายุ แตะวันที่ในปฏิทินเพื่อเพิ่มหรือแก้ไข หรือนำเข้าประวัติการลาจากรูปหน้าจอระบบของบริษัท
+
+วิดเจ็ตและสำรองข้อมูล
+วันลาคงเหลือและวันหยุดครั้งถัดไปอยู่บนหน้าจอโฮม ข้อมูลสำรองไว้ใน iCloud และแชร์ตารางวันลากับครอบครัวได้ ใช้ได้ทั้ง iPhone และ iPad
+
+วางแผนล่วงหน้า ใช้วันลาน้อยลง แล้วได้พักนานขึ้น
+
+### 지원 URL
+
+https://m1zz.github.io/Goldweek/th/support.html
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/Goldweek/th/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/th/
+
+## vi
+
+### 이름
+
+Goldweek: Lịch nghỉ phép
+
+### 부제
+
+Nối lễ với cuối tuần, nghỉ dài
+
+### 키워드
+
+tết,ngày,bù,năm,quốc,khánh,kế,hoạch,du,xuân,hè,đơn,xin,công,ty,văn,phòng,nhân,viên,đếm,ngược,tiện
+
+### 프로모션 텍스트
+
+Sắp có ngày lễ? Goldweek ghép ngày lễ với cuối tuần và cho bạn biết nên xin nghỉ ngày nào để được kỳ nghỉ dài nhất. Xem số phép còn lại ngay trên tiện ích.
+
+### 설명
+
+Goldweek giúp bạn chọn những ngày xin nghỉ có lợi nhất.
+Ứng dụng ghép ngày lễ với cuối tuần rồi chỉ ra cách nghỉ được lâu nhất mà tốn ít ngày phép nhất, không cần ngồi lật lịch tự tính.
+
+Gợi ý cho mỗi dịp lễ
+Với mỗi ngày lễ sắp tới, bạn biết cần nghỉ phép mấy ngày và sẽ được nghỉ liền bao nhiêu ngày. Không bỏ lỡ ngày nối lễ nào nữa.
+
+Ngày lễ của 42 quốc gia và ngày lễ tự thêm
+Có sẵn ngày lễ của 42 quốc gia ở châu Á, châu Âu, châu Mỹ, Trung Đông, châu Phi và châu Đại Dương. Việt Nam chưa có trong danh sách, nhưng bạn có thể tự thêm ngày lễ Việt Nam ở chế độ tự thiết lập. Ngày lễ cố định như Tết Dương lịch hay Quốc khánh có thể đặt lặp lại hằng năm, còn Tết Nguyên Đán thì thêm theo từng năm. Ngày lễ bạn thêm được dùng cho lịch, cách tính phép và gợi ý. Bạn cũng tự chọn ngày cuối tuần và ngày bắt đầu tuần.
+
+Theo dõi phép năm
+Tổng số phép, phép đã dùng và phép còn lại trên cùng một màn hình. Ghi nghỉ nửa ngày, nghỉ theo giờ, và tự tạo loại nghỉ với màu riêng. Các ngày phép thêm như nghỉ bù được theo dõi kèm hạn dùng. Chạm vào một ngày trên lịch để thêm hoặc sửa, hoặc nhập lịch sử nghỉ từ ảnh chụp màn hình hệ thống nhân sự của công ty.
+
+Tiện ích và sao lưu
+Số phép còn lại và kỳ nghỉ sắp tới hiện ngay trên Màn hình chính. Dữ liệu được sao lưu lên iCloud, và bạn có thể chia sẻ lịch nghỉ với gia đình. Dùng được trên iPhone và iPad.
+
+Lên kế hoạch sớm, dùng ít phép hơn, nghỉ ngơi nhiều hơn.
+
+### 지원 URL
+
+https://m1zz.github.io/Goldweek/vi/support.html
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/Goldweek/vi/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/vi/

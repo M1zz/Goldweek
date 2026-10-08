@@ -25,7 +25,7 @@ enum CalendarSpan: Int, CaseIterable, Identifiable {
 struct PeriodNavigator: View {
     @Binding var currentMonth: Date
     let span: CalendarSpan
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var start: Date { span.periodStart(containing: currentMonth) }
     private var end: Date { calendar.date(byAdding: .month, value: span.rawValue - 1, to: start) ?? start }
@@ -77,7 +77,7 @@ struct CalendarOverviewGrid: View {
     let onSelectMonth: (Date) -> Void
 
     @Environment(\.horizontalSizeClass) private var sizeClass
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var months: [Date] {
         let start = span.periodStart(containing: currentMonth)
@@ -133,7 +133,7 @@ struct MiniMonthView: View {
     var large = false
 
     @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var firstWeekday: Int { HolidayService.firstWeekday(for: country, override: firstWeekdayRaw) }
 

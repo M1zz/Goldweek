@@ -128,6 +128,18 @@
             "state": "translated",
             "value": "%1$@ · cuti %2$@ hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · ลา %2$@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · nghỉ phép %2$@ ngày"
+          }
         }
       }
     },
@@ -251,6 +263,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ hari"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ngày"
           }
         }
       }
@@ -376,6 +400,18 @@
             "state": "translated",
             "value": "Sisa %@ hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เหลือ %@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %@ ngày"
+          }
         }
       }
     },
@@ -496,6 +532,18 @@
           }
         },
         "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "vi": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld"
@@ -624,6 +672,18 @@
             "state": "translated",
             "value": "%lld%%"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
         }
       }
     },
@@ -747,6 +807,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sisa %lld%%"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เหลือ %lld%%"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %lld%%"
           }
         }
       }
@@ -896,6 +968,18 @@
             "state": "translated",
             "value": "%lld hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ngày"
+          }
         }
       }
     },
@@ -1044,6 +1128,18 @@
             "state": "translated",
             "value": "%lld hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ngày"
+          }
         }
       }
     },
@@ -1168,6 +1264,18 @@
             "state": "translated",
             "value": "+%@ hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ ngày"
+          }
         }
       }
     },
@@ -1288,6 +1396,18 @@
           }
         },
         "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "vi": {
           "stringUnit": {
             "state": "translated",
             "value": "D-"
@@ -1415,6 +1535,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "HARI"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NGÀY"
           }
         }
       }
@@ -1546,6 +1678,18 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -1669,6 +1813,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hingga diperbarui"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ถึงรอบใหม่"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đến kỳ làm mới"
           }
         }
       }
@@ -1818,6 +1974,18 @@
             "state": "translated",
             "value": "%lld hari lagi hingga diperbarui"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อีก %lld วันถึงรอบใหม่"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %lld ngày đến kỳ làm mới"
+          }
         }
       }
     },
@@ -1941,6 +2109,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Target"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เป้าหมาย"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mục tiêu"
           }
         }
       }
@@ -2066,6 +2246,18 @@
             "state": "translated",
             "value": "Sisa cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาคงเหลือ"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phép còn lại"
+          }
         }
       }
     },
@@ -2189,6 +2381,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sisa cuti %@ hari"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาคงเหลือ %@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %@ ngày phép"
           }
         }
       }
@@ -2314,6 +2518,18 @@
             "state": "translated",
             "value": "Lihat sisa cuti dan liburan berikutnya"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ดูวันลาคงเหลือและวันหยุดที่กำลังจะถึง"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem số phép còn lại và kỳ nghỉ sắp tới"
+          }
         }
       }
     },
@@ -2437,6 +2653,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cuti mendatang"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาที่กำลังจะถึง"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kỳ nghỉ sắp tới"
           }
         }
       }
@@ -2562,6 +2790,18 @@
             "state": "translated",
             "value": "Cuti berikutnya"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาครั้งถัดไป"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kỳ nghỉ tiếp theo"
+          }
         }
       }
     },
@@ -2685,6 +2925,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hitung mundur menuju cuti berikutnya"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "นับถอยหลังสู่วันหยุดครั้งถัดไป"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đếm ngược đến kỳ nghỉ tiếp theo"
           }
         }
       }
@@ -2810,6 +3062,18 @@
             "state": "translated",
             "value": "Bonus"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "โบนัส"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thưởng"
+          }
         }
       }
     },
@@ -2933,6 +3197,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Laju pemakaian"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อัตราการใช้"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tốc độ dùng phép"
           }
         }
       }
@@ -3058,6 +3334,18 @@
             "state": "translated",
             "value": "Laju pemakaian: %@"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อัตราการใช้: %@"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tốc độ dùng phép: %@"
+          }
         }
       }
     },
@@ -3181,6 +3469,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aktual"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "จริง"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thực tế"
           }
         }
       }
@@ -3306,6 +3606,18 @@
             "state": "translated",
             "value": "Tambahkan rencana cuti di aplikasi"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เพิ่มแผนวันลาในแอป"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm kế hoạch nghỉ trong ứng dụng"
+          }
         }
       }
     },
@@ -3429,6 +3741,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cuti"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ลาพักร้อน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phép năm"
           }
         }
       }
@@ -3554,6 +3878,18 @@
             "state": "translated",
             "value": "Cuti %@ hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ลาพักร้อน %@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ngày phép"
+          }
         }
       }
     },
@@ -3677,6 +4013,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sisa cuti %@ hari"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ลาพักร้อนเหลือ %@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %@ ngày phép"
           }
         }
       }
@@ -3802,6 +4150,18 @@
             "state": "translated",
             "value": "Lihat laju pemakaian cuti hingga jatah diperbarui"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ดูอัตราการใช้วันลาจนถึงรอบใหม่"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem tốc độ dùng phép đến kỳ làm mới"
+          }
         }
       }
     },
@@ -3925,6 +4285,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Laju pemakaian cuti"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อัตราการใช้วันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tốc độ dùng phép"
           }
         }
       }
@@ -4050,6 +4422,18 @@
             "state": "translated",
             "value": "Ringkasan cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "สถานะวันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tình trạng phép"
+          }
         }
       }
     },
@@ -4173,6 +4557,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "hari"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ngày"
           }
         }
       }
@@ -4298,6 +4694,18 @@
             "state": "translated",
             "value": "Sisa"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "คงเหลือ"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn lại"
+          }
         }
       }
     },
@@ -4421,6 +4829,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lihat D-day dan sisa cuti di Layar Terkunci"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ดู D-day และวันลาคงเหลือบนหน้าจอล็อก"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem D-day và số phép còn lại trên Màn hình khóa"
           }
         }
       }
@@ -4547,6 +4967,18 @@
             "state": "translated",
             "value": "Sisa cuti di Layar Terkunci"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ดูวันลาคงเหลือบนหน้าจอล็อก"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem phép còn lại trên Màn hình khóa"
+          }
         }
       }
     },
@@ -4670,6 +5102,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Total cuti"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาทั้งหมด"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tổng số phép"
           }
         }
       }
@@ -4796,6 +5240,18 @@
             "state": "translated",
             "value": "Cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nghỉ phép"
+          }
         }
       }
     },
@@ -4919,6 +5375,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "D-Day Cuti"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-Day วันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-Day kỳ nghỉ"
           }
         }
       }
@@ -5044,6 +5512,18 @@
             "state": "translated",
             "value": "Yuk, rencanakan cuti berikutnya"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "มาวางแผนวันหยุดครั้งถัดไปกัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lên kế hoạch kỳ nghỉ tới nhé?"
+          }
         }
       }
     },
@@ -5167,6 +5647,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Belum ada rencana cuti"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ยังไม่มีแผนลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có kế hoạch nghỉ"
           }
         }
       }
@@ -5292,6 +5784,18 @@
             "state": "translated",
             "value": "Tidak ada cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ไม่มีวันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có kỳ nghỉ"
+          }
         }
       }
     },
@@ -5416,6 +5920,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kalender Cuti"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ปฏิทินวันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lịch nghỉ phép"
           }
         }
       }

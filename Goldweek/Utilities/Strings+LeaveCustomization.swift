@@ -34,6 +34,8 @@ extension Strings {
         case .turkish: return "Saatlik"
         case .russian: return "По часам"
         case .indonesian: return "Per jam"
+        case .thai: return "ลาเป็นชั่วโมง"
+        case .vietnamese: return "Theo giờ"
         }
     }
 
@@ -61,6 +63,8 @@ extension Strings {
         case .turkish: return "sa · dk"
         case .russian: return "ч · мин"
         case .indonesian: return "jam · mnt"
+        case .thai: return "ชม. · นาที"
+        case .vietnamese: return "giờ · phút"
         }
     }
 
@@ -88,6 +92,8 @@ extension Strings {
         case .turkish: return "Saat"
         case .russian: return "Часы"
         case .indonesian: return "Jam"
+        case .thai: return "ชั่วโมง"
+        case .vietnamese: return "Giờ"
         }
     }
 
@@ -115,6 +121,8 @@ extension Strings {
         case .turkish: return "Dakika"
         case .russian: return "Минуты"
         case .indonesian: return "Menit"
+        case .thai: return "นาที"
+        case .vietnamese: return "Phút"
         }
     }
 
@@ -142,6 +150,8 @@ extension Strings {
         case .turkish: return "Günlük çalışma sürene (\(w)) göre güne çevrilir ve izninden düşülür. Çalışma süresini Ayarlar'dan değiştirebilirsin."
         case .russian: return "Переводится в дни по вашему рабочему дню (\(w)) и вычитается из отпуска. Длину рабочего дня можно изменить в настройках."
         case .indonesian: return "Diubah ke hari berdasarkan jam kerjamu (\(w)) dan dipotong dari cuti. Lama jam kerja bisa diubah di Pengaturan."
+        case .thai: return "แปลงเป็นวันตามชั่วโมงทำงานต่อวันของคุณ (\(w)) แล้วหักจากวันลา เปลี่ยนชั่วโมงทำงานต่อวันได้ในการตั้งค่า"
+        case .vietnamese: return "Được quy đổi ra ngày theo số giờ làm mỗi ngày của bạn (\(w)) và trừ vào phép. Bạn có thể đổi số giờ làm trong Cài đặt."
         }
     }
 
@@ -169,6 +179,8 @@ extension Strings {
         case .turkish: return "Günlük çalışma süresi"
         case .russian: return "Длина рабочего дня"
         case .indonesian: return "Lama jam kerja"
+        case .thai: return "ชั่วโมงทำงานต่อวัน"
+        case .vietnamese: return "Số giờ làm mỗi ngày"
         }
     }
 
@@ -196,6 +208,8 @@ extension Strings {
         case .turkish: return "İzin türleri ve renkler"
         case .russian: return "Виды отпуска и цвета"
         case .indonesian: return "Jenis cuti dan warna"
+        case .thai: return "ประเภทการลาและสี"
+        case .vietnamese: return "Loại nghỉ và màu sắc"
         }
     }
 
@@ -223,6 +237,8 @@ extension Strings {
         case .turkish: return "Her tür takvimde kendi rengiyle görünür. Şirketin kendi izin adlarını kullanıyorsa bunları yeni tür olarak oluştur."
         case .russian: return "Каждый вид отображается в календаре своим цветом. Если в вашей компании свои названия отпусков, создайте их как новые виды."
         case .indonesian: return "Setiap jenis tampil di kalender dengan warnanya sendiri. Jika perusahaanmu punya nama cuti sendiri, buat sebagai jenis baru."
+        case .thai: return "แต่ละประเภทจะแสดงในปฏิทินด้วยสีของตัวเอง ถ้าบริษัทของคุณมีชื่อประเภทการลาเฉพาะ สร้างเป็นประเภทใหม่ได้เลย"
+        case .vietnamese: return "Mỗi loại hiển thị trên lịch bằng màu riêng. Nếu công ty bạn dùng tên loại nghỉ riêng, hãy tạo thành loại mới."
         }
     }
 
@@ -250,6 +266,8 @@ extension Strings {
         case .turkish: return "Varsayılan türler"
         case .russian: return "Стандартные виды"
         case .indonesian: return "Jenis bawaan"
+        case .thai: return "ประเภทพื้นฐาน"
+        case .vietnamese: return "Loại có sẵn"
         }
     }
 
@@ -277,6 +295,8 @@ extension Strings {
         case .turkish: return "Türlerim"
         case .russian: return "Мои виды"
         case .indonesian: return "Jenis buatanku"
+        case .thai: return "ประเภทของฉัน"
+        case .vietnamese: return "Loại của tôi"
         }
     }
 
@@ -304,6 +324,8 @@ extension Strings {
         case .turkish: return "Yeni tür"
         case .russian: return "Новый вид"
         case .indonesian: return "Jenis baru"
+        case .thai: return "ประเภทใหม่"
+        case .vietnamese: return "Loại mới"
         }
     }
 
@@ -331,6 +353,8 @@ extension Strings {
         case .turkish: return "Ad"
         case .russian: return "Название"
         case .indonesian: return "Nama"
+        case .thai: return "ชื่อ"
+        case .vietnamese: return "Tên"
         }
     }
 
@@ -358,6 +382,8 @@ extension Strings {
         case .turkish: return "Renk"
         case .russian: return "Цвет"
         case .indonesian: return "Warna"
+        case .thai: return "สี"
+        case .vietnamese: return "Màu"
         }
     }
 
@@ -385,6 +411,8 @@ extension Strings {
         case .turkish: return "Yıllık izinden düş"
         case .russian: return "Вычитать из отпуска"
         case .indonesian: return "Potong dari cuti tahunan"
+        case .thai: return "หักจากวันลาพักร้อน"
+        case .vietnamese: return "Trừ vào phép năm"
         }
     }
 
@@ -412,6 +440,8 @@ extension Strings {
         case .turkish: return "Rengi sıfırla"
         case .russian: return "Сбросить цвет"
         case .indonesian: return "Atur ulang warna"
+        case .thai: return "รีเซ็ตสี"
+        case .vietnamese: return "Đặt lại màu"
         }
     }
 
@@ -439,6 +469,8 @@ extension Strings {
         case .turkish: return "Takvim aralığı"
         case .russian: return "Период календаря"
         case .indonesian: return "Rentang kalender"
+        case .thai: return "ช่วงปฏิทิน"
+        case .vietnamese: return "Khoảng hiển thị lịch"
         }
     }
 
@@ -466,6 +498,8 @@ extension Strings {
         case .turkish: return "Ayrıntılar için bir aya dokun"
         case .russian: return "Нажмите на месяц, чтобы открыть его"
         case .indonesian: return "Ketuk bulan untuk melihat detailnya"
+        case .thai: return "แตะเดือนเพื่อดูรายละเอียด"
+        case .vietnamese: return "Chạm vào tháng để xem chi tiết"
         }
     }
 
@@ -493,6 +527,8 @@ extension Strings {
         case .turkish: return "Bu türle eklenen izinler silinmez, varsayılan türle görünür."
         case .russian: return "Отпуска этого вида останутся и будут показаны как стандартный вид."
         case .indonesian: return "Cuti dengan jenis ini tetap ada dan tampil sebagai jenis bawaan."
+        case .thai: return "วันลาที่บันทึกด้วยประเภทนี้จะยังอยู่ และแสดงเป็นประเภทพื้นฐาน"
+        case .vietnamese: return "Các ngày nghỉ đã ghi với loại này vẫn được giữ và hiển thị theo loại có sẵn."
         }
     }
 
@@ -502,7 +538,7 @@ extension Strings {
         f.allowedUnits = minutes >= 60 ? [.hour, .minute] : [.minute]
         f.unitsStyle = .abbreviated
         f.zeroFormattingBehavior = .dropAll
-        var cal = Calendar.current
+        var cal = Calendar.app
         cal.locale = Locale(identifier: localeIdentifier)
         f.calendar = cal
         return f.string(from: TimeInterval(max(0, minutes) * 60)) ?? "\(minutes)"
@@ -513,7 +549,7 @@ extension Strings {
         let f = DateComponentsFormatter()
         f.allowedUnits = months >= 12 ? [.year] : [.month]
         f.unitsStyle = .short
-        var cal = Calendar.current
+        var cal = Calendar.app
         cal.locale = Locale(identifier: localeIdentifier)
         f.calendar = cal
         return f.string(from: DateComponents(year: months >= 12 ? months / 12 : nil, month: months >= 12 ? nil : months)) ?? "\(months)"

@@ -189,6 +189,21 @@ COPY = {
         ("41 ülkenin<br>resmî tatilleri", "Ramazan ve Kurban Bayramı dahil"),
         ("Senin ülken,<br>senin dilin", "21 dilde kullanılabilir"),
     ],
+    # 태국·베트남은 내장 공휴일이 없다 — 데모는 직접 입력 모드에 그 나라 공휴일을 넣은 모습
+    "th": [
+        ("ถึงเวลาพัก<br>หรือยัง?", "หยุดครั้งก่อน ครั้งถัดไป และเวลาที่ควรพัก"),
+        ("ลาน้อย<br>ได้หยุดยาว", "ต่อวันหยุดกับเสาร์-อาทิตย์ให้อัตโนมัติ"),
+        ("วันลาทั้งหมด<br>ในหน้าเดียว", "แตะวันที่เพื่อเพิ่มหรือแก้ไขวันลา"),
+        ("วันหยุด<br>41 ประเทศ", "ประเทศอื่นใส่วันหยุดเองได้"),
+        ("ประเทศของคุณ<br>ภาษาของคุณ", "ใช้ได้ 23 ภาษา"),
+    ],
+    "vi": [
+        ("Khi nào nên<br>nghỉ ngơi?", "Lần nghỉ trước, lần nghỉ tới và lúc cần nghỉ"),
+        ("Ít ngày phép,<br>nghỉ thật dài", "Tự ghép ngày lễ với cuối tuần cho bạn"),
+        ("Mọi ngày nghỉ<br>trên một màn hình", "Chạm vào ngày để thêm hoặc sửa"),
+        ("Ngày lễ của<br>41 quốc gia", "Nước khác có thể tự thêm ngày lễ"),
+        ("Quốc gia của bạn,<br>ngôn ngữ của bạn", "Có 23 ngôn ngữ"),
+    ],
 }
 
 BRAND = "#0066FF"

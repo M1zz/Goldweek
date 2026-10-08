@@ -5,7 +5,7 @@
 # 탭마다 시뮬레이터 화면을 캡처한다. 결과: docs/screenshots/raw/<로케일>/<번호>-<화면>.png (원본 — 스토어에 안 올라감)
 # 제출본은 scripts/make_marketing_screenshots.py 가 이 원본으로 docs/screenshots/marketing/<로케일>/ 에 만든다.
 #
-# 사용법: scripts/take_screenshots.sh [언어...]   (기본: 21개 언어 전부)
+# 사용법: scripts/take_screenshots.sh [언어...]   (기본: 23개 언어 전부)
 #         IPAD=1 scripts/take_screenshots.sh …   iPad 13" (2064×2752) — 원본은 raw/ipad/<로케일>/
 
 set -euo pipefail
@@ -19,7 +19,7 @@ fi
 BUNDLE_ID="com.Ysoup.LeaveWise"
 DERIVED="${DERIVED:-$ROOT/build/screenshots-dd}"
 OUT="${OUT:-$ROOT/docs/screenshots/raw${IPAD:+/ipad}}"
-LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr es it pt zh-Hant ru id nl sv nb da fi pl cs el tr)
+LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr es it pt zh-Hant ru id nl sv nb da fi pl cs el tr th vi)
 
 # 탭 번호:이름[:스크롤 위치] (MainTabView 의 tag, ScreenshotMode.scrollTarget)
 SHOTS=("0:home" "1:recommend:recommendations" "1:calendar:nextYear" "3:settings")
@@ -36,7 +36,8 @@ apple_locale() {   # 앱 언어 코드 → 지역 (국가 판별이 지역을 �
     de) echo "de_DE" ;; fr) echo "fr_FR" ;; es) echo "es_ES" ;; it) echo "it_IT" ;;
     pt) echo "pt_BR" ;; zh-Hant) echo "zh_TW" ;; ru) echo "ru_RU" ;; id) echo "id_ID" ;;
     nl) echo "nl_NL" ;; sv) echo "sv_SE" ;; nb) echo "nb_NO" ;; da) echo "da_DK" ;; fi) echo "fi_FI" ;;
-    pl) echo "pl_PL" ;; cs) echo "cs_CZ" ;; el) echo "el_GR" ;; tr) echo "tr_TR" ;; *) echo "$1" ;;
+    pl) echo "pl_PL" ;; cs) echo "cs_CZ" ;; el) echo "el_GR" ;; tr) echo "tr_TR" ;;
+    th) echo "th_TH" ;; vi) echo "vi_VN" ;; *) echo "$1" ;;
   esac
 }
 
