@@ -136,7 +136,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
             // 영어로 바꿨을 때 그 화면들까지 따라온다.
             // ⚠️ 번들 문구는 **다음 실행부터** 반영된다(이미 로드된 번들 캐시는 안 바뀐다).
             //    설정 화면의 행 이름들은 Strings 를 쓰므로 즉시 바뀐다.
-            // 지원하지 않는 언어에서 개발 언어(한국어)로 떨어지지 않도록 영어를 뒤에 둔다.
+            // 지원하지 않는 언어에서도 영어로 떨어지도록 영어를 뒤에 둔다(개발 언어도 en).
             let fallback = newValue == .english ? [] : ["en"]
             UserDefaults.standard.set([newValue.bundleLanguageCode] + fallback, forKey: "AppleLanguages")
             LanguageManager.shared.currentLanguage = newValue
@@ -22247,6 +22247,39 @@ enum Strings {
         case .italian: return days == 1 ? "tra 1 giorno" : "tra \(days) giorni"
         case .portuguese: return days == 1 ? "em 1 dia" : "em \(days) dias"
         case .chineseTraditional: return days == 1 ? "還有 1 天" : "還有 \(days) 天"
+        }
+    }
+}
+
+// MARK: - 기기 캘린더
+
+extension Strings {
+    /// 기기 캘린더 앱에 새로 만드는 Goldweek 전용 캘린더 이름
+    static var goldweekCalendarTitle: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "Goldweek 연차"
+        case .english: return "Goldweek Leave"
+        case .japanese: return "Goldweek 休暇"
+        case .chinese: return "Goldweek 休假"
+        case .chineseTraditional: return "Goldweek 休假"
+        case .german: return "Goldweek Urlaub"
+        case .french: return "Goldweek Congés"
+        case .spanish: return "Goldweek Vacaciones"
+        case .italian: return "Goldweek Ferie"
+        case .portuguese: return "Goldweek Folgas"
+        case .dutch: return "Goldweek Verlof"
+        case .swedish: return "Goldweek Ledighet"
+        case .norwegian: return "Goldweek Ferie"
+        case .danish: return "Goldweek Ferie"
+        case .finnish: return "Goldweek Lomat"
+        case .polish: return "Goldweek Urlopy"
+        case .czech: return "Goldweek Dovolená"
+        case .greek: return "Goldweek Άδειες"
+        case .turkish: return "Goldweek İzinler"
+        case .russian: return "Goldweek Отпуска"
+        case .indonesian: return "Goldweek Cuti"
+        case .thai: return "Goldweek วันลา"
+        case .vietnamese: return "Goldweek Nghỉ phép"
         }
     }
 }

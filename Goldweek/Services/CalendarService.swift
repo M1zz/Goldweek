@@ -16,6 +16,7 @@ class CalendarService {
     private let eventStore = EKEventStore()
     // 기존 사용자 데이터 호환을 위해 UserDefaults 키는 보존
     private let calendarIdentifierKey = "LeaveWiseCalendarIdentifier"
+    // 예전에 만든 캘린더를 알아보는 데 쓰는 이름. 새 캘린더는 Strings.goldweekCalendarTitle(앱 언어)로 만든다.
     private let calendarTitle = "Goldweek 연차"
     private let legacyCalendarTitle = "LeaveWise 연차"
     
@@ -78,7 +79,7 @@ class CalendarService {
            let existingCalendar = eventStore.calendar(withIdentifier: savedIdentifier) {
             // 레거시 제목인 경우 자동으로 새 제목으로 변경
             if existingCalendar.title == legacyCalendarTitle {
-                existingCalendar.title = calendarTitle
+                existingCalendar.title = Strings.goldweekCalendarTitle
                 do {
                     try eventStore.saveCalendar(existingCalendar, commit: true)
                     logInfo("캘린더 제목 마이그레이션 완료: \(legacyCalendarTitle) → \(calendarTitle)", category: .app)
@@ -92,7 +93,7 @@ class CalendarService {
 
         // 새 캘린더 생성
         let calendar = EKCalendar(for: .event, eventStore: eventStore)
-        calendar.title = calendarTitle
+        calendar.title = Strings.goldweekCalendarTitle
         calendar.cgColor = UIColor.systemBlue.cgColor
 
         // iCloud 계정이 있으면 iCloud에, 아니면 로컬에 저장
@@ -191,7 +192,7 @@ class CalendarService {
         
         // 제목과 날짜가 일치하는 이벤트 찾기
         for event in events {
-            if event.title == eventTitle {
+            if event.title == eventTitle || event.title == legacyEventTitle(for: leaveRecord) {
                 try eventStore.remove(event, span: .thisEvent)
                 logInfo("캘린더에서 연차 삭제 완료: \(eventTitle)", category: .app)
                 return
@@ -381,8 +382,15 @@ class CalendarService {
             return "\(typeString)"
         } else {
             let days = leaveRecord.daysCount
-            return "\(typeString) (\(days)일)"
+            return "\(typeString) \(Strings.daysCountLabel(days))"
         }
+    }
+
+    /// 2.2.2 이전에 만든 이벤트 제목 — 일수 표기가 언어와 상관없이 "(N일)" 이었다. 지울 때 이것도 찾는다.
+    private func legacyEventTitle(for leaveRecord: LeaveRecord) -> String {
+        let typeString = Strings.leaveTypeName(leaveRecord.type)
+        if leaveRecord.startDate == leaveRecord.endDate { return typeString }
+        return "\(typeString) (\(leaveRecord.daysCount)일)"
     }
     
     /// Goldweek 캘린더의 모든 이벤트 가져오기

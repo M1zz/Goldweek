@@ -7,144 +7,168 @@
 이제 태국어와 베트남어로도 쓸 수 있어요
 위젯과 알림도 태국어와 베트남어로 나와요
 태국력이나 일본 연호 달력에서도 날짜가 맞아요
+위젯이 휴대폰 언어로 제대로 나와요
 
 ### App Store (English)
 
 Goldweek now speaks Thai and Vietnamese
 Widgets and alerts are translated too
 Dates stay right with any calendar
+Widgets now match your phone's language
 
 ### 앱스토어 (일본어)
 
 タイ語とベトナム語に対応しました
 ウィジェットと通知もタイ語とベトナム語に
 和暦や仏暦の設定でも日付が正しくなりました
+ウィジェットが端末の言語で表示されます
 
 ### 앱스토어 (중국어 간체)
 
 新增泰语和越南语
 小组件和通知也支持泰语和越南语
 手机使用佛历或日本年号时，日期也准确无误
+小组件现在按手机语言显示
 
 ### 앱스토어 (독일어)
 
 Jetzt auch auf Thai und Vietnamesisch
 Auch Widgets und Mitteilungen übersetzt
 Korrekte Daten bei jedem Kalendertyp
+Widgets jetzt in deiner Gerätesprache
 
 ### 앱스토어 (프랑스어)
 
 Disponible en thaï et en vietnamien
 Widgets et notifications traduits aussi
 Dates justes quel que soit le calendrier
+Les widgets parlent votre langue
 
 ### 앱스토어 (스페인어)
 
 Ahora en tailandés y vietnamita
 Widgets y avisos también traducidos
 Fechas exactas con cualquier calendario
+Los widgets ya salen en tu idioma
 
 ### 앱스토어 (이탈리아어)
 
 Ora anche in thailandese e vietnamita
 Tradotti anche widget e notifiche
 Date giuste con qualsiasi calendario
+I widget ora sono nella tua lingua
 
 ### 앱스토어 (포르투갈어 브라질)
 
 Agora em tailandês e vietnamita
 Widgets e notificações também traduzidos
 Datas certas em qualquer calendário
+Widgets agora no idioma do seu celular
 
 ### 앱스토어 (중국어 번체)
 
 新增泰文與越南文
 小工具與通知也支援泰文與越南文
 手機使用佛曆或日本年號時，日期也正確無誤
+小工具現在會依手機語言顯示
 
 ### 앱스토어 (네덜란드어)
 
 Nu ook in het Thais en Vietnamees
 Ook widgets en meldingen vertaald
 Juiste data bij elke kalenderinstelling
+Widgets nu in de taal van je toestel
 
 ### 앱스토어 (스웨덴어)
 
 Nu på thailändska och vietnamesiska
 Widgetar och notiser är också översatta
 Rätt datum oavsett kalenderinställning
+Widgetar visas nu på ditt språk
 
 ### 앱스토어 (노르웨이어 보크말)
 
 Nå på thai og vietnamesisk
 Widgeter og varsler er også oversatt
 Riktige datoer uansett kalendertype
+Widgeter vises nå på ditt språk
 
 ### 앱스토어 (덴마크어)
 
 Nu på thai og vietnamesisk
 Widgets og notifikationer er nu oversat
 Korrekte datoer uanset kalendertype
+Widgets vises nu på dit sprog
 
 ### 앱스토어 (핀란드어)
 
 Nyt myös thaiksi ja vietnamiksi
 Myös widgetit ja ilmoitukset käännetty
 Oikeat päivät millä tahansa kalenterilla
+Widgetit näkyvät nyt laitteesi kielellä
 
 ### 앱스토어 (폴란드어)
 
 Teraz także po tajsku i wietnamsku
 Obejmuje to widżety i powiadomienia
 Poprawne daty przy każdym kalendarzu
+Widżety teraz w języku telefonu
 
 ### 앱스토어 (체코어)
 
 Nově v thajštině a vietnamštině
 Přeložené jsou i widgety a oznámení
 Správná data při jakémkoli kalendáři
+Widgety jsou teď v jazyce telefonu
 
 ### 앱스토어 (그리스어)
 
 Τώρα και στα ταϊλανδικά και βιετναμέζικα
 Μεταφρασμένα widget και ειδοποιήσεις
 Σωστές ημερομηνίες με κάθε ημερολόγιο
+Τα widget εμφανίζονται στη γλώσσα σου
 
 ### 앱스토어 (튀르키예어)
 
 Artık Tayca ve Vietnamca da var
 Widget'lar ve bildirimler de çevrildi
 Her takvim ayarında doğru tarihler
+Widget'lar artık cihazınızın dilinde
 
 ### 앱스토어 (러시아어)
 
 Теперь на тайском и вьетнамском
 Виджеты и уведомления тоже переведены
 Верные даты при любом календаре
+Виджеты теперь на языке телефона
 
 ### 앱스토어 (인도네시아어)
 
 Kini hadir dalam bahasa Thai dan Vietnam
 Widget dan notifikasi ikut diterjemahkan
 Tanggal tetap tepat di kalender apa pun
+Widget kini memakai bahasa ponselmu
 
 ### 앱스토어 (태국어)
 
 ใช้แอปเป็นภาษาไทยและเวียดนามได้แล้ว
 วิดเจ็ตและการแจ้งเตือนก็เป็นภาษาไทย
 ตั้งปฏิทินแบบพุทธก็นับวันลาได้ถูกต้อง
+วิดเจ็ตแสดงเป็นภาษาของเครื่องแล้ว
 
 ### 앱스토어 (베트남어)
 
 Đã có tiếng Việt và tiếng Thái
 Tiện ích và thông báo cũng có tiếng Việt
 Ngày tháng luôn đúng dù dùng lịch nào
+Tiện ích nay hiển thị đúng ngôn ngữ máy
 
 ### 개발 메모 (스토어에 올라가지 않음)
 
 - 앱 언어 th · vi (앱 문자열·위젯·권한 문구·백업/구매 오류·알림), 날짜 로케일 th_TH@calendar=gregorian · vi_VN
 - Calendar.app — 불기·일본식 달력 폰에서도 언제나 양력으로 공휴일·연차 계산
 - 스크린샷 모드: 태국·베트남 데모(직접 입력 공휴일), vi 번아웃 '지난 휴식' 라벨을 짧게(Lần trước)
+- 위젯 하드코딩 한국어(기대 문구·소진 속도·갤러리 예시 메모) → String(localized:) + 위젯 카탈로그 22개 언어, 기기 캘린더 이름·이벤트 일수 표기 현지화
 
 ## 2.2.1
 
