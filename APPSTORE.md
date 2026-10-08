@@ -408,7 +408,7 @@ Goldweek - 黄金假期规划
 
 ### 키워드
 
-拼假,请假,调休,节假日,放假安排,小长假,法定假日,日历,带薪休假,休假攻略,出游计划,周末,桌面小组件,上班族,假期计算,休假,放假,国庆,春节,五一,端午,中秋,清明,元旦
+拼假,请假,调休,节假日,放假安排,小长假,法定假日,日历,带薪休假,休假攻略,出游计划,周末,桌面小组件,上班族,假期计算,休假,放假,国庆,春节,五一,端午,中秋,清明,元旦,补班,倒休
 
 ### 프로모션 텍스트
 
@@ -457,7 +457,7 @@ Goldweek - 連假請假規劃
 
 ### 키워드
 
-休假,行事曆,國定假日,年假,放假,日曆,補班,假期,出遊,旅遊,上班族,休假攻略,假日,週末,小工具,補休,春節,端午,中秋,清明,元旦,跨年,收假,旅行
+休假,行事曆,國定假日,年假,放假,日曆,補班,假期,出遊,旅遊,上班族,休假攻略,假日,週末,小工具,補休,春節,端午,中秋,清明,元旦,跨年,收假,旅行,排休,補假,連休,雙十,國慶,休假計算
 
 ### 프로모션 텍스트
 
@@ -921,7 +921,7 @@ Celkem, využito a zbývá na jedné obrazovce. Zapíšeš i půlden nebo čtvrt
 Víkendové dny si nastavíš podle sebe, i když pracuješ o sobotách, a vybereš, kterým dnem začíná týden.
 
 Widget a záloha
-Zbývající dovolená a nejbližší volno jsou rovnou na ploše. Záznamy se zálohují do iCloudu a plán dovolené můžeš sdílet s rodinou. Funguje na iPhonu i iPadu, ve 21 jazycích.
+Zbývající dovolená a nejbližší volno jsou rovnou na ploše. Záznamy se zálohují do iCloudu a plán dovolené můžeš sdílet s rodinou. Funguje na iPhonu i iPadu, ve 23 jazycích.
 
 Plánuj dopředu, čerpej méně dní a užij si víc volna.
 
@@ -972,7 +972,7 @@ Goldweek: Πλάνο άδειας
 Διαλέγεις ποιες μέρες είναι το δικό σου Σαββατοκύριακο, ακόμη κι αν δουλεύεις Σάββατο, και με ποια μέρα ξεκινά η εβδομάδα.
 
 Widget και αντίγραφο ασφαλείας
-Το υπόλοιπο της άδειας και το επόμενο ρεπό φαίνονται κατευθείαν στην οθόνη Αφετηρίας. Οι καταχωρίσεις σου αποθηκεύονται στο iCloud και μπορείς να μοιραστείς το πρόγραμμα των αδειών σου με την οικογένειά σου. Λειτουργεί σε iPhone και iPad, σε 21 γλώσσες.
+Το υπόλοιπο της άδειας και το επόμενο ρεπό φαίνονται κατευθείαν στην οθόνη Αφετηρίας. Οι καταχωρίσεις σου αποθηκεύονται στο iCloud και μπορείς να μοιραστείς το πρόγραμμα των αδειών σου με την οικογένειά σου. Λειτουργεί σε iPhone και iPad, σε 23 γλώσσες.
 
 Σχεδίασε από νωρίς, ξόδεψε λιγότερες μέρες άδειας και απόλαυσε περισσότερο ελεύθερο χρόνο.
 
@@ -1023,7 +1023,7 @@ Toplam, kullanılan ve kalan izin tek ekranda. Yarım gün ve çeyrek gün izin 
 Hafta sonu günlerini kendine göre seçersin, hafta sonu çalışıyorsan bile. Haftanın hangi günle başlayacağını da sen belirlersin.
 
 Widget ve yedekleme
-Kalan iznin ve yaklaşan tatilin doğrudan Ana Ekran'da. Kayıtların iCloud'a yedeklenir, tatil planını ailenle paylaşabilirsin. iPhone ve iPad'de, 21 dilde çalışır.
+Kalan iznin ve yaklaşan tatilin doğrudan Ana Ekran'da. Kayıtların iCloud'a yedeklenir, tatil planını ailenle paylaşabilirsin. iPhone ve iPad'de, 23 dilde çalışır.
 
 Önceden planla, daha az izin kullan, daha çok tatil yap.
 
@@ -1051,7 +1051,7 @@ Goldweek: วางแผนวันลา
 
 ### 키워드
 
-ปฏิทิน,วันหยุดนักขัตฤกษ์,ลาพักร้อน,เสาร์อาทิตย์,วันหยุดชดเชย,เที่ยว,มนุษย์เงินเดือน,วิดเจ็ต,สงกรานต์
+ปฏิทิน,วันหยุดนักขัตฤกษ์,ลาพักร้อน,เสาร์อาทิตย์,วันหยุดชดเชย,เที่ยว,มนุษย์เงินเดือน,วิดเจ็ต,สงกรานต์,ทริป,ปีใหม่,ลากิจ
 
 ### 프로모션 텍스트
 

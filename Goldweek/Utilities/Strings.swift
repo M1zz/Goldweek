@@ -13965,7 +13965,7 @@ enum Strings {
         case .russian: return "Прошлый"
         case .indonesian: return "Libur terakhir"
         case .thai: return "หยุดครั้งล่าสุด"
-        case .vietnamese: return "Lần nghỉ trước"
+        case .vietnamese: return "Lần trước"
         case .dutch: return "Laatste rustpauze"
         case .japanese: return "前回の休み"
         case .chinese: return "上次休息"

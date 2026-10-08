@@ -66,7 +66,7 @@ enum ScreenshotMode {
             case .russian: return (.russia, "Анна", 20)
             case .indonesian: return (.indonesia, "Putri", 12)
             // 태국·베트남은 내장 공휴일이 없다 — 사용자가 하듯 직접 입력 모드에 그 나라 공휴일을 넣는다
-            case .thai: return (.custom, "ปลา", 10)
+            case .thai: return (.custom, "ปลา", 15)
             case .vietnamese: return (.custom, "Linh", 12)
             case .dutch: return (.netherlands, "Sanne", 25)
             case .japanese: return (.japan, "ゆき", 20)
