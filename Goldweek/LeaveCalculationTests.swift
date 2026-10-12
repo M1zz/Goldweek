@@ -2140,6 +2140,48 @@ final class LeaveKindAllowanceTests: XCTestCase {
         XCTAssertEqual(LeaveKindUsage.workMinutes(of: hours), 3 * 450 + 240)
     }
 
+    func testICloudBackupKeepsKindsLinksAndSettings() throws {
+        let schema = Schema([UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self, CustomLeaveType.self])
+        func makeContext() throws -> ModelContext {
+            let c = try ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+            return ModelContext(c)
+        }
+        let profile = UserProfile(name: "T", yearStartMonth: 1, totalAnnualLeave: 20)
+        let rol = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
+        rol.allowanceAmount = 32
+        let bonus = BonusLeave(days: 2, type: .compensatory)
+        let r1 = LeaveRecord(startDate: d(2026, 3, 13), endDate: d(2026, 3, 13), type: .special, status: .used,
+                             length: .hours, durationMinutes: 90, customTypeId: rol.id)
+        let r2 = LeaveRecord(startDate: d(2026, 3, 16), endDate: d(2026, 3, 16), type: .compensatory, status: .used,
+                             bonusLeaveId: bonus.id)
+        LeaveStyleStore.shared.setOrder([.custom(rol.id), .builtIn(.sick)])
+
+        let data = try BackupService.shared.createBackup(profile: profile, leaveRecords: [r1, r2], bonusLeaves: [bonus],
+                                                         leaveKinds: [rol])
+        // 복원 전에 설정을 바꿔 두고, 복원하면 돌아오는지 본다
+        LeaveLength.workdayMinutesByWeekday = [:]
+        LeaveStyleStore.shared.setOrder([])
+
+        let context = try makeContext()
+        try BackupService.shared.applyBackup(BackupService.shared.parseBackup(from: data), to: context, existingProfile: nil)
+        let kinds = try context.fetch(FetchDescriptor<CustomLeaveType>())
+        XCTAssertEqual(kinds.map(\.id), [rol.id])
+        XCTAssertEqual(kinds.first?.allowanceAmount, 32)
+        let records = try context.fetch(FetchDescriptor<LeaveRecord>())
+        XCTAssertEqual(records.first { $0.length == .hours }?.customTypeId, rol.id)
+        let restoredBonus = try context.fetch(FetchDescriptor<BonusLeave>()).first
+        XCTAssertEqual(restoredBonus?.id, bonus.id)
+        XCTAssertEqual(records.first { $0.bonusLeaveId != nil }?.bonusLeaveId, bonus.id)
+        XCTAssertEqual(LeaveLength.workdayMinutesByWeekday, [6: 420])
+        XCTAssertEqual(LeaveStyleStore.shared.orderKeys.first, LeaveKindRef.custom(rol.id).key)
+
+        // 예전 백업(종류·설정 없음)도 그대로 읽힌다
+        let legacy = #"{"version":1,"createdAt":"2026-01-01T00:00:00Z","profile":{"name":"T","yearStartMonth":1,"totalAnnualLeave":15,"usedLeave":0,"preferredDurationRaw":"","preferredSeasonsRaw":"","preferLongWeekend":true,"preferConsecutive":true,"avoidPeakSeason":false,"priorityActivitiesRaw":""},"leaveRecords":[],"bonusLeaves":[]}"#
+        let old = try BackupService.shared.parseBackup(from: Data(legacy.utf8))
+        XCTAssertNil(old.leaveKinds)
+        XCTAssertNil(old.kindSettings)
+    }
+
     func testLeaveKindOrder() {
         let a = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
         let b = CustomLeaveType(name: "Ex festività", colorHex: "34C759", deductsFromAnnual: false)

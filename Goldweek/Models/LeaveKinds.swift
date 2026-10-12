@@ -105,6 +105,18 @@ final class LeaveStyleStore {
         orderKeys = UserDefaults.standard.stringArray(forKey: Self.orderKey) ?? []
     }
 
+    /// 다른 기기에서 iCloud 로 바뀐 값을 다시 읽는다 (`LeaveSettingsSync`)
+    func reloadFromDefaults() {
+        if let data = UserDefaults.standard.data(forKey: Self.colorsKey),
+           let map = try? JSONDecoder().decode([String: String].self, from: data) {
+            if map != builtInColorHex { builtInColorHex = map }
+        } else if !builtInColorHex.isEmpty {
+            builtInColorHex = [:]
+        }
+        let order = UserDefaults.standard.stringArray(forKey: Self.orderKey) ?? []
+        if order != orderKeys { orderKeys = order }
+    }
+
     /// 모든 종류를 사용자 순서로 — 기본 종류 먼저, 직접 만든 종류는 만든 순서가 기본
     func orderedKinds(custom: [CustomLeaveType]) -> [LeaveKindRef] {
         let defaults = LeaveType.categories.map { LeaveKindRef.builtIn($0) }
@@ -279,5 +291,80 @@ struct LeaveAllowanceCounter: Equatable {
         let sign = value < -0.0001 ? "−" : ""
         let v = abs(value)
         return sign + (isHours ? Strings.durationText(minutes: Int(v.rounded())) : Strings.dayCount(v))
+    }
+}
+
+// MARK: - 휴가 종류·근무 시간 설정 iCloud 동기화
+
+/// 휴가 종류 색·순서, 하루 근무 시간, 요일별 근무 시간을 iCloud 키값 저장소로 기기끼리 맞춘다.
+/// 휴가 기록 자체는 동기화하지 않는다 (iCloud 백업·복원이 맡는다) — 작은 설정값만.
+///
+/// - 앱을 켤 때: iCloud 에 값이 있으면 그 값을 쓰고, 없으면 이 기기 값을 올린다 (새 기기는 바로 같은 설정)
+/// - 이 기기에서 바꾸면: UserDefaults 변경을 보고 다른 값만 올린다
+/// - 다른 기기에서 바뀌면: 내려받아 UserDefaults 에 쓰고 화면을 다시 그린다 (같은 값이라 다시 올리지 않는다)
+final class LeaveSettingsSync {
+    static let shared = LeaveSettingsSync()
+
+    static let keys = ["leaveTypeColors", "leaveKindOrder", "workdayMinutes", "workdayMinutesByWeekday"]
+
+    private let cloud = NSUbiquitousKeyValueStore.default
+    private let defaults = UserDefaults.standard
+    private var started = false
+    private var isApplyingCloud = false
+
+    private init() {}
+
+    func start() {
+        guard !started else { return }
+        started = true
+        NotificationCenter.default.addObserver(forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+                                               object: cloud, queue: .main) { [weak self] note in
+            let changed = note.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] ?? Self.keys
+            self?.pull(keys: changed.filter { Self.keys.contains($0) })
+        }
+        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification,
+                                               object: defaults, queue: .main) { [weak self] _ in
+            self?.pushChanges()
+        }
+        cloud.synchronize()
+        // iCloud 에 있는 값이 먼저, 없는 키만 이 기기 값으로 채운다
+        pull(keys: Self.keys.filter { cloud.object(forKey: $0) != nil })
+        pushChanges()
+    }
+
+    private func pull(keys: [String]) {
+        guard !keys.isEmpty else { return }
+        isApplyingCloud = true
+        defer { isApplyingCloud = false }
+        var changed = false
+        for key in keys {
+            let value = cloud.object(forKey: key)
+            guard !Self.same(value, defaults.object(forKey: key)) else { continue }
+            if let value { defaults.set(value, forKey: key) } else { defaults.removeObject(forKey: key) }
+            changed = true
+        }
+        guard changed else { return }
+        LeaveStyleStore.shared.reloadFromDefaults()
+        logInfo("iCloud 에서 휴가 설정 받음: \(keys.joined(separator: ","))", category: .iCloud)
+    }
+
+    private func pushChanges() {
+        guard !isApplyingCloud else { return }
+        var changed = false
+        for key in Self.keys {
+            let local = defaults.object(forKey: key)
+            guard !Self.same(local, cloud.object(forKey: key)) else { continue }
+            if let local { cloud.set(local, forKey: key) } else { cloud.removeObject(forKey: key) }
+            changed = true
+        }
+        if changed { cloud.synchronize() }
+    }
+
+    private static func same(_ a: Any?, _ b: Any?) -> Bool {
+        switch (a, b) {
+        case (nil, nil): return true
+        case let (a as NSObject, b as NSObject): return a.isEqual(b)
+        default: return false
+        }
     }
 }
