@@ -2202,3 +2202,67 @@ final class LeaveKindAllowanceTests: XCTestCase {
         XCTAssertEqual(LeaveKindRef(key: LeaveKindRef.custom(a.id).key), .custom(a.id))
     }
 }
+
+// MARK: - 근무 형태 · 교대 근무 (교대 근무 피드백, 2026-10-12)
+
+@MainActor
+final class WorkPatternTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+    private let keys = ["workPattern", "shiftDaysOff", "shiftWorkDays", "partTimeDaysOff", "partTimeSwaps", "customWeekendDays"]
+    private var saved: [String: Any] = [:]
+
+    override func setUp() {
+        super.setUp()
+        for k in keys { saved[k] = UserDefaults.standard.object(forKey: k); UserDefaults.standard.removeObject(forKey: k) }
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    override func tearDown() {
+        for k in keys { UserDefaults.standard.set(saved[k], forKey: k) }
+        super.tearDown()
+    }
+
+    func testShiftMarksChangeDaysOffAndLeave() {
+        HolidayService.workPattern = .shift
+        let dayOff = DayOffCalendar.shared
+        let wed = d(2026, 3, 11), sat = d(2026, 3, 14)
+        HolidayService.setShiftMark(true, on: wed, defaultIsOff: dayOff.isDayOffIgnoringShift(wed))
+        HolidayService.setShiftMark(false, on: sat, defaultIsOff: dayOff.isDayOffIgnoringShift(sat))
+        XCTAssertTrue(dayOff.isDayOff(wed))
+        XCTAssertFalse(dayOff.isDayOff(sat))
+        // 월~일 한 주 휴가: 월화목금토 = 5일 차감 (수요일은 교대 휴무, 토요일은 근무)
+        XCTAssertEqual(dayOff.workdays(from: d(2026, 3, 9), to: d(2026, 3, 15)), 5)
+
+        // 공휴일(삼일절)에 근무로 표시하면 근무일
+        let holiday = d(2026, 3, 1)   // 일요일이기도 하다
+        HolidayService.setShiftMark(false, on: holiday, defaultIsOff: dayOff.isDayOffIgnoringShift(holiday))
+        XCTAssertFalse(dayOff.isDayOff(holiday))
+
+        // 원래 상태로 되돌리면 표시가 남지 않는다
+        HolidayService.setShiftMark(false, on: wed, defaultIsOff: dayOff.isDayOffIgnoringShift(wed))
+        XCTAssertNil(HolidayService.shiftMark(on: wed))
+        XCTAssertFalse(dayOff.isDayOff(wed))
+    }
+
+    func testPatternOnlyAppliesItsOwnDays() {
+        let dayOff = DayOffCalendar.shared
+        let fri = d(2026, 3, 13), wed = d(2026, 3, 11)
+        HolidayService.partTimeDaysOffRaw = "6"
+        // 고른 적 없고 파트타임 요일이 있으면 파트타임으로 짐작
+        XCTAssertEqual(HolidayService.workPattern, .partTime)
+        XCTAssertTrue(dayOff.isDayOff(fri))
+
+        HolidayService.workPattern = .shift
+        HolidayService.setShiftMark(true, on: wed, defaultIsOff: false)
+        XCTAssertFalse(dayOff.isDayOff(fri), "교대 근무면 파트타임 요일은 적용하지 않는다")
+        XCTAssertTrue(dayOff.isDayOff(wed))
+
+        HolidayService.workPattern = .fixed
+        XCTAssertFalse(dayOff.isDayOff(fri))
+        XCTAssertFalse(dayOff.isDayOff(wed), "고정 근무면 교대 표시도 적용하지 않는다")
+        // 다시 바꾸면 그대로 돌아온다
+        HolidayService.workPattern = .shift
+        XCTAssertTrue(dayOff.isDayOff(wed))
+    }
+}

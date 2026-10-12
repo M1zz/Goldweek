@@ -296,7 +296,7 @@ struct LeaveAllowanceCounter: Equatable {
 
 // MARK: - 휴가 종류·근무 시간 설정 iCloud 동기화
 
-/// 휴가 종류 색·순서, 하루 근무 시간, 요일별 근무 시간을 iCloud 키값 저장소로 기기끼리 맞춘다.
+/// 휴가 종류 색·순서, 하루·요일별 근무 시간, 근무 형태·교대 휴무를 iCloud 키값 저장소로 기기끼리 맞춘다.
 /// 휴가 기록 자체는 동기화하지 않는다 (iCloud 백업·복원이 맡는다) — 작은 설정값만.
 ///
 /// - 앱을 켤 때: iCloud 에 값이 있으면 그 값을 쓰고, 없으면 이 기기 값을 올린다 (새 기기는 바로 같은 설정)
@@ -305,7 +305,8 @@ struct LeaveAllowanceCounter: Equatable {
 final class LeaveSettingsSync {
     static let shared = LeaveSettingsSync()
 
-    static let keys = ["leaveTypeColors", "leaveKindOrder", "workdayMinutes", "workdayMinutesByWeekday"]
+    static let keys = ["leaveTypeColors", "leaveKindOrder", "workdayMinutes", "workdayMinutesByWeekday",
+                       "workPattern", "usesHourlyLeave", "shiftDaysOff", "shiftWorkDays"]
 
     private let cloud = NSUbiquitousKeyValueStore.default
     private let defaults = UserDefaults.standard

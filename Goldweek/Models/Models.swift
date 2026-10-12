@@ -876,6 +876,19 @@ enum LeaveLength: String, Codable, CaseIterable, Identifiable {
         Double(max(0, minutes)) / Double(workdayMinutes)
     }
 
+    static let usesHourlyLeaveKey = "usesHourlyLeave"
+
+    /// 시간 단위 휴가를 쓰는지 — 끄면 "시간 단위" 버튼과 근무 시간 설정을 숨긴다.
+    /// 고른 적 없으면 근무 시간을 바꾼 적이 있는지로 짐작한다 (시간 기록이 있으면 ContentView 가 켠다).
+    static var usesHourlyLeave: Bool {
+        get {
+            let d = UserDefaults.standard
+            if let v = d.object(forKey: usesHourlyLeaveKey) as? Bool { return v }
+            return d.object(forKey: "workdayMinutes") != nil || d.object(forKey: weekdayMinutesKey) != nil
+        }
+        set { UserDefaults.standard.set(newValue, forKey: usesHourlyLeaveKey) }
+    }
+
     private static let weekdayMinutesKey = "workdayMinutesByWeekday"
 
     /// 요일마다 근무 시간이 다른 경우 (예: 월~목 7시간 30분, 금 7시간) — 요일(1=일 … 7=토) → 분.

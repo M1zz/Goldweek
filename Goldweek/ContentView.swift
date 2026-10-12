@@ -26,6 +26,10 @@ struct ContentView: View {
     /// 파트타임 쉬는 요일·이번 주만 옮긴 날 — 바뀌면 쉬는 날 판정을 다시 채운다
     @AppStorage("partTimeDaysOff") private var partTimeDaysOffRaw = ""
     @AppStorage("partTimeSwaps") private var partTimeSwapsRaw = ""
+    /// 근무 형태·교대 휴무/근무 날 — 바뀌면 쉬는 날 판정을 다시 채운다
+    @AppStorage("workPattern") private var workPatternRaw = ""
+    @AppStorage("shiftDaysOff") private var shiftDaysOffRaw = ""
+    @AppStorage("shiftWorkDays") private var shiftWorkDaysRaw = ""
     /// 사는 곳 공휴일에도 쉬는지 — 바뀌면 쉬는 날 판정을 다시 채운다
     @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
     /// 공휴일 앞뒤 휴가 제한 근무일 수
@@ -68,6 +72,11 @@ struct ContentView: View {
                         syncDayOffCalendar(profile: profile)
                         LeaveMigrations.splitRecommendedLeavesIfNeeded(records: leaveRecords, context: modelContext)
                         LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
+                        // 시간 단위 휴가 켜짐 여부를 고른 적 없는 기존 사용자 — 시간 기록이 있으면 켠다 (버튼이 갑자기 사라지지 않게)
+                        if UserDefaults.standard.object(forKey: LeaveLength.usesHourlyLeaveKey) == nil,
+                           leaveRecords.contains(where: { $0.length == .hours }) {
+                            LeaveLength.usesHourlyLeave = true
+                        }
                         updateWidget()
                         ReviewManager.shared.recordLaunch()
                         // 사람이 앱을 실제로 연 순간 — 실행 횟수·활동일·설치 스냅샷이 여기서 나간다.
@@ -99,6 +108,10 @@ struct ContentView: View {
                     }
                     .onChange(of: customLeaveTypes.map { "\($0.id)\($0.name)\($0.colorHex)" }, initial: true) { _, _ in
                         LeaveStyleStore.shared.update(customTypes: customLeaveTypes)
+                    }
+                    // 캘린더 앱으로 보내기를 켰으면 휴가가 바뀔 때마다 Goldweek 캘린더를 맞춘다
+                    .onChange(of: calendarSyncFingerprint, initial: true) { _, _ in
+                        CalendarService.shared.scheduleSync(records: leaveRecords)
                     }
                     .onChange(of: timeMachineFingerprint) { _, _ in
                         TimeMachineService.shared.scheduleAutoSnapshot(context: modelContext)
@@ -235,11 +248,17 @@ struct ContentView: View {
         }
     }
 
+    /// 캘린더 이벤트에 보이는 값만 — 바뀌면 캘린더를 다시 맞춘다
+    private var calendarSyncFingerprint: String {
+        leaveRecords.map { "\($0.id)\($0.startDate.timeIntervalSince1970)\($0.endDate.timeIntervalSince1970)\($0.statusRaw)\($0.typeRaw)\($0.lengthRaw ?? "")\($0.durationMinutes ?? 0)\($0.customTypeId?.uuidString ?? "")\($0.note)" }
+            .joined(separator: "|")
+    }
+
     /// 쉬는 날 판정 입력값 요약 — 바뀌면 DayOffCalendar 를 다시 채운다
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
-        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(workPatternRaw)|\(shiftDaysOffRaw)|\(shiftWorkDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {

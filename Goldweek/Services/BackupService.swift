@@ -40,6 +40,11 @@ struct LeaveKindSettingsBackup: Codable {
     var order: [String]?
     var workdayMinutes: Int?
     var workdayMinutesByWeekday: [Int: Int]?
+    /// 근무 형태 · 교대 휴무/근무 날 · 시간 단위 휴가 사용
+    var workPattern: String?
+    var shiftDaysOff: String?
+    var shiftWorkDays: String?
+    var usesHourlyLeave: Bool?
 
     static func current() -> LeaveKindSettingsBackup {
         let defaults = UserDefaults.standard
@@ -49,7 +54,11 @@ struct LeaveKindSettingsBackup: Codable {
             builtInColors: LeaveStyleStore.shared.builtInColorHex,
             order: LeaveStyleStore.shared.orderKeys,
             workdayMinutes: minutes > 0 ? minutes : nil,
-            workdayMinutesByWeekday: byWeekday.isEmpty ? nil : byWeekday
+            workdayMinutesByWeekday: byWeekday.isEmpty ? nil : byWeekday,
+            workPattern: defaults.string(forKey: HolidayService.workPatternKey),
+            shiftDaysOff: HolidayService.shiftDaysOffRaw,
+            shiftWorkDays: HolidayService.shiftWorkDaysRaw,
+            usesHourlyLeave: defaults.object(forKey: LeaveLength.usesHourlyLeaveKey) as? Bool
         )
     }
 
@@ -58,6 +67,10 @@ struct LeaveKindSettingsBackup: Codable {
         if let order { LeaveStyleStore.shared.setOrder(order.compactMap { LeaveKindRef(key: $0) }) }
         if let workdayMinutes { LeaveLength.workdayMinutes = workdayMinutes }
         LeaveLength.workdayMinutesByWeekday = workdayMinutesByWeekday ?? [:]
+        if let workPattern { UserDefaults.standard.set(workPattern, forKey: HolidayService.workPatternKey) }
+        if let shiftDaysOff { HolidayService.shiftDaysOffRaw = shiftDaysOff }
+        if let shiftWorkDays { HolidayService.shiftWorkDaysRaw = shiftWorkDays }
+        if let usesHourlyLeave { LeaveLength.usesHourlyLeave = usesHourlyLeave }
     }
 }
 

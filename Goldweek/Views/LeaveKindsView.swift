@@ -224,6 +224,7 @@ struct LeaveKindEditor: View {
             .onAppear {
                 guard !didLoad else { return }
                 didLoad = true
+                if kind == nil { allowanceIsHours = LeaveLength.usesHourlyLeave }
                 if let kind {
                     name = kind.name
                     color = kind.color
@@ -246,11 +247,13 @@ struct LeaveKindEditor: View {
         Section {
             Toggle(Strings.allowanceToggle, isOn: $hasAllowance.animation())
             if hasAllowance {
+                if LeaveLength.usesHourlyLeave || allowanceIsHours {
                 Picker(Strings.allowanceUnitLabel, selection: $allowanceIsHours) {
                     Text(Strings.leaveHoursLabel).tag(true)
                     Text(Strings.allowanceUnitDays).tag(false)
                 }
                 .pickerStyle(.segmented)
+                }
                 if allowanceIsHours {
                     HStack {
                         Text(Strings.leaveHoursLabel)

@@ -507,7 +507,7 @@ struct LeaveRegistrationView: View {
                         .foregroundStyle(.secondary)
                         .voHeader()
                     HStack(spacing: 8) {
-                        ForEach([LeaveLength.quarter, .half, .full, .hours], id: \.self) { len in
+                        ForEach([LeaveLength.quarter, .half, .full] + (LeaveLength.usesHourlyLeave || length == .hours ? [.hours] : []), id: \.self) { len in
                             Button {
                                 HapticFeedback.selection()
                                 length = len

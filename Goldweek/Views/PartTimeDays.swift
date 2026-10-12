@@ -170,3 +170,217 @@ private struct PartTimeMoveSheet: View {
         }
     }
 }
+
+// MARK: - 근무 형태 고르기 (온보딩·설정)
+
+/// 근무 형태 세 가지를 카드로 — 고른 형태에 맞는 기능만 앱에 보인다
+struct WorkPatternChooser: View {
+    @AppStorage(HolidayService.workPatternKey) private var raw = ""
+    var onChange: () -> Void = {}
+
+    private var selected: WorkPattern { WorkPattern(rawValue: raw) ?? HolidayService.workPattern }
+
+    var body: some View {
+        VStack(spacing: 8) {
+            ForEach(WorkPattern.allCases) { pattern in
+                let isOn = selected == pattern
+                Button {
+                    HapticFeedback.selection()
+                    raw = pattern.rawValue
+                    UsageReportingService.record(event: "work_pattern:\(pattern.rawValue)")
+                    onChange()
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: pattern.icon)
+                            .font(.title3)
+                            .frame(width: 28)
+                            .foregroundStyle(isOn ? .white : AppTheme.Colors.brand)
+                            .voDecorative()
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.workPatternName(pattern))
+                                .font(.body.weight(.semibold))
+                            Text(Strings.workPatternDesc(pattern))
+                                .font(.body)
+                                .foregroundStyle(isOn ? .white.opacity(0.9) : .secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        Spacer(minLength: 0)
+                        if isOn {
+                            Image(systemName: "checkmark.circle.fill").voDecorative()
+                        }
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(isOn ? AppTheme.Colors.brand : Color(.systemGray6))
+                    .foregroundStyle(isOn ? .white : .primary)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(isOn ? .isSelected : [])
+            }
+        }
+    }
+}
+
+// MARK: - 교대 근무 (피드백: "쉬는 날이 주마다 바뀌어 주말이 고정돼 있지 않다")
+
+/// 한 주씩 넘기며 날짜마다 근무·휴무를 누른다 — 매주 근무표를 옮겨 적기 쉽게
+struct ShiftScheduleView: View {
+    let country: Country
+    var onChange: () -> Void = {}
+
+    @AppStorage("shiftDaysOff") private var offRaw = ""
+    @AppStorage("shiftWorkDays") private var workRaw = ""
+    @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
+    @State private var weekOffset = 0
+    private let calendar = Calendar.current
+
+    private var weekStart: Date {
+        let today = calendar.startOfDay(for: Date())
+        let first = HolidayService.firstWeekday(for: country, override: firstWeekdayRaw)
+        let back = (calendar.component(.weekday, from: today) - first + 7) % 7
+        let thisWeek = calendar.date(byAdding: .day, value: -back, to: today) ?? today
+        return calendar.date(byAdding: .day, value: weekOffset * 7, to: thisWeek) ?? thisWeek
+    }
+
+    private var days: [Date] {
+        (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: weekStart) }
+    }
+
+    var body: some View {
+        let _ = (offRaw, workRaw)
+        List {
+            Section {
+                HStack {
+                    Button {
+                        withAnimation { weekOffset -= 1 }
+                    } label: {
+                        Image(systemName: "chevron.left").font(.body.weight(.semibold))
+                    }
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel(Text(Strings.shiftPrevWeek))
+                    Spacer()
+                    VStack(spacing: 2) {
+                        Text("\(weekStart.appMonthDay) – \((days.last ?? weekStart).appMonthDay)")
+                            .font(.headline)
+                            .monospacedDigit()
+                        if weekOffset != 0 {
+                            Button(Strings.shiftThisWeek) { withAnimation { weekOffset = 0 } }
+                                .font(.body)
+                                .buttonStyle(.borderless)
+                        }
+                    }
+                    Spacer()
+                    Button {
+                        withAnimation { weekOffset += 1 }
+                    } label: {
+                        Image(systemName: "chevron.right").font(.body.weight(.semibold))
+                    }
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel(Text(Strings.shiftNextWeek))
+                }
+
+                ForEach(days, id: \.self) { day in
+                    dayRow(day)
+                }
+            } footer: {
+                Text(Strings.shiftScheduleFooter)
+            }
+        }
+        .navigationTitle(Strings.shiftScheduleTitle)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func dayRow(_ day: Date) -> some View {
+        let isOff = DayOffCalendar.shared.isDayOff(day)
+        let changed = HolidayService.shiftMark(on: day) != nil
+        let holiday = DayOffCalendar.shared.holidays(for: calendar.component(.year, from: day), country: country)
+            .first { calendar.isDate($0.date, inSameDayAs: day) }?.name
+        return Button {
+            HapticFeedback.selection()
+            HolidayService.setShiftMark(!isOff, on: day, defaultIsOff: DayOffCalendar.shared.isDayOffIgnoringShift(day))
+            offRaw = HolidayService.shiftDaysOffRaw
+            workRaw = HolidayService.shiftWorkDaysRaw
+            UsageReportingService.record(event: "shift_day_toggled")
+            onChange()
+        } label: {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Text(Strings.weekdays[calendar.component(.weekday, from: day) - 1])
+                            .font(.body.weight(.semibold))
+                        Text(day.appMonthDay)
+                            .foregroundStyle(.secondary)
+                        if calendar.isDateInToday(day) {
+                            Circle().fill(AppTheme.Colors.brand).frame(width: 6, height: 6).voDecorative()
+                        }
+                    }
+                    if let holiday {
+                        Text(holiday)
+                            .font(.body)
+                            .foregroundStyle(AppTheme.Colors.holiday)
+                    }
+                }
+                Spacer()
+                Text(isOff ? Strings.shiftOff : Strings.shiftWork)
+                    .font(.body.weight(.semibold))
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 6)
+                    .background(isOff ? Color.indigo : Color(.systemGray5))
+                    .foregroundStyle(isOff ? .white : .primary)
+                    .clipShape(Capsule())
+                    .overlay(alignment: .topTrailing) {
+                        if changed {
+                            Circle().fill(.orange).frame(width: 8, height: 8).offset(x: 2, y: -2).voDecorative()
+                        }
+                    }
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("\(Strings.weekdays[calendar.component(.weekday, from: day) - 1]) \(day.appMonthDay), \(isOff ? Strings.shiftOff : Strings.shiftWork)"))
+    }
+}
+
+/// 달력 날짜 상세 — 교대 근무면 이 날을 휴무/근무로 바꾸거나 되돌린다
+struct ShiftDayRow: View {
+    let date: Date
+    @AppStorage(HolidayService.workPatternKey) private var patternRaw = ""
+    @AppStorage("shiftDaysOff") private var offRaw = ""
+    @AppStorage("shiftWorkDays") private var workRaw = ""
+
+    var body: some View {
+        let _ = (patternRaw, offRaw, workRaw)
+        if HolidayService.workPattern == .shift {
+            let mark = HolidayService.shiftMark(on: date)
+            let isOff = DayOffCalendar.shared.isDayOff(date)
+            HStack {
+                if let mark {
+                    Image(systemName: mark ? "moon.zzz.fill" : "briefcase.fill").foregroundStyle(.indigo).voDecorative()
+                    Text(mark ? Strings.shiftMarkedOff : Strings.shiftMarkedWork)
+                    Spacer()
+                    Button(Strings.shiftUndo) { set(nil) }
+                        .buttonStyle(.bordered)
+                } else {
+                    Button {
+                        set(!isOff)
+                    } label: {
+                        Label(isOff ? Strings.shiftMarkWork : Strings.shiftMarkOff,
+                              systemImage: isOff ? "briefcase" : "moon.zzz")
+                            .font(.body.weight(.semibold))
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.indigo)
+                }
+            }
+        }
+    }
+
+    private func set(_ off: Bool?) {
+        HapticFeedback.selection()
+        HolidayService.setShiftMark(off, on: date, defaultIsOff: DayOffCalendar.shared.isDayOffIgnoringShift(date))
+        offRaw = HolidayService.shiftDaysOffRaw
+        workRaw = HolidayService.shiftWorkDaysRaw
+        UsageReportingService.record(event: "shift_day_toggled")
+    }
+}

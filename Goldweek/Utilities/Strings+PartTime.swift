@@ -226,3 +226,702 @@ extension Strings {
         }
     }
 }
+
+// MARK: - 근무 형태 · 교대 근무 · 시간 단위 휴가 켜기 (교대 근무 피드백, 2026-10-12)
+
+extension Strings {
+    /// 근무 형태
+    static var workPatternTitle: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "근무 형태"
+        case .english: return "Work schedule"
+        case .japanese: return "勤務形態"
+        case .chinese: return "工作方式"
+        case .german: return "Arbeitsmodell"
+        case .french: return "Type d'horaire"
+        case .spanish: return "Tipo de jornada"
+        case .italian: return "Tipo di orario"
+        case .portuguese: return "Tipo de jornada"
+        case .chineseTraditional: return "工作方式"
+        case .dutch: return "Werkrooster"
+        case .swedish: return "Arbetsschema"
+        case .norwegian: return "Arbeidsordning"
+        case .danish: return "Arbejdsform"
+        case .finnish: return "Työaikamuoto"
+        case .polish: return "Tryb pracy"
+        case .czech: return "Pracovní režim"
+        case .greek: return "Τύπος ωραρίου"
+        case .turkish: return "Çalışma düzeni"
+        case .russian: return "График работы"
+        case .indonesian: return "Pola kerja"
+        }
+    }
+
+    /// 근무 형태 — 고정
+    static var workPatternFixed: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "고정 근무"
+        case .english: return "Fixed schedule"
+        case .japanese: return "固定勤務"
+        case .chinese: return "固定排班"
+        case .german: return "Feste Arbeitstage"
+        case .french: return "Horaire fixe"
+        case .spanish: return "Horario fijo"
+        case .italian: return "Orario fisso"
+        case .portuguese: return "Horário fixo"
+        case .chineseTraditional: return "固定排班"
+        case .dutch: return "Vast rooster"
+        case .swedish: return "Fast schema"
+        case .norwegian: return "Fast arbeidstid"
+        case .danish: return "Fast arbejdstid"
+        case .finnish: return "Kiinteä työaika"
+        case .polish: return "Stały grafik"
+        case .czech: return "Pevná pracovní doba"
+        case .greek: return "Σταθερό ωράριο"
+        case .turkish: return "Sabit çalışma"
+        case .russian: return "Постоянный график"
+        case .indonesian: return "Jadwal tetap"
+        }
+    }
+
+    /// 고정 근무 설명
+    static var workPatternFixedDesc: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "매주 같은 요일에 일하고 주말에 쉬어요"
+        case .english: return "Same days every week, weekends off"
+        case .japanese: return "毎週同じ曜日に働き、週末は休み"
+        case .chinese: return "每周固定几天上班，周末休息"
+        case .german: return "Jede Woche dieselben Tage, Wochenende frei"
+        case .french: return "Mêmes jours chaque semaine, week-end libre"
+        case .spanish: return "Mismos días cada semana, fines de semana libres"
+        case .italian: return "Stessi giorni ogni settimana, weekend libero"
+        case .portuguese: return "Mesmos dias toda semana, fins de semana livres"
+        case .chineseTraditional: return "每週固定幾天上班，週末休息"
+        case .dutch: return "Elke week dezelfde dagen, weekend vrij"
+        case .swedish: return "Samma dagar varje vecka, ledig på helgen"
+        case .norwegian: return "Samme dager hver uke, fri i helgene"
+        case .danish: return "Samme dage hver uge, fri i weekenden"
+        case .finnish: return "Samat päivät joka viikko, viikonloput vapaat"
+        case .polish: return "Te same dni co tydzień, weekendy wolne"
+        case .czech: return "Každý týden stejné dny, víkendy volno"
+        case .greek: return "Ίδιες ημέρες κάθε εβδομάδα, Σαββατοκύριακα ελεύθερα"
+        case .turkish: return "Her hafta aynı günler, hafta sonu izin"
+        case .russian: return "Одни и те же дни каждую неделю, выходные свободны"
+        case .indonesian: return "Hari yang sama tiap minggu, akhir pekan libur"
+        }
+    }
+
+    /// 근무 형태 — 파트타임
+    static var workPatternPartTime: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "파트타임"
+        case .english: return "Part-time"
+        case .japanese: return "パートタイム"
+        case .chinese: return "兼职"
+        case .german: return "Teilzeit"
+        case .french: return "Temps partiel"
+        case .spanish: return "Media jornada"
+        case .italian: return "Part-time"
+        case .portuguese: return "Meio período"
+        case .chineseTraditional: return "兼職"
+        case .dutch: return "Deeltijd"
+        case .swedish: return "Deltid"
+        case .norwegian: return "Deltid"
+        case .danish: return "Deltid"
+        case .finnish: return "Osa-aika"
+        case .polish: return "Niepełny etat"
+        case .czech: return "Částečný úvazek"
+        case .greek: return "Μερική απασχόληση"
+        case .turkish: return "Yarı zamanlı"
+        case .russian: return "Неполный день"
+        case .indonesian: return "Paruh waktu"
+        }
+    }
+
+    /// 파트타임 설명
+    static var workPatternPartTimeDesc: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "매주 정해진 요일에도 쉬어요"
+        case .english: return "A set weekday off every week"
+        case .japanese: return "毎週決まった曜日も休み"
+        case .chinese: return "每周固定某天也休息"
+        case .german: return "Jede Woche ein fester freier Wochentag"
+        case .french: return "Un jour fixe de repos chaque semaine"
+        case .spanish: return "Un día fijo libre cada semana"
+        case .italian: return "Un giorno fisso libero ogni settimana"
+        case .portuguese: return "Um dia fixo de folga toda semana"
+        case .chineseTraditional: return "每週固定某天也休息"
+        case .dutch: return "Elke week een vaste vrije dag"
+        case .swedish: return "En fast ledig veckodag varje vecka"
+        case .norwegian: return "En fast fridag hver uke"
+        case .danish: return "En fast fridag hver uge"
+        case .finnish: return "Kiinteä vapaapäivä joka viikko"
+        case .polish: return "Stały wolny dzień w każdym tygodniu"
+        case .czech: return "Pevný volný den každý týden"
+        case .greek: return "Μια σταθερή ρεπό ημέρα κάθε εβδομάδα"
+        case .turkish: return "Her hafta sabit bir izin günü"
+        case .russian: return "Постоянный выходной день каждую неделю"
+        case .indonesian: return "Satu hari libur tetap tiap minggu"
+        }
+    }
+
+    /// 근무 형태 — 교대
+    static var workPatternShift: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "교대 근무"
+        case .english: return "Shift work"
+        case .japanese: return "シフト勤務"
+        case .chinese: return "轮班"
+        case .german: return "Schichtarbeit"
+        case .french: return "Travail posté"
+        case .spanish: return "Trabajo por turnos"
+        case .italian: return "Turni"
+        case .portuguese: return "Trabalho por turnos"
+        case .chineseTraditional: return "輪班"
+        case .dutch: return "Ploegendienst"
+        case .swedish: return "Skiftarbete"
+        case .norwegian: return "Skiftarbeid"
+        case .danish: return "Skifteholdsarbejde"
+        case .finnish: return "Vuorotyö"
+        case .polish: return "Praca zmianowa"
+        case .czech: return "Směnný provoz"
+        case .greek: return "Βάρδιες"
+        case .turkish: return "Vardiyalı çalışma"
+        case .russian: return "Сменная работа"
+        case .indonesian: return "Kerja shift"
+        }
+    }
+
+    /// 교대 근무 설명
+    static var workPatternShiftDesc: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "쉬는 날이 주마다 바뀌어요"
+        case .english: return "Days off change from week to week"
+        case .japanese: return "休みの日が週ごとに変わる"
+        case .chinese: return "休息日每周都不同"
+        case .german: return "Freie Tage wechseln von Woche zu Woche"
+        case .french: return "Les jours de repos changent chaque semaine"
+        case .spanish: return "Los días libres cambian cada semana"
+        case .italian: return "I giorni liberi cambiano ogni settimana"
+        case .portuguese: return "Os dias de folga mudam a cada semana"
+        case .chineseTraditional: return "休息日每週都不同"
+        case .dutch: return "Vrije dagen verschillen per week"
+        case .swedish: return "Lediga dagar varierar från vecka till vecka"
+        case .norwegian: return "Fridagene varierer fra uke til uke"
+        case .danish: return "Fridagene skifter fra uge til uge"
+        case .finnish: return "Vapaapäivät vaihtelevat viikoittain"
+        case .polish: return "Dni wolne zmieniają się co tydzień"
+        case .czech: return "Volné dny se mění každý týden"
+        case .greek: return "Τα ρεπό αλλάζουν κάθε εβδομάδα"
+        case .turkish: return "İzin günleri haftadan haftaya değişir"
+        case .russian: return "Выходные меняются каждую неделю"
+        case .indonesian: return "Hari libur berubah tiap minggu"
+        }
+    }
+
+    /// 근무 형태 설정 설명
+    static var workPatternFooter: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "고른 형태에 맞는 설정만 보여요. 형태를 바꿔도 전에 넣은 쉬는 날은 남아 있어요."
+        case .english: return "Only the settings for your schedule are shown. Days off you entered are kept if you switch."
+        case .japanese: return "選んだ形態に合う設定だけが表示されます。形態を変えても入力した休みは残ります。"
+        case .chinese: return "只显示与所选方式相关的设置。切换后之前输入的休息日仍会保留。"
+        case .german: return "Es werden nur die passenden Einstellungen gezeigt. Eingetragene freie Tage bleiben beim Wechsel erhalten."
+        case .french: return "Seuls les réglages de votre horaire s'affichent. Les jours saisis sont conservés si vous changez."
+        case .spanish: return "Solo se muestran los ajustes de tu jornada. Los días libres que pusiste se conservan si cambias."
+        case .italian: return "Vengono mostrate solo le impostazioni del tuo orario. I giorni liberi inseriti restano se cambi."
+        case .portuguese: return "Só aparecem os ajustes da sua jornada. As folgas que você inseriu ficam guardadas se mudar."
+        case .chineseTraditional: return "只顯示與所選方式相關的設定。切換後先前輸入的休息日仍會保留。"
+        case .dutch: return "Alleen de instellingen voor jouw rooster worden getoond. Ingevoerde vrije dagen blijven bewaard als je wisselt."
+        case .swedish: return "Bara inställningarna för ditt schema visas. Lediga dagar du lagt in sparas om du byter."
+        case .norwegian: return "Bare innstillingene for arbeidsordningen din vises. Fridager du har lagt inn beholdes hvis du bytter."
+        case .danish: return "Kun indstillingerne for din arbejdsform vises. Fridage, du har indtastet, bevares, hvis du skifter."
+        case .finnish: return "Vain työaikamuotoosi liittyvät asetukset näytetään. Syötetyt vapaapäivät säilyvät, jos vaihdat."
+        case .polish: return "Widać tylko ustawienia dla Twojego trybu. Wpisane dni wolne zostaną zachowane po zmianie."
+        case .czech: return "Zobrazí se jen nastavení pro váš režim. Zadané volné dny zůstanou i po změně."
+        case .greek: return "Εμφανίζονται μόνο οι ρυθμίσεις του ωραρίου σας. Τα ρεπό που βάλατε κρατιούνται αν αλλάξετε."
+        case .turkish: return "Yalnızca düzeninize uygun ayarlar görünür. Değiştirseniz de girdiğiniz izin günleri korunur."
+        case .russian: return "Показываются только настройки вашего графика. Введённые выходные сохранятся при смене."
+        case .indonesian: return "Hanya pengaturan pola kerja Anda yang tampil. Hari libur yang dimasukkan tetap tersimpan jika diganti."
+        }
+    }
+
+    /// 시간 단위 휴가 켜기
+    static var hourlyLeaveToggle: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "시간 단위로도 휴가를 써요"
+        case .english: return "I take leave by the hour"
+        case .japanese: return "時間単位でも休暇を取る"
+        case .chinese: return "我也按小时请假"
+        case .german: return "Ich nehme auch stundenweise frei"
+        case .french: return "Je prends aussi des congés à l'heure"
+        case .spanish: return "También tomo permisos por horas"
+        case .italian: return "Uso anche permessi a ore"
+        case .portuguese: return "Também tiro folga por horas"
+        case .chineseTraditional: return "我也按小時請假"
+        case .dutch: return "Ik neem ook verlof per uur"
+        case .swedish: return "Jag tar även ledigt per timme"
+        case .norwegian: return "Jeg tar også fri per time"
+        case .danish: return "Jeg tager også fri pr. time"
+        case .finnish: return "Pidän vapaata myös tunneittain"
+        case .polish: return "Biorę też urlop na godziny"
+        case .czech: return "Beru volno i po hodinách"
+        case .greek: return "Παίρνω άδεια και με την ώρα"
+        case .turkish: return "Saatlik izin de kullanıyorum"
+        case .russian: return "Беру отгулы и по часам"
+        case .indonesian: return "Saya juga cuti per jam"
+        }
+    }
+
+    /// 시간 단위 휴가 설명
+    static var hourlyLeaveDesc: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "켜면 휴가를 시·분으로 넣고, 하루·요일별 근무 시간과 시간 한도를 정할 수 있어요."
+        case .english: return "Turn on to enter leave in hours and minutes and set daily hours and hour allowances."
+        case .japanese: return "オンにすると休暇を時間・分で入力し、勤務時間や時間の上限を設定できます。"
+        case .chinese: return "开启后可按小时和分钟登记假期，并设置每日工时和小时额度。"
+        case .german: return "Aktiviere es, um Urlaub in Stunden und Minuten einzutragen und Arbeitszeiten sowie Stundenkontingente festzulegen."
+        case .french: return "Activez pour saisir des congés en heures et minutes et définir horaires et quotas d'heures."
+        case .spanish: return "Actívalo para registrar ausencias en horas y minutos y fijar horarios y cupos de horas."
+        case .italian: return "Attivalo per inserire permessi in ore e minuti e impostare orari e monte ore."
+        case .portuguese: return "Ative para registrar folgas em horas e minutos e definir horários e cotas de horas."
+        case .chineseTraditional: return "開啟後可按小時和分鐘登記假期，並設定每日工時和小時額度。"
+        case .dutch: return "Zet aan om verlof in uren en minuten in te voeren en werktijden en urentegoed in te stellen."
+        case .swedish: return "Slå på för att ange ledighet i timmar och minuter och ställa in arbetstid och timkvoter."
+        case .norwegian: return "Slå på for å legge inn fri i timer og minutter og angi arbeidstid og timekvoter."
+        case .danish: return "Slå til for at angive fri i timer og minutter og indstille arbejdstid og timekvoter."
+        case .finnish: return "Ota käyttöön, niin voit syöttää vapaat tunteina ja minuutteina ja asettaa työajat ja tuntikiintiöt."
+        case .polish: return "Włącz, aby wpisywać urlop w godzinach i minutach oraz ustawić czas pracy i limity godzin."
+        case .czech: return "Zapněte pro zadávání volna v hodinách a minutách a nastavení pracovní doby a hodinových nároků."
+        case .greek: return "Ενεργοποιήστε για να καταχωρείτε άδεια σε ώρες και λεπτά και να ορίζετε ωράριο και όρια ωρών."
+        case .turkish: return "Açarsanız izni saat ve dakika olarak girip çalışma saatlerini ve saat haklarını belirleyebilirsiniz."
+        case .russian: return "Включите, чтобы вводить отпуск в часах и минутах и задать рабочее время и лимиты часов."
+        case .indonesian: return "Aktifkan untuk mencatat cuti dalam jam dan menit serta mengatur jam kerja dan jatah jam."
+        }
+    }
+
+    /// 교대 근무 일정 화면
+    static var shiftScheduleTitle: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "교대 근무 일정"
+        case .english: return "Shift schedule"
+        case .japanese: return "シフト表"
+        case .chinese: return "轮班表"
+        case .german: return "Schichtplan"
+        case .french: return "Planning des postes"
+        case .spanish: return "Calendario de turnos"
+        case .italian: return "Calendario turni"
+        case .portuguese: return "Escala de turnos"
+        case .chineseTraditional: return "輪班表"
+        case .dutch: return "Dienstrooster"
+        case .swedish: return "Skiftschema"
+        case .norwegian: return "Vaktplan"
+        case .danish: return "Vagtplan"
+        case .finnish: return "Työvuorolista"
+        case .polish: return "Grafik zmian"
+        case .czech: return "Rozpis směn"
+        case .greek: return "Πρόγραμμα βαρδιών"
+        case .turkish: return "Vardiya planı"
+        case .russian: return "График смен"
+        case .indonesian: return "Jadwal shift"
+        }
+    }
+
+    /// 교대 근무 일정 설명
+    static var shiftScheduleFooter: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "날짜를 눌러 근무와 휴무를 바꾸세요. 휴무인 날은 연차에서 빠지지 않고, 추천도 쉬는 날로 봐요."
+        case .english: return "Tap a day to switch between work and off. Days off aren't taken from your leave, and suggestions treat them as rest days."
+        case .japanese: return "日付をタップして勤務と休みを切り替えます。休みの日は有給から引かれず、おすすめでも休日として扱います。"
+        case .chinese: return "点按日期在上班和休息之间切换。休息日不扣年假，推荐也会把它当作休息日。"
+        case .german: return "Tippe auf einen Tag, um zwischen Arbeit und frei zu wechseln. Freie Tage zählen nicht als Urlaub und gelten bei Vorschlägen als Ruhetage."
+        case .french: return "Touchez un jour pour basculer entre travail et repos. Les jours de repos ne sont pas décomptés et les suggestions les traitent comme repos."
+        case .spanish: return "Toca un día para cambiar entre trabajo y libre. Los días libres no se descuentan y las sugerencias los cuentan como descanso."
+        case .italian: return "Tocca un giorno per passare tra lavoro e riposo. I giorni liberi non scalano ferie e i suggerimenti li considerano di riposo."
+        case .portuguese: return "Toque num dia para alternar entre trabalho e folga. As folgas não descontam férias e as sugestões as tratam como descanso."
+        case .chineseTraditional: return "點一下日期在上班和休息之間切換。休息日不扣特休，推薦也會把它當作休息日。"
+        case .dutch: return "Tik op een dag om te wisselen tussen werk en vrij. Vrije dagen gaan niet van je verlof af en tellen in suggesties als rustdag."
+        case .swedish: return "Tryck på en dag för att växla mellan arbete och ledig. Lediga dagar dras inte från semestern och räknas som vilodagar i förslag."
+        case .norwegian: return "Trykk på en dag for å bytte mellom jobb og fri. Fridager trekkes ikke fra ferien og regnes som hviledager i forslag."
+        case .danish: return "Tryk på en dag for at skifte mellem arbejde og fri. Fridage trækkes ikke fra ferien og tæller som hviledage i forslag."
+        case .finnish: return "Napauta päivää vaihtaaksesi työn ja vapaan välillä. Vapaapäiviä ei vähennetä lomasta, ja ehdotukset pitävät niitä lepopäivinä."
+        case .polish: return "Stuknij dzień, aby przełączyć pracę i wolne. Dni wolne nie zmniejszają urlopu, a propozycje traktują je jako odpoczynek."
+        case .czech: return "Klepnutím na den přepnete mezi prací a volnem. Volné dny se neodečítají z dovolené a návrhy je berou jako odpočinek."
+        case .greek: return "Πατήστε μια ημέρα για εναλλαγή εργασίας και ρεπό. Τα ρεπό δεν αφαιρούνται από την άδεια και οι προτάσεις τα θεωρούν ξεκούραση."
+        case .turkish: return "Çalışma ve izin arasında geçmek için bir güne dokunun. İzin günleri izninizden düşülmez ve önerilerde dinlenme günü sayılır."
+        case .russian: return "Нажмите на день, чтобы переключить работу и выходной. Выходные не вычитаются из отпуска и в подсказках считаются днями отдыха."
+        case .indonesian: return "Ketuk hari untuk beralih antara kerja dan libur. Hari libur tidak memotong cuti dan dianggap hari istirahat dalam saran."
+        }
+    }
+
+    /// 근무
+    static var shiftWork: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "근무"
+        case .english: return "Work"
+        case .japanese: return "勤務"
+        case .chinese: return "上班"
+        case .german: return "Arbeit"
+        case .french: return "Travail"
+        case .spanish: return "Trabajo"
+        case .italian: return "Lavoro"
+        case .portuguese: return "Trabalho"
+        case .chineseTraditional: return "上班"
+        case .dutch: return "Werk"
+        case .swedish: return "Arbete"
+        case .norwegian: return "Jobb"
+        case .danish: return "Arbejde"
+        case .finnish: return "Työ"
+        case .polish: return "Praca"
+        case .czech: return "Práce"
+        case .greek: return "Εργασία"
+        case .turkish: return "Çalışma"
+        case .russian: return "Работа"
+        case .indonesian: return "Kerja"
+        }
+    }
+
+    /// 휴무
+    static var shiftOff: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "휴무"
+        case .english: return "Off"
+        case .japanese: return "休み"
+        case .chinese: return "休息"
+        case .german: return "Frei"
+        case .french: return "Repos"
+        case .spanish: return "Libre"
+        case .italian: return "Riposo"
+        case .portuguese: return "Folga"
+        case .chineseTraditional: return "休息"
+        case .dutch: return "Vrij"
+        case .swedish: return "Ledig"
+        case .norwegian: return "Fri"
+        case .danish: return "Fri"
+        case .finnish: return "Vapaa"
+        case .polish: return "Wolne"
+        case .czech: return "Volno"
+        case .greek: return "Ρεπό"
+        case .turkish: return "İzin"
+        case .russian: return "Выходной"
+        case .indonesian: return "Libur"
+        }
+    }
+
+    /// 이 날 휴무로
+    static var shiftMarkOff: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "이 날 쉬어요"
+        case .english: return "Mark as day off"
+        case .japanese: return "この日は休み"
+        case .chinese: return "这天休息"
+        case .german: return "Als frei markieren"
+        case .french: return "Marquer comme repos"
+        case .spanish: return "Marcar como libre"
+        case .italian: return "Segna come riposo"
+        case .portuguese: return "Marcar como folga"
+        case .chineseTraditional: return "這天休息"
+        case .dutch: return "Markeren als vrij"
+        case .swedish: return "Markera som ledig"
+        case .norwegian: return "Merk som fridag"
+        case .danish: return "Markér som fridag"
+        case .finnish: return "Merkitse vapaaksi"
+        case .polish: return "Oznacz jako wolne"
+        case .czech: return "Označit jako volno"
+        case .greek: return "Σήμανση ως ρεπό"
+        case .turkish: return "İzin günü yap"
+        case .russian: return "Отметить выходным"
+        case .indonesian: return "Tandai libur"
+        }
+    }
+
+    /// 이 날 근무로
+    static var shiftMarkWork: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "이 날 일해요"
+        case .english: return "Mark as workday"
+        case .japanese: return "この日は勤務"
+        case .chinese: return "这天上班"
+        case .german: return "Als Arbeitstag markieren"
+        case .french: return "Marquer comme travaillé"
+        case .spanish: return "Marcar como laborable"
+        case .italian: return "Segna come lavorativo"
+        case .portuguese: return "Marcar como dia de trabalho"
+        case .chineseTraditional: return "這天上班"
+        case .dutch: return "Markeren als werkdag"
+        case .swedish: return "Markera som arbetsdag"
+        case .norwegian: return "Merk som arbeidsdag"
+        case .danish: return "Markér som arbejdsdag"
+        case .finnish: return "Merkitse työpäiväksi"
+        case .polish: return "Oznacz jako pracujący"
+        case .czech: return "Označit jako pracovní"
+        case .greek: return "Σήμανση ως εργάσιμη"
+        case .turkish: return "Çalışma günü yap"
+        case .russian: return "Отметить рабочим"
+        case .indonesian: return "Tandai hari kerja"
+        }
+    }
+
+    /// 교대 휴무 표시
+    static var shiftMarkedOff: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "교대 휴무"
+        case .english: return "Shift day off"
+        case .japanese: return "シフト休み"
+        case .chinese: return "轮班休息"
+        case .german: return "Schichtfrei"
+        case .french: return "Repos (postes)"
+        case .spanish: return "Libre por turno"
+        case .italian: return "Riposo da turno"
+        case .portuguese: return "Folga de turno"
+        case .chineseTraditional: return "輪班休息"
+        case .dutch: return "Vrij volgens rooster"
+        case .swedish: return "Ledig enligt schema"
+        case .norwegian: return "Fri etter vaktplan"
+        case .danish: return "Fri ifølge vagtplan"
+        case .finnish: return "Vuorovapaa"
+        case .polish: return "Wolne wg grafiku"
+        case .czech: return "Volno podle směn"
+        case .greek: return "Ρεπό βάρδιας"
+        case .turkish: return "Vardiya izni"
+        case .russian: return "Выходной по графику"
+        case .indonesian: return "Libur shift"
+        }
+    }
+
+    /// 교대 근무 표시
+    static var shiftMarkedWork: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "교대 근무일"
+        case .english: return "Shift workday"
+        case .japanese: return "シフト勤務日"
+        case .chinese: return "轮班上班"
+        case .german: return "Schichtarbeitstag"
+        case .french: return "Jour travaillé (postes)"
+        case .spanish: return "Día de turno"
+        case .italian: return "Giorno di turno"
+        case .portuguese: return "Dia de turno"
+        case .chineseTraditional: return "輪班上班"
+        case .dutch: return "Werkdag volgens rooster"
+        case .swedish: return "Arbetsdag enligt schema"
+        case .norwegian: return "Arbeidsdag etter vaktplan"
+        case .danish: return "Arbejdsdag ifølge vagtplan"
+        case .finnish: return "Vuorotyöpäivä"
+        case .polish: return "Dzień pracy wg grafiku"
+        case .czech: return "Pracovní den podle směn"
+        case .greek: return "Εργάσιμη βάρδιας"
+        case .turkish: return "Vardiya iş günü"
+        case .russian: return "Рабочий день по графику"
+        case .indonesian: return "Hari kerja shift"
+        }
+    }
+
+    /// 교대 표시 되돌리기
+    static var shiftUndo: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "원래대로"
+        case .english: return "Reset"
+        case .japanese: return "元に戻す"
+        case .chinese: return "恢复"
+        case .german: return "Zurücksetzen"
+        case .french: return "Rétablir"
+        case .spanish: return "Restablecer"
+        case .italian: return "Ripristina"
+        case .portuguese: return "Restaurar"
+        case .chineseTraditional: return "恢復"
+        case .dutch: return "Herstellen"
+        case .swedish: return "Återställ"
+        case .norwegian: return "Tilbakestill"
+        case .danish: return "Nulstil"
+        case .finnish: return "Palauta"
+        case .polish: return "Przywróć"
+        case .czech: return "Obnovit"
+        case .greek: return "Επαναφορά"
+        case .turkish: return "Sıfırla"
+        case .russian: return "Сбросить"
+        case .indonesian: return "Kembalikan"
+        }
+    }
+
+    /// 지난주
+    static var shiftPrevWeek: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "지난주"
+        case .english: return "Previous week"
+        case .japanese: return "前の週"
+        case .chinese: return "上一周"
+        case .german: return "Vorige Woche"
+        case .french: return "Semaine précédente"
+        case .spanish: return "Semana anterior"
+        case .italian: return "Settimana precedente"
+        case .portuguese: return "Semana anterior"
+        case .chineseTraditional: return "上一週"
+        case .dutch: return "Vorige week"
+        case .swedish: return "Föregående vecka"
+        case .norwegian: return "Forrige uke"
+        case .danish: return "Forrige uge"
+        case .finnish: return "Edellinen viikko"
+        case .polish: return "Poprzedni tydzień"
+        case .czech: return "Předchozí týden"
+        case .greek: return "Προηγούμενη εβδομάδα"
+        case .turkish: return "Önceki hafta"
+        case .russian: return "Предыдущая неделя"
+        case .indonesian: return "Minggu sebelumnya"
+        }
+    }
+
+    /// 다음 주
+    static var shiftNextWeek: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "다음 주"
+        case .english: return "Next week"
+        case .japanese: return "次の週"
+        case .chinese: return "下一周"
+        case .german: return "Nächste Woche"
+        case .french: return "Semaine suivante"
+        case .spanish: return "Semana siguiente"
+        case .italian: return "Settimana successiva"
+        case .portuguese: return "Próxima semana"
+        case .chineseTraditional: return "下一週"
+        case .dutch: return "Volgende week"
+        case .swedish: return "Nästa vecka"
+        case .norwegian: return "Neste uke"
+        case .danish: return "Næste uge"
+        case .finnish: return "Seuraava viikko"
+        case .polish: return "Następny tydzień"
+        case .czech: return "Další týden"
+        case .greek: return "Επόμενη εβδομάδα"
+        case .turkish: return "Sonraki hafta"
+        case .russian: return "Следующая неделя"
+        case .indonesian: return "Minggu berikutnya"
+        }
+    }
+
+    /// 이번 주
+    static var shiftThisWeek: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "이번 주"
+        case .english: return "This week"
+        case .japanese: return "今週"
+        case .chinese: return "本周"
+        case .german: return "Diese Woche"
+        case .french: return "Cette semaine"
+        case .spanish: return "Esta semana"
+        case .italian: return "Questa settimana"
+        case .portuguese: return "Esta semana"
+        case .chineseTraditional: return "本週"
+        case .dutch: return "Deze week"
+        case .swedish: return "Denna vecka"
+        case .norwegian: return "Denne uken"
+        case .danish: return "Denne uge"
+        case .finnish: return "Tämä viikko"
+        case .polish: return "Ten tydzień"
+        case .czech: return "Tento týden"
+        case .greek: return "Αυτή την εβδομάδα"
+        case .turkish: return "Bu hafta"
+        case .russian: return "Эта неделя"
+        case .indonesian: return "Minggu ini"
+        }
+    }
+
+    static func workPatternName(_ p: WorkPattern) -> String {
+        switch p {
+        case .fixed: return workPatternFixed
+        case .partTime: return workPatternPartTime
+        case .shift: return workPatternShift
+        }
+    }
+
+    static func workPatternDesc(_ p: WorkPattern) -> String {
+        switch p {
+        case .fixed: return workPatternFixedDesc
+        case .partTime: return workPatternPartTimeDesc
+        case .shift: return workPatternShiftDesc
+        }
+    }
+}
+
+// MARK: - 캘린더 앱으로 휴가 보내기 (캘린더 동기화 피드백, 2026-10-12)
+
+extension Strings {
+    /// 캘린더 앱으로 휴가 보내기
+    static var calendarExportToggle: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "캘린더 앱에 휴가 보내기"
+        case .english: return "Send leave to Calendar"
+        case .japanese: return "カレンダーに休暇を送る"
+        case .chinese: return "将假期同步到日历"
+        case .german: return "Urlaub an Kalender senden"
+        case .french: return "Envoyer les congés vers Calendrier"
+        case .spanish: return "Enviar ausencias a Calendario"
+        case .italian: return "Invia i permessi a Calendario"
+        case .portuguese: return "Enviar folgas ao Calendário"
+        case .chineseTraditional: return "將假期同步到行事曆"
+        case .dutch: return "Verlof naar Agenda sturen"
+        case .swedish: return "Skicka ledighet till Kalender"
+        case .norwegian: return "Send fri til Kalender"
+        case .danish: return "Send fri til Kalender"
+        case .finnish: return "Lähetä vapaat Kalenteriin"
+        case .polish: return "Wysyłaj urlopy do Kalendarza"
+        case .czech: return "Posílat volno do Kalendáře"
+        case .greek: return "Αποστολή αδειών στο Ημερολόγιο"
+        case .turkish: return "İzinleri Takvim'e gönder"
+        case .russian: return "Отправлять отпуска в Календарь"
+        case .indonesian: return "Kirim cuti ke Kalender"
+        }
+    }
+
+    /// 캘린더 앱으로 보내기 설명
+    static var calendarExportDesc: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "\"Goldweek 연차\" 캘린더에 휴가가 저절로 들어가고, 고치거나 지우면 함께 바뀌어요. iCloud 캘린더면 Mac·iPad 같은 다른 기기와 캘린더 앱에서도 보여요. 끄면 이 캘린더를 지워요."
+        case .english: return "Your leave goes into a \"Goldweek\" calendar automatically and updates when you edit or delete it. It lives in iCloud, so it shows on Mac, iPad and other calendar apps. Turning this off removes that calendar."
+        case .japanese: return "「Goldweek」カレンダーに休暇が自動で入り、編集・削除すると一緒に変わります。iCloudなのでMac・iPadなどでも見えます。オフにするとこのカレンダーを削除します。"
+        case .chinese: return "假期会自动加入“Goldweek”日历，修改或删除时同步更新。保存在iCloud，可在Mac、iPad等设备上查看。关闭后会删除该日历。"
+        case .german: return "Dein Urlaub landet automatisch in einem Kalender „Goldweek“ und wird beim Bearbeiten oder Löschen angepasst. Er liegt in iCloud und ist auf Mac, iPad und anderen Kalender-Apps sichtbar. Beim Ausschalten wird der Kalender entfernt."
+        case .french: return "Vos congés vont automatiquement dans un calendrier « Goldweek » et suivent vos modifications. Il est dans iCloud, donc visible sur Mac, iPad et d'autres apps. Désactiver supprime ce calendrier."
+        case .spanish: return "Tus ausencias se añaden solas a un calendario «Goldweek» y se actualizan al editarlas o borrarlas. Está en iCloud, así que se ve en Mac, iPad y otras apps. Al desactivarlo se borra ese calendario."
+        case .italian: return "I permessi finiscono da soli in un calendario «Goldweek» e si aggiornano quando li modifichi o elimini. È su iCloud, quindi lo vedi anche su Mac, iPad e altre app. Disattivando, il calendario viene rimosso."
+        case .portuguese: return "Suas folgas vão automaticamente para um calendário \"Goldweek\" e mudam quando você edita ou apaga. Fica no iCloud, então aparece no Mac, iPad e outros apps. Desativar remove esse calendário."
+        case .chineseTraditional: return "假期會自動加入「Goldweek」行事曆，修改或刪除時同步更新。儲存在iCloud，可在Mac、iPad等裝置上查看。關閉後會刪除該行事曆。"
+        case .dutch: return "Je verlof komt vanzelf in een agenda \"Goldweek\" en past zich aan als je wijzigt of verwijdert. Hij staat in iCloud, dus zichtbaar op Mac, iPad en andere apps. Uitzetten verwijdert die agenda."
+        case .swedish: return "Din ledighet hamnar automatiskt i kalendern \"Goldweek\" och uppdateras när du ändrar eller tar bort. Den ligger i iCloud och syns på Mac, iPad och andra appar. Stänger du av tas kalendern bort."
+        case .norwegian: return "Fri legges automatisk i kalenderen \"Goldweek\" og oppdateres når du endrer eller sletter. Den ligger i iCloud og vises på Mac, iPad og andre apper. Slår du av, fjernes kalenderen."
+        case .danish: return "Din fri lægges automatisk i kalenderen \"Goldweek\" og opdateres, når du ændrer eller sletter. Den ligger i iCloud og vises på Mac, iPad og andre apps. Slår du fra, fjernes kalenderen."
+        case .finnish: return "Vapaat menevät automaattisesti \"Goldweek\"-kalenteriin ja päivittyvät, kun muokkaat tai poistat. Kalenteri on iCloudissa, joten se näkyy Macilla, iPadilla ja muissa sovelluksissa. Poistaminen käytöstä poistaa kalenterin."
+        case .polish: return "Urlopy trafiają same do kalendarza „Goldweek” i zmieniają się przy edycji lub usunięciu. Jest w iCloud, więc widać go na Macu, iPadzie i w innych aplikacjach. Wyłączenie usuwa ten kalendarz."
+        case .czech: return "Volno se samo zapisuje do kalendáře „Goldweek“ a mění se při úpravě či smazání. Je v iCloudu, takže je vidět na Macu, iPadu i v jiných aplikacích. Vypnutím se kalendář odstraní."
+        case .greek: return "Οι άδειες μπαίνουν αυτόματα στο ημερολόγιο «Goldweek» και ενημερώνονται όταν τις αλλάζετε ή διαγράφετε. Είναι στο iCloud, άρα φαίνεται σε Mac, iPad και άλλες εφαρμογές. Αν το απενεργοποιήσετε, το ημερολόγιο διαγράφεται."
+        case .turkish: return "İzinleriniz otomatik olarak \"Goldweek\" takvimine girer, düzenleyince veya silince güncellenir. iCloud'da olduğu için Mac, iPad ve diğer uygulamalarda görünür. Kapatırsanız bu takvim silinir."
+        case .russian: return "Отпуска сами попадают в календарь «Goldweek» и меняются при правке или удалении. Он в iCloud, поэтому виден на Mac, iPad и в других приложениях. При выключении календарь удаляется."
+        case .indonesian: return "Cuti otomatis masuk ke kalender \"Goldweek\" dan ikut berubah saat diubah atau dihapus. Ada di iCloud, jadi terlihat di Mac, iPad, dan aplikasi lain. Mematikannya akan menghapus kalender itu."
+        }
+    }
+
+    /// 캘린더 접근 거부
+    static var calendarAccessDenied: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "캘린더 접근이 꺼져 있어요. 설정 앱 > Goldweek > 캘린더에서 전체 접근을 허용해 주세요."
+        case .english: return "Calendar access is off. Allow Full Access in Settings > Goldweek > Calendars."
+        case .japanese: return "カレンダーへのアクセスがオフです。設定 > Goldweek > カレンダーでフルアクセスを許可してください。"
+        case .chinese: return "日历访问已关闭。请在设置 > Goldweek > 日历中允许完全访问。"
+        case .german: return "Kalenderzugriff ist aus. Erlaube vollen Zugriff unter Einstellungen > Goldweek > Kalender."
+        case .french: return "L'accès au calendrier est désactivé. Autorisez l'accès complet dans Réglages > Goldweek > Calendriers."
+        case .spanish: return "El acceso al calendario está desactivado. Permite el acceso total en Ajustes > Goldweek > Calendarios."
+        case .italian: return "L'accesso al calendario è disattivato. Consenti l'accesso completo in Impostazioni > Goldweek > Calendari."
+        case .portuguese: return "O acesso ao calendário está desativado. Permita acesso total em Ajustes > Goldweek > Calendários."
+        case .chineseTraditional: return "行事曆存取已關閉。請在設定 > Goldweek > 行事曆中允許完整取用。"
+        case .dutch: return "Agendatoegang staat uit. Sta volledige toegang toe in Instellingen > Goldweek > Agenda's."
+        case .swedish: return "Kalenderåtkomst är av. Tillåt full åtkomst i Inställningar > Goldweek > Kalendrar."
+        case .norwegian: return "Kalendertilgang er av. Tillat full tilgang i Innstillinger > Goldweek > Kalendere."
+        case .danish: return "Kalenderadgang er slået fra. Tillad fuld adgang i Indstillinger > Goldweek > Kalendere."
+        case .finnish: return "Kalenterin käyttö on pois päältä. Salli täysi käyttö kohdassa Asetukset > Goldweek > Kalenterit."
+        case .polish: return "Dostęp do kalendarza jest wyłączony. Zezwól na pełny dostęp w Ustawienia > Goldweek > Kalendarze."
+        case .czech: return "Přístup ke kalendáři je vypnutý. Povolte plný přístup v Nastavení > Goldweek > Kalendáře."
+        case .greek: return "Η πρόσβαση στο ημερολόγιο είναι ανενεργή. Επιτρέψτε πλήρη πρόσβαση στις Ρυθμίσεις > Goldweek > Ημερολόγια."
+        case .turkish: return "Takvim erişimi kapalı. Ayarlar > Goldweek > Takvimler'den tam erişime izin verin."
+        case .russian: return "Доступ к календарю выключен. Разрешите полный доступ в Настройки > Goldweek > Календари."
+        case .indonesian: return "Akses kalender mati. Izinkan akses penuh di Pengaturan > Goldweek > Kalender."
+        }
+    }
+}
