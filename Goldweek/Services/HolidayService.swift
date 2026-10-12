@@ -703,8 +703,9 @@ class HolidayService {
     }
 
     /// 주말이지만 출근하는 날인지 (중국 调休 补班 · 러시아 рабочая суббота · 파트타임 쉬는 날을 옮겨 일하는 날)
-    static func isMakeupWorkday(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
-        if partTimeSwapWorkKeys.contains(partTimeKey(date)) { return true }
+    static func isMakeupWorkday(_ date: Date, country: Country, calendar: Calendar = .current, includeShift: Bool = true) -> Bool {
+        let k = partTimeKey(date)
+        if partTimeSwapWorkKeys.contains(k) || (includeShift && shiftWorkKeys.contains(k)) { return true }
         let c = calendar.dateComponents([.year, .month, .day], from: date)
         guard let year = c.year, let days = makeupTable(country)[year] else { return false }
         return days.contains { $0.month == c.month && $0.day == c.day }
@@ -749,7 +750,9 @@ class HolidayService {
     }
 
     static var partTimeDaysOff: Set<Int> {
-        Set(partTimeDaysOffRaw.split(separator: ",").compactMap { Int($0) }.filter { (1...7).contains($0) })
+        // 근무 형태가 파트타임일 때만 — 다른 형태로 바꿔도 고른 요일은 남겨 둔다
+        guard workPattern == .partTime else { return [] }
+        return Set(partTimeDaysOffRaw.split(separator: ",").compactMap { Int($0) }.filter { (1...7).contains($0) })
     }
 
     /// 이번 주만 쉬는 날을 옮긴 기록 — "원래 쉬는 날>대신 쉬는 날" (yyyy-MM-dd) 쌍을 쉼표로
@@ -760,7 +763,8 @@ class HolidayService {
 
     /// (원래 쉬는 날 → 대신 쉬는 날)
     static var partTimeSwaps: [(from: String, to: String)] {
-        partTimeSwapsRaw.split(separator: ",").compactMap { pair in
+        guard workPattern == .partTime else { return [] }
+        return partTimeSwapsRaw.split(separator: ",").compactMap { pair in
             let parts = pair.split(separator: ">").map(String.init)
             return parts.count == 2 ? (parts[0], parts[1]) : nil
         }
@@ -800,14 +804,21 @@ class HolidayService {
     }
 
     /// 쉬는 주말인지 — 그 나라 주말 중 보충 근무일이 아닌 날. 파트타임 쉬는 날을 옮겨 쉬는 날도 여기 든다.
-    static func isRestWeekend(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
-        if partTimeSwapOffKeys.contains(partTimeKey(date)) { return true }
-        return isWeekendDay(date, country: country, calendar: calendar) && !isMakeupWorkday(date, country: country, calendar: calendar)
+    /// 교대 근무 표시(휴무·근무)가 가장 먼저다 — includeShift 를 끄면 원래 상태
+    static func isRestWeekend(_ date: Date, country: Country, calendar: Calendar = .current, includeShift: Bool = true) -> Bool {
+        let k = partTimeKey(date)
+        if includeShift {
+            if shiftOffKeys.contains(k) { return true }
+            if shiftWorkKeys.contains(k) { return false }
+        }
+        if partTimeSwapOffKeys.contains(k) { return true }
+        return isWeekendDay(date, country: country, calendar: calendar)
+            && !isMakeupWorkday(date, country: country, calendar: calendar, includeShift: includeShift)
     }
 
     /// 한 해의 보충 근무일 (startOfDay) — 연휴 플래너용. 파트타임 쉬는 날을 옮겨 일하는 날도 포함.
     static func makeupWorkdays(for year: Int, country: Country, calendar: Calendar = .current) -> Set<Date> {
-        let swapped = partTimeSwaps.compactMap { partTimeKeyFormatter.date(from: $0.from) }
+        let swapped = (partTimeSwaps.map(\.from) + Array(shiftWorkKeys)).compactMap { partTimeKeyFormatter.date(from: $0) }
             .filter { calendar.component(.year, from: $0) == year }
             .map { calendar.startOfDay(for: $0) }
         guard let days = makeupTable(country)[year] else { return Set(swapped) }
@@ -1246,5 +1257,93 @@ class HolidayService {
         let y = Double(year)
         let day = 23.2488 + 0.242194 * (y - 1980) - floor((y - 1980) / 4)
         return Int(floor(day))
+    }
+}
+
+// MARK: - 근무 형태 · 교대 근무
+
+/// 근무 형태 — 온보딩·설정에서 고른다. 형태에 맞는 기능만 보이고 쉬는 날 계산에 쓰인다.
+/// 다른 형태로 바꿔도 파트타임 요일·교대 휴무 기록은 지우지 않는다 (다시 바꾸면 그대로 돌아온다).
+enum WorkPattern: String, CaseIterable, Identifiable {
+    /// 매주 같은 요일 근무 (주말만 쉼)
+    case fixed
+    /// 매주 쉬는 요일이 정해져 있고 가끔 그 주만 옮긴다 (네덜란드 피드백)
+    case partTime
+    /// 쉬는 날이 주마다 바뀐다 — 날짜마다 휴무·근무를 정한다 (교대 근무 피드백)
+    case shift
+
+    var id: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .fixed: return "calendar"
+        case .partTime: return "calendar.badge.minus"
+        case .shift: return "arrow.triangle.2.circlepath"
+        }
+    }
+}
+
+extension HolidayService {
+    static let workPatternKey = "workPattern"
+
+    /// 고른 근무 형태. 고른 적 없으면 예전 설정으로 짐작한다 (파트타임 요일을 정해 뒀으면 파트타임).
+    static var workPattern: WorkPattern {
+        get {
+            if let raw = UserDefaults.standard.string(forKey: workPatternKey), let p = WorkPattern(rawValue: raw) { return p }
+            return partTimeDaysOffRaw.isEmpty ? .fixed : .partTime
+        }
+        set { UserDefaults.standard.set(newValue.rawValue, forKey: workPatternKey) }
+    }
+
+    /// 교대 근무로 쉬는 날 / 원래 쉬는 날인데 근무하는 날 ("yyyy-MM-dd" 쉼표로)
+    static var shiftDaysOffRaw: String {
+        get { UserDefaults.standard.string(forKey: "shiftDaysOff") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "shiftDaysOff") }
+    }
+
+    static var shiftWorkDaysRaw: String {
+        get { UserDefaults.standard.string(forKey: "shiftWorkDays") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "shiftWorkDays") }
+    }
+
+    /// 교대 근무일 때만 적용된다
+    static var shiftOffKeys: Set<String> { workPattern == .shift ? ShiftKeyCache.keys(shiftDaysOffRaw) : [] }
+    static var shiftWorkKeys: Set<String> { workPattern == .shift ? ShiftKeyCache.keys(shiftWorkDaysRaw) : [] }
+
+    /// 그 날의 교대 표시 — true 휴무 · false 근무 · nil 원래대로
+    static func shiftMark(on date: Date) -> Bool? {
+        let k = partTimeKey(date)
+        if ShiftKeyCache.keys(shiftDaysOffRaw).contains(k) { return true }
+        if ShiftKeyCache.keys(shiftWorkDaysRaw).contains(k) { return false }
+        return nil
+    }
+
+    /// 날짜를 휴무(true) / 근무(false) / 원래대로(nil)로. 원래 상태와 같으면 표시를 남기지 않는다.
+    static func setShiftMark(_ off: Bool?, on date: Date, defaultIsOff: Bool) {
+        let k = partTimeKey(date)
+        var offs = ShiftKeyCache.keys(shiftDaysOffRaw)
+        var works = ShiftKeyCache.keys(shiftWorkDaysRaw)
+        offs.remove(k); works.remove(k)
+        if let off, off != defaultIsOff {
+            if off { offs.insert(k) } else { works.insert(k) }
+        }
+        shiftDaysOffRaw = offs.sorted().joined(separator: ",")
+        shiftWorkDaysRaw = works.sorted().joined(separator: ",")
+    }
+}
+
+/// 교대 기록 문자열 → 집합. 쉬는 날 판정이 날마다 불리므로 같은 문자열이면 다시 나누지 않는다.
+private enum ShiftKeyCache {
+    private static let lock = NSLock()
+    nonisolated(unsafe) private static var cache: [String: Set<String>] = [:]
+
+    static func keys(_ raw: String) -> Set<String> {
+        guard !raw.isEmpty else { return [] }
+        lock.lock(); defer { lock.unlock() }
+        if let hit = cache[raw] { return hit }
+        let set = Set(raw.split(separator: ",").map(String.init))
+        if cache.count > 8 { cache = [:] }
+        cache[raw] = set
+        return set
     }
 }

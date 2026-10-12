@@ -21,12 +21,12 @@ struct LeaveKindsView: View {
 
     private var orderedKinds: [LeaveKindRef] { store.orderedKinds(custom: customTypes) }
 
+    private var startMonth: Int { profiles.first?.yearStartMonth ?? 1 }
+    private var currentYear: Int { LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: startMonth) }
+
     /// 올해(연차 기준월부터) 종류별 사용량 — 한도 카운터용
     private var usage: [LeaveKindRef: LeaveKindUsage] {
-        let startMonth = profiles.first?.yearStartMonth ?? 1
-        return LeaveKindUsage.byKind(records: records, customTypes: customTypes,
-                                     year: LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: startMonth),
-                                     startMonth: startMonth)
+        LeaveKindUsage.byKind(records: records, customTypes: customTypes, year: currentYear, startMonth: startMonth)
     }
 
     var body: some View {
@@ -116,7 +116,9 @@ struct LeaveKindsView: View {
                         .foregroundStyle(.primary)
                     // 연간 한도가 있으면 올해 남은 양
                     if kind.hasAllowance {
-                        let counter = LeaveAllowanceCounter(kind: kind, usage: usage)
+                        let counter = LeaveAllowanceCounter(kind: kind, usage: usage,
+                                                            carriedIn: LeaveAllowanceCounter.carryIn(kind: kind, records: records,
+                                                                                                    year: currentYear, startMonth: startMonth))
                         Text(counter.isOver ? Strings.allowanceOver(counter.text(-counter.remaining))
                              : "\(Strings.remaining) \(counter.text(counter.remaining)) / \(counter.text(counter.total))")
                             .font(.body)
@@ -164,6 +166,7 @@ struct LeaveKindEditor: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Query private var records: [LeaveRecord]
+    @Query private var profiles: [UserProfile]
 
     @State private var name = ""
     @State private var color = Color(hex: "4FACFE") ?? .blue
@@ -173,7 +176,22 @@ struct LeaveKindEditor: View {
     /// 시간 한도는 분, 일 한도는 일
     @State private var allowanceMinutes = 0
     @State private var allowanceDays = 0.0
+    /// 남은 한도 넘겨 쓰기 · 시작할 때 이미 쌓여 있던 양 (시간이면 분, 일이면 일)
+    @State private var carriesOver = false
+    @State private var startBalanceMinutes = 0
+    @State private var startBalanceDays = 0.0
     @State private var didLoad = false
+
+    private var startMonth: Int { profiles.first?.yearStartMonth ?? 1 }
+    private var currentYear: Int { LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: startMonth) }
+    /// 넘겨 쓰기를 셈하기 시작하는 해 — 이미 켜져 있던 종류는 그 해, 새로 켜면 올해
+    private var carryStartYear: Int {
+        if let kind, kind.allowanceCarriesOver, kind.allowanceStartYear > 0 { return kind.allowanceStartYear }
+        if let kind, kind.allowanceCarriesOver {
+            return LeaveUsageCalculator.fiscalYear(for: kind.createdAt, startMonth: startMonth)
+        }
+        return currentYear
+    }
 
     /// 빨리 고를 수 있는 색 — 달력의 공휴일(빨강)과 겹치지 않게 골랐다
     private static let palette = ["4FACFE", "34C759", "FF9500", "AF52DE", "FF2D55", "5856D6", "00C7BE", "A2845E"]
@@ -224,6 +242,7 @@ struct LeaveKindEditor: View {
             .onAppear {
                 guard !didLoad else { return }
                 didLoad = true
+                if kind == nil { allowanceIsHours = LeaveLength.usesHourlyLeave }
                 if let kind {
                     name = kind.name
                     color = kind.color
@@ -234,6 +253,12 @@ struct LeaveKindEditor: View {
                         allowanceMinutes = Int((kind.allowanceAmount * 60).rounded())
                     } else {
                         allowanceDays = kind.allowanceAmount
+                    }
+                    carriesOver = kind.allowanceCarriesOver
+                    if kind.allowanceIsHours {
+                        startBalanceMinutes = Int((kind.allowanceStartBalance * 60).rounded())
+                    } else {
+                        startBalanceDays = kind.allowanceStartBalance
                     }
                 }
             }
@@ -246,11 +271,13 @@ struct LeaveKindEditor: View {
         Section {
             Toggle(Strings.allowanceToggle, isOn: $hasAllowance.animation())
             if hasAllowance {
+                if LeaveLength.usesHourlyLeave || allowanceIsHours {
                 Picker(Strings.allowanceUnitLabel, selection: $allowanceIsHours) {
                     Text(Strings.leaveHoursLabel).tag(true)
                     Text(Strings.allowanceUnitDays).tag(false)
                 }
                 .pickerStyle(.segmented)
+                }
                 if allowanceIsHours {
                     HStack {
                         Text(Strings.leaveHoursLabel)
@@ -287,6 +314,43 @@ struct LeaveKindEditor: View {
         } footer: {
             if hasAllowance { Text(Strings.allowanceFooter) }
         }
+        if hasAllowance {
+            carryOverSection
+        }
+    }
+
+    /// 남은 한도를 다음 해로 넘기기 (미국 교사 피드백: 병가는 쌓이고 개인 휴가는 사라진다)
+    @ViewBuilder
+    private var carryOverSection: some View {
+        Section {
+            Toggle(Strings.allowanceCarryToggle, isOn: $carriesOver.animation())
+            if carriesOver {
+                if allowanceIsHours {
+                    HStack {
+                        Text(Strings.allowanceStartBalance(Strings.yearLabel(carryStartYear)))
+                        Spacer()
+                        TextField("0", value: Binding(get: { startBalanceMinutes / 60 },
+                                                      set: { startBalanceMinutes = max(0, min(99999, $0)) * 60 + startBalanceMinutes % 60 }),
+                                  format: .number)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .monospacedDigit()
+                            .frame(maxWidth: 100)
+                        Text(Strings.leaveHoursLabel).foregroundStyle(.secondary)
+                    }
+                } else {
+                    Stepper(value: $startBalanceDays, in: 0...999, step: 0.5) {
+                        HStack {
+                            Text(Strings.allowanceStartBalance(Strings.yearLabel(carryStartYear)))
+                            Spacer()
+                            Text(Strings.dayCount(startBalanceDays)).monospacedDigit().foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+        } footer: {
+            Text(carriesOver ? Strings.allowanceCarryOnFooter : Strings.allowanceCarryOffFooter)
+        }
     }
 
     private func applyAllowance(to target: CustomLeaveType) {
@@ -296,6 +360,13 @@ struct LeaveKindEditor: View {
         } else {
             target.allowanceAmount = allowanceIsHours ? Double(allowanceMinutes) / 60 : allowanceDays
         }
+        let carry = hasAllowance && carriesOver
+        if carry {
+            // 새로 켤 때 시작 해를 올해로 — 시작할 때 쌓여 있던 양이 그해부터 들어간다
+            if !target.allowanceCarriesOver || target.allowanceStartYear == 0 { target.allowanceStartYear = carryStartYear }
+            target.allowanceStartBalance = allowanceIsHours ? Double(startBalanceMinutes) / 60 : startBalanceDays
+        }
+        target.allowanceCarriesOver = carry
     }
 
     private func save() {
@@ -340,7 +411,7 @@ struct LeaveKindStatsView: View {
     @State private var store = LeaveStyleStore.shared
 
     /// 쓴 기록이 있거나 한도를 정한 종류만, 사용자가 정한 순서로
-    private var rows: [(ref: LeaveKindRef, usage: LeaveKindUsage, kind: CustomLeaveType?)] {
+    private var rows: [(ref: LeaveKindRef, usage: LeaveKindUsage, kind: CustomLeaveType?, counter: LeaveAllowanceCounter?)] {
         let usage = LeaveKindUsage.byKind(records: records, customTypes: customTypes, year: year, startMonth: startMonth)
         return store.orderedKinds(custom: customTypes).compactMap { ref in
             let kind: CustomLeaveType? = {
@@ -349,7 +420,12 @@ struct LeaveKindStatsView: View {
             }()
             let u = usage[ref] ?? LeaveKindUsage()
             guard u.totalCount > 0 || kind?.hasAllowance == true else { return nil }
-            return (ref, u, kind)
+            let counter = kind.flatMap { k in
+                k.hasAllowance ? LeaveAllowanceCounter(kind: k, usage: u,
+                                                       carriedIn: LeaveAllowanceCounter.carryIn(kind: k, records: records,
+                                                                                               year: year, startMonth: startMonth)) : nil
+            }
+            return (ref, u, kind, counter)
         }
     }
 
@@ -363,7 +439,7 @@ struct LeaveKindStatsView: View {
             } else {
                 Section {
                     ForEach(rows, id: \.ref) { row in
-                        LeaveKindStatsRow(ref: row.ref, usage: row.usage, kind: row.kind)
+                        LeaveKindStatsRow(ref: row.ref, usage: row.usage, kind: row.kind, counter: row.counter)
                     }
                 } header: {
                     Text(verbatim: Strings.yearLabel(year))
@@ -381,6 +457,8 @@ private struct LeaveKindStatsRow: View {
     let ref: LeaveKindRef
     let usage: LeaveKindUsage
     let kind: CustomLeaveType?
+    /// 한도가 있는 종류의 카운터 (넘어온 양 포함)
+    let counter: LeaveAllowanceCounter?
 
     private var name: String {
         switch ref {
@@ -421,15 +499,18 @@ private struct LeaveKindStatsRow: View {
             HStack(spacing: 0) {
                 figure(Strings.statUsed, amount(days: usage.usedDays, minutes: usage.usedMinutes), .green)
                 figure(Strings.statPlanned, amount(days: usage.plannedDays, minutes: usage.plannedMinutes), .blue)
-                if let kind, kind.hasAllowance {
-                    let counter = LeaveAllowanceCounter(kind: kind, usage: usage)
+                if let counter {
                     figure(Strings.remaining, counter.text(counter.remaining), counter.isOver ? .red : .primary)
                 }
             }
 
-            if let kind, kind.hasAllowance {
-                let counter = LeaveAllowanceCounter(kind: kind, usage: usage)
+            if let counter {
                 AllowanceBar(counter: counter, color: color)
+                if counter.carriedIn > 0.0001 {
+                    Text(Strings.allowanceCarriedIn(counter.text(counter.carriedIn)))
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                }
                 if counter.isOver {
                     Text(Strings.allowanceOver(counter.text(-counter.remaining)))
                         .font(.body)

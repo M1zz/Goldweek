@@ -368,9 +368,7 @@ struct LeaveRegistrationView: View {
         guard let kind = customType, kind.hasAllowance, selectedBonusLeave == nil else { return nil }
         let startMonth = profile.yearStartMonth
         let year = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: startMonth)
-        let usage = LeaveKindUsage.byKind(records: Array(allLeaveRecords), customTypes: Array(customLeaveTypes),
-                                          year: year, startMonth: startMonth)[.custom(kind.id)] ?? LeaveKindUsage()
-        let counter = LeaveAllowanceCounter(kind: kind, usage: usage)
+        let counter = LeaveAllowanceCounter.make(kind: kind, records: Array(allLeaveRecords), year: year, startMonth: startMonth)
         let end = length == .full ? endDate : startDate
         let thisLeave = kind.allowanceIsHours
             ? Double(LeaveKindUsage.workMinutes(length: length, durationMinutes: durationMinutes, start: startDate, end: end))
@@ -507,7 +505,7 @@ struct LeaveRegistrationView: View {
                         .foregroundStyle(.secondary)
                         .voHeader()
                     HStack(spacing: 8) {
-                        ForEach([LeaveLength.quarter, .half, .full, .hours], id: \.self) { len in
+                        ForEach([LeaveLength.quarter, .half, .full] + (LeaveLength.usesHourlyLeave || length == .hours ? [.hours] : []), id: \.self) { len in
                             Button {
                                 HapticFeedback.selection()
                                 length = len

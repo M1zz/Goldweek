@@ -16,7 +16,8 @@ class CalendarService {
     private let eventStore = EKEventStore()
     // 기존 사용자 데이터 호환을 위해 UserDefaults 키는 보존
     private let calendarIdentifierKey = "LeaveWiseCalendarIdentifier"
-    private let calendarTitle = "Goldweek 연차"
+    /// 새로 만드는 캘린더 이름 — 한국어면 "Goldweek 연차", 그 밖의 언어는 "Goldweek"
+    private var calendarTitle: String { LanguageManager.shared.currentLanguage == .korean ? "Goldweek 연차" : "Goldweek" }
     private let legacyCalendarTitle = "LeaveWise 연차"
     
     var authorizationStatus: EKAuthorizationStatus {
@@ -318,7 +319,7 @@ class CalendarService {
         let goldweekIdentifier = UserDefaults.standard.string(forKey: calendarIdentifierKey)
         let calendars = eventStore.calendars(for: .event).filter { c in
             c.calendarIdentifier != goldweekIdentifier
-                && c.title != calendarTitle
+                && c.title != "Goldweek 연차" && c.title != "Goldweek"
                 && c.title != legacyCalendarTitle
                 && c.type != .subscription
                 && c.type != .birthday
@@ -373,15 +374,116 @@ class CalendarService {
 
     // MARK: - Utility Methods
 
-    /// 연차 타입에 따른 이벤트 제목 생성
+    /// 이벤트 제목 — "연차 · 3일", "ROL · 2시간 30분", "연차 · 반차" (직접 만든 종류 이름, 앱 언어)
     private func generateEventTitle(for leaveRecord: LeaveRecord) -> String {
-        let typeString = Strings.leaveTypeName(leaveRecord.type)
-        
-        if leaveRecord.startDate == leaveRecord.endDate {
-            return "\(typeString)"
-        } else {
-            let days = leaveRecord.daysCount
-            return "\(typeString) (\(days)일)"
+        let typeString = leaveRecord.displayTypeName
+        switch leaveRecord.length {
+        case .full:
+            return leaveRecord.daysCount > 1 ? "\(typeString) · \(Strings.dayCount(leaveRecord.effectiveLeaveDays))" : typeString
+        default:
+            return "\(typeString) · \(leaveRecord.lengthLabel)"
+        }
+    }
+
+    // MARK: - 캘린더 앱으로 자동 보내기 (피드백: "iCal·시스템 캘린더에 동기화하고 싶다")
+
+    /// 켜 두면 휴가를 넣고·고치고·지울 때마다 "Goldweek 연차" 캘린더를 맞춘다 (Pro)
+    static let autoSyncKey = "calendarAutoSync"
+    static var isAutoSyncOn: Bool { UserDefaults.standard.bool(forKey: autoSyncKey) }
+
+    /// 이벤트 URL 로 어느 기록인지 잇는다 — 기록을 고치면 같은 이벤트를 고친다
+    private static let eventURLPrefix = "goldweek://leave/"
+
+    private var pendingSync: Task<Void, Never>?
+
+    /// 기록이 바뀔 때마다 부른다 — 연달아 바뀌면 마지막 한 번만 맞춘다
+    @MainActor
+    func scheduleSync(records: [LeaveRecord]) {
+        guard Self.isAutoSyncOn, ProManager.shared.isPro, isAuthorized else { return }
+        pendingSync?.cancel()
+        let snapshot = records
+        pendingSync = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 800_000_000)
+            guard !Task.isCancelled else { return }
+            do { _ = try self.syncAll(records: snapshot) } catch {
+                logError("캘린더 동기화 실패: \(error.localizedDescription)", category: .app)
+            }
+        }
+    }
+
+    /// 취소하지 않은 휴가를 모두 캘린더에 맞춘다 — 새로 만들고, 바뀐 건 고치고, 없어진 건 지운다.
+    /// - Returns: 캘린더에 있는 휴가 수
+    @MainActor
+    @discardableResult
+    func syncAll(records: [LeaveRecord]) throws -> Int {
+        guard ProManager.shared.isPro else { throw CalendarError.proFeatureRequired }
+        guard isAuthorized else { throw CalendarError.permissionDenied }
+        let calendar = try getOrCreateGoldweekCalendar()
+        let cal = Calendar.current
+        let active = records.filter { $0.status != .cancelled }
+
+        // 이 캘린더의 이벤트 — EventKit 은 한 번에 4년까지라 1년씩 나눠 읽는다
+        let now = Date()
+        let starts = active.map(\.startDate) + [cal.date(byAdding: .year, value: -1, to: now) ?? now]
+        let ends = active.map(\.endDate) + [cal.date(byAdding: .year, value: 2, to: now) ?? now]
+        var cursor = cal.startOfDay(for: starts.min() ?? now)
+        let last = cal.date(byAdding: .day, value: 2, to: ends.max() ?? now) ?? now
+        var existing: [String: EKEvent] = [:]
+        var strays: [EKEvent] = []
+        while cursor < last {
+            let next = min(cal.date(byAdding: .year, value: 1, to: cursor) ?? last, last)
+            for event in eventStore.events(matching: eventStore.predicateForEvents(withStart: cursor, end: next, calendars: [calendar])) {
+                if let url = event.url?.absoluteString, url.hasPrefix(Self.eventURLPrefix) {
+                    let id = String(url.dropFirst(Self.eventURLPrefix.count))
+                    if existing[id] == nil { existing[id] = event } else { strays.append(event) }
+                } else if !strays.contains(where: { $0.eventIdentifier == event.eventIdentifier }) {
+                    strays.append(event)   // 예전 버전이 URL 없이 넣은 이벤트 — 새로 만들어 대신한다
+                }
+            }
+            cursor = next
+        }
+
+        var changed = 0
+        for record in active {
+            let key = record.id.uuidString
+            let event = existing.removeValue(forKey: key) ?? {
+                let e = EKEvent(eventStore: eventStore)
+                e.calendar = calendar
+                e.url = URL(string: Self.eventURLPrefix + key)
+                return e
+            }()
+            let title = generateEventTitle(for: record)
+            let start = cal.startOfDay(for: record.startDate)
+            let end = cal.startOfDay(for: cal.date(byAdding: .day, value: 1, to: record.endDate) ?? record.endDate)
+            let notes: String? = record.note.isEmpty ? nil : record.note
+            guard event.isNew || event.title != title || event.startDate != start || event.endDate != end
+                    || event.notes != notes || !event.isAllDay else { continue }
+            event.title = title
+            event.isAllDay = true
+            event.startDate = start
+            event.endDate = end
+            event.notes = notes
+            try eventStore.save(event, span: .thisEvent, commit: false)
+            changed += 1
+        }
+        // 지웠거나 취소한 휴가
+        for event in Array(existing.values) + strays {
+            try eventStore.remove(event, span: .thisEvent, commit: false)
+            changed += 1
+        }
+        if changed > 0 { try eventStore.commit() }
+        logInfo("캘린더 동기화: \(active.count)건, 바뀜 \(changed)", category: .app)
+        return active.count
+    }
+
+    /// 자동 보내기를 끄면 Goldweek 캘린더를 지운다 (앱이 만든 캘린더라 다른 일정은 건드리지 않는다)
+    @MainActor
+    func stopAutoSync() {
+        pendingSync?.cancel()
+        UserDefaults.standard.set(false, forKey: Self.autoSyncKey)
+        guard isAuthorized else { return }
+        do { try deleteGoldweekCalendar() } catch {
+            logError("Goldweek 캘린더 삭제 실패: \(error.localizedDescription)", category: .app)
         }
     }
     

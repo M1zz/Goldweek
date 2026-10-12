@@ -1555,12 +1555,14 @@ struct PastLeaveQuickEntrySheet: View {
                             Text("\(days)").monospacedDigit().foregroundStyle(.secondary)
                         }
                     }
+                    if LeaveLength.usesHourlyLeave {
                     Stepper(value: $extraMinutes, in: 0...max(0, workday - 30), step: 30) {
                         HStack {
                             Text(Strings.leaveHoursLabel)
                             Spacer()
                             Text(Strings.durationText(minutes: extraMinutes)).monospacedDigit().foregroundStyle(.secondary)
                         }
+                    }
                     }
 
                     HStack(spacing: 8) {

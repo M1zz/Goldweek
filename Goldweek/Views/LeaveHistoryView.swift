@@ -724,7 +724,8 @@ struct EditLeaveSheet: View {
                 // 사용 길이
                 Section(Strings.leaveLengthSectionHeader) {
                     Picker(Strings.leaveLengthSectionHeader, selection: $length) {
-                        ForEach(LeaveLength.allCases) { len in
+                        // 시간 단위를 안 쓰면 숨긴다 — 이미 시간으로 넣은 기록은 그대로 보인다
+                        ForEach(LeaveLength.allCases.filter { $0 != .hours || LeaveLength.usesHourlyLeave || record.length == .hours }) { len in
                             Text(Strings.leaveLengthName(len)).tag(len)
                         }
                     }

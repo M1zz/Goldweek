@@ -1121,3 +1121,466 @@ extension Strings {
         }
     }
 }
+
+// MARK: - 넘겨 쓰는 한도 · 학교 달력 가져오기 (미국 교사 피드백, 2026-10-12)
+
+extension Strings {
+    /// 남은 한도 다음 해로 넘기기
+    static var allowanceCarryToggle: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "남은 양을 다음 해로 넘겨요"
+        case .english: return "Unused balance rolls over"
+        case .japanese: return "残りを翌年に繰り越す"
+        case .chinese: return "剩余额度结转到下一年"
+        case .german: return "Rest ins nächste Jahr übertragen"
+        case .french: return "Le solde non utilisé est reporté"
+        case .spanish: return "El saldo no usado se acumula"
+        case .italian: return "Il residuo passa all'anno successivo"
+        case .portuguese: return "O saldo não usado acumula"
+        case .chineseTraditional: return "剩餘額度結轉到下一年"
+        case .dutch: return "Restant gaat mee naar volgend jaar"
+        case .swedish: return "Outnyttjat saldo förs över"
+        case .norwegian: return "Ubrukt saldo overføres"
+        case .danish: return "Ubrugt saldo overføres"
+        case .finnish: return "Käyttämätön saldo siirtyy"
+        case .polish: return "Niewykorzystane przechodzi na kolejny rok"
+        case .czech: return "Nevyčerpané se převádí"
+        case .greek: return "Το υπόλοιπο μεταφέρεται"
+        case .turkish: return "Kalan bakiye devreder"
+        case .russian: return "Остаток переносится"
+        case .indonesian: return "Sisa dibawa ke tahun berikutnya"
+        }
+    }
+
+    /// 넘겨 쓰기 시작 해에 쌓여 있던 양
+    static func allowanceStartBalance(_ year: String) -> String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "\(year) 시작 때 쌓인 양"
+        case .english: return "Built up by \(year)"
+        case .japanese: return "\(year)開始時の繰越分"
+        case .chinese: return "\(year)开始时的累计额度"
+        case .german: return "Angespart bis \(year)"
+        case .french: return "Cumulé au début de \(year)"
+        case .spanish: return "Acumulado al inicio de \(year)"
+        case .italian: return "Accumulato a inizio \(year)"
+        case .portuguese: return "Acumulado no início de \(year)"
+        case .chineseTraditional: return "\(year)開始時的累計額度"
+        case .dutch: return "Opgebouwd tot \(year)"
+        case .swedish: return "Intjänat till \(year)"
+        case .norwegian: return "Opptjent til \(year)"
+        case .danish: return "Optjent til \(year)"
+        case .finnish: return "Kertynyt \(year) alkuun"
+        case .polish: return "Zebrane do \(year)"
+        case .czech: return "Naspořeno k \(year)"
+        case .greek: return "Συσσωρευμένο έως \(year)"
+        case .turkish: return "\(year) başında biriken"
+        case .russian: return "Накоплено к \(year)"
+        case .indonesian: return "Terkumpul hingga \(year)"
+        }
+    }
+
+    /// 넘겨 쓰기 켰을 때 설명
+    static var allowanceCarryOnFooter: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "해마다 남은 양이 다음 해 한도에 더해져요 (쌓이는 병가처럼). 지금까지 이미 쌓인 양을 위에 넣으세요."
+        case .english: return "Whatever is left each year is added to next year, like sick days that roll over. Enter what you have already built up above."
+        case .japanese: return "毎年の残りが翌年の上限に加算されます（繰り越せる病気休暇のように）。これまでに貯まった分を上に入力してください。"
+        case .chinese: return "每年剩下的额度会加到下一年（像可累积的病假）。请在上面填写目前已累积的额度。"
+        case .german: return "Was übrig bleibt, kommt jedes Jahr dazu – wie übertragbare Krankheitstage. Trage oben ein, was du schon angespart hast."
+        case .french: return "Ce qui reste chaque année s'ajoute à l'année suivante, comme des jours de maladie cumulables. Indiquez ci-dessus ce que vous avez déjà cumulé."
+        case .spanish: return "Lo que sobra cada año se suma al siguiente, como los días de enfermedad acumulables. Indica arriba lo que ya tienes acumulado."
+        case .italian: return "Quello che resta ogni anno si aggiunge all'anno dopo, come i giorni di malattia cumulabili. Inserisci sopra quanto hai già accumulato."
+        case .portuguese: return "O que sobra a cada ano soma-se ao seguinte, como dias de doença acumuláveis. Informe acima o que você já acumulou."
+        case .chineseTraditional: return "每年剩下的額度會加到下一年（像可累積的病假）。請在上面填寫目前已累積的額度。"
+        case .dutch: return "Wat elk jaar overblijft komt bij het volgende jaar, zoals opbouwende ziektedagen. Vul hierboven in wat je al hebt opgebouwd."
+        case .swedish: return "Det som blir över varje år läggs till nästa år, som sjukdagar som sparas. Ange ovan vad du redan har samlat."
+        case .norwegian: return "Det som er igjen hvert år legges til neste år, som sykedager som spares. Skriv over hva du allerede har opptjent."
+        case .danish: return "Det, der er tilbage hvert år, lægges til næste år, som sygedage der opspares. Angiv ovenfor, hvad du allerede har optjent."
+        case .finnish: return "Joka vuosi jäljelle jäävä lisätään seuraavaan vuoteen, kuten kertyvät sairauspäivät. Syötä yllä jo kertynyt määrä."
+        case .polish: return "To, co zostaje co roku, dolicza się do kolejnego roku, jak kumulowane dni chorobowe. Wpisz wyżej, ile już masz zebrane."
+        case .czech: return "Co každý rok zbude, přičte se k dalšímu roku, jako převáděné dny nemoci. Nahoře zadejte, co už máte naspořeno."
+        case .greek: return "Ό,τι περισσεύει κάθε χρόνο προστίθεται στον επόμενο, όπως οι αναρρωτικές που μεταφέρονται. Βάλτε πάνω όσα έχετε ήδη συγκεντρώσει."
+        case .turkish: return "Her yıl kalan miktar bir sonraki yıla eklenir, biriken hastalık izni gibi. Şimdiye kadar biriktirdiğinizi yukarıya girin."
+        case .russian: return "Остаток каждого года добавляется к следующему, как накапливаемые больничные. Укажите выше, сколько уже накоплено."
+        case .indonesian: return "Sisa tiap tahun ditambahkan ke tahun berikutnya, seperti cuti sakit yang terakumulasi. Masukkan yang sudah terkumpul di atas."
+        }
+    }
+
+    /// 넘겨 쓰기 껐을 때 설명
+    static var allowanceCarryOffFooter: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "끄면 남은 양은 해가 바뀌면 사라져요 (개인 휴가처럼)."
+        case .english: return "When off, anything left resets at the end of the leave year, like personal days."
+        case .japanese: return "オフにすると、残りは年度が変わると消えます（個人休暇のように）。"
+        case .chinese: return "关闭后，剩余额度在年度结束时清零（像事假一样）。"
+        case .german: return "Wenn aus, verfällt der Rest zum Jahresende – wie persönliche freie Tage."
+        case .french: return "Désactivé, le reste est perdu en fin d'année, comme les jours personnels."
+        case .spanish: return "Si está desactivado, lo que sobra se pierde al final del año, como los días personales."
+        case .italian: return "Se disattivato, il residuo si azzera a fine anno, come i giorni personali."
+        case .portuguese: return "Desativado, o que sobra zera no fim do ano, como os dias pessoais."
+        case .chineseTraditional: return "關閉後，剩餘額度在年度結束時歸零（像事假一樣）。"
+        case .dutch: return "Uit: wat overblijft vervalt aan het eind van het jaar, zoals persoonlijke dagen."
+        case .swedish: return "Av: det som blir över försvinner vid årets slut, som personliga dagar."
+        case .norwegian: return "Av: det som er igjen forsvinner ved årets slutt, som personlige dager."
+        case .danish: return "Fra: det, der er tilbage, bortfalder ved årets udgang, som personlige dage."
+        case .finnish: return "Pois päältä: jäljelle jäävä nollautuu vuoden lopussa, kuten henkilökohtaiset päivät."
+        case .polish: return "Wyłączone: to, co zostanie, przepada z końcem roku, jak dni osobiste."
+        case .czech: return "Vypnuto: zbytek na konci roku propadá, jako osobní dny."
+        case .greek: return "Απενεργοποιημένο: ό,τι περισσεύει χάνεται στο τέλος του έτους, όπως οι προσωπικές ημέρες."
+        case .turkish: return "Kapalıyken kalan miktar yıl sonunda sıfırlanır, kişisel izin günleri gibi."
+        case .russian: return "Если выключено, остаток сгорает в конце года, как личные дни."
+        case .indonesian: return "Jika mati, sisa hangus di akhir tahun, seperti hari pribadi."
+        }
+    }
+
+    /// 지난해에서 넘어온 양
+    static func allowanceCarriedIn(_ amount: String) -> String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "지난해에서 넘어온 \(amount) 포함"
+        case .english: return "Includes \(amount) rolled over"
+        case .japanese: return "前年からの繰越 \(amount) を含む"
+        case .chinese: return "含上年结转 \(amount)"
+        case .german: return "Inkl. \(amount) aus dem Vorjahr"
+        case .french: return "Dont \(amount) reportés"
+        case .spanish: return "Incluye \(amount) acumulados"
+        case .italian: return "Inclusi \(amount) riportati"
+        case .portuguese: return "Inclui \(amount) acumulados"
+        case .chineseTraditional: return "含上年結轉 \(amount)"
+        case .dutch: return "Inclusief \(amount) overgedragen"
+        case .swedish: return "Inkl. \(amount) överfört"
+        case .norwegian: return "Inkl. \(amount) overført"
+        case .danish: return "Inkl. \(amount) overført"
+        case .finnish: return "Sisältää \(amount) siirtyneenä"
+        case .polish: return "W tym \(amount) z poprzedniego roku"
+        case .czech: return "Včetně \(amount) převedených"
+        case .greek: return "Περιλαμβάνει \(amount) από μεταφορά"
+        case .turkish: return "\(amount) devreden dahil"
+        case .russian: return "Включая \(amount) перенесённых"
+        case .indonesian: return "Termasuk \(amount) dari tahun lalu"
+        }
+    }
+
+    /// 학교 달력 가져오기
+    static var schoolImportTitle: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "학교 달력 가져오기"
+        case .english: return "Import school calendar"
+        case .japanese: return "学校カレンダーを読み込む"
+        case .chinese: return "导入学校日历"
+        case .german: return "Schulkalender importieren"
+        case .french: return "Importer le calendrier scolaire"
+        case .spanish: return "Importar calendario escolar"
+        case .italian: return "Importa calendario scolastico"
+        case .portuguese: return "Importar calendário escolar"
+        case .chineseTraditional: return "匯入學校行事曆"
+        case .dutch: return "Schoolkalender importeren"
+        case .swedish: return "Importera skolkalender"
+        case .norwegian: return "Importer skolekalender"
+        case .danish: return "Importér skolekalender"
+        case .finnish: return "Tuo koulun kalenteri"
+        case .polish: return "Importuj kalendarz szkolny"
+        case .czech: return "Importovat školní kalendář"
+        case .greek: return "Εισαγωγή σχολικού ημερολογίου"
+        case .turkish: return "Okul takvimini içe aktar"
+        case .russian: return "Импорт школьного календаря"
+        case .indonesian: return "Impor kalender sekolah"
+        }
+    }
+
+    /// 학교 달력 가져오기 안내
+    static var schoolImportGuide: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "학교 달력 사진·PDF를 고르거나 글을 붙여 넣으세요. 칸으로 된 달력보다 날짜 목록(주요 일정) 부분을 잘 읽어요."
+        case .english: return "Choose a photo or PDF of your school calendar, or paste its text. A list of key dates reads better than a grid."
+        case .japanese: return "学校カレンダーの写真・PDFを選ぶか、文字を貼り付けてください。マス目のカレンダーより日付の一覧（主な予定）の方がよく読めます。"
+        case .chinese: return "选择学校日历的照片或 PDF，或粘贴文字。日期列表（重要日程）比格子日历更容易识别。"
+        case .german: return "Wähle ein Foto oder PDF des Schulkalenders oder füge den Text ein. Eine Liste wichtiger Termine wird besser erkannt als ein Raster."
+        case .french: return "Choisissez une photo ou un PDF du calendrier scolaire, ou collez le texte. Une liste des dates clés se lit mieux qu'une grille."
+        case .spanish: return "Elige una foto o PDF del calendario escolar, o pega el texto. Una lista de fechas clave se lee mejor que una cuadrícula."
+        case .italian: return "Scegli una foto o un PDF del calendario scolastico, oppure incolla il testo. Un elenco di date si legge meglio di una griglia."
+        case .portuguese: return "Escolha uma foto ou PDF do calendário escolar, ou cole o texto. Uma lista de datas importantes é lida melhor que uma grade."
+        case .chineseTraditional: return "選擇學校行事曆的照片或 PDF，或貼上文字。日期清單（重要行程）比格子行事曆更容易辨識。"
+        case .dutch: return "Kies een foto of pdf van de schoolkalender, of plak de tekst. Een lijst met belangrijke data leest beter dan een raster."
+        case .swedish: return "Välj ett foto eller en PDF av skolkalendern, eller klistra in texten. En lista med viktiga datum läses bättre än ett rutnät."
+        case .norwegian: return "Velg et bilde eller en PDF av skolekalenderen, eller lim inn teksten. En liste med viktige datoer leses bedre enn et rutenett."
+        case .danish: return "Vælg et foto eller en PDF af skolekalenderen, eller indsæt teksten. En liste med vigtige datoer læses bedre end et gitter."
+        case .finnish: return "Valitse koulun kalenterin kuva tai PDF tai liitä teksti. Tärkeiden päivien luettelo luetaan paremmin kuin ruudukko."
+        case .polish: return "Wybierz zdjęcie lub PDF kalendarza szkolnego albo wklej tekst. Lista ważnych dat czyta się lepiej niż siatka."
+        case .czech: return "Vyberte fotku nebo PDF školního kalendáře, nebo vložte text. Seznam důležitých dat se čte lépe než mřížka."
+        case .greek: return "Επιλέξτε φωτογραφία ή PDF του σχολικού ημερολογίου ή επικολλήστε το κείμενο. Μια λίστα ημερομηνιών διαβάζεται καλύτερα από πλέγμα."
+        case .turkish: return "Okul takviminin fotoğrafını veya PDF'ini seçin ya da metni yapıştırın. Önemli tarihler listesi ızgaradan daha iyi okunur."
+        case .russian: return "Выберите фото или PDF школьного календаря либо вставьте текст. Список ключевых дат читается лучше, чем сетка."
+        case .indonesian: return "Pilih foto atau PDF kalender sekolah, atau tempel teksnya. Daftar tanggal penting lebih mudah dibaca daripada kisi."
+        }
+    }
+
+    /// PDF·파일 고르기
+    static var schoolImportChooseFile: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "PDF·파일 고르기"
+        case .english: return "Choose PDF or file"
+        case .japanese: return "PDF・ファイルを選ぶ"
+        case .chinese: return "选择 PDF 或文件"
+        case .german: return "PDF oder Datei wählen"
+        case .french: return "Choisir un PDF ou un fichier"
+        case .spanish: return "Elegir PDF o archivo"
+        case .italian: return "Scegli PDF o file"
+        case .portuguese: return "Escolher PDF ou arquivo"
+        case .chineseTraditional: return "選擇 PDF 或檔案"
+        case .dutch: return "Pdf of bestand kiezen"
+        case .swedish: return "Välj PDF eller fil"
+        case .norwegian: return "Velg PDF eller fil"
+        case .danish: return "Vælg PDF eller fil"
+        case .finnish: return "Valitse PDF tai tiedosto"
+        case .polish: return "Wybierz PDF lub plik"
+        case .czech: return "Vybrat PDF nebo soubor"
+        case .greek: return "Επιλογή PDF ή αρχείου"
+        case .turkish: return "PDF veya dosya seç"
+        case .russian: return "Выбрать PDF или файл"
+        case .indonesian: return "Pilih PDF atau file"
+        }
+    }
+
+    /// 글 붙여 넣기
+    static var schoolImportPaste: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "글 붙여 넣기"
+        case .english: return "Paste text"
+        case .japanese: return "テキストを貼り付け"
+        case .chinese: return "粘贴文字"
+        case .german: return "Text einfügen"
+        case .french: return "Coller du texte"
+        case .spanish: return "Pegar texto"
+        case .italian: return "Incolla testo"
+        case .portuguese: return "Colar texto"
+        case .chineseTraditional: return "貼上文字"
+        case .dutch: return "Tekst plakken"
+        case .swedish: return "Klistra in text"
+        case .norwegian: return "Lim inn tekst"
+        case .danish: return "Indsæt tekst"
+        case .finnish: return "Liitä teksti"
+        case .polish: return "Wklej tekst"
+        case .czech: return "Vložit text"
+        case .greek: return "Επικόλληση κειμένου"
+        case .turkish: return "Metin yapıştır"
+        case .russian: return "Вставить текст"
+        case .indonesian: return "Tempel teks"
+        }
+    }
+
+    /// 날짜 읽기
+    static var schoolImportRead: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "날짜 읽기"
+        case .english: return "Find dates"
+        case .japanese: return "日付を読み取る"
+        case .chinese: return "识别日期"
+        case .german: return "Daten erkennen"
+        case .french: return "Trouver les dates"
+        case .spanish: return "Buscar fechas"
+        case .italian: return "Trova le date"
+        case .portuguese: return "Encontrar datas"
+        case .chineseTraditional: return "辨識日期"
+        case .dutch: return "Data zoeken"
+        case .swedish: return "Hitta datum"
+        case .norwegian: return "Finn datoer"
+        case .danish: return "Find datoer"
+        case .finnish: return "Etsi päivät"
+        case .polish: return "Znajdź daty"
+        case .czech: return "Najít data"
+        case .greek: return "Εύρεση ημερομηνιών"
+        case .turkish: return "Tarihleri bul"
+        case .russian: return "Найти даты"
+        case .indonesian: return "Cari tanggal"
+        }
+    }
+
+    /// 학년도
+    static var schoolImportSchoolYear: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "학년도"
+        case .english: return "School year"
+        case .japanese: return "学年度"
+        case .chinese: return "学年"
+        case .german: return "Schuljahr"
+        case .french: return "Année scolaire"
+        case .spanish: return "Curso escolar"
+        case .italian: return "Anno scolastico"
+        case .portuguese: return "Ano letivo"
+        case .chineseTraditional: return "學年度"
+        case .dutch: return "Schooljaar"
+        case .swedish: return "Läsår"
+        case .norwegian: return "Skoleår"
+        case .danish: return "Skoleår"
+        case .finnish: return "Lukuvuosi"
+        case .polish: return "Rok szkolny"
+        case .czech: return "Školní rok"
+        case .greek: return "Σχολικό έτος"
+        case .turkish: return "Eğitim yılı"
+        case .russian: return "Учебный год"
+        case .indonesian: return "Tahun ajaran"
+        }
+    }
+
+    /// 학교 달력 결과 설명
+    static var schoolImportFooter: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "쉬는 날은 내 방학으로 넣어 연차에서 빠지지 않고, 공휴일 앞뒤 휴가 제한도 그 앞뒤에 걸려요. 시험 주간 같은 날은 휴가 불가 기간으로 넣으면 추천이 피해요."
+        case .english: return "Days off are added as your breaks: no leave is taken, and the no-leave-around-holidays rule applies before and after them. Add testing weeks as no-leave periods and suggestions will avoid them."
+        case .japanese: return "休みの日は自分の休暇期間として追加され、有給から引かれず、祝日前後の休暇制限もその前後に適用されます。試験週などは休暇不可期間にすると、おすすめが避けます。"
+        case .chinese: return "休息日会作为我的假期加入，不扣年假，节假日前后的请假限制也会作用于其前后。考试周等可设为禁止请假期间，推荐会避开。"
+        case .german: return "Freie Tage werden als deine Ferien eingetragen: kein Urlaub wird abgezogen, und die Sperre rund um Feiertage gilt auch davor und danach. Prüfungswochen als Urlaubssperre eintragen, dann meiden die Vorschläge sie."
+        case .french: return "Les jours de repos sont ajoutés comme vos vacances : aucun congé n'est décompté et la règle autour des fériés s'applique avant et après. Ajoutez les semaines d'examens comme périodes sans congé pour que les suggestions les évitent."
+        case .spanish: return "Los días libres se añaden como tus vacaciones: no se descuentan y la regla de no pedir días junto a festivos se aplica antes y después. Añade las semanas de exámenes como periodos sin vacaciones y las sugerencias las evitarán."
+        case .italian: return "I giorni liberi vengono aggiunti come tue vacanze: non scalano ferie e la regola sui giorni vicino alle festività vale anche prima e dopo. Aggiungi le settimane di verifiche come periodi senza ferie e i suggerimenti le eviteranno."
+        case .portuguese: return "As folgas entram como suas férias: não descontam e a regra de não tirar folga perto de feriados vale antes e depois delas. Adicione semanas de provas como períodos sem folga e as sugestões vão evitá-las."
+        case .chineseTraditional: return "休息日會作為我的假期加入，不扣特休，假日前後的請假限制也會作用於其前後。考試週等可設為禁止請假期間，推薦會避開。"
+        case .dutch: return "Vrije dagen worden toegevoegd als jouw vakanties: er gaat geen verlof af en de regel rond feestdagen geldt ervoor en erna. Voeg toetsweken toe als verlofstop, dan vermijden suggesties ze."
+        case .swedish: return "Lediga dagar läggs till som dina lov: ingen semester dras och regeln kring helgdagar gäller före och efter. Lägg till provveckor som spärrperioder så undviker förslagen dem."
+        case .norwegian: return "Fridager legges til som dine ferier: ingen ferie trekkes, og regelen rundt helligdager gjelder før og etter. Legg til prøveuker som perioder uten fri, så unngår forslagene dem."
+        case .danish: return "Fridage tilføjes som dine ferier: der trækkes ingen ferie, og reglen omkring helligdage gælder før og efter. Tilføj prøveuger som perioder uden fri, så undgår forslagene dem."
+        case .finnish: return "Vapaapäivät lisätään omiksi lomiksi: lomaa ei vähennetä, ja pyhien ympärillä oleva rajoitus koskee myös niiden alkua ja loppua. Lisää koeviikot lomakieltoina, niin ehdotukset välttävät ne."
+        case .polish: return "Dni wolne dodają się jako Twoje ferie: urlop nie jest odejmowany, a zakaz urlopu przy świętach działa też przed i po nich. Dodaj tygodnie egzaminów jako okresy bez urlopu, a propozycje je ominą."
+        case .czech: return "Volné dny se přidají jako vaše prázdniny: dovolená se neodečítá a pravidlo kolem svátků platí i před nimi a po nich. Týdny testů přidejte jako období bez dovolené a návrhy se jim vyhnou."
+        case .greek: return "Οι ελεύθερες μέρες προστίθενται ως δικές σας διακοπές: δεν αφαιρείται άδεια και ο κανόνας γύρω από τις αργίες ισχύει πριν και μετά. Προσθέστε τις εβδομάδες εξετάσεων ως περιόδους χωρίς άδεια για να τις αποφεύγουν οι προτάσεις."
+        case .turkish: return "İzin günleri tatiliniz olarak eklenir: izin düşülmez ve tatil öncesi/sonrası kuralı bunların önünde ve arkasında da geçerlidir. Sınav haftalarını izin yasağı olarak ekleyin, öneriler onlardan kaçınsın."
+        case .russian: return "Выходные добавляются как ваши каникулы: отпуск не списывается, а правило о днях рядом с праздниками действует до и после них. Недели тестов добавьте как периоды без отпуска — подсказки их обойдут."
+        case .indonesian: return "Hari libur ditambahkan sebagai liburan Anda: cuti tidak dipotong, dan aturan sekitar hari libur berlaku sebelum dan sesudahnya. Tambahkan minggu ujian sebagai periode tanpa cuti agar saran menghindarinya."
+        }
+    }
+
+    /// 날짜 못 찾음
+    static var schoolImportNothingFound: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "날짜를 찾지 못했어요. 날짜 목록이 보이게 다시 찍거나 글을 붙여 넣어 보세요."
+        case .english: return "No dates found. Try a photo of the list of dates, or paste the text."
+        case .japanese: return "日付が見つかりませんでした。日付の一覧が写るように撮り直すか、文字を貼り付けてみてください。"
+        case .chinese: return "没有找到日期。请重新拍摄日期列表，或粘贴文字。"
+        case .german: return "Keine Daten gefunden. Fotografiere die Terminliste oder füge den Text ein."
+        case .french: return "Aucune date trouvée. Photographiez la liste des dates ou collez le texte."
+        case .spanish: return "No se encontraron fechas. Prueba con una foto de la lista de fechas o pega el texto."
+        case .italian: return "Nessuna data trovata. Prova con una foto dell'elenco delle date o incolla il testo."
+        case .portuguese: return "Nenhuma data encontrada. Tente uma foto da lista de datas ou cole o texto."
+        case .chineseTraditional: return "沒有找到日期。請重新拍攝日期清單，或貼上文字。"
+        case .dutch: return "Geen data gevonden. Probeer een foto van de lijst met data of plak de tekst."
+        case .swedish: return "Inga datum hittades. Prova ett foto av datumlistan eller klistra in texten."
+        case .norwegian: return "Fant ingen datoer. Prøv et bilde av datolisten eller lim inn teksten."
+        case .danish: return "Ingen datoer fundet. Prøv et foto af datolisten, eller indsæt teksten."
+        case .finnish: return "Päiviä ei löytynyt. Kokeile kuvaa päivälistasta tai liitä teksti."
+        case .polish: return "Nie znaleziono dat. Spróbuj zdjęcia listy dat lub wklej tekst."
+        case .czech: return "Nenalezena žádná data. Zkuste fotku seznamu dat nebo vložte text."
+        case .greek: return "Δεν βρέθηκαν ημερομηνίες. Δοκιμάστε φωτογραφία της λίστας ή επικολλήστε το κείμενο."
+        case .turkish: return "Tarih bulunamadı. Tarih listesinin fotoğrafını deneyin veya metni yapıştırın."
+        case .russian: return "Даты не найдены. Сфотографируйте список дат или вставьте текст."
+        case .indonesian: return "Tanggal tidak ditemukan. Coba foto daftar tanggal atau tempel teksnya."
+        }
+    }
+
+    /// 쉬는 날
+    static var schoolImportDayOff: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "쉬는 날"
+        case .english: return "Day off"
+        case .japanese: return "休み"
+        case .chinese: return "休息日"
+        case .german: return "Frei"
+        case .french: return "Jour de repos"
+        case .spanish: return "Día libre"
+        case .italian: return "Giorno libero"
+        case .portuguese: return "Folga"
+        case .chineseTraditional: return "休息日"
+        case .dutch: return "Vrij"
+        case .swedish: return "Ledig"
+        case .norwegian: return "Fri"
+        case .danish: return "Fri"
+        case .finnish: return "Vapaa"
+        case .polish: return "Wolne"
+        case .czech: return "Volno"
+        case .greek: return "Ρεπό"
+        case .turkish: return "Tatil"
+        case .russian: return "Выходной"
+        case .indonesian: return "Libur"
+        }
+    }
+
+    /// 이미 쉬는 날
+    static var schoolImportAlreadyOff: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "이미 쉬는 날이에요"
+        case .english: return "Already a day off"
+        case .japanese: return "すでに休みの日です"
+        case .chinese: return "已经是休息日"
+        case .german: return "Bereits frei"
+        case .french: return "Déjà un jour de repos"
+        case .spanish: return "Ya es día libre"
+        case .italian: return "Già giorno libero"
+        case .portuguese: return "Já é folga"
+        case .chineseTraditional: return "已經是休息日"
+        case .dutch: return "Al een vrije dag"
+        case .swedish: return "Redan ledig"
+        case .norwegian: return "Allerede fri"
+        case .danish: return "Allerede fri"
+        case .finnish: return "Jo vapaapäivä"
+        case .polish: return "Już wolne"
+        case .czech: return "Už je volno"
+        case .greek: return "Ήδη ρεπό"
+        case .turkish: return "Zaten tatil"
+        case .russian: return "Уже выходной"
+        case .indonesian: return "Sudah libur"
+        }
+    }
+
+    /// 이름 없는 학교 쉬는 날
+    static var schoolImportUntitled: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "학교 쉬는 날"
+        case .english: return "No school"
+        case .japanese: return "学校休み"
+        case .chinese: return "学校放假"
+        case .german: return "Schulfrei"
+        case .french: return "Pas d'école"
+        case .spanish: return "Sin clases"
+        case .italian: return "Scuola chiusa"
+        case .portuguese: return "Sem aula"
+        case .chineseTraditional: return "學校放假"
+        case .dutch: return "Geen school"
+        case .swedish: return "Skolfritt"
+        case .norwegian: return "Skolefri"
+        case .danish: return "Skolefri"
+        case .finnish: return "Ei koulua"
+        case .polish: return "Dzień wolny od szkoły"
+        case .czech: return "Ředitelské volno"
+        case .greek: return "Χωρίς σχολείο"
+        case .turkish: return "Okul yok"
+        case .russian: return "Нет занятий"
+        case .indonesian: return "Sekolah libur"
+        }
+    }
+
+    /// 고른 항목 넣기
+    static func schoolImportAdd(_ n: Int) -> String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "\(n)개 넣기"
+        case .english: return "Add \(n)"
+        case .japanese: return "\(n)件追加"
+        case .chinese: return "添加 \(n) 项"
+        case .german: return "\(n) hinzufügen"
+        case .french: return "Ajouter \(n)"
+        case .spanish: return "Añadir \(n)"
+        case .italian: return "Aggiungi \(n)"
+        case .portuguese: return "Adicionar \(n)"
+        case .chineseTraditional: return "新增 \(n) 項"
+        case .dutch: return "\(n) toevoegen"
+        case .swedish: return "Lägg till \(n)"
+        case .norwegian: return "Legg til \(n)"
+        case .danish: return "Tilføj \(n)"
+        case .finnish: return "Lisää \(n)"
+        case .polish: return "Dodaj \(n)"
+        case .czech: return "Přidat \(n)"
+        case .greek: return "Προσθήκη \(n)"
+        case .turkish: return "\(n) ekle"
+        case .russian: return "Добавить \(n)"
+        case .indonesian: return "Tambah \(n)"
+        }
+    }
+}

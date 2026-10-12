@@ -566,6 +566,7 @@ struct CalendarGrid: View {
                                 isHoliday: isHoliday(date) && !isMyBreak(date),
                                 isLeave: isLeave(date),
                                 isMakeupWorkday: HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country),
+                                isShiftOff: HolidayService.shiftOffKeys.contains(HolidayService.partTimeKey(date)),
                                 isChildBreak: DayOffCalendar.shared.childBreakName(on: date) != nil,
                                 isHomeHoliday: DayOffCalendar.shared.homeHolidayName(on: date) != nil,
                                 barVisible: showsRestBar(date),
@@ -700,6 +701,8 @@ struct DayCell: View {
     let isLeave: Bool
     /// 중국 调休 보충 근무일 — 토·일이지만 평일처럼 그리고 '班' 표시를 단다
     var isMakeupWorkday: Bool = false
+    /// 교대 근무로 쉬는 평일 — 주말처럼 칠하고 '휴무' 표시를 단다
+    var isShiftOff: Bool = false
     /// 자녀 방학 — 날짜 위쪽에 청록 선 (참고 표시라 배경은 건드리지 않는다)
     var isChildBreak: Bool = false
     /// 사는 곳에만 있는 공휴일 — 쉬는 날로 치지 않으면 빈 링으로, 치면 일반 공휴일처럼 보인다
@@ -737,7 +740,7 @@ struct DayCell: View {
             return .primary
         } else if isHoliday || (isWeekend && calendar.component(.weekday, from: date) != 7) {
             return AppTheme.Colors.holiday
-        } else if isWeekend {
+        } else if isWeekend || isShiftOff {
             return AppTheme.Colors.weekend
         }
         return .primary
@@ -802,8 +805,8 @@ struct DayCell: View {
                 .font(.system(isWide ? .title3 : .body, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
 
-            if isMakeupWorkday && !isSelected {
-                Text(Strings.makeupWorkdayMark)
+            if (isMakeupWorkday || isShiftOff) && !isSelected {
+                Text(isShiftOff ? Strings.shiftOff : Strings.makeupWorkdayMark)
                     .font(.system(size: isWide ? 11 : 9, weight: .semibold))
                     .foregroundStyle(.secondary)
                     .offset(x: markOffset, y: -markOffset)
@@ -1040,7 +1043,8 @@ struct SelectedDateInfo: View {
                 .accessibilityElement(children: .combine)
             }
 
-            if HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country) {
+            // 교대 근무일은 아래 교대 줄이 따로 알린다
+            if HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country, includeShift: false) {
                 HStack {
                     Image(systemName: "briefcase.fill")
                         .foregroundStyle(.secondary)
@@ -1083,6 +1087,8 @@ struct SelectedDateInfo: View {
 
             // 파트타임 쉬는 요일 — 이번 주만 다른 날로 옮기기 / 원래대로
             PartTimeDayRow(date: date, country: originCountry)
+            // 교대 근무 — 이 날을 휴무/근무로
+            ShiftDayRow(date: date)
 
             if let childBreak = DayOffCalendar.shared.childBreakName(on: date) {
                 HStack {

@@ -32,6 +32,10 @@ struct LeaveKindBackup: Codable {
     let createdAt: Date
     let allowanceAmount: Double
     let allowanceIsHours: Bool
+    /// 남은 한도 넘겨 쓰기 — 예전 백업에는 없다
+    var allowanceCarriesOver: Bool? = nil
+    var allowanceStartBalance: Double? = nil
+    var allowanceStartYear: Int? = nil
 }
 
 /// 기기에만 있던 설정 (UserDefaults) — 종류 색·순서, 하루·요일별 근무 시간
@@ -40,6 +44,11 @@ struct LeaveKindSettingsBackup: Codable {
     var order: [String]?
     var workdayMinutes: Int?
     var workdayMinutesByWeekday: [Int: Int]?
+    /// 근무 형태 · 교대 휴무/근무 날 · 시간 단위 휴가 사용
+    var workPattern: String?
+    var shiftDaysOff: String?
+    var shiftWorkDays: String?
+    var usesHourlyLeave: Bool?
 
     static func current() -> LeaveKindSettingsBackup {
         let defaults = UserDefaults.standard
@@ -49,7 +58,11 @@ struct LeaveKindSettingsBackup: Codable {
             builtInColors: LeaveStyleStore.shared.builtInColorHex,
             order: LeaveStyleStore.shared.orderKeys,
             workdayMinutes: minutes > 0 ? minutes : nil,
-            workdayMinutesByWeekday: byWeekday.isEmpty ? nil : byWeekday
+            workdayMinutesByWeekday: byWeekday.isEmpty ? nil : byWeekday,
+            workPattern: defaults.string(forKey: HolidayService.workPatternKey),
+            shiftDaysOff: HolidayService.shiftDaysOffRaw,
+            shiftWorkDays: HolidayService.shiftWorkDaysRaw,
+            usesHourlyLeave: defaults.object(forKey: LeaveLength.usesHourlyLeaveKey) as? Bool
         )
     }
 
@@ -58,6 +71,10 @@ struct LeaveKindSettingsBackup: Codable {
         if let order { LeaveStyleStore.shared.setOrder(order.compactMap { LeaveKindRef(key: $0) }) }
         if let workdayMinutes { LeaveLength.workdayMinutes = workdayMinutes }
         LeaveLength.workdayMinutesByWeekday = workdayMinutesByWeekday ?? [:]
+        if let workPattern { UserDefaults.standard.set(workPattern, forKey: HolidayService.workPatternKey) }
+        if let shiftDaysOff { HolidayService.shiftDaysOffRaw = shiftDaysOff }
+        if let shiftWorkDays { HolidayService.shiftWorkDaysRaw = shiftWorkDays }
+        if let usesHourlyLeave { LeaveLength.usesHourlyLeave = usesHourlyLeave }
     }
 }
 
@@ -226,7 +243,9 @@ class BackupService {
         let kinds = leaveKinds ?? Self.fetchLeaveKinds()
         let kindBackups = kinds.map {
             LeaveKindBackup(id: $0.id, name: $0.name, colorHex: $0.colorHex, deductsFromAnnual: $0.deductsFromAnnual,
-                            createdAt: $0.createdAt, allowanceAmount: $0.allowanceAmount, allowanceIsHours: $0.allowanceIsHours)
+                            createdAt: $0.createdAt, allowanceAmount: $0.allowanceAmount, allowanceIsHours: $0.allowanceIsHours,
+                            allowanceCarriesOver: $0.allowanceCarriesOver, allowanceStartBalance: $0.allowanceStartBalance,
+                            allowanceStartYear: $0.allowanceStartYear)
         }
 
         let backup = BackupData(
@@ -436,6 +455,9 @@ class BackupService {
                 kind.createdAt = k.createdAt
                 kind.allowanceAmount = k.allowanceAmount
                 kind.allowanceIsHours = k.allowanceIsHours
+                kind.allowanceCarriesOver = k.allowanceCarriesOver ?? false
+                kind.allowanceStartBalance = k.allowanceStartBalance ?? 0
+                kind.allowanceStartYear = k.allowanceStartYear ?? 0
                 modelContext.insert(kind)
             }
         }

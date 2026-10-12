@@ -68,6 +68,9 @@ struct SettingsView: View {
     @State private var showingOnboardingReplay = false
     @State private var showingTipsResetNotice = false
     @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
+    /// 캘린더 앱으로 휴가 보내기 — CalendarService.autoSyncKey
+    @AppStorage(CalendarService.autoSyncKey) private var calendarAutoSync = false
+    @State private var calendarSyncError: String?
     /// 홈 "다가오는 휴가" 카드에 공휴일도 함께 보여줄지 (HomeView와 같은 키를 공유)
     @AppStorage("showHolidaysInUpcoming") private var showHolidaysInUpcoming = true
 
@@ -90,6 +93,10 @@ struct SettingsView: View {
     @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
     /// 하루 근무 시간(분) — 시간 단위 휴가를 일수로 바꾸는 기준. LeaveLength.workdayMinutes 와 같은 키
     @AppStorage("workdayMinutes") private var workdayMinutes = 480
+    /// 근무 형태 — HolidayService.workPattern 과 같은 키 (비어 있으면 예전 설정으로 짐작)
+    @AppStorage("workPattern") private var workPatternRaw = ""
+    /// 시간 단위 휴가 — 끄면 근무 시간 설정을 숨긴다
+    @State private var usesHourlyLeave = LeaveLength.usesHourlyLeave
     /// 남은 연차 이월 상한(0 안 함, -1 전부)·사용 기한(개월) — LeaveUsageCalculator 와 같은 키
     @AppStorage("carryOverMaxDays") private var carryOverMaxDays = 0
     @AppStorage("carryOverExpiryMonths") private var carryOverExpiryMonths = 0
@@ -397,12 +404,34 @@ struct SettingsView: View {
                     }
                     .onChange(of: customWeekendDaysRaw) { _, _ in recommendationEngine.invalidateCache() }
 
-                    // 파트타임 — 매주 일하지 않는 요일 (주말처럼 연차에서 빠지지 않는다)
-                    PartTimeDaysPicker(country: selectedCountry)
-                        .onChange(of: partTimeDaysOffRaw) { _, _ in recommendationEngine.invalidateCache() }
-                    Text(Strings.partTimeDaysFooter)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
+                    // 근무 형태 — 고정 / 파트타임 / 교대. 고른 형태의 설정만 보인다 (휴일 기록 방식이 사람마다 달라서)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(Strings.workPatternTitle)
+                        WorkPatternChooser { recommendationEngine.invalidateCache() }
+                        Text(Strings.workPatternFooter)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
+
+                    switch WorkPattern(rawValue: workPatternRaw) ?? HolidayService.workPattern {
+                    case .fixed:
+                        EmptyView()
+                    case .partTime:
+                        // 파트타임 — 매주 일하지 않는 요일 (주말처럼 연차에서 빠지지 않는다)
+                        PartTimeDaysPicker(country: selectedCountry)
+                            .onChange(of: partTimeDaysOffRaw) { _, _ in recommendationEngine.invalidateCache() }
+                        Text(Strings.partTimeDaysFooter)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    case .shift:
+                        // 교대 근무 — 한 주씩 날짜마다 근무·휴무
+                        NavigationLink {
+                            ShiftScheduleView(country: selectedCountry) { recommendationEngine.invalidateCache() }
+                        } label: {
+                            Label(Strings.shiftScheduleTitle, systemImage: "calendar.day.timeline.left")
+                        }
+                    }
 
                     // 주 시작 요일 — 달력 첫 칸. 0 이면 나라 기본(스페인은 월, 미국은 일).
                     Picker(Strings.firstWeekdaySetting, selection: $firstWeekdayRaw) {
@@ -608,23 +637,36 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    // 하루 근무 시간 — 시간·분 단위로 쓴 휴가를 일수로 바꾸는 기준 (이탈리아 permessi 등)
-                    Stepper(value: $workdayMinutes, in: 180...720, step: 15) {
-                        HStack {
-                            Text(Strings.workdayLengthSetting)
-                            Spacer()
-                            Text(Strings.durationText(minutes: workdayMinutes))
-                                .monospacedDigit()
+                    // 시간 단위 휴가 — 이탈리아 permessi·대만 특휴처럼 시간으로 쓰는 사람만 근무 시간 설정을 본다
+                    Toggle(isOn: $usesHourlyLeave) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.hourlyLeaveToggle)
+                            Text(Strings.hourlyLeaveDesc)
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                         }
                     }
-                    .onChange(of: workdayMinutes) { _, _ in recommendationEngine.invalidateCache() }
+                    .onChange(of: usesHourlyLeave) { _, v in LeaveLength.usesHourlyLeave = v }
 
-                    // 요일마다 근무 시간이 다른 직장 (예: 월~목 7시간 30분, 금 7시간)
-                    NavigationLink {
-                        WorkdayHoursView(country: selectedCountry) { recommendationEngine.invalidateCache() }
-                    } label: {
-                        Text(Strings.workdayByWeekdayTitle)
+                    if usesHourlyLeave {
+                        // 하루 근무 시간 — 시간·분 단위로 쓴 휴가를 일수로 바꾸는 기준 (이탈리아 permessi 등)
+                        Stepper(value: $workdayMinutes, in: 180...720, step: 15) {
+                            HStack {
+                                Text(Strings.workdayLengthSetting)
+                                Spacer()
+                                Text(Strings.durationText(minutes: workdayMinutes))
+                                    .monospacedDigit()
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .onChange(of: workdayMinutes) { _, _ in recommendationEngine.invalidateCache() }
+
+                        // 요일마다 근무 시간이 다른 직장 (예: 월~목 7시간 30분, 금 7시간)
+                        NavigationLink {
+                            WorkdayHoursView(country: selectedCountry) { recommendationEngine.invalidateCache() }
+                        } label: {
+                            Text(Strings.workdayByWeekdayTitle)
+                        }
                     }
 
                     // 휴가 종류 만들기·색 바꾸기 — 달력에서 종류별로 다른 색
@@ -845,6 +887,21 @@ struct SettingsView: View {
                                 .font(.body)
                         }
                         .accessibilityElement(children: .combine)
+                    }
+
+                    // 캘린더 앱으로 휴가 보내기 — 넣고·고치고·지우면 "Goldweek" 캘린더가 따라 바뀐다 (Pro)
+                    Toggle(isOn: Binding(get: { calendarAutoSync }, set: setCalendarAutoSync)) {
+                        HStack {
+                            Image(systemName: "calendar.badge.checkmark")
+                                .foregroundStyle(.green)
+                                .voDecorative()
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.calendarExportToggle)
+                                Text(calendarSyncError ?? Strings.calendarExportDesc)
+                                    .font(.body)
+                                    .foregroundStyle(calendarSyncError == nil ? Color.secondary : Color.red)
+                            }
+                        }
                     }
 
                     // 캘린더에서 휴가 가져오기 (제안 후 확인)
@@ -1217,6 +1274,36 @@ struct SettingsView: View {
     }
 
     // MARK: - 백업 함수
+    /// 켜면 권한을 받고 지금 휴가를 모두 보낸다, 끄면 Goldweek 캘린더를 지운다
+    private func setCalendarAutoSync(_ on: Bool) {
+        calendarSyncError = nil
+        guard on else {
+            CalendarService.shared.stopAutoSync()
+            calendarAutoSync = false
+            UsageReportingService.record(event: "calendar_export_off")
+            return
+        }
+        guard ProManager.shared.isPro else {
+            showingPaywall = true
+            return
+        }
+        Task { @MainActor in
+            do {
+                guard try await CalendarService.shared.requestCalendarAccess() else {
+                    calendarSyncError = Strings.calendarAccessDenied
+                    return
+                }
+                try CalendarService.shared.syncAll(records: Array(leaveRecords))
+                calendarAutoSync = true
+                HapticFeedback.success()
+                UsageReportingService.record(event: "calendar_export_on")
+            } catch {
+                calendarSyncError = error.localizedDescription
+                HapticFeedback.error()
+            }
+        }
+    }
+
     private func backupToICloud() async {
         logInfo("사용자 iCloud 백업 요청", category: .ui)
         isBackingUp = true

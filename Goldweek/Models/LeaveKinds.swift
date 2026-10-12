@@ -23,6 +23,12 @@ final class CustomLeaveType {
     /// allowanceIsHours 면 시간, 아니면 일. 해마다(연차 기준월) 새로 센다.
     var allowanceAmount: Double = 0
     var allowanceIsHours: Bool = true
+    /// 남은 한도를 다음 해로 넘기는지 (미국 교사 병가처럼 쌓이는 휴가). 끄면 해마다 새로 센다.
+    var allowanceCarriesOver: Bool = false
+    /// 넘겨 쓰기를 시작한 해(연차 기준)에 이미 쌓여 있던 양 — 한도와 같은 단위 (시간 또는 일)
+    var allowanceStartBalance: Double = 0
+    /// 넘겨 쓰기를 셈하기 시작한 해 (연차 기준). 0 이면 종류를 만든 해
+    var allowanceStartYear: Int = 0
 
     init(name: String, colorHex: String, deductsFromAnnual: Bool) {
         self.id = UUID()
@@ -278,11 +284,49 @@ struct LeaveAllowanceCounter: Equatable {
     var remaining: Double { total - used - planned }
     var isOver: Bool { remaining < -0.0001 }
 
-    init(kind: CustomLeaveType, usage: LeaveKindUsage) {
+    /// 지난해에서 넘어온 양 (한도 단위 — 시간이면 분)
+    let carriedIn: Double
+
+    init(kind: CustomLeaveType, usage: LeaveKindUsage, carriedIn: Double = 0) {
         isHours = kind.allowanceIsHours
-        total = kind.allowanceIsHours ? kind.allowanceAmount * 60 : kind.allowanceAmount
+        self.carriedIn = carriedIn
+        total = (kind.allowanceIsHours ? kind.allowanceAmount * 60 : kind.allowanceAmount) + carriedIn
         used = kind.allowanceIsHours ? Double(usage.usedMinutes) : usage.usedDays
         planned = kind.allowanceIsHours ? Double(usage.plannedMinutes) : usage.plannedDays
+    }
+
+    /// 그해 한도 카운터 — 넘겨 쓰기를 켠 종류면 지난해까지 남은 양을 더한다
+    static func make(kind: CustomLeaveType, records: [LeaveRecord], year: Int, startMonth: Int,
+                     asOf now: Date = Date(), calendar: Calendar = .current) -> LeaveAllowanceCounter {
+        let mine = records.filter { $0.customTypeId == kind.id }
+        let usage = LeaveKindUsage.byKind(records: mine, customTypes: [kind], year: year, startMonth: startMonth,
+                                          asOf: now, calendar: calendar)[.custom(kind.id)] ?? LeaveKindUsage()
+        return LeaveAllowanceCounter(kind: kind, usage: usage,
+                                     carriedIn: carryIn(kind: kind, records: mine, year: year, startMonth: startMonth,
+                                                        asOf: now, calendar: calendar))
+    }
+
+    /// 그해로 넘어온 양 (시간이면 분, 일이면 일).
+    /// 시작한 해에는 처음 쌓여 있던 양, 그 뒤로는 해마다 (한도 + 넘어온 양 − 쓴 양)을 넘긴다 (모자라면 0).
+    static func carryIn(kind: CustomLeaveType, records: [LeaveRecord], year: Int, startMonth: Int,
+                        asOf now: Date = Date(), calendar: Calendar = .current) -> Double {
+        guard kind.allowanceCarriesOver, kind.hasAllowance else { return 0 }
+        let unit = kind.allowanceIsHours ? 60.0 : 1.0
+        let startYear = kind.allowanceStartYear > 0 ? kind.allowanceStartYear
+            : LeaveUsageCalculator.fiscalYear(for: kind.createdAt, startMonth: startMonth, calendar: calendar)
+        guard year >= startYear else { return 0 }
+        let mine = records.filter { $0.customTypeId == kind.id }
+        var carry = max(0, kind.allowanceStartBalance) * unit
+        var y = startYear
+        // 아주 오래된 시작 해라도 계산이 끝없이 돌지 않게
+        while y < year && y < startYear + 60 {
+            let u = LeaveKindUsage.byKind(records: mine, customTypes: [kind], year: y, startMonth: startMonth,
+                                          asOf: now, calendar: calendar)[.custom(kind.id)] ?? LeaveKindUsage()
+            let spent = kind.allowanceIsHours ? Double(u.usedMinutes + u.plannedMinutes) : u.usedDays + u.plannedDays
+            carry = max(0, kind.allowanceAmount * unit + carry - spent)
+            y += 1
+        }
+        return carry
     }
 
     /// 화면에 보일 양 — 시간이면 "7시간 30분", 일이면 "2.5일"
@@ -296,7 +340,7 @@ struct LeaveAllowanceCounter: Equatable {
 
 // MARK: - 휴가 종류·근무 시간 설정 iCloud 동기화
 
-/// 휴가 종류 색·순서, 하루 근무 시간, 요일별 근무 시간을 iCloud 키값 저장소로 기기끼리 맞춘다.
+/// 휴가 종류 색·순서, 하루·요일별 근무 시간, 근무 형태·교대 휴무를 iCloud 키값 저장소로 기기끼리 맞춘다.
 /// 휴가 기록 자체는 동기화하지 않는다 (iCloud 백업·복원이 맡는다) — 작은 설정값만.
 ///
 /// - 앱을 켤 때: iCloud 에 값이 있으면 그 값을 쓰고, 없으면 이 기기 값을 올린다 (새 기기는 바로 같은 설정)
@@ -305,7 +349,8 @@ struct LeaveAllowanceCounter: Equatable {
 final class LeaveSettingsSync {
     static let shared = LeaveSettingsSync()
 
-    static let keys = ["leaveTypeColors", "leaveKindOrder", "workdayMinutes", "workdayMinutesByWeekday"]
+    static let keys = ["leaveTypeColors", "leaveKindOrder", "workdayMinutes", "workdayMinutesByWeekday",
+                       "workPattern", "usesHourlyLeave", "shiftDaysOff", "shiftWorkDays"]
 
     private let cloud = NSUbiquitousKeyValueStore.default
     private let defaults = UserDefaults.standard

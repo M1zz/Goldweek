@@ -41,15 +41,15 @@ struct LeaveWidgetData {
 
     /// 상황별 감성 메시지
     var anticipationMessage: String {
-        guard hasUpcomingLeave else { return "휴가 계획을 세워볼까요?" }
+        guard hasUpcomingLeave else { return String(localized: "휴가 계획을 세워볼까요?") }
         switch daysUntilNextLeave {
-        case 0:        return "🎉 오늘이에요!"
-        case 1:        return "내일이에요!"
-        case 2...3:    return "곧 시작해요 ✈️"
-        case 4...7:    return "이번 주 안에!"
-        case 8...14:   return "다음 주에요"
-        case 15...30:  return "이번 달이에요"
-        default:       return "기다리고 있어요"
+        case 0:        return String(localized: "🎉 오늘이에요!")
+        case 1:        return String(localized: "내일이에요!")
+        case 2...3:    return String(localized: "곧 시작해요 ✈️")
+        case 4...7:    return String(localized: "이번 주 안에!")
+        case 8...14:   return String(localized: "다음 주에요")
+        case 15...30:  return String(localized: "이번 달이에요")
+        default:       return String(localized: "기다리고 있어요")
         }
     }
 
@@ -59,11 +59,11 @@ struct LeaveWidgetData {
         bonusLeave: 2.0,
         nextLeaveDate: Calendar.current.date(byAdding: .day, value: 5, to: Date()),
         nextLeaveType: "annual",
-        nextLeaveNote: "제주도 여행",
+        nextLeaveNote: nil,
         nextLeaveDuration: 3,
         daysUntilNextLeave: 5,
         remainingPercentage: 0.67,
-        userName: "홍길동",
+        userName: "",
         elapsedRatio: 0.5,
         actualUsedRatio: 0.33,
         burnRate: 0.66,
@@ -717,11 +717,11 @@ struct LeaveWidgetLargeView: View {
 
     private var burnRateText: String {
         let r = entry.data.burnRate
-        if r < 0.7 { return "느림" }
-        if r < 0.9 { return "조금 느림" }
-        if r <= 1.1 { return "적정 ✓" }
-        if r <= 1.3 { return "조금 빠름" }
-        return "빠름"
+        if r < 0.7 { return String(localized: "느림") }
+        if r < 0.9 { return String(localized: "조금 느림") }
+        if r <= 1.1 { return String(localized: "적정 ✓") }
+        if r <= 1.3 { return String(localized: "조금 빠름") }
+        return String(localized: "빠름")
     }
     private var burnRateIcon: String {
         let r = entry.data.burnRate
