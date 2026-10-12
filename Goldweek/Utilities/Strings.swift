@@ -19661,6 +19661,267 @@ enum Strings {
         }
     }
 
+    /// 설정·화면 제목 — 휴가 불가 기간
+    static var blackoutPeriodsTitle: String {
+        switch lang {
+        case .korean: return "휴가 불가 기간"
+        case .english: return "Blackout dates"
+        case .japanese: return "休暇不可期間"
+        case .chinese: return "禁休期"
+        case .german: return "Urlaubssperren"
+        case .french: return "Périodes sans congé"
+        case .spanish: return "Fechas sin vacaciones"
+        case .italian: return "Periodi senza ferie"
+        case .portuguese: return "Períodos sem folga"
+        case .chineseTraditional: return "禁休期間"
+        case .dutch: return "Verlofstops"
+        case .swedish: return "Spärrperioder för ledighet"
+        case .norwegian: return "Feriestopp"
+        case .danish: return "Feriestop"
+        case .finnish: return "Lomakieltojaksot"
+        case .polish: return "Okresy bez urlopu"
+        case .czech: return "Období bez dovolené"
+        case .greek: return "Περίοδοι χωρίς άδεια"
+        case .turkish: return "İzin yasağı dönemleri"
+        case .russian: return "Периоды без отпуска"
+        case .indonesian: return "Periode larangan cuti"
+        case .thai: return "ช่วงห้ามลา"
+        case .vietnamese: return "Thời gian không được nghỉ"
+        }
+    }
+
+    /// 휴가 불가 기간 설명
+    static var blackoutPeriodsFooter: String {
+        switch lang {
+        case .korean: return "결산·성수기처럼 직장 규정상 휴가를 낼 수 없는 기간을 넣어 두세요. 추천과 최적 연차 플랜이 그 기간을 피하고, 휴가를 등록할 때 알려 드려요."
+        case .english: return "Add periods when your workplace doesn't allow time off, like closing or peak season. Suggestions and the optimal plan will avoid them, and you'll get a warning when adding leave."
+        case .japanese: return "決算や繁忙期など、職場の規定で休暇を取れない期間を登録してください。おすすめと最適プランがその期間を避け、休暇登録時にお知らせします。"
+        case .chinese: return "添加单位规定不能请假的时期，比如结算期、旺季。推荐和最佳年假计划会避开这些时期，登记休假时也会提醒你。"
+        case .german: return "Trage Zeiträume ein, in denen dein Arbeitgeber keinen Urlaub erlaubt, etwa Abschluss oder Hochsaison. Vorschläge und der optimale Plan meiden sie, und beim Eintragen bekommst du einen Hinweis."
+        case .french: return "Ajoutez les périodes où votre employeur interdit les congés, comme la clôture ou la haute saison. Les suggestions et le plan optimal les éviteront, et un avertissement s’affichera lors de l’ajout d’un congé."
+        case .spanish: return "Añade los periodos en los que tu trabajo no permite vacaciones, como cierres o temporada alta. Las sugerencias y el plan óptimo los evitarán y te avisaremos al añadir vacaciones."
+        case .italian: return "Aggiungi i periodi in cui sul lavoro non puoi prendere ferie, come chiusure o alta stagione. I suggerimenti e il piano ottimale li eviteranno e riceverai un avviso quando aggiungi ferie."
+        case .portuguese: return "Adicione os períodos em que seu trabalho não permite folga, como fechamento ou alta temporada. As sugestões e o plano ideal vão evitá-los, e você será avisado ao adicionar uma folga."
+        case .chineseTraditional: return "加入職場規定不能請假的期間，例如結算期、旺季。推薦和最佳特休計畫會避開這些期間，登記休假時也會提醒你。"
+        case .dutch: return "Voeg periodes toe waarin je werkgever geen verlof toestaat, zoals jaarafsluiting of hoogseizoen. Suggesties en het optimale plan vermijden ze, en je krijgt een waarschuwing bij het invoeren van verlof."
+        case .swedish: return "Lägg till perioder då din arbetsgivare inte tillåter ledighet, till exempel bokslut eller högsäsong. Förslagen och den optimala planen undviker dem, och du får en varning när du lägger till ledighet."
+        case .norwegian: return "Legg inn perioder der arbeidsgiveren din ikke tillater ferie, for eksempel årsoppgjør eller høysesong. Forslagene og den optimale planen unngår dem, og du får en advarsel når du legger inn ferie."
+        case .danish: return "Tilføj perioder, hvor din arbejdsplads ikke tillader ferie, fx regnskabsafslutning eller højsæson. Forslagene og den optimale plan undgår dem, og du får en advarsel, når du tilføjer ferie."
+        case .finnish: return "Lisää jaksot, joina työpaikkasi ei salli lomaa, kuten tilinpäätös tai sesonki. Ehdotukset ja paras suunnitelma välttävät ne, ja saat varoituksen lomaa lisätessäsi."
+        case .polish: return "Dodaj okresy, w których w pracy nie można brać urlopu, np. zamknięcie roku lub szczyt sezonu. Sugestie i optymalny plan je ominą, a przy dodawaniu urlopu zobaczysz ostrzeżenie."
+        case .czech: return "Přidej období, kdy v práci nesmíš čerpat dovolenou, třeba uzávěrka nebo hlavní sezóna. Návrhy a optimální plán se jim vyhnou a při přidávání dovolené uvidíš upozornění."
+        case .greek: return "Πρόσθεσε περιόδους που η δουλειά σου δεν επιτρέπει άδεια, όπως κλείσιμο χρήσης ή αιχμή σεζόν. Οι προτάσεις και το βέλτιστο πλάνο θα τις αποφεύγουν και θα βλέπεις προειδοποίηση όταν προσθέτεις άδεια."
+        case .turkish: return "İş yerinin izin vermediği dönemleri ekle, örneğin kapanış ya da yoğun sezon. Öneriler ve en iyi plan bu dönemlerden kaçınır, izin eklerken de uyarı görürsün."
+        case .russian: return "Добавьте периоды, когда на работе нельзя брать отпуск, например закрытие года или высокий сезон. Рекомендации и оптимальный план обойдут их, а при добавлении отпуска появится предупреждение."
+        case .indonesian: return "Tambahkan periode saat tempat kerjamu tidak mengizinkan cuti, seperti tutup buku atau musim sibuk. Saran dan rencana terbaik akan menghindarinya, dan kamu akan diberi peringatan saat menambah cuti."
+        case .thai: return "ใส่ช่วงที่ที่ทำงานไม่ให้ลา เช่น ช่วงปิดงบหรือช่วงงานยุ่ง คำแนะนำและแผนที่คุ้มที่สุดจะเลี่ยงช่วงนั้น และจะเตือนเมื่อคุณบันทึกวันลา"
+        case .vietnamese: return "Thêm những khoảng thời gian nơi làm việc không cho nghỉ, như kỳ quyết toán hay mùa cao điểm. Gợi ý và kế hoạch tối ưu sẽ tránh những ngày đó, và bạn sẽ được nhắc khi thêm ngày nghỉ."
+        }
+    }
+
+    /// 휴가 불가 기간 — 비어 있음
+    static var blackoutPeriodsEmpty: String {
+        switch lang {
+        case .korean: return "아직 넣은 기간이 없어요"
+        case .english: return "No blackout dates yet"
+        case .japanese: return "まだ登録された期間はありません"
+        case .chinese: return "还没有添加禁休期"
+        case .german: return "Noch keine Urlaubssperren"
+        case .french: return "Aucune période pour l’instant"
+        case .spanish: return "Aún no hay fechas"
+        case .italian: return "Nessun periodo per ora"
+        case .portuguese: return "Nenhum período ainda"
+        case .chineseTraditional: return "還沒有加入禁休期間"
+        case .dutch: return "Nog geen verlofstops"
+        case .swedish: return "Inga spärrperioder än"
+        case .norwegian: return "Ingen feriestopp ennå"
+        case .danish: return "Ingen feriestop endnu"
+        case .finnish: return "Ei vielä lomakieltojaksoja"
+        case .polish: return "Brak okresów"
+        case .czech: return "Zatím žádná období"
+        case .greek: return "Δεν υπάρχουν ακόμα περίοδοι"
+        case .turkish: return "Henüz dönem yok"
+        case .russian: return "Пока нет периодов"
+        case .indonesian: return "Belum ada periode"
+        case .thai: return "ยังไม่มีช่วงห้ามลา"
+        case .vietnamese: return "Chưa có khoảng thời gian nào"
+        }
+    }
+
+    /// 휴가 불가 기간 추가
+    static var blackoutPeriodAddTitle: String {
+        switch lang {
+        case .korean: return "휴가 불가 기간 추가"
+        case .english: return "Add Blackout Dates"
+        case .japanese: return "休暇不可期間を追加"
+        case .chinese: return "添加禁休期"
+        case .german: return "Urlaubssperre hinzufügen"
+        case .french: return "Ajouter une période sans congé"
+        case .spanish: return "Añadir fechas sin vacaciones"
+        case .italian: return "Aggiungi periodo senza ferie"
+        case .portuguese: return "Adicionar período sem folga"
+        case .chineseTraditional: return "加入禁休期間"
+        case .dutch: return "Verlofstop toevoegen"
+        case .swedish: return "Lägg till spärrperiod"
+        case .norwegian: return "Legg til feriestopp"
+        case .danish: return "Tilføj feriestop"
+        case .finnish: return "Lisää lomakieltojakso"
+        case .polish: return "Dodaj okres bez urlopu"
+        case .czech: return "Přidat období bez dovolené"
+        case .greek: return "Προσθήκη περιόδου χωρίς άδεια"
+        case .turkish: return "İzin yasağı dönemi ekle"
+        case .russian: return "Добавить период без отпуска"
+        case .indonesian: return "Tambah periode larangan cuti"
+        case .thai: return "เพิ่มช่วงห้ามลา"
+        case .vietnamese: return "Thêm thời gian không được nghỉ"
+        }
+    }
+
+    /// 휴가 불가 기간 수정
+    static var blackoutPeriodEditTitle: String {
+        switch lang {
+        case .korean: return "휴가 불가 기간 수정"
+        case .english: return "Edit Blackout Dates"
+        case .japanese: return "休暇不可期間を編集"
+        case .chinese: return "编辑禁休期"
+        case .german: return "Urlaubssperre bearbeiten"
+        case .french: return "Modifier la période sans congé"
+        case .spanish: return "Editar fechas sin vacaciones"
+        case .italian: return "Modifica periodo senza ferie"
+        case .portuguese: return "Editar período sem folga"
+        case .chineseTraditional: return "編輯禁休期間"
+        case .dutch: return "Verlofstop bewerken"
+        case .swedish: return "Redigera spärrperiod"
+        case .norwegian: return "Rediger feriestopp"
+        case .danish: return "Rediger feriestop"
+        case .finnish: return "Muokkaa lomakieltojaksoa"
+        case .polish: return "Edytuj okres bez urlopu"
+        case .czech: return "Upravit období bez dovolené"
+        case .greek: return "Επεξεργασία περιόδου χωρίς άδεια"
+        case .turkish: return "İzin yasağı dönemini düzenle"
+        case .russian: return "Изменить период без отпуска"
+        case .indonesian: return "Edit periode larangan cuti"
+        case .thai: return "แก้ไขช่วงห้ามลา"
+        case .vietnamese: return "Sửa thời gian không được nghỉ"
+        }
+    }
+
+    /// 휴가 불가 기간 이름 예시
+    static var blackoutPeriodNamePlaceholder: String {
+        switch lang {
+        case .korean: return "예: 분기 결산"
+        case .english: return "e.g. Quarter-end close"
+        case .japanese: return "例：四半期決算"
+        case .chinese: return "例如：季度结算"
+        case .german: return "z. B. Quartalsabschluss"
+        case .french: return "ex. : clôture trimestrielle"
+        case .spanish: return "p. ej.: cierre trimestral"
+        case .italian: return "es. chiusura trimestrale"
+        case .portuguese: return "ex.: fechamento trimestral"
+        case .chineseTraditional: return "例如：季度結算"
+        case .dutch: return "bijv. kwartaalafsluiting"
+        case .swedish: return "t.ex. kvartalsbokslut"
+        case .norwegian: return "f.eks. kvartalsavslutning"
+        case .danish: return "fx kvartalsafslutning"
+        case .finnish: return "esim. kvartaalin päätös"
+        case .polish: return "np. zamknięcie kwartału"
+        case .czech: return "např. čtvrtletní uzávěrka"
+        case .greek: return "π.χ. κλείσιμο τριμήνου"
+        case .turkish: return "örn. çeyrek kapanışı"
+        case .russian: return "например, закрытие квартала"
+        case .indonesian: return "mis. tutup buku kuartal"
+        case .thai: return "เช่น ปิดงบไตรมาส"
+        case .vietnamese: return "VD: Quyết toán quý"
+        }
+    }
+
+    /// 휴가 불가 기간 삭제 확인
+    static var blackoutPeriodDeleteTitle: String {
+        switch lang {
+        case .korean: return "이 기간을 삭제할까요?"
+        case .english: return "Delete these blackout dates?"
+        case .japanese: return "この期間を削除しますか？"
+        case .chinese: return "要删除这个禁休期吗？"
+        case .german: return "Diese Urlaubssperre löschen?"
+        case .french: return "Supprimer cette période ?"
+        case .spanish: return "¿Eliminar estas fechas?"
+        case .italian: return "Eliminare questo periodo?"
+        case .portuguese: return "Excluir este período?"
+        case .chineseTraditional: return "要刪除這個禁休期間嗎？"
+        case .dutch: return "Deze verlofstop verwijderen?"
+        case .swedish: return "Ta bort spärrperioden?"
+        case .norwegian: return "Slette feriestoppen?"
+        case .danish: return "Slet feriestoppet?"
+        case .finnish: return "Poistetaanko jakso?"
+        case .polish: return "Usunąć ten okres?"
+        case .czech: return "Smazat toto období?"
+        case .greek: return "Διαγραφή αυτής της περιόδου;"
+        case .turkish: return "Bu dönem silinsin mi?"
+        case .russian: return "Удалить этот период?"
+        case .indonesian: return "Hapus periode ini?"
+        case .thai: return "ลบช่วงนี้ไหม"
+        case .vietnamese: return "Xóa khoảng thời gian này?"
+        }
+    }
+
+    /// 휴가 등록 — 휴가 불가 기간 포함 경고
+    static func blackoutPeriodWarning(_ name: String) -> String {
+        switch lang {
+        case .korean: return "휴가 불가 기간이 들어 있어요 (\(name))"
+        case .english: return "This includes blackout dates (\(name))"
+        case .japanese: return "休暇不可期間（\(name)）が含まれています"
+        case .chinese: return "包含禁休期（\(name)）"
+        case .german: return "Enthält eine Urlaubssperre (\(name))"
+        case .french: return "Inclut une période sans congé (\(name))"
+        case .spanish: return "Incluye fechas sin vacaciones (\(name))"
+        case .italian: return "Include un periodo senza ferie (\(name))"
+        case .portuguese: return "Inclui um período sem folga (\(name))"
+        case .chineseTraditional: return "包含禁休期間（\(name)）"
+        case .dutch: return "Bevat een verlofstop (\(name))"
+        case .swedish: return "Innehåller en spärrperiod (\(name))"
+        case .norwegian: return "Inneholder feriestopp (\(name))"
+        case .danish: return "Indeholder feriestop (\(name))"
+        case .finnish: return "Sisältää lomakieltojakson (\(name))"
+        case .polish: return "Obejmuje okres bez urlopu (\(name))"
+        case .czech: return "Zahrnuje období bez dovolené (\(name))"
+        case .greek: return "Περιλαμβάνει περίοδο χωρίς άδεια (\(name))"
+        case .turkish: return "İzin yasağı dönemi içeriyor (\(name))"
+        case .russian: return "Включает период без отпуска (\(name))"
+        case .indonesian: return "Termasuk periode larangan cuti (\(name))"
+        case .thai: return "มีช่วงห้ามลารวมอยู่ (\(name))"
+        case .vietnamese: return "Có thời gian không được nghỉ (\(name))"
+        }
+    }
+
+    /// 날짜 상세 — 휴가 불가 기간
+    static func blackoutPeriodDayLabel(_ name: String) -> String {
+        switch lang {
+        case .korean: return "휴가 불가 기간 · \(name)"
+        case .english: return "Blackout date · \(name)"
+        case .japanese: return "休暇不可期間 · \(name)"
+        case .chinese: return "禁休期 · \(name)"
+        case .german: return "Urlaubssperre · \(name)"
+        case .french: return "Sans congé · \(name)"
+        case .spanish: return "Sin vacaciones · \(name)"
+        case .italian: return "Senza ferie · \(name)"
+        case .portuguese: return "Sem folga · \(name)"
+        case .chineseTraditional: return "禁休期間 · \(name)"
+        case .dutch: return "Verlofstop · \(name)"
+        case .swedish: return "Spärrperiod · \(name)"
+        case .norwegian: return "Feriestopp · \(name)"
+        case .danish: return "Feriestop · \(name)"
+        case .finnish: return "Lomakielto · \(name)"
+        case .polish: return "Bez urlopu · \(name)"
+        case .czech: return "Bez dovolené · \(name)"
+        case .greek: return "Χωρίς άδεια · \(name)"
+        case .turkish: return "İzin yasağı · \(name)"
+        case .russian: return "Без отпуска · \(name)"
+        case .indonesian: return "Larangan cuti · \(name)"
+        case .thai: return "ช่วงห้ามลา · \(name)"
+        case .vietnamese: return "Không được nghỉ · \(name)"
+        }
+    }
+
     /// 설정 — 공휴일 앞뒤 제한 근무일 수
     static func blackoutDays(_ n: Int) -> String {
         switch lang {

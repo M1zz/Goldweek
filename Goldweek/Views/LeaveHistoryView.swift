@@ -252,6 +252,7 @@ struct LeaveHistoryView: View {
 
     // MARK: - 통계 섹션
     private var statsSection: some View {
+        VStack(spacing: 12) {
         HStack(spacing: 16) {
             StatCard(
                 title: Strings.statUsed,
@@ -273,6 +274,27 @@ struct LeaveHistoryView: View {
                 count: yearStats.cancelledCount,
                 color: .gray
             )
+        }
+
+        // 종류별 합계 — 휴가 종류마다 쓴 날·시간, 연간 한도가 있으면 남은 양
+        NavigationLink {
+            LeaveKindStatsView(year: selectedYear, startMonth: yearStartMonth)
+        } label: {
+            HStack {
+                Label(Strings.statsByKindTitle, systemImage: "chart.bar.doc.horizontal")
+                    .font(.body.weight(.semibold))
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.body)
+                    .foregroundStyle(.tertiary)
+                    .voDecorative()
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(Color(.systemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
         }
         .padding()
         .background(Color(.secondarySystemBackground))
@@ -349,7 +371,8 @@ struct LeaveHistoryView: View {
         logInfo("Leave record deleted - \(record.startDate) ~ \(record.endDate)", category: .data)
 
         // 보너스 연차 레코드 삭제 시 usedDays 복원
-        if let bonusId = record.bonusLeaveId,
+        // 취소된 기록은 보너스를 쓰지 않았으니 되돌릴 것도 없다
+        if record.status != .cancelled, let bonusId = record.bonusLeaveId,
            let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
             let days = record.effectiveLeaveDays
             bonus.usedDays = max(0, bonus.usedDays - days)
@@ -606,6 +629,9 @@ struct EditLeaveSheet: View {
     @State private var startDate: Date
     @State private var endDate: Date
     @State private var leaveType: LeaveType
+    /// 고른 종류 — 직접 만든 종류(ROL 등)도 고를 수 있다. leaveType 은 그 종류의 차감 기준.
+    @State private var kindRef: LeaveKindRef
+    @Query(sort: \CustomLeaveType.createdAt) private var customLeaveTypes: [CustomLeaveType]
     @State private var length: LeaveLength
     /// 시간 단위 휴가의 길이(분)
     @State private var durationMinutes: Int
@@ -623,6 +649,7 @@ struct EditLeaveSheet: View {
         _startDate = State(initialValue: record.startDate)
         _endDate = State(initialValue: record.endDate)
         _leaveType = State(initialValue: record.category)
+        _kindRef = State(initialValue: record.customTypeId.map { LeaveKindRef.custom($0) } ?? .builtIn(record.category))
         _length = State(initialValue: record.length)
         _durationMinutes = State(initialValue: record.durationMinutes ?? 120)
         _leaveStatus = State(initialValue: record.status)
@@ -634,7 +661,7 @@ struct EditLeaveSheet: View {
     }
 
     var newLeaveDays: Double {
-        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes) }
+        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes, on: startDate) }
         if length != .full { return length.fraction }
         // 일괄 입력 요약 기록은 달력 일수, 그 외엔 쉬는 날을 뺀 평일 수 (effectiveLeaveDays 와 같은 기준)
         if record.isBulkSummary {
@@ -668,13 +695,28 @@ struct EditLeaveSheet: View {
             Form {
                 // 휴가 종류 (카테고리)
                 Section(Strings.leaveCategorySectionHeader) {
-                    Picker(Strings.typeSection, selection: $leaveType) {
-                        ForEach(LeaveType.categories) { type in
-                            HStack {
-                                Image(systemName: type.icon)
-                                Text(Strings.leaveTypeName(type))
+                    Picker(Strings.typeSection, selection: $kindRef) {
+                        ForEach(LeaveStyleStore.shared.orderedKinds(custom: customLeaveTypes)) { ref in
+                            switch ref {
+                            case .builtIn(let type):
+                                Label(Strings.leaveTypeName(type), systemImage: type.icon)
+                                    .tag(ref)
+                            case .custom(let id):
+                                if let kind = customLeaveTypes.first(where: { $0.id == id }) {
+                                    Label {
+                                        Text(kind.name)
+                                    } icon: {
+                                        Image(systemName: "circle.fill").foregroundStyle(kind.color)
+                                    }
+                                    .tag(ref)
+                                }
                             }
-                            .tag(type)
+                        }
+                    }
+                    .onChange(of: kindRef) { _, ref in
+                        switch ref {
+                        case .builtIn(let type): leaveType = type
+                        case .custom(let id): leaveType = customLeaveTypes.first { $0.id == id }?.baseType ?? leaveType
                         }
                     }
                 }
@@ -682,7 +724,8 @@ struct EditLeaveSheet: View {
                 // 사용 길이
                 Section(Strings.leaveLengthSectionHeader) {
                     Picker(Strings.leaveLengthSectionHeader, selection: $length) {
-                        ForEach(LeaveLength.allCases) { len in
+                        // 시간 단위를 안 쓰면 숨긴다 — 이미 시간으로 넣은 기록은 그대로 보인다
+                        ForEach(LeaveLength.allCases.filter { $0 != .hours || LeaveLength.usesHourlyLeave || record.length == .hours }) { len in
                             Text(Strings.leaveLengthName(len)).tag(len)
                         }
                     }
@@ -710,7 +753,7 @@ struct EditLeaveSheet: View {
                     if length == .hours {
                         Stepper(value: Binding(get: { durationMinutes / 60 },
                                                set: { durationMinutes = max(5, $0 * 60 + durationMinutes % 60) }),
-                                in: 0...12) {
+                                in: 0...(record.isBulkSummary ? 3000 : 12)) {
                             HStack {
                                 Text(Strings.leaveHoursLabel)
                                 Spacer()
@@ -778,6 +821,12 @@ struct EditLeaveSheet: View {
                     }
                 }
             }
+            .onAppear {
+                // 지운 종류에 연결된 기록은 기본 종류로 보여 준다
+                if case .custom(let id) = kindRef, !customLeaveTypes.contains(where: { $0.id == id }) {
+                    kindRef = .builtIn(record.category)
+                }
+            }
             .navigationTitle(Strings.navTitleEditLeave)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -815,26 +864,22 @@ struct EditLeaveSheet: View {
             }
         }
 
-        // 보너스 연차 레코드를 편집하면 usedDays 차분 반영
-        if let bonusId = record.bonusLeaveId,
-           let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
-            let diff = newLeaveDays - originalLeaveDays
-            if abs(diff) > 0.001 {
-                bonus.usedDays = max(0, bonus.usedDays + diff)
-                if bonus.isUsed && bonus.remainingDays > 0 { bonus.isUsed = false }
-            }
-        }
-
         // 기록 업데이트 (records가 source of truth이므로 profile.usedLeave 조정 불필요)
         record.startDate = startDate
         record.endDate = length != .full ? startDate : endDate
-        // 종류를 다른 기본 종류로 바꾸면 직접 만든 종류 연결은 끊는다
-        if leaveType != record.category { record.customTypeId = nil }
+        // 직접 만든 종류를 고르면 연결하고, 기본 종류를 고르면 연결을 끊는다 (보너스 차감 기록은 종류 연결 없이)
+        switch kindRef {
+        case .builtIn: record.customTypeId = nil
+        case .custom(let id): record.customTypeId = record.bonusLeaveId == nil ? id : nil
+        }
         record.type = leaveType
         record.length = length
         record.durationMinutes = length == .hours ? durationMinutes : nil
         record.status = leaveStatus
         record.note = note
+
+        // 보너스 사용량은 기록 기준으로 다시 센다 — 일수 변경뿐 아니라 취소↔예정 전환도 반영된다
+        BonusLeaveReconciler.reconcile(records: allLeaveRecords, bonuses: allBonusLeaves)
 
         do {
             try modelContext.save()

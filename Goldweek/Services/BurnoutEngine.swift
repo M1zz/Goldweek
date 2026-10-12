@@ -347,7 +347,7 @@ extension BurnoutEngine {
     /// 쉬는 날 판정은 `DayOffCalendar` (나라·주말 설정·파트타임 요일·숨긴 공휴일까지 반영된 것)를 쓴다.
     /// - Parameter now: 공휴일을 볼 범위의 기준 (앞뒤 약 1년). 휴가 기록은 범위와 상관없이 모두 넣는다.
     static func restBlocks(from records: [LeaveRecord], around now: Date = Date(),
-                           dayOff: DayOffCalendar = .shared, calendar: Calendar = .current) -> [RestBlock] {
+                           dayOff: DayOffCalendar = .shared, calendar: Calendar = .app) -> [RestBlock] {
         func day(_ d: Date) -> Date { calendar.startOfDay(for: d) }
         func next(_ d: Date, _ step: Int) -> Date? { calendar.date(byAdding: .day, value: step, to: d) }
 

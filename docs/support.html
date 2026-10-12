@@ -1,532 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goldweek - Support</title>
-    <meta name="description" content="Goldweek app support. FAQ, contact, and privacy policy.">
-    <meta property="og:title" content="Goldweek - Support">
-    <meta property="og:description" content="Goldweek app support, FAQ, and privacy policy.">
-    <meta property="og:url" content="https://m1zz.github.io/Goldweek/support.html">
-    <link rel="icon" type="image/png" href="images/favicon.png">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --primary: #0066FF;
-            --primary-dark: #0052CC;
-            --secondary: #00C471;
-            --bg: #FAFBFC;
-            --text: #1A1A2E;
-            --text-light: #6B7280;
-            --card-bg: #FFFFFF;
-            --border: #E5E7EB;
-            --gradient: linear-gradient(135deg, #0066FF 0%, #00C471 100%);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.7;
-        }
-        header {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-        }
-        .header-inner {
-            max-width: 960px; margin: 0 auto;
-            padding: 0 24px; height: 64px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .logo {
-            display: flex; align-items: center; gap: 10px;
-            text-decoration: none; font-weight: 700; font-size: 18px; color: var(--text);
-        }
-        .logo img { width: 32px; height: 32px; border-radius: 8px; }
-        .nav-links { display: flex; align-items: center; gap: 20px; }
-        .nav-links a { text-decoration: none; color: var(--text-light); font-size: 15px; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--primary); }
-        .download-btn {
-            background: var(--gradient); color: white !important;
-            padding: 8px 18px; border-radius: 20px; font-weight: 600; font-size: 14px !important;
-        }
-        .page-hero {
-            background: var(--gradient); color: white;
-            text-align: center; padding: 56px 24px 40px;
-        }
-        .page-hero h1 { font-size: 34px; font-weight: 900; margin-bottom: 10px; }
-        .page-hero p { font-size: 16px; opacity: 0.9; }
-        .lang-bar {
-            background: white; border-bottom: 1px solid var(--border);
-            display: flex; justify-content: flex-end;
-        }
-        .lang-bar-inner {
-            max-width: 960px; width: 100%; margin: 0 auto;
-            padding: 10px 24px; display: flex; justify-content: flex-end;
-        }
-        .lang-toggle {
-            display: flex; border: 1px solid var(--border);
-            border-radius: 8px; overflow: hidden;
-        }
-        .lang-toggle button {
-            padding: 5px 13px; border: none; background: white;
-            cursor: pointer; font-size: 13px; font-family: inherit;
-            color: var(--text-light); transition: all 0.15s;
-            border-right: 1px solid var(--border);
-        }
-        .lang-toggle button:last-child { border-right: none; }
-        .lang-toggle button.active { background: var(--primary); color: white; font-weight: 600; }
-        main { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; }
-        .section { margin-bottom: 56px; }
-        .section-title {
-            font-size: 21px; font-weight: 700; margin-bottom: 20px;
-            padding-bottom: 12px; border-bottom: 2px solid var(--primary);
-            display: flex; align-items: center; gap: 8px;
-        }
-        .faq-item {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 12px; margin-bottom: 10px; overflow: hidden;
-        }
-        .faq-question {
-            width: 100%; text-align: left; padding: 17px 20px;
-            background: none; border: none; cursor: pointer;
-            font-size: 15px; font-weight: 600; font-family: inherit; color: var(--text);
-            display: flex; justify-content: space-between; align-items: center; gap: 12px;
-        }
-        .faq-question:hover { background: #F8F9FA; }
-        .faq-chevron { flex-shrink: 0; font-size: 11px; transition: transform 0.2s; color: var(--text-light); }
-        .faq-item.open .faq-chevron { transform: rotate(180deg); }
-        .faq-answer { display: none; padding: 0 20px 17px; font-size: 14px; color: var(--text-light); line-height: 1.75; }
-        .faq-item.open .faq-answer { display: block; }
-        .contact-card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 16px; padding: 28px;
-            display: flex; align-items: center; gap: 20px;
-        }
-        .contact-icon {
-            width: 56px; height: 56px; flex-shrink: 0;
-            background: linear-gradient(135deg, #0066FF20, #00C47120);
-            border-radius: 14px; display: flex; align-items: center;
-            justify-content: center; font-size: 26px;
-        }
-        .contact-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-        .contact-info p { font-size: 14px; color: var(--text-light); margin-bottom: 12px; }
-        .contact-btn {
-            display: inline-block; background: var(--gradient); color: white;
-            text-decoration: none; padding: 8px 20px;
-            border-radius: 20px; font-size: 14px; font-weight: 600;
-        }
-        .version-item { display: flex; gap: 16px; margin-bottom: 18px; }
-        .version-tag {
-            flex-shrink: 0; background: var(--primary); color: white;
-            font-size: 12px; font-weight: 700; padding: 3px 10px;
-            border-radius: 20px; height: fit-content; margin-top: 3px;
-        }
-        .version-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-        .version-content p { font-size: 14px; color: var(--text-light); }
-        .privacy-block {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 12px; padding: 22px; margin-bottom: 12px;
-        }
-        .privacy-block h3 { font-size: 15px; font-weight: 700; margin-bottom: 7px; }
-        .privacy-block p { font-size: 14px; color: var(--text-light); }
-        .privacy-date { font-size: 13px; color: var(--text-light); margin-bottom: 18px; }
-        footer { background: #1A1A2E; color: rgba(255,255,255,0.7); text-align: center; padding: 32px 24px; }
-        .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
-        .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; transition: color 0.2s; }
-        .footer-links a:hover { color: white; }
-        .footer-copy { font-size: 13px; }
-        @media (max-width: 640px) {
-            .page-hero h1 { font-size: 26px; }
-            .contact-card { flex-direction: column; text-align: center; }
-            .nav-links .hide-mobile { display: none; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goldweek · 고객 지원</title>
+<meta name="description" content="골드위크 고객 지원: 자주 묻는 질문, 문의, 개인정보 처리방침.">
+<link rel="canonical" href="https://m1zz.github.io/Goldweek/support.html">
+<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/support.html">
+<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/support.html">
+<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/support.html">
+<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/support.html">
+<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/support.html">
+<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/support.html">
+<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/support.html">
+<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/support.html">
+<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/support.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/support.html">
+<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/support.html">
+<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/support.html">
+<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/support.html">
+<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/support.html">
+<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/support.html">
+<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/support.html">
+<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/support.html">
+<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/support.html">
+<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/support.html">
+<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/support.html">
+<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/support.html">
+<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/support.html">
+<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/support.html">
+<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/support.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Goldweek · 고객 지원">
+<meta property="og:description" content="골드위크 고객 지원: 자주 묻는 질문, 문의, 개인정보 처리방침.">
+<meta property="og:url" content="https://m1zz.github.io/Goldweek/support.html">
+<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
+<link rel="icon" type="image/png" href="images/app-icon.png">
+<link rel="apple-touch-icon" href="images/app-icon.png">
+<script>
+(function () {
+  var supported = ["ko", "en", "de", "es", "fr", "it", "ja", "pt-BR", "zh-Hans", "zh-Hant", "ru", "id", "nl", "sv", "nb", "da", "fi", "pl", "cs", "el", "tr", "th", "vi"];
+  function pick(tag) {
+    var t = String(tag || '').toLowerCase();
+    if (/^zh-(tw|hk|mo|hant)/.test(t)) return 'zh-Hant';
+    if (/^zh/.test(t)) return 'zh-Hans';
+    if (/^pt/.test(t)) return 'pt-BR';
+    if (/^(nb|no|nn)/.test(t)) return 'nb';
+    var p = t.split('-')[0];
+    for (var i = 0; i < supported.length; i++) if (supported[i].toLowerCase() === p) return supported[i];
+    return null;
+  }
+  var prefs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+  for (var i = 0; i < prefs.length; i++) {
+    var l = pick(prefs[i]);
+    if (l) {
+      if (l !== 'ko') location.replace(l + '/support.html' + location.hash);
+      return;
+    }
+  }
+  location.replace('en/support.html' + location.hash);
+})();
+</script>
+<link rel="stylesheet" href="site.css">
 </head>
 <body>
-
 <header>
-    <div class="header-inner">
-        <a href="index.html" class="logo">
-            <img src="images/app-icon.png" alt="Goldweek" onerror="this.style.display='none'">
-            <span>Goldweek</span>
-        </a>
-        <nav class="nav-links">
-            <a href="index.html" class="hide-mobile" data-i18n="nav_home">Home</a>
-            <a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" data-i18n="nav_download">Download</a>
-        </nav>
-    </div>
+<div class="header-inner">
+<a href="./" class="logo"><img src="images/app-icon.png" alt="골드위크 앱 아이콘"><span>Goldweek</span></a>
+<nav class="nav-links">
+<a href="./" class="hide-mobile">홈</a>
+<a href="support.html" class="hide-mobile" aria-current="page">고객 지원</a>
+<a href="privacy.html" class="hide-mobile">개인정보 처리방침</a>
+<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">다운로드</a>
+</nav>
+</div>
 </header>
-
 <div class="page-hero">
-    <h1 data-i18n="hero_title">Support</h1>
-    <p data-i18n="hero_sub">We're here to help. Reach out anytime.</p>
+<h1>고객 지원</h1>
+<p>궁금한 점이나 문제가 있으면 언제든지 문의해 주세요.</p>
 </div>
-
-<div class="lang-bar">
-    <div class="lang-bar-inner">
-        <div class="lang-toggle">
-            <button onclick="setLang('en')" data-lang-btn="en" class="active">English</button>
-            <button onclick="setLang('ko')" data-lang-btn="ko">한국어</button>
-            <button onclick="setLang('ja')" data-lang-btn="ja">日本語</button>
-            <button onclick="setLang('zh')" data-lang-btn="zh">中文</button>
-        </div>
-    </div>
-</div>
-
+<div class="lang-bar"><nav class="langs" aria-label="언어">
+<a href="ko/support.html" hreflang="ko" lang="ko" aria-current="true">한국어</a>
+<a href="en/support.html" hreflang="en" lang="en">English</a>
+<a href="de/support.html" hreflang="de" lang="de">Deutsch</a>
+<a href="es/support.html" hreflang="es" lang="es">Español</a>
+<a href="fr/support.html" hreflang="fr" lang="fr">Français</a>
+<a href="it/support.html" hreflang="it" lang="it">Italiano</a>
+<a href="ja/support.html" hreflang="ja" lang="ja">日本語</a>
+<a href="pt-BR/support.html" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="zh-Hans/support.html" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="zh-Hant/support.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="ru/support.html" hreflang="ru" lang="ru">Русский</a>
+<a href="id/support.html" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="nl/support.html" hreflang="nl" lang="nl">Nederlands</a>
+<a href="sv/support.html" hreflang="sv" lang="sv">Svenska</a>
+<a href="nb/support.html" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="da/support.html" hreflang="da" lang="da">Dansk</a>
+<a href="fi/support.html" hreflang="fi" lang="fi">Suomi</a>
+<a href="pl/support.html" hreflang="pl" lang="pl">Polski</a>
+<a href="cs/support.html" hreflang="cs" lang="cs">Čeština</a>
+<a href="el/support.html" hreflang="el" lang="el">Ελληνικά</a>
+<a href="tr/support.html" hreflang="tr" lang="tr">Türkçe</a>
+<a href="th/support.html" hreflang="th" lang="th">ไทย</a>
+<a href="vi/support.html" hreflang="vi" lang="vi">Tiếng Việt</a>
+</nav></div>
 <main>
-
-    <!-- FAQ -->
-    <div class="section" id="faq">
-        <div class="section-title">
-            <span>❓</span>
-            <span data-i18n="faq_title">Frequently Asked Questions</span>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                <span data-i18n="faq1_q">My leave balance doesn't seem to be calculated correctly.</span>
-                <span class="faq-chevron">▼</span>
-            </button>
-            <div class="faq-answer" data-i18n="faq1_a">Please check the leave year start month and total annual leave days in Settings. Half-days (0.5) and quarter-days (0.25) are automatically deducted. Non-deducting types such as sick leave, official leave, and business trips do not affect your leave balance. If the issue persists, please contact us.</div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                <span data-i18n="faq2_q">My leave entries are not showing on the calendar.</span>
-                <span class="faq-chevron">▼</span>
-            </button>
-            <div class="faq-answer" data-i18n="faq2_a">Cancelled leave entries are not displayed on the calendar. Please check the status of the entry in the Add Leave tab. Updating to the latest version may also resolve the issue.</div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                <span data-i18n="faq3_q">How do I add bonus leave?</span>
-                <span class="faq-chevron">▼</span>
-            </button>
-            <div class="faq-answer" data-i18n="faq3_a">You can add bonus leave in the Bonus Leave section at the bottom of the Add Leave tab. Select the type (compensatory, reward, refresh, etc.), enter the number of days, and set an optional expiration date. Bonus leave is managed separately from regular annual leave.</div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                <span data-i18n="faq4_q">I purchased Pro but the features are not unlocked.</span>
-                <span class="faq-chevron">▼</span>
-            </button>
-            <div class="faq-answer" data-i18n="faq4_a">Please tap the Restore Purchases button at the bottom of the Settings tab. The restore will use the Apple ID currently signed in to the App Store. If the issue is not resolved, please contact us via email.</div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                <span data-i18n="faq5_q">Will my data be lost if I delete the app?</span>
-                <span class="faq-chevron">▼</span>
-            </button>
-            <div class="faq-answer" data-i18n="faq5_a">App data is stored locally on your device. Deleting the app will permanently remove all data. We recommend keeping iCloud Backup enabled to protect your data.</div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                <span data-i18n="faq6_q">Can I add custom holidays or hide existing ones?</span>
-                <span class="faq-chevron">▼</span>
-            </button>
-            <div class="faq-answer" data-i18n="faq6_a">Yes. In the Holiday Management menu within Settings, you can add your own custom holidays or hide default public holidays.</div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                <span data-i18n="faq7_q">Which countries are supported?</span>
-                <span class="faq-chevron">▼</span>
-            </button>
-            <div class="faq-answer" data-i18n="faq7_a">We currently support public holidays for South Korea, the United States, Japan, and China. Changing the country in Settings will update the holidays shown on your calendar.</div>
-        </div>
-    </div>
-
-    <!-- Contact -->
-    <div class="section" id="contact">
-        <div class="section-title">
-            <span>✉️</span>
-            <span data-i18n="contact_title">Contact Us</span>
-        </div>
-        <div class="contact-card">
-            <div class="contact-icon">📬</div>
-            <div class="contact-info">
-                <h3 data-i18n="contact_h">Email Support</h3>
-                <p data-i18n="contact_p">For issues not covered in the FAQ, feature requests, or bug reports, please send us an email. We aim to respond within 1–2 business days.</p>
-                <a class="contact-btn" href="mailto:mizzking75@gmail.com">mizzking75@gmail.com</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Version History -->
-    <div class="section" id="versions">
-        <div class="section-title">
-            <span>📋</span>
-            <span data-i18n="versions_title">Release Notes</span>
-        </div>
-
-        <div class="version-item">
-            <span class="version-tag">2.0.2</span>
-            <div class="version-content">
-                <h4 data-i18n="v202_title">2.0.2 — Business Trip &amp; Bug Fixes</h4>
-                <p data-i18n="v202_body">Added business trip as a new leave type. Fixed an issue where leave entries were not highlighted on the calendar, and corrected remaining leave calculation in Settings.</p>
-            </div>
-        </div>
-
-        <div class="version-item">
-            <span class="version-tag">2.0.1</span>
-            <div class="version-content">
-                <h4 data-i18n="v201_title">2.0.1 — Leave Calculation Fixes</h4>
-                <p data-i18n="v201_body">Fixed completed days showing as 0 when Bonus Leave was enabled. Fixed non-deducting leave types appearing as 0 days in Leave History. Added Holiday Management and redesigned the Paywall screen.</p>
-            </div>
-        </div>
-
-        <div class="version-item">
-            <span class="version-tag">2.0.0</span>
-            <div class="version-content">
-                <h4 data-i18n="v200_title">2.0.0 — Pro Subscription &amp; Calendar Integration</h4>
-                <p data-i18n="v200_body">Introduced StoreKit 2-based Pro subscription. EventKit calendar integration, SwiftData triple-layer data protection, and widget support.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Privacy -->
-    <div class="section" id="privacy">
-        <div class="section-title">
-            <span>🔒</span>
-            <span data-i18n="privacy_title">Privacy Policy</span>
-        </div>
-        <p class="privacy-date" data-i18n="privacy_date">Last updated: August 2026</p>
-
-        <div class="privacy-block">
-            <h3 data-i18n="privacy1_h">Information We Collect</h3>
-            <p data-i18n="privacy1_p">Personal data you enter — your name, leave settings, and leave records — stays on your device (and in your own iCloud if you turn on backup or schedule sharing) and is never sent to us. Separately, Goldweek sends anonymous usage statistics to the developer's iCloud (CloudKit) so we can tell whether the app is actually useful: counts such as how many leaves you registered or how many recommendations you accepted, the app version, language, and which actions were used. No leave reasons, dates, names, or notes are included. These records use a random install identifier that is not linked to you, your Apple Account, or your device, and a new one is created if you delete and reinstall the app. If the app crashes or freezes, iOS may send an anonymous diagnostic report (call stack, app version, OS version, device model) with no identifiers attached. Feedback you send contains only your message and any contact details you choose to type.</p>
-        </div>
-
-        <div class="privacy-block">
-            <h3 data-i18n="privacy2_h">Third-Party Services</h3>
-            <p data-i18n="privacy2_p">We use Apple's StoreKit for in-app purchases, and Apple's iCloud (CloudKit) for backup, schedule sharing, and the anonymous statistics described above. No third-party analytics SDKs and no advertising SDKs are used, and no data is sold or shared with data brokers.</p>
-        </div>
-
-        <div class="privacy-block">
-            <h3 data-i18n="privacy3_h">Data Security</h3>
-            <p data-i18n="privacy3_p">All data is stored locally using Apple's SwiftData framework. If iCloud Backup is enabled, your data is protected by Apple's encryption policies.</p>
-        </div>
-
-        <div class="privacy-block">
-            <h3 data-i18n="privacy4_h">Contact</h3>
-            <p data-i18n="privacy4_p">For questions about this Privacy Policy, please contact us at mizzking75@gmail.com.</p>
-        </div>
-    </div>
-
+<div class="section" id="faq">
+<h2 class="section-title"><span aria-hidden="true">❓</span><span>자주 묻는 질문</span></h2>
+<div class="faq-item">
+<button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)"><span>연차가 정확히 계산되지 않는 것 같아요.</span><span class="faq-chevron" aria-hidden="true">▼</span></button>
+<div class="faq-answer">설정에서 연차 기준 시작월과 총 연차 일수를 확인해 주세요. 반차(0.5일)와 반반차(0.25일)는 자동으로 차감되고, 병가·공가·출장처럼 차감되지 않는 유형은 남은 연차에 영향을 주지 않습니다. 그래도 맞지 않으면 문의해 주세요.</div>
+</div>
+<div class="faq-item">
+<button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)"><span>캘린더에 휴가가 표시되지 않아요.</span><span class="faq-chevron" aria-hidden="true">▼</span></button>
+<div class="faq-answer">취소한 휴가는 캘린더에 표시되지 않습니다. 등록 탭에서 해당 기록의 상태를 확인해 주세요. 앱을 최신 버전으로 업데이트하면 해결되는 경우도 있습니다.</div>
+</div>
+<div class="faq-item">
+<button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)"><span>보너스 연차는 어떻게 등록하나요?</span><span class="faq-chevron" aria-hidden="true">▼</span></button>
+<div class="faq-answer">등록 탭 아래쪽의 보너스 연차 항목에서 추가할 수 있습니다. 대체휴무, 포상휴가, 리프레시 휴가 같은 유형을 고르고 일수와 만료일(선택)을 입력하면 됩니다. 보너스 연차는 일반 연차와 따로 관리됩니다.</div>
+</div>
+<div class="faq-item">
+<button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)"><span>골드위크 Pro를 구매했는데 기능이 열리지 않아요.</span><span class="faq-chevron" aria-hidden="true">▼</span></button>
+<div class="faq-answer">설정 탭 아래쪽의 구매 복원을 눌러 주세요. App Store에 로그인된 Apple 계정으로 구매 내역이 복원됩니다. 그래도 해결되지 않으면 이메일로 문의해 주세요.</div>
+</div>
+<div class="faq-item">
+<button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)"><span>앱을 삭제하면 데이터가 사라지나요?</span><span class="faq-chevron" aria-hidden="true">▼</span></button>
+<div class="faq-answer">데이터는 기기에 저장되므로 앱을 삭제하면 모두 지워집니다. iCloud 백업을 켜 두면 나중에 복원할 수 있는 사본이 남습니다.</div>
+</div>
+<div class="faq-item">
+<button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)"><span>공휴일을 직접 추가하거나 숨길 수 있나요?</span><span class="faq-chevron" aria-hidden="true">▼</span></button>
+<div class="faq-answer">네. 설정의 공휴일·방학 관리에서 나만의 공휴일을 추가하거나 기본 공휴일을 숨길 수 있습니다.</div>
+</div>
+<div class="faq-item">
+<button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)"><span>어느 나라를 지원하나요?</span><span class="faq-chevron" aria-hidden="true">▼</span></button>
+<div class="faq-answer">골드위크에는 42개 나라의 공휴일이 들어 있습니다. 설정에서 나라를 고르면(주나 지역마다 공휴일이 다른 나라는 지역까지) 캘린더에 바로 반영됩니다. 목록에 없는 나라는 공휴일을 직접 넣어 쓰거나, 앱에서 피드백을 보내 지원을 요청할 수 있습니다.</div>
+</div>
+</div>
+<div class="section" id="contact">
+<h2 class="section-title"><span aria-hidden="true">✉️</span><span>문의하기</span></h2>
+<div class="contact-card">
+<div class="contact-icon" aria-hidden="true">📬</div>
+<div class="contact-info">
+<h3>이메일 문의</h3>
+<p>위에서 해결되지 않는 문제, 기능 제안, 버그 신고는 이메일로 보내 주세요. 보통 영업일 기준 1~2일 안에 답변 드립니다.</p>
+<a class="contact-btn" href="mailto:mizzking75@gmail.com">mizzking75@gmail.com</a>
+</div>
+</div>
+</div>
+<div class="section" id="privacy">
+<h2 class="section-title"><span aria-hidden="true">🔒</span><span>개인정보 처리방침</span></h2>
+<div class="privacy-block">
+<p>골드위크에 입력한 내용은 기기와 사용자 본인의 iCloud에만 저장됩니다. 개발자는 익명 사용 통계, 익명 오류 진단, 그리고 직접 보내신 피드백만 받습니다.</p>
+<p class="more"><a href="privacy.html">개인정보 처리방침 전문 보기 →</a></p>
+</div>
+</div>
 </main>
-
 <footer>
-    <div class="footer-links">
-        <a href="index.html" data-i18n="nav_home">Home</a>
-        <a href="#faq" data-i18n="faq_title">FAQ</a>
-        <a href="#contact" data-i18n="contact_title">Contact</a>
-        <a href="#privacy" data-i18n="privacy_title">Privacy Policy</a>
-        <a href="https://github.com/M1zz/Goldweek" target="_blank">GitHub</a>
-    </div>
-    <p class="footer-copy">© 2024 Goldweek. All rights reserved.</p>
+<div class="footer-links">
+<a href="./">홈</a>
+<a href="support.html">고객 지원</a>
+<a href="privacy.html">개인정보 처리방침</a>
+<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
+</div>
+<p class="footer-copy">© Goldweek. All rights reserved.</p>
 </footer>
-
 <script>
-const i18n = {
-    en: {
-        nav_home: "Home",
-        nav_download: "Download",
-        hero_title: "Support",
-        hero_sub: "We're here to help. Reach out anytime.",
-        faq_title: "Frequently Asked Questions",
-        faq1_q: "My leave balance doesn't seem to be calculated correctly.",
-        faq1_a: "Please check the leave year start month and total annual leave days in Settings. Half-days (0.5) and quarter-days (0.25) are automatically deducted. Non-deducting types such as sick leave, official leave, and business trips do not affect your leave balance. If the issue persists, please contact us.",
-        faq2_q: "My leave entries are not showing on the calendar.",
-        faq2_a: "Cancelled leave entries are not displayed on the calendar. Please check the status of the entry in the Add Leave tab. Updating to the latest version may also resolve the issue.",
-        faq3_q: "How do I add bonus leave?",
-        faq3_a: "You can add bonus leave in the Bonus Leave section at the bottom of the Add Leave tab. Select the type (compensatory, reward, refresh, etc.), enter the number of days, and set an optional expiration date. Bonus leave is managed separately from regular annual leave.",
-        faq4_q: "I purchased Pro but the features are not unlocked.",
-        faq4_a: "Please tap the Restore Purchases button at the bottom of the Settings tab. The restore will use the Apple ID currently signed in to the App Store. If the issue is not resolved, please contact us via email.",
-        faq5_q: "Will my data be lost if I delete the app?",
-        faq5_a: "App data is stored locally on your device. Deleting the app will permanently remove all data. We recommend keeping iCloud Backup enabled to protect your data.",
-        faq6_q: "Can I add custom holidays or hide existing ones?",
-        faq6_a: "Yes. In the Holiday Management menu within Settings, you can add your own custom holidays or hide default public holidays.",
-        faq7_q: "Which countries are supported?",
-        faq7_a: "We currently support public holidays for South Korea, the United States, Japan, and China. Changing the country in Settings will update the holidays shown on your calendar.",
-        contact_title: "Contact Us",
-        contact_h: "Email Support",
-        contact_p: "For issues not covered in the FAQ, feature requests, or bug reports, please send us an email. We aim to respond within 1–2 business days.",
-        versions_title: "Release Notes",
-        v202_title: "2.0.2 — Business Trip & Bug Fixes",
-        v202_body: "Added business trip as a new leave type. Fixed an issue where leave entries were not highlighted on the calendar, and corrected remaining leave calculation in Settings.",
-        v201_title: "2.0.1 — Leave Calculation Fixes",
-        v201_body: "Fixed completed days showing as 0 when Bonus Leave was enabled. Fixed non-deducting leave types appearing as 0 days in Leave History. Added Holiday Management and redesigned the Paywall screen.",
-        v200_title: "2.0.0 — Pro Subscription & Calendar Integration",
-        v200_body: "Introduced StoreKit 2-based Pro subscription. EventKit calendar integration, SwiftData triple-layer data protection, and widget support.",
-        privacy_title: "Privacy Policy",
-        privacy_date: "Last updated: August 2026",
-        privacy1_h: "Information We Collect",
-        privacy1_p: "Personal data you enter — your name, leave settings, and leave records — stays on your device (and in your own iCloud if you turn on backup or schedule sharing) and is never sent to us. Separately, Goldweek sends anonymous usage statistics to the developer's iCloud (CloudKit) so we can tell whether the app is actually useful: counts such as how many leaves you registered or how many recommendations you accepted, the app version, language, and which actions were used. No leave reasons, dates, names, or notes are included. These records use a random install identifier that is not linked to you, your Apple Account, or your device, and a new one is created if you delete and reinstall the app. If the app crashes or freezes, iOS may send an anonymous diagnostic report (call stack, app version, OS version, device model) with no identifiers attached. Feedback you send contains only your message and any contact details you choose to type.",
-        privacy2_h: "Third-Party Services",
-        privacy2_p: "We use Apple's StoreKit for in-app purchases, and Apple's iCloud (CloudKit) for backup, schedule sharing, and the anonymous statistics described above. No third-party analytics SDKs and no advertising SDKs are used, and no data is sold or shared with data brokers.",
-        privacy3_h: "Data Security",
-        privacy3_p: "All data is stored locally using Apple's SwiftData framework. If iCloud Backup is enabled, your data is protected by Apple's encryption policies.",
-        privacy4_h: "Contact",
-        privacy4_p: "For questions about this Privacy Policy, please contact us at mizzking75@gmail.com.",
-    },
-    ko: {
-        nav_home: "홈",
-        nav_download: "다운로드",
-        hero_title: "고객 지원",
-        hero_sub: "궁금한 점이 있으시면 언제든지 문의해 주세요.",
-        faq_title: "자주 묻는 질문",
-        faq1_q: "연차가 정확히 계산되지 않는 것 같아요.",
-        faq1_a: "설정 화면에서 연차 기준 시작월과 총 연차 일수를 확인해 주세요. 반차(0.5일), 반반차(0.25일)는 자동으로 차감되며, 병가·공가·출장 등 비차감 유형은 연차에서 빠지지 않습니다. 그래도 문제가 있다면 문의해 주세요.",
-        faq2_q: "캘린더에 휴가 표시가 되지 않아요.",
-        faq2_a: "취소 상태의 휴가는 캘린더에 표시되지 않습니다. 등록 탭에서 해당 기록의 상태를 확인해 주세요. 앱을 최신 버전으로 업데이트하면 해결되는 경우도 있습니다.",
-        faq3_q: "보너스 연차는 어떻게 등록하나요?",
-        faq3_a: "등록 탭 하단의 보너스 연차 섹션에서 추가할 수 있습니다. 대체휴무, 포상휴가, 리프레시 휴가 등 다양한 유형을 선택하고 일수와 만료일을 입력하면 됩니다. 보너스 연차는 일반 연차와 별도로 관리됩니다.",
-        faq4_q: "Pro 구독을 결제했는데 기능이 활성화되지 않아요.",
-        faq4_a: "설정 탭 하단의 구매 복원 버튼을 눌러 주세요. App Store에 로그인된 Apple ID로 복원이 진행됩니다. 그래도 해결되지 않으면 아래 이메일로 문의해 주세요.",
-        faq5_q: "앱을 삭제하면 데이터가 사라지나요?",
-        faq5_a: "앱 데이터는 기기에 로컬로 저장됩니다. 앱을 삭제하면 모든 데이터가 삭제되므로, iCloud 백업을 활성화해 두시길 권장합니다.",
-        faq6_q: "공휴일을 직접 추가하거나 숨길 수 있나요?",
-        faq6_a: "네, 가능합니다. 설정 탭의 공휴일 관리 메뉴에서 나만의 공휴일을 추가하거나 기본 공휴일을 숨길 수 있습니다.",
-        faq7_q: "지원하는 국가는 어디인가요?",
-        faq7_a: "현재 한국, 미국, 일본, 중국의 공휴일을 지원합니다. 설정에서 국가를 변경하면 해당 국가의 공휴일이 캘린더에 반영됩니다.",
-        contact_title: "문의하기",
-        contact_h: "이메일 문의",
-        contact_p: "FAQ에서 해결되지 않는 문제, 기능 제안, 버그 신고는 이메일로 보내 주세요. 영업일 기준 1-2일 내에 답변 드립니다.",
-        versions_title: "업데이트 내역",
-        v202_title: "2.0.2 — 출장 기록 및 버그 수정",
-        v202_body: "출장 유형이 추가되었습니다. 캘린더에 일정이 표시되지 않는 문제와 설정 화면의 잔여 연차 계산 오류를 수정했습니다.",
-        v201_title: "2.0.1 — 연차 계산 버그 수정",
-        v201_body: "보너스 연차 포함 시 완료 일수가 0으로 표시되는 버그를 수정했습니다. 비차감 유형이 사용 내역에서 0일로 표시되던 문제도 개선했습니다. 공휴일 관리 기능 추가, Paywall 디자인 개선.",
-        v200_title: "2.0.0 — Pro 유료화 및 캘린더 연동",
-        v200_body: "StoreKit 2 기반 Pro 구독 도입. EventKit 캘린더 연동, 3중 데이터 보호(SwiftData), 위젯 기능 추가.",
-        privacy_title: "개인정보 처리방침",
-        privacy_date: "최종 업데이트: 2026년 8월",
-        privacy1_h: "수집하는 정보",
-        privacy1_p: "입력하신 이름·연차 설정·휴가 기록 같은 개인 데이터는 기기(백업이나 일정 공유를 켜면 사용자 본인의 iCloud)에만 저장되며 개발자에게 전송되지 않습니다. 이와 별개로 골드위크는 앱이 실제로 도움이 되는지 확인하기 위해 익명 사용 통계를 개발자의 iCloud(CloudKit)로 보냅니다. 등록한 휴가 수·추천 채택 수 같은 개수, 앱 버전, 언어, 어떤 기능을 사용했는지 같은 집계 수치이며 휴가 사유·날짜·이름·메모는 포함되지 않습니다. 이 기록은 사용자·Apple 계정·기기와 연결되지 않는 무작위 설치 식별자만 사용하고, 앱을 삭제 후 다시 설치하면 새로 만들어집니다. 앱이 종료되거나 멈춘 경우 iOS가 익명 진단(콜스택·앱 버전·OS 버전·기기 종류)을 보내며 여기에는 어떤 식별자도 붙지 않습니다. 보내주신 피드백에는 작성하신 내용과 직접 입력하신 연락처만 담깁니다.",
-        privacy2_h: "제3자 서비스",
-        privacy2_p: "인앱 구매 처리에 Apple StoreKit을, 백업·일정 공유·위 익명 통계 수집에 Apple iCloud(CloudKit)를 사용합니다. 외부 분석 SDK와 광고 SDK는 사용하지 않으며, 어떤 데이터도 판매하거나 데이터 브로커와 공유하지 않습니다.",
-        privacy3_h: "데이터 보안",
-        privacy3_p: "모든 데이터는 Apple의 SwiftData 프레임워크를 통해 기기 로컬에 저장됩니다. iCloud 백업이 활성화된 경우 Apple의 암호화 정책에 따라 보호됩니다.",
-        privacy4_h: "문의",
-        privacy4_p: "개인정보 처리방침에 관한 문의는 mizzking75@gmail.com으로 연락해 주세요.",
-    },
-    ja: {
-        nav_home: "ホーム",
-        nav_download: "ダウンロード",
-        hero_title: "サポート",
-        hero_sub: "お気軽にお問い合わせください。",
-        faq_title: "よくある質問",
-        faq1_q: "有給休暇の残日数が正しく計算されていないようです。",
-        faq1_a: "設定画面で有給年度の開始月と総有給日数をご確認ください。半休（0.5日）・時間休（0.25日）は自動で差し引かれます。病休・公休・出張などの非控除タイプは有給残日数に影響しません。それでも解決しない場合はお問い合わせください。",
-        faq2_q: "カレンダーに休暇が表示されません。",
-        faq2_a: "キャンセルされた休暇はカレンダーに表示されません。登録タブで該当記録のステータスをご確認ください。アプリを最新バージョンにアップデートすると解消される場合があります。",
-        faq3_q: "ボーナス休暇の追加方法を教えてください。",
-        faq3_a: "登録タブ下部のボーナス休暇セクションから追加できます。代替休暇・報奨休暇・リフレッシュ休暇などのタイプを選択し、日数と任意の有効期限を入力してください。ボーナス休暇は通常の有給とは別に管理されます。",
-        faq4_q: "Proを購入しましたが機能が有効になりません。",
-        faq4_a: "設定タブ下部の「購入を復元」ボタンをタップしてください。App Storeにサインインしている Apple ID で復元が行われます。それでも解決しない場合はメールでお問い合わせください。",
-        faq5_q: "アプリを削除するとデータが消えますか？",
-        faq5_a: "アプリのデータはデバイス内にローカル保存されています。アプリを削除するとすべてのデータが失われます。iCloudバックアップを有効にしておくことをお勧めします。",
-        faq6_q: "祝日を追加したり非表示にしたりできますか？",
-        faq6_a: "はい。設定タブの祝日管理メニューから、独自の祝日を追加したり、デフォルトの祝日を非表示にしたりすることができます。",
-        faq7_q: "対応している国はどこですか？",
-        faq7_a: "現在、韓国・アメリカ・日本・中国の祝日に対応しています。設定で国を変更すると、カレンダーに反映される祝日が切り替わります。",
-        contact_title: "お問い合わせ",
-        contact_h: "メールサポート",
-        contact_p: "FAQで解決しない問題、機能のご提案、バグ報告はメールでお送りください。営業日1〜2日以内にご返答いたします。",
-        versions_title: "アップデート履歴",
-        v202_title: "2.0.2 — 出張記録とバグ修正",
-        v202_body: "出張タイプを新たに追加しました。カレンダーに休暇が表示されない問題と、設定画面の残有給計算の誤りを修正しました。",
-        v201_title: "2.0.1 — 有給計算バグの修正",
-        v201_body: "ボーナス休暇を含む設定でONにしたとき、使用済み日数が0で表示されるバグを修正しました。非控除タイプの休暇が使用内訳に0日と表示される問題も改善しました。祝日管理機能の追加とPaywallデザインの刷新も行いました。",
-        v200_title: "2.0.0 — Proサブスクリプションとカレンダー連携",
-        v200_body: "StoreKit 2ベースのProサブスクリプションを導入。EventKitカレンダー連携、SwiftDataによる三重データ保護、ウィジェット機能を追加しました。",
-        privacy_title: "プライバシーポリシー",
-        privacy_date: "最終更新：2026年8月",
-        privacy1_h: "収集する情報",
-        privacy1_p: "入力されたお名前・有給設定・休暇記録などの個人データはデバイス（バックアップや予定共有をオンにした場合はご自身のiCloud）にのみ保存され、開発者へ送信されることはありません。これとは別に、Goldweekはアプリが実際に役立っているかを確認するため、匿名の利用統計を開発者のiCloud（CloudKit）へ送信します。登録した休暇の件数やおすすめを採用した件数、アプリのバージョン、言語、どの機能を使ったかといった集計値のみで、休暇の理由・日付・氏名・メモは含まれません。これらの記録は、あなた・Appleアカウント・デバイスと結び付かないランダムなインストール識別子のみを使い、アプリを削除して再インストールすると新しく作り直されます。アプリがクラッシュ・停止した場合、iOSが匿名の診断情報（コールスタック・アプリのバージョン・OSバージョン・端末の種類）を送信します。識別子は一切付きません。お送りいただいたフィードバックには、本文とご自身で入力された連絡先のみが含まれます。",
-        privacy2_h: "第三者サービス",
-        privacy2_p: "アプリ内購入の処理にAppleのStoreKitを、バックアップ・予定共有・上記の匿名統計にAppleのiCloud（CloudKit）を使用しています。サードパーティの分析SDKや広告SDKは使用しておらず、データを販売したりデータブローカーと共有したりすることはありません。",
-        privacy3_h: "データセキュリティ",
-        privacy3_p: "すべてのデータはAppleのSwiftDataフレームワークを通じてデバイスにローカル保存されます。iCloudバックアップが有効な場合、Appleの暗号化ポリシーによってデータが保護されます。",
-        privacy4_h: "お問い合わせ",
-        privacy4_p: "プライバシーポリシーに関するご質問は mizzking75@gmail.com までご連絡ください。",
-    },
-    zh: {
-        nav_home: "首页",
-        nav_download: "下载",
-        hero_title: "支持",
-        hero_sub: "有任何问题，随时联系我们。",
-        faq_title: "常见问题",
-        faq1_q: "年假余额计算好像不准确。",
-        faq1_a: "请在设置界面检查年假起始月份和总年假天数。半天假（0.5天）和短假（0.25天）会自动扣除。病假、公假、出差等非扣除类型不会影响年假余额。如问题仍未解决，请联系我们。",
-        faq2_q: "日历中没有显示我的假期。",
-        faq2_a: "已取消的假期不会显示在日历中。请在登记标签页中确认相关记录的状态。将应用更新至最新版本也可能解决此问题。",
-        faq3_q: "如何添加额外假期（奖励假）？",
-        faq3_a: "可以在登记标签页底部的额外假期区域进行添加。选择类型（调休、奖励假、带薪休假等），输入天数并设置可选的到期日期。额外假期与正常年假分开管理。",
-        faq4_q: "我已购买Pro，但功能没有解锁。",
-        faq4_a: "请点击设置标签页底部的「恢复购买」按钮，系统将使用当前登录App Store的Apple ID进行恢复。如问题仍未解决，请通过电子邮件联系我们。",
-        faq5_q: "删除应用会丢失数据吗？",
-        faq5_a: "应用数据存储在本地设备上。删除应用将永久清除所有数据，建议开启iCloud备份以保护您的数据。",
-        faq6_q: "可以添加自定义假日或隐藏现有假日吗？",
-        faq6_a: "可以。在设置中的假日管理菜单里，您可以添加自己的自定义假日，或隐藏默认的法定假日。",
-        faq7_q: "支持哪些国家？",
-        faq7_a: "目前支持韩国、美国、日本和中国的法定假日。在设置中更改国家，日历中显示的假日也会随之切换。",
-        contact_title: "联系我们",
-        contact_h: "邮件支持",
-        contact_p: "对于常见问题中未涉及的问题、功能建议或错误报告，请发送电子邮件给我们，我们将在1-2个工作日内回复。",
-        versions_title: "版本更新记录",
-        v202_title: "2.0.2 — 出差记录及Bug修复",
-        v202_body: "新增出差假期类型。修复了假期在日历中未高亮显示的问题，以及设置界面中剩余年假计算错误的问题。",
-        v201_title: "2.0.1 — 年假计算修复",
-        v201_body: "修复了开启额外假期后已完成天数显示为0的Bug。修复了非扣除类型在使用记录中显示为0天的问题。新增假日管理功能，优化了付费引导页设计。",
-        v200_title: "2.0.0 — Pro订阅及日历集成",
-        v200_body: "引入基于StoreKit 2的Pro订阅。支持EventKit日历集成、SwiftData三重数据保护及小组件功能。",
-        privacy_title: "隐私政策",
-        privacy_date: "最后更新：2026年8月",
-        privacy1_h: "收集的信息",
-        privacy1_p: "您输入的姓名、年假设置、假期记录等个人数据仅保存在本机（若开启备份或日程共享，则保存在您自己的 iCloud 中），不会发送给开发者。另外，为了确认这款应用是否真正有用，Goldweek 会将匿名使用统计发送到开发者的 iCloud（CloudKit）：例如登记了多少假期、采纳了多少条推荐、应用版本、语言以及使用了哪些功能等汇总数值，不包含请假事由、日期、姓名或备注。这些记录只使用与您本人、Apple 账户和设备均无关联的随机安装标识符，删除并重新安装应用后会生成新的标识符。若应用崩溃或卡死，iOS 会发送匿名诊断信息（调用堆栈、应用版本、系统版本、设备型号），其中不包含任何标识符。您发送的反馈仅包含您写下的内容和自行填写的联系方式。",
-        privacy2_h: "第三方服务",
-        privacy2_p: "我们使用 Apple 的 StoreKit 处理应用内购买，使用 Apple 的 iCloud（CloudKit）进行备份、日程共享以及上述匿名统计。我们不使用任何第三方分析 SDK 或广告 SDK，也不会出售数据或与数据经纪商共享数据。",
-        privacy3_h: "数据安全",
-        privacy3_p: "所有数据通过Apple的SwiftData框架存储在本地设备上。如已启用iCloud备份，您的数据将受到Apple加密策略的保护。",
-        privacy4_h: "联系方式",
-        privacy4_p: "如对本隐私政策有任何疑问，请联系 mizzking75@gmail.com。",
-    }
-};
-
-function setLang(lang) {
-    document.querySelectorAll('[data-lang-btn]').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-lang-btn') === lang);
-    });
-    const strings = i18n[lang];
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (strings[key]) el.textContent = strings[key];
-    });
-    document.documentElement.lang = lang;
-}
-
 function toggleFaq(btn) {
-    btn.closest('.faq-item').classList.toggle('open');
+  var item = btn.closest('.faq-item');
+  var open = item.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
-
-// Default: English
-setLang('en');
-
-// Auto-detect browser language
-const browserLang = navigator.language.slice(0, 2);
-if (['ko', 'ja', 'zh'].includes(browserLang)) setLang(browserLang);
 </script>
 </body>
 </html>

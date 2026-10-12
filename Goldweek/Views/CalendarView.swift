@@ -219,7 +219,8 @@ struct CalendarView: View {
     /// ⚠️ 화면마다 다르게 지우면 보너스 사용량이 화면에 따라 어긋난다.
     private func deleteRecord(_ record: LeaveRecord) {
         // 보너스에서 쓴 휴가였다면 그만큼 되돌린다
-        if let bonusId = record.bonusLeaveId,
+        // 취소된 기록은 보너스를 쓰지 않았으니 되돌릴 것도 없다
+        if record.status != .cancelled, let bonusId = record.bonusLeaveId,
            let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
             bonus.usedDays = max(0, bonus.usedDays - record.effectiveLeaveDays)
             if bonus.isUsed && bonus.remainingDays > 0 { bonus.isUsed = false }
@@ -565,6 +566,7 @@ struct CalendarGrid: View {
                                 isHoliday: isHoliday(date) && !isMyBreak(date),
                                 isLeave: isLeave(date),
                                 isMakeupWorkday: HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country),
+                                isShiftOff: HolidayService.shiftOffKeys.contains(HolidayService.partTimeKey(date)),
                                 isChildBreak: DayOffCalendar.shared.childBreakName(on: date) != nil,
                                 isHomeHoliday: DayOffCalendar.shared.homeHolidayName(on: date) != nil,
                                 barVisible: showsRestBar(date),
@@ -699,6 +701,8 @@ struct DayCell: View {
     let isLeave: Bool
     /// 중국 调休 보충 근무일 — 토·일이지만 평일처럼 그리고 '班' 표시를 단다
     var isMakeupWorkday: Bool = false
+    /// 교대 근무로 쉬는 평일 — 주말처럼 칠하고 '휴무' 표시를 단다
+    var isShiftOff: Bool = false
     /// 자녀 방학 — 날짜 위쪽에 청록 선 (참고 표시라 배경은 건드리지 않는다)
     var isChildBreak: Bool = false
     /// 사는 곳에만 있는 공휴일 — 쉬는 날로 치지 않으면 빈 링으로, 치면 일반 공휴일처럼 보인다
@@ -736,7 +740,7 @@ struct DayCell: View {
             return .primary
         } else if isHoliday || (isWeekend && calendar.component(.weekday, from: date) != 7) {
             return AppTheme.Colors.holiday
-        } else if isWeekend {
+        } else if isWeekend || isShiftOff {
             return AppTheme.Colors.weekend
         }
         return .primary
@@ -801,8 +805,8 @@ struct DayCell: View {
                 .font(.system(isWide ? .title3 : .body, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
 
-            if isMakeupWorkday && !isSelected {
-                Text(Strings.makeupWorkdayMark)
+            if (isMakeupWorkday || isShiftOff) && !isSelected {
+                Text(isShiftOff ? Strings.shiftOff : Strings.makeupWorkdayMark)
                     .font(.system(size: isWide ? 11 : 9, weight: .semibold))
                     .foregroundStyle(.secondary)
                     .offset(x: markOffset, y: -markOffset)
@@ -1039,7 +1043,8 @@ struct SelectedDateInfo: View {
                 .accessibilityElement(children: .combine)
             }
 
-            if HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country) {
+            // 교대 근무일은 아래 교대 줄이 따로 알린다
+            if HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country, includeShift: false) {
                 HStack {
                     Image(systemName: "briefcase.fill")
                         .foregroundStyle(.secondary)
@@ -1054,7 +1059,11 @@ struct SelectedDateInfo: View {
                     Image(systemName: "nosign")
                         .foregroundStyle(.orange)
                         .voDecorative()
-                    Text(Strings.blackoutDayLabel)
+                    if let period = DayOffCalendar.shared.blackoutPeriodName(on: date) {
+                        Text(Strings.blackoutPeriodDayLabel(period))
+                    } else {
+                        Text(Strings.blackoutDayLabel)
+                    }
                 }
                 .accessibilityElement(children: .combine)
             }
@@ -1078,6 +1087,8 @@ struct SelectedDateInfo: View {
 
             // 파트타임 쉬는 요일 — 이번 주만 다른 날로 옮기기 / 원래대로
             PartTimeDayRow(date: date, country: originCountry)
+            // 교대 근무 — 이 날을 휴무/근무로
+            ShiftDayRow(date: date)
 
             if let childBreak = DayOffCalendar.shared.childBreakName(on: date) {
                 HStack {

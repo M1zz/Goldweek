@@ -320,19 +320,24 @@ struct LeaveRegistrationView: View {
         }
     }
 
-    /// 고른 기간에 공휴일 앞뒤 휴가 제한일이 있는지 (쉬는 날은 연차가 아니니 보지 않는다)
-    var rangeHasBlockedDay: Bool {
+    /// 고른 기간에 휴가 제한일이 있으면 경고 문구 (쉬는 날은 연차가 아니니 보지 않는다)
+    /// 내가 넣은 휴가 불가 기간이 걸리면 그 이름을, 아니면 공휴일 앞뒤 제한 문구를 쓴다.
+    var blockedWarning: String? {
         let dayOff = DayOffCalendar.shared
-        guard dayOff.leaveBlackoutDays > 0 else { return false }
+        guard dayOff.hasLeaveRestrictions else { return nil }
         let cal = Calendar.app
         var d = cal.startOfDay(for: startDate)
         let end = cal.startOfDay(for: length == .full ? endDate : startDate)
+        var nearHoliday = false
         while d <= end {
-            if dayOff.isLeaveBlocked(d) { return true }
+            if !dayOff.isDayOff(d) {
+                if let name = dayOff.blackoutPeriodName(on: d) { return Strings.blackoutPeriodWarning(name) }
+                if dayOff.isLeaveBlocked(d) { nearHoliday = true }
+            }
             guard let next = cal.date(byAdding: .day, value: 1, to: d) else { break }
             d = next
         }
-        return false
+        return nearHoliday ? Strings.blackoutWarning : nil
     }
 
     /// 시작~끝 달력 일수
@@ -343,7 +348,7 @@ struct LeaveRegistrationView: View {
 
     /// 차감 일수 — 주말·공휴일·내 방학은 빼고 센다 (LeaveRecord.effectiveLeaveDays 와 같은 기준)
     var leaveDays: Double {
-        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes) }
+        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes, on: startDate) }
         if length != .full { return length.fraction }
         return Double(DayOffCalendar.shared.workdays(from: startDate, to: endDate))
     }
@@ -360,6 +365,22 @@ struct LeaveRegistrationView: View {
         let target = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: profile.yearStartMonth, calendar: cal)
         let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
         return target > now ? target : nil
+    }
+
+    /// 고른 직접 만든 종류에 연간 한도가 있으면, 이번 휴가를 넣은 뒤 그 해에 남는 양
+    var allowanceNote: (text: String, isOver: Bool)? {
+        guard let kind = customType, kind.hasAllowance, selectedBonusLeave == nil else { return nil }
+        let startMonth = profile.yearStartMonth
+        let year = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: startMonth)
+        let counter = LeaveAllowanceCounter.make(kind: kind, records: Array(allLeaveRecords), year: year, startMonth: startMonth)
+        let end = length == .full ? endDate : startDate
+        let thisLeave = kind.allowanceIsHours
+            ? Double(LeaveKindUsage.workMinutes(length: length, durationMinutes: durationMinutes, start: startDate, end: end))
+            : leaveDays
+        let left = counter.remaining - thisLeave
+        return left < -0.0001
+            ? (Strings.allowanceOverAfterThis(counter.text(-left)), true)
+            : (Strings.allowanceAfterThis(counter.text(left)), false)
     }
 
     /// 고른 종류 이름 — 직접 만든 종류면 그 이름
@@ -488,7 +509,7 @@ struct LeaveRegistrationView: View {
                         .foregroundStyle(.secondary)
                         .voHeader()
                     HStack(spacing: 8) {
-                        ForEach([LeaveLength.quarter, .half, .full, .hours], id: \.self) { len in
+                        ForEach([LeaveLength.quarter, .half, .full] + (LeaveLength.usesHourlyLeave || length == .hours ? [.hours] : []), id: \.self) { len in
                             Button {
                                 HapticFeedback.selection()
                                 length = len
@@ -541,59 +562,63 @@ struct LeaveRegistrationView: View {
                             .foregroundStyle(.secondary)
                             .voHeader()
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
-                            ForEach(LeaveType.categories, id: \.self) { cat in
-                                Button {
-                                    HapticFeedback.selection()
-                                    category = cat
-                                    customType = nil
-                                } label: {
-                                    VStack(spacing: 3) {
-                                        Image(systemName: cat.icon)
-                                            .font(.body)
-                                            .voDecorative()
-                                        Text(Strings.leaveTypeName(cat))
-                                            .font(.body)
-                                            .fontWeight(.semibold)
+                            // 기본 종류와 직접 만든 종류(예: ROL, 공부 휴가)를 사용자가 정한 순서로
+                            ForEach(LeaveStyleStore.shared.orderedKinds(custom: Array(customLeaveTypes))) { ref in
+                                switch ref {
+                                case .builtIn(let cat):
+                                    Button {
+                                        HapticFeedback.selection()
+                                        category = cat
+                                        customType = nil
+                                    } label: {
+                                        VStack(spacing: 3) {
+                                            Image(systemName: cat.icon)
+                                                .font(.body)
+                                                .voDecorative()
+                                            Text(Strings.leaveTypeName(cat))
+                                                .font(.body)
+                                                .fontWeight(.semibold)
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 8)
+                                        .background(customType == nil && category == cat ? cat.themeColor : Color(.systemGray5))
+                                        .foregroundStyle(customType == nil && category == cat ? .white : .primary)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
                                     }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 8)
-                                    .background(customType == nil && category == cat ? cat.themeColor : Color(.systemGray5))
-                                    .foregroundStyle(customType == nil && category == cat ? .white : .primary)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityLabel(Text(Strings.leaveTypeName(cat)))
-                                .accessibilityAddTraits(customType == nil && category == cat ? .isSelected : [])
-                            }
-                            // 직접 만든 종류 (예: ROL, 공부 휴가) — 고른 색으로 달력에 보인다
-                            ForEach(customLeaveTypes) { kind in
-                                let isSelected = customType?.id == kind.id
-                                Button {
-                                    HapticFeedback.selection()
-                                    customType = kind
-                                    category = kind.baseType
-                                } label: {
-                                    VStack(spacing: 3) {
-                                        Circle()
-                                            .fill(isSelected ? Color.white : kind.color)
-                                            .frame(width: 12, height: 12)
-                                            .padding(.vertical, 3)
-                                            .voDecorative()
-                                        Text(kind.name)
-                                            .font(.body)
-                                            .fontWeight(.semibold)
-                                            .lineLimit(1)
-                                            .minimumScaleFactor(0.7)
+                                    .buttonStyle(.plain)
+                                    .accessibilityLabel(Text(Strings.leaveTypeName(cat)))
+                                    .accessibilityAddTraits(customType == nil && category == cat ? .isSelected : [])
+                                case .custom(let id):
+                                    if let kind = customLeaveTypes.first(where: { $0.id == id }) {
+                                        let isSelected = customType?.id == kind.id
+                                        Button {
+                                            HapticFeedback.selection()
+                                            customType = kind
+                                            category = kind.baseType
+                                        } label: {
+                                            VStack(spacing: 3) {
+                                                Circle()
+                                                    .fill(isSelected ? Color.white : kind.color)
+                                                    .frame(width: 12, height: 12)
+                                                    .padding(.vertical, 3)
+                                                    .voDecorative()
+                                                Text(kind.name)
+                                                    .font(.body)
+                                                    .fontWeight(.semibold)
+                                                    .lineLimit(1)
+                                                    .minimumScaleFactor(0.7)
+                                            }
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 8)
+                                            .background(isSelected ? kind.color : Color(.systemGray5))
+                                            .foregroundStyle(isSelected ? .white : .primary)
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        }
+                                        .buttonStyle(.plain)
+                                        .accessibilityLabel(Text(kind.name))
+                                        .accessibilityAddTraits(isSelected ? .isSelected : [])
                                     }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 8)
-                                    .background(isSelected ? kind.color : Color(.systemGray5))
-                                    .foregroundStyle(isSelected ? .white : .primary)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
-                                .buttonStyle(.plain)
-                                .accessibilityLabel(Text(kind.name))
-                                .accessibilityAddTraits(isSelected ? .isSelected : [])
                             }
                             // 종류 만들기·색 바꾸기
                             NavigationLink {
@@ -659,7 +684,7 @@ struct LeaveRegistrationView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
-                    Text(Strings.hoursLeaveFooter(workday: Strings.durationText(minutes: LeaveLength.workdayMinutes)))
+                    Text(Strings.hoursLeaveFooter(workday: Strings.durationText(minutes: LeaveLength.workdayMinutes(on: startDate))))
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -691,9 +716,17 @@ struct LeaveRegistrationView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                // 직장 규정상 공휴일 앞뒤로 못 쉬는 날이 끼어 있으면 알린다 (막지는 않는다 — 예외 승인이 있을 수 있다)
-                if rangeHasBlockedDay {
-                    Label(Strings.blackoutWarning, systemImage: "exclamationmark.triangle.fill")
+                // 연간 한도가 있는 종류(이탈리아 permessi 의 monte ore)면 등록 후 남는 양 — 넘어도 막지는 않는다
+                if let note = allowanceNote {
+                    Label(note.text, systemImage: note.isOver ? "exclamationmark.triangle.fill" : "gauge.with.dots.needle.33percent")
+                        .font(.body)
+                        .foregroundStyle(note.isOver ? .orange : AppTheme.Colors.brand)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                // 직장 규정상 휴가를 못 내는 날이 끼어 있으면 알린다 (막지는 않는다 — 예외 승인이 있을 수 있다)
+                if let warning = blockedWarning {
+                    Label(warning, systemImage: "exclamationmark.triangle.fill")
                         .font(.body)
                         .foregroundStyle(.orange)
                         .fixedSize(horizontal: false, vertical: true)
@@ -864,6 +897,12 @@ struct LeaveRegistrationView: View {
 
         do {
             try modelContext.save()
+            // 대체휴무·공가·병가처럼 보너스와 같은 유형인데 보너스를 고르지 않았으면 여기서 바로 연결한다
+            // (홈에 돌아가도 시트 위라 onAppear 재계산이 돌지 않는다)
+            let records = allLeaveRecords.filter { $0.id != record.id } + [record]
+            if BonusLeaveReconciler.reconcile(records: records, bonuses: unusedBonusLeaves) {
+                try? modelContext.save()
+            }
             let typeName = selectedBonusLeave != nil
                 ? Strings.bonusLeaveTypeName(selectedBonusLeave!.type)
                 : categoryName

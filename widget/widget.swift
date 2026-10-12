@@ -63,7 +63,7 @@ struct LeaveWidgetData {
         nextLeaveDuration: 3,
         daysUntilNextLeave: 5,
         remainingPercentage: 0.67,
-        userName: "홍길동",
+        userName: "",
         elapsedRatio: 0.5,
         actualUsedRatio: 0.33,
         burnRate: 0.66,

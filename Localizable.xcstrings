@@ -5941,55 +5941,55 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Almost here ✈️"
+            "value": "Starting soon ✈️"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "もうすぐ ✈️"
+            "value": "もうすぐです ✈️"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "马上就到 ✈️"
+            "value": "马上开始 ✈️"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "馬上就到 ✈️"
+            "value": "馬上開始 ✈️"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gleich geht's los ✈️"
+            "value": "Bald geht's los ✈️"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "C'est bientôt ✈️"
+            "value": "Ça commence bientôt ✈️"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ya casi ✈️"
+            "value": "Empieza pronto ✈️"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ci siamo quasi ✈️"
+            "value": "Manca poco ✈️"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Falta pouco ✈️"
+            "value": "Começa em breve ✈️"
           }
         },
         "nl": {
@@ -6004,22 +6004,22 @@
             "value": "Snart dags ✈️"
           }
         },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Snart er det tid ✈️"
-          }
-        },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lige om lidt ✈️"
+            "value": "Snart tid ✈️"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snart tid ✈️"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kohta lähdetään ✈️"
+            "value": "Pian alkaa ✈️"
           }
         },
         "pl": {
@@ -6034,28 +6034,28 @@
             "value": "Už brzy ✈️"
           }
         },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Σε λίγο ✈️"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Çok yakında ✈️"
-          }
-        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Совсем скоро ✈️"
           }
         },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakında başlıyor ✈️"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ξεκινά σύντομα ✈️"
+          }
+        },
         "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sebentar lagi ✈️"
+            "value": "Segera dimulai ✈️"
           }
         },
         "th": {
@@ -6077,13 +6077,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Counting down"
+            "value": "Something to look forward to"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "楽しみに待ってます"
+            "value": "楽しみに待っています"
           }
         },
         "zh-Hans": {
@@ -6101,19 +6101,19 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Die Vorfreude steigt"
+            "value": "Vorfreude!"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "J'ai hâte"
+            "value": "À attendre avec impatience"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Con muchas ganas"
+            "value": "Algo que esperar"
           }
         },
         "it": {
@@ -6131,67 +6131,67 @@
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Aftellen maar"
+            "value": "Iets om naar uit te kijken"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Längtar redan"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gleder meg"
+            "value": "Något att se fram emot"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Glæder mig"
+            "value": "Noget at glæde sig til"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noe å glede seg til"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Odotellaan"
+            "value": "Odotettavaa"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Odliczam dni"
+            "value": "Czekamy z niecierpliwością"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Už se těším"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Αντίστροφη μέτρηση"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sabırsızlıkla"
+            "value": "Je na co se těšit"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ждём с нетерпением"
+            "value": "Есть чего ждать"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dört gözle bekleniyor"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Κάτι να περιμένεις"
           }
         },
         "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Menanti"
+            "value": "Ditunggu-tunggu"
           }
         },
         "th": {
@@ -6213,7 +6213,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tomorrow!"
+            "value": "It's tomorrow!"
           }
         },
         "ja": {
@@ -6225,19 +6225,19 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "就在明天！"
+            "value": "就是明天！"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "就在明天！"
+            "value": "就是明天！"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Schon morgen!"
+            "value": "Morgen ist es so weit!"
           }
         },
         "fr": {
@@ -6267,49 +6267,49 @@
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Morgen al!"
+            "value": "Het is morgen!"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "I morgon!"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I morgen!"
+            "value": "Det är imorgon!"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "I morgen!"
+            "value": "Det er i morgen!"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Det er i morgen!"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Huomenna!"
+            "value": "Se on huomenna!"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Już jutro!"
+            "value": "To jutro!"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Už zítra!"
+            "value": "Je to zítra!"
           }
         },
-        "el": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Αύριο!"
+            "value": "Это завтра!"
           }
         },
         "tr": {
@@ -6318,10 +6318,10 @@
             "value": "Yarın!"
           }
         },
-        "ru": {
+        "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Уже завтра!"
+            "value": "Είναι αύριο!"
           }
         },
         "id": {
@@ -6403,25 +6403,25 @@
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Traag"
+            "value": "Langzaam"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Långsam"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Treg"
+            "value": "Långsamt"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Langsom"
+            "value": "Langsomt"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sakte"
           }
         },
         "fi": {
@@ -6433,7 +6433,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wolne"
+            "value": "Wolno"
           }
         },
         "cs": {
@@ -6442,10 +6442,10 @@
             "value": "Pomalé"
           }
         },
-        "el": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Αργός"
+            "value": "Медленно"
           }
         },
         "tr": {
@@ -6454,10 +6454,10 @@
             "value": "Yavaş"
           }
         },
-        "ru": {
+        "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Медленно"
+            "value": "Αργός"
           }
         },
         "id": {
@@ -6548,16 +6548,16 @@
             "value": "Nästa vecka"
           }
         },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I næste uge"
+          }
+        },
         "nb": {
           "stringUnit": {
             "state": "translated",
             "value": "Neste uke"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Næste uge"
           }
         },
         "fi": {
@@ -6578,10 +6578,10 @@
             "value": "Příští týden"
           }
         },
-        "el": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Την επόμενη εβδομάδα"
+            "value": "На следующей неделе"
           }
         },
         "tr": {
@@ -6590,10 +6590,10 @@
             "value": "Gelecek hafta"
           }
         },
-        "ru": {
+        "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "На следующей неделе"
+            "value": "Την επόμενη εβδομάδα"
           }
         },
         "id": {
@@ -6681,19 +6681,19 @@
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Snabb"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rask"
+            "value": "Snabbt"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hurtig"
+            "value": "Hurtigt"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raskt"
           }
         },
         "fi": {
@@ -6705,7 +6705,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Szybkie"
+            "value": "Szybko"
           }
         },
         "cs": {
@@ -6714,10 +6714,10 @@
             "value": "Rychlé"
           }
         },
-        "el": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Γρήγορος"
+            "value": "Быстро"
           }
         },
         "tr": {
@@ -6726,10 +6726,10 @@
             "value": "Hızlı"
           }
         },
-        "ru": {
+        "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Быстро"
+            "value": "Γρήγορος"
           }
         },
         "id": {
@@ -6757,121 +6757,121 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Within a month"
+            "value": "This month"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "1か月以内"
+            "value": "今月です"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "一个月之内"
+            "value": "就在本月"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "一個月之內"
+            "value": "就在本月"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Innerhalb eines Monats"
+            "value": "Diesen Monat"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dans le mois"
+            "value": "Ce mois-ci"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dentro de un mes"
+            "value": "Este mes"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Entro un mese"
+            "value": "Questo mese"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Em até um mês"
+            "value": "Este mês"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Binnen een maand"
+            "value": "Deze maand"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inom en månad"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Innen en måned"
+            "value": "Den här månaden"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inden for en måned"
+            "value": "I denne måned"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denne måneden"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kuukauden sisällä"
+            "value": "Tässä kuussa"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "W ciągu miesiąca"
+            "value": "W tym miesiącu"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Do měsíce"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Μέσα σε έναν μήνα"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bir ay içinde"
+            "value": "Tento měsíc"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Меньше месяца"
+            "value": "В этом месяце"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu ay"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Αυτόν τον μήνα"
           }
         },
         "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dalam sebulan"
+            "value": "Bulan ini"
           }
         },
         "th": {
@@ -6893,121 +6893,121 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Within a week!"
+            "value": "This week!"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "1週間以内！"
+            "value": "今週中！"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "一周之内！"
+            "value": "就在本周！"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "一週之內！"
+            "value": "就在本週！"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keine Woche mehr!"
+            "value": "Diese Woche!"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dans moins d'une semaine !"
+            "value": "Cette semaine !"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "¡En unos días!"
+            "value": "¡Esta semana!"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tra pochi giorni!"
+            "value": "Questa settimana!"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Em poucos dias!"
+            "value": "Esta semana!"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Binnen een week!"
+            "value": "Deze week!"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inom en vecka!"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Innen en uke!"
+            "value": "Den här veckan!"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inden for en uge!"
+            "value": "I denne uge!"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denne uken!"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Alle viikon päästä!"
+            "value": "Tällä viikolla!"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Za mniej niż tydzień!"
+            "value": "W tym tygodniu!"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Do týdne!"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Μέσα σε μια εβδομάδα!"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bir hafta içinde!"
+            "value": "Tento týden!"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Меньше недели!"
+            "value": "На этой неделе!"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu hafta!"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Αυτή την εβδομάδα!"
           }
         },
         "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kurang dari seminggu!"
+            "value": "Minggu ini!"
           }
         },
         "th": {
@@ -7171,19 +7171,19 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ちょうどいい ✓"
+            "value": "適正 ✓"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "正好 ✓"
+            "value": "正常 ✓"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "剛好 ✓"
+            "value": "正常 ✓"
           }
         },
         "de": {
@@ -7195,25 +7195,25 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Équilibré ✓"
+            "value": "Dans les temps ✓"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Equilibrado ✓"
+            "value": "A buen ritmo ✓"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Equilibrato ✓"
+            "value": "In linea ✓"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Equilibrado ✓"
+            "value": "No ritmo ✓"
           }
         },
         "nl": {
@@ -7228,22 +7228,22 @@
             "value": "I fas ✓"
           }
         },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Som planlagt ✓"
+          }
+        },
         "nb": {
           "stringUnit": {
             "state": "translated",
             "value": "I rute ✓"
           }
         },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Passende ✓"
-          }
-        },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sopiva ✓"
+            "value": "Aikataulussa ✓"
           }
         },
         "pl": {
@@ -7255,19 +7255,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Akorát ✓"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ισορροπημένος ✓"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dengeli ✓"
+            "value": "V pořádku ✓"
           }
         },
         "ru": {
@@ -7276,10 +7264,22 @@
             "value": "В норме ✓"
           }
         },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yolunda ✓"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Εντός πλάνου ✓"
+          }
+        },
         "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pas ✓"
+            "value": "Sesuai ✓"
           }
         },
         "th": {
@@ -7450,13 +7450,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "稍慢"
+            "value": "略慢"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "稍慢"
+            "value": "略慢"
           }
         },
         "de": {
@@ -7492,25 +7492,25 @@
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wat traag"
+            "value": "Wat langzaam"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lite långsam"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Litt treg"
+            "value": "Lite långsamt"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lidt langsom"
+            "value": "Lidt langsomt"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Litt sakte"
           }
         },
         "fi": {
@@ -7522,7 +7522,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nieco wolne"
+            "value": "Trochę wolno"
           }
         },
         "cs": {
@@ -7531,10 +7531,10 @@
             "value": "Trochu pomalé"
           }
         },
-        "el": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Λίγο αργός"
+            "value": "Немного медленно"
           }
         },
         "tr": {
@@ -7543,10 +7543,10 @@
             "value": "Biraz yavaş"
           }
         },
-        "ru": {
+        "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Немного медленно"
+            "value": "Λίγο αργός"
           }
         },
         "id": {
@@ -7586,13 +7586,13 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "稍快"
+            "value": "略快"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "稍快"
+            "value": "略快"
           }
         },
         "de": {
@@ -7634,19 +7634,19 @@
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lite snabb"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Litt rask"
+            "value": "Lite snabbt"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lidt hurtig"
+            "value": "Lidt hurtigt"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Litt raskt"
           }
         },
         "fi": {
@@ -7658,7 +7658,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nieco szybkie"
+            "value": "Trochę szybko"
           }
         },
         "cs": {
@@ -7667,10 +7667,10 @@
             "value": "Trochu rychlé"
           }
         },
-        "el": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Λίγο γρήγορος"
+            "value": "Немного быстро"
           }
         },
         "tr": {
@@ -7679,10 +7679,10 @@
             "value": "Biraz hızlı"
           }
         },
-        "ru": {
+        "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Немного быстро"
+            "value": "Λίγο γρήγορος"
           }
         },
         "id": {
@@ -7773,13 +7773,13 @@
             "value": "🎉 Det är idag!"
           }
         },
-        "nb": {
+        "da": {
           "stringUnit": {
             "state": "translated",
             "value": "🎉 Det er i dag!"
           }
         },
-        "da": {
+        "nb": {
           "stringUnit": {
             "state": "translated",
             "value": "🎉 Det er i dag!"
@@ -7788,7 +7788,7 @@
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "🎉 Tänään se alkaa!"
+            "value": "🎉 Se on tänään!"
           }
         },
         "pl": {
@@ -7803,10 +7803,10 @@
             "value": "🎉 Je to dnes!"
           }
         },
-        "el": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "🎉 Είναι σήμερα!"
+            "value": "🎉 Это сегодня!"
           }
         },
         "tr": {
@@ -7815,10 +7815,10 @@
             "value": "🎉 Bugün!"
           }
         },
-        "ru": {
+        "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "🎉 Уже сегодня!"
+            "value": "🎉 Είναι σήμερα!"
           }
         },
         "id": {

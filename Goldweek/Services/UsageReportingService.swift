@@ -300,7 +300,7 @@ enum UsageReportingService {
     static func trend(unit: BucketUnit,
                       events: [EventSample],
                       snapshots: [Snapshot],
-                      calendar: Calendar = .current,
+                      calendar: Calendar = .app,
                       now: Date = Date()) -> [TrendPoint] {
         func bucketStart(_ date: Date) -> Date? {
             calendar.dateInterval(of: unit.calendarComponent, for: date)?.start

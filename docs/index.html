@@ -1,604 +1,164 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goldweek - 스마트 연차 관리 앱</title>
-    <meta name="description" content="연차를 똑똑하게 관리하고 AI 기반 최적의 휴가 일정을 추천받으세요. 공휴일과 주말을 활용한 황금연휴 플랜!">
-    <meta name="keywords" content="연차, 휴가, 황금연휴, 연차관리, 휴가추천, Goldweek, 골드위크, annual leave, vacation planner, 연차캘린더">
-
-    <!-- Open Graph / SNS 공유 -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Goldweek - 스마트 연차 관리 앱">
-    <meta property="og:description" content="연차를 똑똑하게 관리하고 AI 기반 최적의 휴가 일정을 추천받으세요.">
-    <meta property="og:image" content="https://m1zz.github.io/Goldweek/images/og-image.png">
-    <meta property="og:url" content="https://m1zz.github.io/Goldweek/">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Goldweek - 스마트 연차 관리 앱">
-    <meta name="twitter:description" content="연차를 똑똑하게 관리하고 AI 기반 최적의 휴가 일정을 추천받으세요.">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="images/favicon.png">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary: #0066FF;
-            --primary-dark: #0052CC;
-            --secondary: #00C471;
-            --accent: #FF6B35;
-            --bg: #FAFBFC;
-            --text: #1A1A2E;
-            --text-light: #6B7280;
-            --card-bg: #FFFFFF;
-            --gradient: linear-gradient(135deg, #0066FF 0%, #00C471 100%);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        body {
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
-        
-        /* Header */
-        header {
-            background: var(--card-bg);
-            padding: 16px 24px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
-        }
-        
-        .header-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text);
-        }
-        
-        .logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-        }
-        
-        .logo span {
-            font-weight: 700;
-            font-size: 20px;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-        
-        .nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        
-        .download-btn {
-            background: var(--primary);
-            color: white !important;
-            padding: 10px 24px;
-            border-radius: 24px;
-            font-weight: 600;
-        }
-        
-        .download-btn:hover {
-            background: var(--primary-dark);
-        }
-        
-        /* Hero Section */
-        .hero {
-            padding: 160px 24px 100px;
-            text-align: center;
-            background: linear-gradient(180deg, #F0F7FF 0%, var(--bg) 100%);
-        }
-        
-        .hero h1 {
-            font-size: clamp(32px, 6vw, 56px);
-            font-weight: 900;
-            line-height: 1.2;
-            margin-bottom: 24px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .hero p {
-            font-size: clamp(16px, 2.5vw, 20px);
-            color: var(--text-light);
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .app-store-badge {
-            height: 56px;
-            transition: transform 0.2s;
-        }
-        
-        .app-store-badge:hover {
-            transform: scale(1.05);
-        }
-        
-        .hero-image {
-            margin-top: 60px;
-            max-width: 100%;
-        }
-        
-        .hero-image img {
-            max-width: 800px;
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 40px 80px rgba(0,102,255,0.15);
-        }
-        
-        /* Features Section */
-        .features {
-            padding: 100px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .section-title h2 {
-            font-size: clamp(28px, 4vw, 40px);
-            font-weight: 900;
-            margin-bottom: 16px;
-        }
-        
-        .section-title p {
-            color: var(--text-light);
-            font-size: 18px;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 32px;
-        }
-        
-        .feature-card {
-            background: var(--card-bg);
-            padding: 32px;
-            border-radius: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
-        }
-        
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        
-        .feature-card h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        
-        .feature-card p {
-            color: var(--text-light);
-            font-size: 15px;
-        }
-        
-        .icon-calendar { background: linear-gradient(135deg, #E8F4FF 0%, #D1E9FF 100%); }
-        .icon-ai { background: linear-gradient(135deg, #E8FFF1 0%, #D1FFE4 100%); }
-        .icon-bonus { background: linear-gradient(135deg, #FFF4E8 0%, #FFE8D1 100%); }
-        .icon-widget { background: linear-gradient(135deg, #F4E8FF 0%, #E8D1FF 100%); }
-        .icon-backup { background: linear-gradient(135deg, #FFE8F1 0%, #FFD1E4 100%); }
-        .icon-world { background: linear-gradient(135deg, #E8FAFF 0%, #D1F4FF 100%); }
-        
-        /* Screenshot Section */
-        .screenshots {
-            padding: 100px 24px;
-            background: linear-gradient(180deg, var(--bg) 0%, #E8F4FF 100%);
-            overflow: hidden;
-        }
-        
-        .screenshot-slider {
-            display: flex;
-            gap: 24px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 40px;
-        }
-        
-        .screenshot-slider img {
-            width: 220px;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-        }
-        
-        /* Testimonials */
-        .testimonials {
-            padding: 100px 24px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-        
-        .testimonial-card {
-            background: var(--card-bg);
-            padding: 28px;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        }
-        
-        .testimonial-stars {
-            color: #FFB800;
-            font-size: 18px;
-            margin-bottom: 16px;
-        }
-        
-        .testimonial-text {
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 16px;
-        }
-        
-        .testimonial-author {
-            font-size: 14px;
-            color: var(--text-light);
-        }
-        
-        /* CTA Section */
-        .cta {
-            padding: 100px 24px;
-            text-align: center;
-            background: var(--gradient);
-            color: white;
-        }
-        
-        .cta h2 {
-            font-size: clamp(28px, 4vw, 40px);
-            font-weight: 900;
-            margin-bottom: 20px;
-        }
-        
-        .cta p {
-            font-size: 18px;
-            opacity: 0.9;
-            margin-bottom: 40px;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 16px 32px;
-            background: white;
-            color: var(--primary);
-            border-radius: 32px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            transition: transform 0.2s;
-        }
-        
-        .cta-button:hover {
-            transform: scale(1.05);
-        }
-        
-        /* Footer */
-        footer {
-            padding: 60px 24px;
-            background: var(--text);
-            color: white;
-        }
-        
-        .footer-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 24px;
-        }
-        
-        .footer-links {
-            display: flex;
-            gap: 32px;
-        }
-        
-        .footer-links a {
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.2s;
-        }
-        
-        .footer-links a:hover {
-            color: white;
-        }
-        
-        .footer-copy {
-            font-size: 14px;
-            color: rgba(255,255,255,0.5);
-        }
-        
-        /* Mobile */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero {
-                padding: 120px 20px 60px;
-            }
-            
-            .features, .testimonials {
-                padding: 60px 20px;
-            }
-            
-            .screenshot-slider img {
-                width: 160px;
-            }
-            
-            .footer-inner {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-        
-        /* Language Switcher */
-        .lang-switch {
-            display: flex;
-            gap: 8px;
-            padding: 4px;
-            background: var(--bg);
-            border-radius: 8px;
-        }
-        
-        .lang-switch button {
-            padding: 6px 12px;
-            border: none;
-            background: transparent;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        
-        .lang-switch button.active {
-            background: var(--primary);
-            color: white;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>골드위크 - 황금연휴 플래너</title>
+<meta name="description" content="다가오는 공휴일, 연차 며칠이면 긴 연휴가 될까요? 공휴일과 주말을 엮어 가장 적은 연차로 가장 오래 쉬는 조합을 찾아 드려요. 남은 연차는 홈 위젯에서 바로 확인하세요.">
+<link rel="canonical" href="https://m1zz.github.io/Goldweek/">
+<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="골드위크 - 황금연휴 플래너">
+<meta property="og:description" content="다가오는 공휴일, 연차 며칠이면 긴 연휴가 될까요? 공휴일과 주말을 엮어 가장 적은 연차로 가장 오래 쉬는 조합을 찾아 드려요. 남은 연차는 홈 위젯에서 바로 확인하세요.">
+<meta property="og:url" content="https://m1zz.github.io/Goldweek/">
+<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
+<link rel="icon" type="image/png" href="images/app-icon.png">
+<link rel="apple-touch-icon" href="images/app-icon.png">
+<script>
+(function () {
+  var supported = ["ko", "en", "de", "es", "fr", "it", "ja", "pt-BR", "zh-Hans", "zh-Hant", "ru", "id", "nl", "sv", "nb", "da", "fi", "pl", "cs", "el", "tr", "th", "vi"];
+  function pick(tag) {
+    var t = String(tag || '').toLowerCase();
+    if (/^zh-(tw|hk|mo|hant)/.test(t)) return 'zh-Hant';
+    if (/^zh/.test(t)) return 'zh-Hans';
+    if (/^pt/.test(t)) return 'pt-BR';
+    if (/^(nb|no|nn)/.test(t)) return 'nb';
+    var p = t.split('-')[0];
+    for (var i = 0; i < supported.length; i++) if (supported[i].toLowerCase() === p) return supported[i];
+    return null;
+  }
+  var prefs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+  for (var i = 0; i < prefs.length; i++) {
+    var l = pick(prefs[i]);
+    if (l) {
+      if (l !== 'ko') location.replace(l + '/' + location.hash);
+      return;
+    }
+  }
+  location.replace('en/' + location.hash);
+})();
+</script>
+<link rel="stylesheet" href="home.css">
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="header-inner">
-            <a href="#" class="logo">
-                <img src="images/app-icon.png" alt="Goldweek" onerror="this.style.display='none'">
-                <span>Goldweek</span>
-            </a>
-            <nav class="nav-links">
-                <a href="#features">기능</a>
-                <a href="#screenshots">스크린샷</a>
-                <a href="#reviews">리뷰</a>
-                <a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank">다운로드</a>
-            </nav>
-        </div>
-    </header>
-    
-    <!-- Hero -->
-    <section class="hero">
-        <h1>연차, 똑똑하게<br>관리하자 ✨</h1>
-        <p>공휴일과 주말을 활용한 황금연휴 추천부터<br>연차 현황 관리까지. 더 이상 연차 고민하지 마세요.</p>
-        
-        <div class="hero-buttons">
-            <a href="https://apps.apple.com/app/id6755983135" target="_blank">
-                <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/ko-kr?size=250x83" alt="Download on the App Store" class="app-store-badge">
-            </a>
-        </div>
-        
-        <div class="hero-image">
-            <img src="images/hero-mockup.png" alt="Goldweek 앱 화면" onerror="this.parentElement.style.display='none'">
-        </div>
-    </section>
-    
-    <!-- Features -->
-    <section class="features" id="features">
-        <div class="section-title">
-            <h2>왜 Goldweek인가요?</h2>
-            <p>연차 관리의 모든 것을 한 앱에서</p>
-        </div>
-        
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon icon-calendar">📅</div>
-                <h3>연차 관리</h3>
-                <p>연차, 반차, 반반차까지. 다양한 유형의 휴가를 기록하고 남은 연차를 한눈에 확인하세요.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon icon-ai">✨</div>
-                <h3>AI 휴가 추천</h3>
-                <p>공휴일과 주말을 활용해 최소 연차로 최대 연휴를 만드는 황금 조합을 추천해드려요.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon icon-bonus">🎁</div>
-                <h3>보너스 연차</h3>
-                <p>대체휴무, 포상휴가, 리프레시 휴가 등 추가로 받은 연차도 따로 관리할 수 있어요.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon icon-widget">📱</div>
-                <h3>홈 위젯</h3>
-                <p>앱을 열지 않아도 홈 화면에서 바로 남은 연차와 다가오는 휴가를 확인하세요.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon icon-backup">☁️</div>
-                <h3>iCloud 백업</h3>
-                <p>소중한 연차 기록을 iCloud에 안전하게 백업하고 새 기기에서도 복원하세요.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon icon-world">🌏</div>
-                <h3>4개국 지원</h3>
-                <p>한국, 일본, 중국, 미국의 공휴일을 지원해요. 해외 근무자도 OK!</p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Screenshots -->
-    <section class="screenshots" id="screenshots">
-        <div class="section-title">
-            <h2>앱 미리보기</h2>
-            <p>깔끔하고 직관적인 UI</p>
-        </div>
-        
-        <div class="screenshot-slider">
-            <img src="images/screenshot-1.png" alt="홈 화면" onerror="this.src='https://via.placeholder.com/220x476/E8F4FF/0066FF?text=Home'">
-            <img src="images/screenshot-2.png" alt="캘린더" onerror="this.src='https://via.placeholder.com/220x476/E8FFF1/00C471?text=Calendar'">
-            <img src="images/screenshot-3.png" alt="추천" onerror="this.src='https://via.placeholder.com/220x476/FFF4E8/FF6B35?text=Recommend'">
-            <img src="images/screenshot-4.png" alt="등록" onerror="this.src='https://via.placeholder.com/220x476/F4E8FF/9B59B6?text=Register'">
-            <img src="images/screenshot-5.png" alt="설정" onerror="this.src='https://via.placeholder.com/220x476/E8FAFF/3498DB?text=Settings'">
-        </div>
-    </section>
-    
-    <!-- Testimonials -->
-    <section class="testimonials" id="reviews">
-        <div class="section-title">
-            <h2>사용자 리뷰</h2>
-            <p>실제 사용자들의 이야기</p>
-        </div>
-        
-        <div class="testimonial-grid">
-            <div class="testimonial-card">
-                <div class="testimonial-stars">★★★★★</div>
-                <p class="testimonial-text">"연차 계산하느라 엑셀 켤 필요가 없어졌어요. 추천 일정 보고 그대로 신청했는데 9일 연휴 만들어버림 ㅋㅋ"</p>
-                <p class="testimonial-author">— 직장인 A님</p>
-            </div>
-            
-            <div class="testimonial-card">
-                <div class="testimonial-stars">★★★★★</div>
-                <p class="testimonial-text">"위젯으로 남은 연차 바로 보이는 게 진짜 편해요. 매번 앱 들어가서 확인할 필요 없으니까."</p>
-                <p class="testimonial-author">— IT 개발자 B님</p>
-            </div>
-            
-            <div class="testimonial-card">
-                <div class="testimonial-stars">★★★★★</div>
-                <p class="testimonial-text">"대체휴무 관리가 안 되는 앱이 많은데 여기는 보너스 연차로 따로 관리돼서 좋아요."</p>
-                <p class="testimonial-author">— 마케터 C님</p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- CTA -->
-    <section class="cta">
-        <h2>연차 관리,<br>지금 시작하세요</h2>
-        <p>무료 다운로드 · 구독 없음</p>
-        
-        <div class="cta-buttons">
-            <a href="https://apps.apple.com/app/id6755983135" class="cta-button" target="_blank">
-                <span>🍎</span>
-                <span>App Store에서 다운로드</span>
-            </a>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer>
-        <div class="footer-inner">
-            <div class="footer-links">
-                <a href="support.html">고객 지원</a>
-                <a href="support.html#privacy">개인정보 처리방침</a>
-                <a href="https://github.com/M1zz/Goldweek" target="_blank">GitHub</a>
-            </div>
-            <p class="footer-copy">© 2024 Goldweek. All rights reserved.</p>
-        </div>
-    </footer>
-    
-    <script>
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
+<header>
+<div class="header-inner">
+<a href="./" class="logo"><img src="images/app-icon.png" alt="골드위크 앱 아이콘"><span>Goldweek</span></a>
+<nav class="nav-links">
+<a href="#features" class="hide-mobile">기능</a>
+<a href="#screenshots" class="hide-mobile">스크린샷</a>
+<a href="support.html" class="hide-mobile">고객 지원</a>
+<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">다운로드</a>
+</nav>
+</div>
+</header>
+<div class="lang-bar"><nav class="langs" aria-label="언어">
+<a href="ko/" hreflang="ko" lang="ko" aria-current="true">한국어</a>
+<a href="en/" hreflang="en" lang="en">English</a>
+<a href="de/" hreflang="de" lang="de">Deutsch</a>
+<a href="es/" hreflang="es" lang="es">Español</a>
+<a href="fr/" hreflang="fr" lang="fr">Français</a>
+<a href="it/" hreflang="it" lang="it">Italiano</a>
+<a href="ja/" hreflang="ja" lang="ja">日本語</a>
+<a href="pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="id/" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="nl/" hreflang="nl" lang="nl">Nederlands</a>
+<a href="sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="da/" hreflang="da" lang="da">Dansk</a>
+<a href="fi/" hreflang="fi" lang="fi">Suomi</a>
+<a href="pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="tr/" hreflang="tr" lang="tr">Türkçe</a>
+<a href="th/" hreflang="th" lang="th">ไทย</a>
+<a href="vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
+</nav></div>
+
+<section class="hero">
+<h1>최소 연차로 최대 연휴 만들기</h1>
+<p>골드위크는 공휴일과 주말 사이 어디에 연차를 끼우면 가장 오래 쉴 수 있는지 찾아 주는 연휴 플래너입니다.<br>달력을 한 장씩 넘기며 계산하지 않아도, 최소 연차로 최대 연휴를 만드는 조합을 한눈에 보여 드립니다.</p>
+<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/ko-kr?size=250x83" alt="App Store에서 다운로드" class="app-store-badge"></a></div>
+</section>
+
+<section class="features" id="features">
+<div class="section-title"><h2>골드위크로 할 수 있는 일</h2></div>
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon icon-ai">✨</div>
+<h3>연휴 추천</h3>
+<p>다가오는 공휴일마다 연차를 며칠 쓰면 며칠을 이어서 쉴 수 있는지 알려 드립니다. 징검다리 휴일도 놓치지 않습니다.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon icon-world">🌏</div>
+<h3>42개 나라 공휴일</h3>
+<p>한국과 일본, 미국, 유럽, 중동, 남미, 오세아니아까지 42개 나라의 공휴일을 담았습니다. 주나 지역마다 공휴일이 다른 나라는 내 지역을 고르고, 목록에 없는 나라는 공휴일을 직접 넣어 쓸 수 있습니다. 주말 요일과 한 주의 시작 요일도 고를 수 있습니다.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon icon-calendar">📅</div>
+<h3>연차 관리</h3>
+<p>총 연차, 쓴 연차, 남은 연차를 한 화면에서 확인하세요. 반차와 반반차도 기록할 수 있고, 대체휴무나 포상휴가처럼 따로 받은 휴가는 만료일과 함께 관리합니다. 캘린더에서 날짜를 눌러 바로 등록하고 고칠 수 있으며, 회사 휴가 내역 화면을 찍은 사진으로 기록을 한 번에 불러올 수도 있습니다.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon icon-widget">📱</div>
+<h3>홈 위젯과 백업</h3>
+<p>앱을 열지 않아도 홈 화면 위젯에서 남은 연차와 다가오는 휴가를 볼 수 있습니다. 기록은 iCloud에 백업되고, 가족과 휴가 일정을 함께 볼 수도 있습니다. iPhone과 iPad에서 쓸 수 있습니다.</p>
+</div>
+</div>
+</section>
+
+<section class="screenshots" id="screenshots">
+<div class="section-title"><h2>앱 미리보기</h2></div>
+<div class="screenshot-slider">
+<img src="screenshots/marketing/ko/01-home.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+<img src="screenshots/marketing/ko/02-recommend.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+<img src="screenshots/marketing/ko/03-calendar.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+<img src="screenshots/marketing/ko/04-countries.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+<img src="screenshots/marketing/ko/05-settings.png" alt="골드위크 화면" loading="lazy" width="1242" height="2688">
+</div>
+</section>
+
+<section class="cta">
+<h2>올해 연차, 그냥 흘려보내지 말고 가장 길게 쉬어 보세요.</h2>
+<p>무료로 받을 수 있어요. 골드위크 Pro는 원할 때만 한 번 구매하면 됩니다.</p>
+<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/ko-kr?size=250x83" alt="App Store에서 다운로드" class="app-store-badge on-dark"></a></div>
+</section>
+
+<footer>
+<div class="footer-inner">
+<div class="footer-links">
+<a href="support.html">고객 지원</a>
+<a href="privacy.html">개인정보 처리방침</a>
+<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
+</div>
+<p class="footer-copy">© Goldweek. All rights reserved.</p>
+</div>
+</footer>
 </body>
 </html>

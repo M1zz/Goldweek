@@ -6,6 +6,7 @@
 
 import SwiftUI
 import SwiftData
+import PhotosUI
 
 struct HolidayManagementView: View {
     let country: Country
@@ -20,6 +21,7 @@ struct HolidayManagementView: View {
     @State private var holidayToDelete: CustomHoliday?
     @State private var showingDeleteAlert = false
     @State private var showingAddBreak = false
+    @State private var showingSchoolImport = false
     @State private var breakToEdit: SchoolBreak?
     @State private var breakToDelete: SchoolBreak?
     @State private var errorMessage = ""
@@ -63,10 +65,11 @@ struct HolidayManagementView: View {
             .sorted { $0.date < $1.date }
     }
 
-    /// 선택한 연도에 걸친 방학 (겨울방학처럼 해를 넘기는 것도 포함)
+    /// 선택한 연도에 걸친 방학 (겨울방학처럼 해를 넘기는 것도 포함) — 휴가 불가 기간은 설정에서 따로 관리
     private var breaksThisYear: [SchoolBreak] {
         schoolBreaks.filter {
-            calendar.component(.year, from: $0.startDate) <= selectedYear
+            $0.kind != .blackout
+                && calendar.component(.year, from: $0.startDate) <= selectedYear
                 && calendar.component(.year, from: $0.endDate) >= selectedYear
         }
     }
@@ -129,6 +132,9 @@ struct HolidayManagementView: View {
                 modelContext.insert(item)
                 saveOrReport { modelContext.delete(item) }
             }
+        }
+        .sheet(isPresented: $showingSchoolImport) {
+            SchoolCalendarImportSheet()
         }
         .sheet(item: $breakToEdit) { item in
             SchoolBreakEditSheet(defaultYear: selectedYear, existing: item) { name, start, end, kind in
@@ -245,6 +251,19 @@ struct HolidayManagementView: View {
             .background(Color(.systemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal)
+
+            Button {
+                showingSchoolImport = true
+            } label: {
+                Label(Strings.schoolImportTitle, systemImage: "doc.viewfinder")
+                    .font(.body.weight(.semibold))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(Color(.systemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .padding(.horizontal)
+            .padding(.top, 8)
 
             Text(Strings.breakSectionFooter)
                 .font(.body)
@@ -520,7 +539,29 @@ private struct SchoolBreakRow: View {
     let onEdit: () -> Void
     let onDelete: () -> Void
 
-    private var tint: Color { item.kind == .mine ? .indigo : .teal }
+    private var tint: Color {
+        switch item.kind {
+        case .mine: return .indigo
+        case .child: return .teal
+        case .blackout: return .orange
+        }
+    }
+
+    private var icon: String {
+        switch item.kind {
+        case .mine: return "graduationcap.fill"
+        case .child: return "figure.and.child.holdinghands"
+        case .blackout: return "nosign"
+        }
+    }
+
+    private var kindLabel: String {
+        switch item.kind {
+        case .mine: return Strings.myBreakLabel
+        case .child: return Strings.childBreakTag
+        case .blackout: return Strings.blackoutPeriodsTitle
+        }
+    }
 
     private var days: Int {
         (Calendar.app.dateComponents([.day], from: item.startDate, to: item.endDate).day ?? 0) + 1
@@ -530,7 +571,7 @@ private struct SchoolBreakRow: View {
         HStack(spacing: 12) {
             Button(action: onEdit) {
                 HStack(spacing: 12) {
-                    Image(systemName: item.kind == .mine ? "graduationcap.fill" : "figure.and.child.holdinghands")
+                    Image(systemName: icon)
                         .font(.title3)
                         .foregroundStyle(tint)
                         .frame(width: 36)
@@ -541,7 +582,7 @@ private struct SchoolBreakRow: View {
                         Text("\(item.startDate.appMonthDay) – \(item.endDate.appMonthDay) · \(Strings.breakDays(days))")
                             .font(.body)
                             .foregroundStyle(.secondary)
-                        Text(item.kind == .mine ? Strings.myBreakLabel : Strings.childBreakTag)
+                        Text(kindLabel)
                             .font(.body)
                             .foregroundStyle(tint)
                     }
@@ -551,7 +592,7 @@ private struct SchoolBreakRow: View {
             }
             .buttonStyle(.plain)
             .accessibilityElement(children: .combine)
-            .accessibilityHint(Text(Strings.breakEditTitle))
+            .accessibilityHint(Text(item.kind == .blackout ? Strings.blackoutPeriodEditTitle : Strings.breakEditTitle))
 
             Button(role: .destructive, action: onDelete) {
                 Image(systemName: "trash")
@@ -577,19 +618,27 @@ struct SchoolBreakEditSheet: View {
     @State private var startDate: Date
     @State private var endDate: Date
 
-    init(defaultYear: Int, existing: SchoolBreak?, onSave: @escaping (String, Date, Date, SchoolBreakKind) -> Void) {
+    /// 휴가 불가 기간 편집 — 종류 선택을 숨기고 문구를 바꾼다
+    private var isBlackout: Bool { kind == .blackout }
+
+    /// - Parameter kind: 새로 만들 때의 종류 (휴가 불가 기간 화면은 `.blackout`)
+    init(defaultYear: Int, existing: SchoolBreak?, kind defaultKind: SchoolBreakKind = .child,
+         onSave: @escaping (String, Date, Date, SchoolBreakKind) -> Void) {
         self.existing = existing
         self.onSave = onSave
         let cal = Calendar.app
         let thisYear = cal.component(.year, from: Date())
+        let initialKind = existing?.kind ?? defaultKind
         // 기본값: 올해면 오늘부터 4주, 다른 해면 그해 7월 말부터 4주(여름방학 즈음)
         let start = existing?.startDate
             ?? (defaultYear == thisYear ? cal.startOfDay(for: Date())
                 : cal.date(from: DateComponents(year: defaultYear, month: 7, day: 20)) ?? Date())
         _startDate = State(initialValue: start)
-        _endDate = State(initialValue: existing?.endDate ?? cal.date(byAdding: .day, value: 27, to: start) ?? start)
+        // 방학은 4주, 휴가 불가 기간은 1주가 기본
+        let length = initialKind == .blackout ? 6 : 27
+        _endDate = State(initialValue: existing?.endDate ?? cal.date(byAdding: .day, value: length, to: start) ?? start)
         _name = State(initialValue: existing?.name ?? "")
-        _kind = State(initialValue: existing?.kind ?? .child)
+        _kind = State(initialValue: initialKind)
     }
 
     private var isValid: Bool { endDate >= startDate }
@@ -597,7 +646,13 @@ struct SchoolBreakEditSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
+                if isBlackout {
+                    Section {
+                        Text(Strings.blackoutPeriodsFooter)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    }
+                } else { Section {
                     Picker(Strings.breakKindSection, selection: $kind) {
                         Text(Strings.childBreakTag).tag(SchoolBreakKind.child)
                         Text(Strings.myBreakLabel).tag(SchoolBreakKind.mine)
@@ -608,7 +663,7 @@ struct SchoolBreakEditSheet: View {
                         .foregroundStyle(.secondary)
                 } header: {
                     Text(Strings.breakKindSection)
-                }
+                } }
 
                 Section(Strings.breakPeriodSection) {
                     DatePicker(Strings.startDate, selection: $startDate, displayedComponents: .date)
@@ -621,11 +676,13 @@ struct SchoolBreakEditSheet: View {
                 }
 
                 Section(Strings.breakNameSection) {
-                    TextField(Strings.breakNamePlaceholder, text: $name)
+                    TextField(isBlackout ? Strings.blackoutPeriodNamePlaceholder : Strings.breakNamePlaceholder, text: $name)
                         .submitLabel(.done)
                 }
             }
-            .navigationTitle(existing == nil ? Strings.breakAddTitle : Strings.breakEditTitle)
+            .navigationTitle(isBlackout
+                ? (existing == nil ? Strings.blackoutPeriodAddTitle : Strings.blackoutPeriodEditTitle)
+                : (existing == nil ? Strings.breakAddTitle : Strings.breakEditTitle))
             .navigationBarTitleDisplayMode(.inline)
             .onChange(of: startDate) { _, newStart in
                 if endDate < newStart { endDate = newStart }
@@ -637,9 +694,12 @@ struct SchoolBreakEditSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(existing == nil ? Strings.commonAdd : Strings.save) {
                         let trimmed = name.trimmingCharacters(in: .whitespaces)
-                        let finalName = trimmed.isEmpty
-                            ? (kind == .mine ? Strings.myBreakLabel : Strings.childBreakTag)
-                            : trimmed
+                        let fallback: String = switch kind {
+                        case .mine: Strings.myBreakLabel
+                        case .child: Strings.childBreakTag
+                        case .blackout: Strings.blackoutPeriodsTitle
+                        }
+                        let finalName = trimmed.isEmpty ? fallback : trimmed
                         onSave(finalName, startDate, endDate, kind)
                         dismiss()
                     }
@@ -649,6 +709,114 @@ struct SchoolBreakEditSheet: View {
             }
         }
         .presentationDetents([.large])
+    }
+}
+
+// MARK: - 휴가 불가 기간 (설정 → 휴가 제한)
+/// 직장 규정상 휴가를 낼 수 없는 기간 목록. 방학과 같은 `SchoolBreak` 모델(`.blackout`)에 담는다.
+struct BlackoutPeriodsView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \SchoolBreak.startDate) private var schoolBreaks: [SchoolBreak]
+
+    /// 바뀌면 추천을 다시 계산하게 한다
+    var onChange: () -> Void = {}
+
+    @State private var showingAdd = false
+    @State private var itemToEdit: SchoolBreak?
+    @State private var itemToDelete: SchoolBreak?
+    @State private var showingErrorAlert = false
+
+    private let calendar = Calendar.app
+
+    /// 끝나지 않은 기간을 먼저, 지난 기간은 아래로
+    private var periods: [SchoolBreak] {
+        let today = calendar.startOfDay(for: Date())
+        let all = schoolBreaks.filter { $0.kind == .blackout }
+        return all.filter { $0.endDate >= today } + all.filter { $0.endDate < today }.reversed()
+    }
+
+    var body: some View {
+        List {
+            Section {
+                if periods.isEmpty {
+                    HStack(spacing: 10) {
+                        Image(systemName: "nosign")
+                            .foregroundStyle(.secondary)
+                            .voDecorative()
+                        Text(Strings.blackoutPeriodsEmpty)
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    ForEach(periods) { item in
+                        SchoolBreakRow(item: item,
+                                       onEdit: { itemToEdit = item },
+                                       onDelete: { itemToDelete = item })
+                            .listRowInsets(EdgeInsets())
+                    }
+                }
+            } footer: {
+                Text(Strings.blackoutPeriodsFooter)
+                    .font(.body)
+            }
+        }
+        .navigationTitle(Strings.blackoutPeriodsTitle)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button { showingAdd = true } label: {
+                    Image(systemName: "plus")
+                }
+                .accessibilityLabel(Text(Strings.blackoutPeriodAddTitle))
+            }
+        }
+        .sheet(isPresented: $showingAdd) {
+            SchoolBreakEditSheet(defaultYear: calendar.component(.year, from: Date()), existing: nil,
+                                 kind: .blackout) { name, start, end, kind in
+                let item = SchoolBreak(name: name, startDate: start, endDate: end, kind: kind)
+                modelContext.insert(item)
+                save { modelContext.delete(item) }
+            }
+        }
+        .sheet(item: $itemToEdit) { item in
+            SchoolBreakEditSheet(defaultYear: calendar.component(.year, from: item.startDate), existing: item) { name, start, end, _ in
+                item.name = name
+                item.startDate = calendar.startOfDay(for: start)
+                item.endDate = calendar.startOfDay(for: end)
+                save { modelContext.rollback() }
+            }
+        }
+        .alert(Strings.blackoutPeriodDeleteTitle, isPresented: Binding(
+            get: { itemToDelete != nil },
+            set: { if !$0 { itemToDelete = nil } }
+        )) {
+            Button(Strings.cancel, role: .cancel) { itemToDelete = nil }
+            Button(Strings.commonDelete, role: .destructive) {
+                if let item = itemToDelete {
+                    modelContext.delete(item)
+                    save { }
+                }
+                itemToDelete = nil
+            }
+        } message: {
+            Text(itemToDelete?.name ?? "")
+        }
+        .alert(Strings.alert, isPresented: $showingErrorAlert) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(Strings.saveFailed)
+        }
+    }
+
+    private func save(undo: () -> Void) {
+        do {
+            try modelContext.save()
+            HapticFeedback.success()
+            onChange()
+        } catch {
+            undo()
+            showingErrorAlert = true
+            HapticFeedback.error()
+        }
     }
 }
 
@@ -716,4 +884,272 @@ struct AddCustomHolidaySheet: View {
         HolidayManagementView(country: .korea)
     }
     .modelContainer(for: [CustomHoliday.self, SchoolBreak.self], inMemory: true)
+}
+
+// MARK: - 학교 달력 가져오기 (미국 교사 피드백: 학교 달력은 사진·PDF로만 온다)
+
+/// 학교 달력 사진·PDF·붙여 넣은 글에서 쉬는 날과 시험 주간을 찾아 한 번에 넣는다.
+/// 쉬는 날은 내 방학(연차 차감 없음, 공휴일 앞뒤 제한의 기준), 시험 주간은 휴가 불가 기간으로.
+struct SchoolCalendarImportSheet: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @Query private var schoolBreaks: [SchoolBreak]
+
+    private enum Phase { case pick, reading, results }
+
+    @State private var phase: Phase = .pick
+    @State private var pastedText = ""
+    @State private var sourceText = ""
+    @State private var schoolYear = SchoolCalendarParser.schoolYearStart(in: "")
+    @State private var items: [SchoolCalendarParser.Item] = []
+    @State private var selected: Set<UUID> = []
+    @State private var kinds: [UUID: SchoolBreakKind] = [:]
+    @State private var pickedItem: PhotosPickerItem?
+    @State private var showingCamera = false
+    @State private var showingFileImporter = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                switch phase {
+                case .pick: pickView
+                case .reading:
+                    VStack(spacing: 12) {
+                        ProgressView()
+                        Text(Strings.scanningPhoto).font(.body).foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case .results: resultsView
+                }
+            }
+            .navigationTitle(Strings.schoolImportTitle)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(Strings.cancel) { dismiss() }
+                }
+                if phase == .results {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(Strings.schoolImportAdd(selected.count), action: addSelected)
+                            .disabled(selected.isEmpty)
+                            .fontWeight(.semibold)
+                    }
+                }
+            }
+            .onChange(of: pickedItem) { _, item in
+                guard let item else { return }
+                Task { await read { 
+                    guard let data = try await item.loadTransferable(type: Data.self),
+                          let image = UIImage(data: data) else { throw PhotoImportError.invalidImage }
+                    return try await PhotoImportService.shared.recognizeLines(in: image)
+                } }
+            }
+            .sheet(isPresented: $showingCamera) {
+                CameraPicker { image in
+                    Task { await read { try await PhotoImportService.shared.recognizeLines(in: image) } }
+                }
+                .ignoresSafeArea()
+            }
+            .fileImporter(isPresented: $showingFileImporter, allowedContentTypes: [.pdf, .image]) { result in
+                guard case .success(let url) = result else { return }
+                Task { await read {
+                    let scoped = url.startAccessingSecurityScopedResource()
+                    defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+                    if url.pathExtension.lowercased() == "pdf" {
+                        return try await PhotoImportService.shared.text(fromPDF: url)
+                    }
+                    guard let image = UIImage(contentsOfFile: url.path) else { throw PhotoImportError.invalidImage }
+                    return try await PhotoImportService.shared.recognizeLines(in: image)
+                } }
+            }
+        }
+    }
+
+    // MARK: 고르기
+
+    private var pickView: some View {
+        Form {
+            Section {
+                Text(Strings.schoolImportGuide)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                if let errorMessage {
+                    Text(errorMessage).font(.body).foregroundStyle(.orange)
+                }
+            }
+            Section {
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    Button { showingCamera = true } label: {
+                        Label(Strings.takePhoto, systemImage: "camera.fill")
+                    }
+                }
+                PhotosPicker(selection: $pickedItem, matching: .images) {
+                    Label(Strings.choosePhoto, systemImage: "photo.on.rectangle")
+                }
+                Button { showingFileImporter = true } label: {
+                    Label(Strings.schoolImportChooseFile, systemImage: "doc.richtext")
+                }
+            }
+            Section {
+                TextEditor(text: $pastedText)
+                    .frame(minHeight: 120)
+                    .font(.body)
+                    .overlay(alignment: .topLeading) {
+                        if pastedText.isEmpty {
+                            Text(verbatim: "Nov 24-28  Thanksgiving Break\nDec 21 - Jan 1  Winter Break")
+                                .font(.body)
+                                .foregroundStyle(.tertiary)
+                                .padding(.top, 8)
+                                .padding(.leading, 5)
+                                .allowsHitTesting(false)
+                        }
+                    }
+                Button(Strings.schoolImportRead) {
+                    let text = pastedText
+                    Task { await read { text } }
+                }
+                .disabled(pastedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            } header: {
+                Text(Strings.schoolImportPaste)
+            }
+        }
+    }
+
+    // MARK: 결과
+
+    private var resultsView: some View {
+        List {
+            Section {
+                Picker(Strings.schoolImportSchoolYear, selection: $schoolYear) {
+                    ForEach((schoolYear - 2)...(schoolYear + 2), id: \.self) { y in
+                        Text(verbatim: "\(y)–\(String(y + 1).suffix(2))").tag(y)
+                    }
+                }
+                .onChange(of: schoolYear) { _, _ in parse() }
+            } footer: {
+                Text(Strings.schoolImportFooter)
+            }
+
+            if items.isEmpty {
+                Section {
+                    Text(Strings.schoolImportNothingFound)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                }
+            } else {
+                Section {
+                    ForEach(items) { item in row(item) }
+                }
+            }
+
+            Section {
+                Button(Strings.chooseAnotherPhoto) {
+                    phase = .pick
+                    pickedItem = nil
+                }
+            }
+        }
+    }
+
+    private func row(_ item: SchoolCalendarParser.Item) -> some View {
+        let isOn = selected.contains(item.id)
+        let alreadyOff = DayOffCalendar.shared.workdays(from: item.start, to: item.end) == 0
+        let days = (Calendar.app.dateComponents([.day], from: item.start, to: item.end).day ?? 0) + 1
+        return VStack(alignment: .leading, spacing: 8) {
+            Button {
+                if isOn { selected.remove(item.id) } else { selected.insert(item.id) }
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: isOn ? "checkmark.circle.fill" : "circle")
+                        .font(.title3)
+                        .foregroundStyle(isOn ? AppTheme.Colors.brand : Color(.systemGray3))
+                        .voDecorative()
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(item.name.isEmpty ? Strings.schoolImportUntitled : item.name)
+                            .foregroundStyle(.primary)
+                        Text(item.start == item.end ? item.start.appMonthDay
+                             : "\(item.start.appMonthDay) – \(item.end.appMonthDay) · \(Strings.breakDays(days))")
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                        if alreadyOff {
+                            Text(Strings.schoolImportAlreadyOff)
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer()
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(isOn ? .isSelected : [])
+
+            if isOn {
+                Picker(Strings.breakKindSection, selection: Binding(
+                    get: { kinds[item.id] ?? .mine },
+                    set: { kinds[item.id] = $0 })) {
+                    Text(Strings.schoolImportDayOff).tag(SchoolBreakKind.mine)
+                    Text(Strings.blackoutPeriodsTitle).tag(SchoolBreakKind.blackout)
+                }
+                .pickerStyle(.segmented)
+                .padding(.leading, 34)
+            }
+        }
+    }
+
+    // MARK: 동작
+
+    private func read(_ load: @escaping () async throws -> String) async {
+        errorMessage = nil
+        phase = .reading
+        do {
+            let text = try await load()
+            sourceText = text
+            schoolYear = SchoolCalendarParser.schoolYearStart(in: text)
+            parse()
+            phase = .results
+            UsageReportingService.record(event: "school_calendar_read")
+        } catch {
+            errorMessage = error.localizedDescription
+            phase = .pick
+        }
+    }
+
+    private func parse() {
+        let existing = Set(schoolBreaks.map { "\($0.kindRaw)|\($0.startDate.timeIntervalSince1970)|\($0.endDate.timeIntervalSince1970)" })
+        items = SchoolCalendarParser.parse(text: sourceText, schoolYearStart: schoolYear)
+        selected = []
+        kinds = [:]
+        for item in items {
+            let kind: SchoolBreakKind = item.suggestion == .blackout ? .blackout : .mine
+            kinds[item.id] = kind
+            let key = "\(kind.rawValue)|\(item.start.timeIntervalSince1970)|\(item.end.timeIntervalSince1970)"
+            // 이미 넣었거나, 원래 쉬는 날이거나, 교사가 일하는 날은 고르지 않은 채로 둔다
+            guard item.suggestion != .skip, !existing.contains(key) else { continue }
+            if kind == .mine && DayOffCalendar.shared.workdays(from: item.start, to: item.end) == 0 { continue }
+            selected.insert(item.id)
+        }
+    }
+
+    private func addSelected() {
+        var inserted: [SchoolBreak] = []
+        for item in items where selected.contains(item.id) {
+            let kind = kinds[item.id] ?? .mine
+            let name = item.name.isEmpty ? Strings.schoolImportUntitled : item.name
+            let b = SchoolBreak(name: name, startDate: item.start, endDate: item.end, kind: kind)
+            modelContext.insert(b)
+            inserted.append(b)
+        }
+        do {
+            try modelContext.save()
+            HapticFeedback.success()
+            UsageReportingService.record(event: "school_calendar_imported")
+            dismiss()
+        } catch {
+            inserted.forEach { modelContext.delete($0) }
+            errorMessage = Strings.saveFailed
+            HapticFeedback.error()
+        }
+    }
 }

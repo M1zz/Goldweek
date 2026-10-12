@@ -29,18 +29,18 @@ enum LeaveUsageCalculator {
     // MARK: - 회계연도
 
     /// `yearStartMonth`로 시작하는 회계연도의 시작일.
-    static func fiscalYearStart(year: Int, startMonth: Int, calendar: Calendar = .current) -> Date {
+    static func fiscalYearStart(year: Int, startMonth: Int, calendar: Calendar = .app) -> Date {
         calendar.date(from: DateComponents(year: year, month: startMonth, day: 1)) ?? Date()
     }
 
     /// 회계연도의 마지막 순간 (다음 해 시작 1초 전).
-    static func fiscalYearEnd(year: Int, startMonth: Int, calendar: Calendar = .current) -> Date {
+    static func fiscalYearEnd(year: Int, startMonth: Int, calendar: Calendar = .app) -> Date {
         let start = fiscalYearStart(year: year, startMonth: startMonth, calendar: calendar)
         return calendar.date(byAdding: DateComponents(year: 1, second: -1), to: start) ?? start
     }
 
     /// 이 날짜가 속한 회계연도 (예: 기준월 4월이면 2026-03-31은 2025년도).
-    static func fiscalYear(for date: Date, startMonth: Int, calendar: Calendar = .current) -> Int {
+    static func fiscalYear(for date: Date, startMonth: Int, calendar: Calendar = .app) -> Int {
         let year = calendar.component(.year, from: date)
         let month = calendar.component(.month, from: date)
         return month >= startMonth ? year : year - 1
@@ -50,7 +50,7 @@ enum LeaveUsageCalculator {
     static func records(_ records: [LeaveRecord],
                         inFiscalYear year: Int,
                         startMonth: Int,
-                        calendar: Calendar = .current) -> [LeaveRecord] {
+                        calendar: Calendar = .app) -> [LeaveRecord] {
         let start = fiscalYearStart(year: year, startMonth: startMonth, calendar: calendar)
         let end = fiscalYearEnd(year: year, startMonth: startMonth, calendar: calendar)
         return records.filter { $0.startDate >= start && $0.startDate <= end }
@@ -59,7 +59,7 @@ enum LeaveUsageCalculator {
     // MARK: - 상태 판정
 
     /// 이미 지나간 휴가인가 — 상태가 `.used`이거나 종료일이 지난 `.planned`.
-    static func isCompleted(_ record: LeaveRecord, asOf now: Date = Date(), calendar: Calendar = .current) -> Bool {
+    static func isCompleted(_ record: LeaveRecord, asOf now: Date = Date(), calendar: Calendar = .app) -> Bool {
         let today = calendar.startOfDay(for: now)
         switch record.status {
         case .used: return true
@@ -69,7 +69,7 @@ enum LeaveUsageCalculator {
     }
 
     /// 아직 오지 않은 예정 휴가인가.
-    static func isUpcoming(_ record: LeaveRecord, asOf now: Date = Date(), calendar: Calendar = .current) -> Bool {
+    static func isUpcoming(_ record: LeaveRecord, asOf now: Date = Date(), calendar: Calendar = .app) -> Bool {
         let today = calendar.startOfDay(for: now)
         return record.status == .planned && calendar.startOfDay(for: record.endDate) >= today
     }
@@ -141,7 +141,7 @@ enum LeaveUsageCalculator {
                         startMonth: Int,
                         annualGrant: Double? = nil,
                         asOf now: Date = Date(),
-                        calendar: Calendar = .current) -> Summary {
+                        calendar: Calendar = .app) -> Summary {
         let scoped = self.records(records, inFiscalYear: year, startMonth: startMonth, calendar: calendar)
 
         // 보너스도 그 해에 부여된 것만 — 지난 해 내역을 볼 때 올해 받은 보너스가 끼어들면 안 된다.
@@ -187,7 +187,7 @@ enum LeaveUsageCalculator {
                                startMonth: Int,
                                annualGrant: Double? = nil,
                                asOf now: Date = Date(),
-                               calendar: Calendar = .current) -> Summary {
+                               calendar: Calendar = .app) -> Summary {
         summary(records: records,
                 bonuses: bonuses,
                 year: fiscalYear(for: now, startMonth: startMonth, calendar: calendar),
@@ -217,7 +217,7 @@ enum LeaveUsageCalculator {
     }
 
     /// 넘어온 연차의 사용 기한 (그 시각부터는 못 쓴다). 기한이 없으면 nil.
-    static func carryOverExpiry(year: Int, startMonth: Int, calendar: Calendar = .current) -> Date? {
+    static func carryOverExpiry(year: Int, startMonth: Int, calendar: Calendar = .app) -> Date? {
         guard carryOverExpiryMonths > 0 else { return nil }
         return calendar.date(byAdding: .month, value: carryOverExpiryMonths,
                              to: fiscalYearStart(year: year, startMonth: startMonth, calendar: calendar))
@@ -233,7 +233,7 @@ enum LeaveUsageCalculator {
 
     /// 지난해에서 그 해로 넘어오는 연차 (기한과 상관없이 넘어온 양). 앞의 해를 몇 해까지 거슬러 계산한다.
     static func carryOverIn(year: Int, records: [LeaveRecord], annualGrant: Double, startMonth: Int,
-                            depth: Int = 3, calendar: Calendar = .current) -> Double {
+                            depth: Int = 3, calendar: Calendar = .app) -> Double {
         let cap = carryOverMaxDays
         guard cap != 0, depth > 0, annualGrant > 0 else { return 0 }
         let previous = year - 1
@@ -257,7 +257,7 @@ enum LeaveUsageCalculator {
 
     /// 그 해의 넘어온 연차 중 `date` 에 쓸 수 있는 양 — 기한 전이면 전부, 기한 뒤면 그 전에 쓴 만큼만
     static func carryOverUsable(year: Int, on date: Date, records: [LeaveRecord], annualGrant: Double,
-                                startMonth: Int, calendar: Calendar = .current) -> Double {
+                                startMonth: Int, calendar: Calendar = .app) -> Double {
         let carryIn = carryOverIn(year: year, records: records, annualGrant: annualGrant, startMonth: startMonth, calendar: calendar)
         guard carryIn > 0, let expiry = carryOverExpiry(year: year, startMonth: startMonth, calendar: calendar),
               date >= expiry else { return carryIn }
@@ -267,7 +267,7 @@ enum LeaveUsageCalculator {
     /// `date` 에 시작하는 휴가에 쓸 수 있는 연차 — **그 휴가가 속한 해** 기준 (내년 휴가는 내년 연차).
     /// - Parameter excluding: 고치는 중인 기록은 빼고 센다.
     static func availableAnnual(on date: Date, records: [LeaveRecord], annualGrant: Double, startMonth: Int,
-                                excluding: UUID? = nil, calendar: Calendar = .current) -> Double {
+                                excluding: UUID? = nil, calendar: Calendar = .app) -> Double {
         let others = excluding.map { id in records.filter { $0.id != id } } ?? records
         let year = fiscalYear(for: date, startMonth: startMonth, calendar: calendar)
         let carry = carryOverUsable(year: year, on: date, records: others, annualGrant: annualGrant,

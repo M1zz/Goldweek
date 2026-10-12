@@ -511,6 +511,7 @@ private struct FeatureCard: View {
 
 // MARK: - 페이지 4: 셋업 (이름 + 연차 + 기준월)
 struct SetupPage: View {
+    @State private var usesHourlyLeave = LeaveLength.usesHourlyLeave
     @Binding var userName: String
     @Binding var totalLeave: Double
     @Binding var yearStartMonth: Int
@@ -624,6 +625,28 @@ struct SetupPage: View {
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(18)
+                .background(Color(.systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                // 근무 형태 카드 — 고정 / 파트타임 / 교대. 고른 형태의 기능만 앱에 보인다.
+                VStack(alignment: .leading, spacing: 12) {
+                    Label(Strings.workPatternTitle, systemImage: "briefcase")
+                        .font(.headline)
+                    WorkPatternChooser()
+                    Toggle(isOn: $usesHourlyLeave) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.hourlyLeaveToggle)
+                                .font(.body.weight(.semibold))
+                            Text(Strings.hourlyLeaveDesc)
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .tint(AppTheme.Colors.bonus)
+                    .onChange(of: usesHourlyLeave) { _, v in LeaveLength.usesHourlyLeave = v }
                 }
                 .padding(18)
                 .background(Color(.systemBackground))

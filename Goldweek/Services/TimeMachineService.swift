@@ -552,9 +552,20 @@ struct TMLeaveKindData: Codable {
     let colorHex: String
     let deductsFromAnnual: Bool
     let createdAt: Date
+    /// 연간 한도 — 예전 스냅샷에는 없다
+    var allowanceAmount: Double?
+    var allowanceIsHours: Bool?
+    var allowanceCarriesOver: Bool?
+    var allowanceStartBalance: Double?
+    var allowanceStartYear: Int?
 
     init(from kind: CustomLeaveType) {
         self.id = kind.id
+        self.allowanceCarriesOver = kind.allowanceCarriesOver
+        self.allowanceStartBalance = kind.allowanceStartBalance
+        self.allowanceStartYear = kind.allowanceStartYear
+        self.allowanceAmount = kind.allowanceAmount
+        self.allowanceIsHours = kind.allowanceIsHours
         self.name = kind.name
         self.colorHex = kind.colorHex
         self.deductsFromAnnual = kind.deductsFromAnnual
@@ -565,6 +576,11 @@ struct TMLeaveKindData: Codable {
         let kind = CustomLeaveType(name: name, colorHex: colorHex, deductsFromAnnual: deductsFromAnnual)
         kind.id = id
         kind.createdAt = createdAt
+        kind.allowanceAmount = allowanceAmount ?? 0
+        kind.allowanceIsHours = allowanceIsHours ?? true
+        kind.allowanceCarriesOver = allowanceCarriesOver ?? false
+        kind.allowanceStartBalance = allowanceStartBalance ?? 0
+        kind.allowanceStartYear = allowanceStartYear ?? 0
         return kind
     }
 }
