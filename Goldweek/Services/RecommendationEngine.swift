@@ -118,8 +118,8 @@ class RecommendationEngine {
             }
         }
 
-        // 6-2. 공휴일 앞뒤 휴가 제한 — 연차를 내야 하는 날 중 하나라도 제한일이면 뺀다
-        if dayOff.leaveBlackoutDays > 0 {
+        // 6-2. 휴가 제한(공휴일 앞뒤·휴가 불가 기간) — 연차를 내야 하는 날 중 하나라도 제한일이면 뺀다
+        if dayOff.hasLeaveRestrictions {
             scoredRecommendations = scoredRecommendations.filter { rec in
                 !rec.leaveSegments(holidays: rangeHolidays, country: targetCountry, calendar: calendar).contains { seg in
                     var d = seg.start

@@ -349,7 +349,8 @@ struct LeaveHistoryView: View {
         logInfo("Leave record deleted - \(record.startDate) ~ \(record.endDate)", category: .data)
 
         // 보너스 연차 레코드 삭제 시 usedDays 복원
-        if let bonusId = record.bonusLeaveId,
+        // 취소된 기록은 보너스를 쓰지 않았으니 되돌릴 것도 없다
+        if record.status != .cancelled, let bonusId = record.bonusLeaveId,
            let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
             let days = record.effectiveLeaveDays
             bonus.usedDays = max(0, bonus.usedDays - days)
@@ -815,16 +816,6 @@ struct EditLeaveSheet: View {
             }
         }
 
-        // 보너스 연차 레코드를 편집하면 usedDays 차분 반영
-        if let bonusId = record.bonusLeaveId,
-           let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
-            let diff = newLeaveDays - originalLeaveDays
-            if abs(diff) > 0.001 {
-                bonus.usedDays = max(0, bonus.usedDays + diff)
-                if bonus.isUsed && bonus.remainingDays > 0 { bonus.isUsed = false }
-            }
-        }
-
         // 기록 업데이트 (records가 source of truth이므로 profile.usedLeave 조정 불필요)
         record.startDate = startDate
         record.endDate = length != .full ? startDate : endDate
@@ -835,6 +826,9 @@ struct EditLeaveSheet: View {
         record.durationMinutes = length == .hours ? durationMinutes : nil
         record.status = leaveStatus
         record.note = note
+
+        // 보너스 사용량은 기록 기준으로 다시 센다 — 일수 변경뿐 아니라 취소↔예정 전환도 반영된다
+        BonusLeaveReconciler.reconcile(records: allLeaveRecords, bonuses: allBonusLeaves)
 
         do {
             try modelContext.save()

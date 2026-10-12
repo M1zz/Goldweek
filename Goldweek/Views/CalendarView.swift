@@ -219,7 +219,8 @@ struct CalendarView: View {
     /// ⚠️ 화면마다 다르게 지우면 보너스 사용량이 화면에 따라 어긋난다.
     private func deleteRecord(_ record: LeaveRecord) {
         // 보너스에서 쓴 휴가였다면 그만큼 되돌린다
-        if let bonusId = record.bonusLeaveId,
+        // 취소된 기록은 보너스를 쓰지 않았으니 되돌릴 것도 없다
+        if record.status != .cancelled, let bonusId = record.bonusLeaveId,
            let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
             bonus.usedDays = max(0, bonus.usedDays - record.effectiveLeaveDays)
             if bonus.isUsed && bonus.remainingDays > 0 { bonus.isUsed = false }
@@ -1054,7 +1055,11 @@ struct SelectedDateInfo: View {
                     Image(systemName: "nosign")
                         .foregroundStyle(.orange)
                         .voDecorative()
-                    Text(Strings.blackoutDayLabel)
+                    if let period = DayOffCalendar.shared.blackoutPeriodName(on: date) {
+                        Text(Strings.blackoutPeriodDayLabel(period))
+                    } else {
+                        Text(Strings.blackoutDayLabel)
+                    }
                 }
                 .accessibilityElement(children: .combine)
             }

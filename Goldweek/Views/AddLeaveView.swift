@@ -316,19 +316,24 @@ struct LeaveRegistrationView: View {
         }
     }
 
-    /// 고른 기간에 공휴일 앞뒤 휴가 제한일이 있는지 (쉬는 날은 연차가 아니니 보지 않는다)
-    var rangeHasBlockedDay: Bool {
+    /// 고른 기간에 휴가 제한일이 있으면 경고 문구 (쉬는 날은 연차가 아니니 보지 않는다)
+    /// 내가 넣은 휴가 불가 기간이 걸리면 그 이름을, 아니면 공휴일 앞뒤 제한 문구를 쓴다.
+    var blockedWarning: String? {
         let dayOff = DayOffCalendar.shared
-        guard dayOff.leaveBlackoutDays > 0 else { return false }
+        guard dayOff.hasLeaveRestrictions else { return nil }
         let cal = Calendar.current
         var d = cal.startOfDay(for: startDate)
         let end = cal.startOfDay(for: length == .full ? endDate : startDate)
+        var nearHoliday = false
         while d <= end {
-            if dayOff.isLeaveBlocked(d) { return true }
+            if !dayOff.isDayOff(d) {
+                if let name = dayOff.blackoutPeriodName(on: d) { return Strings.blackoutPeriodWarning(name) }
+                if dayOff.isLeaveBlocked(d) { nearHoliday = true }
+            }
             guard let next = cal.date(byAdding: .day, value: 1, to: d) else { break }
             d = next
         }
-        return false
+        return nearHoliday ? Strings.blackoutWarning : nil
     }
 
     /// 시작~끝 달력 일수
@@ -687,9 +692,9 @@ struct LeaveRegistrationView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                // 직장 규정상 공휴일 앞뒤로 못 쉬는 날이 끼어 있으면 알린다 (막지는 않는다 — 예외 승인이 있을 수 있다)
-                if rangeHasBlockedDay {
-                    Label(Strings.blackoutWarning, systemImage: "exclamationmark.triangle.fill")
+                // 직장 규정상 휴가를 못 내는 날이 끼어 있으면 알린다 (막지는 않는다 — 예외 승인이 있을 수 있다)
+                if let warning = blockedWarning {
+                    Label(warning, systemImage: "exclamationmark.triangle.fill")
                         .font(.body)
                         .foregroundStyle(.orange)
                         .fixedSize(horizontal: false, vertical: true)
@@ -860,6 +865,12 @@ struct LeaveRegistrationView: View {
 
         do {
             try modelContext.save()
+            // 대체휴무·공가·병가처럼 보너스와 같은 유형인데 보너스를 고르지 않았으면 여기서 바로 연결한다
+            // (홈에 돌아가도 시트 위라 onAppear 재계산이 돌지 않는다)
+            let records = allLeaveRecords.filter { $0.id != record.id } + [record]
+            if BonusLeaveReconciler.reconcile(records: records, bonuses: unusedBonusLeaves) {
+                try? modelContext.save()
+            }
             let typeName = selectedBonusLeave != nil
                 ? Strings.bonusLeaveTypeName(selectedBonusLeave!.type)
                 : categoryName

@@ -266,7 +266,8 @@ struct PhotoImportSheet: View {
         var assignments: [UUID: UUID] = [:]
         for candidate in candidates {
             guard !candidate.suggestedType.deductsFromAnnual,
-                  let bonusType = BonusLeaveType.matching(candidate.title) else { continue }
+                  let bonusType = BonusLeaveType(category: candidate.suggestedType)
+                    ?? BonusLeaveType.matching(candidate.title) else { continue }
             guard let bonus = availableBonusLeaves.first(where: {
                 $0.type == bonusType && (remaining[$0.id] ?? 0) >= candidate.effectiveDays
             }) else { continue }

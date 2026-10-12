@@ -20,6 +20,9 @@ struct SettingsView: View {
     @Environment(\.requestReview) private var requestReview
     @Query private var leaveRecords: [LeaveRecord]
     @Query(sort: \BonusLeave.grantedDate, order: .reverse) private var bonusLeaves: [BonusLeave]
+    @Query private var schoolBreaks: [SchoolBreak]
+
+    private var blackoutPeriodCount: Int { schoolBreaks.filter { $0.kind == .blackout }.count }
 
     /// 개발자 모드 — 지원 섹션의 버전 행을 7번 탭하면 켜진다(키는 LeeoKit과 공유).
     /// 켜지면 접수된 피드백(인박스)·사용 통계·안정성 화면이 보인다.
@@ -609,6 +612,20 @@ struct SettingsView: View {
                         LeaveKindsView()
                     } label: {
                         Label(Strings.leaveKindsTitle, systemImage: "paintpalette")
+                    }
+
+                    // 결산·성수기처럼 직장에서 휴가를 막는 기간 — 날짜를 직접 넣는다
+                    NavigationLink {
+                        BlackoutPeriodsView { recommendationEngine.invalidateCache() }
+                    } label: {
+                        HStack {
+                            Text(Strings.blackoutPeriodsTitle)
+                            Spacer()
+                            if blackoutPeriodCount > 0 {
+                                Text("\(blackoutPeriodCount)")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     }
 
                     // 연차를 달력 일수로 세는지 근무일로 세는지 — 묻는 사람이 많다

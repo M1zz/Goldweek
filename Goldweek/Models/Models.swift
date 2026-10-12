@@ -982,8 +982,12 @@ enum LeaveRecordMaintenance {
 /// 저장된 `usedDays` 카운터가 실제 기록과 어긋나거나, 보너스 유형에 해당하는
 /// 특별휴가 기록이 보너스에 연결(`bonusLeaveId`)되지 않은 과거 데이터를 함께 보정한다.
 enum BonusLeaveReconciler {
-    /// 1) 연차를 차감하지 않는 미연결 특별휴가 기록을, 유형(이름)이 맞고 잔여가 충분한 보너스에 자동 연결
+    /// 1) 연차를 차감하지 않는 미연결 특별휴가 기록을, 유형이 맞고 잔여가 충분한 보너스에 자동 연결
+    ///    — 유형은 휴가 카테고리(대체휴무·공가·병가)로 먼저 판단하고, 없으면 메모에서 찾는다
     /// 2) 모든 보너스의 `usedDays`/`isUsed`를 연결된 기록 기준으로 재산정
+    ///
+    /// ⚠️ 취소(`.cancelled`)된 기록은 보너스를 쓰지 않은 것이다 — 연결은 남겨 두되 사용량에 세지 않는다
+    ///    (`LeaveUsageCalculator`의 "취소는 어디에도 세지 않는다"와 같은 규칙).
     /// - Returns: 데이터가 실제로 변경되면 true (호출 측에서 save 트리거용)
     @discardableResult
     static func reconcile(records: [LeaveRecord], bonuses: [BonusLeave]) -> Bool {
@@ -993,15 +997,15 @@ enum BonusLeaveReconciler {
         // 잔여 추적 — 이미 연결된 기록부터 차감
         var remaining: [UUID: Double] = [:]
         for b in bonuses { remaining[b.id] = b.days }
-        for r in records {
+        for r in records where r.status != .cancelled {
             guard let id = r.bonusLeaveId, remaining[id] != nil else { continue }
             remaining[id]! -= r.effectiveLeaveDays
         }
 
         // 1단계: 미연결 특별휴가 → 유형 매칭 보너스 자동 연결 (오래된 기록부터 안정적으로)
         for r in records.sorted(by: { $0.startDate < $1.startDate }) {
-            guard r.bonusLeaveId == nil, !r.type.deductsFromAnnual else { continue }
-            guard let matchType = BonusLeaveType.matching(r.note) else { continue }
+            guard r.bonusLeaveId == nil, r.status != .cancelled, !r.type.deductsFromAnnual else { continue }
+            guard let matchType = BonusLeaveType(category: r.category) ?? BonusLeaveType.matching(r.note) else { continue }
             let days = r.effectiveLeaveDays
             guard let target = bonuses.first(where: {
                 $0.type == matchType && (remaining[$0.id] ?? 0) >= days
@@ -1014,7 +1018,7 @@ enum BonusLeaveReconciler {
         // 2단계: usedDays / isUsed 재산정
         for b in bonuses {
             let used = records
-                .filter { $0.bonusLeaveId == b.id }
+                .filter { $0.bonusLeaveId == b.id && $0.status != .cancelled }
                 .reduce(0.0) { $0 + $1.effectiveLeaveDays }
             if abs(used - b.usedDays) > 0.001 {
                 b.usedDays = used
@@ -1046,6 +1050,17 @@ enum BonusLeaveType: String, Codable, CaseIterable, Identifiable {
 
     /// 휴가 유형명 원문(예: "자녀돌봄(1/2)", "포상휴가")에서 대응하는 보너스 유형을 추론.
     /// 사진 가져오기에서 특별휴가류를 보너스 연차와 자동 연결할 때 사용.
+    /// 휴가 카테고리에 대응하는 보너스 유형 — 대체휴무·공가·병가는 이름이 같은 보너스에서 쓴다.
+    /// 메모가 비어 있거나 한국어가 아니어도 카테고리만으로 연결되게 한다.
+    init?(category: LeaveType) {
+        switch category {
+        case .compensatory: self = .compensatory
+        case .official: self = .official
+        case .sick: self = .sick
+        default: return nil
+        }
+    }
+
     static func matching(_ text: String) -> BonusLeaveType? {
         let table: [(keyword: String, type: BonusLeaveType)] = [
             ("대체", .compensatory), ("보상", .compensatory),
@@ -1132,6 +1147,10 @@ enum SchoolBreakKind: String, CaseIterable, Identifiable {
     case child
     /// 내 방학(교사·학생) — 공휴일처럼 쉬는 날. 연차 차감 없음, 추천·번아웃 계산에서 휴식으로 본다.
     case mine
+    /// 휴가 불가 기간 — 직장 규정상 휴가를 낼 수 없는 기간(결산·성수기 등). 쉬는 날이 아니라 일하는 날이며,
+    /// 추천·최적 플랜이 피하고 휴가 등록 때 경고한다. 방학과 같은 모델에 담아 동기화·타임머신을 그대로 탄다.
+    /// ⚠️ 이 값을 모르는 예전 버전은 자녀 방학(`child`)으로 읽는다 — 연차 계산엔 영향 없음.
+    case blackout
 
     var id: String { rawValue }
 }

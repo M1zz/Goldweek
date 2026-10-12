@@ -1915,3 +1915,128 @@ final class BurnoutHolidayRestTests: XCTestCase {
         XCTAssertEqual(a.daysSinceLastBreak, 2)   // 한글날 연휴 10/11 끝
     }
 }
+
+// MARK: - 보너스 차감 · 사진 가져오기 빠진 날 채우기
+
+final class BonusAndPhotoImportTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: 2026, month: m, day: day))! }
+    /// 주말만 쉬는 날로 본다 (공휴일 설정에 흔들리지 않게)
+    private func weekend(_ date: Date) -> Bool { cal.isDateInWeekend(date) }
+
+    // 대체휴무 카테고리로 등록하고 보너스를 고르지 않아도, 메모가 비어 있어도 같은 유형 보너스에서 차감된다
+    func testReconcile_LinksByCategoryWithoutNote() {
+        let bonus = BonusLeave(days: 2, type: .compensatory)
+        let day = Calendar.current.startOfDay(for: Date())
+        let rec = LeaveRecord(startDate: day, endDate: day, type: .compensatory, status: .planned, note: "", length: .half)
+        BonusLeaveReconciler.reconcile(records: [rec], bonuses: [bonus])
+        XCTAssertEqual(rec.bonusLeaveId, bonus.id)
+        XCTAssertEqual(bonus.usedDays, 0.5)
+    }
+
+    // 취소된 기록은 보너스를 쓰지 않은 것
+    func testReconcile_IgnoresCancelled() {
+        let bonus = BonusLeave(days: 1, type: .reward)
+        let day = Calendar.current.startOfDay(for: Date())
+        let rec = LeaveRecord(startDate: day, endDate: day, type: .annual, status: .cancelled, bonusLeaveId: bonus.id)
+        bonus.usedDays = 1; bonus.isUsed = true
+        BonusLeaveReconciler.reconcile(records: [rec], bonuses: [bonus])
+        XCTAssertEqual(bonus.usedDays, 0)
+        XCTAssertFalse(bonus.isUsed)
+    }
+
+    private func leave(_ s: Date, _ e: Date, _ type: LeaveType = .annual, _ length: LeaveLength = .full) -> PhotoImportService.ImportedLeave {
+        .init(title: "연차", startDate: s, endDate: e, type: type, length: length)
+    }
+
+    // 앱엔 10/5~10/7 하나, 사진엔 하루씩 → 전부 중복
+    func testPhoto_DailyRowsCoveredByRange() {
+        let existing = [LeaveRecord(startDate: d(10, 5), endDate: d(10, 7), status: .used)]
+        let r = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5)), leave(d(10, 6), d(10, 6)), leave(d(10, 7), d(10, 7))],
+                                                 existingRecords: existing, isDayOff: weekend)
+        XCTAssertTrue(r.candidates.isEmpty)
+        XCTAssertEqual(r.duplicateCount, 3)
+    }
+
+    // 유형이 달라도 같은 날 종일이 이미 있으면 중복
+    func testPhoto_DifferentTypeSameDayIsDuplicate() {
+        let existing = [LeaveRecord(startDate: d(10, 5), endDate: d(10, 5), type: .annual, status: .used)]
+        let r = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5), .compensatory)],
+                                                 existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(r.duplicateCount, 1)
+    }
+
+    // 사진 10/5(월)~10/9(금) 중 10/7만 등록돼 있으면 → 10/5~6, 10/8~9 두 구간만 새로
+    func testPhoto_PartialRangeAddsOnlyMissingDays() {
+        let existing = [LeaveRecord(startDate: d(10, 7), endDate: d(10, 7), status: .used)]
+        let r = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 9))], existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(r.duplicateCount, 0)
+        XCTAssertEqual(r.candidates.map { cal.component(.day, from: $0.startDate) }, [5, 8])
+        XCTAssertEqual(r.candidates.map { cal.component(.day, from: $0.endDate) }, [6, 9])
+    }
+
+    // 사이에 낀 주말은 구간을 끊지 않는다: 10/9(금)~10/12(월) 중 아무것도 없으면 한 건 그대로
+    func testPhoto_WeekendInsideRangeKeepsOneSegment() {
+        let r = PhotoImportService.missingLeaves([leave(d(10, 9), d(10, 12))], existingRecords: [], isDayOff: weekend)
+        XCTAssertEqual(r.candidates.count, 1)
+        XCTAssertEqual(cal.component(.day, from: r.candidates[0].endDate), 12)
+    }
+
+    // 오전 반차가 있는 날: 사진에 반차 하나 더 → 새로 넣는다, 종일 → 하루를 넘치니 중복
+    func testPhoto_HalfDays() {
+        let existing = [LeaveRecord(startDate: d(10, 5), endDate: d(10, 5), status: .used, length: .half)]
+        let half = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5), .annual, .half)],
+                                                    existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(half.candidates.count, 1)
+        let full = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5))],
+                                                    existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(full.duplicateCount, 1)
+    }
+
+    // 취소된 기록이 있던 날은 빈 날로 본다
+    func testPhoto_CancelledRecordDoesNotBlock() {
+        let existing = [LeaveRecord(startDate: d(10, 5), endDate: d(10, 5), status: .cancelled)]
+        let r = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5))], existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(r.candidates.count, 1)
+    }
+}
+
+// MARK: - 휴가 불가 기간 (사용자 지정 blackout dates)
+
+final class BlackoutPeriodTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: 2026, month: m, day: day))! }
+
+    override func tearDown() {
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        super.tearDown()
+    }
+
+    func testBlackoutPeriodBlocksLeaveButIsNotDayOff() {
+        let period = SchoolBreak(name: "분기 결산", startDate: d(12, 21), endDate: d(12, 24), kind: .blackout)
+        let dayOff = DayOffCalendar.shared
+        dayOff.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [period])
+
+        XCTAssertTrue(dayOff.hasLeaveRestrictions)
+        XCTAssertTrue(dayOff.isLeaveBlocked(d(12, 22)))
+        XCTAssertEqual(dayOff.blackoutPeriodName(on: d(12, 22)), "분기 결산")
+        XCTAssertFalse(dayOff.isLeaveBlocked(d(12, 28)))
+        // 쉬는 날이 아니다 — 연차 차감 일수는 그대로
+        XCTAssertFalse(dayOff.isDayOff(d(12, 22)))
+        XCTAssertEqual(dayOff.workdays(from: d(12, 21), to: d(12, 24)), 4)
+        // 최적 플랜이 피할 날
+        let blocked = dayOff.blockedDates(in: 2026)
+        XCTAssertTrue(blocked.contains(cal.startOfDay(for: d(12, 21))))
+        XCTAssertTrue(blocked.contains(cal.startOfDay(for: d(12, 24))))
+        XCTAssertFalse(blocked.contains(cal.startOfDay(for: d(12, 25))))
+    }
+
+    func testBlackoutPeriodChangesFingerprint() {
+        let dayOff = DayOffCalendar.shared
+        dayOff.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        let before = dayOff.fingerprint
+        let period = SchoolBreak(name: "성수기", startDate: d(7, 1), endDate: d(7, 31), kind: .blackout)
+        dayOff.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [period])
+        XCTAssertNotEqual(before, dayOff.fingerprint, "기간을 넣으면 추천 캐시가 바뀌어야 한다")
+    }
+}
