@@ -982,3 +982,142 @@ extension Strings {
         }
     }
 }
+
+// MARK: - 이전 연차 입력 — 시간 단위 · 남은 연차로 입력 (대만 피드백)
+
+extension Strings {
+    /// 이전 연차 입력 — 사용한 만큼
+    static var pastLeaveModeUsed: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "사용한 연차"
+        case .english: return "Leave used"
+        case .japanese: return "使った有給"
+        case .chinese: return "已用年假"
+        case .german: return "Genommen"
+        case .french: return "Congés pris"
+        case .spanish: return "Usadas"
+        case .italian: return "Ferie usate"
+        case .portuguese: return "Usadas"
+        case .chineseTraditional: return "已用特休"
+        case .dutch: return "Gebruikt"
+        case .swedish: return "Använt"
+        case .norwegian: return "Brukt"
+        case .danish: return "Brugt"
+        case .finnish: return "Käytetty"
+        case .polish: return "Wykorzystany"
+        case .czech: return "Využitá"
+        case .greek: return "Χρησιμοποιημένη"
+        case .turkish: return "Kullanılan"
+        case .russian: return "Использовано"
+        case .indonesian: return "Terpakai"
+        }
+    }
+
+    /// 이전 연차 입력 — 지금 남은 만큼 (중간에 앱을 시작한 경우)
+    static var pastLeaveModeRemaining: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "지금 남은 연차"
+        case .english: return "Leave left now"
+        case .japanese: return "今の残り有給"
+        case .chinese: return "目前剩余年假"
+        case .german: return "Jetzt übrig"
+        case .french: return "Restant aujourd'hui"
+        case .spanish: return "Quedan ahora"
+        case .italian: return "Ferie residue ora"
+        case .portuguese: return "Restantes agora"
+        case .chineseTraditional: return "目前剩餘特休"
+        case .dutch: return "Nu over"
+        case .swedish: return "Kvar nu"
+        case .norwegian: return "Igjen nå"
+        case .danish: return "Tilbage nu"
+        case .finnish: return "Jäljellä nyt"
+        case .polish: return "Zostało teraz"
+        case .czech: return "Zbývá teď"
+        case .greek: return "Απομένει τώρα"
+        case .turkish: return "Şu an kalan"
+        case .russian: return "Осталось сейчас"
+        case .indonesian: return "Sisa sekarang"
+        }
+    }
+
+    /// 남은 연차로 넣으면 사용 연차로 바꿔 기록
+    static func pastLeaveWillRecordUsed(_ amount: String) -> String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "사용한 연차 \(amount)로 기록돼요"
+        case .english: return "Recorded as \(amount) used"
+        case .japanese: return "使った有給\(amount)として記録します"
+        case .chinese: return "将记录为已用 \(amount)"
+        case .german: return "Wird als \(amount) genommen erfasst"
+        case .french: return "Enregistré comme \(amount) pris"
+        case .spanish: return "Se registrará como \(amount) usadas"
+        case .italian: return "Registrate come \(amount) usate"
+        case .portuguese: return "Registrado como \(amount) usadas"
+        case .chineseTraditional: return "將記錄為已用 \(amount)"
+        case .dutch: return "Wordt opgeslagen als \(amount) gebruikt"
+        case .swedish: return "Sparas som \(amount) använt"
+        case .norwegian: return "Lagres som \(amount) brukt"
+        case .danish: return "Gemmes som \(amount) brugt"
+        case .finnish: return "Tallennetaan käytetyksi: \(amount)"
+        case .polish: return "Zapisane jako wykorzystane: \(amount)"
+        case .czech: return "Uloží se jako využito \(amount)"
+        case .greek: return "Καταγράφεται ως χρησιμοποιημένη \(amount)"
+        case .turkish: return "Kullanılan \(amount) olarak kaydedilir"
+        case .russian: return "Будет записано как использовано \(amount)"
+        case .indonesian: return "Dicatat sebagai terpakai \(amount)"
+        }
+    }
+
+    /// 남은 연차가 받은 연차보다 많을 때
+    static var pastLeaveRemainingTooMuch: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "올해 받은 연차보다 많아요. 설정에서 총 연차를 먼저 바꿔 주세요."
+        case .english: return "That's more than this year's total. Change your total leave in Settings first."
+        case .japanese: return "今年の付与日数より多いです。先に設定で総日数を変更してください。"
+        case .chinese: return "超过了今年的年假总数。请先在设置中修改年假总数。"
+        case .german: return "Das ist mehr als dein Jahresurlaub. Ändere zuerst den Gesamturlaub in den Einstellungen."
+        case .french: return "C'est plus que le total de l'année. Modifiez d'abord le total dans Réglages."
+        case .spanish: return "Es más que el total del año. Cambia primero el total en Ajustes."
+        case .italian: return "È più del totale dell'anno. Modifica prima il totale ferie nelle Impostazioni."
+        case .portuguese: return "É mais que o total do ano. Altere primeiro o total nos Ajustes."
+        case .chineseTraditional: return "超過今年的特休總數。請先在設定中修改特休總數。"
+        case .dutch: return "Dat is meer dan je jaartotaal. Pas eerst je totale verlof aan in Instellingen."
+        case .swedish: return "Det är mer än årets totala. Ändra totalen i Inställningar först."
+        case .norwegian: return "Det er mer enn årets totale. Endre totalen i Innstillinger først."
+        case .danish: return "Det er mere end årets samlede. Ret totalen i Indstillinger først."
+        case .finnish: return "Se on enemmän kuin vuoden kokonaismäärä. Muuta ensin kokonaismäärä asetuksista."
+        case .polish: return "To więcej niż roczna pula. Najpierw zmień łączny urlop w Ustawieniach."
+        case .czech: return "To je víc než roční nárok. Nejdřív změňte celkovou dovolenou v Nastavení."
+        case .greek: return "Είναι περισσότερο από το σύνολο της χρονιάς. Αλλάξτε πρώτα το σύνολο στις Ρυθμίσεις."
+        case .turkish: return "Bu yılın toplamından fazla. Önce Ayarlar'da toplam izni değiştirin."
+        case .russian: return "Это больше годового количества. Сначала измените общее число в настройках."
+        case .indonesian: return "Lebih dari total tahun ini. Ubah total cuti di Pengaturan dulu."
+        }
+    }
+
+    /// 이미 일괄 입력한 기록이 있을 때
+    static var pastLeaveReplacesExisting: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "전에 일괄 입력한 값은 이 값으로 바뀌어요."
+        case .english: return "Your earlier bulk entry will be replaced."
+        case .japanese: return "以前の一括入力はこの値に置き換わります。"
+        case .chinese: return "之前的批量录入将被替换。"
+        case .german: return "Deine frühere Sammeleingabe wird ersetzt."
+        case .french: return "Votre saisie groupée précédente sera remplacée."
+        case .spanish: return "Tu entrada en bloque anterior se reemplazará."
+        case .italian: return "L'inserimento in blocco precedente verrà sostituito."
+        case .portuguese: return "Sua entrada em lote anterior será substituída."
+        case .chineseTraditional: return "先前的批次輸入將被取代。"
+        case .dutch: return "Je eerdere bulkinvoer wordt vervangen."
+        case .swedish: return "Din tidigare samlade inmatning ersätts."
+        case .norwegian: return "Den tidligere samlede registreringen erstattes."
+        case .danish: return "Din tidligere samlede indtastning erstattes."
+        case .finnish: return "Aiempi kertasyöttö korvataan."
+        case .polish: return "Wcześniejszy wpis zbiorczy zostanie zastąpiony."
+        case .czech: return "Dřívější hromadný záznam bude nahrazen."
+        case .greek: return "Η προηγούμενη μαζική εισαγωγή θα αντικατασταθεί."
+        case .turkish: return "Önceki toplu giriş değiştirilecek."
+        case .russian: return "Прежняя запись будет заменена."
+        case .indonesian: return "Input sekaligus sebelumnya akan diganti."
+        }
+    }
+}

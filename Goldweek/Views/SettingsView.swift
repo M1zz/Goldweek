@@ -36,6 +36,7 @@ struct SettingsView: View {
     }
 
     @State private var showingPreferences = false
+    @State private var showingPastLeaveEntry = false
     @State private var showingResetAlert = false
     @State private var showingBonusLeaveSheet = false
     @State private var editingName = false
@@ -554,6 +555,18 @@ struct SettingsView: View {
                         Spacer()
                         Text("\(Strings.dayCount(committedLeave))")
                             .foregroundStyle(.secondary)
+                    }
+
+                    // 연도 중간에 앱을 시작했으면 그동안 쓴(또는 지금 남은) 연차를 일·시간으로 한 번에 — 홈 배너를 닫아도 여기서 다시
+                    if !isLeisure {
+                        Button {
+                            showingPastLeaveEntry = true
+                        } label: {
+                            Label(Strings.pastLeaveSheetTitle, systemImage: "clock.arrow.circlepath")
+                        }
+                        .sheet(isPresented: $showingPastLeaveEntry) {
+                            PastLeaveQuickEntrySheet(profile: profile)
+                        }
                     }
 
                     Picker(isLeisure ? Strings.leisureYearStartMonth : Strings.yearStartMonth, selection: $profile.yearStartMonth) {

@@ -2127,6 +2127,19 @@ final class LeaveKindAllowanceTests: XCTestCase {
         XCTAssertEqual(orphan[.builtIn(.special)]?.totalCount, 2)
     }
 
+    func testBulkEntryInEveryLanguageAndHours() {
+        // 번체 중국어로 넣은 일괄 입력도 일괄 입력으로 알아본다 (예전엔 6개 언어만 — 근무일로 세어 줄었다)
+        XCTAssertEqual(LeaveRecord.bulkSummaryNotes.count, 21)
+        let tw = LeaveRecord(startDate: d(2026, 1, 1), endDate: d(2026, 1, 10), status: .used, note: "先前特休（批次輸入）")
+        XCTAssertTrue(tw.isBulkSummary)
+        XCTAssertEqual(tw.effectiveLeaveDays, 10)
+        // 시간까지 넣은 일괄 입력: 3일 4시간 (하루 7시간 30분) — 요일별 근무 시간과 상관없이 하루 근무 시간으로 나눈다
+        let hours = LeaveRecord(startDate: d(2026, 1, 2), endDate: d(2026, 1, 2), status: .used,
+                                note: "先前特休（批次輸入）", length: .hours, durationMinutes: 3 * 450 + 240)
+        XCTAssertEqual(hours.effectiveLeaveDays, 3 + 240.0 / 450.0, accuracy: 0.0001)   // 1/2 은 금요일(420)
+        XCTAssertEqual(LeaveKindUsage.workMinutes(of: hours), 3 * 450 + 240)
+    }
+
     func testLeaveKindOrder() {
         let a = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
         let b = CustomLeaveType(name: "Ex festività", colorHex: "34C759", deductsFromAnnual: false)

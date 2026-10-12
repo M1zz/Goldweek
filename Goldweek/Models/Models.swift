@@ -659,6 +659,8 @@ final class LeaveRecord {
     /// 금~월로 등록해도 주말·공휴일·내 방학은 차감하지 않는다 (쉬는 날 판정: `DayOffCalendar`).
     /// 예외: "이전 사용 연차 일괄 입력"은 N일을 달력 일수로 펼쳐 저장한 요약 기록이라 달력 일수 그대로 센다.
     var effectiveLeaveDays: Double {
+        // 일괄 입력을 시간으로 넣은 요약 기록 — 요일별 근무 시간과 상관없이 하루 근무 시간으로 나눈다
+        if length == .hours, isBulkSummary { return LeaveLength.days(forMinutes: durationMinutes ?? 0) }
         if length == .hours { return LeaveLength.days(forMinutes: durationMinutes ?? 0, on: startDate) }
         if length != .full { return length.fraction }
         if isBulkSummary { return Double(daysCount) }
@@ -671,9 +673,29 @@ final class LeaveRecord {
         Self.bulkSummaryNotes.contains(note)
     }
 
+    /// `Strings.pastLeaveSummaryNote` 의 21개 언어 전부 — 빠진 언어가 있으면 그 기록을 근무일로 세어 줄어든다
     static let bulkSummaryNotes: Set<String> = [
-        "이전 사용 연차 (일괄 입력)", "Prior leave (bulk entry)", "過去の有給（一括入力）",
-        "过去的年假（批量录入）", "Früherer Urlaub (Sammeleingabe)", "Congés antérieurs (saisie groupée)",
+        "이전 사용 연차 (일괄 입력)",
+        "Prior leave (bulk entry)",
+        "Tidigare ledighet (samlad inmatning)",
+        "Tidligere ferie (samlet registrering)",
+        "Tidligere ferie (samlet indtastning)",
+        "Aiempi loma (kertasyöttö)",
+        "Wcześniejszy urlop (wpis zbiorczy)",
+        "Dřívější dovolená (hromadně)",
+        "Προηγούμενη άδεια (μαζική εισαγωγή)",
+        "Önceki izin (toplu giriş)",
+        "Прошлый отпуск (одной записью)",
+        "Cuti sebelumnya (input sekaligus)",
+        "Eerder verlof (bulkinvoer)",
+        "過去の有給（一括入力）",
+        "过去的年假（批量录入）",
+        "Früherer Urlaub (Sammeleingabe)",
+        "Congés antérieurs (saisie groupée)",
+        "Vacaciones anteriores (entrada en bloque)",
+        "Ferie precedenti (inserimento in blocco)",
+        "Férias anteriores (entrada em lote)",
+        "先前特休（批次輸入）",
     ]
 
     /// 실제 연차 차감 여부 — bonusLeaveId가 있으면 보너스 차감이므로 연차 차감 아님

@@ -752,7 +752,7 @@ struct EditLeaveSheet: View {
                     if length == .hours {
                         Stepper(value: Binding(get: { durationMinutes / 60 },
                                                set: { durationMinutes = max(5, $0 * 60 + durationMinutes % 60) }),
-                                in: 0...12) {
+                                in: 0...(record.isBulkSummary ? 3000 : 12)) {
                             HStack {
                                 Text(Strings.leaveHoursLabel)
                                 Spacer()

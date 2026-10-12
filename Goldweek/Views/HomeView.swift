@@ -1467,32 +1467,60 @@ struct PastLeavePromptBanner: View {
 }
 
 // MARK: - 이전 연차 빠른 입력 시트
+/// 앱을 연도 중간에 시작한 사람이 그동안 쓴 연차를 한 번에 넣는다.
+/// 쓴 만큼 또는 지금 남은 만큼으로, 일 + 시간까지 (대만 피드백: 특휴를 시간 단위로 관리).
 struct PastLeaveQuickEntrySheet: View {
     @Bindable var profile: UserProfile
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Query private var allRecords: [LeaveRecord]
 
-    @State private var daysUsed: Double = 1.0
+    @State private var entersRemaining = false
+    @State private var days = 1
+    /// 일 외에 더하는 시간(분)
+    @State private var extraMinutes = 0
     @State private var isSaving = false
     @State private var showingSaveError = false
 
     private let calendar = Calendar.current
+    private var workday: Int { LeaveLength.workdayMinutes }
 
+    /// 지금 속한 연차 해의 시작일 (기준월이 지금 달보다 뒤면 작년)
     private var yearStartDate: Date {
-        let year = calendar.component(.year, from: Date())
-        var components = DateComponents()
-        components.year = year
-        components.month = profile.yearStartMonth
-        components.day = 1
-        return calendar.date(from: components) ?? Date()
+        let year = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: calendar)
+        return LeaveUsageCalculator.fiscalYearStart(year: year, startMonth: profile.yearStartMonth, calendar: calendar)
     }
 
     private var yesterday: Date {
         calendar.date(byAdding: .day, value: -1, to: calendar.startOfDay(for: Date())) ?? Date()
     }
 
-    private var maxDays: Double {
-        Double(min(Int(profile.totalAnnualLeave), 30))
+    /// 올해 이미 넣은 일괄 입력 — 새 값으로 바꾼다
+    private var existingBulk: [LeaveRecord] {
+        let start = yearStartDate
+        let end = LeaveUsageCalculator.fiscalYearEnd(year: calendar.component(.year, from: start),
+                                                     startMonth: profile.yearStartMonth, calendar: calendar)
+        return allRecords.filter { $0.isBulkSummary && $0.startDate >= start && $0.startDate <= end }
+    }
+
+    private var enteredMinutes: Int { days * workday + extraMinutes }
+
+    /// 기록할 사용 시간(분) — 남은 만큼으로 넣었으면 지금 쓸 수 있는 연차에서 뺀다. nil 이면 받은 연차보다 많이 남은 것.
+    private var usedMinutes: Int? {
+        guard entersRemaining else { return enteredMinutes }
+        let bulkIDs = Set(existingBulk.map(\.id))
+        let available = LeaveUsageCalculator.availableAnnual(on: Date(), records: allRecords.filter { !bulkIDs.contains($0.id) },
+                                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStartMonth)
+        let used = Int((available * Double(workday)).rounded()) - enteredMinutes
+        return used >= 0 ? used : nil
+    }
+
+    /// "3일 4시간" — 하루 근무 시간 기준
+    private func daysAndHours(_ minutes: Int) -> String {
+        let d = minutes / workday, rest = minutes % workday
+        if rest == 0 { return Strings.dayCount(Double(d)) }
+        if d == 0 { return Strings.durationText(minutes: rest) }
+        return "\(Strings.dayCount(Double(d))) \(Strings.durationText(minutes: rest))"
     }
 
     var body: some View {
@@ -1505,33 +1533,68 @@ struct PastLeaveQuickEntrySheet: View {
                         .listRowBackground(Color.clear)
                 }
 
-                Section(Strings.pastLeaveTotalUsed) {
+                Section {
+                    Picker(Strings.pastLeaveTotalUsed, selection: $entersRemaining) {
+                        Text(Strings.pastLeaveModeUsed).tag(false)
+                        Text(Strings.pastLeaveModeRemaining).tag(true)
+                    }
+                    .pickerStyle(.segmented)
+
                     HStack {
-                        Text("\(String(format: daysUsed == Double(Int(daysUsed)) ? "%.0f" : "%.1f", daysUsed))\(Strings.dayUnitSuffix)")
+                        Text(daysAndHours(enteredMinutes))
                             .font(.title2.bold())
                             .foregroundStyle(.orange)
+                            .contentTransition(.numericText())
                         Spacer()
-                        Stepper("", value: $daysUsed, in: 0.5...maxDays, step: 0.5)
-                            .labelsHidden()
+                    }
+
+                    Stepper(value: $days, in: 0...365) {
+                        HStack {
+                            Text(Strings.allowanceUnitDays)
+                            Spacer()
+                            Text("\(days)").monospacedDigit().foregroundStyle(.secondary)
+                        }
+                    }
+                    Stepper(value: $extraMinutes, in: 0...max(0, workday - 30), step: 30) {
+                        HStack {
+                            Text(Strings.leaveHoursLabel)
+                            Spacer()
+                            Text(Strings.durationText(minutes: extraMinutes)).monospacedDigit().foregroundStyle(.secondary)
+                        }
                     }
 
                     HStack(spacing: 8) {
-                        ForEach([1.0, 2.0, 3.0, 5.0, 7.0, 10.0], id: \.self) { days in
+                        ForEach([1, 2, 3, 5, 7, 10], id: \.self) { n in
                             Button {
-                                daysUsed = days
+                                days = n
+                                extraMinutes = 0
                             } label: {
-                                Text("\(Int(days))")
+                                Text("\(n)")
                                     .font(.body)
                                     .fontWeight(.medium)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 7)
-                                    .background(daysUsed == days ? Color.orange : Color(.systemGray5))
-                                    .foregroundStyle(daysUsed == days ? .white : .primary)
+                                    .background(days == n && extraMinutes == 0 ? Color.orange : Color(.systemGray5))
+                                    .foregroundStyle(days == n && extraMinutes == 0 ? .white : .primary)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             .buttonStyle(.plain)
                         }
                     }
+
+                    if entersRemaining {
+                        if let used = usedMinutes {
+                            Text(Strings.pastLeaveWillRecordUsed(daysAndHours(used)))
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text(Strings.pastLeaveRemainingTooMuch)
+                                .font(.body)
+                                .foregroundStyle(.red)
+                        }
+                    }
+                } footer: {
+                    Text(Strings.hoursLeaveFooter(workday: Strings.durationText(minutes: workday)))
                 }
 
                 Section {
@@ -1541,6 +1604,11 @@ struct PastLeaveQuickEntrySheet: View {
                         Text("\(yearStartDate.appMonthDay)  →  \(yesterday.appMonthDay)")
                             .font(.body)
                             .foregroundStyle(.secondary)
+                    }
+                    if !existingBulk.isEmpty {
+                        Text(Strings.pastLeaveReplacesExisting)
+                            .font(.body)
+                            .foregroundStyle(.orange)
                     }
                 } footer: {
                     Text(Strings.pastLeaveSheetFooter)
@@ -1560,40 +1628,52 @@ struct PastLeaveQuickEntrySheet: View {
                             Text(Strings.pastLeaveConfirm).fontWeight(.semibold)
                         }
                     }
-                    .disabled(isSaving)
+                    .disabled(isSaving || usedMinutes == nil || (!entersRemaining && enteredMinutes == 0))
                 }
             }
         }
-        .presentationDetents([.medium])
+        .presentationDetents([.large])
         .alert(Strings.alert, isPresented: $showingSaveError) {
             Button(Strings.confirm, role: .cancel) { }
         } message: {
             Text(Strings.saveFailed)
         }
+        .onAppear {
+            // 이미 넣은 값이 있으면 그 값에서 시작
+            if let old = existingBulk.first {
+                let minutes = old.length == .hours ? (old.durationMinutes ?? 0) : old.daysCount * workday
+                days = minutes / workday
+                extraMinutes = (minutes % workday) / 30 * 30
+            }
+        }
     }
 
+    /// 연차 해 첫날 하루짜리 시간 기록으로 남긴다 — 달력에 여러 날로 퍼지지 않고, 반나절·시간도 그대로 남는다
     private func saveEntry() {
-        guard daysUsed > 0 else { return }
+        guard let minutes = usedMinutes else { return }
         isSaving = true
-
-        // effectiveLeaveDays = daysUsed가 되도록 endDate를 계산
-        let calendar = Calendar.current
-        let adjustedEnd = calendar.date(byAdding: .day, value: max(0, Int(daysUsed) - 1), to: yearStartDate) ?? yearStartDate
-        let record = LeaveRecord(
-            startDate: yearStartDate,
-            endDate: adjustedEnd,
-            type: .annual,
-            status: .used,
-            note: Strings.pastLeaveSummaryNote
-        )
-        modelContext.insert(record)
+        let old = existingBulk
+        old.forEach { modelContext.delete($0) }
+        if minutes > 0 {
+            let record = LeaveRecord(
+                startDate: yearStartDate,
+                endDate: yearStartDate,
+                type: .annual,
+                status: .used,
+                note: Strings.pastLeaveSummaryNote,
+                length: .hours,
+                durationMinutes: minutes
+            )
+            modelContext.insert(record)
+        }
 
         do {
             try modelContext.save()
+            UsageReportingService.record(event: entersRemaining ? "past_leave_entered_remaining" : "past_leave_entered_used")
             HapticFeedback.success()
             dismiss()
         } catch {
-            modelContext.delete(record)
+            modelContext.rollback()
             HapticFeedback.error()
             showingSaveError = true
         }
