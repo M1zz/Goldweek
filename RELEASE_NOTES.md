@@ -1,5 +1,228 @@
 # Goldweek 릴리즈 노트
 
+## 2.3.0
+
+### 앱스토어 (한국어)
+
+휴가 종류별 합계와 연간 한도를 볼 수 있어요
+요일마다 근무 시간을 다르게 정할 수 있어요
+교대 근무와 파트타임에 맞게 쉬는 날을 정해요
+캘린더 앱에 휴가를 자동으로 넣어요
+학교 달력 사진이나 PDF로 방학을 한 번에 넣어요
+휴가 불가 기간과 병가 이월을 지원해요
+위젯 문구와 이전 연차 입력 오류를 고쳤어요
+
+### App Store (English)
+
+See totals and yearly allowances per leave type
+Set different work hours for each weekday
+Shift and part-time schedules for your days off
+Send your leave to the Calendar app automatically
+Import school breaks from a photo or PDF
+No-leave periods and sick days that roll over
+Fixed widget text and past leave entry
+
+### 앱스토어 (일본어)
+
+休暇の種類ごとの合計と年間上限を表示
+曜日ごとに勤務時間を設定できます
+シフト勤務やパートタイムの休みに対応
+休暇をカレンダーアプリに自動で追加
+学校カレンダーの写真やPDFから休みを追加
+休暇不可期間と病気休暇の繰り越しに対応
+ウィジェットの表示と過去の休暇入力を修正
+
+### 앱스토어 (중국어 간체)
+
+按假期类型查看合计和年度额度
+可为每个工作日设置不同工时
+支持轮班和兼职的休息日
+自动把假期添加到日历应用
+用照片或 PDF 导入学校假期
+支持禁止请假期间和病假结转
+修复了小组件文字和过往年假录入问题
+
+### 앱스토어 (독일어)
+
+Summen und Jahreskontingent je Urlaubsart
+Arbeitszeit für jeden Wochentag festlegen
+Freie Tage für Schicht und Teilzeit
+Urlaub automatisch im Kalender eintragen
+Schulferien per Foto oder PDF importieren
+Urlaubssperren und übertragbare Krankheitstage
+Widget-Texte und Resturlaub-Eingabe korrigiert
+
+### 앱스토어 (프랑스어)
+
+Totaux et quotas annuels par type de congé
+Horaires différents pour chaque jour
+Jours de repos pour postés et temps partiel
+Vos congés ajoutés au Calendrier automatiquement
+Importez les vacances scolaires d’une photo ou d’un PDF
+Périodes sans congé et jours maladie cumulables
+Textes du widget et saisie des congés passés corrigés
+
+### 앱스토어 (스페인어)
+
+Totales y cupo anual por tipo de permiso
+Horario distinto para cada día de la semana
+Días libres para turnos y media jornada
+Tus permisos en la app Calendario automáticamente
+Importa vacaciones escolares desde foto o PDF
+Periodos sin permisos y días de enfermedad acumulables
+Corregidos los textos del widget y los días previos
+
+### 앱스토어 (이탈리아어)
+
+Totali e monte ore annuale per ogni permesso
+Orario diverso per ogni giorno della settimana
+Giorni liberi per turni e part-time
+Ferie inviate in automatico al Calendario
+Importa le vacanze scolastiche da foto o PDF
+Periodi senza ferie e malattia che si accumula
+Corretti i testi del widget e le ferie pregresse
+
+### 앱스토어 (포르투갈어 브라질)
+
+Totais e cota anual por tipo de folga
+Horário diferente para cada dia da semana
+Folgas para escala de turnos e meio período
+Suas folgas no app Calendário automaticamente
+Importe férias escolares de foto ou PDF
+Períodos sem folga e dias de doença acumuláveis
+Corrigidos textos do widget e folgas anteriores
+
+### 앱스토어 (중국어 번체)
+
+依假別查看合計與年度額度
+可為每個工作日設定不同工時
+支援輪班與兼職的休息日
+自動把假期加入行事曆 App
+用照片或 PDF 匯入學校假期
+支援禁止請假期間與病假結轉
+修正小工具文字與過往特休輸入問題
+
+### 앱스토어 (네덜란드어)
+
+Totalen en jaartegoed per soort verlof
+Andere werktijden per weekdag
+Vrije dagen voor ploegendienst en deeltijd
+Verlof automatisch in de Agenda
+Schoolvakanties importeren via foto of pdf
+Verlofstops en opbouwende ziektedagen
+Widgettekst en eerder verlof invoeren hersteld
+
+### 앱스토어 (스웨덴어)
+
+Summor och årskvot per ledighetstyp
+Olika arbetstid för varje veckodag
+Lediga dagar för skift och deltid
+Ledigheten läggs in i Kalender automatiskt
+Importera skollov från foto eller PDF
+Spärrperioder och sjukdagar som sparas
+Rättat widgettext och tidigare ledighet
+
+### 앱스토어 (노르웨이어 보크말)
+
+Summer og årskvote per fraværstype
+Ulik arbeidstid for hver ukedag
+Fridager for skift og deltid
+Fravær legges i Kalender automatisk
+Importer skoleferier fra bilde eller PDF
+Perioder uten fri og sykedager som spares
+Rettet widgettekst og tidligere ferie
+
+### 앱스토어 (덴마크어)
+
+Summer og årskvote for hver fraværstype
+Forskellig arbejdstid for hver ugedag
+Fridage for skiftehold og deltid
+Fravær lægges i Kalender automatisk
+Importér skoleferier fra foto eller PDF
+Perioder uden fri og sygedage der opspares
+Rettet widgettekst og tidligere ferie
+
+### 앱스토어 (핀란드어)
+
+Summat ja vuosikiintiö vapaatyypeittäin
+Eri työaika jokaiselle viikonpäivälle
+Vapaapäivät vuoro- ja osa-aikatyöhön
+Vapaat Kalenteriin automaattisesti
+Tuo koulun lomat kuvasta tai PDF:stä
+Lomakiellot ja kertyvät sairauspäivät
+Korjattu widgetin tekstit ja aiemmat lomat
+
+### 앱스토어 (폴란드어)
+
+Sumy i roczny limit dla każdego rodzaju urlopu
+Inny czas pracy dla każdego dnia tygodnia
+Dni wolne przy pracy zmianowej i niepełnym etacie
+Urlop automatycznie w aplikacji Kalendarz
+Import ferii szkolnych ze zdjęcia lub PDF
+Okresy bez urlopu i kumulowane dni chorobowe
+Poprawiono teksty widżetu i wcześniejszy urlop
+
+### 앱스토어 (체코어)
+
+Součty a roční limit pro každý druh volna
+Jiná pracovní doba pro každý den v týdnu
+Volné dny pro směny a částečný úvazek
+Volno se samo přidá do Kalendáře
+Import školních prázdnin z fotky nebo PDF
+Období bez dovolené a převáděné dny nemoci
+Opraveny texty widgetu a dřívější dovolená
+
+### 앱스토어 (그리스어)
+
+Σύνολα και ετήσιο όριο ανά τύπο άδειας
+Διαφορετικό ωράριο για κάθε ημέρα
+Ρεπό για βάρδιες και μερική απασχόληση
+Οι άδειες μπαίνουν αυτόματα στο Ημερολόγιο
+Εισαγωγή σχολικών διακοπών από φωτογραφία ή PDF
+Περίοδοι χωρίς άδεια και αναρρωτικές που μεταφέρονται
+Διορθώθηκαν κείμενα widget και παλαιότερες άδειες
+
+### 앱스토어 (튀르키예어)
+
+İzin türüne göre toplamlar ve yıllık hak
+Her gün için farklı çalışma saati
+Vardiya ve yarı zamanlı için izin günleri
+İzinler Takvim uygulamasına otomatik eklenir
+Okul tatillerini fotoğraf veya PDF ile ekleyin
+İzin yasağı dönemleri ve devreden hastalık izni
+Widget metinleri ve geçmiş izin girişi düzeltildi
+
+### 앱스토어 (러시아어)
+
+Итоги и годовой лимит по типам отпуска
+Разное рабочее время по дням недели
+Выходные для сменного графика и неполного дня
+Отпуск сам попадает в Календарь
+Импорт школьных каникул с фото или PDF
+Периоды без отпуска и накопление больничных
+Исправлены тексты виджета и ввод прошлых отпусков
+
+### 앱스토어 (인도네시아어)
+
+Total dan jatah tahunan per jenis cuti
+Jam kerja berbeda untuk tiap hari
+Hari libur untuk kerja shift dan paruh waktu
+Cuti otomatis masuk ke app Kalender
+Impor libur sekolah dari foto atau PDF
+Periode tanpa cuti dan cuti sakit yang terakumulasi
+Perbaikan teks widget dan input cuti sebelumnya
+
+### 개발 메모 (스토어에 올라가지 않음)
+
+버전 번호는 아직 2.2.1 빌드 8 그대로다. 배포할 때 DeployBar에서 2.3.0으로 올린다.
+32d80fc 휴가 불가 기간 직접 입력, 보너스 차감, 사진 가져오기에서 빠진 날 채우기
+66004b3 종류별 합계, 연간 한도, 요일별 근무 시간, 수정 화면에서 종류 고르기, 종류 순서 (이탈리아 피드백)
+2776946 이전 연차 일괄 입력: 21개 언어에서 인식, 일과 시간 함께 입력, 남은 연차로 입력 (대만 피드백)
+3d5b145 iCloud 키값 저장소로 종류와 근무 시간 설정 동기화, 백업에 종류와 한도 포함
+26a1239 근무 형태 고르기, 교대 근무 일정, 캘린더 앱으로 휴가 보내기 (Pro)
+b1b4f15 학교 달력 가져오기, 병가 이월, 방학 앞뒤 휴가 제한, 위젯 한국어 문구 번역
+실기기 확인 전: 캘린더 권한과 동기화, 학교 달력 인식률, 키값 동기화 권한
+
 ## 2.2.1
 
 ### 앱스토어 (한국어)
