@@ -656,7 +656,6 @@ final class LeaveCalculationTests: XCTestCase {
         totalAnnual: Double,
         includeBonusInStatus: Bool
     ) -> Double {
-        let today = Calendar.current.startOfDay(for: Date())
         let committed = records.filter { record in
             guard record.deductsFromAnnualLeave else { return false }
             return record.status == .used ||
@@ -1095,6 +1094,11 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_US")).country, .usa)
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "ar_SA")).country, .saudiArabia)
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_AE")).country, .uae)
+        // 지원하지 않는 아랍 나라 → 미국이 아니라 주말·명절이 맞는 이웃 나라 (안내 카드는 그대로 뜬다)
+        let kuwait = Country.detect(locale: Locale(identifier: "ar_KW"))
+        XCTAssertEqual(kuwait.country, .saudiArabia)
+        XCTAssertFalse(kuwait.isSupported)
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "ar_TN")).country, .morocco)
     }
 
     func testMoreCountriesKeyDates() {
@@ -1116,6 +1120,84 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertTrue(keys(.newZealand, 2026).contains("2026-07-10"))
         // 이집트는 금·토 주말
         XCTAssertEqual(HolidayService.weekendDays(for: .egypt), [6, 7])
+        // 모로코 2026: 고정 국경일 + 통일의 날(2026년부터) + 이드 알피트르 3/20~21 · 이드 알아드하 5/27~28
+        let morocco = keys(.morocco, 2026)
+        XCTAssertTrue(morocco.isSuperset(of: ["2026-01-11", "2026-01-14", "2026-07-30", "2026-08-14", "2026-08-20", "2026-08-21",
+                                              "2026-10-31", "2026-11-06", "2026-11-18", "2026-03-20", "2026-03-21", "2026-05-27", "2026-05-28"]))
+        XCTAssertFalse(keys(.morocco, 2025).contains("2025-10-31"))
+        XCTAssertEqual(HolidayService.weekendDays(for: .morocco), [1, 7])
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "fr_MA")).country, .morocco)
+    }
+
+    func testRussiaTransfers() {
+        func keys(_ y: Int) -> Set<String> {
+            let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+            return Set(HolidayService().getHolidays(for: y, country: .russia).map { f.string(from: $0.date) })
+        }
+        // 2026 (№1466): 1/1~1/9 연휴, 3/8(일) → 3/9, 5/9(토) → 5/11, 1/4 → 12/31
+        let y26 = keys(2026)
+        XCTAssertTrue(y26.isSuperset(of: ["2026-01-01", "2026-01-08", "2026-01-09", "2026-03-09", "2026-05-11", "2026-12-31"]))
+        XCTAssertEqual(y26.count, 18)
+        // 2025 (№1335): 2/23(일)은 2/24 가 아니라 5/8 로 — 정부 결정이 자동 이동을 덮어쓴다
+        let y25 = keys(2025)
+        XCTAssertTrue(y25.isSuperset(of: ["2025-05-02", "2025-05-08", "2025-06-13", "2025-11-03", "2025-12-31"]))
+        XCTAssertFalse(y25.contains("2025-02-24"))
+        // 2027 (№1187): 2/20(토) 출근, 2/22 휴무
+        XCTAssertTrue(keys(2027).isSuperset(of: ["2027-02-22", "2027-05-03", "2027-05-10", "2027-06-14", "2027-11-05", "2027-12-31"]))
+        let cal = Calendar.current
+        XCTAssertTrue(HolidayService.isMakeupWorkday(cal.date(from: DateComponents(year: 2027, month: 2, day: 20))!, country: .russia))
+        // 발표 전 해(2028)는 노동법 규칙: 11/4(토) → 11/6(월)
+        XCTAssertTrue(keys(2028).contains("2028-11-06"))
+        XCTAssertFalse(HolidayService().isHolidayDataReliable(for: 2028, country: .russia))
+    }
+
+    func testIndonesiaOfficialSchedule() {
+        let saved = UserDefaults.standard.string(forKey: "appLanguage")
+        defer { UserDefaults.standard.set(saved, forKey: "appLanguage") }
+        UserDefaults.standard.set("id", forKey: "appLanguage")
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+        let y26 = Dictionary(uniqueKeysWithValues: HolidayService().getHolidays(for: 2026, country: .indonesia).map { (f.string(from: $0.date), $0.name) })
+        // SKB 2026: 공휴일 17일 + 공동 휴가 8일
+        XCTAssertEqual(y26.count, 25)
+        XCTAssertEqual(y26["2026-03-21"], "Idulfitri")
+        XCTAssertEqual(y26["2026-03-20"], "Cuti bersama Idulfitri")
+        XCTAssertEqual(y26["2026-08-17"], "Hari Kemerdekaan RI")
+        // SKB 2027: 18 + 8 — 이슬람력이 한 해에 두 번 오는 이스라 미라즈(1/5, 12/26)
+        let y27 = HolidayService().getHolidays(for: 2027, country: .indonesia).map { f.string(from: $0.date) }
+        XCTAssertEqual(y27.count, 26)
+        XCTAssertTrue(Set(y27).isSuperset(of: ["2027-01-05", "2027-12-26", "2027-03-15"]))
+        XCTAssertTrue(HolidayService().isHolidayDataReliable(for: 2027, country: .indonesia))
+        XCTAssertFalse(HolidayService().isHolidayDataReliable(for: 2028, country: .indonesia))
+        UserDefaults.standard.set("ru", forKey: "appLanguage")
+        XCTAssertTrue(HolidayService().getHolidays(for: 2026, country: .russia).contains { $0.name == "День Победы" })
+    }
+
+    func testFirstWeekdayFollowsCountry() {
+        XCTAssertEqual(Country.spain.standardFirstWeekday, 2)
+        XCTAssertEqual(Country.sweden.standardFirstWeekday, 2)
+        XCTAssertEqual(Country.usa.standardFirstWeekday, 1)
+        XCTAssertEqual(Country.korea.standardFirstWeekday, 1)
+        XCTAssertEqual(Country.russia.standardFirstWeekday, 2)
+        // 직접 고르면 나라 기본보다 앞선다, 0 은 나라 기본
+        XCTAssertEqual(HolidayService.firstWeekday(for: .spain, override: 1), 1)
+        XCTAssertEqual(HolidayService.firstWeekday(for: .usa, override: 2), 2)
+        XCTAssertEqual(HolidayService.firstWeekday(for: .spain, override: 0), 2)
+    }
+
+    func testSwedenRedDays() {
+        let saved = UserDefaults.standard.string(forKey: "appLanguage")
+        defer { UserDefaults.standard.set(saved, forKey: "appLanguage") }
+        UserDefaults.standard.set("sv", forKey: "appLanguage")
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+        let days = Dictionary(uniqueKeysWithValues: HolidayService().getHolidays(for: 2026, country: .sweden).map { (f.string(from: $0.date), $0.name) })
+        // 2026 부활절 4/5, 성령강림절 5/24, 하지 6/19~20, 만성절 10/31
+        XCTAssertEqual(days["2026-04-04"], "Påskafton")
+        XCTAssertEqual(days["2026-04-05"], "Påskdagen")
+        XCTAssertEqual(days["2026-05-24"], "Pingstdagen")
+        XCTAssertEqual(days["2026-06-19"], "Midsommarafton")
+        XCTAssertEqual(days["2026-06-20"], "Midsommardagen")
+        XCTAssertEqual(days["2026-10-31"], "Alla helgons dag")
+        XCTAssertEqual(days.count, 17)
     }
 
     func testLocalHolidayNamesFollowAppLanguage() {
@@ -1402,6 +1484,79 @@ final class LeaveDeductionTests: XCTestCase {
         XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 10)))  // 토 — 근무일
     }
 
+    func testHomeRegionHolidays() {
+        let saved = (HolidayService.selectedRegionCode, HolidayService.homeRegionCode, HolidayService.homeHolidaysAreDaysOff)
+        defer {
+            HolidayService.selectedRegionCode = saved.0
+            HolidayService.homeRegionCode = saved.1
+            HolidayService.homeHolidaysAreDaysOff = saved.2
+            DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        }
+        // 마드리드에서 일하고 카탈루냐에 산다 — 2026-09-11(금) 카탈루냐의 날
+        HolidayService.selectedRegionCode = "ES-MD"
+        HolidayService.homeRegionCode = "ES-CT"
+        HolidayService.homeHolidaysAreDaysOff = false
+        DayOffCalendar.shared.update(country: .spain, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertNotNil(DayOffCalendar.shared.homeHolidayName(on: d(2026, 9, 11)))
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 9, 11)))      // 연차는 일하는 곳 기준
+        XCTAssertNil(DayOffCalendar.shared.homeHolidayName(on: d(2026, 5, 1)))  // 둘 다 쉬는 날은 사는 곳 전용이 아니다
+        // 사는 곳 공휴일에도 쉰다
+        HolidayService.homeHolidaysAreDaysOff = true
+        DayOffCalendar.shared.update(country: .spain, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 9, 11)))
+        XCTAssertEqual(LeaveRecord(startDate: d(2026, 9, 10), endDate: d(2026, 9, 11)).effectiveLeaveDays, 1)
+    }
+
+    func testLeaveBlackoutAroundHolidays() {
+        let saved = (HolidayService.leaveBlackoutDays, HolidayService.selectedRegionCode)
+        defer {
+            HolidayService.leaveBlackoutDays = saved.0
+            HolidayService.selectedRegionCode = saved.1
+            DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        }
+        HolidayService.selectedRegionCode = ""
+        // 미국 2026: 7/4(토) → 7/3(금) 대체. 앞뒤 1 근무일 = 7/2(목), 7/6(월)
+        HolidayService.leaveBlackoutDays = 1
+        DayOffCalendar.shared.update(country: .usa, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertTrue(DayOffCalendar.shared.isLeaveBlocked(d(2026, 7, 2)))
+        XCTAssertTrue(DayOffCalendar.shared.isLeaveBlocked(d(2026, 7, 6)))
+        XCTAssertFalse(DayOffCalendar.shared.isLeaveBlocked(d(2026, 7, 7)))
+        XCTAssertTrue(DayOffCalendar.shared.blockedDates(in: 2026).contains(d(2026, 7, 2)))
+        // 끄면 제한 없음
+        HolidayService.leaveBlackoutDays = 0
+        DayOffCalendar.shared.update(country: .usa, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertFalse(DayOffCalendar.shared.isLeaveBlocked(d(2026, 7, 2)))
+    }
+
+    func testHomeCountryHolidays() {
+        let saved = (HolidayService.selectedRegionCode, HolidayService.homeRegionCode,
+                     HolidayService.homeHolidaysAreDaysOff, HolidayService.homeCountryCode)
+        defer {
+            HolidayService.selectedRegionCode = saved.0
+            HolidayService.homeRegionCode = saved.1
+            HolidayService.homeHolidaysAreDaysOff = saved.2
+            HolidayService.homeCountryCode = saved.3
+            DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        }
+        // 스페인에서 일하고 회사 본사는 한국 — 2026-10-09(금) 한글날
+        HolidayService.selectedRegionCode = ""
+        HolidayService.homeRegionCode = ""
+        HolidayService.homeCountryCode = Country.korea.rawValue
+        HolidayService.homeHolidaysAreDaysOff = false
+        DayOffCalendar.shared.update(country: .spain, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertNotNil(DayOffCalendar.shared.homeHolidayName(on: d(2026, 10, 9)))
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 9)))       // 연차는 일하는 나라 기준
+        XCTAssertNil(DayOffCalendar.shared.homeHolidayName(on: d(2026, 12, 25)))  // 두 나라 다 쉬는 날
+        XCTAssertNotNil(HolidayService.homePlaceName(for: .spain))
+        // 본사 공휴일에도 쉰다
+        HolidayService.homeHolidaysAreDaysOff = true
+        DayOffCalendar.shared.update(country: .spain, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 9)))
+        XCTAssertEqual(LeaveRecord(startDate: d(2026, 10, 8), endDate: d(2026, 10, 9)).effectiveLeaveDays, 1)
+        // 일하는 나라와 같으면 함께 볼 게 없다
+        XCTAssertNil(HolidayService.homePlace(for: .korea))
+    }
+
     func testWorkEveryDayOverride() {
         let saved = HolidayService.weekendOverrideRaw
         defer { HolidayService.weekendOverrideRaw = saved }
@@ -1436,7 +1591,7 @@ final class RecommendedLeaveMigrationTests: XCTestCase {
         UserDefaults.standard.removeObject(forKey: "migration.splitRecommendedLeaves.v1")
         defer { UserDefaults.standard.removeObject(forKey: "migration.splitRecommendedLeaves.v1") }
 
-        let schema = Schema([UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self])
+        let schema = Schema([UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self, CustomLeaveType.self])
         let container = try ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let context = container.mainContext
         // 10/8(목) ~ 10/12(월): 10/9 한글날, 10/10·11 주말 → 10/8, 10/12 두 구간
@@ -1512,5 +1667,538 @@ final class ChinaMakeupWorkdayTests: XCTestCase {
             XCTAssertTrue(brk.leaveDates.contains { cal.isDate($0, inSameDayAs: feb14) }, "补班 날을 공짜로 쉬는 날로 셌다")
         }
         XCTAssertTrue(plan.breaks.contains { $0.startDate <= feb14 && $0.endDate >= feb14 })
+    }
+}
+
+// MARK: - 시간 단위 휴가 · 직접 만든 휴가 종류 · 여러 달 보기 (이탈리아 permessi 피드백)
+
+@MainActor
+final class LeaveCustomizationTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    func testHoursLeaveIsDeductedByWorkdayLength() {
+        let saved = UserDefaults.standard.object(forKey: "workdayMinutes")
+        defer { UserDefaults.standard.set(saved, forKey: "workdayMinutes") }
+        LeaveLength.workdayMinutes = 480
+        let r = LeaveRecord(startDate: d(2026, 10, 14), endDate: d(2026, 10, 14), length: .hours, durationMinutes: 150)
+        XCTAssertEqual(r.effectiveLeaveDays, 150.0 / 480.0, accuracy: 0.0001)
+        // 하루가 7시간 12분(432분)인 회사
+        LeaveLength.workdayMinutes = 432
+        XCTAssertEqual(r.effectiveLeaveDays, 150.0 / 432.0, accuracy: 0.0001)
+        XCTAssertTrue(r.deductsFromAnnualLeave)
+    }
+
+    func testCustomLeaveTypeFollowsDeductionAndStyle() throws {
+        let schema = Schema([UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self, CustomLeaveType.self])
+        let container = try ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+        let context = container.mainContext
+        let rol = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
+        context.insert(rol)
+        let r = LeaveRecord(startDate: d(2026, 10, 14), endDate: d(2026, 10, 14), type: rol.baseType,
+                            length: .hours, durationMinutes: 120, customTypeId: rol.id)
+        context.insert(r)
+        try context.save()
+        defer { LeaveStyleStore.shared.update(customTypes: []) }
+        LeaveStyleStore.shared.update(customTypes: [rol])
+        XCTAssertEqual(r.displayTypeName, "ROL")
+        XCTAssertEqual(r.displayColor.leaveHex, "AF52DE")
+        XCTAssertFalse(r.deductsFromAnnualLeave)   // 연차에서 안 뺀다
+        // 종류를 지우면 이름은 기본 유형으로 돌아간다
+        LeaveStyleStore.shared.update(customTypes: [])
+        XCTAssertEqual(r.displayTypeName, Strings.leaveTypeName(.special))
+    }
+
+    func testTimeMachineKeepsLengthMinutesAndKind() {
+        let kindID = UUID()
+        let r = LeaveRecord(startDate: d(2026, 10, 14), endDate: d(2026, 10, 14), length: .hours,
+                            durationMinutes: 90, customTypeId: kindID)
+        let half = LeaveRecord(startDate: d(2026, 10, 15), endDate: d(2026, 10, 15), length: .half)
+        let restored = TMLeaveData(from: r).materialize()
+        XCTAssertEqual(restored.length, .hours)
+        XCTAssertEqual(restored.durationMinutes, 90)
+        XCTAssertEqual(restored.customTypeId, kindID)
+        // 예전엔 반차가 복원 후 종일이 됐다
+        XCTAssertEqual(TMLeaveData(from: half).materialize().length, .half)
+    }
+
+    func testCalendarSpanPeriodsStartInJanuary() {
+        XCTAssertEqual(CalendarSpan.three.periodStart(containing: d(2026, 8, 20)), d(2026, 7, 1))
+        XCTAssertEqual(CalendarSpan.six.periodStart(containing: d(2026, 8, 20)), d(2026, 7, 1))
+        XCTAssertEqual(CalendarSpan.two.periodStart(containing: d(2026, 8, 20)), d(2026, 7, 1))
+        XCTAssertEqual(CalendarSpan.twelve.periodStart(containing: d(2026, 8, 20)), d(2026, 1, 1))
+        XCTAssertEqual(CalendarSpan.one.periodStart(containing: d(2026, 8, 20)), d(2026, 8, 1))
+    }
+}
+
+// MARK: - 파트타임 쉬는 요일 · 이번 주만 옮기기 (네덜란드 사용자 피드백)
+
+final class PartTimeDaysTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    override func tearDown() {
+        HolidayService.partTimeDaysOffRaw = ""
+        HolidayService.partTimeSwapsRaw = ""
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    func testFridayOffIsNotDeductedAndCanMoveForOneWeek() {
+        HolidayService.partTimeDaysOffRaw = "6"   // 금요일
+        DayOffCalendar.shared.update(country: .netherlands, customHolidays: [], hiddenDates: [], breaks: [])
+        // 2026-10-12(월) ~ 10-16(금): 금요일은 쉬는 날이라 4일만 차감
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 16)))
+        XCTAssertEqual(DayOffCalendar.shared.workdays(from: d(2026, 10, 12), to: d(2026, 10, 16)), 4)
+
+        // 이번 주만 금 → 수 로 옮긴다
+        HolidayService.addPartTimeSwap(from: d(2026, 10, 16), to: d(2026, 10, 14))
+        DayOffCalendar.shared.update(country: .netherlands, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 16)))
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 14)))
+        XCTAssertEqual(DayOffCalendar.shared.workdays(from: d(2026, 10, 12), to: d(2026, 10, 16)), 4)
+        // 다음 주 금요일은 그대로 쉰다
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 23)))
+        XCTAssertTrue(HolidayService.makeupWorkdays(for: 2026, country: .netherlands).contains(cal.startOfDay(for: d(2026, 10, 16))))
+
+        // 원래대로
+        HolidayService.removePartTimeSwap(involving: d(2026, 10, 14))
+        DayOffCalendar.shared.update(country: .netherlands, customHolidays: [], hiddenDates: [], breaks: [])
+        XCTAssertTrue(DayOffCalendar.shared.isDayOff(d(2026, 10, 16)))
+        XCTAssertFalse(DayOffCalendar.shared.isDayOff(d(2026, 10, 14)))
+    }
+}
+
+// MARK: - 미리 계획(내년 연차) · 남은 연차 이월 (네덜란드 사용자 피드백)
+
+final class PlanAheadCarryOverTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    override func setUp() {
+        DayOffCalendar.shared.update(country: .netherlands, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    override func tearDown() {
+        LeaveUsageCalculator.carryOverMaxDays = 0
+        LeaveUsageCalculator.carryOverExpiryMonths = 0
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    /// 올해 연차를 다 써도 내년 1월 휴가는 내년 연차로 잡을 수 있다
+    func testNextYearLeaveUsesNextYearBudget() {
+        LeaveUsageCalculator.carryOverMaxDays = 0
+        // 2026년: 20일을 다 씀 — 3월에 월~금 5일씩 4주
+        let used = (0..<4).map { w in
+            LeaveRecord(startDate: d(2026, 3, 2 + w * 7), endDate: d(2026, 3, 6 + w * 7), status: .used)
+        }
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2026, 11, 9), records: used, annualGrant: 20, startMonth: 1), 0)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2027, 1, 11), records: used, annualGrant: 20, startMonth: 1), 20)
+    }
+
+    func testCarryOverWithCapAndExpiry() {
+        // 2026년에 20일 중 12일만 씀 → 8일 남음
+        let y2026 = [
+            LeaveRecord(startDate: d(2026, 3, 2), endDate: d(2026, 3, 6), status: .used),   // 5
+            LeaveRecord(startDate: d(2026, 8, 3), endDate: d(2026, 8, 7), status: .used),   // 5
+            LeaveRecord(startDate: d(2026, 9, 7), endDate: d(2026, 9, 8), status: .used),   // 2
+        ]
+        LeaveUsageCalculator.carryOverMaxDays = -1
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: y2026, annualGrant: 20, startMonth: 1), 8)
+        LeaveUsageCalculator.carryOverMaxDays = 5
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: y2026, annualGrant: 20, startMonth: 1), 5)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2027, 2, 1), records: y2026, annualGrant: 20, startMonth: 1), 25)
+
+        // 기한 6개월: 7월 1일 전에 3일만 썼으면 그 뒤로는 넘어온 5일 중 3일만 남는다
+        LeaveUsageCalculator.carryOverExpiryMonths = 6
+        let early = LeaveRecord(startDate: d(2027, 2, 1), endDate: d(2027, 2, 3), status: .used)   // 3
+        let all = y2026 + [early]
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2027, 3, 1), records: all, annualGrant: 20, startMonth: 1), 22)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2027, 8, 2), records: all, annualGrant: 20, startMonth: 1), 20)
+
+        // 이월을 끄면 넘어오는 게 없다
+        LeaveUsageCalculator.carryOverMaxDays = 0
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: y2026, annualGrant: 20, startMonth: 1), 0)
+    }
+}
+
+// MARK: - 최적 연차 플랜이 죽지 않는다 (이탈리아 사용자: 1월부터 휴가를 넣다가 5월쯤에서 크래시)
+
+final class LeavePlannerCrashTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    /// 후보 연휴가 하나도 없으면 예전엔 knapsack 의 `1...0` 에서 죽었다
+    func testNoCandidatesReturnsEmptyPlan() {
+        // 이탈리아 2026: 남은 평일을 전부 휴가로 막아 후보가 남지 않게 한다
+        var excluded = Set<Date>()
+        var day = d(2026, 1, 1)
+        while day <= d(2026, 12, 31) {
+            excluded.insert(cal.startOfDay(for: day))
+            day = cal.date(byAdding: .day, value: 1, to: day)!
+        }
+        let holidays = HolidayService().getHolidays(for: 2026, country: .italy).map(\.date)
+        let plan = LeavePlanner.optimalPlan(year: 2026, availableLeaveDays: 5, holidays: holidays, excludedDates: excluded)
+        XCTAssertTrue(plan.breaks.isEmpty)
+    }
+
+    /// 1월부터 휴가를 하나씩 넣으며 매번 다시 계산해도 죽지 않는다 (남은 연차가 0이 될 때까지)
+    func testAddingLeaveDayByDayNeverCrashes() {
+        let holidays = HolidayService().getHolidays(for: 2026, country: .italy).map(\.date)
+        var excluded = Set<Date>()
+        var day = d(2026, 1, 5)
+        var available = 26
+        while day <= d(2026, 6, 30) {
+            if !HolidayService.isRestWeekend(day, country: .italy) {
+                excluded.insert(cal.startOfDay(for: day))
+                available = max(0, available - 1)
+                for earliest in [d(2026, 1, 1), day] {
+                    _ = LeavePlanner.optimalPlan(year: 2026, availableLeaveDays: available, holidays: holidays,
+                                                 excludedDates: excluded, earliestDate: earliest)
+                }
+            }
+            day = cal.date(byAdding: .day, value: 1, to: day)!
+        }
+    }
+
+    /// 추천 화면(백그라운드)과 홈 휴식 레이더(메인)가 동시에 돌려도 서로의 계산을 읽지 않는다
+    func testConcurrentPlansDoNotInterfere() {
+        let holidays = HolidayService().getHolidays(for: 2026, country: .italy).map(\.date)
+        let expected = LeavePlanner.optimalPlan(year: 2026, availableLeaveDays: 10, holidays: holidays).totalDaysOff
+        let lock = NSLock()
+        var results: [Int] = []
+        DispatchQueue.concurrentPerform(iterations: 40) { i in
+            let plan = LeavePlanner.optimalPlan(year: 2026, availableLeaveDays: i % 2 == 0 ? 10 : 3, holidays: holidays)
+            lock.lock(); if i % 2 == 0 { results.append(plan.totalDaysOff) }; lock.unlock()
+        }
+        XCTAssertEqual(Set(results), [expected])
+    }
+}
+
+// MARK: - 번아웃: 공휴일도 휴식이다 (휴가만 세던 문제)
+
+final class BurnoutHolidayRestTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    override func setUp() {
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    private func has(_ blocks: [RestBlock], _ start: Date, _ end: Date) -> Bool {
+        blocks.contains { cal.isDate($0.start, inSameDayAs: start) && cal.isDate($0.end, inSameDayAs: end) }
+    }
+
+    func testHolidaysWithAttachedWeekendsAreRest() {
+        let blocks = BurnoutEngine.restBlocks(from: [], around: d(2026, 10, 7))
+        // 추석 9/24(목)~26(토) + 일요일 → 4일 (토요일과 겹친 추석은 대체공휴일이 없다)
+        XCTAssertTrue(has(blocks, d(2026, 9, 24), d(2026, 9, 27)), "\(blocks.map { ($0.start, $0.end) })")
+        // 개천절 10/3(토) → 대체공휴일 10/5(월) → 토·일·월
+        XCTAssertTrue(has(blocks, d(2026, 10, 3), d(2026, 10, 5)))
+        // 한글날 10/9(금) → 금·토·일
+        XCTAssertTrue(has(blocks, d(2026, 10, 9), d(2026, 10, 11)))
+        // 평범한 주말만은 휴식 블록이 아니다
+        XCTAssertFalse(blocks.contains { cal.isDate($0.start, inSameDayAs: d(2026, 10, 17)) })
+    }
+
+    func testLeaveMergesWithWeekendsAndHolidays() {
+        // 10/5(월)~10/8(목) 휴가 → 앞 주말(10/3 개천절·10/4)과 뒤 한글날 연휴(10/9~11)까지 한 번에 9일
+        let leave = LeaveRecord(startDate: d(2026, 10, 5), endDate: d(2026, 10, 8), status: .used)
+        let blocks = BurnoutEngine.restBlocks(from: [leave], around: d(2026, 10, 20))
+        XCTAssertTrue(has(blocks, d(2026, 10, 3), d(2026, 10, 11)), "\(blocks.map { ($0.start, $0.end) })")
+    }
+
+    func testHolidayOnlyHistoryIsNotNeverRested() {
+        // 휴가를 한 번도 안 넣은 사람도 지난 공휴일 연휴만큼은 쉰 것으로 본다
+        let today = d(2026, 10, 13)
+        let a = BurnoutEngine().assess(breaks: BurnoutEngine.restBlocks(from: [], around: today), asOf: today)
+        XCTAssertNotEqual(a.primaryReason, .neverRested)
+        XCTAssertEqual(a.daysSinceLastBreak, 2)   // 한글날 연휴 10/11 끝
+    }
+}
+
+// MARK: - 보너스 차감 · 사진 가져오기 빠진 날 채우기
+
+final class BonusAndPhotoImportTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: 2026, month: m, day: day))! }
+    /// 주말만 쉬는 날로 본다 (공휴일 설정에 흔들리지 않게)
+    private func weekend(_ date: Date) -> Bool { cal.isDateInWeekend(date) }
+
+    // 대체휴무 카테고리로 등록하고 보너스를 고르지 않아도, 메모가 비어 있어도 같은 유형 보너스에서 차감된다
+    func testReconcile_LinksByCategoryWithoutNote() {
+        let bonus = BonusLeave(days: 2, type: .compensatory)
+        let day = Calendar.current.startOfDay(for: Date())
+        let rec = LeaveRecord(startDate: day, endDate: day, type: .compensatory, status: .planned, note: "", length: .half)
+        BonusLeaveReconciler.reconcile(records: [rec], bonuses: [bonus])
+        XCTAssertEqual(rec.bonusLeaveId, bonus.id)
+        XCTAssertEqual(bonus.usedDays, 0.5)
+    }
+
+    // 취소된 기록은 보너스를 쓰지 않은 것
+    func testReconcile_IgnoresCancelled() {
+        let bonus = BonusLeave(days: 1, type: .reward)
+        let day = Calendar.current.startOfDay(for: Date())
+        let rec = LeaveRecord(startDate: day, endDate: day, type: .annual, status: .cancelled, bonusLeaveId: bonus.id)
+        bonus.usedDays = 1; bonus.isUsed = true
+        BonusLeaveReconciler.reconcile(records: [rec], bonuses: [bonus])
+        XCTAssertEqual(bonus.usedDays, 0)
+        XCTAssertFalse(bonus.isUsed)
+    }
+
+    private func leave(_ s: Date, _ e: Date, _ type: LeaveType = .annual, _ length: LeaveLength = .full) -> PhotoImportService.ImportedLeave {
+        .init(title: "연차", startDate: s, endDate: e, type: type, length: length)
+    }
+
+    // 앱엔 10/5~10/7 하나, 사진엔 하루씩 → 전부 중복
+    func testPhoto_DailyRowsCoveredByRange() {
+        let existing = [LeaveRecord(startDate: d(10, 5), endDate: d(10, 7), status: .used)]
+        let r = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5)), leave(d(10, 6), d(10, 6)), leave(d(10, 7), d(10, 7))],
+                                                 existingRecords: existing, isDayOff: weekend)
+        XCTAssertTrue(r.candidates.isEmpty)
+        XCTAssertEqual(r.duplicateCount, 3)
+    }
+
+    // 유형이 달라도 같은 날 종일이 이미 있으면 중복
+    func testPhoto_DifferentTypeSameDayIsDuplicate() {
+        let existing = [LeaveRecord(startDate: d(10, 5), endDate: d(10, 5), type: .annual, status: .used)]
+        let r = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5), .compensatory)],
+                                                 existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(r.duplicateCount, 1)
+    }
+
+    // 사진 10/5(월)~10/9(금) 중 10/7만 등록돼 있으면 → 10/5~6, 10/8~9 두 구간만 새로
+    func testPhoto_PartialRangeAddsOnlyMissingDays() {
+        let existing = [LeaveRecord(startDate: d(10, 7), endDate: d(10, 7), status: .used)]
+        let r = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 9))], existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(r.duplicateCount, 0)
+        XCTAssertEqual(r.candidates.map { cal.component(.day, from: $0.startDate) }, [5, 8])
+        XCTAssertEqual(r.candidates.map { cal.component(.day, from: $0.endDate) }, [6, 9])
+    }
+
+    // 사이에 낀 주말은 구간을 끊지 않는다: 10/9(금)~10/12(월) 중 아무것도 없으면 한 건 그대로
+    func testPhoto_WeekendInsideRangeKeepsOneSegment() {
+        let r = PhotoImportService.missingLeaves([leave(d(10, 9), d(10, 12))], existingRecords: [], isDayOff: weekend)
+        XCTAssertEqual(r.candidates.count, 1)
+        XCTAssertEqual(cal.component(.day, from: r.candidates[0].endDate), 12)
+    }
+
+    // 오전 반차가 있는 날: 사진에 반차 하나 더 → 새로 넣는다, 종일 → 하루를 넘치니 중복
+    func testPhoto_HalfDays() {
+        let existing = [LeaveRecord(startDate: d(10, 5), endDate: d(10, 5), status: .used, length: .half)]
+        let half = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5), .annual, .half)],
+                                                    existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(half.candidates.count, 1)
+        let full = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5))],
+                                                    existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(full.duplicateCount, 1)
+    }
+
+    // 취소된 기록이 있던 날은 빈 날로 본다
+    func testPhoto_CancelledRecordDoesNotBlock() {
+        let existing = [LeaveRecord(startDate: d(10, 5), endDate: d(10, 5), status: .cancelled)]
+        let r = PhotoImportService.missingLeaves([leave(d(10, 5), d(10, 5))], existingRecords: existing, isDayOff: weekend)
+        XCTAssertEqual(r.candidates.count, 1)
+    }
+}
+
+// MARK: - 휴가 불가 기간 (사용자 지정 blackout dates)
+
+final class BlackoutPeriodTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: 2026, month: m, day: day))! }
+
+    override func tearDown() {
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        super.tearDown()
+    }
+
+    func testBlackoutPeriodBlocksLeaveButIsNotDayOff() {
+        let period = SchoolBreak(name: "분기 결산", startDate: d(12, 21), endDate: d(12, 24), kind: .blackout)
+        let dayOff = DayOffCalendar.shared
+        dayOff.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [period])
+
+        XCTAssertTrue(dayOff.hasLeaveRestrictions)
+        XCTAssertTrue(dayOff.isLeaveBlocked(d(12, 22)))
+        XCTAssertEqual(dayOff.blackoutPeriodName(on: d(12, 22)), "분기 결산")
+        XCTAssertFalse(dayOff.isLeaveBlocked(d(12, 28)))
+        // 쉬는 날이 아니다 — 연차 차감 일수는 그대로
+        XCTAssertFalse(dayOff.isDayOff(d(12, 22)))
+        XCTAssertEqual(dayOff.workdays(from: d(12, 21), to: d(12, 24)), 4)
+        // 최적 플랜이 피할 날
+        let blocked = dayOff.blockedDates(in: 2026)
+        XCTAssertTrue(blocked.contains(cal.startOfDay(for: d(12, 21))))
+        XCTAssertTrue(blocked.contains(cal.startOfDay(for: d(12, 24))))
+        XCTAssertFalse(blocked.contains(cal.startOfDay(for: d(12, 25))))
+    }
+
+    func testBlackoutPeriodChangesFingerprint() {
+        let dayOff = DayOffCalendar.shared
+        dayOff.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        let before = dayOff.fingerprint
+        let period = SchoolBreak(name: "성수기", startDate: d(7, 1), endDate: d(7, 31), kind: .blackout)
+        dayOff.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [period])
+        XCTAssertNotEqual(before, dayOff.fingerprint, "기간을 넣으면 추천 캐시가 바뀌어야 한다")
+    }
+}
+
+// MARK: - 요일별 근무 시간 · 종류별 합계 · 연간 한도 · 종류 순서 (이탈리아 피드백 2차)
+
+@MainActor
+final class LeaveKindAllowanceTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    private var savedMinutes: Any?
+    private var savedByWeekday: Any?
+    private var savedOrder: [String] = []
+
+    override func setUp() {
+        super.setUp()
+        savedMinutes = UserDefaults.standard.object(forKey: "workdayMinutes")
+        savedByWeekday = UserDefaults.standard.object(forKey: "workdayMinutesByWeekday")
+        savedOrder = LeaveStyleStore.shared.orderKeys
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        // 월~목 7시간 30분, 금 7시간
+        LeaveLength.workdayMinutes = 450
+        LeaveLength.workdayMinutesByWeekday = [6: 420]
+    }
+
+    override func tearDown() {
+        UserDefaults.standard.set(savedMinutes, forKey: "workdayMinutes")
+        UserDefaults.standard.set(savedByWeekday, forKey: "workdayMinutesByWeekday")
+        LeaveStyleStore.shared.setOrder(savedOrder.compactMap { LeaveKindRef(key: $0) })
+        super.tearDown()
+    }
+
+    func testWorkdayMinutesByWeekday() {
+        XCTAssertEqual(LeaveLength.workdayMinutes(on: d(2026, 3, 12)), 450)   // 목
+        XCTAssertEqual(LeaveLength.workdayMinutes(on: d(2026, 3, 13)), 420)   // 금
+        // 금요일 1시간은 7시간 근무 기준 1/7일
+        let fri = LeaveRecord(startDate: d(2026, 3, 13), endDate: d(2026, 3, 13), length: .hours, durationMinutes: 60)
+        XCTAssertEqual(fri.effectiveLeaveDays, 60.0 / 420.0, accuracy: 0.0001)
+        let thu = LeaveRecord(startDate: d(2026, 3, 12), endDate: d(2026, 3, 12), length: .hours, durationMinutes: 60)
+        XCTAssertEqual(thu.effectiveLeaveDays, 60.0 / 450.0, accuracy: 0.0001)
+        // 종일 한 주(월~금) = 7.5×4 + 7 시간, 주말은 빠진다
+        let week = LeaveRecord(startDate: d(2026, 3, 9), endDate: d(2026, 3, 15))
+        XCTAssertEqual(LeaveKindUsage.workMinutes(of: week), 450 * 4 + 420)
+        // 반차는 그 요일 근무 시간의 절반
+        let half = LeaveRecord(startDate: d(2026, 3, 13), endDate: d(2026, 3, 13), length: .half)
+        XCTAssertEqual(LeaveKindUsage.workMinutes(of: half), 210)
+    }
+
+    func testUsageByKindAndAllowanceCounter() {
+        let rol = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
+        rol.allowanceAmount = 20   // 20시간
+        rol.allowanceIsHours = true
+        let now = d(2026, 6, 15)
+        let records = [
+            LeaveRecord(startDate: d(2026, 3, 13), endDate: d(2026, 3, 13), type: .special, status: .used,
+                        length: .hours, durationMinutes: 120, customTypeId: rol.id),
+            LeaveRecord(startDate: d(2026, 7, 10), endDate: d(2026, 7, 10), type: .special, status: .planned,
+                        length: .half, customTypeId: rol.id),   // 금요일 반차 = 3시간 30분
+            LeaveRecord(startDate: d(2026, 4, 1), endDate: d(2026, 4, 1), type: .special, status: .cancelled,
+                        length: .hours, durationMinutes: 240, customTypeId: rol.id),   // 취소는 안 센다
+            LeaveRecord(startDate: d(2026, 5, 6), endDate: d(2026, 5, 6), type: .sick, status: .used),
+            LeaveRecord(startDate: d(2025, 5, 7), endDate: d(2025, 5, 7), type: .special, status: .used,
+                        length: .hours, durationMinutes: 300, customTypeId: rol.id),   // 지난해
+        ]
+        let usage = LeaveKindUsage.byKind(records: records, customTypes: [rol], year: 2026, startMonth: 1, asOf: now)
+        let u = usage[.custom(rol.id)]!
+        XCTAssertEqual(u.usedMinutes, 120)
+        XCTAssertEqual(u.plannedMinutes, 210)
+        XCTAssertEqual(u.usedCount, 1)
+        XCTAssertEqual(u.plannedCount, 1)
+        XCTAssertEqual(usage[.builtIn(.sick)]?.usedDays, 1)
+
+        let counter = LeaveAllowanceCounter(kind: rol, usage: u)
+        XCTAssertEqual(counter.total, 1200)
+        XCTAssertEqual(counter.remaining, 1200 - 120 - 210)
+        XCTAssertFalse(counter.isOver)
+
+        // 일 단위 한도
+        rol.allowanceIsHours = false
+        rol.allowanceAmount = 0.5
+        let days = LeaveAllowanceCounter(kind: rol, usage: u)
+        XCTAssertTrue(days.isOver)   // 120/450 + 0.5 > 0.5
+
+        // 지운 종류의 기록은 기본 종류로 센다
+        let orphan = LeaveKindUsage.byKind(records: records, customTypes: [], year: 2026, startMonth: 1, asOf: now)
+        XCTAssertNil(orphan[.custom(rol.id)])
+        XCTAssertEqual(orphan[.builtIn(.special)]?.totalCount, 2)
+    }
+
+    func testBulkEntryInEveryLanguageAndHours() {
+        // 번체 중국어로 넣은 일괄 입력도 일괄 입력으로 알아본다 (예전엔 6개 언어만 — 근무일로 세어 줄었다)
+        XCTAssertEqual(LeaveRecord.bulkSummaryNotes.count, 21)
+        let tw = LeaveRecord(startDate: d(2026, 1, 1), endDate: d(2026, 1, 10), status: .used, note: "先前特休（批次輸入）")
+        XCTAssertTrue(tw.isBulkSummary)
+        XCTAssertEqual(tw.effectiveLeaveDays, 10)
+        // 시간까지 넣은 일괄 입력: 3일 4시간 (하루 7시간 30분) — 요일별 근무 시간과 상관없이 하루 근무 시간으로 나눈다
+        let hours = LeaveRecord(startDate: d(2026, 1, 2), endDate: d(2026, 1, 2), status: .used,
+                                note: "先前特休（批次輸入）", length: .hours, durationMinutes: 3 * 450 + 240)
+        XCTAssertEqual(hours.effectiveLeaveDays, 3 + 240.0 / 450.0, accuracy: 0.0001)   // 1/2 은 금요일(420)
+        XCTAssertEqual(LeaveKindUsage.workMinutes(of: hours), 3 * 450 + 240)
+    }
+
+    func testICloudBackupKeepsKindsLinksAndSettings() throws {
+        let schema = Schema([UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self, CustomLeaveType.self])
+        func makeContext() throws -> ModelContext {
+            let c = try ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+            return ModelContext(c)
+        }
+        let profile = UserProfile(name: "T", yearStartMonth: 1, totalAnnualLeave: 20)
+        let rol = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
+        rol.allowanceAmount = 32
+        let bonus = BonusLeave(days: 2, type: .compensatory)
+        let r1 = LeaveRecord(startDate: d(2026, 3, 13), endDate: d(2026, 3, 13), type: .special, status: .used,
+                             length: .hours, durationMinutes: 90, customTypeId: rol.id)
+        let r2 = LeaveRecord(startDate: d(2026, 3, 16), endDate: d(2026, 3, 16), type: .compensatory, status: .used,
+                             bonusLeaveId: bonus.id)
+        LeaveStyleStore.shared.setOrder([.custom(rol.id), .builtIn(.sick)])
+
+        let data = try BackupService.shared.createBackup(profile: profile, leaveRecords: [r1, r2], bonusLeaves: [bonus],
+                                                         leaveKinds: [rol])
+        // 복원 전에 설정을 바꿔 두고, 복원하면 돌아오는지 본다
+        LeaveLength.workdayMinutesByWeekday = [:]
+        LeaveStyleStore.shared.setOrder([])
+
+        let context = try makeContext()
+        try BackupService.shared.applyBackup(BackupService.shared.parseBackup(from: data), to: context, existingProfile: nil)
+        let kinds = try context.fetch(FetchDescriptor<CustomLeaveType>())
+        XCTAssertEqual(kinds.map(\.id), [rol.id])
+        XCTAssertEqual(kinds.first?.allowanceAmount, 32)
+        let records = try context.fetch(FetchDescriptor<LeaveRecord>())
+        XCTAssertEqual(records.first { $0.length == .hours }?.customTypeId, rol.id)
+        let restoredBonus = try context.fetch(FetchDescriptor<BonusLeave>()).first
+        XCTAssertEqual(restoredBonus?.id, bonus.id)
+        XCTAssertEqual(records.first { $0.bonusLeaveId != nil }?.bonusLeaveId, bonus.id)
+        XCTAssertEqual(LeaveLength.workdayMinutesByWeekday, [6: 420])
+        XCTAssertEqual(LeaveStyleStore.shared.orderKeys.first, LeaveKindRef.custom(rol.id).key)
+
+        // 예전 백업(종류·설정 없음)도 그대로 읽힌다
+        let legacy = #"{"version":1,"createdAt":"2026-01-01T00:00:00Z","profile":{"name":"T","yearStartMonth":1,"totalAnnualLeave":15,"usedLeave":0,"preferredDurationRaw":"","preferredSeasonsRaw":"","preferLongWeekend":true,"preferConsecutive":true,"avoidPeakSeason":false,"priorityActivitiesRaw":""},"leaveRecords":[],"bonusLeaves":[]}"#
+        let old = try BackupService.shared.parseBackup(from: Data(legacy.utf8))
+        XCTAssertNil(old.leaveKinds)
+        XCTAssertNil(old.kindSettings)
+    }
+
+    func testLeaveKindOrder() {
+        let a = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
+        let b = CustomLeaveType(name: "Ex festività", colorHex: "34C759", deductsFromAnnual: false)
+        b.createdAt = a.createdAt.addingTimeInterval(1)
+        let store = LeaveStyleStore.shared
+        store.setOrder([])
+        let initial = store.orderedKinds(custom: [b, a])
+        XCTAssertEqual(initial.first, .builtIn(.annual))
+        XCTAssertEqual(Array(initial.suffix(2)), [.custom(a.id), .custom(b.id)])
+
+        // b 를 맨 앞으로, 병가를 두 번째로
+        store.setOrder([.custom(b.id), .builtIn(.sick)])
+        let ordered = store.orderedKinds(custom: [a, b])
+        XCTAssertEqual(Array(ordered.prefix(3)), [.custom(b.id), .builtIn(.sick), .builtIn(.annual)])
+        XCTAssertEqual(ordered.count, LeaveType.categories.count + 2)
+        // 지운 종류는 빠진다
+        XCTAssertFalse(store.orderedKinds(custom: [a]).contains(.custom(b.id)))
+        XCTAssertEqual(LeaveKindRef(key: LeaveKindRef.custom(a.id).key), .custom(a.id))
     }
 }

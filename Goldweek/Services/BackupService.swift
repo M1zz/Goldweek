@@ -17,8 +17,48 @@ struct BackupData: Codable {
     let profile: ProfileBackup
     let leaveRecords: [LeaveRecordBackup]
     let bonusLeaves: [BonusLeaveBackup]
+    /// 직접 만든 휴가 종류(한도 포함)와 종류·근무 시간 설정 — 나중에 추가돼 예전 백업에는 없다
+    var leaveKinds: [LeaveKindBackup]? = nil
+    var kindSettings: LeaveKindSettingsBackup? = nil
 
     static let currentVersion = 1
+}
+
+struct LeaveKindBackup: Codable {
+    let id: UUID
+    let name: String
+    let colorHex: String
+    let deductsFromAnnual: Bool
+    let createdAt: Date
+    let allowanceAmount: Double
+    let allowanceIsHours: Bool
+}
+
+/// 기기에만 있던 설정 (UserDefaults) — 종류 색·순서, 하루·요일별 근무 시간
+struct LeaveKindSettingsBackup: Codable {
+    var builtInColors: [String: String]?
+    var order: [String]?
+    var workdayMinutes: Int?
+    var workdayMinutesByWeekday: [Int: Int]?
+
+    static func current() -> LeaveKindSettingsBackup {
+        let defaults = UserDefaults.standard
+        let minutes = defaults.integer(forKey: "workdayMinutes")
+        let byWeekday = LeaveLength.workdayMinutesByWeekday
+        return LeaveKindSettingsBackup(
+            builtInColors: LeaveStyleStore.shared.builtInColorHex,
+            order: LeaveStyleStore.shared.orderKeys,
+            workdayMinutes: minutes > 0 ? minutes : nil,
+            workdayMinutesByWeekday: byWeekday.isEmpty ? nil : byWeekday
+        )
+    }
+
+    func apply() {
+        if let builtInColors { LeaveStyleStore.shared.replaceBuiltInColors(builtInColors) }
+        if let order { LeaveStyleStore.shared.setOrder(order.compactMap { LeaveKindRef(key: $0) }) }
+        if let workdayMinutes { LeaveLength.workdayMinutes = workdayMinutes }
+        LeaveLength.workdayMinutesByWeekday = workdayMinutesByWeekday ?? [:]
+    }
 }
 
 struct ProfileBackup: Codable {
@@ -41,6 +81,12 @@ struct LeaveRecordBackup: Codable {
     let statusRaw: String
     let note: String
     let isRecommended: Bool
+    /// 길이·시간 — 나중에 추가된 필드라 예전 백업에는 없다
+    var lengthRaw: String? = nil
+    var durationMinutes: Int? = nil
+    /// 직접 만든 종류 · 보너스 연결 — 없으면 복원 후 기본 종류로 보이고 보너스 휴가가 연차에서 빠졌다
+    var customTypeId: UUID? = nil
+    var bonusLeaveId: UUID? = nil
 }
 
 struct BonusLeaveBackup: Codable {
@@ -50,6 +96,9 @@ struct BonusLeaveBackup: Codable {
     let grantedDate: Date
     let expirationDate: Date?
     let isUsed: Bool
+    /// 기록의 bonusLeaveId 와 잇기 위한 id — 예전 백업에는 없다
+    var id: UUID? = nil
+    var usedDays: Double? = nil
 }
 
 // MARK: - 백업 서비스
@@ -129,7 +178,8 @@ class BackupService {
     func createBackup(
         profile: UserProfile,
         leaveRecords: [LeaveRecord],
-        bonusLeaves: [BonusLeave]
+        bonusLeaves: [BonusLeave],
+        leaveKinds: [CustomLeaveType]? = nil
     ) throws -> Data {
         let profileBackup = ProfileBackup(
             name: profile.name,
@@ -151,7 +201,11 @@ class BackupService {
                 typeRaw: record.typeRaw,
                 statusRaw: record.statusRaw,
                 note: record.note,
-                isRecommended: record.isRecommended
+                isRecommended: record.isRecommended,
+                lengthRaw: record.lengthRaw,
+                durationMinutes: record.durationMinutes,
+                customTypeId: record.customTypeId,
+                bonusLeaveId: record.bonusLeaveId
             )
         }
 
@@ -162,8 +216,17 @@ class BackupService {
                 reason: bonus.reason,
                 grantedDate: bonus.grantedDate,
                 expirationDate: bonus.expirationDate,
-                isUsed: bonus.isUsed
+                isUsed: bonus.isUsed,
+                id: bonus.id,
+                usedDays: bonus.usedDays
             )
+        }
+
+        // 넘기지 않으면 저장소에서 읽는다 — 백업 경로가 여럿이라 호출부마다 넘기지 않아도 빠지지 않게
+        let kinds = leaveKinds ?? Self.fetchLeaveKinds()
+        let kindBackups = kinds.map {
+            LeaveKindBackup(id: $0.id, name: $0.name, colorHex: $0.colorHex, deductsFromAnnual: $0.deductsFromAnnual,
+                            createdAt: $0.createdAt, allowanceAmount: $0.allowanceAmount, allowanceIsHours: $0.allowanceIsHours)
         }
 
         let backup = BackupData(
@@ -171,7 +234,9 @@ class BackupService {
             createdAt: Date(),
             profile: profileBackup,
             leaveRecords: leaveRecordBackups,
-            bonusLeaves: bonusLeaveBackups
+            bonusLeaves: bonusLeaveBackups,
+            leaveKinds: kindBackups,
+            kindSettings: .current()
         )
 
         let encoder = JSONEncoder()
@@ -361,6 +426,21 @@ class BackupService {
             modelContext.insert(newProfile)
         }
 
+        // 직접 만든 휴가 종류 — 새 백업에만 있다. 예전 백업이면 지금 종류를 그대로 둔다.
+        // id 를 그대로 살려야 기록의 종류 연결과 종류 순서가 이어진다.
+        if let kinds = backup.leaveKinds {
+            try modelContext.fetch(FetchDescriptor<CustomLeaveType>()).forEach { modelContext.delete($0) }
+            for k in kinds {
+                let kind = CustomLeaveType(name: k.name, colorHex: k.colorHex, deductsFromAnnual: k.deductsFromAnnual)
+                kind.id = k.id
+                kind.createdAt = k.createdAt
+                kind.allowanceAmount = k.allowanceAmount
+                kind.allowanceIsHours = k.allowanceIsHours
+                modelContext.insert(kind)
+            }
+        }
+        backup.kindSettings?.apply()
+
         // 기존 연차 기록 삭제 — fetch 실패 시 중복 삽입을 막기 위해 복원을 중단한다
         let existingRecords = try modelContext.fetch(FetchDescriptor<LeaveRecord>())
         existingRecords.forEach { modelContext.delete($0) }
@@ -373,8 +453,12 @@ class BackupService {
                 type: LeaveType(rawValue: record.typeRaw) ?? .annual,
                 status: LeaveStatus(rawValue: record.statusRaw) ?? .planned,
                 note: record.note,
-                isRecommended: record.isRecommended
+                isRecommended: record.isRecommended,
+                bonusLeaveId: record.bonusLeaveId,
+                durationMinutes: record.durationMinutes,
+                customTypeId: record.customTypeId
             )
+            newRecord.lengthRaw = record.lengthRaw
             modelContext.insert(newRecord)
         }
 
@@ -392,10 +476,18 @@ class BackupService {
                 expirationDate: bonus.expirationDate
             )
             newBonus.isUsed = bonus.isUsed
+            if let id = bonus.id { newBonus.id = id }
+            if let used = bonus.usedDays { newBonus.usedDays = used }
             modelContext.insert(newBonus)
         }
 
         try modelContext.save()
+    }
+
+    /// 백업할 직접 만든 휴가 종류 — 앱 저장소에서 읽는다
+    private static func fetchLeaveKinds() -> [CustomLeaveType] {
+        guard let container = GoldweekApp.sharedContainerForBackup else { return [] }
+        return (try? ModelContext(container).fetch(FetchDescriptor<CustomLeaveType>())) ?? []
     }
 
     // MARK: - Layer 3: Enhanced iCloud Backup
@@ -829,6 +921,30 @@ enum BackupError: LocalizedError {
             case .integrityVerificationFailed: return "Yedek bütünlük doğrulaması başarısız oldu."
             case .backupRotationFailed: return "Yedek dosyası döndürme işlemi başarısız oldu."
             case .checksumMismatch: return "Yedek dosyası bozuk. (Sağlama toplamı uyuşmuyor)"
+            }
+        case .russian:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud недоступен. Включите iCloud Drive в Настройках."
+            case .localPathNotAvailable: return "Нет доступа к локальному хранилищу."
+            case .backupNotFound: return "Файл резервной копии не найден."
+            case .invalidBackupData: return "Не удалось прочитать данные резервной копии."
+            case .encryptionFailed: return "Не удалось зашифровать резервную копию."
+            case .decryptionFailed: return "Не удалось расшифровать резервную копию. Возможно, она создана на другом устройстве."
+            case .integrityVerificationFailed: return "Резервная копия не прошла проверку целостности."
+            case .backupRotationFailed: return "Не удалось обновить файлы резервных копий."
+            case .checksumMismatch: return "Файл резервной копии повреждён (контрольная сумма не совпадает)."
+            }
+        case .indonesian:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud tidak tersedia. Aktifkan iCloud Drive di Pengaturan."
+            case .localPathNotAvailable: return "Tidak bisa mengakses penyimpanan lokal."
+            case .backupNotFound: return "File backup tidak ditemukan."
+            case .invalidBackupData: return "Data backup tidak bisa dibaca."
+            case .encryptionFailed: return "Enkripsi backup gagal."
+            case .decryptionFailed: return "Dekripsi backup gagal. Mungkin ini backup dari perangkat lain."
+            case .integrityVerificationFailed: return "Verifikasi integritas backup gagal."
+            case .backupRotationFailed: return "Rotasi file backup gagal."
+            case .checksumMismatch: return "File backup rusak. (Checksum tidak cocok)"
             }
         case .dutch:
             switch self {

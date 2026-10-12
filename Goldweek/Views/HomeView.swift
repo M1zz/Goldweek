@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import LeeoKit
 
 struct HomeView: View {
     @Bindable var profile: UserProfile
@@ -67,7 +68,9 @@ struct HomeView: View {
         let now = Date()
         let month = cal.component(.month, from: now)
         let year = cal.component(.year, from: now)
-        let remaining = max(0, profile.totalAnnualLeave - committedLeave)
+        let remaining = LeaveUsageCalculator.currentSummary(records: Array(leaveRecords), startMonth: profile.yearStartMonth,
+                                                            annualGrant: profile.totalAnnualLeave)
+            .remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)
         let hasPlanned = leaveRecords.contains { $0.status == .planned }
 
         // 1. 14일 이내 공휴일 임박
@@ -448,6 +451,40 @@ struct AutoDetectBanner: View {
 
 /// 기기 지역을 지원하지 않거나(다른 나라 공휴일을 보여 주는 중), 지역마다 공휴일이 다른 나라에서
 /// 지역을 아직 안 골랐을 때. 카드 안에서 바로 고를 수 있게 메뉴를 둔다.
+/// 지원하지 않는 나라 — 피드백(기능 제안)으로 그 나라 지원을 요청한다. 지역 코드는 자동으로 붙는다.
+struct CountrySupportRequestButton<Label: View>: View {
+    let regionCode: String
+    @ViewBuilder let label: () -> Label
+    @State private var showingFeedback = false
+
+    /// 지역 코드 → 앱 언어의 나라 이름 (예: "KE" → "케냐")
+    static func regionName(_ code: String) -> String {
+        Locale(identifier: AppLanguage.current.bundleLanguageCode).localizedString(forRegionCode: code) ?? code
+    }
+
+    var body: some View {
+        Button {
+            UsageReportingService.record(event: "country_request_open:\(regionCode)")
+            showingFeedback = true
+        } label: {
+            label()
+        }
+        .sheet(isPresented: $showingFeedback) {
+            NavigationStack {
+                LeeoFeedbackView<GoldweekSpec>(
+                    initialType: .feature,
+                    extraInfo: ["Country request: \(regionCode) (\(Locale(identifier: "en").localizedString(forRegionCode: regionCode) ?? regionCode))"]
+                )
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(Strings.close) { showingFeedback = false }
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct HolidayRegionNoticeCard: View {
     enum Notice: Equatable {
         case unsupported(regionCode: String)
@@ -481,9 +518,8 @@ struct HolidayRegionNoticeCard: View {
     private var message: String {
         switch notice {
         case .unsupported(let code):
-            let locale = Locale(identifier: AppLanguage.current.bundleLanguageCode)
-            let regionName = locale.localizedString(forRegionCode: code) ?? code
-            return Strings.unsupportedCountryMessage(region: regionName, country: profile.country.displayName)
+            // 지원하지 않는 나라 — 피드백으로 지원을 요청하게 한다 (요청이 모이면 그 나라부터 넣는다)
+            return Strings.unsupportedCountryRequest(region: CountrySupportRequestButton<EmptyView>.regionName(code))
         case .chooseRegion:
             return Strings.chooseRegionMessage(profile.country.displayName)
         case .addCustomHolidays:
@@ -520,7 +556,11 @@ struct HolidayRegionNoticeCard: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             switch notice {
-            case .unsupported:
+            case .unsupported(let code):
+                CountrySupportRequestButton(regionCode: code) {
+                    actionLabel(icon: "paperplane", text: Strings.requestCountrySupport, filled: true)
+                }
+                // 지원될 때까지는 가까운 나라를 고르거나 공휴일을 직접 넣어 쓴다
                 Menu {
                     CountryMenuItems(includeCustom: false) { country in
                         profile.country = country
@@ -528,7 +568,7 @@ struct HolidayRegionNoticeCard: View {
                         onDismiss()
                     }
                 } label: {
-                    actionLabel(icon: "arrow.left.arrow.right", text: Strings.changeCountry, filled: true)
+                    actionLabel(icon: "arrow.left.arrow.right", text: Strings.changeCountry, filled: false)
                 }
                 Button {
                     // 나라가 바뀌면 이 카드는 '공휴일 추가' 안내로 바뀐다
@@ -725,7 +765,8 @@ struct LeaveStatusCard: View {
     var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: allLeaveRecords,
                                             bonuses: allBonusLeaves,
-                                            startMonth: profile.yearStartMonth)
+                                            startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
     }
 
     /// 현재 연차 연도에 해당하는 레코드만 필터
@@ -868,6 +909,8 @@ struct LeaveStatusCard: View {
                     Text(Strings.statUsed)
                         .font(.body)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                     Text("\(Strings.dayCount(displayUsed))")
                         .font(.title2.bold())
                         .foregroundStyle(.blue)
@@ -879,6 +922,8 @@ struct LeaveStatusCard: View {
                     Text(Strings.statPlanned)
                         .font(.body)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                     Text("\(Strings.dayCount(plannedLeave))")
                         .font(.title2.bold())
                         .foregroundStyle(.cyan)
@@ -890,6 +935,8 @@ struct LeaveStatusCard: View {
                     Text(isLeisure ? (hasGoal ? Strings.statRemainingGoal : Strings.statPlanned) : Strings.remaining)
                         .font(.body)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                     if isLeisure && !hasGoal {
                         // 무제한 모드: 총 계획/완료일 표시
                         Text("\(Strings.dayCount(actualUsed + plannedLeave))")
@@ -1420,32 +1467,60 @@ struct PastLeavePromptBanner: View {
 }
 
 // MARK: - 이전 연차 빠른 입력 시트
+/// 앱을 연도 중간에 시작한 사람이 그동안 쓴 연차를 한 번에 넣는다.
+/// 쓴 만큼 또는 지금 남은 만큼으로, 일 + 시간까지 (대만 피드백: 특휴를 시간 단위로 관리).
 struct PastLeaveQuickEntrySheet: View {
     @Bindable var profile: UserProfile
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Query private var allRecords: [LeaveRecord]
 
-    @State private var daysUsed: Double = 1.0
+    @State private var entersRemaining = false
+    @State private var days = 1
+    /// 일 외에 더하는 시간(분)
+    @State private var extraMinutes = 0
     @State private var isSaving = false
     @State private var showingSaveError = false
 
     private let calendar = Calendar.current
+    private var workday: Int { LeaveLength.workdayMinutes }
 
+    /// 지금 속한 연차 해의 시작일 (기준월이 지금 달보다 뒤면 작년)
     private var yearStartDate: Date {
-        let year = calendar.component(.year, from: Date())
-        var components = DateComponents()
-        components.year = year
-        components.month = profile.yearStartMonth
-        components.day = 1
-        return calendar.date(from: components) ?? Date()
+        let year = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: calendar)
+        return LeaveUsageCalculator.fiscalYearStart(year: year, startMonth: profile.yearStartMonth, calendar: calendar)
     }
 
     private var yesterday: Date {
         calendar.date(byAdding: .day, value: -1, to: calendar.startOfDay(for: Date())) ?? Date()
     }
 
-    private var maxDays: Double {
-        Double(min(Int(profile.totalAnnualLeave), 30))
+    /// 올해 이미 넣은 일괄 입력 — 새 값으로 바꾼다
+    private var existingBulk: [LeaveRecord] {
+        let start = yearStartDate
+        let end = LeaveUsageCalculator.fiscalYearEnd(year: calendar.component(.year, from: start),
+                                                     startMonth: profile.yearStartMonth, calendar: calendar)
+        return allRecords.filter { $0.isBulkSummary && $0.startDate >= start && $0.startDate <= end }
+    }
+
+    private var enteredMinutes: Int { days * workday + extraMinutes }
+
+    /// 기록할 사용 시간(분) — 남은 만큼으로 넣었으면 지금 쓸 수 있는 연차에서 뺀다. nil 이면 받은 연차보다 많이 남은 것.
+    private var usedMinutes: Int? {
+        guard entersRemaining else { return enteredMinutes }
+        let bulkIDs = Set(existingBulk.map(\.id))
+        let available = LeaveUsageCalculator.availableAnnual(on: Date(), records: allRecords.filter { !bulkIDs.contains($0.id) },
+                                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStartMonth)
+        let used = Int((available * Double(workday)).rounded()) - enteredMinutes
+        return used >= 0 ? used : nil
+    }
+
+    /// "3일 4시간" — 하루 근무 시간 기준
+    private func daysAndHours(_ minutes: Int) -> String {
+        let d = minutes / workday, rest = minutes % workday
+        if rest == 0 { return Strings.dayCount(Double(d)) }
+        if d == 0 { return Strings.durationText(minutes: rest) }
+        return "\(Strings.dayCount(Double(d))) \(Strings.durationText(minutes: rest))"
     }
 
     var body: some View {
@@ -1458,33 +1533,68 @@ struct PastLeaveQuickEntrySheet: View {
                         .listRowBackground(Color.clear)
                 }
 
-                Section(Strings.pastLeaveTotalUsed) {
+                Section {
+                    Picker(Strings.pastLeaveTotalUsed, selection: $entersRemaining) {
+                        Text(Strings.pastLeaveModeUsed).tag(false)
+                        Text(Strings.pastLeaveModeRemaining).tag(true)
+                    }
+                    .pickerStyle(.segmented)
+
                     HStack {
-                        Text("\(String(format: daysUsed == Double(Int(daysUsed)) ? "%.0f" : "%.1f", daysUsed))\(Strings.dayUnitSuffix)")
+                        Text(daysAndHours(enteredMinutes))
                             .font(.title2.bold())
                             .foregroundStyle(.orange)
+                            .contentTransition(.numericText())
                         Spacer()
-                        Stepper("", value: $daysUsed, in: 0.5...maxDays, step: 0.5)
-                            .labelsHidden()
+                    }
+
+                    Stepper(value: $days, in: 0...365) {
+                        HStack {
+                            Text(Strings.allowanceUnitDays)
+                            Spacer()
+                            Text("\(days)").monospacedDigit().foregroundStyle(.secondary)
+                        }
+                    }
+                    Stepper(value: $extraMinutes, in: 0...max(0, workday - 30), step: 30) {
+                        HStack {
+                            Text(Strings.leaveHoursLabel)
+                            Spacer()
+                            Text(Strings.durationText(minutes: extraMinutes)).monospacedDigit().foregroundStyle(.secondary)
+                        }
                     }
 
                     HStack(spacing: 8) {
-                        ForEach([1.0, 2.0, 3.0, 5.0, 7.0, 10.0], id: \.self) { days in
+                        ForEach([1, 2, 3, 5, 7, 10], id: \.self) { n in
                             Button {
-                                daysUsed = days
+                                days = n
+                                extraMinutes = 0
                             } label: {
-                                Text("\(Int(days))")
+                                Text("\(n)")
                                     .font(.body)
                                     .fontWeight(.medium)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 7)
-                                    .background(daysUsed == days ? Color.orange : Color(.systemGray5))
-                                    .foregroundStyle(daysUsed == days ? .white : .primary)
+                                    .background(days == n && extraMinutes == 0 ? Color.orange : Color(.systemGray5))
+                                    .foregroundStyle(days == n && extraMinutes == 0 ? .white : .primary)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             .buttonStyle(.plain)
                         }
                     }
+
+                    if entersRemaining {
+                        if let used = usedMinutes {
+                            Text(Strings.pastLeaveWillRecordUsed(daysAndHours(used)))
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text(Strings.pastLeaveRemainingTooMuch)
+                                .font(.body)
+                                .foregroundStyle(.red)
+                        }
+                    }
+                } footer: {
+                    Text(Strings.hoursLeaveFooter(workday: Strings.durationText(minutes: workday)))
                 }
 
                 Section {
@@ -1494,6 +1604,11 @@ struct PastLeaveQuickEntrySheet: View {
                         Text("\(yearStartDate.appMonthDay)  →  \(yesterday.appMonthDay)")
                             .font(.body)
                             .foregroundStyle(.secondary)
+                    }
+                    if !existingBulk.isEmpty {
+                        Text(Strings.pastLeaveReplacesExisting)
+                            .font(.body)
+                            .foregroundStyle(.orange)
                     }
                 } footer: {
                     Text(Strings.pastLeaveSheetFooter)
@@ -1513,40 +1628,52 @@ struct PastLeaveQuickEntrySheet: View {
                             Text(Strings.pastLeaveConfirm).fontWeight(.semibold)
                         }
                     }
-                    .disabled(isSaving)
+                    .disabled(isSaving || usedMinutes == nil || (!entersRemaining && enteredMinutes == 0))
                 }
             }
         }
-        .presentationDetents([.medium])
+        .presentationDetents([.large])
         .alert(Strings.alert, isPresented: $showingSaveError) {
             Button(Strings.confirm, role: .cancel) { }
         } message: {
             Text(Strings.saveFailed)
         }
+        .onAppear {
+            // 이미 넣은 값이 있으면 그 값에서 시작
+            if let old = existingBulk.first {
+                let minutes = old.length == .hours ? (old.durationMinutes ?? 0) : old.daysCount * workday
+                days = minutes / workday
+                extraMinutes = (minutes % workday) / 30 * 30
+            }
+        }
     }
 
+    /// 연차 해 첫날 하루짜리 시간 기록으로 남긴다 — 달력에 여러 날로 퍼지지 않고, 반나절·시간도 그대로 남는다
     private func saveEntry() {
-        guard daysUsed > 0 else { return }
+        guard let minutes = usedMinutes else { return }
         isSaving = true
-
-        // effectiveLeaveDays = daysUsed가 되도록 endDate를 계산
-        let calendar = Calendar.current
-        let adjustedEnd = calendar.date(byAdding: .day, value: max(0, Int(daysUsed) - 1), to: yearStartDate) ?? yearStartDate
-        let record = LeaveRecord(
-            startDate: yearStartDate,
-            endDate: adjustedEnd,
-            type: .annual,
-            status: .used,
-            note: Strings.pastLeaveSummaryNote
-        )
-        modelContext.insert(record)
+        let old = existingBulk
+        old.forEach { modelContext.delete($0) }
+        if minutes > 0 {
+            let record = LeaveRecord(
+                startDate: yearStartDate,
+                endDate: yearStartDate,
+                type: .annual,
+                status: .used,
+                note: Strings.pastLeaveSummaryNote,
+                length: .hours,
+                durationMinutes: minutes
+            )
+            modelContext.insert(record)
+        }
 
         do {
             try modelContext.save()
+            UsageReportingService.record(event: entersRemaining ? "past_leave_entered_remaining" : "past_leave_entered_used")
             HapticFeedback.success()
             dismiss()
         } catch {
-            modelContext.delete(record)
+            modelContext.rollback()
             HapticFeedback.error()
             showingSaveError = true
         }
@@ -1561,12 +1688,16 @@ struct BurnoutPaceCard: View {
 
     /// 번아웃 평가 — 렌더당 1회만 계산 (예측 루프 중복 방지)
     private let assessment: BurnoutAssessment
+    /// 휴식 블록 (휴가·공휴일 + 붙은 주말) — 평가와 "마지막/다음 휴식" 표시가 같은 기준을 쓴다
+    private let restBlocks: [RestBlock]
 
     init(profile: UserProfile, allLeaveRecords: [LeaveRecord]) {
         self._profile = Bindable(wrappedValue: profile)
         self.allLeaveRecords = allLeaveRecords
+        let blocks = BurnoutEngine.restBlocks(from: allLeaveRecords)
+        self.restBlocks = blocks
         self.assessment = BurnoutEngine().assess(
-            breaks: BurnoutEngine.restBlocks(from: allLeaveRecords),
+            breaks: blocks,
             asOf: Date(),
             subjectiveFatigue: FatigueCheckIn.recentValue
         )
@@ -1652,28 +1783,15 @@ struct BurnoutPaceCard: View {
     // MARK: 휴가 텀 (번아웃 지표)
     /// 쉬어가는 흐름에서 "사무실에서 벗어난 시간"으로 카운트할 레코드.
     /// 일이긴 하지만 일상 루틴에서 벗어나는 출장도 리프레시 효과가 있어 포함.
-    private func countsAsBreak(_ record: LeaveRecord) -> Bool {
-        record.deductsFromAnnualLeave || record.type == .businessTrip
-    }
-
+    /// 마지막으로 쉰 날 — 휴가뿐 아니라 공휴일 연휴도 휴식이다 (BurnoutEngine.restBlocks)
     private var lastLeaveDate: Date? {
         let today = cal.startOfDay(for: Date())
-        return allLeaveRecords.compactMap { record -> Date? in
-            guard countsAsBreak(record) else { return nil }
-            let endDay = cal.startOfDay(for: record.endDate)
-            guard endDay <= today else { return nil }
-            guard record.status == .used || record.status == .planned else { return nil }
-            return record.endDate
-        }.max()
+        return restBlocks.map(\.end).filter { cal.startOfDay(for: $0) <= today }.max()
     }
+    /// 다음에 쉬는 날 — 잡아 둔 휴가나 다가오는 공휴일 연휴
     private var nextPlannedLeave: Date? {
         let today = cal.startOfDay(for: Date())
-        return allLeaveRecords.compactMap { record -> Date? in
-            guard countsAsBreak(record) else { return nil }
-            let startDay = cal.startOfDay(for: record.startDate)
-            guard startDay > today, record.status == .planned else { return nil }
-            return record.startDate
-        }.min()
+        return restBlocks.map(\.start).filter { cal.startOfDay(for: $0) > today }.min()
     }
     private var daysSinceLastLeave: Int? {
         guard let last = lastLeaveDate else { return nil }
@@ -1865,6 +1983,8 @@ struct BurnoutPaceCard: View {
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)   // "Сегодня" 가 "Сегодн/я" 로 끊기지 않게
                 .fixedSize(horizontal: false, vertical: true)
         }
     }

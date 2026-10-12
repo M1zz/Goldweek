@@ -113,11 +113,10 @@ enum LeavePlanner {
         //    → 부분집합 선택 자유. 단 같은 워크데이가 두 다리에 중복 안 되게 보장 필요.
         let nonOverlapping = removeOverlaps(candidates)
 
-        let dp = knapsack(items: nonOverlapping, capacity: availableLeaveDays)
+        let table = knapsack(items: nonOverlapping, capacity: availableLeaveDays)
 
         // 6. 역추적으로 선택된 다리 복원
-        let selected = traceback(items: nonOverlapping, dp: dp,
-                                  capacity: availableLeaveDays)
+        let selected = traceback(table, capacity: availableLeaveDays)
 
         // 7. LeaveBreak 객체로 변환
         let breaks = selected
@@ -238,6 +237,8 @@ private extension LeavePlanner {
             // 한 런 안에서 가운데만 떼는 건 무의미 (양 끝이 워크데이라 효과 없음)
             let runLen = j - i + 1
             let maxK = min(runLen, maxCost)
+            // maxCost 가 0 이면 `1...0` 이 되어 죽는다 — 부르는 쪽 가드와 상관없이 여기서도 막는다
+            guard maxK >= 1 else { i = j + 1; continue }
             for k in 1...maxK {
                 // (a) 좌측 k개
                 if i > 0 {  // 왼쪽에 휴일/주말이 있어야
@@ -330,7 +331,17 @@ private extension LeavePlanner {
     /// 0/1 knapsack DP (1D 롤링 배열, O(N) 공간)
     /// 동시에 선택된 다리들은 시간상 겹치지 않게 해야 하므로 선형 시간순 DP로 변환.
     /// breakStart 인덱스 오름차순으로 정렬한 뒤, 각 시점에서 "선택/스킵" 결정.
-    static func knapsack(items: [Bridge], capacity: Int) -> [[Int]] {
+    /// DP 결과 — 역추적에 필요한 정렬 순서·p 배열을 함께 돌려준다.
+    /// ⚠️ 예전엔 이걸 공유 싱글턴(TracebackContext.shared)에 넣었다. 추천 화면은 백그라운드에서,
+    ///    홈의 휴식 레이더는 메인에서 동시에 돌려서 서로의 배열을 읽고 범위 밖을 짚어 앱이 죽었다
+    ///    (휴가를 여러 개 넣을 때마다 둘 다 다시 계산된다 — 이탈리아 사용자 크래시 제보).
+    struct Table {
+        let dp: [[Int]]
+        let sorted: [Bridge]
+        let p: [Int]
+    }
+
+    static func knapsack(items: [Bridge], capacity: Int) -> Table {
         // dp[i][j] = items[0..<i] 중 cost 합 ≤ j 이면서 다리들이 시간상 겹치지 않을 때 최대 gain
         // 시간 정렬 후, 이전 선택된 다리와 겹치지 않는 다리만 이을 수 있게 마지막 endIdx 추적
         // → 2D DP가 필요해지므로, 다리가 작은 규모(~50개)면 그냥 비트마스크가 간단하지만,
@@ -345,7 +356,11 @@ private extension LeavePlanner {
         //                  dp[p[i]][j - items[i].cost] + items[i].gain)         // 선택
         let sorted = items.sorted { $0.endIdx < $1.endIdx }
         let n = sorted.count
+        let capacity = max(0, capacity)
         var dp = Array(repeating: Array(repeating: 0, count: capacity + 1), count: n + 1)
+        // 후보가 하나도 없으면 끝 — 아래 `1...n` 은 n 이 0 이면 범위가 성립하지 않아 그 자리에서 죽는다
+        // (휴가를 많이 넣어 남은 평일이 다 막히면 후보가 0개가 된다)
+        guard n > 0 else { return Table(dp: dp, sorted: [], p: [0]) }
 
         // p[i] = sorted[0..<i] 중 sorted[i-1]과 겹치지 않는 마지막 인덱스 + 1 (없으면 0)
         var p = [Int](repeating: 0, count: n + 1)
@@ -376,18 +391,15 @@ private extension LeavePlanner {
                 }
             }
         }
-        // 역추적을 위해 정렬된 items도 함께 보관 — 따로 클로저로 노출
-        TracebackContext.shared.set(sorted: sorted, p: p)
-        return dp
+        return Table(dp: dp, sorted: sorted, p: p)
     }
 
     /// dp 테이블에서 선택된 다리들을 복원
-    static func traceback(items: [Bridge], dp: [[Int]], capacity: Int) -> [Bridge] {
-        let ctx = TracebackContext.shared
-        guard let sorted = ctx.sorted, let p = ctx.p else { return [] }
+    static func traceback(_ table: Table, capacity: Int) -> [Bridge] {
+        let (dp, sorted, p) = (table.dp, table.sorted, table.p)
         var result: [Bridge] = []
         var i = sorted.count
-        var j = capacity
+        var j = max(0, capacity)
         while i > 0 {
             let item = sorted[i - 1]
             let skipValue = dp[i - 1][j]
@@ -403,13 +415,4 @@ private extension LeavePlanner {
         return result
     }
 
-    /// knapsack과 traceback 사이에 정렬·p 배열 공유용. 단일 호출 흐름이라 안전.
-    final class TracebackContext {
-        static let shared = TracebackContext()
-        var sorted: [Bridge]?
-        var p: [Int]?
-        func set(sorted: [Bridge], p: [Int]) {
-            self.sorted = sorted; self.p = p
-        }
-    }
 }

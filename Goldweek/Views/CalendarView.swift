@@ -17,6 +17,9 @@ struct CalendarView: View {
     @State private var selectedDate = ScreenshotMode.calendarStartMonth
     @State private var currentMonth = ScreenshotMode.calendarStartMonth
     @State private var showingAddLeave = false
+    /// 보기 범위 — 1개월(기본) · 2개월 · 분기 · 반기 · 1년
+    @AppStorage("calendarSpanMonths") private var spanRaw = 1
+    private var span: CalendarSpan { CalendarSpan(rawValue: spanRaw) ?? .one }
     /// 선택한 날짜 카드에서 바로 고치거나 지우기
     @State private var recordToEdit: LeaveRecord?
     @State private var recordToDelete: LeaveRecord?
@@ -66,10 +69,18 @@ struct CalendarView: View {
     private var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: leaveRecords,
                                             bonuses: allBonusLeaves,
-                                            startMonth: profile.yearStartMonth)
+                                            startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
     }
+    /// 보고 있는 달이 내년(다음 연차 해)이면 내년 연차로 추천한다 — 해가 바뀌기 전에도 미리 계획할 수 있게
     private var availableLeave: Double {
-        usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: true)
+        let cal = Calendar.current
+        let viewing = LeaveUsageCalculator.fiscalYear(for: currentMonth, startMonth: profile.yearStartMonth, calendar: cal)
+        let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
+        guard viewing > now else { return usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: true) }
+        let start = LeaveUsageCalculator.fiscalYearStart(year: viewing, startMonth: profile.yearStartMonth, calendar: cal)
+        return LeaveUsageCalculator.availableAnnual(on: start, records: leaveRecords, annualGrant: profile.totalAnnualLeave,
+                                                    startMonth: profile.yearStartMonth) + usage.remainingBonus
     }
 
     /// MRT 여행 큐레이션 노출 조건: 한국어 + 한국 거주 + 직장인 (마이리얼트립은 한국 시장 위주)
@@ -80,6 +91,34 @@ struct CalendarView: View {
     }
 
     /// 추천 일정 중 노란색으로 표시할 "연차일" — 범위 내 평일(주말·공휴일 제외)
+    /// 이 달 휴가의 종류별 이름·색 — 색이 하나뿐이고 기본색이면 범례는 예전처럼 "연차" 하나로 둔다
+    private var monthLeaveKinds: [(name: String, color: Color)] {
+        guard let interval = calendar.dateInterval(of: .month, for: currentMonth) else { return [] }
+        let store = LeaveStyleStore.shared
+        var seen = Set<String>()
+        var kinds: [(name: String, color: Color)] = []
+        var anyStyled = false
+        for r in leaveRecords where r.status != .cancelled && r.startDate < interval.end && r.endDate >= interval.start {
+            anyStyled = anyStyled || r.customTypeId != nil || store.hasCustomColor(for: r.category)
+            let name = r.displayTypeName
+            guard seen.insert(name).inserted else { continue }
+            kinds.append((name, r.displayColor))
+        }
+        return anyStyled ? kinds : []
+    }
+
+    /// 이 달에 사는 곳 공휴일이 있는지 — 있을 때만 범례에 넣는다
+    private var monthHasHomeHoliday: Bool {
+        guard let interval = calendar.dateInterval(of: .month, for: currentMonth) else { return false }
+        var d = interval.start
+        while d < interval.end {
+            if DayOffCalendar.shared.homeHolidayName(on: d) != nil { return true }
+            guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+            d = next
+        }
+        return false
+    }
+
     private var monthHasChildBreak: Bool {
         guard let interval = calendar.dateInterval(of: .month, for: currentMonth) else { return false }
         let lastDay = calendar.date(byAdding: .day, value: -1, to: interval.end) ?? interval.end
@@ -180,7 +219,8 @@ struct CalendarView: View {
     /// ⚠️ 화면마다 다르게 지우면 보너스 사용량이 화면에 따라 어긋난다.
     private func deleteRecord(_ record: LeaveRecord) {
         // 보너스에서 쓴 휴가였다면 그만큼 되돌린다
-        if let bonusId = record.bonusLeaveId,
+        // 취소된 기록은 보너스를 쓰지 않았으니 되돌릴 것도 없다
+        if record.status != .cancelled, let bonusId = record.bonusLeaveId,
            let bonus = allBonusLeaves.first(where: { $0.id == bonusId }) {
             bonus.usedDays = max(0, bonus.usedDays - record.effectiveLeaveDays)
             if bonus.isUsed && bonus.remainingDays > 0 { bonus.isUsed = false }
@@ -223,6 +263,7 @@ struct CalendarView: View {
             UsageReportingService.record(event: "recommendation_added")
             AppTips.recommendation.invalidate(reason: .actionPerformed)
             HapticFeedback.success()
+            ReviewMoments.shared.trigger(.recommendationAdded)
         } catch {
             addedRecommendationIDs.remove(recommendation.id)
             records.forEach { modelContext.delete($0) }
@@ -236,6 +277,27 @@ struct CalendarView: View {
             ScrollViewReader { proxy in
             ScrollView {
                 VStack(spacing: 20) {
+                    // 보기 범위 — 한 달 / 여러 달
+                    Picker(Strings.calendarSpanLabel, selection: $spanRaw) {
+                        ForEach(CalendarSpan.allCases) { s in
+                            Text(Strings.calendarSpanName(months: s.rawValue)).tag(s.rawValue)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: spanRaw) { _, new in
+                        if new > 1 { UsageReportingService.record(event: "calendar_span:\(new)") }
+                    }
+
+                    if span != .one {
+                        PeriodNavigator(currentMonth: $currentMonth, span: span)
+                        CalendarOverviewGrid(currentMonth: currentMonth, span: span, country: profile.country,
+                                             leaveRecords: leaveRecords) { month in
+                            withAnimation {
+                                currentMonth = month
+                                spanRaw = CalendarSpan.one.rawValue
+                            }
+                        }
+                    } else {
                     // 월 네비게이션
                     MonthNavigator(currentMonth: $currentMonth)
 
@@ -263,7 +325,9 @@ struct CalendarView: View {
                     LegendView(showsRecommendation: !recommendedDates.isEmpty,
                                showsWarning: !burnoutWarningDates.isEmpty,
                                showsMyBreak: holidays.contains { $0.isBreak && calendar.isDate($0.date, equalTo: currentMonth, toGranularity: .month) },
-                               showsChildBreak: monthHasChildBreak)
+                               showsChildBreak: monthHasChildBreak,
+                               showsHomeHoliday: monthHasHomeHoliday,
+                               leaveKinds: monthLeaveKinds)
 
                     // 추천이 실제로 있을 때만 안내한다 — 없는 기능을 설명하면 소음이다
                     if !recommendedDates.isEmpty {
@@ -290,6 +354,7 @@ struct CalendarView: View {
                             showingDeleteAlert = true
                         }
                     )
+                    }
 
                     // 추천 휴가 — 캘린더의 노란 표시를 목록으로 풀어 준다.
                     //
@@ -437,6 +502,17 @@ struct CalendarGrid: View {
 
     private let calendar = Calendar.current
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
+
+    /// 달력 첫 칸의 요일 (1=일, 2=월, 7=토)
+    private var firstWeekday: Int {
+        HolidayService.firstWeekday(for: DayOffCalendar.shared.country, override: firstWeekdayRaw)
+    }
+
+    /// 첫 요일부터 차례로 늘어선 7개 요일
+    private var orderedWeekdays: [Int] {
+        (0..<7).map { (firstWeekday - 1 + $0) % 7 + 1 }
+    }
 
     /// 내 방학 날 — 쉬는 날이지만 공휴일(빨강)과 구분해 남색으로 그린다
     private func isMyBreak(_ date: Date) -> Bool {
@@ -449,8 +525,8 @@ struct CalendarGrid: View {
             return []
         }
 
-        let firstWeekday = calendar.component(.weekday, from: firstDay) - 1
-        var days: [Date?] = Array(repeating: nil, count: firstWeekday)
+        let leadingBlanks = (calendar.component(.weekday, from: firstDay) - firstWeekday + 7) % 7
+        var days: [Date?] = Array(repeating: nil, count: leadingBlanks)
 
         for day in range {
             if let date = calendar.date(byAdding: .day, value: day - 1, to: firstDay) {
@@ -469,10 +545,10 @@ struct CalendarGrid: View {
         VStack(spacing: 8) {
             // 요일 헤더
             HStack {
-                ForEach(Array(Strings.weekdays.enumerated()), id: \.offset) { index, day in
-                    Text(day)
+                ForEach(orderedWeekdays, id: \.self) { weekday in
+                    Text(Strings.weekdays[weekday - 1])
                         .font(.body.bold())
-                        .foregroundStyle(weekdayHeaderColor(index + 1))
+                        .foregroundStyle(weekdayHeaderColor(weekday))
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -491,6 +567,7 @@ struct CalendarGrid: View {
                                 isLeave: isLeave(date),
                                 isMakeupWorkday: HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country),
                                 isChildBreak: DayOffCalendar.shared.childBreakName(on: date) != nil,
+                                isHomeHoliday: DayOffCalendar.shared.homeHolidayName(on: date) != nil,
                                 barVisible: showsRestBar(date),
                                 barColor: restBarColor(date),
                                 leaveConnectsLeft: restConnectsLeft(date),
@@ -520,8 +597,13 @@ struct CalendarGrid: View {
     }
 
     private func isLeave(_ date: Date) -> Bool {
+        leaveRecord(on: date) != nil
+    }
+
+    /// 그 날의 휴가 기록 (취소 제외) — 막대 색을 그 휴가 종류의 색으로 칠한다
+    private func leaveRecord(on date: Date) -> LeaveRecord? {
         let dayStart = calendar.startOfDay(for: date)
-        return leaveRecords.contains { record in
+        return leaveRecords.first { record in
             let recordStart = calendar.startOfDay(for: record.startDate)
             let recordEnd = calendar.startOfDay(for: record.endDate)
             return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
@@ -577,7 +659,7 @@ struct CalendarGrid: View {
 
     /// 막대 색 — 휴가색/공휴일색, 브릿지 주말은 인접 앵커 기준(휴가 우선)
     private func restBarColor(_ date: Date) -> Color {
-        if isLeave(date) { return AppTheme.Colors.leave }
+        if let record = leaveRecord(on: date) { return record.displayColor }
         if isMyBreak(date) { return .indigo }
         if isHoliday(date) { return AppTheme.Colors.holiday }
         var start = date
@@ -586,25 +668,25 @@ struct CalendarGrid: View {
         while let n = calendar.date(byAdding: .day, value: 1, to: end), isWeekendDate(n) { end = n }
         let before = calendar.date(byAdding: .day, value: -1, to: start)
         let after = calendar.date(byAdding: .day, value: 1, to: end)
-        let nearLeave = (before.map(isLeave) ?? false) || (after.map(isLeave) ?? false)
-        if nearLeave { return AppTheme.Colors.leave }
+        // 휴가에 붙은 주말은 그 휴가 색으로 잇는다 (앞쪽 휴가 우선)
+        if let near = before.flatMap(leaveRecord(on:)) ?? after.flatMap(leaveRecord(on:)) { return near.displayColor }
         // 내 방학에 붙은 주말은 방학 색으로 잇는다
         let nearBreak = (before.map(isMyBreak) ?? false) || (after.map(isMyBreak) ?? false)
         return nearBreak ? .indigo : AppTheme.Colors.holiday
     }
 
-    /// 전날도 막대이고 같은 주 안에서 이어지는 경우 (일요일=첫 열은 좌측 연결 없음)
+    /// 전날도 막대이고 같은 주 안에서 이어지는 경우 (첫 열은 좌측 연결 없음)
     private func restConnectsLeft(_ date: Date) -> Bool {
         guard showsRestBar(date) else { return false }
-        if calendar.component(.weekday, from: date) == 1 { return false }
+        if calendar.component(.weekday, from: date) == firstWeekday { return false }
         guard let prev = calendar.date(byAdding: .day, value: -1, to: date) else { return false }
         return showsRestBar(prev)
     }
 
-    /// 다음날도 막대이고 같은 주 안에서 이어지는 경우 (토요일=마지막 열은 우측 연결 없음)
+    /// 다음날도 막대이고 같은 주 안에서 이어지는 경우 (마지막 열은 우측 연결 없음)
     private func restConnectsRight(_ date: Date) -> Bool {
         guard showsRestBar(date) else { return false }
-        if calendar.component(.weekday, from: date) == 7 { return false }
+        if calendar.component(.weekday, from: date) == orderedWeekdays[6] { return false }
         guard let next = calendar.date(byAdding: .day, value: 1, to: date) else { return false }
         return showsRestBar(next)
     }
@@ -620,6 +702,8 @@ struct DayCell: View {
     var isMakeupWorkday: Bool = false
     /// 자녀 방학 — 날짜 위쪽에 청록 선 (참고 표시라 배경은 건드리지 않는다)
     var isChildBreak: Bool = false
+    /// 사는 곳에만 있는 공휴일 — 쉬는 날로 치지 않으면 빈 링으로, 치면 일반 공휴일처럼 보인다
+    var isHomeHoliday: Bool = false
     var barVisible: Bool = false
     var barColor: Color = AppTheme.Colors.leave
     var leaveConnectsLeft: Bool = false
@@ -706,6 +790,12 @@ struct DayCell: View {
                     .fill(AppTheme.Colors.holiday)
                     .frame(width: 6, height: 6)
                     .offset(y: markOffset)
+            } else if isHomeHoliday && !isHoliday && !isSelected && !barVisible {
+                // 사는 곳 공휴일(참고) — 빈 링
+                Circle()
+                    .stroke(AppTheme.Colors.holiday, lineWidth: 1.5)
+                    .frame(width: 7, height: 7)
+                    .offset(y: markOffset)
             }
 
             Text("\(dayNumber)")
@@ -754,13 +844,22 @@ struct LegendView: View {
     var showsWarning: Bool = false
     var showsMyBreak: Bool = false
     var showsChildBreak: Bool = false
+    var showsHomeHoliday: Bool = false
+    /// 이 달에 보이는 휴가 종류(이름·색) — 비면 기본 "연차" 하나만
+    var leaveKinds: [(name: String, color: Color)] = []
 
     var body: some View {
         // 본문 크기 글자로는 5개가 한 줄에 안 들어간다 — 한 줄을 고집하면 "Holid/ay"처럼
         // 단어가 잘린다. 자리가 모자라면 다음 줄로 흐르게 둔다.
         LeaveFlowLayout(spacing: 16, lineSpacing: 6) {
             LegendItem(color: AppTheme.Colors.holiday, text: Strings.holiday)
-            LegendItem(color: AppTheme.Colors.leave, text: Strings.annualLeave)
+            if leaveKinds.isEmpty {
+                LegendItem(color: AppTheme.Colors.leave, text: Strings.annualLeave)
+            } else {
+                ForEach(leaveKinds.indices, id: \.self) { i in
+                    LegendItem(color: leaveKinds[i].color, text: leaveKinds[i].name)
+                }
+            }
             LegendItem(color: AppTheme.Colors.weekend, text: Strings.weekend)
             if showsRecommendation {
                 LegendItem(color: .yellow, text: Strings.tabRecommendations)
@@ -774,6 +873,10 @@ struct LegendView: View {
             if showsChildBreak {
                 LegendItem(color: .teal.opacity(0.35), text: Strings.childBreakTag)
             }
+            if showsHomeHoliday {
+                LegendItem(color: AppTheme.Colors.holiday,
+                           text: HolidayService.homePlaceName(for: DayOffCalendar.shared.country) ?? "", hollow: true)
+            }
         }
         .font(.body)
         .accessibilityElement(children: .combine)
@@ -786,10 +889,16 @@ struct LegendItem: View {
     let text: String
     /// 달력의 번아웃 주의 표시처럼 점선 링으로 그린다 — 범례가 점이면 링과 연결이 안 된다
     var dashed = false
+    /// 사는 곳 공휴일처럼 빈 링으로 그린다
+    var hollow = false
 
     var body: some View {
         HStack(spacing: 4) {
-            if dashed {
+            if hollow {
+                Circle()
+                    .stroke(color, lineWidth: 1.5)
+                    .frame(width: 8, height: 8)
+            } else if dashed {
                 Circle()
                     .stroke(color.opacity(0.7), style: StrokeStyle(lineWidth: 1.5, dash: [3, 2]))
                     .frame(width: 12, height: 12)
@@ -834,25 +943,36 @@ struct LeaveFlowLayout: Layout {
             }
         }
         maxLineWidth = max(maxLineWidth, lineWidth)
+        // 줄이 넘어가면 제안 폭을 그대로 쓴다 — 가장 긴 줄 폭으로 줄이면 배치 때 그 좁은 폭으로
+        // 다시 줄바꿈해 한 줄이 더 생기고, 계산한 높이를 넘쳐 아래 카드와 겹친다.
+        let wrapped = totalHeight > 0
         totalHeight += lineHeight
-        return CGSize(width: min(maxLineWidth, maxWidth), height: totalHeight)
+        return CGSize(width: wrapped && maxWidth.isFinite ? maxWidth : min(maxLineWidth, maxWidth), height: totalHeight)
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        var x = bounds.minX
-        var y = bounds.minY
-        var lineHeight: CGFloat = 0
-
+        // 줄을 먼저 나눈 뒤 줄마다 가운데로 놓는다
+        var lines: [[(Subviews.Element, CGSize)]] = [[]]
+        var lineWidth: CGFloat = 0
         for subview in subviews {
             let size = subview.sizeThatFits(.unspecified)
-            if x > bounds.minX, x + size.width > bounds.maxX {
-                x = bounds.minX
-                y += lineHeight + lineSpacing
-                lineHeight = 0
+            if lineWidth > 0, lineWidth + spacing + size.width > bounds.width {
+                lines.append([])
+                lineWidth = 0
             }
-            subview.place(at: CGPoint(x: x, y: y), anchor: .topLeading, proposal: ProposedViewSize(size))
-            x += size.width + spacing
-            lineHeight = max(lineHeight, size.height)
+            lineWidth += (lineWidth > 0 ? spacing : 0) + size.width
+            lines[lines.count - 1].append((subview, size))
+        }
+        var y = bounds.minY
+        for line in lines where !line.isEmpty {
+            let width = line.map(\.1.width).reduce(0, +) + spacing * CGFloat(line.count - 1)
+            var x = bounds.minX + max(0, (bounds.width - width) / 2)
+            let lineHeight = line.map(\.1.height).max() ?? 0
+            for (subview, size) in line {
+                subview.place(at: CGPoint(x: x, y: y), anchor: .topLeading, proposal: ProposedViewSize(size))
+                x += size.width + spacing
+            }
+            y += lineHeight + lineSpacing
         }
     }
 }
@@ -930,6 +1050,40 @@ struct SelectedDateInfo: View {
                 .accessibilityElement(children: .combine)
             }
 
+            if DayOffCalendar.shared.isLeaveBlocked(date) {
+                HStack {
+                    Image(systemName: "nosign")
+                        .foregroundStyle(.orange)
+                        .voDecorative()
+                    if let period = DayOffCalendar.shared.blackoutPeriodName(on: date) {
+                        Text(Strings.blackoutPeriodDayLabel(period))
+                    } else {
+                        Text(Strings.blackoutDayLabel)
+                    }
+                }
+                .accessibilityElement(children: .combine)
+            }
+
+            // 함께 보는 곳(사는 곳·본사 나라) 공휴일 — 쉬는 날로 치면 위 공휴일 줄에 이미 이름이 있으니 표시만 덧붙인다
+            if let homeHoliday = DayOffCalendar.shared.homeHolidayName(on: date) {
+                HStack {
+                    Image(systemName: "mappin.circle.fill")
+                        .foregroundStyle(AppTheme.Colors.holiday)
+                        .voDecorative()
+                    if holidayOnDate?.name != homeHoliday {
+                        Text(homeHoliday)
+                    }
+                    if let place = HolidayService.homePlaceName(for: DayOffCalendar.shared.country) {
+                        Text("(\(place))")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .accessibilityElement(children: .combine)
+            }
+
+            // 파트타임 쉬는 요일 — 이번 주만 다른 날로 옮기기 / 원래대로
+            PartTimeDayRow(date: date, country: originCountry)
+
             if let childBreak = DayOffCalendar.shared.childBreakName(on: date) {
                 HStack {
                     Image(systemName: "figure.and.child.holdinghands")
@@ -945,9 +1099,13 @@ struct SelectedDateInfo: View {
             if let leave = leaveOnDate {
                 HStack {
                     Image(systemName: "calendar.badge.checkmark")
-                        .foregroundStyle(.green)
+                        .foregroundStyle(leave.displayColor)
                         .voDecorative()
-                    Text(Strings.leaveTypeName(leave.type))
+                    Text(leave.displayTypeName)
+                    if leave.length != .full {
+                        Text(leave.lengthLabel)
+                            .foregroundStyle(.secondary)
+                    }
                     if !leave.note.isEmpty {
                         Text("- \(leave.note)")
                             .foregroundStyle(.secondary)
@@ -1226,7 +1384,7 @@ struct LeaveListRow: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    Text(Strings.leaveTypeName(leave.type))
+                    Text(leave.displayTypeName)
                         .font(.body)
                         .fontWeight(.semibold)
 
@@ -1272,7 +1430,7 @@ struct LeaveListRow: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .opacity(isUpcoming ? 1 : 0.7)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(Strings.leaveTypeName(leave.type)), \(dateText)\(dDayText != nil ? ", \(dDayText!)" : "")")
+        .accessibilityLabel("\(leave.displayTypeName), \(dateText)\(dDayText != nil ? ", \(dDayText!)" : "")")
     }
 }
 

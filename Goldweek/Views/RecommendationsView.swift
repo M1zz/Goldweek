@@ -30,9 +30,12 @@ struct RecommendationsView: View {
     }
 
     /// 사용 확정 연차 — 홈·설정과 **같은 계산기**를 쓴다.
-    private var committedLeave: Double {
-        LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords),
-                                            startMonth: profile.yearStartMonth).annualCommitted
+    private var committedLeave: Double { usage.annualCommitted }
+
+    /// 지난해에서 넘어온 연차를 포함한 올해 현황
+    private var usage: LeaveUsageCalculator.Summary {
+        LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords), startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
     }
 
     private var activeBonusLeave: Double {
@@ -44,7 +47,7 @@ struct RecommendationsView: View {
 
     /// 사용 가능 연차 = 설정·현황과 동일한 계산
     private var availableLeave: Double {
-        max(0, profile.totalAnnualLeave - committedLeave) + activeBonusLeave
+        usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false) + activeBonusLeave
     }
 
     private var freeHolidays: [LeaveRecommendation] {
@@ -91,7 +94,7 @@ struct RecommendationsView: View {
                     }
 
                     // 남은 연차 정보 — records 기반으로 계산
-                    RemainingLeaveInfo(available: availableLeave, total: profile.totalAnnualLeave, committed: committedLeave, hasBonus: activeBonusLeave > 0)
+                    RemainingLeaveInfo(available: availableLeave, total: profile.totalAnnualLeave + usage.carryOver, committed: committedLeave, hasBonus: activeBonusLeave > 0)
 
                     // 최적 연간 휴가 플래너 (Pro 기능 — 알고리즘 기반)
                     OptimalLeavePlannerCard(
@@ -192,6 +195,7 @@ struct RecommendationsView: View {
             try modelContext.save()
             UsageReportingService.record(event: "recommendation_added")
             HapticFeedback.success()
+            ReviewMoments.shared.trigger(.recommendationAdded)
         } catch {
             addedRecommendations.remove(recommendation.id)
             records.forEach { modelContext.delete($0) }
@@ -734,7 +738,8 @@ struct RecommendationDatePreview: View {
                 }
             }
 
-            HStack(spacing: 12) {
+            // 긴 언어(러시아어 등)에서 "Празд-ник"처럼 단어가 끊기지 않게 자리가 모자라면 다음 줄로
+            LeaveFlowLayout(spacing: 12, lineSpacing: 4) {
                 MiniLegend(color: .gray.opacity(0.5), text: Strings.workday)
                 MiniLegend(color: .green, text: Strings.annualLeave)
                 MiniLegend(color: .red.opacity(0.7), text: Strings.holiday)
@@ -1361,11 +1366,14 @@ struct MyRealTripPromoCard: View {
         case .turkey: return "IST"
         case .egypt: return "CAI"
         case .southAfrica: return "JNB"
+        case .morocco: return "CMN"
         case .mexico: return "MEX"
         case .argentina: return "EZE"
         case .chile: return "SCL"
         case .colombia: return "BOG"
         case .newZealand: return "AKL"
+        case .russia: return "SVO"   // 모스크바 셰레메티예보
+        case .indonesia: return "CGK" // 자카르타
         case .custom: return "ICN"   // 출발지를 알 수 없다 — 기본값
         }
     }
@@ -2662,6 +2670,9 @@ struct OptimalLeavePlannerCard: View {
             }
         }
 
+        // 직장 규정상 공휴일 앞뒤로 못 쉬는 날도 제외
+        excluded.formUnion(DayOffCalendar.shared.blockedDates(in: year))
+
         let makeupDays = HolidayService.makeupWorkdays(for: year, country: profile.country, calendar: cal)
         let weekendDays = HolidayService.weekendDays(for: profile.country)
 
@@ -2722,6 +2733,7 @@ struct OptimalLeavePlannerCard: View {
             try? modelContext.save()
             HapticFeedback.success()
             didBatchAdd = true
+            ReviewMoments.shared.trigger(.optimalPlanAdded, delay: 1.5)
         }
     }
 }

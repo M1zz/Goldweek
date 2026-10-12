@@ -18,15 +18,26 @@ struct ContentView: View {
     @Query private var bonusLeaves: [BonusLeave]
     @Query private var customHolidays: [CustomHoliday]
     @Query private var schoolBreaks: [SchoolBreak]
+    /// 직접 만든 휴가 종류 — 달력 색·이름이 읽는 LeaveStyleStore 에 맞춰 둔다
+    @Query(sort: \CustomLeaveType.createdAt) private var customLeaveTypes: [CustomLeaveType]
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
     /// 직접 입력 국가의 주말 요일 — 바뀌면 쉬는 날 판정을 다시 채운다
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
+    /// 파트타임 쉬는 요일·이번 주만 옮긴 날 — 바뀌면 쉬는 날 판정을 다시 채운다
+    @AppStorage("partTimeDaysOff") private var partTimeDaysOffRaw = ""
+    @AppStorage("partTimeSwaps") private var partTimeSwapsRaw = ""
+    /// 사는 곳 공휴일에도 쉬는지 — 바뀌면 쉬는 날 판정을 다시 채운다
+    @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
+    /// 공휴일 앞뒤 휴가 제한 근무일 수
+    @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
 
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     /// 사용법 시트를 이미 봤는지 — 온보딩 직후 딱 한 번 자동으로 띄운다.
     /// (그 뒤로는 설정 > 도움말에서 사용자가 원할 때만 연다)
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var showingTutorial = false
+    /// 만족 순간에 띄우는 만족도 프롬프트 (추천 등록·플랜 등록·휴가 복귀)
+    @State private var reviewMoments = ReviewMoments.shared
 
     var currentProfile: UserProfile? {
         profiles.first
@@ -49,10 +60,10 @@ struct ContentView: View {
                         try? await Task.sleep(nanoseconds: 700_000_000)
                         showingTutorial = true
                     }
-                    // 만족도 프롬프트 — 조건이 맞으면 "즐겁게 쓰고 계신가요?"를 묻고,
-                    // 좋다면 App Store 리뷰로, 아쉽다면 피드백 화면으로 보낸다.
-                    // 불만인 사람을 별점 대신 피드백으로 흡수하는 게 이 프롬프트의 목적이다.
-                    .leeoSatisfactionCheck(GoldweekSpec.self)
+                    // 만족도 프롬프트 — "즐겁게 쓰고 계신가요?"를 묻고, 좋다면 App Store 리뷰로,
+                    // 아쉽다면 피드백 화면으로 보낸다(불만은 별점 대신 피드백으로 흡수).
+                    // 앱을 열자마자가 아니라 만족한 순간(추천·플랜 등록, 휴가 복귀)에 띄운다 — ReviewMoments.
+                    .leeoReviewGate(GoldweekSpec.self, isPresented: $reviewMoments.isPresented)
                     .onAppear {
                         syncDayOffCalendar(profile: profile)
                         LeaveMigrations.splitRecommendedLeavesIfNeeded(records: leaveRecords, context: modelContext)
@@ -61,6 +72,7 @@ struct ContentView: View {
                         ReviewManager.shared.recordLaunch()
                         // 사람이 앱을 실제로 연 순간 — 실행 횟수·활동일·설치 스냅샷이 여기서 나간다.
                         UsageReportingService.reportForegroundOpen(context: modelContext)
+                        reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
                         if !hasCompletedOnboarding {
                             hasCompletedOnboarding = true
                         }
@@ -72,6 +84,7 @@ struct ContentView: View {
                             LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                             updateWidget()
                             UsageReportingService.reportForegroundOpen(context: modelContext)
+                            reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
                             refreshRestRadar(profile: profile)
                             syncSharedSchedules(profile: profile)
                         } else if newPhase == .background {
@@ -83,6 +96,9 @@ struct ContentView: View {
                     .onChange(of: dayOffInputs(profile: profile)) { _, _ in
                         syncDayOffCalendar(profile: profile)
                         updateWidget()
+                    }
+                    .onChange(of: customLeaveTypes.map { "\($0.id)\($0.name)\($0.colorHex)" }, initial: true) { _, _ in
+                        LeaveStyleStore.shared.update(customTypes: customLeaveTypes)
                     }
                     .onChange(of: timeMachineFingerprint) { _, _ in
                         TimeMachineService.shared.scheduleAutoSnapshot(context: modelContext)
@@ -166,6 +182,15 @@ struct ContentView: View {
             hasher.combine(record.statusRaw)
             hasher.combine(record.note)
             hasher.combine(record.bonusLeaveId)
+            hasher.combine(record.lengthRaw)
+            hasher.combine(record.durationMinutes)
+            hasher.combine(record.customTypeId)
+        }
+        for kind in customLeaveTypes {
+            hasher.combine(kind.id)
+            hasher.combine(kind.name)
+            hasher.combine(kind.colorHex)
+            hasher.combine(kind.deductsFromAnnual)
         }
         for bonus in bonusLeaves {
             hasher.combine(bonus.id)
@@ -214,13 +239,15 @@ struct ContentView: View {
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
-        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(profile.holidayRegionRaw)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {
         let hidden = Set(hiddenHolidayDatesRaw.split(separator: ",").map(String.init).filter { !$0.isEmpty })
         // 백업 복원·타임머신처럼 프로필이 통째로 바뀐 경우에도 공휴일 계산이 같은 지역을 쓰도록 맞춘다
         HolidayService.selectedRegionCode = profile.holidayRegion?.code ?? ""
+        HolidayService.homeCountryCode = profile.homeCountry?.rawValue ?? ""
+        HolidayService.homeRegionCode = profile.homeRegion?.code ?? ""
         DayOffCalendar.shared.update(country: profile.country, customHolidays: customHolidays,
                                      hiddenDates: hidden, breaks: schoolBreaks)
     }
@@ -263,7 +290,11 @@ struct ContentView: View {
         let bonus = bonusLeaves
             .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > Date()) }
             .reduce(0.0) { $0 + $1.remainingDays }
-        let available = Int((max(0, profile.totalAnnualLeave - committed) + bonus).rounded(.down))
+        // 지난해에서 넘어온 연차도 쓸 수 있는 양에 든다
+        let carry = LeaveUsageCalculator.carryOverUsable(year: LeaveUsageCalculator.fiscalYear(for: today, startMonth: profile.yearStartMonth),
+                                                         on: today, records: leaveRecords, annualGrant: profile.totalAnnualLeave,
+                                                         startMonth: profile.yearStartMonth)
+        let available = Int((max(0, profile.totalAnnualLeave + carry - committed) + bonus).rounded(.down))
         guard available >= 1 else { return nil }
 
         let holidays = HolidayService().getHolidays(for: year, country: profile.country).map { $0.date }
@@ -279,6 +310,9 @@ struct ContentView: View {
                 d = n
             }
         }
+
+        // 직장 규정상 공휴일 앞뒤로 못 쉬는 날도 제외
+        excluded.formUnion(DayOffCalendar.shared.blockedDates(in: year))
 
         let plan = LeavePlanner.optimalPlan(
             year: year,
@@ -379,7 +413,8 @@ struct WideMainView: View {
     @Bindable var profile: UserProfile
     let hasSharedSchedules: Bool
 
-    @State private var showingSettings = false
+    /// 두 칸 화면엔 설정 탭이 없다 — 스크린샷 모드에서 설정(탭 3)을 찍을 땐 시트로 열어 둔다
+    @State private var showingSettings = ScreenshotMode.initialTab == 3
     @State private var showingFamily = false
 
     /// 오른쪽 대시보드 폭 — 현황 카드가 아이폰 폭과 비슷할 때 가장 읽기 좋다

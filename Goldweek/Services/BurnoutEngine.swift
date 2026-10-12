@@ -23,7 +23,7 @@ import Foundation
 
 // MARK: - 입력
 
-/// 사무실/일상에서 벗어난 1개 휴식 블록 (연차·출장 등). LeaveRecord에서 변환해 주입.
+/// 사무실/일상에서 벗어난 1개 휴식 블록 (휴가·공휴일 + 붙은 주말). `restBlocks(from:)` 이 만든다.
 struct RestBlock: Hashable {
     let start: Date
     let end: Date
@@ -335,18 +335,67 @@ struct BurnoutEngine {
 // MARK: - LeaveRecord 변환 헬퍼
 
 extension BurnoutEngine {
-    /// LeaveRecord 배열을 RestBlock으로 변환.
-    /// 휴식으로 칠 것: 연차 차감 휴가 + 출장(일상 루틴 이탈). 취소는 제외.
-    /// (BurnoutPaceCard.countsAsBreak 와 동일 기준 — 단일 진실 소스화 목적)
-    static func restBlocks(from records: [LeaveRecord]) -> [RestBlock] {
-        let leaves: [RestBlock] = records.compactMap { r in
-            guard r.status != .cancelled else { return nil }
-            let counts = r.deductsFromAnnualLeave || r.type == .businessTrip
-            guard counts else { return nil }
-            return RestBlock(start: r.startDate, end: r.endDate)
+    /// 휴식 블록 — **실제로 연달아 쉰 날들**.
+    ///
+    /// 기준점(anchor)은 휴가(연차 차감 휴가 + 출장 — 일상 루틴 이탈, 취소 제외)와 **평일에 걸린 공휴일**
+    /// (나라 공휴일 · 내 공휴일 · 내 방학)이다. 기준점에서 앞뒤로 붙은 주말·쉬는 날까지 이어 한 블록으로 묶는다.
+    ///  · 금요일 공휴일 → 금·토·일 3일 휴식 (예전엔 공휴일을 아예 휴식으로 치지 않았다)
+    ///  · 월~금 휴가 → 앞뒤 주말까지 9일 휴식
+    ///  · 주말만 있는 주는 넣지 않는다 — 매주 있는 주말까지 휴식으로 치면 번아웃 신호가 사라진다
+    ///  · 토요일에 걸린 공휴일은 주말 그대로라 기준점이 아니다
+    ///
+    /// 쉬는 날 판정은 `DayOffCalendar` (나라·주말 설정·파트타임 요일·숨긴 공휴일까지 반영된 것)를 쓴다.
+    /// - Parameter now: 공휴일을 볼 범위의 기준 (앞뒤 약 1년). 휴가 기록은 범위와 상관없이 모두 넣는다.
+    static func restBlocks(from records: [LeaveRecord], around now: Date = Date(),
+                           dayOff: DayOffCalendar = .shared, calendar: Calendar = .current) -> [RestBlock] {
+        func day(_ d: Date) -> Date { calendar.startOfDay(for: d) }
+        func next(_ d: Date, _ step: Int) -> Date? { calendar.date(byAdding: .day, value: step, to: d) }
+
+        // 1. 휴가 날 (같은 날 반차 두 번 등 겹쳐도 한 번)
+        var leaveDays = Set<Date>()
+        for r in records where r.status != .cancelled && (r.deductsFromAnnualLeave || r.type == .businessTrip) {
+            var d = day(r.startDate)
+            let last = day(r.endDate)
+            var guardrail = 0
+            while d <= last && guardrail < 400 {
+                leaveDays.insert(d)
+                guard let n = next(d, 1) else { break }
+                d = n; guardrail += 1
+            }
         }
-        // 내 방학(교사·학생)도 쉰 기간이다
-        let breaks = DayOffCalendar.shared.myBreaks.map { RestBlock(start: $0.start, end: $0.end) }
-        return leaves + breaks
+
+        // 2. 평일에 걸린 공휴일·내 공휴일·내 방학 — 오늘 앞뒤 약 1년
+        let today = day(now)
+        let from = next(today, -400) ?? today, to = next(today, 400) ?? today
+        let years = Set([from, today, to].map { calendar.component(.year, from: $0) })
+        var anchors = leaveDays
+        for y in years {
+            for h in dayOff.holidays(for: y, country: dayOff.country) {
+                let d = day(h.date)
+                guard d >= from, d <= to,
+                      !HolidayService.isRestWeekend(d, country: dayOff.country, calendar: calendar) else { continue }
+                anchors.insert(d)
+            }
+        }
+
+        // 3. 기준점마다 앞뒤로 붙은 쉬는 날까지 이어 한 블록으로
+        func isRest(_ d: Date) -> Bool { leaveDays.contains(d) || dayOff.isDayOff(d) }
+        var covered = Set<Date>()
+        var blocks: [RestBlock] = []
+        for anchor in anchors.sorted() where !covered.contains(anchor) {
+            var start = anchor, end = anchor
+            var steps = 0
+            while steps < 60, let p = next(start, -1), isRest(p) { start = p; steps += 1 }
+            steps = 0
+            while steps < 60, let n = next(end, 1), isRest(n) { end = n; steps += 1 }
+            var d = start
+            while d <= end {
+                covered.insert(d)
+                guard let n = next(d, 1) else { break }
+                d = n
+            }
+            blocks.append(RestBlock(start: start, end: end))
+        }
+        return blocks
     }
 }

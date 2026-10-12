@@ -20,6 +20,9 @@ struct SettingsView: View {
     @Environment(\.requestReview) private var requestReview
     @Query private var leaveRecords: [LeaveRecord]
     @Query(sort: \BonusLeave.grantedDate, order: .reverse) private var bonusLeaves: [BonusLeave]
+    @Query private var schoolBreaks: [SchoolBreak]
+
+    private var blackoutPeriodCount: Int { schoolBreaks.filter { $0.kind == .blackout }.count }
 
     /// 개발자 모드 — 지원 섹션의 버전 행을 7번 탭하면 켜진다(키는 LeeoKit과 공유).
     /// 켜지면 접수된 피드백(인박스)·사용 통계·안정성 화면이 보인다.
@@ -33,6 +36,7 @@ struct SettingsView: View {
     }
 
     @State private var showingPreferences = false
+    @State private var showingPastLeaveEntry = false
     @State private var showingResetAlert = false
     @State private var showingBonusLeaveSheet = false
     @State private var editingName = false
@@ -71,11 +75,26 @@ struct SettingsView: View {
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
     /// 내 주말 ("1,7", "none", 비면 나라 기본) — HolidayService.weekendOverrideRaw 와 같은 키
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
+    @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
     @AppStorage("rest_radar_enabled") private var restRadarEnabled: Bool = true
 
     // 국가 & 언어
     @State private var selectedCountry: Country
     @State private var selectedRegionCode: String
+    /// 함께 볼 공휴일의 나라 — "" 없음, 일하는 나라면 그 나라 다른 지역, 아니면 다른 나라 (본사·사는 곳)
+    @State private var selectedHomeCountryRaw: String
+    /// 함께 볼 공휴일의 지역 — 일하는 곳과 공휴일이 다를 때
+    @State private var selectedHomeRegionCode: String
+    @AppStorage("homeHolidaysDaysOff") private var homeHolidaysDaysOff = false
+    /// 공휴일 앞뒤 휴가 제한 근무일 수 (0 = 없음) — HolidayService.leaveBlackoutDays 와 같은 키
+    @AppStorage("holidayBlackoutDays") private var holidayBlackoutDays = 0
+    /// 하루 근무 시간(분) — 시간 단위 휴가를 일수로 바꾸는 기준. LeaveLength.workdayMinutes 와 같은 키
+    @AppStorage("workdayMinutes") private var workdayMinutes = 480
+    /// 남은 연차 이월 상한(0 안 함, -1 전부)·사용 기한(개월) — LeaveUsageCalculator 와 같은 키
+    @AppStorage("carryOverMaxDays") private var carryOverMaxDays = 0
+    @AppStorage("carryOverExpiryMonths") private var carryOverExpiryMonths = 0
+    /// 파트타임 매주 쉬는 요일 — HolidayService.partTimeDaysOffRaw 와 같은 키
+    @AppStorage("partTimeDaysOff") private var partTimeDaysOffRaw = ""
     @State private var selectedLanguage: AppLanguage
 
     private let recommendationEngine = RecommendationEngine()
@@ -85,6 +104,9 @@ struct SettingsView: View {
         self.showsCloseButton = showsCloseButton
         _selectedCountry = State(initialValue: profile.country)
         _selectedRegionCode = State(initialValue: profile.holidayRegion?.code ?? "")
+        _selectedHomeRegionCode = State(initialValue: profile.homeRegion?.code ?? "")
+        _selectedHomeCountryRaw = State(initialValue: profile.homeCountry?.rawValue
+                                        ?? (profile.homeRegion != nil ? profile.country.rawValue : ""))
         _selectedLanguage = State(initialValue: AppLanguage.current)
     }
 
@@ -125,7 +147,8 @@ struct SettingsView: View {
     var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
                                             bonuses: Array(bonusLeaves),
-                                            startMonth: profile.yearStartMonth)
+                                            startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
     }
 
     var committedLeave: Double { usage.annualCommitted }
@@ -152,6 +175,12 @@ struct SettingsView: View {
         guard total > 0 else { return "0%" }
         let used = includeBonusInStatus ? committedLeave + usage.usedBonus : committedLeave
         return "\(Int((used / total) * 100))%"
+    }
+
+    /// 함께 볼 공휴일 선택을 프로필에 맞춘다 — 나라·지역이 바뀌어 프로필이 값을 지웠을 때
+    private func syncHomeSelection() {
+        selectedHomeCountryRaw = profile.homeCountry?.rawValue ?? (profile.homeRegion != nil ? profile.country.rawValue : "")
+        selectedHomeRegionCode = profile.homeRegion?.code ?? ""
     }
 
     /// 고를 수 있는 주말 (토·일 / 금·토 / 목·금 / 일 / 금 / 토) — 저장값 그대로
@@ -288,6 +317,7 @@ struct SettingsView: View {
                     .onChange(of: selectedCountry) { _, newValue in
                         profile.country = newValue
                         selectedRegionCode = profile.holidayRegion?.code ?? ""
+                        syncHomeSelection()
                         recommendationEngine.invalidateCache()
                     }
 
@@ -301,8 +331,60 @@ struct SettingsView: View {
                         }
                         .onChange(of: selectedRegionCode) { _, newValue in
                             profile.holidayRegion = HolidayRegion.find(newValue)
+                            syncHomeSelection()
                             recommendationEngine.invalidateCache()
                         }
+                    }
+
+                    // 함께 볼 공휴일 — 사는 곳이 다른 지역이거나(스페인 자치주), 회사 본사가 다른 나라일 때
+                    Picker(Strings.homeRegionSetting, selection: $selectedHomeCountryRaw) {
+                        Text(Strings.homeRegionNone).tag("")
+                        if !selectedCountry.holidayRegions.isEmpty {
+                            Text(Strings.homeSameCountryOtherRegion(selectedCountry)).tag(selectedCountry.rawValue)
+                        }
+                        ForEach(Country.allCases.filter { $0 != selectedCountry && $0 != .custom }) { country in
+                            Text("\(country.flag) \(country.displayName)").tag(country.rawValue)
+                        }
+                    }
+                    .pickerStyle(.navigationLink)
+                    .onChange(of: selectedHomeCountryRaw) { _, newValue in
+                        if newValue == selectedCountry.rawValue {
+                            // 같은 나라 다른 지역 — 지역이 있어야 의미가 있으니 일하는 곳이 아닌 첫 지역을 고른다
+                            profile.homeCountry = nil
+                            if profile.homeRegion == nil {
+                                profile.homeRegion = selectedCountry.holidayRegions.first { $0.code != selectedRegionCode }
+                            }
+                        } else {
+                            profile.homeCountry = Country(rawValue: newValue)
+                            profile.homeRegion = nil
+                        }
+                        syncHomeSelection()
+                        recommendationEngine.invalidateCache()
+                    }
+
+                    // 함께 보는 나라에 지역이 있으면 지역도 고른다 (다른 나라는 전국 공통도 된다)
+                    if let homeCountry = Country(rawValue: selectedHomeCountryRaw), !homeCountry.holidayRegions.isEmpty {
+                        let isSameCountry = homeCountry == selectedCountry
+                        Picker(Strings.holidayRegion, selection: $selectedHomeRegionCode) {
+                            if !isSameCountry {
+                                Text(Strings.holidayRegionNationwide).tag("")
+                            }
+                            ForEach(homeCountry.holidayRegions.filter { !isSameCountry || $0.code != selectedRegionCode }) { region in
+                                Text(region.displayName).tag(region.code)
+                            }
+                        }
+                        .onChange(of: selectedHomeRegionCode) { _, newValue in
+                            profile.homeRegion = HolidayRegion.find(newValue)
+                            recommendationEngine.invalidateCache()
+                        }
+                    }
+
+                    if !selectedHomeCountryRaw.isEmpty {
+                        Toggle(Strings.homeHolidaysDaysOff, isOn: $homeHolidaysDaysOff)
+                            .onChange(of: homeHolidaysDaysOff) { _, newValue in
+                                HolidayService.homeHolidaysAreDaysOff = newValue
+                                recommendationEngine.invalidateCache()
+                            }
                     }
 
                     // 주말 — 나라마다 다르고(중동은 금·토), 주말에 일하는 사람도 있다. 비워 두면 나라 기본.
@@ -314,6 +396,21 @@ struct SettingsView: View {
                         Text(Strings.weekendNone).tag("none")
                     }
                     .onChange(of: customWeekendDaysRaw) { _, _ in recommendationEngine.invalidateCache() }
+
+                    // 파트타임 — 매주 일하지 않는 요일 (주말처럼 연차에서 빠지지 않는다)
+                    PartTimeDaysPicker(country: selectedCountry)
+                        .onChange(of: partTimeDaysOffRaw) { _, _ in recommendationEngine.invalidateCache() }
+                    Text(Strings.partTimeDaysFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+
+                    // 주 시작 요일 — 달력 첫 칸. 0 이면 나라 기본(스페인은 월, 미국은 일).
+                    Picker(Strings.firstWeekdaySetting, selection: $firstWeekdayRaw) {
+                        Text(Strings.weekendCountryDefault(Strings.weekdays[selectedCountry.standardFirstWeekday - 1])).tag(0)
+                        ForEach([2, 1, 7], id: \.self) { day in
+                            Text(Strings.weekdays[day - 1]).tag(day)
+                        }
+                    }
 
                     Picker(Strings.language, selection: $selectedLanguage) {
                         ForEach(AppLanguage.allCases) { lang in
@@ -328,11 +425,11 @@ struct SettingsView: View {
                     Text(Strings.countryAndLanguage)
                 } footer: {
                     if !selectedCountry.holidayRegions.isEmpty {
-                        Text(Strings.holidayRegionFooter(selectedCountry))
+                        Text("\(Strings.holidayRegionFooter(selectedCountry))\n\(Strings.homeRegionFooter)")
                     } else if selectedCountry == .custom {
-                        Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.weekendSettingFooter)")
+                        Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
                     } else {
-                        Text(Strings.weekendSettingFooter)
+                        Text("\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
                     }
                 }
 
@@ -419,7 +516,7 @@ struct SettingsView: View {
                                     .foregroundStyle(includeBonusInStatus && activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
                                 if includeBonusInStatus && activeBonusLeave > 0 {
                                     Text(Strings.baseAndBonus(
-                                        base: formatLeave(max(0, profile.totalAnnualLeave - committedLeave)),
+                                        base: formatLeave(usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)),
                                         bonus: formatLeave(activeBonusLeave)
                                     ))
                                     .font(.body)
@@ -460,14 +557,102 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
 
+                    // 연도 중간에 앱을 시작했으면 그동안 쓴(또는 지금 남은) 연차를 일·시간으로 한 번에 — 홈 배너를 닫아도 여기서 다시
+                    if !isLeisure {
+                        Button {
+                            showingPastLeaveEntry = true
+                        } label: {
+                            Label(Strings.pastLeaveSheetTitle, systemImage: "clock.arrow.circlepath")
+                        }
+                        .sheet(isPresented: $showingPastLeaveEntry) {
+                            PastLeaveQuickEntrySheet(profile: profile)
+                        }
+                    }
+
                     Picker(isLeisure ? Strings.leisureYearStartMonth : Strings.yearStartMonth, selection: $profile.yearStartMonth) {
                         ForEach(1...12, id: \.self) { month in
                             Text(Strings.monthShort(month)).tag(month)
                         }
                     }
 
+                    // 공휴일 앞뒤로 휴가를 못 내는 직장(공무원 등) — 추천·최적 플랜이 그 날을 피한다
+                    Picker(Strings.blackoutSetting, selection: $holidayBlackoutDays) {
+                        Text(Strings.blackoutOff).tag(0)
+                        ForEach([1, 2, 3, 5], id: \.self) { n in
+                            Text(Strings.blackoutDays(n)).tag(n)
+                        }
+                    }
+                    .onChange(of: holidayBlackoutDays) { _, _ in recommendationEngine.invalidateCache() }
+
+                    // 남은 연차 이월 — 회사가 허락하는 만큼 (네덜란드 피드백). 기한이 있으면 그 전에 쓴 만큼만 남는다.
+                    if !isLeisure {
+                        Picker(Strings.carryOverSetting, selection: $carryOverMaxDays) {
+                            Text(Strings.carryOverOff).tag(0)
+                            ForEach([1, 2, 3, 5, 10, 20], id: \.self) { n in
+                                Text(Strings.carryOverUpTo(Strings.dayCount(Double(n)))).tag(n)
+                            }
+                            Text(Strings.carryOverAll).tag(-1)
+                        }
+                        .onChange(of: carryOverMaxDays) { _, _ in recommendationEngine.invalidateCache() }
+                        if carryOverMaxDays != 0 {
+                            Picker(Strings.carryOverExpirySetting, selection: $carryOverExpiryMonths) {
+                                Text(Strings.carryOverNoExpiry).tag(0)
+                                ForEach([3, 4, 6, 12], id: \.self) { n in
+                                    Text(Strings.carryOverExpiryMonths(n)).tag(n)
+                                }
+                            }
+                            .onChange(of: carryOverExpiryMonths) { _, _ in recommendationEngine.invalidateCache() }
+                        }
+                        Text(Strings.carryOverFooter)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    // 하루 근무 시간 — 시간·분 단위로 쓴 휴가를 일수로 바꾸는 기준 (이탈리아 permessi 등)
+                    Stepper(value: $workdayMinutes, in: 180...720, step: 15) {
+                        HStack {
+                            Text(Strings.workdayLengthSetting)
+                            Spacer()
+                            Text(Strings.durationText(minutes: workdayMinutes))
+                                .monospacedDigit()
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .onChange(of: workdayMinutes) { _, _ in recommendationEngine.invalidateCache() }
+
+                    // 요일마다 근무 시간이 다른 직장 (예: 월~목 7시간 30분, 금 7시간)
+                    NavigationLink {
+                        WorkdayHoursView(country: selectedCountry) { recommendationEngine.invalidateCache() }
+                    } label: {
+                        Text(Strings.workdayByWeekdayTitle)
+                    }
+
+                    // 휴가 종류 만들기·색 바꾸기 — 달력에서 종류별로 다른 색
+                    NavigationLink {
+                        LeaveKindsView()
+                    } label: {
+                        Label(Strings.leaveKindsTitle, systemImage: "paintpalette")
+                    }
+
+                    // 결산·성수기처럼 직장에서 휴가를 막는 기간 — 날짜를 직접 넣는다
+                    NavigationLink {
+                        BlackoutPeriodsView { recommendationEngine.invalidateCache() }
+                    } label: {
+                        HStack {
+                            Text(Strings.blackoutPeriodsTitle)
+                            Spacer()
+                            if blackoutPeriodCount > 0 {
+                                Text("\(blackoutPeriodCount)")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+
                     // 연차를 달력 일수로 세는지 근무일로 세는지 — 묻는 사람이 많다
                     Text(Strings.leaveCountingFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                    Text(Strings.blackoutFooter)
                         .font(.body)
                         .foregroundStyle(.secondary)
                 }

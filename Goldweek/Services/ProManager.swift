@@ -283,6 +283,18 @@ enum ProPurchaseError: LocalizedError {
             case .verificationFailed: return "Satın alma doğrulanamadı."
             case .purchaseFailed: return "Satın alma başarısız oldu."
             }
+        case .russian:
+            switch self {
+            case .productNotFound: return "Товар не найден."
+            case .verificationFailed: return "Не удалось подтвердить покупку."
+            case .purchaseFailed: return "Не удалось совершить покупку."
+            }
+        case .indonesian:
+            switch self {
+            case .productNotFound: return "Produk tidak ditemukan."
+            case .verificationFailed: return "Verifikasi pembelian gagal."
+            case .purchaseFailed: return "Pembelian gagal."
+            }
         case .dutch:
             switch self {
             case .productNotFound: return "Product niet gevonden."

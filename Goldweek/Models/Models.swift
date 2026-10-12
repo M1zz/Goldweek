@@ -44,11 +44,14 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case turkey = "turkey"
     case egypt = "egypt"
     case southAfrica = "southafrica"
+    case morocco = "morocco"         // 이슬람 명절은 모로코가 직접 달을 보고 정한다
     case mexico = "mexico"
     case argentina = "argentina"
     case chile = "chile"
     case colombia = "colombia"
     case newZealand = "newzealand"
+    case russia = "russia"           // 정부가 해마다 휴일을 옮긴다 (перенос выходных)
+    case indonesia = "indonesia"     // 공휴일·공동 휴가를 해마다 SKB 로 정한다
     /// 지원하지 않는 나라 — 기본 공휴일 없이 사용자가 직접 넣는다 (예: 남아공)
     case custom = "custom"
 
@@ -95,11 +98,14 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .turkey: return "TR"
         case .egypt: return "EG"
         case .southAfrica: return "ZA"
+        case .morocco: return "MA"
         case .mexico: return "MX"
         case .argentina: return "AR"
         case .chile: return "CL"
         case .colombia: return "CO"
         case .newZealand: return "NZ"
+        case .russia: return "RU"
+        case .indonesia: return "ID"
         case .custom: return ""   // 어떤 기기 지역과도 맞지 않게
         }
     }
@@ -148,11 +154,14 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .turkey: return "tr_TR"
         case .egypt: return "ar_EG"
         case .southAfrica: return "en_ZA"
+        case .morocco: return "fr_MA"
         case .mexico: return "es_MX"
         case .argentina: return "es_AR"
         case .chile: return "es_CL"
         case .colombia: return "es_CO"
         case .newZealand: return "en_NZ"
+        case .russia: return "ru_RU"
+        case .indonesia: return "id_ID"
         case .custom: return Locale.current.identifier
         }
     }
@@ -166,10 +175,18 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// 그 나라 달력의 첫 요일 (Calendar weekday: 1=일, 2=월, 7=토) — 스페인·유럽 대부분은 월, 미국·한국은 일.
+    /// 기기 언어와 상관없이 나라의 관습(CLDR)을 따른다.
+    var standardFirstWeekday: Int {
+        var cal = Calendar(identifier: .gregorian)
+        cal.locale = Locale(identifier: localeIdentifier)
+        return cal.firstWeekday
+    }
+
     /// 이슬람력(달 관측) 공휴일이 있는 나라 — 날짜가 공식 발표에서 하루쯤 바뀔 수 있다
     var hasMoonSightingHolidays: Bool {
         switch self {
-        case .uae, .saudiArabia, .qatar, .turkey, .egypt: return true
+        case .uae, .saudiArabia, .qatar, .turkey, .egypt, .morocco: return true
         default: return false
         }
     }
@@ -211,6 +228,13 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case "cs": fallback = .czechia
         case "el": fallback = .greece
         case "tr": fallback = .turkey
+        case "ru": fallback = .russia
+        case "id": fallback = .indonesia
+        // 아랍어 — 지원하지 않는 아랍 나라(쿠웨이트·요르단 등)라도 미국보다 주말(금·토)과 이슬람 명절이 맞는
+        // 이웃 나라가 낫다. 마그레브는 모로코, 그 밖은 사우디.
+        case "ar":
+            let region = locale.region?.identifier ?? ""
+            fallback = ["TN", "DZ", "LY", "MR"].contains(region) ? .morocco : .saudiArabia
         default: fallback = .usa
         }
         return (fallback, false)
@@ -251,11 +275,11 @@ enum Continent: String, CaseIterable, Identifiable {
 extension Country {
     var continent: Continent? {
         switch self {
-        case .korea, .japan, .china, .taiwan, .hongKong: return .asia
+        case .korea, .japan, .china, .taiwan, .hongKong, .indonesia: return .asia
         case .uae, .saudiArabia, .qatar, .turkey: return .middleEast
         case .germany, .france, .uk, .spain, .italy, .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal,
-             .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece: return .europe
-        case .egypt, .southAfrica: return .africa
+             .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .russia: return .europe
+        case .egypt, .southAfrica, .morocco: return .africa
         case .usa, .canada, .mexico: return .northAmerica
         case .brazil, .peru, .argentina, .chile, .colombia: return .southAmerica
         case .australia, .newZealand: return .oceania
@@ -415,6 +439,10 @@ final class UserProfile {
     var userTypeRaw: String = UserType.employee.rawValue  // 사용자 유형
     /// 공휴일 지역 (ISO 3166-2, 예: "DE-BY"). 빈 문자열이면 전국 공통 공휴일만 쓴다.
     var holidayRegionRaw: String = ""
+    /// 사는 곳 지역 — 일하는 곳(holidayRegionRaw)과 공휴일이 다를 때. 비면 없음.
+    var homeRegionRaw: String = ""
+    /// 함께 볼 공휴일의 나라 — 회사 본사가 다른 나라거나 다른 나라에 살 때. 비면 일하는 나라와 같다.
+    var homeCountryRaw: String = ""
 
     // 선호도 설정
     var preferredDurationRaw: String
@@ -464,8 +492,12 @@ final class UserProfile {
     var country: Country {
         get { Country(rawValue: countryRaw) ?? .korea }
         set {
-            // 나라가 바뀌면 이전 나라의 지역은 의미가 없다
-            if newValue.rawValue != countryRaw { holidayRegion = nil }
+            // 나라가 바뀌면 이전 나라의 지역은 의미가 없다.
+            // 함께 볼 공휴일은 다른 나라 것이면 그대로 두고, 같은 나라 지역이거나 새 나라와 같아지면 지운다.
+            if newValue.rawValue != countryRaw {
+                holidayRegion = nil
+                if homeCountry == nil || homeCountry == newValue { homeCountry = nil; homeRegion = nil }
+            }
             countryRaw = newValue.rawValue
         }
     }
@@ -480,6 +512,33 @@ final class UserProfile {
         set {
             holidayRegionRaw = newValue?.code ?? ""
             HolidayService.selectedRegionCode = holidayRegionRaw
+            // 일하는 곳과 같아지면 사는 곳은 따로 둘 이유가 없다
+            if homeRegionRaw == holidayRegionRaw { homeRegion = nil }
+        }
+    }
+
+    /// 함께 볼 공휴일의 나라 — 일하는 나라와 다를 때만 값이 있다 (같은 나라 다른 지역이면 nil + homeRegion)
+    var homeCountry: Country? {
+        get {
+            guard let c = Country(rawValue: homeCountryRaw), c != country, c != .custom else { return nil }
+            return c
+        }
+        set {
+            homeCountryRaw = newValue?.rawValue ?? ""
+            HolidayService.homeCountryCode = homeCountryRaw
+        }
+    }
+
+    /// 함께 볼 공휴일의 지역 — 다른 나라면 그 나라의 지역(없으면 전국), 같은 나라면 일하는 곳과 다른 지역일 때만 의미가 있다.
+    var homeRegion: HolidayRegion? {
+        get {
+            guard let region = HolidayRegion.find(homeRegionRaw), region.country == (homeCountry ?? country),
+                  region.code != holidayRegionRaw else { return nil }
+            return region
+        }
+        set {
+            homeRegionRaw = newValue?.code ?? ""
+            HolidayService.homeRegionCode = homeRegionRaw
         }
     }
 
@@ -526,8 +585,13 @@ final class LeaveRecord {
     var isRecommended: Bool
     /// 보너스 연차 사용 시 연결된 BonusLeave.id (일반 연차는 nil)
     var bonusLeaveId: UUID?
-    /// 휴가 길이(종일/반차/반반차). nil이면 레거시 기록으로, typeRaw의 반차/반반차에서 추론한다.
+    /// 휴가 길이(종일/반차/반반차/시간). nil이면 레거시 기록으로, typeRaw의 반차/반반차에서 추론한다.
     var lengthRaw: String?
+    /// 시간 단위 휴가의 길이(분) — length 가 .hours 일 때만 쓴다
+    var durationMinutes: Int?
+    /// 직접 만든 휴가 종류(CustomLeaveType.id) — 있으면 이름·색은 그 종류를 따른다.
+    /// 연차 차감 여부는 typeRaw(.annual / .special)로 함께 저장해 기존 계산이 그대로 돈다.
+    var customTypeId: UUID?
 
     init(
         startDate: Date,
@@ -537,9 +601,13 @@ final class LeaveRecord {
         note: String = "",
         isRecommended: Bool = false,
         length: LeaveLength? = nil,
-        bonusLeaveId: UUID? = nil
+        bonusLeaveId: UUID? = nil,
+        durationMinutes: Int? = nil,
+        customTypeId: UUID? = nil
     ) {
         self.id = UUID()
+        self.durationMinutes = durationMinutes
+        self.customTypeId = customTypeId
         self.startDate = startDate
         self.endDate = endDate
         self.typeRaw = type.rawValue
@@ -591,6 +659,9 @@ final class LeaveRecord {
     /// 금~월로 등록해도 주말·공휴일·내 방학은 차감하지 않는다 (쉬는 날 판정: `DayOffCalendar`).
     /// 예외: "이전 사용 연차 일괄 입력"은 N일을 달력 일수로 펼쳐 저장한 요약 기록이라 달력 일수 그대로 센다.
     var effectiveLeaveDays: Double {
+        // 일괄 입력을 시간으로 넣은 요약 기록 — 요일별 근무 시간과 상관없이 하루 근무 시간으로 나눈다
+        if length == .hours, isBulkSummary { return LeaveLength.days(forMinutes: durationMinutes ?? 0) }
+        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes ?? 0, on: startDate) }
         if length != .full { return length.fraction }
         if isBulkSummary { return Double(daysCount) }
         return Double(DayOffCalendar.shared.workdays(from: startDate, to: endDate))
@@ -602,9 +673,29 @@ final class LeaveRecord {
         Self.bulkSummaryNotes.contains(note)
     }
 
+    /// `Strings.pastLeaveSummaryNote` 의 21개 언어 전부 — 빠진 언어가 있으면 그 기록을 근무일로 세어 줄어든다
     static let bulkSummaryNotes: Set<String> = [
-        "이전 사용 연차 (일괄 입력)", "Prior leave (bulk entry)", "過去の有給（一括入力）",
-        "过去的年假（批量录入）", "Früherer Urlaub (Sammeleingabe)", "Congés antérieurs (saisie groupée)",
+        "이전 사용 연차 (일괄 입력)",
+        "Prior leave (bulk entry)",
+        "Tidigare ledighet (samlad inmatning)",
+        "Tidligere ferie (samlet registrering)",
+        "Tidligere ferie (samlet indtastning)",
+        "Aiempi loma (kertasyöttö)",
+        "Wcześniejszy urlop (wpis zbiorczy)",
+        "Dřívější dovolená (hromadně)",
+        "Προηγούμενη άδεια (μαζική εισαγωγή)",
+        "Önceki izin (toplu giriş)",
+        "Прошлый отпуск (одной записью)",
+        "Cuti sebelumnya (input sekaligus)",
+        "Eerder verlof (bulkinvoer)",
+        "過去の有給（一括入力）",
+        "过去的年假（批量录入）",
+        "Früherer Urlaub (Sammeleingabe)",
+        "Congés antérieurs (saisie groupée)",
+        "Vacaciones anteriores (entrada en bloque)",
+        "Ferie precedenti (inserimento in blocco)",
+        "Férias anteriores (entrada em lote)",
+        "先前特休（批次輸入）",
     ]
 
     /// 실제 연차 차감 여부 — bonusLeaveId가 있으면 보너스 차감이므로 연차 차감 아님
@@ -746,15 +837,19 @@ enum LeaveLength: String, Codable, CaseIterable, Identifiable {
     case full = "종일"
     case half = "반차"
     case quarter = "반반차"
+    /// 시간·분 단위 (이탈리아 permessi 처럼 몇 시간만 쓰는 휴가) — 길이는 LeaveRecord.durationMinutes
+    case hours = "시간"
 
     var id: String { rawValue }
 
-    /// 하루 대비 사용 비율 (종일 1.0, 반차 0.5, 반반차 0.25)
+    /// 하루 대비 사용 비율 (종일 1.0, 반차 0.5, 반반차 0.25).
+    /// 시간 단위는 기록마다 다르다 — `days(forMinutes:)` 로 계산한다 (여기서는 0).
     var fraction: Double {
         switch self {
         case .full: return 1.0
         case .half: return 0.5
         case .quarter: return 0.25
+        case .hours: return 0
         }
     }
 
@@ -763,7 +858,52 @@ enum LeaveLength: String, Codable, CaseIterable, Identifiable {
         case .full: return "sun.max"
         case .half: return "clock.badge"
         case .quarter: return "clock"
+        case .hours: return "hourglass"
         }
+    }
+
+    /// 하루 근무 시간(분) — 시간 단위 휴가를 일수로 바꾸는 기준. 설정에서 바꾼다 (기본 8시간).
+    static var workdayMinutes: Int {
+        get {
+            let v = UserDefaults.standard.integer(forKey: "workdayMinutes")
+            return v > 0 ? v : 480
+        }
+        set { UserDefaults.standard.set(newValue, forKey: "workdayMinutes") }
+    }
+
+    /// 분 → 차감 일수 (하루 근무 시간 기준)
+    static func days(forMinutes minutes: Int) -> Double {
+        Double(max(0, minutes)) / Double(workdayMinutes)
+    }
+
+    private static let weekdayMinutesKey = "workdayMinutesByWeekday"
+
+    /// 요일마다 근무 시간이 다른 경우 (예: 월~목 7시간 30분, 금 7시간) — 요일(1=일 … 7=토) → 분.
+    /// 비어 있으면 모든 요일이 `workdayMinutes`.
+    static var workdayMinutesByWeekday: [Int: Int] {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: weekdayMinutesKey),
+                  let map = try? JSONDecoder().decode([String: Int].self, from: data) else { return [:] }
+            return Dictionary(uniqueKeysWithValues: map.compactMap { k, v in Int(k).map { ($0, v) } })
+        }
+        set {
+            let map = Dictionary(uniqueKeysWithValues: newValue.filter { $0.value > 0 }.map { (String($0.key), $0.value) })
+            if map.isEmpty {
+                UserDefaults.standard.removeObject(forKey: weekdayMinutesKey)
+            } else if let data = try? JSONEncoder().encode(map) {
+                UserDefaults.standard.set(data, forKey: weekdayMinutesKey)
+            }
+        }
+    }
+
+    /// 그 날의 근무 시간(분) — 요일별로 정했으면 그 값, 아니면 하루 근무 시간
+    static func workdayMinutes(on date: Date, calendar: Calendar = .current) -> Int {
+        workdayMinutesByWeekday[calendar.component(.weekday, from: date)] ?? workdayMinutes
+    }
+
+    /// 분 → 차감 일수 (그 날의 근무 시간 기준 — 금요일 1시간은 7시간 근무면 1/7일)
+    static func days(forMinutes minutes: Int, on date: Date) -> Double {
+        Double(max(0, minutes)) / Double(max(1, workdayMinutes(on: date)))
     }
 }
 
@@ -894,8 +1034,12 @@ enum LeaveRecordMaintenance {
 /// 저장된 `usedDays` 카운터가 실제 기록과 어긋나거나, 보너스 유형에 해당하는
 /// 특별휴가 기록이 보너스에 연결(`bonusLeaveId`)되지 않은 과거 데이터를 함께 보정한다.
 enum BonusLeaveReconciler {
-    /// 1) 연차를 차감하지 않는 미연결 특별휴가 기록을, 유형(이름)이 맞고 잔여가 충분한 보너스에 자동 연결
+    /// 1) 연차를 차감하지 않는 미연결 특별휴가 기록을, 유형이 맞고 잔여가 충분한 보너스에 자동 연결
+    ///    — 유형은 휴가 카테고리(대체휴무·공가·병가)로 먼저 판단하고, 없으면 메모에서 찾는다
     /// 2) 모든 보너스의 `usedDays`/`isUsed`를 연결된 기록 기준으로 재산정
+    ///
+    /// ⚠️ 취소(`.cancelled`)된 기록은 보너스를 쓰지 않은 것이다 — 연결은 남겨 두되 사용량에 세지 않는다
+    ///    (`LeaveUsageCalculator`의 "취소는 어디에도 세지 않는다"와 같은 규칙).
     /// - Returns: 데이터가 실제로 변경되면 true (호출 측에서 save 트리거용)
     @discardableResult
     static func reconcile(records: [LeaveRecord], bonuses: [BonusLeave]) -> Bool {
@@ -905,15 +1049,15 @@ enum BonusLeaveReconciler {
         // 잔여 추적 — 이미 연결된 기록부터 차감
         var remaining: [UUID: Double] = [:]
         for b in bonuses { remaining[b.id] = b.days }
-        for r in records {
+        for r in records where r.status != .cancelled {
             guard let id = r.bonusLeaveId, remaining[id] != nil else { continue }
             remaining[id]! -= r.effectiveLeaveDays
         }
 
         // 1단계: 미연결 특별휴가 → 유형 매칭 보너스 자동 연결 (오래된 기록부터 안정적으로)
         for r in records.sorted(by: { $0.startDate < $1.startDate }) {
-            guard r.bonusLeaveId == nil, !r.type.deductsFromAnnual else { continue }
-            guard let matchType = BonusLeaveType.matching(r.note) else { continue }
+            guard r.bonusLeaveId == nil, r.status != .cancelled, !r.type.deductsFromAnnual else { continue }
+            guard let matchType = BonusLeaveType(category: r.category) ?? BonusLeaveType.matching(r.note) else { continue }
             let days = r.effectiveLeaveDays
             guard let target = bonuses.first(where: {
                 $0.type == matchType && (remaining[$0.id] ?? 0) >= days
@@ -926,7 +1070,7 @@ enum BonusLeaveReconciler {
         // 2단계: usedDays / isUsed 재산정
         for b in bonuses {
             let used = records
-                .filter { $0.bonusLeaveId == b.id }
+                .filter { $0.bonusLeaveId == b.id && $0.status != .cancelled }
                 .reduce(0.0) { $0 + $1.effectiveLeaveDays }
             if abs(used - b.usedDays) > 0.001 {
                 b.usedDays = used
@@ -958,6 +1102,17 @@ enum BonusLeaveType: String, Codable, CaseIterable, Identifiable {
 
     /// 휴가 유형명 원문(예: "자녀돌봄(1/2)", "포상휴가")에서 대응하는 보너스 유형을 추론.
     /// 사진 가져오기에서 특별휴가류를 보너스 연차와 자동 연결할 때 사용.
+    /// 휴가 카테고리에 대응하는 보너스 유형 — 대체휴무·공가·병가는 이름이 같은 보너스에서 쓴다.
+    /// 메모가 비어 있거나 한국어가 아니어도 카테고리만으로 연결되게 한다.
+    init?(category: LeaveType) {
+        switch category {
+        case .compensatory: self = .compensatory
+        case .official: self = .official
+        case .sick: self = .sick
+        default: return nil
+        }
+    }
+
     static func matching(_ text: String) -> BonusLeaveType? {
         let table: [(keyword: String, type: BonusLeaveType)] = [
             ("대체", .compensatory), ("보상", .compensatory),
@@ -1025,6 +1180,8 @@ struct Holiday: Identifiable {
     let isCustom: Bool
     /// 내 방학(교사·학생) — 공휴일처럼 쉬는 날이지만 달력에서 색을 달리한다
     let isBreak: Bool
+    /// 정부가 정한 공동 휴가(인도네시아 cuti bersama) — 쉬는 날이지만 연휴 이름은 진짜 공휴일을 따른다
+    var isCollective = false
 
     init(date: Date, name: String, isSubstitute: Bool = false, isCustom: Bool = false, isBreak: Bool = false) {
         self.date = date
@@ -1042,6 +1199,10 @@ enum SchoolBreakKind: String, CaseIterable, Identifiable {
     case child
     /// 내 방학(교사·학생) — 공휴일처럼 쉬는 날. 연차 차감 없음, 추천·번아웃 계산에서 휴식으로 본다.
     case mine
+    /// 휴가 불가 기간 — 직장 규정상 휴가를 낼 수 없는 기간(결산·성수기 등). 쉬는 날이 아니라 일하는 날이며,
+    /// 추천·최적 플랜이 피하고 휴가 등록 때 경고한다. 방학과 같은 모델에 담아 동기화·타임머신을 그대로 탄다.
+    /// ⚠️ 이 값을 모르는 예전 버전은 자녀 방학(`child`)으로 읽는다 — 연차 계산엔 영향 없음.
+    case blackout
 
     var id: String { rawValue }
 }

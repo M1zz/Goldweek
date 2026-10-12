@@ -63,10 +63,11 @@ struct HolidayManagementView: View {
             .sorted { $0.date < $1.date }
     }
 
-    /// 선택한 연도에 걸친 방학 (겨울방학처럼 해를 넘기는 것도 포함)
+    /// 선택한 연도에 걸친 방학 (겨울방학처럼 해를 넘기는 것도 포함) — 휴가 불가 기간은 설정에서 따로 관리
     private var breaksThisYear: [SchoolBreak] {
         schoolBreaks.filter {
-            calendar.component(.year, from: $0.startDate) <= selectedYear
+            $0.kind != .blackout
+                && calendar.component(.year, from: $0.startDate) <= selectedYear
                 && calendar.component(.year, from: $0.endDate) >= selectedYear
         }
     }
@@ -520,7 +521,29 @@ private struct SchoolBreakRow: View {
     let onEdit: () -> Void
     let onDelete: () -> Void
 
-    private var tint: Color { item.kind == .mine ? .indigo : .teal }
+    private var tint: Color {
+        switch item.kind {
+        case .mine: return .indigo
+        case .child: return .teal
+        case .blackout: return .orange
+        }
+    }
+
+    private var icon: String {
+        switch item.kind {
+        case .mine: return "graduationcap.fill"
+        case .child: return "figure.and.child.holdinghands"
+        case .blackout: return "nosign"
+        }
+    }
+
+    private var kindLabel: String {
+        switch item.kind {
+        case .mine: return Strings.myBreakLabel
+        case .child: return Strings.childBreakTag
+        case .blackout: return Strings.blackoutPeriodsTitle
+        }
+    }
 
     private var days: Int {
         (Calendar.current.dateComponents([.day], from: item.startDate, to: item.endDate).day ?? 0) + 1
@@ -530,7 +553,7 @@ private struct SchoolBreakRow: View {
         HStack(spacing: 12) {
             Button(action: onEdit) {
                 HStack(spacing: 12) {
-                    Image(systemName: item.kind == .mine ? "graduationcap.fill" : "figure.and.child.holdinghands")
+                    Image(systemName: icon)
                         .font(.title3)
                         .foregroundStyle(tint)
                         .frame(width: 36)
@@ -541,7 +564,7 @@ private struct SchoolBreakRow: View {
                         Text("\(item.startDate.appMonthDay) – \(item.endDate.appMonthDay) · \(Strings.breakDays(days))")
                             .font(.body)
                             .foregroundStyle(.secondary)
-                        Text(item.kind == .mine ? Strings.myBreakLabel : Strings.childBreakTag)
+                        Text(kindLabel)
                             .font(.body)
                             .foregroundStyle(tint)
                     }
@@ -551,7 +574,7 @@ private struct SchoolBreakRow: View {
             }
             .buttonStyle(.plain)
             .accessibilityElement(children: .combine)
-            .accessibilityHint(Text(Strings.breakEditTitle))
+            .accessibilityHint(Text(item.kind == .blackout ? Strings.blackoutPeriodEditTitle : Strings.breakEditTitle))
 
             Button(role: .destructive, action: onDelete) {
                 Image(systemName: "trash")
@@ -577,19 +600,27 @@ struct SchoolBreakEditSheet: View {
     @State private var startDate: Date
     @State private var endDate: Date
 
-    init(defaultYear: Int, existing: SchoolBreak?, onSave: @escaping (String, Date, Date, SchoolBreakKind) -> Void) {
+    /// 휴가 불가 기간 편집 — 종류 선택을 숨기고 문구를 바꾼다
+    private var isBlackout: Bool { kind == .blackout }
+
+    /// - Parameter kind: 새로 만들 때의 종류 (휴가 불가 기간 화면은 `.blackout`)
+    init(defaultYear: Int, existing: SchoolBreak?, kind defaultKind: SchoolBreakKind = .child,
+         onSave: @escaping (String, Date, Date, SchoolBreakKind) -> Void) {
         self.existing = existing
         self.onSave = onSave
         let cal = Calendar.current
         let thisYear = cal.component(.year, from: Date())
+        let initialKind = existing?.kind ?? defaultKind
         // 기본값: 올해면 오늘부터 4주, 다른 해면 그해 7월 말부터 4주(여름방학 즈음)
         let start = existing?.startDate
             ?? (defaultYear == thisYear ? cal.startOfDay(for: Date())
                 : cal.date(from: DateComponents(year: defaultYear, month: 7, day: 20)) ?? Date())
         _startDate = State(initialValue: start)
-        _endDate = State(initialValue: existing?.endDate ?? cal.date(byAdding: .day, value: 27, to: start) ?? start)
+        // 방학은 4주, 휴가 불가 기간은 1주가 기본
+        let length = initialKind == .blackout ? 6 : 27
+        _endDate = State(initialValue: existing?.endDate ?? cal.date(byAdding: .day, value: length, to: start) ?? start)
         _name = State(initialValue: existing?.name ?? "")
-        _kind = State(initialValue: existing?.kind ?? .child)
+        _kind = State(initialValue: initialKind)
     }
 
     private var isValid: Bool { endDate >= startDate }
@@ -597,7 +628,13 @@ struct SchoolBreakEditSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
+                if isBlackout {
+                    Section {
+                        Text(Strings.blackoutPeriodsFooter)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    }
+                } else { Section {
                     Picker(Strings.breakKindSection, selection: $kind) {
                         Text(Strings.childBreakTag).tag(SchoolBreakKind.child)
                         Text(Strings.myBreakLabel).tag(SchoolBreakKind.mine)
@@ -608,7 +645,7 @@ struct SchoolBreakEditSheet: View {
                         .foregroundStyle(.secondary)
                 } header: {
                     Text(Strings.breakKindSection)
-                }
+                } }
 
                 Section(Strings.breakPeriodSection) {
                     DatePicker(Strings.startDate, selection: $startDate, displayedComponents: .date)
@@ -621,11 +658,13 @@ struct SchoolBreakEditSheet: View {
                 }
 
                 Section(Strings.breakNameSection) {
-                    TextField(Strings.breakNamePlaceholder, text: $name)
+                    TextField(isBlackout ? Strings.blackoutPeriodNamePlaceholder : Strings.breakNamePlaceholder, text: $name)
                         .submitLabel(.done)
                 }
             }
-            .navigationTitle(existing == nil ? Strings.breakAddTitle : Strings.breakEditTitle)
+            .navigationTitle(isBlackout
+                ? (existing == nil ? Strings.blackoutPeriodAddTitle : Strings.blackoutPeriodEditTitle)
+                : (existing == nil ? Strings.breakAddTitle : Strings.breakEditTitle))
             .navigationBarTitleDisplayMode(.inline)
             .onChange(of: startDate) { _, newStart in
                 if endDate < newStart { endDate = newStart }
@@ -637,9 +676,12 @@ struct SchoolBreakEditSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(existing == nil ? Strings.commonAdd : Strings.save) {
                         let trimmed = name.trimmingCharacters(in: .whitespaces)
-                        let finalName = trimmed.isEmpty
-                            ? (kind == .mine ? Strings.myBreakLabel : Strings.childBreakTag)
-                            : trimmed
+                        let fallback: String = switch kind {
+                        case .mine: Strings.myBreakLabel
+                        case .child: Strings.childBreakTag
+                        case .blackout: Strings.blackoutPeriodsTitle
+                        }
+                        let finalName = trimmed.isEmpty ? fallback : trimmed
                         onSave(finalName, startDate, endDate, kind)
                         dismiss()
                     }
@@ -649,6 +691,114 @@ struct SchoolBreakEditSheet: View {
             }
         }
         .presentationDetents([.large])
+    }
+}
+
+// MARK: - 휴가 불가 기간 (설정 → 휴가 제한)
+/// 직장 규정상 휴가를 낼 수 없는 기간 목록. 방학과 같은 `SchoolBreak` 모델(`.blackout`)에 담는다.
+struct BlackoutPeriodsView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \SchoolBreak.startDate) private var schoolBreaks: [SchoolBreak]
+
+    /// 바뀌면 추천을 다시 계산하게 한다
+    var onChange: () -> Void = {}
+
+    @State private var showingAdd = false
+    @State private var itemToEdit: SchoolBreak?
+    @State private var itemToDelete: SchoolBreak?
+    @State private var showingErrorAlert = false
+
+    private let calendar = Calendar.current
+
+    /// 끝나지 않은 기간을 먼저, 지난 기간은 아래로
+    private var periods: [SchoolBreak] {
+        let today = calendar.startOfDay(for: Date())
+        let all = schoolBreaks.filter { $0.kind == .blackout }
+        return all.filter { $0.endDate >= today } + all.filter { $0.endDate < today }.reversed()
+    }
+
+    var body: some View {
+        List {
+            Section {
+                if periods.isEmpty {
+                    HStack(spacing: 10) {
+                        Image(systemName: "nosign")
+                            .foregroundStyle(.secondary)
+                            .voDecorative()
+                        Text(Strings.blackoutPeriodsEmpty)
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    ForEach(periods) { item in
+                        SchoolBreakRow(item: item,
+                                       onEdit: { itemToEdit = item },
+                                       onDelete: { itemToDelete = item })
+                            .listRowInsets(EdgeInsets())
+                    }
+                }
+            } footer: {
+                Text(Strings.blackoutPeriodsFooter)
+                    .font(.body)
+            }
+        }
+        .navigationTitle(Strings.blackoutPeriodsTitle)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button { showingAdd = true } label: {
+                    Image(systemName: "plus")
+                }
+                .accessibilityLabel(Text(Strings.blackoutPeriodAddTitle))
+            }
+        }
+        .sheet(isPresented: $showingAdd) {
+            SchoolBreakEditSheet(defaultYear: calendar.component(.year, from: Date()), existing: nil,
+                                 kind: .blackout) { name, start, end, kind in
+                let item = SchoolBreak(name: name, startDate: start, endDate: end, kind: kind)
+                modelContext.insert(item)
+                save { modelContext.delete(item) }
+            }
+        }
+        .sheet(item: $itemToEdit) { item in
+            SchoolBreakEditSheet(defaultYear: calendar.component(.year, from: item.startDate), existing: item) { name, start, end, _ in
+                item.name = name
+                item.startDate = calendar.startOfDay(for: start)
+                item.endDate = calendar.startOfDay(for: end)
+                save { modelContext.rollback() }
+            }
+        }
+        .alert(Strings.blackoutPeriodDeleteTitle, isPresented: Binding(
+            get: { itemToDelete != nil },
+            set: { if !$0 { itemToDelete = nil } }
+        )) {
+            Button(Strings.cancel, role: .cancel) { itemToDelete = nil }
+            Button(Strings.commonDelete, role: .destructive) {
+                if let item = itemToDelete {
+                    modelContext.delete(item)
+                    save { }
+                }
+                itemToDelete = nil
+            }
+        } message: {
+            Text(itemToDelete?.name ?? "")
+        }
+        .alert(Strings.alert, isPresented: $showingErrorAlert) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(Strings.saveFailed)
+        }
+    }
+
+    private func save(undo: () -> Void) {
+        do {
+            try modelContext.save()
+            HapticFeedback.success()
+            onChange()
+        } catch {
+            undo()
+            showingErrorAlert = true
+            HapticFeedback.error()
+        }
     }
 }
 

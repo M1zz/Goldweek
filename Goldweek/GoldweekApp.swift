@@ -16,6 +16,8 @@ import LeeoKit
 struct GoldweekApp: App {
     @UIApplicationDelegateAdaptor(GoldweekAppDelegate.self) private var appDelegate
     let sharedModelContainer: ModelContainer
+    /// 백업 서비스가 직접 만든 휴가 종류를 읽을 때 쓴다 (백업 호출부마다 넘기지 않아도 빠지지 않게)
+    nonisolated(unsafe) static var sharedContainerForBackup: ModelContainer?
 
     init() {
         AppLogger.shared.info("Goldweek 앱 초기화 시작", category: .app)
@@ -57,9 +59,11 @@ struct GoldweekApp: App {
             BonusLeave.self,
             CustomHoliday.self,
             SchoolBreak.self,
+            CustomLeaveType.self,
         ])
 
         sharedModelContainer = Self.createModelContainer(schema: schema)
+        Self.sharedContainerForBackup = sharedModelContainer
         ScreenshotMode.seed(container: sharedModelContainer)
 
         // 기능 팁 (TipKit) — 하루 1개씩 노출, 기능 사용 시 각 팁이 invalidate 됨
@@ -75,6 +79,8 @@ struct GoldweekApp: App {
         try? Tips.configure([.displayFrequency(.daily)])
 
         checkICloudStatus()
+        // 휴가 종류 색·순서·근무 시간 — 기기끼리 iCloud 로 맞춘다
+        LeaveSettingsSync.shared.start()
 
         AppLogger.shared.info("Goldweek 앱 초기화 완료", category: .app)
     }

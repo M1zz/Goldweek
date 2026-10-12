@@ -92,6 +92,7 @@ final class TimeMachineService {
             let bonuses = try context.fetch(FetchDescriptor<BonusLeave>())
             let holidays = try context.fetch(FetchDescriptor<CustomHoliday>())
             let breaks = try context.fetch(FetchDescriptor<SchoolBreak>())
+            let kinds = try context.fetch(FetchDescriptor<CustomLeaveType>())
 
             // 프로필조차 없는 완전히 빈 상태는 저장할 가치가 없다
             guard !profiles.isEmpty else { return false }
@@ -106,7 +107,8 @@ final class TimeMachineService {
                 leaveRecords: leaves.map(TMLeaveData.init),
                 bonusLeaves: bonuses.map(TMBonusData.init),
                 customHolidays: holidays.map(TMHolidayData.init),
-                schoolBreaks: breaks.isEmpty ? nil : breaks.map(TMBreakData.init)
+                schoolBreaks: breaks.isEmpty ? nil : breaks.map(TMBreakData.init),
+                leaveKinds: kinds.isEmpty ? nil : kinds.map(TMLeaveKindData.init)
             )
 
             snapshot.contentHash = try Self.contentHash(of: snapshot)
@@ -219,6 +221,7 @@ final class TimeMachineService {
         try context.fetch(FetchDescriptor<BonusLeave>()).forEach { context.delete($0) }
         try context.fetch(FetchDescriptor<CustomHoliday>()).forEach { context.delete($0) }
         try context.fetch(FetchDescriptor<SchoolBreak>()).forEach { context.delete($0) }
+        try context.fetch(FetchDescriptor<CustomLeaveType>()).forEach { context.delete($0) }
 
         if let profileData = snapshot.profiles.first {
             let existing = try context.fetch(FetchDescriptor<UserProfile>())
@@ -233,6 +236,7 @@ final class TimeMachineService {
         snapshot.bonusLeaves.forEach { context.insert($0.materialize()) }
         snapshot.customHolidays.forEach { context.insert($0.materialize()) }
         snapshot.schoolBreaks?.forEach { context.insert($0.materialize()) }
+        snapshot.leaveKinds?.forEach { context.insert($0.materialize()) }
 
         try context.save()
     }
@@ -289,13 +293,15 @@ final class TimeMachineService {
             let bonusLeaves: [TMBonusData]
             let customHolidays: [TMHolidayData]
             let schoolBreaks: [TMBreakData]?
+            let leaveKinds: [TMLeaveKindData]?
         }
         let payload = Payload(
             profiles: snapshot.profiles,
             leaveRecords: snapshot.leaveRecords,
             bonusLeaves: snapshot.bonusLeaves,
             customHolidays: snapshot.customHolidays,
-            schoolBreaks: snapshot.schoolBreaks
+            schoolBreaks: snapshot.schoolBreaks,
+            leaveKinds: snapshot.leaveKinds
         )
         let data = try stableEncoder().encode(payload)
         return SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
@@ -333,6 +339,8 @@ struct TimeMachineSnapshot: Codable {
     var customHolidays: [TMHolidayData]
     /// 방학 — 나중에 추가된 필드라 옵셔널 (없으면 인코딩에서 빠져 예전 스냅샷의 체크섬·해시가 그대로 맞는다)
     var schoolBreaks: [TMBreakData]? = nil
+    /// 직접 만든 휴가 종류 — 나중에 추가된 필드라 옵셔널 (예전 스냅샷의 체크섬이 그대로 맞는다)
+    var leaveKinds: [TMLeaveKindData]? = nil
 }
 
 struct TMProfileData: Codable {
@@ -345,6 +353,10 @@ struct TMProfileData: Codable {
     let countryRaw: String
     /// 공휴일 지역 — 이 필드가 생기기 전 백업에는 없다
     let holidayRegionRaw: String?
+    /// 사는 곳 지역 — 이 필드가 생기기 전 백업에는 없다
+    let homeRegionRaw: String?
+    /// 함께 볼 공휴일의 나라 — 이 필드가 생기기 전 백업에는 없다
+    let homeCountryRaw: String?
     let userTypeRaw: String
     let preferredDurationRaw: String
     let preferredSeasonsRaw: String
@@ -362,6 +374,8 @@ struct TMProfileData: Codable {
         self.createdAt = profile.createdAt
         self.countryRaw = profile.countryRaw
         self.holidayRegionRaw = profile.holidayRegionRaw
+        self.homeRegionRaw = profile.homeRegionRaw
+        self.homeCountryRaw = profile.homeCountryRaw
         self.userTypeRaw = profile.userTypeRaw
         self.preferredDurationRaw = profile.preferredDurationRaw
         self.preferredSeasonsRaw = profile.preferredSeasonsRaw
@@ -380,6 +394,8 @@ struct TMProfileData: Codable {
         profile.createdAt = createdAt
         profile.countryRaw = countryRaw
         profile.holidayRegionRaw = holidayRegionRaw ?? ""
+        profile.homeRegionRaw = homeRegionRaw ?? ""
+        profile.homeCountryRaw = homeCountryRaw ?? ""
         profile.userTypeRaw = userTypeRaw
         profile.preferredDurationRaw = preferredDurationRaw
         profile.preferredSeasonsRaw = preferredSeasonsRaw
@@ -405,6 +421,12 @@ struct TMLeaveData: Codable {
     let note: String
     let isRecommended: Bool
     let bonusLeaveId: UUID?
+    /// 길이(반차·반반차·시간) — 예전 스냅샷에는 없다 (없으면 유형에서 추론)
+    let lengthRaw: String?
+    /// 시간 단위 휴가의 분
+    let durationMinutes: Int?
+    /// 직접 만든 휴가 종류
+    let customTypeId: UUID?
 
     init(from record: LeaveRecord) {
         self.id = record.id
@@ -415,6 +437,9 @@ struct TMLeaveData: Codable {
         self.note = record.note
         self.isRecommended = record.isRecommended
         self.bonusLeaveId = record.bonusLeaveId
+        self.lengthRaw = record.lengthRaw
+        self.durationMinutes = record.durationMinutes
+        self.customTypeId = record.customTypeId
     }
 
     func materialize() -> LeaveRecord {
@@ -425,9 +450,12 @@ struct TMLeaveData: Codable {
             status: LeaveStatus(rawValue: statusRaw) ?? .planned,
             note: note,
             isRecommended: isRecommended,
-            bonusLeaveId: bonusLeaveId
+            bonusLeaveId: bonusLeaveId,
+            durationMinutes: durationMinutes,
+            customTypeId: customTypeId
         )
         record.id = id
+        record.lengthRaw = lengthRaw
         return record
     }
 }
@@ -515,6 +543,36 @@ struct TMBreakData: Codable {
         item.id = id
         item.createdAt = createdAt
         return item
+    }
+}
+
+struct TMLeaveKindData: Codable {
+    let id: UUID
+    let name: String
+    let colorHex: String
+    let deductsFromAnnual: Bool
+    let createdAt: Date
+    /// 연간 한도 — 예전 스냅샷에는 없다
+    var allowanceAmount: Double?
+    var allowanceIsHours: Bool?
+
+    init(from kind: CustomLeaveType) {
+        self.id = kind.id
+        self.allowanceAmount = kind.allowanceAmount
+        self.allowanceIsHours = kind.allowanceIsHours
+        self.name = kind.name
+        self.colorHex = kind.colorHex
+        self.deductsFromAnnual = kind.deductsFromAnnual
+        self.createdAt = kind.createdAt
+    }
+
+    func materialize() -> CustomLeaveType {
+        let kind = CustomLeaveType(name: name, colorHex: colorHex, deductsFromAnnual: deductsFromAnnual)
+        kind.id = id
+        kind.createdAt = createdAt
+        kind.allowanceAmount = allowanceAmount ?? 0
+        kind.allowanceIsHours = allowanceIsHours ?? true
+        return kind
     }
 }
 

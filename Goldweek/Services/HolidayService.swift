@@ -19,6 +19,9 @@ class HolidayService {
     func isHolidayDataReliable(for year: Int, country: Country = .korea) -> Bool {
         // 중국은 调休(주말 대체 근무) 때문에 정부 발표 전에는 실제 휴무일을 알 수 없다
         if country == .china { return year <= Self.chinaOfficialLastYear }
+        // 러시아는 휴일 이동, 인도네시아는 공휴일 날짜 자체를 정부가 해마다 정한다
+        if country == .russia { return year <= Self.russiaOfficialLastYear }
+        if country == .indonesia { return Self.hasIndonesiaOfficialSchedule(year) }
         if country == .custom { return true }   // 기본 공휴일이 없으니 틀릴 것도 없다
         return year <= Self.reliableDataLastYear
     }
@@ -47,6 +50,59 @@ class HolidayService {
         set { UserDefaults.standard.set(newValue, forKey: "holidayRegion") }
     }
 
+    /// 사는 곳 지역 (원본은 `UserProfile.homeRegionRaw`) — 일하는 곳과 다르면 그 지역에만 있는 공휴일을 따로 보여 준다
+    static var homeRegionCode: String {
+        get { UserDefaults.standard.string(forKey: "homeHolidayRegion") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "homeHolidayRegion") }
+    }
+
+    /// 함께 볼 공휴일의 나라 (원본은 `UserProfile.homeCountryRaw`) — 비면 일하는 나라 안의 다른 지역(`homeRegionCode`)
+    static var homeCountryCode: String {
+        get { UserDefaults.standard.string(forKey: "homeHolidayCountry") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "homeHolidayCountry") }
+    }
+
+    /// 사는 곳 공휴일에도 쉬는지 — 기본은 아니다(연차는 일하는 곳 기준)
+    static var homeHolidaysAreDaysOff: Bool {
+        get { UserDefaults.standard.bool(forKey: "homeHolidaysDaysOff") }
+        set { UserDefaults.standard.set(newValue, forKey: "homeHolidaysDaysOff") }
+    }
+
+    /// 공휴일 앞뒤로 휴가를 낼 수 없는 근무일 수 (0 = 제한 없음) — 공무원 등 직장 규정
+    static var leaveBlackoutDays: Int {
+        get { UserDefaults.standard.integer(forKey: "holidayBlackoutDays") }
+        set { UserDefaults.standard.set(newValue, forKey: "holidayBlackoutDays") }
+    }
+
+    /// 함께 볼 공휴일의 나라·지역 — 사는 곳(같은 나라 다른 지역) 또는 회사 본사가 있는 다른 나라.
+    /// 일하는 곳과 같거나 고른 게 없으면 nil.
+    static func homePlace(for country: Country) -> (country: Country, region: HolidayRegion?)? {
+        if let other = Country(rawValue: homeCountryCode), other != country, other != .custom {
+            let region = HolidayRegion.find(homeRegionCode).flatMap { $0.country == other ? $0 : nil }
+            return (other, region)
+        }
+        guard let home = HolidayRegion.find(homeRegionCode), home.country == country,
+              home.code != activeRegion(for: country)?.code else { return nil }
+        return (country, home)
+    }
+
+    /// 달력 범례·날짜 상세에 쓸 함께 보는 곳 이름 (예: "카탈루냐", "🇩🇪 독일")
+    static func homePlaceName(for country: Country) -> String? {
+        guard let place = homePlace(for: country) else { return nil }
+        if place.country == country { return place.region?.displayName }
+        let name = place.region.map { "\(place.country.displayName) \($0.displayName)" } ?? place.country.displayName
+        return "\(place.country.flag) \(name)"
+    }
+
+    /// 함께 보는 곳에만 있는 공휴일 — 일하는 곳 공휴일과 날짜가 겹치지 않는 것
+    func homeOnlyHolidays(for year: Int, country: Country) -> [Holiday] {
+        guard let place = Self.homePlace(for: country) else { return [] }
+        let work = Set(getHolidays(for: year, country: country).map { dateKey($0.date) })
+        // 다른 나라에 지역을 안 골랐으면 전국 공휴일 — 일하는 곳 지역은 그 나라 것이 아니라 끼어들지 않는다
+        return getHolidays(for: year, country: place.country, region: place.region)
+            .filter { !work.contains(dateKey($0.date)) }
+    }
+
     /// 그 나라에 적용할 지역 — 고른 지역이 다른 나라 것이면 없다
     static func activeRegion(for country: Country) -> HolidayRegion? {
         guard let region = HolidayRegion.find(selectedRegionCode), region.country == country else { return nil }
@@ -54,10 +110,12 @@ class HolidayService {
     }
 
     /// 해당 연도의 공휴일 목록 반환 (국가별, 커스텀 포함)
+    /// `region` 을 주면 고른 지역 대신 그 지역으로 계산한다 (사는 곳 공휴일용)
     func getHolidays(for year: Int, country: Country = .korea,
                      customHolidays: [CustomHoliday] = [],
-                     hiddenDates: Set<String> = []) -> [Holiday] {
-        let region = Self.activeRegion(for: country)?.code
+                     hiddenDates: Set<String> = [],
+                     region regionOverride: HolidayRegion? = nil) -> [Holiday] {
+        let region = regionOverride?.code ?? Self.activeRegion(for: country)?.code
         // 이름이 앱 언어를 따르므로 언어도 키에 넣는다 — 실행 중 언어를 바꿔도 예전 이름이 남지 않게
         let baseKey = "\(year)-\(country.rawValue)-\(region ?? "")-\(AppLanguage.current.rawValue)"
         var result: [Holiday]
@@ -131,6 +189,8 @@ class HolidayService {
                 result = getTurkeyHolidays(for: year)
             case .egypt:
                 result = getEgyptHolidays(for: year)
+            case .morocco:
+                result = getMoroccoHolidays(for: year)
             case .southAfrica:
                 result = getSouthAfricaHolidays(for: year)
             case .mexico:
@@ -143,6 +203,10 @@ class HolidayService {
                 result = getColombiaHolidays(for: year)
             case .newZealand:
                 result = getNewZealandHolidays(for: year)
+            case .russia:
+                result = getRussiaHolidays(for: year)
+            case .indonesia:
+                result = getIndonesiaHolidays(for: year)
             case .custom:
                 result = []   // 전부 사용자가 직접 넣는다
             }
@@ -387,6 +451,8 @@ class HolidayService {
         case .czech: subLabel = "Náhradní volno"
         case .greek: subLabel = "Αναπληρωματική αργία"
         case .turkish: subLabel = "İkame Tatil"
+        case .russian: subLabel = "Перенесённый выходной"
+        case .indonesian: subLabel = "Libur Pengganti"
         case .dutch: subLabel = "Vervangende feestdag"
         case .japanese: subLabel = "振替休日"
         case .chinese: subLabel = "补休日"
@@ -536,6 +602,8 @@ class HolidayService {
             case .czech: return "Náhradní volno"
             case .greek: return "Αναπληρωματική αργία"
             case .turkish: return "Telafi Tatili"
+            case .russian: return "Перенесённый выходной"
+            case .indonesian: return "Libur Pengganti"
             case .dutch: return "Vervangende feestdag"
             case .japanese: return "振替休日"
             case .chinese: return "补休日"
@@ -573,6 +641,8 @@ class HolidayService {
             case .czech: return "Občanský svátek"
             case .greek: return "Αργία των πολιτών"
             case .turkish: return "Vatandaş Tatili"
+            case .russian: return "Народный выходной"
+            case .indonesian: return "Hari Libur Warga"
             case .dutch: return "Burgerfeestdag"
             case .japanese: return "国民の休日"
             case .chinese: return "国民休息日"
@@ -618,11 +688,25 @@ class HolidayService {
         2026: [(1, 4), (2, 14), (2, 28), (5, 9), (9, 20), (10, 10)],
     ]
 
-    /// 주말이지만 출근하는 날인지 (중국 调休 补班)
+    /// 러시아 휴일 이동으로 출근하는 토요일 (рабочая суббота) — 같은 정부 결정 원문
+    private static let russiaMakeupWorkdays: [Int: [(month: Int, day: Int)]] = [
+        2025: [(11, 1)],
+        2027: [(2, 20)],
+    ]
+
+    private static func makeupTable(_ country: Country) -> [Int: [(month: Int, day: Int)]] {
+        switch country {
+        case .china: return chinaMakeupWorkdays
+        case .russia: return russiaMakeupWorkdays
+        default: return [:]
+        }
+    }
+
+    /// 주말이지만 출근하는 날인지 (중국 调休 补班 · 러시아 рабочая суббота · 파트타임 쉬는 날을 옮겨 일하는 날)
     static func isMakeupWorkday(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
-        guard country == .china else { return false }
+        if partTimeSwapWorkKeys.contains(partTimeKey(date)) { return true }
         let c = calendar.dateComponents([.year, .month, .day], from: date)
-        guard let year = c.year, let days = chinaMakeupWorkdays[year] else { return false }
+        guard let year = c.year, let days = makeupTable(country)[year] else { return false }
         return days.contains { $0.month == c.month && $0.day == c.day }
     }
 
@@ -633,6 +717,16 @@ class HolidayService {
         set { UserDefaults.standard.set(newValue, forKey: "customWeekendDays") }
     }
 
+    /// 내가 고른 주 시작 요일 — 0 이면 나라 기본, 아니면 Calendar weekday(1=일, 2=월, 7=토)
+    static var firstWeekdayOverride: Int {
+        UserDefaults.standard.integer(forKey: "firstWeekday")
+    }
+
+    /// 달력 첫 칸의 요일. 내가 고른 값이 있으면 그것, 없으면 나라 기본.
+    static func firstWeekday(for country: Country, override: Int = firstWeekdayOverride) -> Int {
+        (1...7).contains(override) ? override : country.standardFirstWeekday
+    }
+
     /// 저장값 → 주말 요일. 나라 기본을 따르면 nil.
     static func parseWeekend(_ raw: String) -> Set<Int>? {
         if raw == "none" { return [] }
@@ -641,24 +735,83 @@ class HolidayService {
     }
 
     /// 그 나라에서 쉬는 주말 요일 (Calendar weekday: 1=일 … 7=토). 내가 고른 값이 있으면 그것.
+    /// 파트타임으로 매주 쉬는 요일도 여기 더한다 — 연차 차감·추천·달력이 주말과 똑같이 다룬다.
     static func weekendDays(for country: Country) -> Set<Int> {
-        parseWeekend(weekendOverrideRaw) ?? country.standardWeekendDays
+        (parseWeekend(weekendOverrideRaw) ?? country.standardWeekendDays).union(partTimeDaysOff)
     }
+
+    // MARK: - 파트타임 쉬는 요일 (네덜란드 사용자 피드백: 금요일마다 쉬고, 가끔 다른 날로 바꾼다)
+
+    /// 매주 일하지 않는 요일 ("6" = 금요일, "4,6" 처럼 여럿). 주말과 따로 둔다 — 주말 설정은 나라 기본을 따를 수 있다.
+    static var partTimeDaysOffRaw: String {
+        get { UserDefaults.standard.string(forKey: "partTimeDaysOff") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "partTimeDaysOff") }
+    }
+
+    static var partTimeDaysOff: Set<Int> {
+        Set(partTimeDaysOffRaw.split(separator: ",").compactMap { Int($0) }.filter { (1...7).contains($0) })
+    }
+
+    /// 이번 주만 쉬는 날을 옮긴 기록 — "원래 쉬는 날>대신 쉬는 날" (yyyy-MM-dd) 쌍을 쉼표로
+    static var partTimeSwapsRaw: String {
+        get { UserDefaults.standard.string(forKey: "partTimeSwaps") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "partTimeSwaps") }
+    }
+
+    /// (원래 쉬는 날 → 대신 쉬는 날)
+    static var partTimeSwaps: [(from: String, to: String)] {
+        partTimeSwapsRaw.split(separator: ",").compactMap { pair in
+            let parts = pair.split(separator: ">").map(String.init)
+            return parts.count == 2 ? (parts[0], parts[1]) : nil
+        }
+    }
+
+    /// 옮겨서 일하게 된 날 (원래는 쉬는 요일)
+    static var partTimeSwapWorkKeys: Set<String> { Set(partTimeSwaps.map(\.from)) }
+    /// 옮겨서 쉬게 된 날
+    static var partTimeSwapOffKeys: Set<String> { Set(partTimeSwaps.map(\.to)) }
+
+    static func addPartTimeSwap(from: Date, to: Date) {
+        let f = partTimeKey(from), t = partTimeKey(to)
+        // 같은 날을 두 번 옮기면 앞의 것을 지운다
+        let kept = partTimeSwaps.filter { $0.from != f && $0.to != t }
+        partTimeSwapsRaw = (kept + [(f, t)]).map { "\($0.from)>\($0.to)" }.joined(separator: ",")
+    }
+
+    /// 그 날이 낀 옮김을 되돌린다 (원래 쉬는 날이든 대신 쉬는 날이든)
+    static func removePartTimeSwap(involving date: Date) {
+        let k = partTimeKey(date)
+        partTimeSwapsRaw = partTimeSwaps.filter { $0.from != k && $0.to != k }
+            .map { "\($0.from)>\($0.to)" }.joined(separator: ",")
+    }
+
+    private static let partTimeKeyFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        f.locale = Locale(identifier: "en_US_POSIX")
+        return f
+    }()
+
+    static func partTimeKey(_ date: Date) -> String { partTimeKeyFormatter.string(from: date) }
 
     /// 요일만 보고 주말인지 — 보충 근무일은 따지지 않는다 (달력 색칠용)
     static func isWeekendDay(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
         weekendDays(for: country).contains(calendar.component(.weekday, from: date))
     }
 
-    /// 쉬는 주말인지 — 그 나라 주말 중 보충 근무일이 아닌 날
+    /// 쉬는 주말인지 — 그 나라 주말 중 보충 근무일이 아닌 날. 파트타임 쉬는 날을 옮겨 쉬는 날도 여기 든다.
     static func isRestWeekend(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
-        isWeekendDay(date, country: country, calendar: calendar) && !isMakeupWorkday(date, country: country, calendar: calendar)
+        if partTimeSwapOffKeys.contains(partTimeKey(date)) { return true }
+        return isWeekendDay(date, country: country, calendar: calendar) && !isMakeupWorkday(date, country: country, calendar: calendar)
     }
 
-    /// 한 해의 보충 근무일 (startOfDay) — 연휴 플래너용
+    /// 한 해의 보충 근무일 (startOfDay) — 연휴 플래너용. 파트타임 쉬는 날을 옮겨 일하는 날도 포함.
     static func makeupWorkdays(for year: Int, country: Country, calendar: Calendar = .current) -> Set<Date> {
-        guard country == .china, let days = chinaMakeupWorkdays[year] else { return [] }
-        return Set(days.compactMap { calendar.date(from: DateComponents(year: year, month: $0.month, day: $0.day)) })
+        let swapped = partTimeSwaps.compactMap { partTimeKeyFormatter.date(from: $0.from) }
+            .filter { calendar.component(.year, from: $0) == year }
+            .map { calendar.startOfDay(for: $0) }
+        guard let days = makeupTable(country)[year] else { return Set(swapped) }
+        return Set(days.compactMap { calendar.date(from: DateComponents(year: year, month: $0.month, day: $0.day)) }).union(swapped)
     }
 
     private func getChineseHolidays(for year: Int) -> [Holiday] {
@@ -843,6 +996,8 @@ class HolidayService {
         case .czech: return "Přeloženo"
         case .greek: return "Τηρείται"
         case .turkish: return "Uygulanan Gün"
+        case .russian: return "Перенесённый"
+        case .indonesian: return "Pengganti"
         case .dutch: return "Vrije dag"
         case .japanese: return "振替"
         case .chinese: return "补休"

@@ -117,6 +117,18 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -232,6 +244,18 @@
           }
         },
         "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "id": {
           "stringUnit": {
             "state": "translated",
             "value": "Goldweek"
@@ -355,6 +379,18 @@
             "state": "translated",
             "value": "Goldweek, içe aktarabileceğin izin benzeri etkinlikleri bulmak ve kayıtlı izinlerini takvimine senkronize etmek için takvim erişimine ihtiyaç duyar."
           }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek нужен доступ к календарю, чтобы находить события, похожие на отпуск, для импорта и синхронизировать ваши отпуска с календарём."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek perlu akses kalender untuk menemukan acara yang mirip cuti agar bisa diimpor, dan untuk menyinkronkan cuti yang kamu catat ke kalender."
+          }
         }
       }
     },
@@ -474,6 +510,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "İzin talep geçmişini fotoğraflamak ve izinlerini otomatik kaydetmek için kamera erişimi gerekir."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Доступ к камере нужен, чтобы сфотографировать историю заявлений на отпуск и автоматически добавить отпуска."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Akses kamera diperlukan untuk memotret riwayat pengajuan cuti dan mencatat cutimu secara otomatis."
           }
         }
       }

@@ -254,6 +254,8 @@ enum NotificationService {
         case .czech:  title = a.level == .critical ? "Čas dobít baterky 🌿" : "Brzy je čas na pauzu 🌿"
         case .greek:  title = a.level == .critical ? "Ώρα για επαναφόρτιση 🌿" : "Σύντομα έρχεται ένα διάλειμμα 🌿"
         case .turkish:  title = a.level == .critical ? "Şarj olma zamanı 🌿" : "Yakında bir moladan yararlanma zamanı 🌿"
+        case .russian:  title = a.level == .critical ? "Пора отдохнуть 🌿" : "Скоро пора отдохнуть 🌿"
+        case .indonesian:  title = a.level == .critical ? "Waktunya isi ulang tenaga 🌿" : "Sebentar lagi waktunya istirahat 🌿"
         case .dutch:  title = a.level == .critical ? "Tijd om op te laden 🌿" : "Je volgende vrije dagen komen eraan 🌿"
         case .german: title = a.level == .critical ? "Zeit zum Auftanken 🌿" : "Bald ist eine Pause fällig 🌿"
         case .french: title = a.level == .critical ? "Il est temps de souffler 🌿" : "Une pause approche 🌿"
@@ -362,6 +364,22 @@ enum NotificationService {
             } else {
                 reasonText = "Bu yıl henüz dinlenme kaydı yok."
             }
+        case .russian:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Вы не отдыхали уже \(s) \(ruPlural(s, "день", "дня", "дней")) — это дольше вашего обычного цикла (\(cycle) \(ruPlural(cycle, "день", "дня", "дней")))."
+            } else if let s = since {
+                reasonText = "Вы не отдыхали уже \(s) \(ruPlural(s, "день", "дня", "дней"))."
+            } else {
+                reasonText = "В этом году вы ещё не отдыхали."
+            }
+        case .indonesian:
+            if let s = since, a.cycleIsPersonalized {
+                reasonText = "Sudah \(s) hari sejak liburan terakhirmu — melewati siklus biasamu yang \(cycle) hari."
+            } else if let s = since {
+                reasonText = "Sudah \(s) hari sejak liburan terakhirmu."
+            } else {
+                reasonText = "Belum ada istirahat yang tercatat tahun ini."
+            }
         case .dutch:
             if let s = since, a.cycleIsPersonalized {
                 reasonText = "Het is \(s) dagen geleden sinds je laatste vrije dagen — langer dan je gebruikelijke cyclus van \(cycle) dagen."
@@ -460,6 +478,12 @@ enum NotificationService {
             case .turkish:
                 let h = w.holidayName.isEmpty ? "" : " \(w.holidayName) çevresinde"
                 windowText = " \(daysFromNow(w.startDate, lang)),\(h) sadece \(w.leaveDaysNeeded) izin günüyle \(w.totalDaysOff) günlük bir mola yapabilirsin."
+            case .russian:
+                let h = w.holidayName.isEmpty ? "" : " (\(w.holidayName))"
+                windowText = " Через \(daysFromNow(w.startDate, lang))\(h): всего \(w.leaveDaysNeeded) \(ruPlural(w.leaveDaysNeeded, "день", "дня", "дней")) отпуска — и \(w.totalDaysOff) \(ruPlural(w.totalDaysOff, "день", "дня", "дней")) отдыха."
+            case .indonesian:
+                let h = w.holidayName.isEmpty ? "" : " sekitar \(w.holidayName)"
+                windowText = " Dalam \(daysFromNow(w.startDate, lang)),\(h) cukup \(w.leaveDaysNeeded) hari cuti untuk libur \(w.totalDaysOff) hari."
             case .dutch:
                 let h = w.holidayName.isEmpty ? "" : " rond \(w.holidayName)"
                 windowText = " Over \(daysFromNow(w.startDate, lang)):\(h) met slechts \(w.leaveDaysNeeded) verlofdag(en) heb je \(w.totalDaysOff) dagen vrij."
@@ -503,6 +527,8 @@ enum NotificationService {
         case .czech:  return "\(max(0, d)) d"
         case .greek:  return "\(max(0, d)) ημέρα(ες)"
         case .turkish:  return "\(max(0, d)) gün"
+        case .russian:  return "\(max(0, d)) \(ruPlural(max(0, d), "день", "дня", "дней"))"
+        case .indonesian:  return "\(max(0, d)) hari"
         case .dutch:  return "\(max(0, d)) dag(en)"
         case .german: return "\(max(0, d)) Tag(e)"
         case .french: return "\(max(0, d)) jour(s)"

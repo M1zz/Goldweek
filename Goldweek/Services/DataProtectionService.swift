@@ -346,6 +346,9 @@ struct LeaveRecordData: Codable {
     let statusRaw: String
     let note: String
     let isRecommended: Bool
+    /// 길이·시간·종류 — 나중에 추가된 필드라 예전 백업에는 없다
+    var lengthRaw: String? = nil
+    var durationMinutes: Int? = nil
 
     init(from record: LeaveRecord) {
         self.startDate = record.startDate
@@ -354,17 +357,22 @@ struct LeaveRecordData: Codable {
         self.statusRaw = record.statusRaw
         self.note = record.note
         self.isRecommended = record.isRecommended
+        self.lengthRaw = record.lengthRaw
+        self.durationMinutes = record.durationMinutes
     }
 
     func toLeaveRecord() -> LeaveRecord {
-        LeaveRecord(
+        let record = LeaveRecord(
             startDate: startDate,
             endDate: endDate,
             type: LeaveType(rawValue: typeRaw) ?? .annual,
             status: LeaveStatus(rawValue: statusRaw) ?? .planned,
             note: note,
-            isRecommended: isRecommended
+            isRecommended: isRecommended,
+            durationMinutes: durationMinutes
         )
+        record.lengthRaw = lengthRaw
+        return record
     }
 }
 
