@@ -213,19 +213,30 @@ final class DayOffCalendar {
         if let cached = blackoutCache[year] { lock.unlock(); return cached }
         lock.unlock()
         var blocked = Set<String>()
+        // 기준이 되는 쉬는 날: 나라 공휴일 + 내가 넣은 공휴일 + 내 방학 (교사: 추수감사절 주간·가을 방학 앞뒤도 막힘)
         // 연말·연초 공휴일이 이웃 해의 날을 막을 수 있어 앞뒤 해도 본다
+        var anchors = Set<String>()
         for y in (year - 1)...(year + 1) {
-            for k in holidayKeys(for: y) {
-                guard let h = keyFormatter.date(from: k) else { continue }
-                for step in [-1, 1] {
-                    var d = h, count = 0, guardrail = 0
-                    while count < leaveBlackoutDays && guardrail < 60 {
-                        guard let next = calendar.date(byAdding: .day, value: step, to: d) else { break }
-                        d = next; guardrail += 1
-                        if isDayOff(d) { continue }
-                        if calendar.component(.year, from: d) == year { blocked.insert(key(d)) }
-                        count += 1
-                    }
+            anchors.formUnion(holidayKeys(for: y))
+            for (md, _) in yearlyCustomDays { anchors.insert("\(y)-\(md)") }
+        }
+        anchors.formUnion(customDays.keys)
+        anchors.formUnion(breakDays.keys)
+        for k in anchors {
+            guard let h = keyFormatter.date(from: k), key(h) == k else { continue }
+            // 교대 근무로 일하는 날은 쉬는 날이 아니다
+            guard isDayOff(h) else { continue }
+            for step in [-1, 1] {
+                // 이어지는 방학은 끝에 있는 날만 따진다 (안쪽 날은 같은 결과라 건너뜀)
+                if let neighbor = calendar.date(byAdding: .day, value: step, to: h),
+                   anchors.contains(key(neighbor)), isDayOff(neighbor) { continue }
+                var d = h, count = 0, guardrail = 0
+                while count < leaveBlackoutDays && guardrail < 60 {
+                    guard let next = calendar.date(byAdding: .day, value: step, to: d) else { break }
+                    d = next; guardrail += 1
+                    if isDayOff(d) { continue }
+                    if calendar.component(.year, from: d) == year { blocked.insert(key(d)) }
+                    count += 1
                 }
             }
         }

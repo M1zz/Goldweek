@@ -2266,3 +2266,116 @@ final class WorkPatternTests: XCTestCase {
         XCTAssertTrue(dayOff.isDayOff(wed))
     }
 }
+
+// MARK: - 미국 교사 피드백 — 넘겨 쓰는 병가 · 방학 앞뒤 휴가 제한 · 학교 달력 가져오기
+
+final class TeacherFeedbackTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    func testSickDaysRollOverAndPersonalDaysDoNot() {
+        let now = d(2027, 6, 1)
+        let sick = CustomLeaveType(name: "Sick", colorHex: "34C759", deductsFromAnnual: false)
+        sick.allowanceIsHours = false
+        sick.allowanceAmount = 10
+        sick.allowanceCarriesOver = true
+        sick.allowanceStartYear = 2025
+        sick.allowanceStartBalance = 30
+        let records = [
+            LeaveRecord(startDate: d(2025, 3, 10), endDate: d(2025, 3, 13), type: .special, status: .used, customTypeId: sick.id),   // 4일 (월~목)
+            LeaveRecord(startDate: d(2026, 2, 2), endDate: d(2026, 2, 3), type: .special, status: .used, customTypeId: sick.id),   // 2일
+            LeaveRecord(startDate: d(2024, 2, 5), endDate: d(2024, 2, 5), type: .special, status: .used, customTypeId: sick.id),   // 시작 전 — 안 셈
+        ]
+        // 2025: 30 + 10 − 4 = 36 넘어감 → 2026: 36 + 10 − 2 = 44 넘어감 → 2027: 44 + 10
+        XCTAssertEqual(LeaveAllowanceCounter.carryIn(kind: sick, records: records, year: 2025, startMonth: 1, asOf: now), 30)
+        XCTAssertEqual(LeaveAllowanceCounter.carryIn(kind: sick, records: records, year: 2027, startMonth: 1, asOf: now), 44)
+        let counter = LeaveAllowanceCounter.make(kind: sick, records: records, year: 2027, startMonth: 1, asOf: now)
+        XCTAssertEqual(counter.total, 54)
+        XCTAssertEqual(counter.carriedIn, 44)
+        XCTAssertEqual(LeaveAllowanceCounter.carryIn(kind: sick, records: records, year: 2024, startMonth: 1, asOf: now), 0)
+
+        // 개인 휴가: 넘기지 않으면 해마다 한도만
+        let personal = CustomLeaveType(name: "Personal", colorHex: "FF9500", deductsFromAnnual: false)
+        personal.allowanceIsHours = false
+        personal.allowanceAmount = 3
+        XCTAssertEqual(LeaveAllowanceCounter.make(kind: personal, records: [], year: 2027, startMonth: 1, asOf: now).total, 3)
+    }
+
+    func testNoLeaveRuleAppliesAroundMyBreaksAndCustomHolidays() {
+        let saved = (HolidayService.leaveBlackoutDays, HolidayService.selectedRegionCode)
+        defer {
+            HolidayService.leaveBlackoutDays = saved.0
+            HolidayService.selectedRegionCode = saved.1
+            DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        }
+        HolidayService.selectedRegionCode = ""
+        HolidayService.leaveBlackoutDays = 1
+        // 가을 방학 2026-10-12(월)~10-16(금): 앞 금요일 10/9, 뒤 월요일 10/19
+        let fall = SchoolBreak(name: "Fall Break", startDate: d(2026, 10, 12), endDate: d(2026, 10, 16), kind: .mine)
+        // 학교만 쉬는 날 2026-02-27(금): 앞 2/26(목), 뒤 3/2(월)
+        let custom = CustomHoliday(date: d(2026, 2, 27), name: "Teacher holiday")
+        DayOffCalendar.shared.update(country: .usa, customHolidays: [custom], hiddenDates: [], breaks: [fall])
+        let day = DayOffCalendar.shared
+        XCTAssertTrue(day.isLeaveBlocked(d(2026, 10, 9)))
+        XCTAssertTrue(day.isLeaveBlocked(d(2026, 10, 19)))
+        XCTAssertFalse(day.isLeaveBlocked(d(2026, 10, 8)))
+        XCTAssertFalse(day.isLeaveBlocked(d(2026, 10, 20)))
+        XCTAssertTrue(day.isLeaveBlocked(d(2026, 2, 26)))
+        XCTAssertTrue(day.isLeaveBlocked(d(2026, 3, 2)))
+    }
+
+    func testSchoolCalendarParser() {
+        let text = """
+        Lincoln Elementary 2026-2027 School Calendar
+        Aug 12 First Day of School
+        Sept. 7 Labor Day - No School
+        Oct 12-16 Fall Break
+        Thanksgiving Break
+        Nov 23 – 27
+        Dec 21, 2026 - Jan 1, 2027 Winter Break
+        Mon., Jan 18 MLK Day
+        April 20-24 State Testing (STAAR)
+        3/12 Teacher Workday
+        5/29 Memorial Day
+        """
+        let items = SchoolCalendarParser.parse(text: text, dayFirst: false)
+        func find(_ name: String) -> SchoolCalendarParser.Item? { items.first { $0.name.localizedCaseInsensitiveContains(name) } }
+
+        XCTAssertEqual(SchoolCalendarParser.schoolYearStart(in: text), 2026)
+        XCTAssertEqual(find("First Day")?.suggestion, .skip)
+        XCTAssertEqual(find("Labor")?.start, d(2026, 9, 7))
+        XCTAssertEqual(find("Labor")?.suggestion, .dayOff)
+        let fall = find("Fall Break")
+        XCTAssertEqual(fall?.start, d(2026, 10, 12))
+        XCTAssertEqual(fall?.end, d(2026, 10, 16))
+        // 이름이 윗줄에 있는 경우
+        let thanks = find("Thanksgiving")
+        XCTAssertEqual(thanks?.start, d(2026, 11, 23))
+        XCTAssertEqual(thanks?.end, d(2026, 11, 27))
+        XCTAssertEqual(thanks?.suggestion, .dayOff)
+        // 해를 넘기는 기간
+        let winter = find("Winter")
+        XCTAssertEqual(winter?.start, d(2026, 12, 21))
+        XCTAssertEqual(winter?.end, d(2027, 1, 1))
+        // 연도 없는 1월은 다음 해, 요일 글자는 이름에서 빠진다
+        XCTAssertEqual(find("MLK")?.start, d(2027, 1, 18))
+        XCTAssertEqual(find("MLK")?.name, "MLK Day")
+        // 시험 주간은 휴가 불가
+        XCTAssertEqual(find("Testing")?.suggestion, .blackout)
+        XCTAssertEqual(find("Testing")?.end, d(2027, 4, 24))
+        // 숫자 날짜 · 교사 근무일은 건너뜀
+        XCTAssertEqual(find("Teacher Workday")?.start, d(2027, 3, 12))
+        XCTAssertEqual(find("Teacher Workday")?.suggestion, .skip)
+        XCTAssertEqual(find("Memorial")?.start, d(2027, 5, 29))
+
+        // 일/월 순서 나라, 따로 적은 날
+        let uk = SchoolCalendarParser.parse(text: "24/10 - 28/10 Half term\n26 & 27 November Inset", schoolYearStart: 2026, dayFirst: true)
+        XCTAssertEqual(uk.first?.start, d(2026, 10, 24))
+        XCTAssertEqual(uk.first?.end, d(2026, 10, 28))
+        // 한국어
+        let ko = SchoolCalendarParser.parse(text: "12월 24일 ~ 2월 28일 겨울방학", schoolYearStart: 2026)
+        XCTAssertEqual(ko.first?.start, d(2026, 12, 24))
+        XCTAssertEqual(ko.first?.end, d(2027, 2, 28))
+        XCTAssertEqual(ko.first?.suggestion, .dayOff)
+    }
+}

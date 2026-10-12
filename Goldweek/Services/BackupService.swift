@@ -32,6 +32,10 @@ struct LeaveKindBackup: Codable {
     let createdAt: Date
     let allowanceAmount: Double
     let allowanceIsHours: Bool
+    /// 남은 한도 넘겨 쓰기 — 예전 백업에는 없다
+    var allowanceCarriesOver: Bool? = nil
+    var allowanceStartBalance: Double? = nil
+    var allowanceStartYear: Int? = nil
 }
 
 /// 기기에만 있던 설정 (UserDefaults) — 종류 색·순서, 하루·요일별 근무 시간
@@ -239,7 +243,9 @@ class BackupService {
         let kinds = leaveKinds ?? Self.fetchLeaveKinds()
         let kindBackups = kinds.map {
             LeaveKindBackup(id: $0.id, name: $0.name, colorHex: $0.colorHex, deductsFromAnnual: $0.deductsFromAnnual,
-                            createdAt: $0.createdAt, allowanceAmount: $0.allowanceAmount, allowanceIsHours: $0.allowanceIsHours)
+                            createdAt: $0.createdAt, allowanceAmount: $0.allowanceAmount, allowanceIsHours: $0.allowanceIsHours,
+                            allowanceCarriesOver: $0.allowanceCarriesOver, allowanceStartBalance: $0.allowanceStartBalance,
+                            allowanceStartYear: $0.allowanceStartYear)
         }
 
         let backup = BackupData(
@@ -449,6 +455,9 @@ class BackupService {
                 kind.createdAt = k.createdAt
                 kind.allowanceAmount = k.allowanceAmount
                 kind.allowanceIsHours = k.allowanceIsHours
+                kind.allowanceCarriesOver = k.allowanceCarriesOver ?? false
+                kind.allowanceStartBalance = k.allowanceStartBalance ?? 0
+                kind.allowanceStartYear = k.allowanceStartYear ?? 0
                 modelContext.insert(kind)
             }
         }
