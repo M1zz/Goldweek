@@ -659,7 +659,7 @@ final class LeaveRecord {
     /// 금~월로 등록해도 주말·공휴일·내 방학은 차감하지 않는다 (쉬는 날 판정: `DayOffCalendar`).
     /// 예외: "이전 사용 연차 일괄 입력"은 N일을 달력 일수로 펼쳐 저장한 요약 기록이라 달력 일수 그대로 센다.
     var effectiveLeaveDays: Double {
-        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes ?? 0) }
+        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes ?? 0, on: startDate) }
         if length != .full { return length.fraction }
         if isBulkSummary { return Double(daysCount) }
         return Double(DayOffCalendar.shared.workdays(from: startDate, to: endDate))
@@ -852,6 +852,36 @@ enum LeaveLength: String, Codable, CaseIterable, Identifiable {
     /// 분 → 차감 일수 (하루 근무 시간 기준)
     static func days(forMinutes minutes: Int) -> Double {
         Double(max(0, minutes)) / Double(workdayMinutes)
+    }
+
+    private static let weekdayMinutesKey = "workdayMinutesByWeekday"
+
+    /// 요일마다 근무 시간이 다른 경우 (예: 월~목 7시간 30분, 금 7시간) — 요일(1=일 … 7=토) → 분.
+    /// 비어 있으면 모든 요일이 `workdayMinutes`.
+    static var workdayMinutesByWeekday: [Int: Int] {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: weekdayMinutesKey),
+                  let map = try? JSONDecoder().decode([String: Int].self, from: data) else { return [:] }
+            return Dictionary(uniqueKeysWithValues: map.compactMap { k, v in Int(k).map { ($0, v) } })
+        }
+        set {
+            let map = Dictionary(uniqueKeysWithValues: newValue.filter { $0.value > 0 }.map { (String($0.key), $0.value) })
+            if map.isEmpty {
+                UserDefaults.standard.removeObject(forKey: weekdayMinutesKey)
+            } else if let data = try? JSONEncoder().encode(map) {
+                UserDefaults.standard.set(data, forKey: weekdayMinutesKey)
+            }
+        }
+    }
+
+    /// 그 날의 근무 시간(분) — 요일별로 정했으면 그 값, 아니면 하루 근무 시간
+    static func workdayMinutes(on date: Date, calendar: Calendar = .current) -> Int {
+        workdayMinutesByWeekday[calendar.component(.weekday, from: date)] ?? workdayMinutes
+    }
+
+    /// 분 → 차감 일수 (그 날의 근무 시간 기준 — 금요일 1시간은 7시간 근무면 1/7일)
+    static func days(forMinutes minutes: Int, on date: Date) -> Double {
+        Double(max(0, minutes)) / Double(max(1, workdayMinutes(on: date)))
     }
 }
 

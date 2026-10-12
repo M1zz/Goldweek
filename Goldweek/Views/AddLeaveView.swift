@@ -344,7 +344,7 @@ struct LeaveRegistrationView: View {
 
     /// 차감 일수 — 주말·공휴일·내 방학은 빼고 센다 (LeaveRecord.effectiveLeaveDays 와 같은 기준)
     var leaveDays: Double {
-        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes) }
+        if length == .hours { return LeaveLength.days(forMinutes: durationMinutes, on: startDate) }
         if length != .full { return length.fraction }
         return Double(DayOffCalendar.shared.workdays(from: startDate, to: endDate))
     }
@@ -361,6 +361,24 @@ struct LeaveRegistrationView: View {
         let target = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: profile.yearStartMonth, calendar: cal)
         let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
         return target > now ? target : nil
+    }
+
+    /// 고른 직접 만든 종류에 연간 한도가 있으면, 이번 휴가를 넣은 뒤 그 해에 남는 양
+    var allowanceNote: (text: String, isOver: Bool)? {
+        guard let kind = customType, kind.hasAllowance, selectedBonusLeave == nil else { return nil }
+        let startMonth = profile.yearStartMonth
+        let year = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: startMonth)
+        let usage = LeaveKindUsage.byKind(records: Array(allLeaveRecords), customTypes: Array(customLeaveTypes),
+                                          year: year, startMonth: startMonth)[.custom(kind.id)] ?? LeaveKindUsage()
+        let counter = LeaveAllowanceCounter(kind: kind, usage: usage)
+        let end = length == .full ? endDate : startDate
+        let thisLeave = kind.allowanceIsHours
+            ? Double(LeaveKindUsage.workMinutes(length: length, durationMinutes: durationMinutes, start: startDate, end: end))
+            : leaveDays
+        let left = counter.remaining - thisLeave
+        return left < -0.0001
+            ? (Strings.allowanceOverAfterThis(counter.text(-left)), true)
+            : (Strings.allowanceAfterThis(counter.text(left)), false)
     }
 
     /// 고른 종류 이름 — 직접 만든 종류면 그 이름
@@ -542,59 +560,63 @@ struct LeaveRegistrationView: View {
                             .foregroundStyle(.secondary)
                             .voHeader()
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
-                            ForEach(LeaveType.categories, id: \.self) { cat in
-                                Button {
-                                    HapticFeedback.selection()
-                                    category = cat
-                                    customType = nil
-                                } label: {
-                                    VStack(spacing: 3) {
-                                        Image(systemName: cat.icon)
-                                            .font(.body)
-                                            .voDecorative()
-                                        Text(Strings.leaveTypeName(cat))
-                                            .font(.body)
-                                            .fontWeight(.semibold)
+                            // 기본 종류와 직접 만든 종류(예: ROL, 공부 휴가)를 사용자가 정한 순서로
+                            ForEach(LeaveStyleStore.shared.orderedKinds(custom: Array(customLeaveTypes))) { ref in
+                                switch ref {
+                                case .builtIn(let cat):
+                                    Button {
+                                        HapticFeedback.selection()
+                                        category = cat
+                                        customType = nil
+                                    } label: {
+                                        VStack(spacing: 3) {
+                                            Image(systemName: cat.icon)
+                                                .font(.body)
+                                                .voDecorative()
+                                            Text(Strings.leaveTypeName(cat))
+                                                .font(.body)
+                                                .fontWeight(.semibold)
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 8)
+                                        .background(customType == nil && category == cat ? cat.themeColor : Color(.systemGray5))
+                                        .foregroundStyle(customType == nil && category == cat ? .white : .primary)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
                                     }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 8)
-                                    .background(customType == nil && category == cat ? cat.themeColor : Color(.systemGray5))
-                                    .foregroundStyle(customType == nil && category == cat ? .white : .primary)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityLabel(Text(Strings.leaveTypeName(cat)))
-                                .accessibilityAddTraits(customType == nil && category == cat ? .isSelected : [])
-                            }
-                            // 직접 만든 종류 (예: ROL, 공부 휴가) — 고른 색으로 달력에 보인다
-                            ForEach(customLeaveTypes) { kind in
-                                let isSelected = customType?.id == kind.id
-                                Button {
-                                    HapticFeedback.selection()
-                                    customType = kind
-                                    category = kind.baseType
-                                } label: {
-                                    VStack(spacing: 3) {
-                                        Circle()
-                                            .fill(isSelected ? Color.white : kind.color)
-                                            .frame(width: 12, height: 12)
-                                            .padding(.vertical, 3)
-                                            .voDecorative()
-                                        Text(kind.name)
-                                            .font(.body)
-                                            .fontWeight(.semibold)
-                                            .lineLimit(1)
-                                            .minimumScaleFactor(0.7)
+                                    .buttonStyle(.plain)
+                                    .accessibilityLabel(Text(Strings.leaveTypeName(cat)))
+                                    .accessibilityAddTraits(customType == nil && category == cat ? .isSelected : [])
+                                case .custom(let id):
+                                    if let kind = customLeaveTypes.first(where: { $0.id == id }) {
+                                        let isSelected = customType?.id == kind.id
+                                        Button {
+                                            HapticFeedback.selection()
+                                            customType = kind
+                                            category = kind.baseType
+                                        } label: {
+                                            VStack(spacing: 3) {
+                                                Circle()
+                                                    .fill(isSelected ? Color.white : kind.color)
+                                                    .frame(width: 12, height: 12)
+                                                    .padding(.vertical, 3)
+                                                    .voDecorative()
+                                                Text(kind.name)
+                                                    .font(.body)
+                                                    .fontWeight(.semibold)
+                                                    .lineLimit(1)
+                                                    .minimumScaleFactor(0.7)
+                                            }
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 8)
+                                            .background(isSelected ? kind.color : Color(.systemGray5))
+                                            .foregroundStyle(isSelected ? .white : .primary)
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        }
+                                        .buttonStyle(.plain)
+                                        .accessibilityLabel(Text(kind.name))
+                                        .accessibilityAddTraits(isSelected ? .isSelected : [])
                                     }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 8)
-                                    .background(isSelected ? kind.color : Color(.systemGray5))
-                                    .foregroundStyle(isSelected ? .white : .primary)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
-                                .buttonStyle(.plain)
-                                .accessibilityLabel(Text(kind.name))
-                                .accessibilityAddTraits(isSelected ? .isSelected : [])
                             }
                             // 종류 만들기·색 바꾸기
                             NavigationLink {
@@ -660,7 +682,7 @@ struct LeaveRegistrationView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
-                    Text(Strings.hoursLeaveFooter(workday: Strings.durationText(minutes: LeaveLength.workdayMinutes)))
+                    Text(Strings.hoursLeaveFooter(workday: Strings.durationText(minutes: LeaveLength.workdayMinutes(on: startDate))))
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -689,6 +711,14 @@ struct LeaveRegistrationView: View {
                           systemImage: "calendar.badge.plus")
                         .font(.body)
                         .foregroundStyle(AppTheme.Colors.brand)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                // 연간 한도가 있는 종류(이탈리아 permessi 의 monte ore)면 등록 후 남는 양 — 넘어도 막지는 않는다
+                if let note = allowanceNote {
+                    Label(note.text, systemImage: note.isOver ? "exclamationmark.triangle.fill" : "gauge.with.dots.needle.33percent")
+                        .font(.body)
+                        .foregroundStyle(note.isOver ? .orange : AppTheme.Colors.brand)
                         .fixedSize(horizontal: false, vertical: true)
                 }
 

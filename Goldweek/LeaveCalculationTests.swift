@@ -2040,3 +2040,110 @@ final class BlackoutPeriodTests: XCTestCase {
         XCTAssertNotEqual(before, dayOff.fingerprint, "기간을 넣으면 추천 캐시가 바뀌어야 한다")
     }
 }
+
+// MARK: - 요일별 근무 시간 · 종류별 합계 · 연간 한도 · 종류 순서 (이탈리아 피드백 2차)
+
+@MainActor
+final class LeaveKindAllowanceTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+
+    private var savedMinutes: Any?
+    private var savedByWeekday: Any?
+    private var savedOrder: [String] = []
+
+    override func setUp() {
+        super.setUp()
+        savedMinutes = UserDefaults.standard.object(forKey: "workdayMinutes")
+        savedByWeekday = UserDefaults.standard.object(forKey: "workdayMinutesByWeekday")
+        savedOrder = LeaveStyleStore.shared.orderKeys
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+        // 월~목 7시간 30분, 금 7시간
+        LeaveLength.workdayMinutes = 450
+        LeaveLength.workdayMinutesByWeekday = [6: 420]
+    }
+
+    override func tearDown() {
+        UserDefaults.standard.set(savedMinutes, forKey: "workdayMinutes")
+        UserDefaults.standard.set(savedByWeekday, forKey: "workdayMinutesByWeekday")
+        LeaveStyleStore.shared.setOrder(savedOrder.compactMap { LeaveKindRef(key: $0) })
+        super.tearDown()
+    }
+
+    func testWorkdayMinutesByWeekday() {
+        XCTAssertEqual(LeaveLength.workdayMinutes(on: d(2026, 3, 12)), 450)   // 목
+        XCTAssertEqual(LeaveLength.workdayMinutes(on: d(2026, 3, 13)), 420)   // 금
+        // 금요일 1시간은 7시간 근무 기준 1/7일
+        let fri = LeaveRecord(startDate: d(2026, 3, 13), endDate: d(2026, 3, 13), length: .hours, durationMinutes: 60)
+        XCTAssertEqual(fri.effectiveLeaveDays, 60.0 / 420.0, accuracy: 0.0001)
+        let thu = LeaveRecord(startDate: d(2026, 3, 12), endDate: d(2026, 3, 12), length: .hours, durationMinutes: 60)
+        XCTAssertEqual(thu.effectiveLeaveDays, 60.0 / 450.0, accuracy: 0.0001)
+        // 종일 한 주(월~금) = 7.5×4 + 7 시간, 주말은 빠진다
+        let week = LeaveRecord(startDate: d(2026, 3, 9), endDate: d(2026, 3, 15))
+        XCTAssertEqual(LeaveKindUsage.workMinutes(of: week), 450 * 4 + 420)
+        // 반차는 그 요일 근무 시간의 절반
+        let half = LeaveRecord(startDate: d(2026, 3, 13), endDate: d(2026, 3, 13), length: .half)
+        XCTAssertEqual(LeaveKindUsage.workMinutes(of: half), 210)
+    }
+
+    func testUsageByKindAndAllowanceCounter() {
+        let rol = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
+        rol.allowanceAmount = 20   // 20시간
+        rol.allowanceIsHours = true
+        let now = d(2026, 6, 15)
+        let records = [
+            LeaveRecord(startDate: d(2026, 3, 13), endDate: d(2026, 3, 13), type: .special, status: .used,
+                        length: .hours, durationMinutes: 120, customTypeId: rol.id),
+            LeaveRecord(startDate: d(2026, 7, 10), endDate: d(2026, 7, 10), type: .special, status: .planned,
+                        length: .half, customTypeId: rol.id),   // 금요일 반차 = 3시간 30분
+            LeaveRecord(startDate: d(2026, 4, 1), endDate: d(2026, 4, 1), type: .special, status: .cancelled,
+                        length: .hours, durationMinutes: 240, customTypeId: rol.id),   // 취소는 안 센다
+            LeaveRecord(startDate: d(2026, 5, 6), endDate: d(2026, 5, 6), type: .sick, status: .used),
+            LeaveRecord(startDate: d(2025, 5, 7), endDate: d(2025, 5, 7), type: .special, status: .used,
+                        length: .hours, durationMinutes: 300, customTypeId: rol.id),   // 지난해
+        ]
+        let usage = LeaveKindUsage.byKind(records: records, customTypes: [rol], year: 2026, startMonth: 1, asOf: now)
+        let u = usage[.custom(rol.id)]!
+        XCTAssertEqual(u.usedMinutes, 120)
+        XCTAssertEqual(u.plannedMinutes, 210)
+        XCTAssertEqual(u.usedCount, 1)
+        XCTAssertEqual(u.plannedCount, 1)
+        XCTAssertEqual(usage[.builtIn(.sick)]?.usedDays, 1)
+
+        let counter = LeaveAllowanceCounter(kind: rol, usage: u)
+        XCTAssertEqual(counter.total, 1200)
+        XCTAssertEqual(counter.remaining, 1200 - 120 - 210)
+        XCTAssertFalse(counter.isOver)
+
+        // 일 단위 한도
+        rol.allowanceIsHours = false
+        rol.allowanceAmount = 0.5
+        let days = LeaveAllowanceCounter(kind: rol, usage: u)
+        XCTAssertTrue(days.isOver)   // 120/450 + 0.5 > 0.5
+
+        // 지운 종류의 기록은 기본 종류로 센다
+        let orphan = LeaveKindUsage.byKind(records: records, customTypes: [], year: 2026, startMonth: 1, asOf: now)
+        XCTAssertNil(orphan[.custom(rol.id)])
+        XCTAssertEqual(orphan[.builtIn(.special)]?.totalCount, 2)
+    }
+
+    func testLeaveKindOrder() {
+        let a = CustomLeaveType(name: "ROL", colorHex: "AF52DE", deductsFromAnnual: false)
+        let b = CustomLeaveType(name: "Ex festività", colorHex: "34C759", deductsFromAnnual: false)
+        b.createdAt = a.createdAt.addingTimeInterval(1)
+        let store = LeaveStyleStore.shared
+        store.setOrder([])
+        let initial = store.orderedKinds(custom: [b, a])
+        XCTAssertEqual(initial.first, .builtIn(.annual))
+        XCTAssertEqual(Array(initial.suffix(2)), [.custom(a.id), .custom(b.id)])
+
+        // b 를 맨 앞으로, 병가를 두 번째로
+        store.setOrder([.custom(b.id), .builtIn(.sick)])
+        let ordered = store.orderedKinds(custom: [a, b])
+        XCTAssertEqual(Array(ordered.prefix(3)), [.custom(b.id), .builtIn(.sick), .builtIn(.annual)])
+        XCTAssertEqual(ordered.count, LeaveType.categories.count + 2)
+        // 지운 종류는 빠진다
+        XCTAssertFalse(store.orderedKinds(custom: [a]).contains(.custom(b.id)))
+        XCTAssertEqual(LeaveKindRef(key: LeaveKindRef.custom(a.id).key), .custom(a.id))
+    }
+}

@@ -607,6 +607,13 @@ struct SettingsView: View {
                     }
                     .onChange(of: workdayMinutes) { _, _ in recommendationEngine.invalidateCache() }
 
+                    // 요일마다 근무 시간이 다른 직장 (예: 월~목 7시간 30분, 금 7시간)
+                    NavigationLink {
+                        WorkdayHoursView(country: selectedCountry) { recommendationEngine.invalidateCache() }
+                    } label: {
+                        Text(Strings.workdayByWeekdayTitle)
+                    }
+
                     // 휴가 종류 만들기·색 바꾸기 — 달력에서 종류별로 다른 색
                     NavigationLink {
                         LeaveKindsView()

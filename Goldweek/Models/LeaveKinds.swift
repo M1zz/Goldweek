@@ -19,6 +19,10 @@ final class CustomLeaveType {
     /// 연차에서 빼는지 — 기록의 typeRaw 를 .annual / .special 로 맞춰 기존 계산이 그대로 돈다
     var deductsFromAnnual: Bool = true
     var createdAt: Date = Date()
+    /// 1년에 쓸 수 있는 양 (이탈리아 permessi 의 "monte ore") — 0 이면 한도 없음.
+    /// allowanceIsHours 면 시간, 아니면 일. 해마다(연차 기준월) 새로 센다.
+    var allowanceAmount: Double = 0
+    var allowanceIsHours: Bool = true
 
     init(name: String, colorHex: String, deductsFromAnnual: Bool) {
         self.id = UUID()
@@ -32,6 +36,43 @@ final class CustomLeaveType {
 
     /// 이 종류로 기록할 때 저장할 기본 유형 — 차감 계산은 이 값이 맡는다
     var baseType: LeaveType { deductsFromAnnual ? .annual : .special }
+
+    var hasAllowance: Bool { allowanceAmount > 0 }
+}
+
+/// 휴가 종류 하나 — 기본 종류(연차·병가 등) 또는 직접 만든 종류. 순서·통계에서 둘을 함께 다룬다.
+enum LeaveKindRef: Hashable, Identifiable {
+    case builtIn(LeaveType)
+    case custom(UUID)
+
+    var id: String { key }
+
+    /// 순서 저장용 키
+    var key: String {
+        switch self {
+        case .builtIn(let t): return "b:\(t.rawValue)"
+        case .custom(let id): return "c:\(id.uuidString)"
+        }
+    }
+
+    init?(key: String) {
+        if key.hasPrefix("b:"), let t = LeaveType(rawValue: String(key.dropFirst(2))) {
+            self = .builtIn(t)
+        } else if key.hasPrefix("c:"), let id = UUID(uuidString: String(key.dropFirst(2))) {
+            self = .custom(id)
+        } else {
+            return nil
+        }
+    }
+
+    /// 기록이 속한 종류 — 직접 만든 종류가 지워졌으면 기본 종류로 본다
+    init(record: LeaveRecord, existingCustom: Set<UUID>) {
+        if let id = record.customTypeId, existingCustom.contains(id) {
+            self = .custom(id)
+        } else {
+            self = .builtIn(record.category)
+        }
+    }
 }
 
 /// 휴가 종류별 이름·색의 거울 — 달력 칸처럼 @Query 를 못 쓰는 곳에서도 같은 값을 읽는다.
@@ -51,12 +92,36 @@ final class LeaveStyleStore {
     private(set) var builtInColorHex: [String: String] = [:]
 
     private static let colorsKey = "leaveTypeColors"
+    private static let orderKey = "leaveKindOrder"
+
+    /// 사용자가 정한 종류 순서 (LeaveKindRef.key). 여기 없는 종류는 기본 순서대로 뒤에 붙는다.
+    private(set) var orderKeys: [String] = []
 
     private init() {
         if let data = UserDefaults.standard.data(forKey: Self.colorsKey),
            let map = try? JSONDecoder().decode([String: String].self, from: data) {
             builtInColorHex = map
         }
+        orderKeys = UserDefaults.standard.stringArray(forKey: Self.orderKey) ?? []
+    }
+
+    /// 모든 종류를 사용자 순서로 — 기본 종류 먼저, 직접 만든 종류는 만든 순서가 기본
+    func orderedKinds(custom: [CustomLeaveType]) -> [LeaveKindRef] {
+        let defaults = LeaveType.categories.map { LeaveKindRef.builtIn($0) }
+            + custom.sorted { $0.createdAt < $1.createdAt }.map { LeaveKindRef.custom($0.id) }
+        let available = Set(defaults)
+        var result: [LeaveKindRef] = []
+        for key in orderKeys {
+            if let ref = LeaveKindRef(key: key), available.contains(ref), !result.contains(ref) { result.append(ref) }
+        }
+        for ref in defaults where !result.contains(ref) { result.append(ref) }
+        return result
+    }
+
+    /// 순서 바꾸기 — 화면에 보이는 전체 순서를 그대로 저장한다
+    func setOrder(_ kinds: [LeaveKindRef]) {
+        orderKeys = kinds.map(\.key)
+        UserDefaults.standard.set(orderKeys, forKey: Self.orderKey)
     }
 
     func update(customTypes: [CustomLeaveType]) {
@@ -120,5 +185,99 @@ extension Color {
         UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
         func byte(_ v: CGFloat) -> Int { Int((min(max(v, 0), 1) * 255).rounded()) }
         return String(format: "%02X%02X%02X", byte(r), byte(g), byte(b))
+    }
+}
+
+// MARK: - 종류별 사용량 (통계 · 연간 한도 카운터)
+
+/// 한 해 동안 휴가 종류 하나를 얼마나 썼는지 — 일수와 시간(분)을 함께 센다.
+/// 취소는 세지 않고, 끝난 예정 휴가는 사용으로 본다 (`LeaveUsageCalculator` 와 같은 규칙).
+struct LeaveKindUsage: Equatable {
+    var usedDays: Double = 0
+    var plannedDays: Double = 0
+    var usedMinutes: Int = 0
+    var plannedMinutes: Int = 0
+    var usedCount = 0
+    var plannedCount = 0
+    /// 시간 단위로 쓴 기록이 있는지 — 한도가 없을 때 시간으로 보여 줄지 정한다
+    var hasHourRecords = false
+
+    var totalCount: Int { usedCount + plannedCount }
+
+    /// 한 해, 종류별 사용량
+    static func byKind(records: [LeaveRecord], customTypes: [CustomLeaveType], year: Int, startMonth: Int,
+                       asOf now: Date = Date(), calendar: Calendar = .current) -> [LeaveKindRef: LeaveKindUsage] {
+        let existing = Set(customTypes.map(\.id))
+        var result: [LeaveKindRef: LeaveKindUsage] = [:]
+        for r in LeaveUsageCalculator.records(records, inFiscalYear: year, startMonth: startMonth, calendar: calendar)
+        where r.status != .cancelled {
+            let ref = LeaveKindRef(record: r, existingCustom: existing)
+            var u = result[ref] ?? LeaveKindUsage()
+            let days = r.effectiveLeaveDays
+            let minutes = workMinutes(of: r, calendar: calendar)
+            if LeaveUsageCalculator.isCompleted(r, asOf: now, calendar: calendar) {
+                u.usedDays += days; u.usedMinutes += minutes; u.usedCount += 1
+            } else {
+                u.plannedDays += days; u.plannedMinutes += minutes; u.plannedCount += 1
+            }
+            if r.length == .hours { u.hasHourRecords = true }
+            result[ref] = u
+        }
+        return result
+    }
+
+    /// 기록이 쓴 근무 시간(분) — 종일은 그 기간 근무일마다 그 요일의 근무 시간을 더한다
+    static func workMinutes(of record: LeaveRecord, calendar: Calendar = .current) -> Int {
+        if record.length == .full, record.isBulkSummary { return record.daysCount * LeaveLength.workdayMinutes }
+        return workMinutes(length: record.length, durationMinutes: record.durationMinutes,
+                           start: record.startDate, end: record.endDate, calendar: calendar)
+    }
+
+    /// 저장 전 입력값으로도 같은 계산 (휴가 등록 화면의 한도 안내)
+    static func workMinutes(length: LeaveLength, durationMinutes: Int?, start: Date, end: Date,
+                            calendar: Calendar = .current) -> Int {
+        switch length {
+        case .hours:
+            return max(0, durationMinutes ?? 0)
+        case .half, .quarter:
+            return Int((Double(LeaveLength.workdayMinutes(on: start, calendar: calendar)) * length.fraction).rounded())
+        case .full:
+            var total = 0
+            var day = calendar.startOfDay(for: start)
+            let last = calendar.startOfDay(for: end)
+            while day <= last {
+                if !DayOffCalendar.shared.isDayOff(day) { total += LeaveLength.workdayMinutes(on: day, calendar: calendar) }
+                guard let next = calendar.date(byAdding: .day, value: 1, to: day) else { break }
+                day = next
+            }
+            return total
+        }
+    }
+}
+
+/// 연간 한도가 있는 종류의 카운터 — 사용 · 예정 · 남음 (한도의 단위로)
+struct LeaveAllowanceCounter: Equatable {
+    let isHours: Bool
+    /// 한도 / 사용 / 예정 — 시간이면 분, 일이면 일
+    let total: Double
+    let used: Double
+    let planned: Double
+
+    var remaining: Double { total - used - planned }
+    var isOver: Bool { remaining < -0.0001 }
+
+    init(kind: CustomLeaveType, usage: LeaveKindUsage) {
+        isHours = kind.allowanceIsHours
+        total = kind.allowanceIsHours ? kind.allowanceAmount * 60 : kind.allowanceAmount
+        used = kind.allowanceIsHours ? Double(usage.usedMinutes) : usage.usedDays
+        planned = kind.allowanceIsHours ? Double(usage.plannedMinutes) : usage.plannedDays
+    }
+
+    /// 화면에 보일 양 — 시간이면 "7시간 30분", 일이면 "2.5일"
+    /// 넘게 쓴 경우(음수)는 앞에 "−"
+    func text(_ value: Double) -> String {
+        let sign = value < -0.0001 ? "−" : ""
+        let v = abs(value)
+        return sign + (isHours ? Strings.durationText(minutes: Int(v.rounded())) : Strings.dayCount(v))
     }
 }
