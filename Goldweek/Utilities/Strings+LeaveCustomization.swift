@@ -1584,3 +1584,34 @@ extension Strings {
         }
     }
 }
+
+// MARK: - 같은 날 여러 휴가 (이탈리아 피드백 3차)
+
+extension Strings {
+    /// 반차·시간 단위 휴가가 있는 날에 다른 휴가를 더 넣는 버튼
+    static var addAnotherLeaveOnThisDate: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "이 날짜에 다른 휴가 추가"
+        case .english: return "Add another leave on this date"
+        case .japanese: return "この日付に別の休暇を追加"
+        case .chinese: return "在此日期再登记一项休假"
+        case .german: return "Weiteren Urlaub für dieses Datum eintragen"
+        case .french: return "Ajouter un autre congé à cette date"
+        case .spanish: return "Añadir otro permiso este día"
+        case .italian: return "Aggiungi un altro giustificativo in questa data"
+        case .portuguese: return "Adicionar outra ausência nesta data"
+        case .chineseTraditional: return "在這天再登記一項休假"
+        case .dutch: return "Nog een verlof toevoegen op deze datum"
+        case .swedish: return "Lägg till en till ledighet på det här datumet"
+        case .norwegian: return "Legg til et annet fravær på denne datoen"
+        case .danish: return "Tilføj endnu et fravær på denne dato"
+        case .finnish: return "Lisää toinen poissaolo tälle päivälle"
+        case .polish: return "Dodaj kolejną nieobecność w tym dniu"
+        case .czech: return "Přidat další volno na toto datum"
+        case .greek: return "Προσθήκη άλλης άδειας σε αυτή την ημερομηνία"
+        case .turkish: return "Bu tarihe başka bir izin ekle"
+        case .russian: return "Добавить ещё один отпуск на эту дату"
+        case .indonesian: return "Catat cuti lain di tanggal ini"
+        }
+    }
+}

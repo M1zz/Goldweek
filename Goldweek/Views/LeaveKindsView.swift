@@ -480,8 +480,14 @@ private struct LeaveKindStatsRow: View {
         return usage.hasHourRecords
     }
 
+    /// 연차(ferie)는 일수로 세는 휴가라 일수를 먼저 크게, 시간은 아래에 (이탈리아 피드백 3차)
+    private var daysFirst: Bool {
+        if case .builtIn(let type) = ref { return type.deductsFromAnnual }
+        return false
+    }
+
     private func amount(days: Double, minutes: Int) -> String {
-        showsHours ? Strings.durationText(minutes: minutes) : Strings.dayCount(days)
+        showsHours && !daysFirst ? Strings.durationText(minutes: minutes) : Strings.dayCount(days)
     }
 
     var body: some View {
@@ -517,8 +523,10 @@ private struct LeaveKindStatsRow: View {
                         .foregroundStyle(.red)
                 }
             } else if showsHours {
-                // 시간으로 보여 줄 때는 일수도 함께 (시간 단위 휴가는 하루 근무 시간 기준 일수)
-                Text(Strings.dayCount(usage.usedDays + usage.plannedDays))
+                // 시간으로 보여 줄 때는 일수도 함께 (시간 단위 휴가는 하루 근무 시간 기준 일수).
+                // 연차는 반대로 일수가 위, 시간이 여기
+                Text(daysFirst ? Strings.durationText(minutes: usage.usedMinutes + usage.plannedMinutes)
+                               : Strings.dayCount(usage.usedDays + usage.plannedDays))
                     .font(.body)
                     .foregroundStyle(.secondary)
             }

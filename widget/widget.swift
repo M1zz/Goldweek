@@ -70,7 +70,8 @@ struct LeaveWidgetData {
         remainingDays: 180
     )
 
-    static func load() -> LeaveWidgetData {
+    /// `date` 날 기준으로 읽는다 — 저장된 D-day 숫자는 앱을 연 날 기준이라 다음 날이면 틀린다
+    static func load(on date: Date = Date()) -> LeaveWidgetData {
         guard let defaults = UserDefaults(suiteName: "group.com.Ysoup.LeaveWise") else {
             return .placeholder
         }
@@ -81,18 +82,58 @@ struct LeaveWidgetData {
         let total      = defaults.double(forKey: "totalLeave")
         let bonus      = defaults.double(forKey: "bonusLeave")
         let percentage = total > 0 ? remaining / total : 0
-        let nextDate   = defaults.object(forKey: "nextLeaveDate") as? Date
-        let nextType   = defaults.string(forKey: "nextLeaveType")
-        let nextNote   = defaults.string(forKey: "nextLeaveNote")
-        let duration   = defaults.integer(forKey: "nextLeaveDuration")
-        let daysUntil  = defaults.object(forKey: "daysUntilNextLeave") != nil
+        var nextDate   = defaults.object(forKey: "nextLeaveDate") as? Date
+        var nextType   = defaults.string(forKey: "nextLeaveType")
+        var nextNote   = defaults.string(forKey: "nextLeaveNote")
+        var duration   = defaults.integer(forKey: "nextLeaveDuration")
+        var daysUntil  = defaults.object(forKey: "daysUntilNextLeave") != nil
                          ? defaults.integer(forKey: "daysUntilNextLeave") : -1
+
+        // 다가오는 휴가 목록이 있으면 그 날 기준으로 다음 휴가와 D-day를 다시 센다
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: date)
+        if let list = defaults.array(forKey: "upcomingLeaves") as? [[String: Any]] {
+            let next = list.first { item in
+                guard let start = item["start"] as? Double else { return false }
+                return cal.startOfDay(for: Date(timeIntervalSince1970: start)) >= today
+            }
+            if let next, let start = next["start"] as? Double {
+                let startDate = Date(timeIntervalSince1970: start)
+                let endDate = (next["end"] as? Double).map { Date(timeIntervalSince1970: $0) } ?? startDate
+                nextDate = startDate
+                nextType = next["type"] as? String
+                nextNote = next["note"] as? String
+                duration = (cal.dateComponents([.day], from: cal.startOfDay(for: startDate),
+                                               to: cal.startOfDay(for: endDate)).day ?? 0) + 1
+                daysUntil = cal.dateComponents([.day], from: today, to: cal.startOfDay(for: startDate)).day ?? 0
+            } else {
+                nextDate = nil
+                nextType = nil
+                nextNote = nil
+                duration = 0
+                daysUntil = -1
+            }
+        } else if let stored = nextDate {
+            // 예전 버전 앱이 저장한 값 — 날짜로 다시 센다
+            let d = cal.dateComponents([.day], from: today, to: cal.startOfDay(for: stored)).day ?? 0
+            daysUntil = d >= 0 ? d : -1
+        }
         let userName   = defaults.string(forKey: "userName") ?? ""
 
         let elapsedRatio    = defaults.double(forKey: "elapsedRatio")
         let actualUsedRatio = defaults.double(forKey: "actualUsedRatio")
         let burnRate        = defaults.double(forKey: "burnRate")
-        let remainingDays   = defaults.integer(forKey: "remainingDaysUntilReset")
+        var remainingDays   = defaults.integer(forKey: "remainingDaysUntilReset")
+        // 갱신까지 남은 날도 그 날 기준으로 — 연차 시작 월이 저장돼 있으면 다시 센다
+        let startMonth = defaults.integer(forKey: "yearStartMonth")
+        if (1...12).contains(startMonth) {
+            let year = cal.component(.year, from: today)
+            let month = cal.component(.month, from: today)
+            let resetYear = month >= startMonth ? year + 1 : year
+            if let reset = cal.date(from: DateComponents(year: resetYear, month: startMonth, day: 1)) {
+                remainingDays = max(0, cal.dateComponents([.day], from: today, to: reset).day ?? remainingDays)
+            }
+        }
 
         return LeaveWidgetData(
             remainingLeave: remaining,
@@ -125,14 +166,17 @@ struct LeaveWidgetProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<LeaveWidgetEntry>) -> Void) {
-        let data  = LeaveWidgetData.load()
-        let entry = LeaveWidgetEntry(date: Date(), data: data)
-        // 자정마다 D-day 숫자 갱신
-        let midnight = Calendar.current.startOfDay(
-            for: Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-        )
-        let timeline = Timeline(entries: [entry], policy: .after(midnight))
-        completion(timeline)
+        // 앞으로 7일 자정마다 항목을 미리 만든다 — 시스템이 위젯을 다시 불러 주지 않아도
+        // 날이 바뀌면 D-day가 줄어든다 (예전엔 앱을 열어야만 바뀌었다)
+        let cal = Calendar.current
+        let now = Date()
+        var entries = [LeaveWidgetEntry(date: now, data: LeaveWidgetData.load(on: now))]
+        let today = cal.startOfDay(for: now)
+        for offset in 1...7 {
+            guard let midnight = cal.date(byAdding: .day, value: offset, to: today) else { continue }
+            entries.append(LeaveWidgetEntry(date: midnight, data: LeaveWidgetData.load(on: midnight)))
+        }
+        completion(Timeline(entries: entries, policy: .atEnd))
     }
 }
 

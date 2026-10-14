@@ -73,6 +73,18 @@ class WidgetService {
             .sorted { $0.startDate < $1.startDate }
             .first
 
+        // 다가오는 휴가 목록 — 위젯이 앱을 열지 않아도 날마다 D-day를 다시 세고,
+        // 다음 휴가가 지나가면 그 다음 휴가로 넘어간다 (이탈리아 피드백 3차: 앱을 열어야만 D-day가 바뀌었다)
+        let upcomingList = leaveRecords
+            .filter { $0.status == .planned && $0.endDate >= today }
+            .sorted { $0.startDate < $1.startDate }
+            .prefix(20)
+            .map { ["start": $0.startDate.timeIntervalSince1970,
+                    "end": $0.endDate.timeIntervalSince1970,
+                    "type": $0.type.rawValue,
+                    "note": $0.note] as [String: Any] }
+        defaults.set(Array(upcomingList), forKey: "upcomingLeaves")
+
         if let nextLeave = upcomingLeave {
             defaults.set(nextLeave.startDate, forKey: "nextLeaveDate")
             defaults.set(nextLeave.type.rawValue, forKey: "nextLeaveType")
@@ -195,6 +207,7 @@ class WidgetService {
         defaults.removeObject(forKey: "nextLeaveType")
         defaults.removeObject(forKey: "nextLeaveNote")
         defaults.removeObject(forKey: "userName")
+        defaults.removeObject(forKey: "upcomingLeaves")
         defaults.set(-1, forKey: "daysUntilNextLeave")
         defaults.set(0, forKey: "nextLeaveDuration")
 
