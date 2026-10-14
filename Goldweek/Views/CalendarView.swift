@@ -989,7 +989,7 @@ struct SelectedDateInfo: View {
     /// MRT 여행 큐레이션 카드 노출 여부 (한국어 + 한국 거주 + 직장인일 때만)
     var showsTravelSuggestions: Bool = false
     var originCountry: Country = .korea
-    /// 선택한 날짜로 바로 휴가를 등록하는 액션 (등록된 휴가가 없는 날짜에만 노출)
+    /// 선택한 날짜로 바로 휴가를 등록하는 액션 (종일 휴가가 없는 날짜에만 노출)
     var onAddLeave: (() -> Void)? = nil
     /// 그 날 등록된 휴가를 바로 고치거나 지우는 액션 (휴가가 있는 날짜에만 노출)
     var onEditLeave: ((LeaveRecord) -> Void)? = nil
@@ -1001,13 +1001,15 @@ struct SelectedDateInfo: View {
         holidays.first { calendar.isDate($0.date, inSameDayAs: date) }
     }
 
-    var leaveOnDate: LeaveRecord? {
+    /// 그 날의 휴가 전부 — 같은 날 연차 2시간 + 특별휴가 1시간처럼 여러 개일 수 있다 (이탈리아 피드백 3차)
+    var leavesOnDate: [LeaveRecord] {
         let dayStart = calendar.startOfDay(for: date)
-        return leaveRecords.first { record in
+        return leaveRecords.filter { record in
             let recordStart = calendar.startOfDay(for: record.startDate)
             let recordEnd = calendar.startOfDay(for: record.endDate)
             return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
         }
+        .sorted { $0.startDate < $1.startDate }
     }
 
     /// 선택일이 포함된 추천 일정 (있으면 상세 표시)
@@ -1102,7 +1104,8 @@ struct SelectedDateInfo: View {
                 .accessibilityElement(children: .combine)
             }
 
-            if let leave = leaveOnDate {
+            ForEach(Array(leavesOnDate.enumerated()), id: \.element.id) { index, leave in
+                if index > 0 { Divider() }
                 HStack {
                     Image(systemName: "calendar.badge.checkmark")
                         .foregroundStyle(leave.displayColor)
@@ -1144,22 +1147,23 @@ struct SelectedDateInfo: View {
             }
 
             // 추천 일정 상세 (실제 등록 휴가가 없을 때) — "일정 없음" 대신 표시
-            if leaveOnDate == nil, let rec = recommendationOnDate {
+            if leavesOnDate.isEmpty, let rec = recommendationOnDate {
                 recommendationDetail(rec)
             }
 
-            if holidayOnDate == nil && leaveOnDate == nil && recommendationOnDate == nil {
+            if holidayOnDate == nil && leavesOnDate.isEmpty && recommendationOnDate == nil {
                 Text(Strings.noSchedule)
                     .foregroundStyle(.secondary)
             }
 
-            // 선택한 날짜로 바로 등록 — 이미 휴가가 있는 날은 숨긴다
-            if leaveOnDate == nil, let onAddLeave {
+            // 선택한 날짜로 바로 등록 — 종일 휴가가 있는 날만 숨긴다.
+            // 반차·시간 단위 휴가가 있는 날은 다른 종류를 더 넣을 수 있다 (연차 2시간 + 특별휴가 1시간)
+            if !leavesOnDate.contains(where: { $0.length == .full }), let onAddLeave {
                 Button(action: onAddLeave) {
                     HStack(spacing: 6) {
                         Image(systemName: "plus.circle.fill")
                             .voDecorative()
-                        Text(Strings.addLeaveOnThisDate)
+                        Text(leavesOnDate.isEmpty ? Strings.addLeaveOnThisDate : Strings.addAnotherLeaveOnThisDate)
                             .fontWeight(.semibold)
                     }
                     .font(.body)

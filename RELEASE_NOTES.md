@@ -6,138 +6,184 @@
 
 보상휴가를 시간 단위로 더할 수 있어요
 시간으로 넣은 휴가는 남은 시간으로 보여요
+같은 날에 휴가를 여러 개 넣을 수 있어요
+위젯의 디데이가 매일 알아서 바뀌어요
 앱을 열 때 가끔 꺼지던 문제를 고쳤어요
 
 ### App Store (English)
 
 Add comp time by the hour, not just days
 See your remaining comp time in hours
+Add more than one leave on the same day
+Widget countdowns now update every day
 Fixed the app closing at launch
 
 ### 앱스토어 (일본어)
 
 代休を時間単位で追加できます
 時間で追加した休みは残り時間で表示
+同じ日に複数の休暇を登録できます
+ウィジェットのカウントダウンが毎日更新
 起動時にまれに終了する問題を修正
 
 ### 앱스토어 (중국어 간체)
 
 调休可以按小时添加了
 按小时添加的假期显示剩余小时
+同一天可以登记多项休假
+小组件倒计时每天自动更新
 修复了启动时偶尔闪退的问题
 
 ### 앱스토어 (독일어)
 
 Überstundenausgleich auch in Stunden
 Restzeit wird in Stunden angezeigt
+Mehrere Abwesenheiten am selben Tag
+Widget-Countdown läuft jetzt täglich mit
 Seltenes Schließen beim Start behoben
 
 ### 앱스토어 (프랑스어)
 
 Ajoutez vos récupérations à l’heure
 Le solde s’affiche en heures
+Plusieurs congés le même jour
+Le widget se met à jour chaque jour
 L’app ne se ferme plus au lancement
 
 ### 앱스토어 (스페인어)
 
 Añade tiempo compensatorio por horas
 Ve el saldo restante en horas
+Varios permisos en el mismo día
+La cuenta atrás del widget se actualiza
 La app ya no se cierra al abrirla
 
 ### 앱스토어 (이탈리아어)
 
 Aggiungi i recuperi anche a ore
 Vedi le ore che ti restano
+Più giustificativi nello stesso giorno
+Il widget si aggiorna ogni giorno
 L’app non si chiude più all’avvio
 
 ### 앱스토어 (포르투갈어 브라질)
 
 Adicione folgas compensatórias por hora
 Veja o saldo restante em horas
+Várias ausências no mesmo dia
+A contagem do widget atualiza todo dia
 O app não fecha mais ao abrir
 
 ### 앱스토어 (중국어 번체)
 
 補休可以按小時新增了
 按小時新增的假會顯示剩餘時數
+同一天可以登記多項休假
+小工具倒數每天自動更新
 修正啟動時偶爾閃退的問題
 
 ### 앱스토어 (네덜란드어)
 
 Voeg compensatie-uren per uur toe
 Zie je resterende tijd in uren
+Meerdere verloven op dezelfde dag
+Aftellen in de widget werkt elke dag bij
 App sluit niet meer af bij het openen
 
 ### 앱스토어 (스웨덴어)
 
 Lägg till kompledighet per timme
 Se återstående tid i timmar
+Flera ledigheter samma dag
+Widgeten räknar ner varje dag
 Appen stängs inte längre vid start
 
 ### 앱스토어 (노르웨이어 보크말)
 
 Legg til avspasering i timer
 Se gjenværende tid i timer
+Flere fravær på samme dag
+Widgetens nedtelling oppdateres daglig
 Appen lukkes ikke lenger ved oppstart
 
 ### 앱스토어 (덴마크어)
 
 Tilføj afspadsering i timer
 Se resterende tid i timer
+Flere fravær på samme dag
+Widgettens nedtælling opdateres dagligt
 Appen lukker ikke længere ved start
 
 ### 앱스토어 (핀란드어)
 
 Lisää vapaat myös tunteina
 Näe jäljellä oleva aika tunteina
+Useita poissaoloja samalle päivälle
+Widgetin laskuri päivittyy päivittäin
 Sovellus ei enää sulkeudu avattaessa
 
 ### 앱스토어 (폴란드어)
 
 Dodawaj odbiór nadgodzin w godzinach
 Pozostały czas widać w godzinach
+Kilka nieobecności w tym samym dniu
+Widżet codziennie odlicza dni
 Aplikacja nie zamyka się przy starcie
 
 ### 앱스토어 (체코어)
 
 Náhradní volno lze přidat po hodinách
 Zbývající čas uvidíš v hodinách
+Více volna ve stejný den
+Odpočet ve widgetu se mění každý den
 Aplikace se už nezavírá při spuštění
 
 ### 앱스토어 (그리스어)
 
 Προσθέστε ρεπό και σε ώρες
 Δείτε τον υπόλοιπο χρόνο σε ώρες
+Πολλές άδειες την ίδια μέρα
+Το widget μετρά αντίστροφα κάθε μέρα
 Η εφαρμογή δεν κλείνει στην εκκίνηση
 
 ### 앱스토어 (튀르키예어)
 
 Telafi iznini saat olarak ekleyin
 Kalan süreyi saat olarak görün
+Aynı güne birden fazla izin ekleyin
+Widget geri sayımı her gün güncellenir
 Uygulama açılışta artık kapanmıyor
 
 ### 앱스토어 (러시아어)
 
 Отгулы можно добавлять по часам
 Остаток виден в часах
+Несколько отпусков в один день
+Отсчёт в виджете обновляется каждый день
 Приложение не закрывается при запуске
 
 ### 앱스토어 (인도네시아어)
 
 Tambah cuti pengganti per jam
 Lihat sisa waktu dalam jam
+Catat beberapa cuti di hari yang sama
+Hitung mundur widget berubah tiap hari
 Aplikasi tak lagi tertutup saat dibuka
 
 ### 앱스토어 (태국어)
 
 เพิ่มวันหยุดชดเชยเป็นชั่วโมงได้แล้ว
 ดูเวลาที่เหลือเป็นชั่วโมง
+ลงวันลาหลายรายการในวันเดียวกันได้
+นับถอยหลังในวิดเจ็ตอัปเดตทุกวัน
 แก้ปัญหาแอปปิดเองตอนเปิดบางครั้ง
 
 ### 앱스토어 (베트남어)
 
 Thêm nghỉ bù theo giờ
 Xem thời gian còn lại theo giờ
+Thêm nhiều ngày nghỉ trong cùng một ngày
+Tiện ích đếm ngược cập nhật mỗi ngày
 Sửa lỗi ứng dụng tự tắt khi mở
 
 ## 2.3.0
