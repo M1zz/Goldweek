@@ -23,7 +23,8 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 PROFILE = tempfile.mkdtemp(prefix="goldweek-creative-chrome-")
 
 # 앱 언어 코드(raw · marketing 폴더 이름) → App Store Connect 로케일 (--storetext 로 확인한 것)
-STORE = {"en": "en-US", "de": "de-DE", "es": "es-ES", "fr": "fr-FR", "nl": "nl-NL"}
+STORE = {"en": "en-US", "de": "de-DE", "es": "es-ES", "fr": "fr-FR", "nl": "nl-NL", "nb": "no"}
+# creative/nb 는 no 를 가리키는 링크 — DeployBar 검사는 nb(LOCALES), 올리기는 no(스토어 로케일)를 본다
 
 # (가로, 세로, 안전 영역 left, top, right, bottom)
 SPEC = {
