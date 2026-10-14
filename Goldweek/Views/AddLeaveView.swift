@@ -1187,10 +1187,23 @@ struct AddBonusLeaveSheet: View {
 
     let onSave: () -> Void
 
+    /// 시간으로 넣기 — 보상휴가는 몇 시간씩 쌓이는 경우가 많다 (피드백: "add comp time by hour")
+    @AppStorage(BonusLeave.inputInHoursKey) private var inHours = false
+    @State private var bonusMinutes = 60
+
     var body: some View {
         NavigationStack {
             Form {
                 Section(Strings.leaveDaysSection) {
+                    Picker(Strings.allowanceUnitLabel, selection: $inHours) {
+                        Text(Strings.allowanceUnitDays).tag(false)
+                        Text(Strings.leaveHoursLabel).tag(true)
+                    }
+                    .pickerStyle(.segmented)
+
+                    if inHours {
+                        BonusHoursInput(minutes: $bonusMinutes)
+                    } else {
                     HStack {
                         Text(Strings.daysToAdd)
                         Spacer()
@@ -1221,7 +1234,14 @@ struct AddBonusLeaveSheet: View {
                             .accessibilityAddTraits(bonusDays == days ? .isSelected : [])
                         }
                     }
+                    }
                 }
+                .onChange(of: bonusMinutes) { _, m in if inHours { bonusDays = LeaveLength.days(forMinutes: m) } }
+                .onChange(of: inHours) { _, hours in
+                    if hours { bonusDays = LeaveLength.days(forMinutes: bonusMinutes) }
+                    else { bonusDays = 1.0 }
+                }
+                .onAppear { if inHours { bonusDays = LeaveLength.days(forMinutes: bonusMinutes) } }
 
                 Section(Strings.typeSection) {
                     Picker(Strings.typeSection, selection: $bonusType) {
@@ -1257,7 +1277,11 @@ struct AddBonusLeaveSheet: View {
                     Button(Strings.cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(Strings.save) { onSave() }
+                    Button(Strings.save) {
+                        // 시간으로 더했으면 시간 단위로도 쓸 수 있게 "시간 단위" 버튼을 켠다
+                        if inHours { LeaveLength.usesHourlyLeave = true }
+                        onSave()
+                    }
                         .disabled(bonusDays <= 0)
                 }
             }
@@ -1278,10 +1302,13 @@ struct EditBonusLeaveSheet: View {
     @State private var editedHasExpiration: Bool
     @State private var editedExpirationDate: Date
     @State private var showingSaveError = false
+    @AppStorage(BonusLeave.inputInHoursKey) private var inHours = false
+    @State private var editedMinutes: Int
 
     init(bonus: BonusLeave) {
         self.bonus = bonus
         _editedDays = State(initialValue: bonus.days)
+        _editedMinutes = State(initialValue: BonusLeave.minutes(forDays: bonus.days))
         _editedType = State(initialValue: bonus.type)
         _editedReason = State(initialValue: bonus.reason)
         _editedHasExpiration = State(initialValue: bonus.expirationDate != nil)
@@ -1292,6 +1319,16 @@ struct EditBonusLeaveSheet: View {
         NavigationStack {
             Form {
                 Section(Strings.leaveDaysSection) {
+                    Picker(Strings.allowanceUnitLabel, selection: $inHours) {
+                        Text(Strings.allowanceUnitDays).tag(false)
+                        Text(Strings.leaveHoursLabel).tag(true)
+                    }
+                    .pickerStyle(.segmented)
+
+                    if inHours {
+                        BonusHoursInput(minutes: $editedMinutes,
+                                        minimumMinutes: BonusLeave.minutes(forDays: bonus.usedDays))
+                    } else {
                     HStack {
                         Text(Strings.daysToAdd)
                         Spacer()
@@ -1325,14 +1362,18 @@ struct EditBonusLeaveSheet: View {
                         }
                     }
 
+                    }
+
                     if bonus.usedDays > 0 {
                         HStack {
                             Image(systemName: "info.circle")
                                 .foregroundStyle(.blue)
                                 .font(.body)
                             Text(Strings.bonusEditUsedRemaining(
-                                used: String(format: "%.2g", bonus.usedDays),
-                                remaining: String(format: "%.2g", max(0, editedDays - bonus.usedDays))
+                                used: inHours ? Strings.durationText(minutes: BonusLeave.minutes(forDays: bonus.usedDays))
+                                              : String(format: "%.2g", bonus.usedDays),
+                                remaining: inHours ? Strings.durationText(minutes: BonusLeave.minutes(forDays: max(0, editedDays - bonus.usedDays)))
+                                                   : String(format: "%.2g", max(0, editedDays - bonus.usedDays))
                             ))
                                 .font(.body)
                                 .foregroundStyle(.secondary)
@@ -1364,6 +1405,11 @@ struct EditBonusLeaveSheet: View {
                 } footer: {
                     Text(Strings.expirationFooter)
                 }
+            }
+            .onChange(of: editedMinutes) { _, m in if inHours { editedDays = LeaveLength.days(forMinutes: m) } }
+            .onChange(of: inHours) { _, hours in
+                // 단위만 바꿀 때는 양을 그대로 두고 표시만 바꾼다
+                if hours { editedMinutes = BonusLeave.minutes(forDays: editedDays) }
             }
             .navigationTitle(Strings.bonusEditTitle)
             .navigationBarTitleDisplayMode(.inline)
@@ -1402,10 +1448,63 @@ struct EditBonusLeaveSheet: View {
     }
 }
 
+// MARK: - 보너스 연차 — 시간으로 넣기
+/// 시간(직접 입력, 하루를 넘어도 됨) + 분(5분 단위), 그리고 며칠로 더해지는지
+struct BonusHoursInput: View {
+    @Binding var minutes: Int
+    var minimumMinutes: Int = 0
+
+    var body: some View {
+        HStack {
+            Text(Strings.leaveHoursLabel)
+            Spacer()
+            TextField("0", value: Binding(get: { minutes / 60 },
+                                          set: { minutes = max(minimumMinutes, max(0, min(9999, $0)) * 60 + minutes % 60) }),
+                      format: .number)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.trailing)
+                .monospacedDigit()
+                .frame(maxWidth: 100)
+        }
+        Stepper(value: Binding(get: { minutes % 60 },
+                               set: { minutes = max(minimumMinutes, (minutes / 60) * 60 + $0) }),
+                in: 0...55, step: 5) {
+            HStack {
+                Text(Strings.leaveMinutesLabel)
+                Spacer()
+                Text("\(minutes % 60)").monospacedDigit().foregroundStyle(.secondary)
+            }
+        }
+        HStack(spacing: 8) {
+            ForEach([1, 2, 4, 8], id: \.self) { h in
+                Button {
+                    minutes = max(minimumMinutes, h * 60)
+                } label: {
+                    Text(Strings.durationText(minutes: h * 60))
+                        .font(.body).fontWeight(.medium)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .background(minutes == h * 60 ? Color.blue : Color(.systemGray5))
+                        .foregroundStyle(minutes == h * 60 ? .white : .primary)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(minutes == h * 60 ? .isSelected : [])
+            }
+        }
+        Text(Strings.bonusHoursFooter(workday: Strings.durationText(minutes: LeaveLength.workdayMinutes),
+                                      days: Strings.dayCount(LeaveLength.days(forMinutes: minutes))))
+            .font(.body)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
 // MARK: - 보너스 연차 행
 struct BonusLeaveRow: View {
     let bonus: BonusLeave
     var editable: Bool = false
+    @AppStorage(BonusLeave.inputInHoursKey) private var inHours = false
 
     var body: some View {
         HStack {
@@ -1418,7 +1517,9 @@ struct BonusLeaveRow: View {
                     Text(Strings.bonusLeaveTypeName(bonus.type))
                         .font(.body)
                         .fontWeight(.medium)
-                    Text("\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
+                    Text(inHours
+                         ? "\(Strings.durationText(minutes: BonusLeave.minutes(forDays: bonus.remainingDays)))/\(Strings.durationText(minutes: BonusLeave.minutes(forDays: bonus.days)))"
+                         : "\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
                         .font(.body)
                         .foregroundStyle(AppTheme.Colors.bonus)
                 }

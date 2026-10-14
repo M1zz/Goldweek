@@ -1698,3 +1698,36 @@ extension Strings {
         }
     }
 }
+
+// MARK: - 보상휴가를 시간으로 더하기 (2026-10-14 피드백: "add comp time by hour, not just by day")
+
+extension Strings {
+    /// 보너스 연차 시트 — 시간으로 넣으면 며칠로 더해지는지. {w} 하루 근무 시간, {d} 환산 일수
+    static func bonusHoursFooter(workday w: String, days d: String) -> String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "하루 근무 시간(\(w)) 기준으로 \(d)로 더해요. 시간 단위로 쉬면 그만큼 줄어요. 근무 시간은 설정에서 바꿀 수 있어요."
+        case .english: return "Added as \(d), based on your \(w) workday. Time you take off by the hour comes out of it. You can change the workday length in Settings."
+        case .japanese: return "1日の勤務時間（\(w)）をもとに\(d)として追加します。時間単位で休むとその分減ります。勤務時間は設定で変えられます。"
+        case .chinese: return "按每天工作时长（\(w)）换算，增加\(d)。按小时休假时会相应扣除。工作时长可以在设置中修改。"
+        case .german: return "Wird mit deinem Arbeitstag (\(w)) als \(d) hinzugefügt. Stundenweise genommene Zeit wird davon abgezogen. Die Länge des Arbeitstags änderst du in den Einstellungen."
+        case .french: return "Ajouté comme \(d), selon votre journée de travail (\(w)). Les heures que vous prenez en sont déduites. Vous pouvez changer la durée de la journée dans les Réglages."
+        case .spanish: return "Se suma como \(d) según tu jornada (\(w)). Las horas que tomes se descuentan de ahí. Puedes cambiar la jornada en Ajustes."
+        case .italian: return "Viene aggiunto come \(d) in base alla tua giornata lavorativa (\(w)). Le ore che prendi vengono scalate da qui. Puoi cambiare la durata della giornata nelle Impostazioni."
+        case .portuguese: return "Somado como \(d) pela sua jornada (\(w)). As horas que você tirar são descontadas daqui. Você pode mudar a jornada nos Ajustes."
+        case .chineseTraditional: return "依每天工作時數（\(w)）換算，增加\(d)。按小時請假時會相應扣除。工作時數可以在設定中修改。"
+        case .dutch: return "Wordt toegevoegd als \(d), op basis van je werkdag (\(w)). Uren die je opneemt gaan hiervan af. De lengte van je werkdag pas je aan in Instellingen."
+        case .swedish: return "Läggs till som \(d) utifrån din arbetsdag (\(w)). Timmar du tar ledigt dras härifrån. Du kan ändra arbetsdagens längd i Inställningar."
+        case .norwegian: return "Legges til som \(d) ut fra arbeidsdagen din (\(w)). Timer du tar fri trekkes herfra. Du kan endre lengden på arbeidsdagen i Innstillinger."
+        case .danish: return "Lægges til som \(d) ud fra din arbejdsdag (\(w)). Timer, du holder fri, trækkes herfra. Du kan ændre arbejdsdagens længde i Indstillinger."
+        case .finnish: return "Lisätään \(d) työpäiväsi (\(w)) mukaan. Tunteina pitämäsi vapaa vähennetään tästä. Työpäivän pituuden voit muuttaa asetuksista."
+        case .polish: return "Dodawane jako \(d) według Twojego dnia pracy (\(w)). Wykorzystane godziny są od tego odejmowane. Długość dnia pracy zmienisz w Ustawieniach."
+        case .czech: return "Přidá se jako \(d) podle tvého pracovního dne (\(w)). Hodiny, které si vezmeš, se odečtou odsud. Délku pracovního dne změníš v Nastavení."
+        case .greek: return "Προστίθεται ως \(d) με βάση την εργάσιμη μέρα σου (\(w)). Οι ώρες που παίρνεις αφαιρούνται από εδώ. Τη διάρκεια της εργάσιμης μέρας την αλλάζεις στις Ρυθμίσεις."
+        case .turkish: return "Günlük çalışma sürene (\(w)) göre \(d) olarak eklenir. Saatlik kullandığın izin buradan düşülür. Çalışma süresini Ayarlar'dan değiştirebilirsin."
+        case .russian: return "Добавится как \(d) по вашему рабочему дню (\(w)). Часы, которые вы берёте, вычитаются отсюда. Длину рабочего дня можно изменить в настройках."
+        case .indonesian: return "Ditambahkan sebagai \(d) berdasarkan jam kerjamu (\(w)). Cuti per jam akan dipotong dari sini. Lama jam kerja bisa diubah di Pengaturan."
+        case .thai: return "เพิ่มเป็น \(d) ตามชั่วโมงทำงานต่อวันของคุณ (\(w)) ลาเป็นชั่วโมงเมื่อไรจะหักจากส่วนนี้ เปลี่ยนชั่วโมงทำงานต่อวันได้ในการตั้งค่า"
+        case .vietnamese: return "Được cộng thành \(d) theo số giờ làm mỗi ngày của bạn (\(w)). Nghỉ theo giờ sẽ trừ vào đây. Bạn có thể đổi số giờ làm trong Cài đặt."
+        }
+    }
+}

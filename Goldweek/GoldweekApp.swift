@@ -88,7 +88,12 @@ struct GoldweekApp: App {
     private static func createModelContainer(schema: Schema) -> ModelContainer {
         // CloudKit 동기화는 ShareSyncService가 CKRecord로 직접 처리 —
         // entitlement 감지로 .automatic이 CloudKit 미러링을 켜면 모델 검증 실패로 컨테이너 생성이 throw됨
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, cloudKitDatabase: .none)
+        let config: ModelConfiguration
+        if let url = storeURLOutsideAppGroup() {
+            config = ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none)
+        } else {
+            config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, cloudKitDatabase: .none)
+        }
 
         do {
             let container = try ModelContainer(for: schema, configurations: [config])
@@ -122,6 +127,54 @@ struct GoldweekApp: App {
                 fatalError("인메모리 ModelContainer 생성 불가: \(error)")
             }
         }
+    }
+
+    /// 저장소를 앱 전용 컨테이너에 둔다 (App Group 에 있던 기존 저장소는 한 번 옮긴다).
+    ///
+    /// App Group 엔타이틀먼트가 있으면 SwiftData 는 기본으로 공유 컨테이너에 저장소를 만든다.
+    /// 공유 컨테이너의 SQLite 잠금을 쥔 채 앱이 정지되면 iOS 가 0xdead10cc 로 죽인다 —
+    /// 프리워밍으로 미리 뜬 앱이 이 init 의 컨테이너 열기 도중 정지돼 실제로 죽었다 (2.2.2·2.3.0, iPhone 11).
+    /// 위젯은 App Group UserDefaults 만 읽으므로 저장소를 공유할 이유가 없다.
+    /// - Returns: 쓸 저장소 URL. 옮기다 실패하면 nil — 예전 자리(SwiftData 기본)를 그대로 쓴다.
+    private static func storeURLOutsideAppGroup() -> URL? {
+        let fm = FileManager.default
+        guard let appSupport = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return nil }
+        let dest = appSupport.appendingPathComponent("default.store")
+        let suffixes = ["-wal", "-shm", ""]  // 본 파일을 마지막에 — 그게 "옮김 완료" 표시라 중간에 끊겨도 다음 실행이 이어 옮긴다
+
+        // 이미 옮겼거나 처음부터 여기 있다
+        if fm.fileExists(atPath: dest.path) { return dest }
+
+        do {
+            try fm.createDirectory(at: appSupport, withIntermediateDirectories: true)
+        } catch {
+            AppLogger.shared.error("Application Support 폴더 생성 실패: \(error.localizedDescription)", category: .data)
+            return nil
+        }
+
+        guard let group = fm.containerURL(forSecurityApplicationGroupIdentifier: "group.com.Ysoup.LeaveWise")?
+            .appendingPathComponent("Library/Application Support/default.store"),
+              fm.fileExists(atPath: group.path) else {
+            return dest  // 새 설치 — 처음부터 앱 전용 컨테이너에 만든다
+        }
+
+        // 본 파일·WAL·SHM 을 함께 옮긴다. 하나라도 실패하면 옮긴 것을 되돌리고 예전 자리를 쓴다.
+        var moved: [(from: URL, to: URL)] = []
+        for suffix in suffixes {
+            let from = URL(fileURLWithPath: group.path + suffix)
+            let to = URL(fileURLWithPath: dest.path + suffix)
+            guard fm.fileExists(atPath: from.path) else { continue }
+            do {
+                try fm.moveItem(at: from, to: to)
+                moved.append((from, to))
+            } catch {
+                AppLogger.shared.error("저장소 이동 실패 (\(suffix.isEmpty ? "store" : suffix)): \(error.localizedDescription) — 되돌림", category: .data)
+                for m in moved.reversed() { try? fm.moveItem(at: m.to, to: m.from) }
+                return nil
+            }
+        }
+        AppLogger.shared.info("저장소를 App Group 에서 앱 전용 컨테이너로 옮김 (\(moved.count)개 파일)", category: .data)
+        return dest
     }
 
     /// 타임머신 스냅샷 → 레거시 자동 백업 순으로 데이터 복구를 시도한다

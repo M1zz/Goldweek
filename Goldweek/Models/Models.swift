@@ -1019,6 +1019,14 @@ final class BonusLeave {
         get { BonusLeaveType(rawValue: typeRaw) ?? .other }
         set { typeRaw = newValue.rawValue }
     }
+
+    /// 보너스 연차를 시간으로 넣고 보여 줄지 (저장은 언제나 일수 — 하루 근무 시간으로 바꾼다)
+    static let inputInHoursKey = "bonusLeaveInHours"
+
+    /// 일수 → 분 (하루 근무 시간 기준, 5분 단위로 반올림)
+    static func minutes(forDays days: Double) -> Int {
+        Int((max(0, days) * Double(LeaveLength.workdayMinutes) / 5).rounded()) * 5
+    }
 }
 
 // MARK: - 기존 기록 길이 보정 (마이그레이션)

@@ -350,7 +350,7 @@ final class LeaveSettingsSync {
     static let shared = LeaveSettingsSync()
 
     static let keys = ["leaveTypeColors", "leaveKindOrder", "workdayMinutes", "workdayMinutesByWeekday",
-                       "workPattern", "usesHourlyLeave", "shiftDaysOff", "shiftWorkDays"]
+                       "workPattern", "usesHourlyLeave", "shiftDaysOff", "shiftWorkDays", "bonusLeaveInHours"]
 
     private let cloud = NSUbiquitousKeyValueStore.default
     private let defaults = UserDefaults.standard

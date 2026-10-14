@@ -1,5 +1,145 @@
 # Goldweek 릴리즈 노트
 
+## 2.3.1
+
+### 앱스토어 (한국어)
+
+보상휴가를 시간 단위로 더할 수 있어요
+시간으로 넣은 휴가는 남은 시간으로 보여요
+앱을 열 때 가끔 꺼지던 문제를 고쳤어요
+
+### App Store (English)
+
+Add comp time by the hour, not just days
+See your remaining comp time in hours
+Fixed the app closing at launch
+
+### 앱스토어 (일본어)
+
+代休を時間単位で追加できます
+時間で追加した休みは残り時間で表示
+起動時にまれに終了する問題を修正
+
+### 앱스토어 (중국어 간체)
+
+调休可以按小时添加了
+按小时添加的假期显示剩余小时
+修复了启动时偶尔闪退的问题
+
+### 앱스토어 (독일어)
+
+Überstundenausgleich auch in Stunden
+Restzeit wird in Stunden angezeigt
+Seltenes Schließen beim Start behoben
+
+### 앱스토어 (프랑스어)
+
+Ajoutez vos récupérations à l’heure
+Le solde s’affiche en heures
+L’app ne se ferme plus au lancement
+
+### 앱스토어 (스페인어)
+
+Añade tiempo compensatorio por horas
+Ve el saldo restante en horas
+La app ya no se cierra al abrirla
+
+### 앱스토어 (이탈리아어)
+
+Aggiungi i recuperi anche a ore
+Vedi le ore che ti restano
+L’app non si chiude più all’avvio
+
+### 앱스토어 (포르투갈어 브라질)
+
+Adicione folgas compensatórias por hora
+Veja o saldo restante em horas
+O app não fecha mais ao abrir
+
+### 앱스토어 (중국어 번체)
+
+補休可以按小時新增了
+按小時新增的假會顯示剩餘時數
+修正啟動時偶爾閃退的問題
+
+### 앱스토어 (네덜란드어)
+
+Voeg compensatie-uren per uur toe
+Zie je resterende tijd in uren
+App sluit niet meer af bij het openen
+
+### 앱스토어 (스웨덴어)
+
+Lägg till kompledighet per timme
+Se återstående tid i timmar
+Appen stängs inte längre vid start
+
+### 앱스토어 (노르웨이어 보크말)
+
+Legg til avspasering i timer
+Se gjenværende tid i timer
+Appen lukkes ikke lenger ved oppstart
+
+### 앱스토어 (덴마크어)
+
+Tilføj afspadsering i timer
+Se resterende tid i timer
+Appen lukker ikke længere ved start
+
+### 앱스토어 (핀란드어)
+
+Lisää vapaat myös tunteina
+Näe jäljellä oleva aika tunteina
+Sovellus ei enää sulkeudu avattaessa
+
+### 앱스토어 (폴란드어)
+
+Dodawaj odbiór nadgodzin w godzinach
+Pozostały czas widać w godzinach
+Aplikacja nie zamyka się przy starcie
+
+### 앱스토어 (체코어)
+
+Náhradní volno lze přidat po hodinách
+Zbývající čas uvidíš v hodinách
+Aplikace se už nezavírá při spuštění
+
+### 앱스토어 (그리스어)
+
+Προσθέστε ρεπό και σε ώρες
+Δείτε τον υπόλοιπο χρόνο σε ώρες
+Η εφαρμογή δεν κλείνει στην εκκίνηση
+
+### 앱스토어 (튀르키예어)
+
+Telafi iznini saat olarak ekleyin
+Kalan süreyi saat olarak görün
+Uygulama açılışta artık kapanmıyor
+
+### 앱스토어 (러시아어)
+
+Отгулы можно добавлять по часам
+Остаток виден в часах
+Приложение не закрывается при запуске
+
+### 앱스토어 (인도네시아어)
+
+Tambah cuti pengganti per jam
+Lihat sisa waktu dalam jam
+Aplikasi tak lagi tertutup saat dibuka
+
+### 앱스토어 (태국어)
+
+เพิ่มวันหยุดชดเชยเป็นชั่วโมงได้แล้ว
+ดูเวลาที่เหลือเป็นชั่วโมง
+แก้ปัญหาแอปปิดเองตอนเปิดบางครั้ง
+
+### 앱스토어 (베트남어)
+
+Thêm nghỉ bù theo giờ
+Xem thời gian còn lại theo giờ
+Sửa lỗi ứng dụng tự tắt khi mở
+
 ## 2.3.0
 
 ### 앱스토어 (한국어)
