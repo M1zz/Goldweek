@@ -1764,3 +1764,93 @@ extension Strings {
         }
     }
 }
+
+// MARK: - 방학·내 공휴일 전체 보기 (미국 교사 피드백: 2개씩만 보인다 — 학년이 해를 넘겨 다른 해 탭에 숨어 있었다)
+
+extension Strings {
+    /// 휴일 관리에서 보고 있는 해 말고 다른 해에도 항목이 있을 때 목록 아래에 붙는 줄
+    static func datesInOtherYears(_ n: Int) -> String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "다른 해에 \(n)개 더 있어요"
+        case .english: return n == 1 ? "1 more in another year" : "\(n) more in other years"
+        case .japanese: return "ほかの年にあと\(n)件あります"
+        case .chinese: return "其他年份还有 \(n) 项"
+        case .german: return n == 1 ? "1 weiterer Eintrag in einem anderen Jahr" : "\(n) weitere in anderen Jahren"
+        case .french: return n == 1 ? "1 autre dans une autre année" : "\(n) autres dans d’autres années"
+        case .spanish: return n == 1 ? "1 más en otro año" : "\(n) más en otros años"
+        case .italian: return n == 1 ? "1 altro in un altro anno" : "Altri \(n) in altri anni"
+        case .portuguese: return n == 1 ? "Mais 1 em outro ano" : "Mais \(n) em outros anos"
+        case .chineseTraditional: return "其他年份還有 \(n) 項"
+        case .dutch: return n == 1 ? "Nog 1 in een ander jaar" : "Nog \(n) in andere jaren"
+        case .swedish: return n == 1 ? "1 till under ett annat år" : "\(n) till under andra år"
+        case .norwegian: return n == 1 ? "1 til i et annet år" : "\(n) til i andre år"
+        case .danish: return n == 1 ? "1 mere i et andet år" : "\(n) mere i andre år"
+        case .finnish: return n == 1 ? "1 lisää toisena vuonna" : "\(n) lisää muina vuosina"
+        case .polish: return "Jeszcze \(n) w innych latach"
+        case .czech: return "Další \(n) v jiných letech"
+        case .greek: return n == 1 ? "1 ακόμη σε άλλη χρονιά" : "\(n) ακόμη σε άλλες χρονιές"
+        case .turkish: return "Diğer yıllarda \(n) tane daha var"
+        case .russian: return "Ещё в других годах: \(n)"
+        case .indonesian: return "\(n) lagi di tahun lain"
+        case .thai: return "มีอีก \(n) รายการในปีอื่น"
+        case .vietnamese: return "Còn \(n) mục nữa ở năm khác"
+        }
+    }
+
+    static var showAllDates: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "모두 보기"
+        case .english: return "See All"
+        case .japanese: return "すべて表示"
+        case .chinese: return "查看全部"
+        case .german: return "Alle anzeigen"
+        case .french: return "Tout afficher"
+        case .spanish: return "Ver todo"
+        case .italian: return "Mostra tutto"
+        case .portuguese: return "Ver tudo"
+        case .chineseTraditional: return "查看全部"
+        case .dutch: return "Toon alles"
+        case .swedish: return "Visa alla"
+        case .norwegian: return "Vis alle"
+        case .danish: return "Vis alle"
+        case .finnish: return "Näytä kaikki"
+        case .polish: return "Pokaż wszystko"
+        case .czech: return "Zobrazit vše"
+        case .greek: return "Εμφάνιση όλων"
+        case .turkish: return "Tümünü gör"
+        case .russian: return "Показать все"
+        case .indonesian: return "Lihat semua"
+        case .thai: return "ดูทั้งหมด"
+        case .vietnamese: return "Xem tất cả"
+        }
+    }
+
+    /// 모든 해의 방학과 내 공휴일을 한 화면에 모은 목록의 제목
+    static var allBreaksAndHolidaysTitle: String {
+        switch LanguageManager.shared.currentLanguage {
+        case .korean: return "방학과 내 공휴일 전체"
+        case .english: return "All Breaks & Holidays"
+        case .japanese: return "休暇と自分の祝日すべて"
+        case .chinese: return "全部假期与我的节假日"
+        case .german: return "Alle Ferien und Feiertage"
+        case .french: return "Toutes les vacances et fêtes"
+        case .spanish: return "Todas las vacaciones y festivos"
+        case .italian: return "Tutte le vacanze e festività"
+        case .portuguese: return "Todas as férias e feriados"
+        case .chineseTraditional: return "全部假期與我的節假日"
+        case .dutch: return "Alle vakanties en feestdagen"
+        case .swedish: return "Alla lov och helgdagar"
+        case .norwegian: return "Alle ferier og helligdager"
+        case .danish: return "Alle ferier og helligdage"
+        case .finnish: return "Kaikki lomat ja pyhäpäivät"
+        case .polish: return "Wszystkie ferie i święta"
+        case .czech: return "Všechny prázdniny a svátky"
+        case .greek: return "Όλες οι διακοπές και αργίες"
+        case .turkish: return "Tüm tatiller ve resmî günler"
+        case .russian: return "Все каникулы и праздники"
+        case .indonesian: return "Semua libur dan hari raya"
+        case .thai: return "ช่วงปิดเทอมและวันหยุดทั้งหมด"
+        case .vietnamese: return "Tất cả kỳ nghỉ và ngày lễ"
+        }
+    }
+}
