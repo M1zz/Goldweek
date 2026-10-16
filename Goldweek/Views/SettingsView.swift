@@ -57,6 +57,7 @@ struct SettingsView: View {
     @State private var backupAlertMessage = ""
     @State private var showingRestoreConfirm = false
     @State private var showingPaywall = false
+    @State private var showingManageSubscription = false
     @State private var editingBonus: BonusLeave?
     @State private var pendingBonusDeleteOffsets: IndexSet?
     @State private var showingBonusDeleteConfirm = false
@@ -262,7 +263,7 @@ struct SettingsView: View {
                 }
 
                 // 이용 중인 버전 — 오퍼 코드를 리딤한 사람도 Pro가 켜졌는지 바로 알 수 있게
-                Section(Strings.planStatusTitle) {
+                Section {
                     if ProManager.shared.isPro {
                         HStack(spacing: 12) {
                             Image(systemName: "crown.fill")
@@ -270,11 +271,17 @@ struct SettingsView: View {
                                 .frame(width: 28)
                                 .voDecorative()
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.goldweekPro)
+                                Text("Goldweek \(Strings.trimName(ProManager.shared.tier))")
                                     .fontWeight(.semibold)
-                                Text(Strings.proActiveMessage)
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
+                                if case .yearly(let expires) = ProManager.shared.activePlan, let expires {
+                                    Text(Strings.yearlyPlanUntil(expires.appFormatted()))
+                                        .font(.body)
+                                        .foregroundStyle(.secondary)
+                                } else {
+                                    Text(Strings.proActiveMessage)
+                                        .font(.body)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                             Spacer()
                             Text(Strings.planActive)
@@ -305,6 +312,15 @@ struct SettingsView: View {
                                 .buttonStyle(.borderedProminent)
                                 .tint(AppTheme.Colors.bonus)
                         }
+                    }
+                    if case .yearly = ProManager.shared.activePlan {
+                        Button(Strings.manageSubscription) { showingManageSubscription = true }
+                    }
+                } header: {
+                    Text(Strings.planStatusTitle)
+                } footer: {
+                    if !ProManager.shared.isPro, ProManager.shared.isLegacyUser {
+                        Text(Strings.legacyFeaturesNote)
                     }
                 }
 
@@ -726,20 +742,20 @@ struct SettingsView: View {
                     .accessibilityHint(Text(Strings.includeBonusHint))
 
                     Button {
-                        if ProManager.shared.isPro {
+                        if ProManager.shared.hasProTier {
                             showingBonusLeaveSheet = true
                         } else {
                             showingPaywall = true
                         }
                     } label: {
                         HStack {
-                            Image(systemName: ProManager.shared.isPro ? "plus.circle.fill" : "crown.fill")
-                                .foregroundStyle(ProManager.shared.isPro ? AppTheme.Colors.bonus : .yellow)
+                            Image(systemName: ProManager.shared.hasProTier ? "plus.circle.fill" : "crown.fill")
+                                .foregroundStyle(ProManager.shared.hasProTier ? AppTheme.Colors.bonus : .yellow)
                                 .voDecorative()
                             Text(Strings.addBonusLeave)
-                                .foregroundStyle(ProManager.shared.isPro ? .primary : .secondary)
+                                .foregroundStyle(ProManager.shared.hasProTier ? .primary : .secondary)
                             Spacer()
-                            if ProManager.shared.isPro {
+                            if ProManager.shared.hasProTier {
                                 Image(systemName: "chevron.right")
                                     .foregroundStyle(.secondary)
                                     .font(.body)
@@ -944,7 +960,7 @@ struct SettingsView: View {
                     }
 
                     // 캘린더 자동 감지 (Pro)
-                    if ProManager.shared.isPro {
+                    if ProManager.shared.hasProTier {
                         Toggle(isOn: $autoDetectEnabled) {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(Strings.autoDetectSettingTitle)
@@ -1231,6 +1247,7 @@ struct SettingsView: View {
             .sheet(isPresented: $showingPaywall) {
                 PaywallView()
             }
+            .manageSubscriptionsSheet(isPresented: $showingManageSubscription)
             .sheet(isPresented: $showingCalendarImport) {
                 CalendarImportSheet(existingRecords: Array(leaveRecords))
             }

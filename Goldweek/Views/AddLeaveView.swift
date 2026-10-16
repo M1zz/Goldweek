@@ -1011,7 +1011,8 @@ struct BonusLeaveView: View {
     @State private var errorMessage = ""
     @State private var showingErrorAlert = false
 
-    private var isPro: Bool { ProManager.shared.isPro }
+    /// 보너스 연차는 프로 트림부터
+    private var isPro: Bool { ProManager.shared.hasProTier }
 
     var activeBonusLeaves: [BonusLeave] {
         bonusLeaves.filter { !$0.isUsed }

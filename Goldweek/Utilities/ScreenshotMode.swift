@@ -9,6 +9,7 @@
 //    -screenshotTab 1         시작 탭 (0 현황 · 1 캘린더 · 3 설정)
 //    -screenshotScroll recommendations   캘린더를 추천 목록까지 내려 둔다
 //    -screenshotScroll nextYear          캘린더를 내년 1월로 연다
+//    -screenshotPaywall <상품 ID>        페이월을 열고 그 상품을 골라 둔다 (앱 내 구입 심사 스크린샷)
 //    -appLanguage de          앱 언어 (UserDefaults 인자 도메인으로 그대로 읽힌다)
 //
 
@@ -29,6 +30,11 @@ enum ScreenshotMode {
     /// 처음 화면에서 내려 둘 위치 (`-screenshotScroll recommendations`)
     static var scrollTarget: String? {
         isActive ? UserDefaults.standard.string(forKey: "screenshotScroll") : nil
+    }
+
+    /// 페이월을 열어 골라 둘 상품 (`-screenshotPaywall com.Ysoup.LeaveWise.pro.yearly`)
+    static var paywallProductID: String? {
+        isActive ? UserDefaults.standard.string(forKey: "screenshotPaywall") : nil
     }
 
     /// 캘린더가 처음 보여 주고 골라 둘 날 — 캘린더를 찍을 땐(`recommendations`·`nextYear`) 내년 1월 1일.

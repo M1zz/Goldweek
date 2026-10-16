@@ -80,7 +80,9 @@
 		EFCC106F139C9439F277D6BF /* Strings+LeaveCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */; };
 		FA11A0012F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */; };
 		FA11A0032F0C4D2E00A1B001 /* FamilyAnniversaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */; };
+		FA11A0052F0C4D2E00A1B001 /* FamilyTogetherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */; };
 		F0AB849B5E6EB9CF20DDE9A3 /* Strings+PlanAhead.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */; };
+		66A2BBF0A63A4632A187F5D2 /* Strings+Monetization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,10 +118,12 @@
 
 /* Begin PBXFileReference section */
 		017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+PlanAhead.swift"; sourceTree = "<group>"; };
+		80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+Monetization.swift"; sourceTree = "<group>"; };
 		09F973B8901CC9124460DC0A /* PartTimeDays.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PartTimeDays.swift; sourceTree = "<group>"; };
 		0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+LeaveCustomization.swift"; sourceTree = "<group>"; };
 		FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+FamilyAnniversary.swift"; sourceTree = "<group>"; };
 		FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyAnniversaryView.swift; sourceTree = "<group>"; };
+		FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyTogetherView.swift; sourceTree = "<group>"; };
 		3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+PartTime.swift"; sourceTree = "<group>"; };
 		4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+CountryRequest.swift"; sourceTree = "<group>"; };
 		584ABA642F211E0C008AD1DB /* Goldweek.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Goldweek.entitlements; sourceTree = "<group>"; };
@@ -328,6 +332,7 @@
 				A2000034 /* PaywallView.swift */,
 				A2000035 /* HolidayManagementView.swift */,
 				FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */,
+				FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */,
 				A2000053 /* ShareScheduleView.swift */,
 				A2000054 /* FamilyView.swift */,
 				A2000056 /* TimeMachineView.swift */,
@@ -384,6 +389,7 @@
 				FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */,
 				3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */,
 				017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */,
+				80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */,
 				4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */,
 			);
 			path = Utilities;
@@ -605,6 +611,7 @@
 				A1000034 /* PaywallView.swift in Sources */,
 				A1000035 /* HolidayManagementView.swift in Sources */,
 				FA11A0032F0C4D2E00A1B001 /* FamilyAnniversaryView.swift in Sources */,
+				FA11A0052F0C4D2E00A1B001 /* FamilyTogetherView.swift in Sources */,
 				A1000052 /* ShareSyncService.swift in Sources */,
 				A1000053 /* ShareScheduleView.swift in Sources */,
 				A1000054 /* FamilyView.swift in Sources */,
@@ -625,6 +632,7 @@
 				3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */,
 				7BC4167236E5FF0979D0BFFC /* Strings+PartTime.swift in Sources */,
 				F0AB849B5E6EB9CF20DDE9A3 /* Strings+PlanAhead.swift in Sources */,
+				66A2BBF0A63A4632A187F5D2 /* Strings+Monetization.swift in Sources */,
 				10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -116,6 +116,9 @@ struct ContentView: View {
                     }
                     // 가족 기념일 알림 — 기념일이나 휴가가 바뀌면 다시 예약 (그날 휴가가 잡혀 있으면 2주 전 알림은 뺀다)
                     .onChange(of: anniversaryReminderKey, initial: true) { _, _ in
+                        ShareSyncService.shared.myAnniversaries = anniversaries.map {
+                            AnniversarySnapshot(id: $0.id, title: $0.displayTitle, kindRaw: $0.kindRaw, date: $0.date, isLunar: $0.isLunar)
+                        }
                         AnniversaryReminders.refresh(anniversaries.map(AnniversaryReminders.Item.init),
                                                      leaves: leaveRecords.filter { $0.status != .cancelled })
                     }
@@ -258,6 +261,13 @@ struct ContentView: View {
             hasher.combine(record.typeRaw)
             hasher.combine(record.statusRaw)
         }
+        // 가족 기념일도 함께 올린다 (패밀리 · 함께 쉬기)
+        for anniversary in anniversaries {
+            hasher.combine(anniversary.id)
+            hasher.combine(anniversary.date)
+            hasher.combine(anniversary.isLunar)
+            hasher.combine(anniversary.displayTitle)
+        }
         return hasher.finalize()
     }
 
@@ -386,6 +396,8 @@ struct ContentView: View {
 struct MainTabView: View {
     @Bindable var profile: UserProfile
     @State private var selectedTab = ScreenshotMode.initialTab
+    /// 스크린샷 모드에서 페이월을 열어 둔다 (앱 내 구입 심사용 화면)
+    @State private var showingScreenshotPaywall = ScreenshotMode.paywallProductID != nil
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     // 공유받은 일정이 있으면 가족 탭 표시 (@Observable — body에서 읽으면 자동 갱신)
@@ -436,6 +448,7 @@ struct MainTabView: View {
                 .tag(3)
         }
         .tint(Color(red: 0.0, green: 0.4, blue: 0.9))
+        .sheet(isPresented: $showingScreenshotPaywall) { PaywallView() }
     }
 }
 

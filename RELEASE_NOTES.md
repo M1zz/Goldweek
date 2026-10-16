@@ -1,5 +1,190 @@
 # Goldweek 릴리즈 노트
 
+## 2.4.0
+
+### 앱스토어 (한국어)
+
+가족 기념일을 기록하고 미리 휴가를 챙겨요
+패밀리로 가족이 다 같이 쉬는 날을 찾아요
+플러스, 프로, 패밀리 중에서 고를 수 있어요
+싱가포르 공휴일을 지원합니다
+다른 해의 방학과 공휴일도 모두 볼 수 있어요
+
+### App Store (English)
+
+Save family birthdays and plan time off
+Find days the whole family is off
+Choose Plus, Pro or Family
+Singapore holidays are now supported
+See breaks and holidays from every year
+
+### 앱스토어 (일본어)
+
+家族の記念日を記録して休みを準備
+ファミリーで家族みんなの休みを探せます
+プラス、プロ、ファミリーから選べます
+シンガポールの祝日に対応しました
+他の年の休暇と祝日もすべて見られます
+
+### 앱스토어 (중국어 간체)
+
+记录家人纪念日，提前安排休假
+家庭版可找出全家都休息的日子
+可选择 Plus、Pro 或家庭版
+新增新加坡公众假期
+可查看其他年份的假期和节日
+
+### 앱스토어 (독일어)
+
+Familientage speichern und Urlaub planen
+Tage finden, an denen alle frei haben
+Wähle zwischen Plus, Pro und Familie
+Jetzt mit Feiertagen in Singapur
+Ferien und Feiertage aller Jahre ansehen
+
+### 앱스토어 (프랑스어)
+
+Dates de famille et congés à l’avance
+Trouvez les jours libres en famille
+Choisissez Plus, Pro ou Famille
+Les jours fériés de Singapour arrivent
+Voyez vacances et fériés de chaque année
+
+### 앱스토어 (스페인어)
+
+Guarda fechas familiares y pide el día
+Días libres para toda la familia
+Elige entre Plus, Pro y Familia
+Ya incluye los festivos de Singapur
+Vacaciones y festivos de todos los años
+
+### 앱스토어 (이탈리아어)
+
+Salva le ricorrenze e chiedi le ferie
+Giorni liberi per tutta la famiglia
+Scegli tra Plus, Pro e Famiglia
+Ora ci sono le festività di Singapore
+Vacanze e festività di tutti gli anni
+
+### 앱스토어 (포르투갈어 브라질)
+
+Salve datas da família e planeje folgas
+Dias de folga para toda a família
+Escolha entre Plus, Pro e Família
+Agora com feriados de Singapura
+Recessos e feriados de todos os anos
+
+### 앱스토어 (중국어 번체)
+
+記錄家人紀念日，提前安排請假
+家庭版可找出全家都放假的日子
+可選擇 Plus、Pro 或家庭版
+新增新加坡國定假日
+可查看其他年份的假期和節日
+
+### 앱스토어 (네덜란드어)
+
+Bewaar familiedagen en plan je verlof
+Vind dagen dat het hele gezin vrij is
+Kies uit Plus, Pro en Gezin
+Nu met feestdagen van Singapore
+Vakanties en feestdagen van elk jaar
+
+### 앱스토어 (스웨덴어)
+
+Spara familjedagar och planera ledigt
+Hitta dagar då hela familjen är ledig
+Välj mellan Plus, Pro och Familj
+Nu med helgdagar i Singapore
+Lov och helgdagar från alla år
+
+### 앱스토어 (노르웨이어 보크말)
+
+Lagre merkedager og planlegg fri
+Finn dager hele familien har fri
+Velg mellom Plus, Pro og Familie
+Nå med helligdager i Singapore
+Ferier og helligdager fra alle år
+
+### 앱스토어 (덴마크어)
+
+Gem mærkedage og planlæg fri
+Find dage hvor hele familien har fri
+Vælg mellem Plus, Pro og Familie
+Nu med helligdage i Singapore
+Ferier og helligdage fra alle år
+
+### 앱스토어 (핀란드어)
+
+Perheen merkkipäivät ja vapaat ajoissa
+Koko perheen yhteiset vapaapäivät
+Valitse Plus, Pro tai Perhe
+Nyt myös Singaporen pyhäpäivät
+Lomat ja pyhät kaikilta vuosilta
+
+### 앱스토어 (폴란드어)
+
+Zapisuj rodzinne święta i planuj wolne
+Dni wolne dla całej rodziny
+Wybierz Plus, Pro lub Rodzina
+Teraz także święta w Singapurze
+Ferie i święta ze wszystkich lat
+
+### 앱스토어 (체코어)
+
+Ukládej rodinná výročí a plánuj volno
+Najdi dny, kdy má volno celá rodina
+Vyber si Plus, Pro nebo Rodina
+Nově svátky v Singapuru
+Prázdniny a svátky ze všech let
+
+### 앱스토어 (그리스어)
+
+Οικογενειακές γιορτές και άδειες
+Κοινά ρεπό για όλη την οικογένεια
+Διάλεξε Plus, Pro ή Οικογένεια
+Τώρα και οι αργίες της Σιγκαπούρης
+Διακοπές και αργίες κάθε χρονιάς
+
+### 앱스토어 (튀르키예어)
+
+Aile günlerini kaydet, izni planla
+Tüm ailenin izinli olduğu günleri bul
+Plus, Pro veya Aile arasından seç
+Artık Singapur tatilleri de var
+Tüm yılların tatilleri ve bayramları
+
+### 앱스토어 (러시아어)
+
+Сохраняйте семейные даты и берите отгул
+Дни, когда отдыхает вся семья
+Тарифы Plus, Pro и Семья на выбор
+Теперь с праздниками Сингапура
+Каникулы и праздники за все годы
+
+### 앱스토어 (인도네시아어)
+
+Simpan hari penting keluarga dan cuti
+Temukan hari libur bersama keluarga
+Pilih Plus, Pro, atau Keluarga
+Kini mendukung hari libur Singapura
+Lihat libur dan cuti dari semua tahun
+
+### 앱스토어 (태국어)
+
+บันทึกวันสำคัญของครอบครัวและวางแผนลา
+หาวันที่ทั้งครอบครัวหยุดพร้อมกัน
+เลือก Plus, Pro หรือครอบครัว
+รองรับวันหยุดของสิงคโปร์แล้ว
+ดูวันหยุดและปิดเทอมของทุกปีได้
+
+### 앱스토어 (베트남어)
+
+Lưu ngày kỷ niệm gia đình, xin nghỉ sớm
+Tìm ngày cả nhà cùng được nghỉ
+Chọn gói Plus, Pro hoặc Gia đình
+Đã hỗ trợ ngày lễ Singapore
+Xem kỳ nghỉ và ngày lễ của mọi năm
 ## 2.3.1
 
 ### 앱스토어 (한국어)

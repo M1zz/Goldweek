@@ -181,6 +181,7 @@ struct LeaveKindEditor: View {
     @State private var startBalanceMinutes = 0
     @State private var startBalanceDays = 0.0
     @State private var didLoad = false
+    @State private var showingPaywall = false
 
     private var startMonth: Int { profiles.first?.yearStartMonth ?? 1 }
     private var currentYear: Int { LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: startMonth) }
@@ -228,6 +229,9 @@ struct LeaveKindEditor: View {
                 }
                 allowanceSection
             }
+            .sheet(isPresented: $showingPaywall) {
+                PaywallView()
+            }
             .navigationTitle(kind?.name ?? Strings.addLeaveKind)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -269,7 +273,26 @@ struct LeaveKindEditor: View {
     @ViewBuilder
     private var allowanceSection: some View {
         Section {
-            Toggle(Strings.allowanceToggle, isOn: $hasAllowance.animation())
+            // 한도는 Pro (2.4.0 전 설치자는 계속 무료). 이미 켜 둔 한도는 끄고 고칠 수 있게 그대로 둔다.
+            Toggle(isOn: Binding(
+                get: { hasAllowance },
+                set: { on in
+                    if on, !ProManager.shared.has(.leaveKindAllowance) {
+                        showingPaywall = true
+                    } else {
+                        withAnimation { hasAllowance = on }
+                    }
+                }
+            )) {
+                HStack(spacing: 6) {
+                    Text(Strings.allowanceToggle)
+                    if !ProManager.shared.has(.leaveKindAllowance) {
+                        Image(systemName: "crown.fill")
+                            .foregroundStyle(.yellow)
+                            .voDecorative()
+                    }
+                }
+            }
             if hasAllowance {
                 if LeaveLength.usesHourlyLeave || allowanceIsHours {
                 Picker(Strings.allowanceUnitLabel, selection: $allowanceIsHours) {
@@ -312,7 +335,11 @@ struct LeaveKindEditor: View {
         } header: {
             Text(Strings.allowanceSection)
         } footer: {
-            if hasAllowance { Text(Strings.allowanceFooter) }
+            if hasAllowance {
+                Text(Strings.allowanceFooter)
+            } else if !ProManager.shared.has(.leaveKindAllowance) {
+                Text(Strings.allowanceProFooter)
+            }
         }
         if hasAllowance {
             carryOverSection

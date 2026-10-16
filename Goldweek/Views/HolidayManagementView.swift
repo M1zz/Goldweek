@@ -22,6 +22,7 @@ struct HolidayManagementView: View {
     @State private var showingDeleteAlert = false
     @State private var showingAddBreak = false
     @State private var showingSchoolImport = false
+    @State private var showingPaywall = false
     @State private var breakToEdit: SchoolBreak?
     @State private var breakToDelete: SchoolBreak?
     @State private var errorMessage = ""
@@ -149,6 +150,9 @@ struct HolidayManagementView: View {
         }
         .sheet(isPresented: $showingSchoolImport) {
             SchoolCalendarImportSheet()
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
         }
         .sheet(item: $breakToEdit) { item in
             SchoolBreakEditSheet(defaultYear: selectedYear, existing: item) { name, start, end, kind in
@@ -305,10 +309,27 @@ struct HolidayManagementView: View {
                 otherYearsLink(breaksInOtherYears)
             }
 
+            // 학교 달력 가져오기는 Pro (2.4.0 전 설치자는 계속 무료). 방학을 손으로 넣는 건 무료.
             Button {
-                showingSchoolImport = true
+                if ProManager.shared.has(.schoolCalendarImport) {
+                    showingSchoolImport = true
+                } else {
+                    showingPaywall = true
+                }
             } label: {
-                Label(Strings.schoolImportTitle, systemImage: "doc.viewfinder")
+                HStack {
+                    Label(Strings.schoolImportTitle, systemImage: "doc.viewfinder")
+                    Spacer()
+                    if !ProManager.shared.has(.schoolCalendarImport) {
+                        Text("Pro")
+                            .font(.body.weight(.semibold))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.yellow)
+                            .foregroundColor(.black)
+                            .cornerRadius(4)
+                    }
+                }
                     .font(.body.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()

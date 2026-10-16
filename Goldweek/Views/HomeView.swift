@@ -327,7 +327,7 @@ struct HomeView: View {
 
     /// Pro 사용자 대상 자동 스캔 — 권한을 새로 요청하지는 않고, 이미 허용된 경우에만 조용히 탐색
     private func autoScanCalendar() async {
-        guard ProManager.shared.isPro, autoDetectEnabled else { return }
+        guard ProManager.shared.hasProTier, autoDetectEnabled else { return }
         guard CalendarService.shared.isAuthorized else { return }
 
         do {

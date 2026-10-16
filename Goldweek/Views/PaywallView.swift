@@ -15,12 +15,23 @@ struct PaywallView: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var isSuccess = false
+    @State private var selectedTier: ProTier
+    @State private var selectedProductID: String
+
+    /// - Parameter initialProductID: 처음 골라 둘 상품 (기본: 프로 연간). 스크린샷 모드에서도 쓴다.
+    init(initialProductID: String? = nil) {
+        let id = initialProductID ?? ScreenshotMode.paywallProductID ?? ProManager.yearlyProductID
+        let tier = ProManager.tier(of: id)
+        _selectedTier = State(initialValue: tier == .free ? .pro : tier)
+        _selectedProductID = State(initialValue: tier == .free ? ProManager.yearlyProductID : id)
+    }
 
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 28) {
+                VStack(spacing: 24) {
                     headerSection
+                    trimPicker
                     featuresSection
                     pricingSection
                     purchaseButtons
@@ -56,142 +67,172 @@ struct PaywallView: View {
     // MARK: - Header Section
 
     private var headerSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             ZStack {
                 Circle()
                     .fill(.yellow.opacity(0.15))
-                    .frame(width: 100, height: 100)
-
-                Circle()
-                    .fill(.yellow.opacity(0.08))
-                    .frame(width: 120, height: 120)
-
-                Image(systemName: "crown.fill")
+                    .frame(width: 84, height: 84)
+                Image(systemName: Self.icon(of: selectedTier))
                     .font(.system(.largeTitle))
                     .foregroundStyle(.yellow)
                     .voDecorative()
             }
-            .padding(.top, 8)
+            .padding(.top, 4)
 
-            VStack(spacing: 6) {
-                Text(Strings.goldweekPro)
-                    .font(.title)
-                    .fontWeight(.bold)
+            Text(Strings.trimTagline(selectedTier))
+                .font(.title2)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
 
-                Text(Strings.unlockAllFeatures)
-                    .font(.body)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
+    static func icon(of tier: ProTier) -> String {
+        switch tier {
+        case .free, .plus: return "sparkles"
+        case .pro: return "crown.fill"
+        case .family: return "person.3.fill"
+        }
+    }
+
+    // MARK: - 트림 고르기
+
+    private var trimPicker: some View {
+        HStack(spacing: 8) {
+            ForEach([ProTier.plus, .pro, .family], id: \.self) { tier in
+                let isSelected = selectedTier == tier
+                Button {
+                    selectedTier = tier
+                    selectedProductID = Self.defaultProductID(for: tier)
+                    HapticFeedback.selection()
+                } label: {
+                    VStack(spacing: 4) {
+                        Text(Strings.trimName(tier))
+                            .font(.headline)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                        Text(tier == .pro ? Strings.trimPopular : " ")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(isSelected ? Color.white.opacity(0.9) : Color.accentColor)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .foregroundStyle(isSelected ? Color.white : Color.primary)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(isSelected ? Color.accentColor : Color(.systemGray6))
+                    )
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(isSelected ? .isSelected : [])
             }
+        }
+    }
+
+    static func defaultProductID(for tier: ProTier) -> String {
+        switch tier {
+        case .free, .pro: return ProManager.yearlyProductID
+        case .plus: return ProManager.plusProductID
+        case .family: return ProManager.familyProductID
         }
     }
 
     // MARK: - Features Section
 
-    private var featuresSection: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text(Strings.featureComparison)
-                .font(.headline)
-                .fontWeight(.semibold)
-                .padding(.bottom, 12)
+    private struct TrimFeature: Hashable {
+        let icon: String
+        let color: Color
+        let title: String
+        var isSummary = false
+    }
 
-            VStack(spacing: 0) {
-                FeatureRowView(
-                    icon: "calendar.badge.checkmark",
-                    iconColor: .blue,
-                    feature: Strings.basicLeaveManagement,
-                    freeLabel: Strings.freeVersion,
-                    proLabel: Strings.proVersion,
-                    isHeader: true
-                )
-
-                Divider().padding(.leading, 52)
-
-                FeatureRowView(
-                    icon: "calendar.badge.checkmark",
-                    iconColor: .blue,
-                    feature: Strings.basicLeaveManagement,
-                    freeValue: .supported(true),
-                    proValue: .supported(true)
-                )
-
-                Divider().padding(.leading, 52)
-
-                FeatureRowView(
-                    icon: "lightbulb.fill",
-                    iconColor: .orange,
-                    feature: Strings.leaveRecommendations,
-                    freeValue: .text(Strings.limitedRecommendations),
-                    proValue: .text(Strings.unlimitedRecommendations)
-                )
-
-                Divider().padding(.leading, 52)
-
-                FeatureRowView(
-                    icon: "calendar",
-                    iconColor: .purple,
-                    feature: Strings.yearSelector,
-                    freeValue: .text(Strings.currentYearOnly),
-                    proValue: .text(Strings.allYears)
-                )
-
-                Divider().padding(.leading, 52)
-
-                FeatureRowView(
-                    icon: "gift.fill",
-                    iconColor: .pink,
-                    feature: Strings.bonusLeaveManagement,
-                    freeValue: .supported(false),
-                    proValue: .supported(true)
-                )
-
-                Divider().padding(.leading, 52)
-
-                FeatureRowView(
-                    icon: "icloud.fill",
-                    iconColor: .cyan,
-                    feature: Strings.iCloudBackup,
-                    freeValue: .supported(false),
-                    proValue: .supported(true)
-                )
-
-                Divider().padding(.leading, 52)
-
-                FeatureRowView(
-                    icon: "calendar.badge.plus",
-                    iconColor: .green,
-                    feature: Strings.systemCalendarSync,
-                    freeValue: .supported(false),
-                    proValue: .supported(true)
-                )
-
-                Divider().padding(.leading, 52)
-
-                FeatureRowView(
-                    icon: "sparkles",
-                    iconColor: AppTheme.Colors.bonus,
-                    feature: Strings.proFeatureAIAnnualPlanner,
-                    freeValue: .supported(false),
-                    proValue: .supported(true)
-                )
-            }
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(Color(.systemGray5), lineWidth: 1)
-            )
+    private var features: [TrimFeature] {
+        switch selectedTier {
+        case .free, .plus:
+            return [
+                TrimFeature(icon: "sparkles", color: AppTheme.Colors.bonus, title: Strings.proFeatureAIAnnualPlanner),
+                TrimFeature(icon: "lightbulb.fill", color: .orange, title: Strings.featUnlimitedRecs),
+                TrimFeature(icon: "calendar", color: .purple, title: Strings.featOtherYears),
+                TrimFeature(icon: "calendar.badge.plus", color: .green, title: Strings.calendarExportToggle),
+            ]
+        case .pro:
+            return [
+                TrimFeature(icon: "checkmark.seal.fill", color: .accentColor, title: Strings.trimEverythingIn(Strings.trimName(.plus)), isSummary: true),
+                TrimFeature(icon: "gift.fill", color: .pink, title: Strings.bonusLeaveManagement),
+                TrimFeature(icon: "gauge.with.needle", color: .teal, title: Strings.paywallAllowanceFeature),
+                TrimFeature(icon: "doc.viewfinder", color: .indigo, title: Strings.schoolImportTitle),
+                TrimFeature(icon: "calendar.badge.clock", color: .blue, title: Strings.autoDetectSettingTitle),
+            ]
+        case .family:
+            return [
+                TrimFeature(icon: "checkmark.seal.fill", color: .accentColor, title: Strings.trimEverythingIn(Strings.trimName(.pro)), isSummary: true),
+                TrimFeature(icon: "person.2.fill", color: .pink, title: Strings.featFamilySharing),
+            ]
         }
+    }
+
+    private var featuresSection: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(features.enumerated()), id: \.element) { index, feature in
+                if index > 0 { Divider().padding(.leading, 54) }
+                HStack(spacing: 12) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 7)
+                            .fill(feature.color.opacity(0.15))
+                            .frame(width: 30, height: 30)
+                        Image(systemName: feature.icon)
+                            .font(.system(.body))
+                            .foregroundColor(feature.color)
+                            .voDecorative()
+                    }
+                    Text(feature.title)
+                        .font(.body)
+                        .fontWeight(feature.isSummary ? .semibold : .regular)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Image(systemName: "checkmark")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.green)
+                        .voDecorative()
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 11)
+                .accessibilityElement(children: .combine)
+            }
+        }
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color(.systemGray5), lineWidth: 1)
+        )
+        .animation(.default, value: selectedTier)
     }
 
     // MARK: - Pricing Section
 
+    /// 고른 트림에서 살 수 있는 상품 (화면 순서)
+    private var tierProductIDs: [String] {
+        switch selectedTier {
+        case .free, .pro: return [ProManager.yearlyProductID, ProManager.proProductID]
+        case .plus: return [ProManager.plusProductID]
+        case .family: return [ProManager.familyProductID]
+        }
+    }
+
+    private var tierHasPrice: Bool {
+        tierProductIDs.contains { PaywallPrice.price(of: $0) != nil }
+    }
+
     private var pricingSection: some View {
         VStack(spacing: 10) {
-            if proManager.proPrice.isEmpty {
+            if !tierHasPrice {
                 // 가격 로드 실패/로딩 중 — 빈칸 대신 상태를 보여준다
                 VStack(spacing: 10) {
-                    if proManager.productLoadFailed {
+                    if proManager.productLoadFailed || proManager.hasAnyPrice {
                         HStack(spacing: 6) {
                             Image(systemName: "wifi.exclamationmark")
                                 .foregroundColor(.orange)
@@ -223,58 +264,40 @@ struct PaywallView: View {
                     RoundedRectangle(cornerRadius: 14)
                         .fill(Color(.systemGray6))
                 )
-            } else {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(Strings.goldweekPro)
-                            .font(.headline)
-                            .fontWeight(.semibold)
-
-                        Text(Strings.oneTimePurchase)
-                            .font(.body)
-                            .foregroundColor(.secondary)
+            } else if proManager.tier < selectedTier {
+                ForEach(tierProductIDs, id: \.self) { id in
+                    if let price = PaywallPrice.price(of: id) {
+                        TrimPriceCard(isSelected: selectedProductID == id,
+                                      title: id == ProManager.proProductID ? Strings.planLifetime : Strings.planYearly,
+                                      price: id == ProManager.proProductID ? price.display : Strings.yearlyPriceLabel(price.display),
+                                      caption: caption(for: id, price: price)) {
+                            selectedProductID = id
+                            HapticFeedback.selection()
+                        }
                     }
-
-                    Spacer()
-
-                    Text(proManager.proPrice)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.accentColor)
                 }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(Color.accentColor.opacity(0.08))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color.accentColor.opacity(0.3), lineWidth: 1.5)
-                )
-            }
-
-            HStack(spacing: 6) {
-                Image(systemName: "checkmark.seal.fill")
-                    .foregroundColor(.green)
-                    .font(.body)
-                Text(Strings.noSubscription)
-                    .font(.body)
-                    .foregroundColor(.secondary)
             }
         }
+    }
+
+    private func caption(for id: String, price: PaywallPrice) -> String {
+        if id == ProManager.proProductID { return Strings.oneTimePurchase }
+        if let days = PaywallPrice.trialDays(of: id) { return Strings.trialThenPrice(days, price.display) }
+        if id == ProManager.familyProductID { return Strings.familyPerPersonHint(price.perMonth(dividedBy: 6)) }
+        return Strings.perMonthHint(price.perMonth(dividedBy: 1))
     }
 
     // MARK: - Purchase Buttons
 
     @ViewBuilder
     private var purchaseButtons: some View {
-        if proManager.isPro {
-            // 이미 Pro — 구매 버튼 대신 상태를 분명히 보여 준다
+        if proManager.tier >= selectedTier {
+            // 이미 이 트림 이상 — 구매 버튼 대신 상태를 분명히 보여 준다
             HStack(spacing: 8) {
                 Image(systemName: "checkmark.seal.fill")
                     .foregroundColor(.green)
                     .voDecorative()
-                Text(Strings.proActiveMessage)
+                Text(Strings.trimIncluded)
                     .fontWeight(.semibold)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -287,28 +310,33 @@ struct PaywallView: View {
         }
     }
 
+    private var purchaseTitle: String {
+        if let days = PaywallPrice.trialDays(of: selectedProductID) { return Strings.startTrial(days) }
+        return Strings.startTrim(Strings.trimName(selectedTier))
+    }
+
     private var purchaseActions: some View {
         VStack(spacing: 12) {
-            Button(action: purchasePro) {
+            Button(action: purchase) {
                 HStack(spacing: 8) {
                     if proManager.isLoading {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle(tint: .white))
                             .scaleEffect(0.85)
                     } else {
-                        Image(systemName: "crown.fill")
+                        Image(systemName: Self.icon(of: selectedTier))
                     }
-                    Text(proManager.isLoading ? Strings.purchasing : Strings.purchase)
+                    Text(proManager.isLoading ? Strings.purchasing : purchaseTitle)
                         .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 52)
-                .background(proManager.isLoading || proManager.proPrice.isEmpty ? Color.gray : Color.accentColor)
+                .background(proManager.isLoading || !tierHasPrice ? Color.gray : Color.accentColor)
                 .foregroundColor(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
             }
             // 가격을 확인할 수 없는 상태에서는 구매를 막는다
-            .disabled(proManager.isLoading || proManager.proPrice.isEmpty)
+            .disabled(proManager.isLoading || !tierHasPrice)
 
             Button(action: restorePurchases) {
                 Text(Strings.restorePurchase)
@@ -324,16 +352,17 @@ struct PaywallView: View {
 
     private var footerSection: some View {
         VStack(spacing: 10) {
-            Text(Strings.oneTimePurchase)
-                .font(.body)
-                .foregroundColor(Color(.systemGray3))
+            Text(Strings.subscriptionDisclosure)
+                .font(.footnote)
+                .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
 
             HStack(spacing: 16) {
                 Link(Strings.termsOfService,
                      destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
                 Link(Strings.privacyPolicy,
-                     destination: URL(string: "https://m1zz.github.io/Goldweek/support.html")!)
+                     destination: GoldweekSpec.legal.privacyURL)
             }
             .font(.body)
             .foregroundColor(.secondary)
@@ -342,13 +371,14 @@ struct PaywallView: View {
 
     // MARK: - Actions
 
-    private func purchasePro() {
+    private func purchase() {
+        let tier = selectedTier
         Task {
             do {
-                try await proManager.purchase()
+                try await proManager.purchase(selectedProductID)
                 // 사용자가 취소한 경우 purchase()는 에러 없이 리턴되므로
-                // 실제 Pro가 됐을 때만 성공 알림을 띄운다
-                guard proManager.isPro else { return }
+                // 실제로 그 트림이 열렸을 때만 성공 알림을 띄운다
+                guard proManager.tier >= tier else { return }
                 UsageReportingService.record(event: "paywall_purchase:success")
                 await MainActor.run {
                     isSuccess = true
@@ -387,6 +417,169 @@ struct PaywallView: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - 트림 요금 카드
+
+private struct TrimPriceCard: View {
+    let isSelected: Bool
+    let title: String
+    let price: String
+    let caption: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isSelected ? Color.accentColor : Color(.systemGray3))
+                    .voDecorative()
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.headline)
+                    Text(caption)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
+                Text(price)
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(isSelected ? Color.accentColor : .primary)
+                    .multilineTextAlignment(.trailing)
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(isSelected ? Color.accentColor.opacity(0.08) : Color(.systemBackground))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(isSelected ? Color.accentColor : Color(.systemGray4), lineWidth: isSelected ? 2 : 1)
+            )
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+}
+
+// MARK: - 가격
+
+/// 페이월이 보여 줄 가격. App Store에서 불러온 상품이 기준이고,
+/// 스크린샷 모드(DEBUG)에서만 상품을 못 불러오면 App Store Connect에 넣은 미국 가격을 쓴다 — 심사용 화면 촬영.
+struct PaywallPrice {
+    let display: String
+    private let amount: Decimal
+    private let format: Decimal.FormatStyle.Currency
+
+    func perMonth(dividedBy people: Int) -> String {
+        (amount / Decimal(12 * max(people, 1))).formatted(format)
+    }
+
+    static func price(of id: String) -> PaywallPrice? {
+        if let product = ProManager.shared.product(id) {
+            return PaywallPrice(display: product.displayPrice, amount: product.price, format: product.priceFormatStyle)
+        }
+        guard ScreenshotMode.isActive, let usd = screenshotUSD[id] else { return nil }
+        let format = Decimal.FormatStyle.Currency(code: "USD", locale: Locale(identifier: "en_US"))
+        return PaywallPrice(display: usd.formatted(format), amount: usd, format: format)
+    }
+
+    static func trialDays(of id: String) -> Int? {
+        if ProManager.shared.product(id) != nil { return ProManager.shared.trialDays(for: id) }
+        guard ScreenshotMode.isActive else { return nil }
+        return [ProManager.yearlyProductID, ProManager.familyProductID].contains(id) ? 7 : nil
+    }
+
+    /// docs/MONETIZATION.md 의 미국 가격
+    private static let screenshotUSD: [String: Decimal] = [
+        ProManager.plusProductID: Decimal(string: "9.99")!,
+        ProManager.yearlyProductID: Decimal(string: "19.99")!,
+        ProManager.proProductID: Decimal(string: "49.99")!,
+        ProManager.familyProductID: Decimal(string: "29.99")!,
+    ]
+}
+
+// MARK: - 요금제 고르기
+
+/// 연간 구독 / 평생 구매 카드 두 장. 불러온 상품만 보인다
+/// (App Store Connect에 연간 상품이 아직 없으면 평생 카드 하나만 남는다).
+struct ProPlanPicker: View {
+    @Binding var selectedID: String
+    private let proManager = ProManager.shared
+
+    var body: some View {
+        VStack(spacing: 10) {
+            if let yearly = proManager.yearlyProduct {
+                card(id: yearly.id,
+                     title: Strings.planYearly,
+                     price: Strings.yearlyPriceLabel(yearly.displayPrice),
+                     caption: Strings.perMonthHint(Self.monthlyPrice(of: yearly)))
+            }
+            if let lifetime = proManager.lifetimeProduct {
+                card(id: lifetime.id,
+                     title: Strings.planLifetime,
+                     price: lifetime.displayPrice,
+                     caption: Strings.oneTimePurchase)
+            }
+        }
+        .onAppear(perform: fixSelection)
+        .onChange(of: proManager.products.count) { _, _ in fixSelection() }
+    }
+
+    /// 고른 상품이 목록에 없으면(연간 상품 미등록 등) 있는 것으로 옮긴다
+    private func fixSelection() {
+        guard !proManager.products.contains(where: { $0.id == selectedID }),
+              let first = proManager.products.first else { return }
+        selectedID = first.id
+    }
+
+    private func card(id: String, title: String, price: String, caption: String) -> some View {
+        let isSelected = selectedID == id
+        return Button {
+            selectedID = id
+            HapticFeedback.selection()
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isSelected ? Color.accentColor : Color(.systemGray3))
+                    .voDecorative()
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.headline)
+                    Text(caption)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
+                Text(price)
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(isSelected ? Color.accentColor : .primary)
+                    .multilineTextAlignment(.trailing)
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(isSelected ? Color.accentColor.opacity(0.08) : Color(.systemBackground))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(isSelected ? Color.accentColor : Color(.systemGray4), lineWidth: isSelected ? 2 : 1)
+            )
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    /// 연간 가격 ÷ 12 — 그 나라 통화 형식 그대로
+    static func monthlyPrice(of product: Product) -> String {
+        (product.price / 12).formatted(product.priceFormatStyle)
     }
 }
 

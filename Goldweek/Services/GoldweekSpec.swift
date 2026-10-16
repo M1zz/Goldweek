@@ -34,10 +34,13 @@ enum GoldweekSpec: LeeoAppSpec {
         marketingURL: URL(string: "https://m1zz.github.io/Goldweek/")!
     )
 
-    /// 수익모델 — 무료로 쓰다가 한 번 사면 평생(구독 아님).
+    /// 수익모델 — 무료로 쓰다가 연간 구독 또는 평생 구매로 Pro를 연다 (2.4.0부터. 그 전엔 평생 구매만).
     /// ⚠️ productID는 App Store Connect·기존 사용자 영수증과의 계약이다 — 변경 금지.
-    static let monetization = LeeoMonetization.freemium(
-        LeeoPurchaseConfig(productIDs: [ProManager.proProductID])
+    static let monetization = LeeoMonetization.freemiumSubscription(
+        LeeoSubscriptionConfig(
+            productIDs: ProManager.allProductIDs,
+            termsURL: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
+        )
     )
 
     /// "리뷰 남기기"가 App Store 작성 페이지로 바로 가게 한다.

@@ -705,6 +705,7 @@ struct ProShowcasePage: View {
     @State private var proManager = ProManager.shared
     @State private var animateFeatures = false
     @State private var isPurchasing = false
+    @State private var selectedProductID = ProManager.yearlyProductID
     @State private var alertMessage: String?
 
     private func primaryButton(_ title: String, showsProgress: Bool = false, action: @escaping () -> Void) -> some View {
@@ -737,7 +738,7 @@ struct ProShowcasePage: View {
         Task {
             defer { isPurchasing = false }
             do {
-                try await proManager.purchase()
+                try await proManager.purchase(selectedProductID)
                 if proManager.isPro {
                     UsageReportingService.record(event: "onboarding_purchase:success")
                     HapticFeedback.success()
@@ -766,7 +767,8 @@ struct ProShowcasePage: View {
             ("lightbulb.fill", Strings.proFeatureRecommendTitle, Strings.proFeatureRecommendDesc, AppTheme.Colors.bonus),
             ("gift.fill", Strings.proFeatureBonusTitle, Strings.proFeatureBonusDesc, AppTheme.Colors.compensatory),
             ("calendar", Strings.proFeatureMultiYearTitle, Strings.proFeatureMultiYearDesc, AppTheme.Colors.brand),
-            ("calendar.badge.plus", Strings.proFeatureCalendarTitle, Strings.proFeatureCalendarDesc, AppTheme.Colors.success)
+            ("calendar.badge.plus", Strings.proFeatureCalendarTitle, Strings.proFeatureCalendarDesc, AppTheme.Colors.success),
+            ("gauge.with.needle", Strings.proFeatureRulesTitle, Strings.proFeatureRulesDesc, AppTheme.Colors.brand)
         ]
     }
 
@@ -810,7 +812,7 @@ struct ProShowcasePage: View {
                     VStack(spacing: 6) {
                         Text(Strings.goldweekPro)
                             .font(.system(.title, weight: .bold))
-                        Text(Strings.proOnboardingSubtitle)
+                        Text(Strings.proOnboardingPitch)
                             .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -846,11 +848,9 @@ struct ProShowcasePage: View {
                     .background(AppTheme.Colors.success.opacity(0.12))
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                     .padding(.horizontal, 24)
-                } else if !proManager.proPrice.isEmpty {
-                    Text(Strings.oneTimePurchase)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .padding(.top, 4)
+                } else if proManager.hasAnyPrice {
+                    ProPlanPicker(selectedID: $selectedProductID)
+                        .padding(.horizontal, 24)
                 }
 
                 // CTA — 구매 버튼과 시작 버튼을 분리한다. 예전엔 가격 아래 큰 버튼이 "시작하기"라
@@ -860,13 +860,11 @@ struct ProShowcasePage: View {
                         primaryButton(Strings.getStarted, action: onComplete)
                     } else {
                         primaryButton(
-                            isPurchasing ? Strings.purchasing
-                                : proManager.proPrice.isEmpty ? Strings.purchase
-                                : Strings.unlockProWithPrice(proManager.proPrice),
+                            isPurchasing ? Strings.purchasing : Strings.startPro,
                             showsProgress: isPurchasing,
                             action: purchase
                         )
-                        .disabled(isPurchasing || proManager.proPrice.isEmpty)
+                        .disabled(isPurchasing || !proManager.hasAnyPrice)
 
                         Button(action: onComplete) {
                             Text(Strings.continueWithFree)
@@ -887,6 +885,13 @@ struct ProShowcasePage: View {
                                 .padding(.vertical, 6)
                         }
                         .disabled(isPurchasing)
+
+                        // 자동 갱신 구독 고지 — 구매 버튼과 같은 화면에 있어야 한다 (심사)
+                        Text(Strings.subscriptionDisclosure)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 .padding(.horizontal, 24)

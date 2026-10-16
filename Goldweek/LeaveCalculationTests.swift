@@ -2406,6 +2406,50 @@ final class TeacherFeedbackTests: XCTestCase {
     }
 }
 
+// MARK: - 2.4.0 유료화 정리 — 기존 설치자 판별
+
+final class MonetizationTests: XCTestCase {
+    /// App Store 최초 다운로드 빌드가 2.4.0 전(빌드 11 이하)이면 새로 Pro가 된 기능을 계속 무료로 쓴다
+    func testLegacyBuildIsDecidedByOriginalBuildNumber() {
+        XCTAssertTrue(ProManager.isLegacyBuild("1"))
+        XCTAssertTrue(ProManager.isLegacyBuild("3"))
+        XCTAssertTrue(ProManager.isLegacyBuild("11"))
+        XCTAssertFalse(ProManager.isLegacyBuild("12"))
+        XCTAssertFalse(ProManager.isLegacyBuild("40"))
+        // 샌드박스가 돌려주는 "1.0"도 숫자 앞부분으로 읽는다 (TestFlight는 어차피 Pro)
+        XCTAssertTrue(ProManager.isLegacyBuild("1.0"))
+        XCTAssertFalse(ProManager.isLegacyBuild(""))
+        XCTAssertFalse(ProManager.isLegacyBuild("abc"))
+    }
+
+    /// 연간 상품이 먼저 보이고, 평생 상품 ID는 기존 영수증과의 계약이라 바뀌면 안 된다
+    func testProductIDsKeepLifetimeContract() {
+        XCTAssertEqual(ProManager.proProductID, "com.Ysoup.LeaveWise.pro")
+        XCTAssertEqual(ProManager.yearlyProductID, "com.Ysoup.LeaveWise.pro.yearly")
+        XCTAssertEqual(ProManager.plusProductID, "com.Ysoup.LeaveWise.plus.annual")
+        XCTAssertEqual(ProManager.familyProductID, "com.Ysoup.LeaveWise.family.yearly")
+        XCTAssertEqual(Set(ProManager.allProductIDs).count, 4)
+        // 평생 구매자는 프로 트림
+        XCTAssertEqual(ProManager.tier(of: ProManager.proProductID), .pro)
+        XCTAssertEqual(ProManager.tier(of: ProManager.yearlyProductID), .pro)
+        XCTAssertEqual(ProManager.tier(of: ProManager.plusProductID), .plus)
+        XCTAssertEqual(ProManager.tier(of: ProManager.familyProductID), .family)
+        XCTAssertTrue(ProTier.family > .pro && ProTier.pro > .plus && ProTier.plus > .free)
+    }
+
+    /// 자동 갱신 고지는 심사 필수 — 어느 언어에서도 비면 안 된다
+    func testSubscriptionDisclosureInEveryLanguage() {
+        let original = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = original }
+        for language in AppLanguage.allCases {
+            LanguageManager.shared.currentLanguage = language
+            XCTAssertFalse(Strings.subscriptionDisclosure.isEmpty, "\(language)")
+            XCTAssertTrue(Strings.yearlyPriceLabel("X").contains("X"), "\(language)")
+            XCTAssertTrue(Strings.perMonthHint("X").contains("X"), "\(language)")
+        }
+    }
+}
+
 // MARK: - 가족 기념일
 
 final class FamilyAnniversaryTests: XCTestCase {
@@ -2454,6 +2498,65 @@ final class FamilyAnniversaryTests: XCTestCase {
             XCTAssertTrue(Strings.anniversaryLeadTitle("X", days: 14).contains("X"), "\(language)")
             XCTAssertTrue(Strings.anniversaryOrdinal(.birthday, 7).contains("7"), "\(language)")
             XCTAssertTrue(Strings.lunarDateLabel(month: 8, day: 15, isLeap: false).contains("15"), "\(language)")
+        }
+    }
+}
+
+/// 패밀리 · 함께 쉬기 계산
+final class FamilyTogetherTests: XCTestCase {
+    private let cal = Calendar.app
+    private func d(_ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: 2026, month: m, day: day))! }
+
+    /// 주말(토·일)만 쉬는 사람 + 추가로 쉬는 날
+    private func member(_ name: String, isMe: Bool = false, extra: [Date] = []) -> TogetherMember {
+        let keys = Set(extra.map { FamilyTogether.key($0) })
+        return TogetherMember(name: name, isMe: isMe) { date in
+            let w = self.cal.component(.weekday, from: date)
+            return w == 1 || w == 7 || keys.contains(FamilyTogether.key(date))
+        }
+    }
+
+    func testEveryoneOffNeedsThreeDaysTogether() {
+        // 2026-10-09(금) 둘 다 쉼 → 금·토·일 3일, 다른 주말 이틀은 안 셈
+        let days = FamilyTogether.days(from: d(10, 1), count: 31)
+        let breaks = FamilyTogether.togetherBreaks(members: [member("나", isMe: true, extra: [d(10, 9)]), member("지수", extra: [d(10, 9)])], days: days)
+        XCTAssertEqual(breaks.count, 1)
+        XCTAssertEqual(breaks.first?.start, d(10, 9))
+        XCTAssertEqual(breaks.first?.days, 3)
+    }
+
+    func testOneLeaveAwayFindsTheOnlyWorker() {
+        // 지수는 10/5(월)~10/9(금) 휴가 → 나만 닷새 내면 되니 안 고르고,
+        // 10/16(금) 지수만 쉬면 나 하루 연차로 3일
+        let days = FamilyTogether.days(from: d(10, 1), count: 31)
+        let me = member("나", isMe: true)
+        let jisu = member("지수", extra: [d(10, 5), d(10, 6), d(10, 7), d(10, 8), d(10, 9), d(10, 16)])
+        let found = FamilyTogether.oneLeaveAway(members: [me, jisu], days: days)
+        XCTAssertEqual(found.count, 1)
+        XCTAssertEqual(found.first?.member, "나")
+        XCTAssertTrue(found.first?.isMe == true)
+        XCTAssertEqual(found.first?.leaveDates, [d(10, 16)])
+        XCTAssertEqual(found.first?.days, 3)
+    }
+
+    func testHalfDayLeaveIsNotADayOff() {
+        let keys = FamilyTogether.fullDayLeaveKeys([
+            (d(10, 13), d(10, 14), LeaveType.annual.rawValue, nil, LeaveStatus.planned.rawValue),
+            (d(10, 20), d(10, 20), LeaveType.half.rawValue, nil, LeaveStatus.planned.rawValue),
+            (d(10, 21), d(10, 21), LeaveType.annual.rawValue, LeaveLength.hours.rawValue, LeaveStatus.planned.rawValue),
+            (d(10, 22), d(10, 22), LeaveType.annual.rawValue, nil, LeaveStatus.cancelled.rawValue),
+        ])
+        XCTAssertEqual(keys, ["2026-10-13", "2026-10-14"])
+    }
+
+    func testTogetherStringsInEveryLanguage() {
+        let original = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = original }
+        for language in AppLanguage.allCases {
+            LanguageManager.shared.currentLanguage = language
+            XCTAssertFalse(Strings.togetherTitle.isEmpty)
+            XCTAssertTrue(Strings.togetherLeaveNeeded("A", 1, 3).contains("3"))
+            XCTAssertFalse(Strings.trimName(.family).isEmpty)
         }
     }
 }
