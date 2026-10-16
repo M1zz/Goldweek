@@ -18,6 +18,7 @@ struct ContentView: View {
     @Query private var bonusLeaves: [BonusLeave]
     @Query private var customHolidays: [CustomHoliday]
     @Query private var schoolBreaks: [SchoolBreak]
+    @Query private var anniversaries: [FamilyAnniversary]
     /// 직접 만든 휴가 종류 — 달력 색·이름이 읽는 LeaveStyleStore 에 맞춰 둔다
     @Query(sort: \CustomLeaveType.createdAt) private var customLeaveTypes: [CustomLeaveType]
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
@@ -112,6 +113,11 @@ struct ContentView: View {
                     // 캘린더 앱으로 보내기를 켰으면 휴가가 바뀔 때마다 Goldweek 캘린더를 맞춘다
                     .onChange(of: calendarSyncFingerprint, initial: true) { _, _ in
                         CalendarService.shared.scheduleSync(records: leaveRecords)
+                    }
+                    // 가족 기념일 알림 — 기념일이나 휴가가 바뀌면 다시 예약 (그날 휴가가 잡혀 있으면 2주 전 알림은 뺀다)
+                    .onChange(of: anniversaryReminderKey, initial: true) { _, _ in
+                        AnniversaryReminders.refresh(anniversaries.map(AnniversaryReminders.Item.init),
+                                                     leaves: leaveRecords.filter { $0.status != .cancelled })
                     }
                     .onChange(of: timeMachineFingerprint) { _, _ in
                         TimeMachineService.shared.scheduleAutoSnapshot(context: modelContext)
@@ -218,6 +224,15 @@ struct ContentView: View {
             hasher.combine(item.endDate)
             hasher.combine(item.kindRaw)
         }
+        for item in anniversaries {
+            hasher.combine(item.id)
+            hasher.combine(item.name)
+            hasher.combine(item.relation)
+            hasher.combine(item.kindRaw)
+            hasher.combine(item.date)
+            hasher.combine(item.isLunar)
+            hasher.combine(item.reminds)
+        }
         for holiday in customHolidays {
             hasher.combine(holiday.id)
             hasher.combine(holiday.date)
@@ -225,6 +240,12 @@ struct ContentView: View {
             hasher.combine(holiday.repeatsYearly)
         }
         return hasher.finalize()
+    }
+
+    private var anniversaryReminderKey: String {
+        guard !anniversaries.isEmpty else { return "" }
+        return anniversaries.map { "\($0.id)\($0.date.timeIntervalSince1970)\($0.isLunar)\($0.reminds)\($0.displayTitle)" }.sorted().joined(separator: "|")
+            + "#" + leaveRecords.map { "\($0.startDate.timeIntervalSince1970)-\($0.endDate.timeIntervalSince1970)\($0.statusRaw)" }.joined(separator: ",")
     }
 
     /// 휴가 기록의 공유 관련 필드 변화 감지용 (개수뿐 아니라 날짜/상태 수정도 포착)
@@ -258,7 +279,8 @@ struct ContentView: View {
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
-        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(workPatternRaw)|\(shiftDaysOffRaw)|\(shiftWorkDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+        let anniversaryKeys = anniversaries.map { "\($0.date.timeIntervalSince1970)\($0.isLunar ? "L" : "")\($0.displayTitle)" }.sorted()
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(workPatternRaw)|\(shiftDaysOffRaw)|\(shiftWorkDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))|\(anniversaryKeys.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {
@@ -268,7 +290,7 @@ struct ContentView: View {
         HolidayService.homeCountryCode = profile.homeCountry?.rawValue ?? ""
         HolidayService.homeRegionCode = profile.homeRegion?.code ?? ""
         DayOffCalendar.shared.update(country: profile.country, customHolidays: customHolidays,
-                                     hiddenDates: hidden, breaks: schoolBreaks)
+                                     hiddenDates: hidden, breaks: schoolBreaks, anniversaries: anniversaries)
     }
 
     private func updateWidget() {
@@ -480,5 +502,5 @@ struct WideMainView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self], inMemory: true)
+        .modelContainer(for: [UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self, FamilyAnniversary.self], inMemory: true)
 }

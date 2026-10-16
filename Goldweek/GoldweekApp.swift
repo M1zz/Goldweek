@@ -60,6 +60,7 @@ struct GoldweekApp: App {
             CustomHoliday.self,
             SchoolBreak.self,
             CustomLeaveType.self,
+            FamilyAnniversary.self,
         ])
 
         sharedModelContainer = Self.createModelContainer(schema: schema)

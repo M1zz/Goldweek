@@ -2380,3 +2380,55 @@ final class TeacherFeedbackTests: XCTestCase {
         XCTAssertEqual(ko.first?.suggestion, .dayOff)
     }
 }
+
+// MARK: - 가족 기념일
+
+final class FamilyAnniversaryTests: XCTestCase {
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date {
+        Calendar.app.date(from: DateComponents(year: y, month: m, day: day))!
+    }
+
+    func testSolarRepeatsEveryYear() {
+        let item = FamilyAnniversary(name: "", relation: "엄마", kind: .birthday, date: d(1960, 5, 1), isLunar: false)
+        XCTAssertEqual(item.occurrence(in: 2026), d(2026, 5, 1))
+        XCTAssertEqual(item.ordinal(at: d(2026, 5, 1)), 66)
+    }
+
+    func testLeapDayFallsBackToFeb28() {
+        let item = FamilyAnniversary(name: "", relation: "", kind: .birthday, date: d(2024, 2, 29), isLunar: false)
+        XCTAssertEqual(item.occurrence(in: 2026), d(2026, 2, 28))
+        XCTAssertEqual(item.occurrence(in: 2028), d(2028, 2, 29))
+    }
+
+    /// 음력 8월 15일(추석) — 2025년 10월 6일, 2026년 9월 25일
+    func testLunarFollowsLunarDate() {
+        let item = FamilyAnniversary(name: "", relation: "", kind: .memorial, date: d(2025, 10, 6), isLunar: true)
+        XCTAssertEqual(item.occurrence(in: 2026), d(2026, 9, 25))
+        XCTAssertEqual(item.occurrence(in: 2025), d(2025, 10, 6))
+    }
+
+    func testNextOccurrenceRollsToNextYear() {
+        let item = FamilyAnniversary(name: "", relation: "", kind: .wedding, date: d(2010, 3, 1), isLunar: false)
+        XCTAssertEqual(item.nextOccurrence(from: d(2026, 3, 2)), d(2027, 3, 1))
+        XCTAssertEqual(item.nextOccurrence(from: d(2026, 3, 1)), d(2026, 3, 1))
+    }
+
+    func testDisplayTitleFallsBackToRelationAndKind() {
+        let item = FamilyAnniversary(name: "  ", relation: "Mom", kind: .birthday, date: d(1960, 5, 1), isLunar: false)
+        XCTAssertTrue(item.displayTitle.hasPrefix("Mom · "))
+        item.name = "엄마 생신"
+        XCTAssertEqual(item.displayTitle, "엄마 생신")
+    }
+
+    func testAllLanguagesHaveAnniversaryStrings() {
+        let original = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = original }
+        for language in AppLanguage.allCases {
+            LanguageManager.shared.currentLanguage = language
+            XCTAssertFalse(Strings.anniversaryRelationPresets.isEmpty, "\(language)")
+            XCTAssertTrue(Strings.anniversaryLeadTitle("X", days: 14).contains("X"), "\(language)")
+            XCTAssertTrue(Strings.anniversaryOrdinal(.birthday, 7).contains("7"), "\(language)")
+            XCTAssertTrue(Strings.lunarDateLabel(month: 8, day: 15, isLeap: false).contains("15"), "\(language)")
+        }
+    }
+}

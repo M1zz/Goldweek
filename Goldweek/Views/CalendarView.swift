@@ -568,6 +568,7 @@ struct CalendarGrid: View {
                                 isMakeupWorkday: HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country),
                                 isShiftOff: HolidayService.shiftOffKeys.contains(HolidayService.partTimeKey(date)),
                                 isChildBreak: DayOffCalendar.shared.childBreakName(on: date) != nil,
+                                isAnniversary: !DayOffCalendar.shared.anniversaryNames(on: date).isEmpty,
                                 isHomeHoliday: DayOffCalendar.shared.homeHolidayName(on: date) != nil,
                                 barVisible: showsRestBar(date),
                                 barColor: restBarColor(date),
@@ -705,6 +706,8 @@ struct DayCell: View {
     var isShiftOff: Bool = false
     /// 자녀 방학 — 날짜 위쪽에 청록 선 (참고 표시라 배경은 건드리지 않는다)
     var isChildBreak: Bool = false
+    /// 가족 기념일 — 왼쪽 위 작은 하트 (쉬는 날 표시와 겹치지 않게)
+    var isAnniversary: Bool = false
     /// 사는 곳에만 있는 공휴일 — 쉬는 날로 치지 않으면 빈 링으로, 치면 일반 공휴일처럼 보인다
     var isHomeHoliday: Bool = false
     var barVisible: Bool = false
@@ -805,6 +808,13 @@ struct DayCell: View {
                 .font(.system(isWide ? .title3 : .body, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
 
+            if isAnniversary && !isSelected {
+                Image(systemName: "heart.fill")
+                    .font(.system(size: isWide ? 10 : 7))
+                    .foregroundStyle(.pink)
+                    .offset(x: -markOffset, y: -markOffset)
+            }
+
             if (isMakeupWorkday || isShiftOff) && !isSelected {
                 Text(isShiftOff ? Strings.shiftOff : Strings.makeupWorkdayMark)
                     .font(.system(size: isWide ? 11 : 9, weight: .semibold))
@@ -816,6 +826,7 @@ struct DayCell: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Strings.accessibilityDayLabel(day: dayNumber, isToday: isToday, isHoliday: isHoliday, isLeave: isLeave, isSelected: isSelected))
         .accessibilityHint(isRecommended ? Text(Strings.recommendedSchedule) : Text(""))
+        .accessibilityValue(isAnniversary ? Text(Strings.familyAnniversaryTag) : Text(""))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
@@ -1091,6 +1102,18 @@ struct SelectedDateInfo: View {
             PartTimeDayRow(date: date, country: originCountry)
             // 교대 근무 — 이 날을 휴무/근무로
             ShiftDayRow(date: date)
+
+            ForEach(DayOffCalendar.shared.anniversaryNames(on: date), id: \.self) { name in
+                HStack {
+                    Image(systemName: "heart.fill")
+                        .foregroundStyle(.pink)
+                        .voDecorative()
+                    Text(name)
+                    Text("(\(Strings.familyAnniversaryTag))")
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityElement(children: .combine)
+            }
 
             if let childBreak = DayOffCalendar.shared.childBreakName(on: date) {
                 HStack {

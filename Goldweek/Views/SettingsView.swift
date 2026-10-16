@@ -480,6 +480,23 @@ struct SettingsView: View {
                         .accessibilityElement(children: .combine)
                     }
 
+                    // 가족 기념일 — 쉬는 날은 아니지만 가족에게는 공휴일 같은 날
+                    NavigationLink(destination: FamilyAnniversariesView()) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "heart.fill")
+                                .foregroundStyle(.pink)
+                                .frame(width: 28)
+                                .voDecorative()
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.familyAnniversariesTitle)
+                                Text(Strings.familyAnniversariesSubtitle)
+                                    .font(.body)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+
                     // 홈의 "다가오는 휴가" 카드에 공휴일을 섞을지 — 내 휴가만 보고 싶은 사람을 위한 스위치
                     Toggle(isOn: $showHolidaysInUpcoming) {
                         VStack(alignment: .leading, spacing: 2) {

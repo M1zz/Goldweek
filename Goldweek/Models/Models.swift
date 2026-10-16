@@ -1287,3 +1287,144 @@ class CustomHoliday {
         return d
     }
 }
+
+// MARK: - 가족 기념일
+
+/// 가족 기념일의 종류 — 표시 이름·아이콘·"몇 번째" 문구가 달라진다
+enum AnniversaryKind: String, CaseIterable, Identifiable {
+    case birthday
+    case wedding
+    /// 기일·제사
+    case memorial
+    case other
+
+    var id: String { rawValue }
+
+    var symbol: String {
+        switch self {
+        case .birthday: return "birthday.cake.fill"
+        case .wedding: return "heart.fill"
+        case .memorial: return "leaf.fill"
+        case .other: return "star.fill"
+        }
+    }
+}
+
+/// 가족 기념일 — 가족 안에서는 공휴일이나 다름없는 날 (생신·결혼기념일·기일).
+/// 쉬는 날은 아니다(연차 계산 그대로). 달력에 표시하고, 그날이 든 추천을 앞세우고, 미리 휴가를 챙기라고 알린다.
+/// 매년 반복이 기본이고, 음력이면 처음 날짜의 음력 월·일을 해마다 따른다.
+@Model
+final class FamilyAnniversary {
+    var id: UUID = UUID()
+    /// 직접 붙인 이름 — 비면 관계와 종류로 보여 준다 ("엄마 · 생일")
+    var name: String = ""
+    /// 누구의 날인지 (예: "엄마") — 비어 있어도 된다
+    var relation: String = ""
+    var kindRaw: String = AnniversaryKind.birthday.rawValue
+    /// 처음 날짜 (태어난 날·결혼한 날). 해마다의 날짜와 "몇 번째"를 여기서 센다
+    var date: Date = Date()
+    /// 음력 날짜 — `date` 의 음력 월·일을 해마다 양력으로 옮긴다
+    var isLunar: Bool = false
+    /// 2주 전에 휴가를 챙기라는 알림과 당일 알림
+    var reminds: Bool = true
+    var createdAt: Date = Date()
+
+    init(name: String, relation: String, kind: AnniversaryKind, date: Date, isLunar: Bool, reminds: Bool = true) {
+        self.id = UUID()
+        self.name = name
+        self.relation = relation
+        self.kindRaw = kind.rawValue
+        self.date = Calendar.app.startOfDay(for: date)
+        self.isLunar = isLunar
+        self.reminds = reminds
+        self.createdAt = Date()
+    }
+
+    var kind: AnniversaryKind {
+        get { AnniversaryKind(rawValue: kindRaw) ?? .other }
+        set { kindRaw = newValue.rawValue }
+    }
+
+    /// 그해(양력)에 이 기념일이 오는 날. 2월 29일은 평년엔 2월 28일로 당긴다.
+    /// 음력은 해에 따라 한 해에 두 번(음력 11·12월) 오거나 안 올 수 있어, 그해 안에 드는 첫 날을 고른다.
+    func occurrence(in year: Int, calendar: Calendar = .app) -> Date? {
+        Self.occurrence(of: date, isLunar: isLunar, in: year, calendar: calendar)
+    }
+
+    /// 모델 밖(추천 엔진처럼 다른 스레드)에서도 같은 규칙으로 셀 수 있게 값만 받는 판
+    static func occurrence(of date: Date, isLunar: Bool, in year: Int, calendar: Calendar = .app) -> Date? {
+        if isLunar {
+            let lunar = LunarDate.components(from: date, calendar: calendar)
+            return (year - 1...year)
+                .compactMap { LunarDate.occurrence(month: lunar.month, day: lunar.day, isLeap: lunar.isLeap,
+                                                   inLunarYearStartingIn: $0, calendar: calendar) }
+                .first { calendar.component(.year, from: $0) == year }
+        }
+        let comps = calendar.dateComponents([.month, .day], from: date)
+        guard let month = comps.month, let day = comps.day else { return nil }
+        if let d = calendar.date(from: DateComponents(year: year, month: month, day: day)),
+           calendar.component(.day, from: d) == day {
+            return d
+        }
+        // 2월 29일 → 평년엔 2월 28일
+        return calendar.date(from: DateComponents(year: year, month: month, day: day - 1))
+    }
+
+    /// 오늘 이후(오늘 포함) 가장 가까운 날
+    func nextOccurrence(from reference: Date = Date(), calendar: Calendar = .app) -> Date? {
+        let today = calendar.startOfDay(for: reference)
+        let year = calendar.component(.year, from: today)
+        return (year...year + 1).compactMap { occurrence(in: $0, calendar: calendar) }.first { $0 >= today }
+    }
+
+    /// 그날이 몇 번째인지 (2026년의 1960년생 생일 → 66). 처음 날짜 그해면 nil
+    func ordinal(at occurrence: Date, calendar: Calendar = .app) -> Int? {
+        let n = calendar.component(.year, from: occurrence) - calendar.component(.year, from: date)
+        return n > 0 ? n : nil
+    }
+}
+
+/// 음력(중국력) 변환 — 한국 음력과 같은 달력. 음력 생신·제사를 해마다 양력으로 옮길 때 쓴다.
+enum LunarDate {
+    private static func chinese(_ calendar: Calendar) -> Calendar {
+        var c = Calendar(identifier: .chinese)
+        c.timeZone = calendar.timeZone
+        return c
+    }
+
+    static func components(from date: Date, calendar: Calendar = .app) -> (month: Int, day: Int, isLeap: Bool) {
+        let comps = chinese(calendar).dateComponents([.month, .day], from: date)
+        return (comps.month ?? 1, comps.day ?? 1, comps.isLeapMonth ?? false)
+    }
+
+    /// 양력 `year` 의 설 이후 시작하는 음력 해에서 음력 월·일의 양력 날짜.
+    /// 윤달이 없는 해는 평달로, 30일이 없는 달은 29일로 당긴다.
+    static func occurrence(month: Int, day: Int, isLeap: Bool, inLunarYearStartingIn year: Int,
+                           calendar: Calendar = .app) -> Date? {
+        let lunarCal = chinese(calendar)
+        guard let midYear = calendar.date(from: DateComponents(year: year, month: 7, day: 1)) else { return nil }
+        let era = lunarCal.component(.era, from: midYear)
+        let lunarYear = lunarCal.component(.year, from: midYear)
+        for leap in (isLeap ? [true, false] : [false]) {
+            for d in stride(from: day, through: max(day - 2, 1), by: -1) {
+                var comps = DateComponents()
+                comps.era = era
+                comps.year = lunarYear
+                comps.month = month
+                comps.day = d
+                comps.isLeapMonth = leap
+                guard let date = lunarCal.date(from: comps) else { continue }
+                let check = lunarCal.dateComponents([.month, .day], from: date)
+                if check.month == month, check.day == d, (check.isLeapMonth ?? false) == leap {
+                    return calendar.startOfDay(for: date)
+                }
+            }
+        }
+        return nil
+    }
+
+    static func label(from date: Date, calendar: Calendar = .app) -> String {
+        let c = components(from: date, calendar: calendar)
+        return Strings.lunarDateLabel(month: c.month, day: c.day, isLeap: c.isLeap)
+    }
+}

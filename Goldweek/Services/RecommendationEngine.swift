@@ -75,6 +75,10 @@ class RecommendationEngine {
         let preferredLength = findPreferredLengthOpportunities(holidays: holidays, year: year, profile: profile)
         recommendations.append(contentsOf: preferredLength)
 
+        // 4-3. 가족 기념일 — 평일이면 가까운 주말까지 이어 그날을 가족과 보낼 연휴를 만든다
+        let anniversaryLeaves = findAnniversaryOpportunities(holidays: holidays, year: year)
+        recommendations.append(contentsOf: anniversaryLeaves)
+
         // 4-2. 실제 달력으로 검증 — 규칙들이 "다리 놓는 날은 평일"이라고 가정해서,
         //      중국 춘절처럼 공휴일이 이어지는 기간엔 주말·공휴일에 연차를 추천하는 일이 있었다.
         //      연차 낼 날(주말·공휴일 제외)을 다시 세어 적힌 일수와 다르면 버린다.
@@ -102,6 +106,14 @@ class RecommendationEngine {
                 scored.matchScore += 1.0
                 if !scored.tags.contains(Strings.childBreakTag) {
                     scored.tags.insert(Strings.childBreakTag, at: 0)
+                }
+            }
+            // 가족 기념일이 든 연휴 — 그날을 가족과 보낼 수 있다. 자녀 방학보다는 덜 앞세운다(하루짜리라서)
+            let anniversaries = dayOff.anniversaryNames(from: recommendation.startDate, to: recommendation.endDate)
+            if let first = anniversaries.first {
+                scored.matchScore += 0.6
+                if !scored.tags.contains(first) {
+                    scored.tags.insert(first, at: 0)
                 }
             }
             return scored
@@ -1126,6 +1138,45 @@ class RecommendationEngine {
             ))
         }
 
+        return result
+    }
+
+    /// 평일에 오는 가족 기념일마다, 연차 1~2일로 주말과 이어지는 가장 짧은 연휴 (3일 이상)
+    private func findAnniversaryOpportunities(holidays: [Holiday], year: Int) -> [LeaveRecommendation] {
+        let dayOff = DayOffCalendar.shared
+        var result: [LeaveRecommendation] = []
+        var seen = Set<Date>()
+        for item in dayOff.anniversaries {
+            guard let day = FamilyAnniversary.occurrence(of: item.date, isLunar: item.isLunar, in: year, calendar: calendar),
+                  !isNonWorkingDay(day, holidays: holidays), seen.insert(day).inserted else { continue }
+            var start = day, end = day, leaveUsed = 1
+            func absorb() {
+                while let p = calendar.date(byAdding: .day, value: -1, to: start), isNonWorkingDay(p, holidays: holidays) { start = p }
+                while let n = calendar.date(byAdding: .day, value: 1, to: end), isNonWorkingDay(n, holidays: holidays) { end = n }
+            }
+            absorb()
+            var total: Int { (calendar.dateComponents([.day], from: start, to: end).day ?? 0) + 1 }
+            // 화·목처럼 주말과 하루 떨어져 있으면 하루를 더 붙인다 (가까운 쪽)
+            if total < 3 {
+                let goRight = workdayGap(after: end, holidays: holidays) <= workdayGap(before: start, holidays: holidays)
+                if goRight, let n = calendar.date(byAdding: .day, value: 1, to: end) { end = n } else if let p = calendar.date(byAdding: .day, value: -1, to: start) { start = p }
+                leaveUsed += 1
+                absorb()
+            }
+            guard total >= 3 else { continue }
+            let names = dayOff.anniversaryNames(on: day)
+            let name = names.first ?? item.title
+            result.append(LeaveRecommendation(
+                title: Strings.anniversaryLeaveTitle(name),
+                description: Strings.anniversaryLeaveDesc(name, leaveDays: leaveUsed, totalDays: total),
+                startDate: start,
+                endDate: end,
+                requiredLeaveDays: Double(leaveUsed),
+                totalDaysOff: total,
+                tags: [Strings.familyAnniversaryTag, Strings.seasonTag(for: calendar.component(.month, from: day))],
+                reason: "가족 기념일"
+            ))
+        }
         return result
     }
 

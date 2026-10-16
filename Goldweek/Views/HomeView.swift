@@ -255,6 +255,9 @@ struct HomeView: View {
                         UpcomingLeavesSection(items: upcomingItems)
                     }
 
+                    // 45일 안의 가족 기념일 — 평일이면 그날 바로 휴가를 낼 수 있게
+                    UpcomingAnniversariesCard(profile: profile)
+
                     // 내역 안내는 **인라인**으로 — 팝오버로 띄우면 화면 맨 아래라
                     // 탭바에 물려 잘린다(여백을 줄 자리가 없다).
                     TipView(AppTips.leaveHistory)
