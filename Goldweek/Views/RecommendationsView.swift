@@ -1374,6 +1374,7 @@ struct MyRealTripPromoCard: View {
         case .newZealand: return "AKL"
         case .russia: return "SVO"   // 모스크바 셰레메티예보
         case .indonesia: return "CGK" // 자카르타
+        case .singapore: return "SIN"
         case .custom: return "ICN"   // 출발지를 알 수 없다 — 기본값
         }
     }

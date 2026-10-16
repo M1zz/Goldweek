@@ -22,6 +22,7 @@ class HolidayService {
         // 러시아는 휴일 이동, 인도네시아는 공휴일 날짜 자체를 정부가 해마다 정한다
         if country == .russia { return year <= Self.russiaOfficialLastYear }
         if country == .indonesia { return Self.hasIndonesiaOfficialSchedule(year) }
+        if country == .singapore { return Self.hasSingaporeOfficialSchedule(year) }
         if country == .custom { return true }   // 기본 공휴일이 없으니 틀릴 것도 없다
         return year <= Self.reliableDataLastYear
     }
@@ -207,6 +208,8 @@ class HolidayService {
                 result = getRussiaHolidays(for: year)
             case .indonesia:
                 result = getIndonesiaHolidays(for: year)
+            case .singapore:
+                result = getSingaporeHolidays(for: year)
             case .custom:
                 result = []   // 전부 사용자가 직접 넣는다
             }

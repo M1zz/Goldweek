@@ -500,7 +500,7 @@ class RecommendationEngine {
             opportunities.append(contentsOf: findUSAOpportunities(holidays: holidays, year: year))
 
         case .germany, .france, .uk, .canada, .australia, .spain, .italy, .brazil, .taiwan, .hongKong, .uae, .saudiArabia, .qatar, .peru,
-             .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal, .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .turkey, .egypt, .southAfrica, .morocco, .mexico, .argentina, .chile, .colombia, .newZealand, .russia, .indonesia, .custom:
+             .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal, .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .turkey, .egypt, .southAfrica, .morocco, .mexico, .argentina, .chile, .colombia, .newZealand, .russia, .indonesia, .singapore, .custom:
             // 알고리즘 기반 OptimalLeavePlannerCard가 자동 처리 (Brückentag / pont / puente / ponte)
             // 여기서는 일반적인 공휴일 연장만 제공
             opportunities.append(contentsOf: findMajorHolidayExtensions(holidays: holidays, year: year, country: country))
@@ -875,13 +875,16 @@ class RecommendationEngine {
                 $0.name.contains("国庆") || $0.name.contains("National Day") ||
                 $0.name.contains("春節") || $0.name.contains("国慶")
             }
-        case .taiwan, .hongKong:
+        case .taiwan, .hongKong, .singapore:
             // 설 연휴 — 이름은 앱 언어에 따라 달라서 여러 표기를 본다
             majorHolidays = holidays.filter {
                 $0.name.contains("春節") || $0.name.contains("春节") || $0.name.contains("農曆") || $0.name.contains("农历") ||
                 $0.name.contains("旧正月") || $0.name.contains("Lunar New Year") || $0.name.contains("춘절") || $0.name.contains("음력 설") ||
                 $0.name.contains("Año Nuevo Lunar") || $0.name.contains("Capodanno lunare") || $0.name.contains("Ano Novo Lunar") ||
-                $0.name.contains("Chinesisches Neujahr") || $0.name.contains("Nouvel An")
+                $0.name.contains("Chinesisches Neujahr") || $0.name.contains("Nouvel An") ||
+                // 싱가포르는 "Chinese New Year"
+                $0.name.contains("Chinese New Year") || $0.name.contains("Año Nuevo chino") || $0.name.contains("Capodanno cinese") ||
+                $0.name.contains("Ano-Novo Chinês")
             }.filter { !$0.isSubstitute }
         default:
             majorHolidays = []

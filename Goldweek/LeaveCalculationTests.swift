@@ -1172,6 +1172,31 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertTrue(HolidayService().getHolidays(for: 2026, country: .russia).contains { $0.name == "День Победы" })
     }
 
+    func testSingaporeHolidays() {
+        let saved = UserDefaults.standard.string(forKey: "appLanguage")
+        defer { UserDefaults.standard.set(saved, forKey: "appLanguage") }
+        UserDefaults.standard.set("en", forKey: "appLanguage")
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+        let y26 = Dictionary(uniqueKeysWithValues: HolidayService().getHolidays(for: 2026, country: .singapore).map { (f.string(from: $0.date), $0.name) })
+        // MOM 2026: 11일 + 일요일에 걸린 베삭·국경일·디파발리의 월요일 대체 3일
+        XCTAssertEqual(y26.count, 14)
+        XCTAssertEqual(y26["2026-02-17"], "Chinese New Year")
+        XCTAssertEqual(y26["2026-03-21"], "Hari Raya Puasa")
+        XCTAssertEqual(y26["2026-06-01"], "Vesak Day (substitute day)")
+        XCTAssertEqual(y26["2026-08-10"], "National Day (substitute day)")
+        XCTAssertEqual(y26["2026-11-09"], "Deepavali (substitute day)")
+        // 토요일 공휴일은 법정 대체 휴일이 없다 (2026-03-21 하리 라야 푸아사)
+        XCTAssertNil(y26["2026-03-23"])
+        XCTAssertTrue(HolidayService().isHolidayDataReliable(for: 2026, country: .singapore))
+        XCTAssertFalse(HolidayService().isHolidayDataReliable(for: 2027, country: .singapore))
+        // 발표 전 해도 설 이틀·성금요일·국경일·크리스마스는 나온다
+        let y27 = Set(HolidayService().getHolidays(for: 2027, country: .singapore).map { f.string(from: $0.date) })
+        XCTAssertTrue(y27.isSuperset(of: ["2027-02-06", "2027-02-07", "2027-02-08", "2027-03-26", "2027-08-09", "2027-12-25"]))
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_SG")).country, .singapore)
+        XCTAssertEqual(Country.singapore.continent, .asia)
+        XCTAssertFalse(Country.singapore.displayName.isEmpty)
+    }
+
     func testFirstWeekdayFollowsCountry() {
         XCTAssertEqual(Country.spain.standardFirstWeekday, 2)
         XCTAssertEqual(Country.sweden.standardFirstWeekday, 2)

@@ -52,6 +52,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
     case newZealand = "newzealand"
     case russia = "russia"           // 정부가 해마다 휴일을 옮긴다 (перенос выходных)
     case indonesia = "indonesia"     // 공휴일·공동 휴가를 해마다 SKB 로 정한다
+    case singapore = "singapore"     // 이슬람·힌두 명절 날짜를 인력부(MOM)가 해마다 발표한다
     /// 지원하지 않는 나라 — 기본 공휴일 없이 사용자가 직접 넣는다 (예: 남아공)
     case custom = "custom"
 
@@ -106,6 +107,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .newZealand: return "NZ"
         case .russia: return "RU"
         case .indonesia: return "ID"
+        case .singapore: return "SG"
         case .custom: return ""   // 어떤 기기 지역과도 맞지 않게
         }
     }
@@ -162,6 +164,7 @@ enum Country: String, CaseIterable, Identifiable, Codable {
         case .newZealand: return "en_NZ"
         case .russia: return "ru_RU"
         case .indonesia: return "id_ID"
+        case .singapore: return "en_SG"
         case .custom: return Locale.current.identifier
         }
     }
@@ -275,7 +278,7 @@ enum Continent: String, CaseIterable, Identifiable {
 extension Country {
     var continent: Continent? {
         switch self {
-        case .korea, .japan, .china, .taiwan, .hongKong, .indonesia: return .asia
+        case .korea, .japan, .china, .taiwan, .hongKong, .indonesia, .singapore: return .asia
         case .uae, .saudiArabia, .qatar, .turkey: return .middleEast
         case .germany, .france, .uk, .spain, .italy, .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal,
              .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .russia: return .europe
