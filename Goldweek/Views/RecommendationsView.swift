@@ -194,6 +194,7 @@ struct RecommendationsView: View {
         do {
             try modelContext.save()
             UsageReportingService.record(event: "recommendation_added")
+            A11yAnnounce.post(Strings.a11yRecommendationAdded(recommendation.title))
             HapticFeedback.success()
             ReviewMoments.shared.trigger(.recommendationAdded)
         } catch {
@@ -353,7 +354,7 @@ struct RecommendationList: View {
 
     @State private var showingPaywall = false
     private let proManager = ProManager.shared
-    private let freeAddLimit = 3
+    private let freeAddLimit = ProManager.freeRecommendationAddLimit
 
     var body: some View {
         LazyVStack(spacing: 16) {
@@ -555,8 +556,12 @@ struct DetailedRecommendationCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
+                // 추천 제목은 나라·언어에 따라 길어진다 — 두 줄까지, 넘치면 끝을 줄인다
                 Text("🎯 \(recommendation.title)")
                     .font(.headline)
+                    .lineLimit(2)
+                    .truncationMode(.tail)
+                    .allowsTightening(true)
                     .accessibilityLabel(Text(recommendation.title))
                     .voHeader()
 
@@ -1850,7 +1855,7 @@ struct MRTAccommodationCard: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
-                            .background(.ultraThinMaterial)
+                            .legibleBadgeBackground()
                             .clipShape(Capsule())
                             .padding(8)
                     }
@@ -1969,7 +1974,7 @@ struct MRTLiveTnaCard: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
-                            .background(.ultraThinMaterial)
+                            .legibleBadgeBackground()
                             .clipShape(Capsule())
                             .padding(8)
                     }
@@ -2091,7 +2096,7 @@ struct TravelSuggestionCard: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(.ultraThinMaterial)
+                        .legibleBadgeBackground()
                         .clipShape(Capsule())
                         .padding(10)
 
@@ -2118,7 +2123,7 @@ struct TravelSuggestionCard: View {
                     if !reasonKey.isEmpty {
                         HStack(spacing: 4) {
                             Image(systemName: reasonIcon)
-                                .font(.system(size: 9, weight: .bold))
+                                .font(.caption2.weight(.bold))
                             Text(Strings.travelReasonLabel(reasonKey))
                                 .font(.body.weight(.semibold))
                                 .fixedSize(horizontal: false, vertical: true)
@@ -2140,7 +2145,7 @@ struct TravelSuggestionCard: View {
                         Text(Strings.mrtPromoCTA)
                             .font(.body.weight(.semibold))
                         Image(systemName: "arrow.up.right")
-                            .font(.system(size: 9, weight: .bold))
+                            .font(.caption2.weight(.bold))
                     }
                     .foregroundStyle(accentColor)
                     .padding(.top, 4)
@@ -2679,7 +2684,7 @@ struct OptimalLeavePlannerCard: View {
 
         // 백그라운드 계산 (DP는 가볍지만 main 스레드 차단 방지)
         let computed = await Task.detached(priority: .userInitiated) { () -> OptimalLeavePlan in
-            LeavePlanner.optimalPlan(
+            AppSignpost.measure("OptimalPlan") { LeavePlanner.optimalPlan(
                 year: year,
                 availableLeaveDays: availableLeaveDays,
                 holidays: holidayDates,
@@ -2689,7 +2694,7 @@ struct OptimalLeavePlannerCard: View {
                 minBreakLength: 3,
                 earliestDate: Date(),
                 calendar: cal
-            )
+            ) }
         }.value
 
         plan = computed

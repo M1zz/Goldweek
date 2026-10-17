@@ -46,6 +46,43 @@ extension View {
     }
 }
 
+// MARK: - 화면 밖 변화 알리기
+
+/// 저장·삭제처럼 **화면이 거의 안 바뀌는** 일이 끝났을 때 VoiceOver 가 소리 내어 알린다.
+/// (밀어서 지우면 행이 사라질 뿐이라, 화면을 못 보는 사람은 지워졌는지 알 수 없다.)
+enum A11yAnnounce {
+    static func post(_ message: String) {
+        var text = AttributedString(message)
+        // 지금 읽고 있는 것을 끊지 않고 이어서 읽는다
+        text.accessibilitySpeechAnnouncementPriority = .high
+        AccessibilityNotification.Announcement(text).post()
+    }
+}
+
+// MARK: - 사진 위 배지 배경
+
+/// 사진 위에 흰 글자를 얹는 배지 배경.
+/// 평소에는 반투명 재질이지만 '투명도 줄이기' 를 켜면 불투명한 어두운 바탕,
+/// '대비 증가' 를 켜면 더 짙은 바탕으로 바꿔 흰 글자가 사진에 묻히지 않게 한다.
+private struct LegibleBadgeBackground: ViewModifier {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var contrast
+
+    func body(content: Content) -> some View {
+        if reduceTransparency || contrast == .increased {
+            content.background(Color.black.opacity(contrast == .increased ? 0.85 : 0.7))
+        } else {
+            content.background(.ultraThinMaterial)
+        }
+    }
+}
+
+extension View {
+    func legibleBadgeBackground() -> some View {
+        modifier(LegibleBadgeBackground())
+    }
+}
+
 // MARK: - VoiceOver Label Builders
 
 /// 화면 곳곳에서 재사용되는 VoiceOver 문구 빌더.

@@ -14,6 +14,8 @@
 import SwiftUI
 
 struct TutorialView: View {
+    /// 페이지 그림 크기 — 글자 크기 설정을 따라 커진다
+    @ScaledMetric(relativeTo: .largeTitle) private var iconSize: CGFloat = 56
     @Environment(\.dismiss) private var dismiss
     @State private var currentPage = 0
 
@@ -101,9 +103,9 @@ struct TutorialView: View {
             ZStack {
                 Circle()
                     .fill(page.tint.opacity(0.12))
-                    .frame(width: 132, height: 132)
+                    .frame(width: iconSize * 132 / 56, height: iconSize * 132 / 56)
                 Image(systemName: page.icon)
-                    .font(.system(size: 56))
+                    .font(.system(size: iconSize))
                     .foregroundStyle(page.tint)
             }
             .accessibilityHidden(true)

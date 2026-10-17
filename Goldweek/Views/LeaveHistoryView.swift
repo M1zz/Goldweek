@@ -386,6 +386,7 @@ struct LeaveHistoryView: View {
         do {
             try modelContext.save()
             HapticFeedback.success()
+            A11yAnnounce.post(Strings.a11yLeaveDeleted)
         } catch {
             logError("Failed to delete leave record: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
@@ -542,10 +543,12 @@ struct HistoryRecordRow: View {
                 }
 
                 if !record.note.isEmpty {
+                    // 메모는 길게 쓸 수 있다 — 목록에서는 세 줄까지, 전체는 편집 화면에서
                     Text(record.note)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(3)
+                        .truncationMode(.tail)
                 }
             }
 

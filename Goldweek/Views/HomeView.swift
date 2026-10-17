@@ -673,6 +673,8 @@ struct EmptyHomeCard: View {
 // MARK: - 단일문항 피로 체크인 (SIB 0~10)
 struct FatigueCheckInView: View {
     @Environment(\.dismiss) private var dismiss
+    /// 큰 숫자·그림 — 글자 크기 설정을 따라 커진다
+    @ScaledMetric(relativeTo: .largeTitle) private var heroSize: CGFloat = 40
     @State private var value: Double = 5
     /// 콘텐츠 실제 높이 — 시트를 콘텐츠에 딱 맞춰 여백을 균형 있게 (버튼이 아래로 뜨지 않게)
     @State private var contentHeight: CGFloat = 0
@@ -681,7 +683,7 @@ struct FatigueCheckInView: View {
         ScrollView {
             VStack(spacing: 20) {
                 Image(systemName: "heart.text.square.fill")
-                    .font(.system(size: 40))
+                    .font(.system(size: heroSize))
                     .foregroundStyle(AppTheme.Colors.brand)
                     .voDecorative()
 
@@ -698,7 +700,8 @@ struct FatigueCheckInView: View {
 
                 VStack(spacing: 8) {
                     Text("\(Int(value))")
-                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                        .font(.system(size: heroSize, weight: .bold, design: .rounded))
+                        .contentTransition(.numericText(value: value))
                         .foregroundStyle(AppTheme.Colors.brand)
                         .monospacedDigit()
                     Slider(value: $value, in: 0...10, step: 1)
@@ -863,6 +866,7 @@ struct LeaveStatusCard: View {
                 }
                 .popoverTip(AppTips.photoImport)
                 .accessibilityLabel(Text(Strings.importFromPhoto))
+                .accessibilityInputLabels([Text(Strings.importFromPhoto)])
 
                 Button {
                     showingAddLeave = true
@@ -875,6 +879,7 @@ struct LeaveStatusCard: View {
                         .clipShape(Circle())
                 }
                 .accessibilityLabel(Text(Strings.registerLeave))
+                .accessibilityInputLabels([Text(Strings.registerLeave), Text(Strings.addLeave)])
             }
 
             // 프로그레스 바 — 완료(파랑) / 예정(시안) / 남은(초록) 3분할

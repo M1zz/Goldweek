@@ -227,6 +227,8 @@ struct OnboardingView: View {
 // MARK: - 페이지 1: Hero
 struct HeroPage: View {
     @State private var animate = false
+    /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 28) {
@@ -247,7 +249,7 @@ struct HeroPage: View {
                         )
                     )
                     .frame(width: 280, height: 280)
-                    .scaleEffect(animate ? 1.0 : 0.85)
+                    .scaleEffect(animate || reduceMotion ? 1.0 : 0.85)
                     .opacity(animate ? 1.0 : 0.4)
 
                 ZStack {
@@ -268,7 +270,7 @@ struct HeroPage: View {
                         .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
                         .voDecorative()
                 }
-                .scaleEffect(animate ? 1.0 : 0.7)
+                .scaleEffect(animate || reduceMotion ? 1.0 : 0.7)
                 .opacity(animate ? 1.0 : 0.0)
             }
 
@@ -294,14 +296,14 @@ struct HeroPage: View {
                     .padding(.horizontal, 24)
             }
             .opacity(animate ? 1.0 : 0.0)
-            .offset(y: animate ? 0 : 20)
+            .offset(y: animate || reduceMotion ? 0 : 20)
 
             Spacer()
             Spacer()
         }
         .padding(.horizontal, 24)
         .onAppear {
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.1)) {
+            withAnimation(reduceMotion ? .easeOut(duration: 0.25) : .spring(response: 0.8, dampingFraction: 0.7).delay(0.1)) {
                 animate = true
             }
         }
@@ -310,6 +312,8 @@ struct HeroPage: View {
 
 // MARK: - 페이지 2: 가치 데모 (3일 연차로 9일 연휴)
 struct ValueDemoPage: View {
+    /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var revealedDays: Set<Int> = []
 
     // 9일 연휴 시뮬레이션: 토(주말) 일(주말) 월(공휴) 화(연차) 수(연차) 목(공휴) 금(연차) 토(주말) 일(주말)
@@ -374,7 +378,7 @@ struct ValueDemoPage: View {
                                     .foregroundStyle(.white)
                             }
                         }
-                        .scaleEffect(revealedDays.contains(index) ? 1.0 : 0.9)
+                        .scaleEffect(revealedDays.contains(index) || reduceMotion ? 1.0 : 0.9)
                     }
                 }
             }
@@ -393,6 +397,11 @@ struct ValueDemoPage: View {
         }
         .padding(.horizontal, 24)
         .onAppear {
+            // 움직임 줄이기: 하나씩 튀어나오지 않고 한 번에 서서히
+            if reduceMotion {
+                withAnimation(.easeOut(duration: 0.25)) { revealedDays = Set(dayLabels.indices) }
+                return
+            }
             // 순차적으로 reveal
             for (i, _) in dayLabels.enumerated() {
                 DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.08) {
@@ -433,6 +442,8 @@ struct FeaturesGridPage: View {
     }
 
     @State private var animateIndex = -1
+    /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 24) {
@@ -448,7 +459,7 @@ struct FeaturesGridPage: View {
                     let f = features[i]
                     FeatureCard(icon: f.0, title: f.1, description: f.2, accent: f.3)
                         .opacity(animateIndex >= i ? 1.0 : 0.0)
-                        .offset(y: animateIndex >= i ? 0 : 16)
+                        .offset(y: animateIndex >= i || reduceMotion ? 0 : 16)
                 }
             }
 
@@ -456,6 +467,10 @@ struct FeaturesGridPage: View {
         }
         .padding(.horizontal, 24)
         .onAppear {
+            if reduceMotion {
+                withAnimation(.easeOut(duration: 0.25)) { animateIndex = features.count - 1 }
+                return
+            }
             for i in 0..<features.count {
                 DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.1) {
                     withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
@@ -704,6 +719,8 @@ struct ProShowcasePage: View {
 
     @State private var proManager = ProManager.shared
     @State private var animateFeatures = false
+    /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isPurchasing = false
     @State private var selectedProductID = ProManager.yearlyProductID
     @State private var alertMessage: String?
@@ -827,8 +844,9 @@ struct ProShowcasePage: View {
                         let f = proFeatures[i]
                         ProFeatureRow(icon: f.0, title: f.1, description: f.2, accent: f.3)
                             .opacity(animateFeatures ? 1.0 : 0.0)
-                            .offset(y: animateFeatures ? 0 : 12)
-                            .animation(.spring(response: 0.5, dampingFraction: 0.85).delay(Double(i) * 0.07), value: animateFeatures)
+                            .offset(y: animateFeatures || reduceMotion ? 0 : 12)
+                            .animation(reduceMotion ? .easeOut(duration: 0.25)
+                                       : .spring(response: 0.5, dampingFraction: 0.85).delay(Double(i) * 0.07), value: animateFeatures)
                     }
                 }
                 .padding(.horizontal, 24)

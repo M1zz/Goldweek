@@ -232,6 +232,7 @@ struct CalendarView: View {
         do {
             try modelContext.save()
             HapticFeedback.success()
+            A11yAnnounce.post(Strings.a11yLeaveDeleted)
         } catch {
             logError("휴가 삭제 실패: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
@@ -262,6 +263,7 @@ struct CalendarView: View {
         do {
             try modelContext.save()
             UsageReportingService.record(event: "recommendation_added")
+            A11yAnnounce.post(Strings.a11yRecommendationAdded(recommendation.title))
             AppTips.recommendation.invalidate(reason: .actionPerformed)
             HapticFeedback.success()
             ReviewMoments.shared.trigger(.recommendationAdded)
@@ -458,6 +460,8 @@ struct MonthNavigator: View {
                     .foregroundStyle(.blue)
             }
             .accessibilityLabel(Text(Strings.previousMonth))
+            // 음성 제어: "이전 달" 말고 그 달 이름으로도 부를 수 있게
+            .accessibilityInputLabels([Text(Strings.previousMonth), Text(monthLabel(offset: -1))])
 
             Spacer()
 
@@ -473,10 +477,18 @@ struct MonthNavigator: View {
                     .foregroundStyle(.blue)
             }
             .accessibilityLabel(Text(Strings.nextMonth))
+            .accessibilityInputLabels([Text(Strings.nextMonth), Text(monthLabel(offset: 1))])
         }
         .padding(.horizontal)
         .accessibilityAction(named: Text(Strings.previousMonth), previousMonth)
         .accessibilityAction(named: Text(Strings.nextMonth), nextMonth)
+    }
+
+    /// 앞뒤 달의 이름 ("2026년 11월") — 음성 제어로 부르는 이름
+    private func monthLabel(offset: Int) -> String {
+        let target = calendar.date(byAdding: .month, value: offset, to: currentMonth) ?? currentMonth
+        return Strings.monthYearFormat(year: calendar.component(.year, from: target),
+                                       month: calendar.component(.month, from: target))
     }
 
     private func previousMonth() {
@@ -727,6 +739,12 @@ struct DayCell: View {
     /// 아이폰 듀오를 펴면 판 한 장도 폰보다 넓다(가로 약 463pt, 세로 669pt) — 칸을 키운다.
     @Environment(\.foldLayout) private var fold
     private var isWide: Bool { LayoutMode.isLargeScreen(sizeClass) || fold.isUnfolded }
+    /// '색 없이 구별' — 공휴일은 날짜에 밑줄, 추천일은 작은 별을 더한다(색만으로 구분하지 않게)
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
+    /// '대비 증가' — 오늘 링을 굵게, 흐린 보조 표시를 진하게
+    @Environment(\.colorSchemeContrast) private var contrast
+    /// 칸 모서리의 작은 표시(하트·班·휴무) — 글자 크기 설정을 따라 커진다
+    @ScaledMetric(relativeTo: .caption2) private var markFontSize: CGFloat = 9
     private var cellHeight: CGFloat { isWide ? 64 : 40 }
     private var circleSize: CGFloat { isWide ? 46 : 34 }
     private var markOffset: CGFloat { isWide ? 22 : 14 }
@@ -775,7 +793,7 @@ struct DayCell: View {
                     .frame(width: circleSize, height: circleSize)
             } else if isToday {
                 Circle()
-                    .stroke(AppTheme.Colors.brand, lineWidth: 2)
+                    .stroke(AppTheme.Colors.brand, lineWidth: contrast == .increased ? 3 : 2)
                     .frame(width: circleSize, height: circleSize)
             }
 
@@ -811,18 +829,27 @@ struct DayCell: View {
             Text("\(dayNumber)")
                 .font(.system(isWide ? .title3 : .body, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
+                .underline(differentiateWithoutColor && (isHoliday || isHomeHoliday) && !isSelected)
 
             if isAnniversary && !isSelected {
                 Image(systemName: "heart.fill")
-                    .font(.system(size: isWide ? 10 : 7))
+                    .font(.system(size: markFontSize * (isWide ? 1.1 : 0.8)))
                     .foregroundStyle(.pink)
                     .offset(x: -markOffset, y: -markOffset)
             }
 
+            // 색 없이 구별: 노란 칠만으로는 추천일을 알아볼 수 없다
+            if differentiateWithoutColor && isRecommended && !isSelected {
+                Image(systemName: "star.fill")
+                    .font(.system(size: markFontSize * (isWide ? 1.1 : 0.8)))
+                    .foregroundStyle(.orange)
+                    .offset(x: -markOffset, y: markOffset)
+            }
+
             if (isMakeupWorkday || isShiftOff) && !isSelected {
                 Text(isShiftOff ? Strings.shiftOff : Strings.makeupWorkdayMark)
-                    .font(.system(size: isWide ? 11 : 9, weight: .semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: markFontSize * (isWide ? 1.2 : 1), weight: .semibold))
+                    .foregroundStyle(contrast == .increased ? .primary : .secondary)
                     .offset(x: markOffset, y: -markOffset)
             }
         }
@@ -858,6 +885,7 @@ struct DayCell: View {
 
 // MARK: - 범례
 struct LegendView: View {
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
     var showsRecommendation: Bool = false
     var showsWarning: Bool = false
     var showsMyBreak: Bool = false
@@ -880,7 +908,8 @@ struct LegendView: View {
             }
             LegendItem(color: AppTheme.Colors.weekend, text: Strings.weekend)
             if showsRecommendation {
-                LegendItem(color: .yellow, text: Strings.tabRecommendations)
+                LegendItem(color: .yellow, text: Strings.tabRecommendations,
+                           symbol: differentiateWithoutColor ? "star.fill" : nil)
             }
             if showsWarning {
                 LegendItem(color: AppTheme.Colors.compensatory, text: Strings.burnoutWarningLegend, dashed: true)
@@ -909,10 +938,17 @@ struct LegendItem: View {
     var dashed = false
     /// 사는 곳 공휴일처럼 빈 링으로 그린다
     var hollow = false
+    /// '색 없이 구별' 일 때 점 대신 그리는 기호 — 달력 칸에 붙는 기호와 같다
+    var symbol: String? = nil
 
     var body: some View {
         HStack(spacing: 4) {
-            if hollow {
+            if let symbol {
+                Image(systemName: symbol)
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
+                    .voDecorative()
+            } else if hollow {
                 Circle()
                     .stroke(color, lineWidth: 1.5)
                     .frame(width: 8, height: 8)
@@ -1264,7 +1300,7 @@ struct CalendarRecommendationSection: View {
     @State private var showingPaywall = false
     private let proManager = ProManager.shared
     /// 무료로 등록할 수 있는 추천 수 — 추천 화면과 같은 규칙을 따른다.
-    private let freeAddLimit = 3
+    private let freeAddLimit = ProManager.freeRecommendationAddLimit
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {

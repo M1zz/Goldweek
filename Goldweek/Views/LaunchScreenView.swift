@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LaunchScreenView: View {
+    /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isAnimating = false
 
     var body: some View {
@@ -33,7 +35,7 @@ struct LaunchScreenView: View {
                     Image(systemName: "calendar.badge.clock")
                         .font(.system(.largeTitle, weight: .medium))
                         .foregroundStyle(.white)
-                        .scaleEffect(isAnimating ? 1.0 : 0.8)
+                        .scaleEffect(isAnimating || reduceMotion ? 1.0 : 0.8)
                         .opacity(isAnimating ? 1.0 : 0.7)
                         .voDecorative()
                 }
