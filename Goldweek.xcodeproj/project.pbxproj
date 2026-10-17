@@ -10,6 +10,7 @@
 		10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */; };
 		1F30894D9E1BC580DD2EC7F1 /* FoldPanes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BD92084C0B9068BED80207 /* FoldPanes.swift */; };
 		236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */; };
+		29CFA424077E4FC938B27794 /* GoldweekRoadmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7E7019BF358938CD858EB3 /* GoldweekRoadmap.swift */; };
 		3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F973B8901CC9124460DC0A /* PartTimeDays.swift */; };
 		5CDAC8A0B908A3183B17E747 /* LeaveKinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79243653112DBACB8C8953B /* LeaveKinds.swift */; };
 		66A2BBF0A63A4632A187F5D2 /* Strings+Monetization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */; };
@@ -199,6 +200,7 @@
 		FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+FamilyAnniversary.swift"; sourceTree = "<group>"; };
 		FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyAnniversaryView.swift; sourceTree = "<group>"; };
 		FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyTogetherView.swift; sourceTree = "<group>"; };
+		FC7E7019BF358938CD858EB3 /* GoldweekRoadmap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoldweekRoadmap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -376,6 +378,7 @@
 				B2000020 /* LeaveUsageCalculator.swift */,
 				B2000002 /* UsageReportingService.swift */,
 				B2000003 /* UsageInsights.swift */,
+				FC7E7019BF358938CD858EB3 /* GoldweekRoadmap.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -638,6 +641,7 @@
 				66A2BBF0A63A4632A187F5D2 /* Strings+Monetization.swift in Sources */,
 				10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */,
 				1F30894D9E1BC580DD2EC7F1 /* FoldPanes.swift in Sources */,
+				29CFA424077E4FC938B27794 /* GoldweekRoadmap.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

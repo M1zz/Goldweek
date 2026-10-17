@@ -1156,6 +1156,11 @@ struct SettingsView: View {
                         Label(Strings.sendFeedback, systemImage: "envelope.badge")
                     }
 
+                    // 앞으로 만들 기능 — 원본은 GoldweekRoadmap.swift
+                    NavigationLink(destination: RoadmapScreen()) {
+                        Label(RoadmapL10n.entry, systemImage: "map")
+                    }
+
                     Button {
                         if let id = GoldweekSpec.appStoreID {
                             LeeoReviewRequest.openWriteReview(appStoreID: id)
