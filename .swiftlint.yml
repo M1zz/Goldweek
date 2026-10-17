@@ -1,0 +1,49 @@
+# SwiftLint — 최소 규칙으로 시작한다 (클립키보드와 같은 방식).
+#
+# ⚠️ 의도적으로 몇 개만 켠다. 모든 규칙을 걸면 경고가 수천 건 쏟아지고, 그러면 아무도 안 본다.
+#    여기 있는 규칙은 "나오면 고친다"는 뜻이다. 규칙을 늘릴 땐 한 번에 하나씩, 기존 위반을 0으로 만든 뒤에.
+#
+# 실행: swiftlint            (경고 확인)
+#       swiftlint --strict   (CI — 경고도 실패 처리)
+
+only_rules:
+  - force_try          # try! — 새로 들어오는 것을 막는다
+  - force_cast         # as! — 크래시 원인
+  - file_length        # 파일 비대화 방지
+
+included:
+  - Goldweek
+  - widget
+
+# 시험 코드는 뺀다 — 시험에서 강제 언랩·try! 는 "여기서 바로 실패하라"는 관용 표현이다.
+excluded:
+  - build
+  - DerivedData
+  - .build
+  - docs
+  - scripts
+  - Goldweek/BurnoutEngineTests.swift
+  - Goldweek/DataProtectionTests.swift
+  - Goldweek/LeaveCalculationTests.swift
+  - Goldweek/LeaveTableParserTests.swift
+  - Goldweek/MaturityFeatureTests.swift
+  - Goldweek/UsageInsightsTests.swift
+  - GoldweekUITests
+  # 23개 언어 문구 표 — 언어 수만큼 길어지는 것이 정상이라 길이 규칙의 대상이 아니다
+  - Goldweek/Utilities/Strings.swift
+  - Goldweek/Utilities/Strings+LeaveCustomization.swift
+  - Goldweek/Services/WorldHolidays.swift
+
+file_length:
+  # 지금 가장 긴 화면(RecommendationsView ~3200줄)을 줄여 가는 게 목표.
+  # 처음부터 조이면 한꺼번에 걸려 실효가 없어 넉넉하게 시작한다.
+  warning: 2500
+  error: 4000
+  ignore_comment_only_lines: true
+
+# 지금 남은 try! 12건은 대부분 #Preview 의 저장소 만들기·정규식 상수라 경고로 시작한다.
+# 0 으로 줄인 뒤 error 로 올린다.
+force_try:
+  severity: warning
+
+reporter: "xcode"

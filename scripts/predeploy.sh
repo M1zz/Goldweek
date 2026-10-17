@@ -41,11 +41,14 @@ if [ -z "$DEST_ID" ]; then
 fi
 DEST="platform=iOS Simulator,id=$DEST_ID"
 
-echo "🧪 전체 테스트 실행 ($SCHEME)"
+# 단위 시험만 게이트로 돈다. UI 시험(GoldweekUITests)은 실제 앱을 띄워 몇 분 걸리고
+# 시뮬레이터 상태에 따라 흔들릴 수 있어 배포를 막는 데 쓰지 않는다 — Xcode 에서 스킴 시험으로 돌린다.
+echo "🧪 단위 테스트 실행 ($SCHEME)"
 xcodebuild test \
   "$PROJECT_FLAG" "$PROJECT" \
   -scheme "$SCHEME" \
   -destination "$DEST" \
+  -only-testing:GoldweekTests \
   -quiet
 
 echo ""
