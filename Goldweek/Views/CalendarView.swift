@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import LeeoKit
 
 struct CalendarView: View {
     @Bindable var profile: UserProfile
@@ -502,6 +503,7 @@ struct CalendarGrid: View {
 
     private let calendar = Calendar.app
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.foldLayout) private var fold
     @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
 
     /// 달력 첫 칸의 요일 (1=일, 2=월, 7=토)
@@ -582,7 +584,7 @@ struct CalendarGrid: View {
                         .buttonStyle(.plain)
                     } else {
                         Color.clear
-                            .frame(height: LayoutMode.isLargeScreen(horizontalSizeClass) ? 64 : 40)
+                            .frame(height: LayoutMode.isLargeScreen(horizontalSizeClass) || fold.isUnfolded ? 64 : 40)
                             .accessibilityHidden(true)
                     }
                 }
@@ -722,7 +724,9 @@ struct DayCell: View {
 
     // iPad·Mac 처럼 넓으면 칸을 키운다 — 폰 크기 그대로면 넓은 화면에서 달력이 작고 허전하다
     @Environment(\.horizontalSizeClass) private var sizeClass
-    private var isWide: Bool { LayoutMode.isLargeScreen(sizeClass) }
+    /// 아이폰 듀오를 펴면 판 한 장도 폰보다 넓다(가로 약 463pt, 세로 669pt) — 칸을 키운다.
+    @Environment(\.foldLayout) private var fold
+    private var isWide: Bool { LayoutMode.isLargeScreen(sizeClass) || fold.isUnfolded }
     private var cellHeight: CGFloat { isWide ? 64 : 40 }
     private var circleSize: CGFloat { isWide ? 46 : 34 }
     private var markOffset: CGFloat { isWide ? 22 : 14 }
@@ -1285,10 +1289,13 @@ struct CalendarRecommendationSection: View {
                         if requiresPro {
                             showingPaywall = true
                         } else {
+                            FoldLeavePreview.shared.clear()
                             onAdd(recommendation)
                         }
                     }
                 )
+                // 아이폰 듀오를 펴면 눌러서 고를 수 있다 — 오른쪽 현황에 넣은 뒤 숫자가 미리 그려진다.
+                .foldPreviewSelectable(recommendation, isAdded: addedIDs.contains(recommendation.id))
             }
         }
         .sheet(isPresented: $showingPaywall) {

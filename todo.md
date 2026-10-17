@@ -2,6 +2,18 @@
 
 ## 진행 중
 
+### 아이폰 듀오 대응 (2026-10-17, 듀오 시뮬레이터 · Mac Catalyst 빌드 성공 · `-FoldPretend` 세로 화면 확인 · 실기기 확인 안 함)
+시안: https://claude.ai/artifact/K6qv6q4fJwivvimcBBhrcA (골드위크 듀오 시안)
+- [x] LeeoKit 3.21.0 Fold 모듈로 올림 · 탭 화면에 `.foldAware()` — 시트 · 알림창이 접힌 선을 비킨다
+- [x] 펴면 왼쪽(세로면 아래) 캘린더 · 가족 · 설정 | 오른쪽(위) 현황. 현황 탭은 오른쪽 판이 되고 탭 막대는 셋 (`Views/FoldPanes.swift`)
+- [x] 탭 구조를 그대로 두고 `FoldSplitView` 로 나눠, 펴고 접어도 보던 달 · 시트가 남는다 (`WideMainView` if/else 를 타지 않는다)
+- [x] 추천 카드를 누르면 현황 막대에 빗금 칸 + "추가하면 남은 연차 N일" (`FoldLeavePreview`, 23개 언어)
+- [x] 가족 탭 오른쪽: 패밀리면 다 같이 쉬는 날(`FamilyTogetherView`), 아니면 현황. 잠금은 그대로
+- [x] 펼친 판에서는 달력 칸을 넓은 화면 크기(64pt)로
+- [ ] 추천 고르기 전용 화면(목록 | 그 연휴를 칠한 달력) — 지금은 캘린더 탭 안 추천 목록 + 오른쪽 현황 미리보기
+- [ ] ⚠️ Xcode 27.0 빌드는 듀오에서 호환 틀(아이폰 크기)로 뜬다. 27.1 로 빌드해야 실제로 펼친 배치가 켜진다
+- [ ] 가로로 편 화면 · 추천 미리보기 탭 · 실기기 확인
+
 ### 시작 중 강제 종료(0xdead10cc) — 저장소를 App Group 밖으로 (2026-10-14)
 - [x] 허브 "메모리 부족" 2건(2.3.0·2.2.2, iPhone 11·11 Pro Max) 심볼 풀이: `GoldweekApp.init` → `createModelContainer` → SQLite 안에서 종료
 - [x] 원인: App Group 엔타이틀먼트 때문에 SwiftData 저장소가 공유 컨테이너에 있었음. 프리워밍으로 미리 뜬 앱이 저장소를 여는 도중 정지 → 공유 파일 잠금을 쥔 채 정지라 iOS가 0xdead10cc로 죽임 (메모리 문제 아님)

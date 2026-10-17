@@ -424,7 +424,9 @@ struct MainTabView: View {
                 }
                 .tag(0)
 
-            CalendarView(profile: profile)
+            // 아이폰 듀오를 펴면 왼쪽(세로면 아래)에 이 탭, 오른쪽(위)에 현황이 선다 (→ Views/FoldPanes.swift).
+            // 접혀 있거나 보통 아이폰이면 `FoldTab` 은 이 탭만 그린다 — 지금 화면 그대로.
+            FoldTab(profile: profile) { CalendarView(profile: profile) }
                 .tabItem {
                     Image(systemName: "calendar")
                     Text(Strings.tabCalendar)
@@ -432,7 +434,7 @@ struct MainTabView: View {
                 .tag(1)
 
             if hasSharedSchedules {
-                FamilyView(profile: profile)
+                FoldTab { FamilyView(profile: profile) } result: { FoldFamilyResult(profile: profile) }
                     .tabItem {
                         Image(systemName: "person.2.fill")
                         Text(Strings.tabFamily)
@@ -440,7 +442,7 @@ struct MainTabView: View {
                     .tag(2)
             }
 
-            SettingsView(profile: profile)
+            FoldTab(profile: profile) { SettingsView(profile: profile) }
                 .tabItem {
                     Image(systemName: "gearshape.fill")
                     Text(Strings.tabSettings)
@@ -448,6 +450,12 @@ struct MainTabView: View {
                 .tag(3)
         }
         .tint(Color(red: 0.0, green: 0.4, blue: 0.9))
+        // 펴면 시스템 탭바 대신 고르는 쪽 판 바닥에 막대가 선다. 현황은 늘 오른쪽 판에 있다.
+        .foldTabBar(items: FoldTabs.items(showsFamily: hasSharedSchedules),
+                    selected: selectedTab == 0 ? 1 : selectedTab) { selectedTab = $0 }
+        .foldHomeTabRedirect(selectedTab: $selectedTab)
+        // 창 크기로 접힘을 재서 아래로 흘린다. 시트 · 알림창도 접힌 선을 비킨다 (LeeoKit Fold).
+        .foldAware()
         .sheet(isPresented: $showingScreenshotPaywall) { PaywallView() }
     }
 }

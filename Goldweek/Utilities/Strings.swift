@@ -2163,6 +2163,35 @@ enum Strings {
 
     /// 일수 표기 — 영어의 "1 days"를 막는다.
     /// (`dayUnitSuffix`는 숫자에 그냥 붙이는 접미사라 단수를 구분하지 못한다)
+    /// 아이폰 듀오를 펴고 추천을 골랐을 때 현황 카드 아래 한 줄. `daysText` 는 `dayCount` 결과.
+    static func foldAddPreview(_ daysText: String) -> String {
+        switch lang {
+        case .korean: return "추가하면 남은 연차 \(daysText)"
+        case .english: return "If added: \(daysText) left"
+        case .japanese: return "追加すると残り\(daysText)"
+        case .chinese: return "添加后剩余\(daysText)"
+        case .chineseTraditional: return "加入後剩餘\(daysText)"
+        case .german: return "Nach dem Hinzufügen: \(daysText) übrig"
+        case .french: return "Si ajouté : il reste \(daysText)"
+        case .spanish: return "Si lo añades: quedan \(daysText)"
+        case .italian: return "Se aggiunto: restano \(daysText)"
+        case .portuguese: return "Se adicionar: restam \(daysText)"
+        case .dutch: return "Na toevoegen: \(daysText) over"
+        case .swedish: return "Om du lägger till: \(daysText) kvar"
+        case .norwegian: return "Hvis du legger til: \(daysText) igjen"
+        case .danish: return "Hvis du tilføjer: \(daysText) tilbage"
+        case .finnish: return "Lisäämisen jälkeen jäljellä \(daysText)"
+        case .polish: return "Po dodaniu zostanie \(daysText)"
+        case .czech: return "Po přidání zbývá \(daysText)"
+        case .greek: return "Αν προστεθεί: απομένουν \(daysText)"
+        case .turkish: return "Eklenirse \(daysText) kalır"
+        case .russian: return "Если добавить, останется \(daysText)"
+        case .indonesian: return "Jika ditambahkan: sisa \(daysText)"
+        case .thai: return "ถ้าเพิ่ม จะเหลือ \(daysText)"
+        case .vietnamese: return "Nếu thêm: còn \(daysText)"
+        }
+    }
+
     static func dayCount(_ value: Double) -> String {
         let text = formatLeave(value)
         switch lang {

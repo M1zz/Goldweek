@@ -821,6 +821,14 @@ struct LeaveStatusCard: View {
     private var isLeisure: Bool { profile.userType == .leisure }
     private var hasGoal: Bool { profile.totalAnnualLeave > 0 }
 
+    /// 아이폰 듀오를 펴고 캘린더에서 고른 추천의 연차 일수. 고른 것이 없으면 0.
+    /// 고르는 일은 펼친 화면에서만 생기고, 접으면 거둔다(→ FoldPanes.swift `foldHomeTabRedirect`).
+    private var previewDays: Double {
+        guard !isLeisure || hasGoal else { return 0 }
+        let preview = FoldLeavePreview.shared
+        return preview.isShowing ? preview.leaveDays : 0
+    }
+
     var body: some View {
         VStack(spacing: 16) {
             // 헤더 — 보너스 포함 여부는 설정 화면에서 제어한다.
@@ -876,6 +884,7 @@ struct LeaveStatusCard: View {
                     let usedFrac   = min(max(displayUsed  / total, 0), 1)
                     let plannedFrac = min(max(plannedLeave / total, 0), 1 - usedFrac)
                     let remFrac    = max(1 - usedFrac - plannedFrac, 0)
+                    let previewFrac = min(max(previewDays / total, 0), remFrac)
                     let w = geometry.size.width
 
                     ZStack(alignment: .leading) {
@@ -892,12 +901,17 @@ struct LeaveStatusCard: View {
                                 Color.cyan.opacity(0.85)
                                     .frame(width: max(w * plannedFrac - 1, 0))
                             }
-                            if remFrac > 0 {
+                            // 아이폰 듀오: 왼쪽에서 고른 추천을 넣으면 줄어들 자리 (→ FoldPanes.swift)
+                            if previewFrac > 0 {
+                                FoldPreviewStripes()
+                                    .frame(width: max(w * previewFrac - 1, 0))
+                            }
+                            if remFrac - previewFrac > 0 {
                                 let remColors: [Color] = isLeisure
                                     ? [.purple, .pink]
                                     : (includeBonusInStatus && remainingBonusLeave > 0 ? [AppTheme.Colors.bonus, Color.yellow] : [.green, .mint])
                                 LinearGradient(colors: remColors, startPoint: .leading, endPoint: .trailing)
-                                    .frame(width: max(w * remFrac, 0))
+                                    .frame(width: max(w * (remFrac - previewFrac), 0))
                             }
                         }
                         .clipShape(Capsule())
@@ -956,6 +970,19 @@ struct LeaveStatusCard: View {
                 }
             }
             .voCard(VoiceOverLabel.leaveBalance(total: totalLeave, used: displayUsed, remaining: effectiveRemaining))
+
+            if previewDays > 0 {
+                HStack(spacing: 8) {
+                    FoldPreviewStripes()
+                        .frame(width: 22, height: 14)
+                        .clipShape(Capsule())
+                    Text(Strings.foldAddPreview(Strings.dayCount(max(effectiveRemaining - previewDays, 0))))
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.blue)
+                    Spacer(minLength: 0)
+                }
+                .transition(.opacity)
+            }
 
             // 보너스 연차 사용 현황 — 부여받은 보너스가 있으면 항상 표시
             if !isLeisure, grantedBonusLeave > 0 {
