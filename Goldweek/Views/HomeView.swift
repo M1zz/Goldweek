@@ -756,6 +756,15 @@ struct FatigueCheckInView: View {
 // MARK: - 연차 현황 카드
 struct LeaveStatusCard: View {
     @Bindable var profile: UserProfile
+    /// 숫자 색 — 밝은 바탕에서 시안·초록은 글자로 쓰기엔 옅다(대비 4.5:1 미만, 접근성 자동 점검).
+    /// 밝은 모드에서는 같은 색 계열의 짙은 쪽을, 어두운 모드에서는 원래 밝은 색을 쓴다.
+    @Environment(\.colorScheme) private var colorScheme
+    private var plannedNumberColor: Color {
+        colorScheme == .dark ? .cyan : Color(red: 0.0, green: 0.45, blue: 0.58)
+    }
+    private var remainingNumberColor: Color {
+        colorScheme == .dark ? .green : Color(red: 0.10, green: 0.48, blue: 0.20)
+    }
     @Query(filter: #Predicate<BonusLeave> { $0.isUsed == false })
     private var activeBonusLeaves: [BonusLeave]
     @Query private var allBonusLeaves: [BonusLeave]
@@ -948,7 +957,7 @@ struct LeaveStatusCard: View {
                         .minimumScaleFactor(0.75)
                     Text("\(Strings.dayCount(plannedLeave))")
                         .font(.title2.bold())
-                        .foregroundStyle(.cyan)
+                        .foregroundStyle(plannedNumberColor)
                 }
 
                 Spacer()
@@ -969,7 +978,7 @@ struct LeaveStatusCard: View {
                             .font(.title2.bold())
                             .foregroundStyle(
                                 isLeisure ? .purple
-                                : includeBonusInStatus && remainingBonusLeave > 0 ? AppTheme.Colors.bonus : .green
+                                : includeBonusInStatus && remainingBonusLeave > 0 ? AppTheme.Colors.bonus : remainingNumberColor
                             )
                     }
                 }
@@ -1379,21 +1388,23 @@ struct UpcomingLeaveRow: View {
                         .font(.body.bold())
                 }
 
+                // 회색 카드 위의 시스템 보조색은 대비가 모자라다(접근성 자동 점검) — 본문색을 조금 덜어 쓴다
                 Text(dateRangeText)
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.primary.opacity(0.72))
             }
 
             Spacer()
 
             VStack(alignment: .trailing) {
+                // 빨강·파랑 글자는 회색 바탕에서 큰 글자(3:1)일 때만 대비를 넘는다
                 Text("D-\(daysUntil)")
-                    .font(.headline)
+                    .font(.title3.bold())
                     .foregroundStyle(item.kind == .holiday ? .red : .blue)
 
                 Text(trailingText)
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.primary.opacity(0.72))
             }
         }
         .padding()
@@ -2020,8 +2031,7 @@ struct BurnoutPaceCard: View {
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)   // "Сегодня" 가 "Сегодн/я" 로 끊기지 않게
+                // 한 줄로 묶어 줄이던 것을 풀고, 대신 칸 폭을 글자 크기에 맞춰 키운다(todayNodeWidth)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -2076,13 +2086,18 @@ struct BurnoutPaceCard: View {
             }
             .frame(width: w)
         }
-        .frame(height: 68)
+        // 높이를 글자 크기에 맞춰 키운다 — 68 로 묶어 두면 칸 제목이 두 줄이 될 때(좁은 폭·큰 글씨) 값이 잘렸다
+        .frame(height: timelineHeight)
     }
+
+    /// 점 + 제목 두 줄 + 값 한 줄이 들어가는 높이 (본문 크기 기준 88)
+    @ScaledMetric(relativeTo: .body) private var timelineHeight: CGFloat = 88
 
     /// 연결선이 선으로 보이려면 최소 이만큼은 있어야 한다 — 이보다 좁아지면 양 끝 칸을 줄인다.
     private var minTrackWidth: CGFloat { 120 }
     /// '오늘' 표식(동그라미 + 글자)의 폭 — 트랙 가장자리에서 멈추는 기준.
-    private var todayNodeWidth: CGFloat { 64 }
+    /// "Сегодня" 가 본문 크기에서 한 줄에 들어가는 폭, 글자 크기 설정을 따라 커진다.
+    @ScaledMetric(relativeTo: .body) private var todayNodeWidth: CGFloat = 76
     /// 양 끝 칸의 점 중심 높이 — 선을 그 점들과 같은 높이에 맞춘다.
     private var trackDotY: CGFloat { 5 }
 
@@ -2098,11 +2113,12 @@ struct BurnoutPaceCard: View {
             Circle()
                 .fill(hasData ? color : Color(.systemGray4))
                 .frame(width: 10, height: 10)
+            // 줄 수를 묶지 않는다 — 큰 글씨에서 제목이 "Next br…" 로 잘렸다(접근성 자동 점검)
             Text(title)
                 .font(.body)
                 .foregroundStyle(.secondary)
-                .lineLimit(2)
                 .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
             Text(value)
                 .font(.body.weight(.semibold))
                 .foregroundStyle(hasData ? .primary : .secondary)
