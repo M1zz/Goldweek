@@ -1,5 +1,168 @@
 # Goldweek 릴리즈 노트
 
+## 2.4.1
+
+### 앱스토어 (한국어)
+
+설정에서 내 혜택과 쓰는 양을 볼 수 있어요
+오퍼 코드를 앱 안에서 바로 쓸 수 있어요
+큰 글씨와 색 없이 구별하기를 더 잘 지원해요
+업데이트 소식을 앱을 열 때 한 번 알려 드려요
+
+### App Store (English)
+
+See your plan’s benefits in Settings
+Redeem offer codes right in the app
+Better with larger text and no colors
+See what’s new once after each update
+
+### 앱스토어 (일본어)
+
+設定で特典と利用状況を確認できます
+オファーコードをアプリ内で使えます
+大きな文字や色以外の区別に対応しました
+アップデート内容を初回に一度お知らせします
+
+### 앱스토어 (중국어 간체)
+
+在设置中查看你的权益和使用情况
+可在应用内直接兑换优惠码
+更好地支持大字体和不用颜色区分
+更新后首次打开时介绍新功能
+
+### 앱스토어 (독일어)
+
+Deine Vorteile in den Einstellungen
+Angebotscodes direkt in der App einlösen
+Besser mit großer Schrift
+Neuigkeiten einmal nach jedem Update
+
+### 앱스토어 (프랑스어)
+
+Vos avantages et usages dans Réglages
+Codes promo à utiliser dans l’app
+Mieux adapté aux grands textes
+Les nouveautés après chaque mise à jour
+
+### 앱스토어 (스페인어)
+
+Mira tus ventajas y su uso en Ajustes
+Canjea códigos de oferta en la app
+Mejor con texto grande y sin color
+Novedades tras cada actualización
+
+### 앱스토어 (이탈리아어)
+
+Vantaggi e utilizzo in Impostazioni
+Riscatta i codici offerta nell’app
+Meglio con testo grande e senza colori
+Le novità dopo ogni aggiornamento
+
+### 앱스토어 (포르투갈어 브라질)
+
+Veja seus benefícios e uso em Ajustes
+Resgate códigos de oferta no app
+Melhor com texto grande e sem cores
+Novidades uma vez após cada atualização
+
+### 앱스토어 (중국어 번체)
+
+在設定中查看你的權益和使用情形
+可在 App 內直接兌換優惠代碼
+更好地支援大字體和不以顏色區分
+更新後首次開啟時介紹新功能
+
+### 앱스토어 (네덜란드어)
+
+Je voordelen in Instellingen
+Wissel aanbiedingscodes in de app in
+Beter met grote tekst en zonder kleur
+Eén keer zien wat nieuw is na een update
+
+### 앱스토어 (스웨덴어)
+
+Se dina förmåner och din användning
+Lös in erbjudandekoder direkt i appen
+Bättre med stor text och utan färg
+Se nyheterna efter varje uppdatering
+
+### 앱스토어 (노르웨이어 보크말)
+
+Se fordelene dine i Innstillinger
+Løs inn tilbudskoder rett i appen
+Bedre med stor tekst og uten farger
+Se nyhetene etter hver oppdatering
+
+### 앱스토어 (덴마크어)
+
+Se dine fordele i Indstillinger
+Indløs tilbudskoder direkte i appen
+Bedre med stor tekst og uden farver
+Se nyhederne efter hver opdatering
+
+### 앱스토어 (핀란드어)
+
+Näe etusi ja käyttösi asetuksista
+Lunasta tarjouskoodit sovelluksessa
+Parempi suurella tekstillä
+Uutuudet näkyvät päivityksen jälkeen
+
+### 앱스토어 (폴란드어)
+
+Sprawdź korzyści i użycie w Ustawieniach
+Kody promocyjne prosto w aplikacji
+Lepiej z dużym tekstem i bez kolorów
+Nowości raz po każdej aktualizacji
+
+### 앱스토어 (체코어)
+
+Výhody a využití najdeš v Nastavení
+Nabídkové kódy uplatníš přímo v aplikaci
+Lépe s velkým písmem a bez barev
+Novinky jednou po každé aktualizaci
+
+### 앱스토어 (그리스어)
+
+Δες τα οφέλη και τη χρήση στις Ρυθμίσεις
+Εξαργύρωσε κωδικούς μέσα στην εφαρμογή
+Καλύτερα με μεγάλο κείμενο χωρίς χρώμα
+Τα νέα μία φορά μετά από κάθε ενημέρωση
+
+### 앱스토어 (튀르키예어)
+
+Avantajlarını Ayarlar’da gör
+Teklif kodlarını uygulamada kullan
+Büyük metin desteği daha iyi
+Güncellemeden sonra yenilikleri gör
+
+### 앱스토어 (러시아어)
+
+Ваши преимущества в настройках
+Промокоды прямо в приложении
+Удобнее с крупным текстом и без цвета
+Новинки один раз после обновления
+
+### 앱스토어 (인도네시아어)
+
+Lihat keuntunganmu di Pengaturan
+Tukarkan kode penawaran di aplikasi
+Lebih nyaman untuk teks besar
+Lihat yang baru sekali setelah pembaruan
+
+### 앱스토어 (태국어)
+
+ดูสิทธิประโยชน์และการใช้งานในการตั้งค่า
+ใช้โค้ดข้อเสนอในแอปได้เลย
+รองรับตัวอักษรขนาดใหญ่ได้ดีขึ้น
+แจ้งสิ่งใหม่หนึ่งครั้งหลังอัปเดต
+
+### 앱스토어 (베트남어)
+
+Xem quyền lợi và mức dùng trong Cài đặt
+Đổi mã ưu đãi ngay trong ứng dụng
+Hỗ trợ tốt hơn chữ lớn và không cần màu
+Xem điều mới sau mỗi bản cập nhật
+
 ## 2.4.0
 
 ### 앱스토어 (한국어)
