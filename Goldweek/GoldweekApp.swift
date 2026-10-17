@@ -21,6 +21,10 @@ struct GoldweekApp: App {
 
     init() {
         AppLogger.shared.info("Goldweek 앱 초기화 시작", category: .app)
+        // 연속으로 시작에 실패했으면 이번 실행은 세이프 모드 — 없어도 되는 시작 작업을 건너뛴다
+        LaunchSafety.beginLaunch()
+        // 업데이트한 사람인지 새로 온 사람인지 — 온보딩이 값을 바꾸기 전에 적어 둔다
+        WhatsNewGate.captureLaunchState()
 
         // StoreKit 거래 리스너를 실행 즉시 붙인다 — 앱 밖에서 리딤한 오퍼 코드·대기 중 구매가
         // Transaction.updates 로 들어오는데, Pro 화면을 처음 열 때까지 미루면 놓치거나 늦게 반영된다.
@@ -63,7 +67,7 @@ struct GoldweekApp: App {
             FamilyAnniversary.self,
         ])
 
-        sharedModelContainer = Self.createModelContainer(schema: schema)
+        sharedModelContainer = AppSignpost.measure("ModelContainer") { Self.createModelContainer(schema: schema) }
         Self.sharedContainerForBackup = sharedModelContainer
         ScreenshotMode.seed(container: sharedModelContainer)
 
@@ -75,13 +79,17 @@ struct GoldweekApp: App {
         }
         #endif
         // "기능 팁 다시 보기"를 눌렀다면 여기서 되돌린다 — configure 전에만 유효하다
-        AppTips.performPendingResetIfNeeded()
-        if ScreenshotMode.isActive { Tips.hideAllTipsForTesting() }
-        try? Tips.configure([.displayFrequency(.daily)])
+        if !LaunchSafety.isSafeMode {
+            AppTips.performPendingResetIfNeeded()
+            if ScreenshotMode.isActive { Tips.hideAllTipsForTesting() }
+            try? Tips.configure([.displayFrequency(.daily)])
+        }
 
         checkICloudStatus()
         // 휴가 종류 색·순서·근무 시간 — 기기끼리 iCloud 로 맞춘다
-        LeaveSettingsSync.shared.start()
+        if !LaunchSafety.isSafeMode {
+            LeaveSettingsSync.shared.start()
+        }
 
         AppLogger.shared.info("Goldweek 앱 초기화 완료", category: .app)
     }

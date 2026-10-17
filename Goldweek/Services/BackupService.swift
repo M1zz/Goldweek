@@ -271,6 +271,8 @@ class BackupService {
         bonusLeaves: [BonusLeave]
     ) async throws {
         logInfo("iCloud 백업 시작", category: .backup)
+        let signpost = AppSignpost.signposter.beginInterval("iCloudBackup", id: AppSignpost.signposter.makeSignpostID())
+        defer { AppSignpost.signposter.endInterval("iCloudBackup", signpost) }
         logDebug("iCloud 사용 가능 여부: \(isICloudAvailable)", category: .iCloud)
 
         guard let url = iCloudBackupURL else {

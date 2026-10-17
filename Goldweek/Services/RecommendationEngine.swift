@@ -32,6 +32,9 @@ class RecommendationEngine {
     ) -> [LeaveRecommendation] {
         let targetCountry = country ?? profile.country
         self.country = targetCountry
+        // 성능 측정 — Instruments 의 Points of Interest 에 "Recommendations" 구간으로 보인다
+        let signpost = AppSignpost.signposter.beginInterval("Recommendations", id: AppSignpost.signposter.makeSignpostID())
+        defer { AppSignpost.signposter.endInterval("Recommendations", signpost) }
         logDebug("추천 생성 시작 - 연도: \(year), 잔여연차: \(remainingLeave), 국가: \(targetCountry.rawValue), includePast: \(includePast)", category: .recommendation)
 
         // 캐시 키 생성 — includePast·기존휴가도 키에 포함 (변경 시 캐시 무효화)
