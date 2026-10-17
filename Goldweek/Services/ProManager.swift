@@ -14,7 +14,10 @@ import SwiftUI
 /// - 프로: + 보너스 연차·캘린더 자동 감지·종류별 한도·학교 달력 (`hasProTier`·`has(_:)`)
 /// - 패밀리: 프로를 App Store 가족 공유로 6명까지
 enum ProTier: Int, Comparable, CaseIterable {
-    case free, plus, pro, family
+    case free
+    case plus
+    case pro
+    case family
 
     static func < (a: ProTier, b: ProTier) -> Bool { a.rawValue < b.rawValue }
 }
@@ -54,6 +57,10 @@ class ProManager {
     /// 패밀리 연간 — 가족 공유 켬
     static let familyProductID = "com.Ysoup.LeaveWise.family.yearly"
     static let allProductIDs = [plusProductID, yearlyProductID, proProductID, familyProductID]
+
+    /// 무료로 등록할 수 있는 추천 수 — 그해 추천 목록 앞에서부터. 추천 화면·캘린더 탭의 게이트와
+    /// '내 혜택' 화면의 "무료 한도와 비교" 가 모두 이 값을 쓴다(두 곳이 다른 숫자를 말하면 안 된다).
+    static let freeRecommendationAddLimit = 3
 
     /// 상품이 여는 트림
     static func tier(of productID: String) -> ProTier {

@@ -117,7 +117,7 @@ extension GoldweekSpec {
                     id: "Saat teks diperbesar, kalender dan daftar tertata ulang tanpa terpotong.",
                     th: "เมื่อขยายตัวอักษร ปฏิทินและรายการจะจัดเรียงใหม่โดยไม่ถูกตัด",
                     vi: "Khi phóng to chữ, lịch và danh sách sẽ tự sắp xếp lại, không bị cắt.").text),
-        .init(id: "a11y.contrast", status: .planned,
+        .init(id: "a11y.contrast", status: .shipped("2.4.1"),
               title: RoadmapL10n(
                     ko: "보기 편한 색과 대비",
                     en: "Easier-to-see colors",
@@ -166,7 +166,7 @@ extension GoldweekSpec {
                     id: "Hari libur dan cuti tetap jelas dengan kontras tinggi atau jika sulit membedakan warna.",
                     th: "แม้เพิ่มคอนทราสต์หรือแยกสีได้ยาก ก็ยังเห็นวันหยุดและวันลาได้ชัด",
                     vi: "Ngày lễ và ngày nghỉ vẫn rõ ràng khi tăng độ tương phản hoặc khi khó phân biệt màu.").text),
-        .init(id: "a11y.motion", status: .planned,
+        .init(id: "a11y.motion", status: .shipped("2.4.1"),
               title: RoadmapL10n(
                     ko: "움직임 줄이기",
                     en: "Reduced motion",
@@ -215,7 +215,7 @@ extension GoldweekSpec {
                     id: "Saat Kurangi Gerakan aktif, animasi jadi lebih tenang.",
                     th: "เมื่อเปิด “ลดการเคลื่อนไหว” เอฟเฟกต์บนหน้าจอจะนุ่มนวลขึ้น",
                     vi: "Khi bật Giảm chuyển động, hiệu ứng trên màn hình sẽ nhẹ nhàng hơn.").text),
-        .init(id: "whatsnew", status: .planned,
+        .init(id: "whatsnew", status: .shipped("2.4.1"),
               title: RoadmapL10n(
                     ko: "업데이트 소식",
                     en: "What's new",

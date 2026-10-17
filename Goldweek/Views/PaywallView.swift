@@ -17,6 +17,8 @@ struct PaywallView: View {
     @State private var isSuccess = false
     @State private var selectedTier: ProTier
     @State private var selectedProductID: String
+    /// App Store 오퍼 코드 입력 시트 (StoreKit 2). 받은 코드는 `Transaction.updates` 로 들어와 Pro 가 열린다.
+    @State private var showingOfferCode = false
 
     /// - Parameter initialProductID: 처음 골라 둘 상품 (기본: 프로 연간). 스크린샷 모드에서도 쓴다.
     init(initialProductID: String? = nil) {
@@ -79,7 +81,8 @@ struct PaywallView: View {
             }
             .padding(.top, 4)
 
-            Text(Strings.trimTagline(selectedTier))
+            // 이미 이 등급을 쓰는 사람에게는 파는 말 대신 "모두 열려 있어요" — '내 혜택'의 전체 보기도 이 화면이다.
+            Text(proManager.tier >= selectedTier ? Strings.benefitsAllUnlocked(selectedTier) : Strings.trimTagline(selectedTier))
                 .font(.title2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
@@ -142,15 +145,19 @@ struct PaywallView: View {
 
     // MARK: - Features Section
 
-    private struct TrimFeature: Hashable {
+    /// 등급 비교표의 한 줄 — '내 혜택' 화면도 이 목록을 그대로 쓴다(목록은 여기 한 곳에만 적는다).
+    struct TrimFeature: Hashable {
         let icon: String
         let color: Color
         let title: String
         var isSummary = false
     }
 
-    private var features: [TrimFeature] {
-        switch selectedTier {
+    private var features: [TrimFeature] { Self.features(of: selectedTier) }
+
+    /// 등급이 더하는 기능. 위 등급은 맨 앞 요약 줄(`isSummary`)로 아래 등급을 모두 포함한다고 말한다.
+    static func features(of tier: ProTier) -> [TrimFeature] {
+        switch tier {
         case .free, .plus:
             return [
                 TrimFeature(icon: "sparkles", color: AppTheme.Colors.bonus, title: Strings.proFeatureAIAnnualPlanner),
@@ -345,6 +352,23 @@ struct PaywallView: View {
                     .frame(height: 44)
             }
             .disabled(proManager.isLoading)
+
+            // 받은 오퍼 코드(할인·무료 기간)를 앱 안에서 바로 쓴다 — App Store 앱을 따로 열지 않아도 된다.
+            Button {
+                UsageReportingService.record(event: "offer_code_open:paywall")
+                showingOfferCode = true
+            } label: {
+                Text(Strings.redeemOfferCode)
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .frame(minHeight: 44)
+            }
+            .disabled(proManager.isLoading)
+            .offerCodeRedemption(isPresented: $showingOfferCode) { result in
+                if case .success = result {
+                    Task { await proManager.checkEntitlement() }
+                }
+            }
         }
     }
 

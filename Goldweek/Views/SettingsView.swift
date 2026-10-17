@@ -68,6 +68,8 @@ struct SettingsView: View {
     @State private var showingTutorial = false
     @State private var showingOnboardingReplay = false
     @State private var showingTipsResetNotice = false
+    @State private var showingOfferCode = false
+    @State private var showingWhatsNew = false
     @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
     /// 캘린더 앱으로 휴가 보내기 — CalendarService.autoSyncKey
     @AppStorage(CalendarService.autoSyncKey) private var calendarAutoSync = false
@@ -265,6 +267,9 @@ struct SettingsView: View {
                 // 이용 중인 버전 — 오퍼 코드를 리딤한 사람도 Pro가 켜졌는지 바로 알 수 있게
                 Section {
                     if ProManager.shared.isPro {
+                        // 누르면 **지금 누리는 혜택과 그 양**을 본다(ProBenefitsView).
+                        // "이용 중" 한 줄은 영수증일 뿐이다 — 무엇을 얼마나 쓰고 있는지가 보여야 산 값이 보인다.
+                        NavigationLink(destination: ProBenefitsView()) {
                         HStack(spacing: 12) {
                             Image(systemName: "crown.fill")
                                 .foregroundStyle(AppTheme.Colors.bonus)
@@ -293,6 +298,9 @@ struct SettingsView: View {
                                 .clipShape(Capsule())
                         }
                         .accessibilityElement(children: .combine)
+                        }
+                        .accessibilityHint(Strings.benefitsRowHint)
+                        .accessibilityInputLabels([Text(Strings.benefitsTitle), Text(Strings.trimName(ProManager.shared.tier))])
                     } else {
                         HStack(spacing: 12) {
                             Image(systemName: "person.crop.circle")
@@ -311,6 +319,19 @@ struct SettingsView: View {
                             Button(Strings.planUpgrade) { showingPaywall = true }
                                 .buttonStyle(.borderedProminent)
                                 .tint(AppTheme.Colors.bonus)
+                                .accessibilityInputLabels([Text(Strings.planUpgrade), Text("Pro")])
+                        }
+                        // 받은 오퍼 코드를 바로 쓴다 (StoreKit 2 오퍼 코드 시트)
+                        Button {
+                            UsageReportingService.record(event: "offer_code_open:settings")
+                            showingOfferCode = true
+                        } label: {
+                            Label(Strings.redeemOfferCode, systemImage: "ticket")
+                        }
+                        .offerCodeRedemption(isPresented: $showingOfferCode) { result in
+                            if case .success = result {
+                                Task { await ProManager.shared.checkEntitlement() }
+                            }
                         }
                     }
                     if case .yearly = ProManager.shared.activePlan {
@@ -1133,6 +1154,13 @@ struct SettingsView: View {
                         Label(Strings.helpOnboarding, systemImage: "sparkles.rectangle.stack")
                     }
 
+                    // 업데이트 뒤 한 번 떴던 "새로운 기능" — 놓쳤거나 다시 보고 싶을 때
+                    Button {
+                        showingWhatsNew = true
+                    } label: {
+                        Label(Strings.whatsNewEntry, systemImage: "gift")
+                    }
+
                     Button {
                         AppTips.requestResetOnNextLaunch()
                         showingTipsResetNotice = true
@@ -1214,6 +1242,11 @@ struct SettingsView: View {
 
                 // 개발자 문의
                 DeveloperContactSection()
+
+                // 같은 개발자가 만든 다른 앱 — 지금 쓰는 앱(Goldweek)은 목록에서 빠진다
+                Section {
+                    LeeoFamilySettingsRow<GoldweekSpec>()
+                }
             }
             // 프로필 값은 @Bindable 바인딩이라 SwiftData 자동 저장에 맡겨져 있었다.
             // 자동 저장은 "곧" 저장할 뿐 그 시점을 보장하지 않는다 — 총 연차처럼 잔여 계산의
@@ -1261,6 +1294,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingTutorial) {
                 TutorialView()
+            }
+            .sheet(isPresented: $showingWhatsNew) {
+                WhatsNewView { showingWhatsNew = false }
             }
             .sheet(isPresented: $showingOnboardingReplay) {
                 // 다시 볼 때는 프로필을 새로 만들지 않고 기존 값을 갱신한다(OnboardingView 안에서 처리)

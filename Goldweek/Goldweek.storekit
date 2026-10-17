@@ -1,0 +1,133 @@
+{
+  "identifier": "3B8E9F10-5C2D-4A7B-8E6F-1A2B3C4D5E6F",
+  "nonRenewingSubscriptions": [],
+  "products": [
+    {
+      "displayPrice": "49.99",
+      "familyShareable": true,
+      "internalID": "9C1E2A33-0B44-4C55-8D66-7E8F90A1B2C3",
+      "localizations": [
+        {
+          "description": "Everything in Pro, forever",
+          "displayName": "Goldweek Pro (Lifetime)",
+          "locale": "en_US"
+        },
+        {
+          "description": "프로 기능을 평생 사용",
+          "displayName": "Goldweek 프로 (평생)",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.pro",
+      "referenceName": "Goldweek Pro Lifetime",
+      "type": "NonConsumable"
+    }
+  ],
+  "settings": {
+    "_applicationInternalID": "6755983135",
+    "_developerTeamID": "",
+    "_lastSynchronizedDate": 0
+  },
+  "subscriptionGroups": [
+    {
+      "id": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+      "localizations": [],
+      "name": "Goldweek",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "29.99",
+          "familyShareable": true,
+          "groupNumber": 1,
+          "internalID": "E2B05735-47E6-5E39-A2EF-D4BCB7C59092",
+          "introductoryOffer": {
+            "internalID": "B07FA188-326B-5FAF-A5CE-7AD5E7DB7096",
+            "paymentMode": "free",
+            "subscriptionPeriod": "P1W"
+          },
+          "localizations": [
+            {
+              "description": "Pro for up to 6 family members",
+              "displayName": "Goldweek Family",
+              "locale": "en_US"
+            },
+            {
+              "description": "프로를 가족 6명이 함께",
+              "displayName": "Goldweek 패밀리",
+              "locale": "ko"
+            }
+          ],
+          "productID": "com.Ysoup.LeaveWise.family.yearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Goldweek Family Yearly",
+          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "19.99",
+          "familyShareable": false,
+          "groupNumber": 2,
+          "internalID": "EAE534BD-ACA4-5F9F-827B-F9D12A45E046",
+          "introductoryOffer": {
+            "internalID": "AD94D862-B2F9-55DC-A580-B0A366B821D8",
+            "paymentMode": "free",
+            "subscriptionPeriod": "P1W"
+          },
+          "localizations": [
+            {
+              "description": "Fits your workplace rules too",
+              "displayName": "Goldweek Pro",
+              "locale": "en_US"
+            },
+            {
+              "description": "내 직장 규칙까지 그대로",
+              "displayName": "Goldweek 프로",
+              "locale": "ko"
+            }
+          ],
+          "productID": "com.Ysoup.LeaveWise.pro.yearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Goldweek Pro Yearly",
+          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "9.99",
+          "familyShareable": false,
+          "groupNumber": 3,
+          "internalID": "9C85C1AC-6094-5429-BA3A-CB3B4B55014F",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Plans your time off for you",
+              "displayName": "Goldweek Plus",
+              "locale": "en_US"
+            },
+            {
+              "description": "연차 계획을 알아서 짜 줘요",
+              "displayName": "Goldweek 플러스",
+              "locale": "ko"
+            }
+          ],
+          "productID": "com.Ysoup.LeaveWise.plus.annual",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Goldweek Plus Yearly",
+          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        }
+      ]
+    }
+  ],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}

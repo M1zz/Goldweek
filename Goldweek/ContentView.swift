@@ -41,6 +41,8 @@ struct ContentView: View {
     /// (그 뒤로는 설정 > 도움말에서 사용자가 원할 때만 연다)
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var showingTutorial = false
+    /// 업데이트 뒤 처음 열 때 한 번 — 처음 설치한 사람에게는 뜨지 않는다(WhatsNewGate)
+    @State private var showingWhatsNew = false
     /// 만족 순간에 띄우는 만족도 프롬프트 (추천 등록·플랜 등록·휴가 복귀)
     @State private var reviewMoments = ReviewMoments.shared
 
@@ -57,6 +59,15 @@ struct ContentView: View {
                     // 온보딩에 더 끼워 넣지 않는 이유: 설득과 사용법은 읽는 마음가짐이 다르다.
                     .sheet(isPresented: $showingTutorial) {
                         TutorialView()
+                    }
+                    .sheet(isPresented: $showingWhatsNew) {
+                        WhatsNewView { showingWhatsNew = false }
+                    }
+                    .task {
+                        guard WhatsNewGate.shouldPresentNow() else { return }
+                        // 첫 화면이 자리 잡은 뒤에 — 실행 직후 시트가 튀어나오면 놀란다
+                        try? await Task.sleep(nanoseconds: 900_000_000)
+                        showingWhatsNew = true
                     }
                     .task {
                         guard !hasSeenTutorial else { return }
@@ -86,8 +97,12 @@ struct ContentView: View {
                         if !hasCompletedOnboarding {
                             hasCompletedOnboarding = true
                         }
-                        refreshRestRadar(profile: profile)
-                        syncSharedSchedules(profile: profile)
+                        // 첫 화면이 떴다 — 몇 초 버티면 이번 실행을 성공으로 적는다(연속 크래시 보호)
+                        LaunchSafety.firstScreenAppeared()
+                        if !LaunchSafety.isSafeMode {
+                            refreshRestRadar(profile: profile)
+                            syncSharedSchedules(profile: profile)
+                        }
                     }
                     .onChange(of: scenePhase) { _, newPhase in
                         if newPhase == .active {
