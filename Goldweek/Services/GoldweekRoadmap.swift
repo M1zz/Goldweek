@@ -411,7 +411,7 @@ extension GoldweekSpec {
                     id: "Kunci aplikasi dengan Face ID atau Touch ID agar catatan cuti Anda tetap aman.",
                     th: "ล็อกแอปด้วย Face ID หรือ Touch ID เพื่อปกป้องข้อมูลวันลาของคุณ",
                     vi: "Khóa ứng dụng bằng Face ID hoặc Touch ID để bảo vệ dữ liệu nghỉ phép.").text),
-        .init(id: "fold", status: .planned,
+        .init(id: "fold", status: .building,
               title: RoadmapL10n(
                     ko: "펼치는 아이폰 화면",
                     en: "Foldable iPhone layout",
