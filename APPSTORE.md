@@ -16,7 +16,7 @@ DeployBar 가 이 파일을 읽어 App Store Connect 의 언어별 칸에 올린
 
 ### 키워드
 
-휴가,징검다리,공휴일,달력,캘린더,반차,반반차,연차관리,휴가계획,대체공휴일,샌드위치휴일,여행,직장인,위젯,빨간날,연차계산,휴가신청,연휴계산기,휴일,쉬는날,휴가관리,추석,설날
+샌드위치휴일,연휴계산기,반반차,징검다리,빨간날,연차계산기,연차계산,연차관리,연차,공휴일,쉬는날,대체공휴일,휴가신청,휴가계산,연차휴가,휴가계획,반차,공휴일달력,휴가관리,휴일
 
 ### 프로모션 텍스트
 
@@ -70,7 +70,7 @@ Turn holidays into long breaks
 
 ### 키워드
 
-leave,tracker,annual,days,off,time,calendar,planner,weekend,bridge,paid,widget,trip,schedule,accrual
+weekend,getaway,leave,accrual,annual,days,off,bridge,paid,optimizer,calendar,planner,maximize
 
 ### 프로모션 텍스트
 
