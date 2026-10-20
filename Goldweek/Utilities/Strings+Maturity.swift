@@ -11,7 +11,7 @@ extension Strings {
     /// 언어별 문구 표에서 지금 언어를 고른다.
     /// ⚠️ 표에 언어가 빠지면 DEBUG 에서 바로 멈춘다(`StringsMaturityTests` 가 23개 언어를 모두 불러 본다).
     ///    출시 빌드에서는 영어로 떨어진다 — 빈칸보다 낫다.
-    fileprivate static func pick(_ rows: [AppLanguage: String]) -> String {
+    static func pick(_ rows: [AppLanguage: String]) -> String {
         let lang = LanguageManager.shared.currentLanguage
         if let text = rows[lang] { return text }
         assertionFailure("번역 빠짐: \(lang.rawValue)")

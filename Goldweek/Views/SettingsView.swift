@@ -345,6 +345,11 @@ struct SettingsView: View {
                     }
                 }
 
+                // 선물 · 응원 — 상품이 App Store 에 있을 때만 줄이 선다
+                if let gift = ProExtras.shared.gift, let tipJar = ProExtras.shared.tipJar {
+                    GiftAndTipSection(gift: gift, tipJar: tipJar)
+                }
+
                 // 국가 및 언어
                 Section {
                     // 대륙 → 나라 2단계로 찾는다 (나라가 늘어 한 줄 목록은 찾기 어렵다)
@@ -1584,6 +1589,67 @@ struct DeveloperContactSection: View {
             Text(Strings.contactDeveloperSection)
         } footer: {
             Text(Strings.contactDeveloperFooter)
+        }
+    }
+}
+
+// MARK: - 선물 · 응원
+
+/// Pro 선물하기 · 선물 코드 입력 · 개발자 응원하기.
+///
+/// 화면 안쪽은 LeeoKit 것을 그대로 쓰고(`LeeoGiftView` · `LeeoGiftRedeemView` · `LeeoTipJarView`),
+/// 행 이름만 앱 언어를 따르게 앱 문구로 그린다(지원 섹션과 같은 까닭).
+/// ⚠️ 상품이 App Store Connect 에 없으면(`isAvailable` false) 줄을 세우지 않는다 — 눌러도 살 수 없는 줄이 된다.
+///    다만 이미 보냈거나 받은 선물, 결제는 됐는데 코드를 못 만든 선물이 있으면 선물 줄은 남긴다(찾아갈 곳이 있어야 한다).
+struct GiftAndTipSection: View {
+    @ObservedObject var gift: LeeoGiftStore
+    @ObservedObject var tipJar: LeeoTipJar
+    @State private var showingGiftSupport = false
+
+    private var showsGift: Bool {
+        gift.isAvailable || gift.pendingCount > 0 || !gift.sentGifts.isEmpty || gift.redeemed != nil
+    }
+
+    var body: some View {
+        if showsGift || tipJar.isAvailable {
+            Section {
+                if showsGift {
+                    NavigationLink(destination: LeeoGiftView<GoldweekSpec>(gift: gift, showsRedeemLink: false,
+                                                                           onContactSupport: { showingGiftSupport = true })) {
+                        Label(Strings.giftSendEntry, systemImage: "gift.fill")
+                    }
+                    // 이미 산 사람은 받을 것이 없다(코드를 다른 사람에게 넘긴다). 받은 사람은 받은 선물을 다시 본다.
+                    if !ProManager.shared.hasPurchasedProTier || gift.redeemed != nil {
+                        NavigationLink(destination: LeeoGiftRedeemView<GoldweekSpec>(gift: gift,
+                                                                                     onContactSupport: { showingGiftSupport = true })) {
+                            Label(Strings.giftRedeemEntry, systemImage: "giftcard")
+                        }
+                    }
+                }
+                if tipJar.isAvailable {
+                    NavigationLink(destination: LeeoTipJarView<GoldweekSpec>(tipJar: tipJar)) {
+                        Label {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.tipEntry)
+                                Text(Strings.tipEntrySubtitle)
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+                            }
+                        } icon: {
+                            Image(systemName: "heart")
+                        }
+                    }
+                }
+            } header: {
+                Text(Strings.giftAndTipSection)
+            }
+            .sheet(isPresented: $showingGiftSupport) {
+                NavigationStack {
+                    // 결제 문제로 바로 — 결제 번호·코드를 붙여 개발자가 바로 찾게 한다
+                    LeeoFeedbackView<GoldweekSpec>(initialType: .bug, extraInfo: gift.supportLines,
+                                                   initialCategory: .purchase)
+                }
+            }
         }
     }
 }

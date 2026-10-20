@@ -39,7 +39,23 @@ enum GoldweekSpec: LeeoAppSpec {
     static let monetization = LeeoMonetization.freemiumSubscription(
         LeeoSubscriptionConfig(
             productIDs: ProManager.allProductIDs,
-            termsURL: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
+            termsURL: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!,
+            // 무료로 넣을 수 있는 추천 수. 마지막 칸에 닿기 전에 미리 알린다(`RecommendationGate`).
+            gate: LeeoGatePolicy(
+                freeLimits: [RecommendationGate.key: ProManager.freeRecommendationAddLimit],
+                warnWhenRemaining: RecommendationGate.warnWhenRemaining
+            ),
+            // Pro 선물하기. 보내는 사람은 소모성 선물 상품을 사고, 받는 사람은 평생 Pro 를 산 것과 같아진다.
+            // 선물 기록은 피드백과 같은 허브 컨테이너의 공개 DB 에 둔다. entitlements 에 이미 있다.
+            // ⚠️ 선물 상품은 productIDs · entitlementIDs 에 넣지 않는다. 넣으면 선물을 산 사람이 Pro 가 된다.
+            gift: LeeoGiftConfig(
+                productID: ProManager.giftProductID,
+                grantsProductID: ProManager.proProductID,
+                containerIdentifier: "iCloud.com.Ysoup.FeedbackHub"
+            ),
+            // 팁(응원). 이미 다 가진 사람이 더 내고 싶을 때. 아무것도 열지 않는 소모성 상품이다.
+            // ⚠️ 이것도 productIDs · entitlementIDs 에 넣지 않는다(사전 점검 `tip.sellsPro`).
+            tipJar: LeeoTipJarConfig(productIDs: ProManager.tipProductIDs)
         )
     )
 

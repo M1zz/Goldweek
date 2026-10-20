@@ -83,6 +83,22 @@ Pro는 "없어도 되지만 있으면 시간과 머리를 아껴 주는 것"에 
 
 전환율이 1.0%까지 떨어져도 약 2,160 USD로 단일 Pro보다 많다. 1.0% 아래로 가면 가격을 한 단계 내린다.
 
+## 무료 한도 미리 알림 · 응원 · 선물
+
+- **무료 한도**: 정책은 `GoldweekSpec.monetization` 의 `LeeoGatePolicy`(추천 등록 3개, 마지막 1칸 전부터 미리 알림)이고,
+  판정은 `RecommendationGate`(LeeoKit `LeeoGate`) 하나다. 추천 화면 · 캘린더 탭이 같은 판정을 쓰고,
+  무료 칸이 거의 끝난 카드 아래에 "무료로 넣을 수 있는 마지막 추천이에요" 같은 한 줄을 단다.
+- **응원(팁)**: `com.Ysoup.LeaveWise.tip.small` · `.medium` · `.large` (소모성, 아무것도 열지 않는다).
+  설정 "선물과 응원" 에 행이 서고, 홈에 부탁 카드(`LeeoTipAskCard`)가 선다.
+  부탁은 **프로 트림 이상**에게만, 올해 추천으로 세운 계획 수(3 · 5 · 10)나 휴가 기록 수(30 · 100)를 넘어섰을 때만(`TipAskMoments`).
+  얼마나 드물게는 LeeoKit 규칙(물으면 60일, 낸 사람은 180일, '다음에' 세 번이면 끝).
+- **선물**: `com.Ysoup.LeaveWise.gift.pro` (소모성). 받은 사람에게 평생 프로(`com.Ysoup.LeaveWise.pro`)를 산 것과 같은 권한을 연다.
+  기록은 `iCloud.com.Ysoup.FeedbackHub` 공개 DB(`LeeoGift` · `LeeoGiftRedemption`)와 받은 사람 비공개 DB(`LeeoGiftClaims`).
+  이미 프로 이상을 **산** 사람은 받지 않는다(코드를 다른 사람에게 넘긴다).
+- ⚠️ 팁 · 선물 상품은 `ProManager.allProductIDs`(= Spec 의 productIDs · entitlementIDs)에 넣지 않는다.
+  넣으면 작은 결제가 Pro 를 연다. `MaturityFeatureTests.testGiftAndTipsNeverUnlockPro` 가 지킨다.
+- 상품이 App Store Connect 에 없으면 그 행 · 카드는 저절로 숨는다(`isAvailable`).
+
 ## 기존 사용자
 
 - 평생 구매자(4.99 USD에 산 사람 포함)는 **프로** 트림이다 (상품 ID 그대로). 패밀리 기능은 포함하지 않는다.

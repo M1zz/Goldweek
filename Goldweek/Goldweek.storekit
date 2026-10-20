@@ -21,6 +21,86 @@
       "productID": "com.Ysoup.LeaveWise.pro",
       "referenceName": "Goldweek Pro Lifetime",
       "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "49.99",
+      "familyShareable": false,
+      "internalID": "9D27FCCF-0E22-5FD7-9D9A-1ADB08915251",
+      "localizations": [
+        {
+          "description": "A one-time code that unlocks Goldweek Pro (lifetime) for someone else.",
+          "displayName": "Gift Goldweek Pro",
+          "locale": "en_US"
+        },
+        {
+          "description": "다른 사람의 Goldweek 프로(평생)를 여는 일회용 선물 코드",
+          "displayName": "Goldweek 프로 선물",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.gift.pro",
+      "referenceName": "Goldweek Pro Gift (consumable)",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "0.99",
+      "familyShareable": false,
+      "internalID": "555A467A-4CFF-515B-A9C0-E1F6F7EF890C",
+      "localizations": [
+        {
+          "description": "A one-time tip for the developer. Unlocks nothing.",
+          "displayName": "A coffee",
+          "locale": "en_US"
+        },
+        {
+          "description": "개발자에게 보내는 한 번의 응원. 열리는 기능은 없습니다.",
+          "displayName": "커피 한 잔",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.tip.small",
+      "referenceName": "Tip small (consumable)",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "2.99",
+      "familyShareable": false,
+      "internalID": "397A4461-1E67-5FF0-B478-6A7F2F9C319E",
+      "localizations": [
+        {
+          "description": "A one-time tip for the developer. Unlocks nothing.",
+          "displayName": "A snack",
+          "locale": "en_US"
+        },
+        {
+          "description": "개발자에게 보내는 한 번의 응원. 열리는 기능은 없습니다.",
+          "displayName": "간식 한 번",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.tip.medium",
+      "referenceName": "Tip medium (consumable)",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "9.99",
+      "familyShareable": false,
+      "internalID": "B7093849-9DCB-59FB-B25B-CA78B2061771",
+      "localizations": [
+        {
+          "description": "A one-time tip for the developer. Unlocks nothing.",
+          "displayName": "A hearty meal",
+          "locale": "en_US"
+        },
+        {
+          "description": "개발자에게 보내는 한 번의 응원. 열리는 기능은 없습니다.",
+          "displayName": "든든한 한 끼",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.tip.large",
+      "referenceName": "Tip large (consumable)",
+      "type": "Consumable"
     }
   ],
   "settings": {

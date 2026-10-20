@@ -8,6 +8,8 @@
 import Foundation
 import StoreKit
 import SwiftUI
+import Combine
+import LeeoKit
 
 /// 유료 트림. 위 트림은 아래 트림 기능을 모두 포함한다 — 무엇을 왜 어느 트림에 두는지는 docs/MONETIZATION.md.
 /// - 플러스: 최적 플래너·추천 무제한·다른 해 추천·캘린더 앱으로 보내기 (`isPro`로 본다)
@@ -58,6 +60,18 @@ class ProManager {
     static let familyProductID = "com.Ysoup.LeaveWise.family.yearly"
     static let allProductIDs = [plusProductID, yearlyProductID, proProductID, familyProductID]
 
+    /// Pro 선물 (소모성). 산 사람이 아니라 **코드를 받은 사람**에게 평생 Pro(`proProductID`)를 연다(`LeeoGiftStore`).
+    /// ⚠️ `allProductIDs` 에 넣지 않는다 — 넣으면 선물을 산 사람이 Pro 가 되고, 결제가 코드 없이 끝난다.
+    /// App Store Connect 에 소모성 상품으로 만들어야 뜬다. 없으면 설정의 선물 행이 숨는다.
+    static let giftProductID = "com.Ysoup.LeaveWise.gift.pro"
+    /// 팁(응원), 작은 것부터. 소모성이고 아무것도 열지 않는다(`LeeoTipJar`).
+    /// ⚠️ 이것도 `allProductIDs` 에 넣지 않는다. 없으면 설정의 응원 행이 숨는다.
+    static let tipProductIDs = [
+        "com.Ysoup.LeaveWise.tip.small",
+        "com.Ysoup.LeaveWise.tip.medium",
+        "com.Ysoup.LeaveWise.tip.large",
+    ]
+
     /// 무료로 등록할 수 있는 추천 수 — 그해 추천 목록 앞에서부터. 추천 화면·캘린더 탭의 게이트와
     /// '내 혜택' 화면의 "무료 한도와 비교" 가 모두 이 값을 쓴다(두 곳이 다른 숫자를 말하면 안 된다).
     static let freeRecommendationAddLimit = 3
@@ -101,6 +115,9 @@ class ProManager {
 
     /// 프로 트림 이상 — 보너스 연차·캘린더 자동 감지
     var hasProTier: Bool { tier >= .pro }
+
+    /// **산 것만으로** 프로 트림 이상인가 (받은 선물 제외). 이미 산 사람은 선물을 받지 않고 코드를 넘기게 둔다.
+    private(set) var hasPurchasedProTier = false
 
     /// 무료 체험을 받을 수 있는 구독 상품
     private(set) var trialEligibleIDs: Set<String> = []
@@ -273,6 +290,7 @@ class ProManager {
 
         do {
             try await AppStore.sync()
+            await ProExtras.shared.gift?.refresh()   // 다른 기기에서 받은 선물도 다시 찾는다
             await checkEntitlement()
             logInfo("구매 복원 완료", category: .app)
             return isPro ? .restored : .nothingToRestore
@@ -299,12 +317,21 @@ class ProManager {
                 plan = isLifetime ? .lifetime : .yearly(expires: transaction.expirationDate)
             }
         }
+        let purchasedProTier = best >= .pro
+
+        // 받은 선물은 평생 Pro 를 산 것과 같다(`LeeoGiftConfig.grantsProductID`). 산 것이 더 높으면 그대로 둔다.
+        let gifted = await MainActor.run { ProExtras.shared.gift?.redeemed != nil }
+        if gifted, best < .pro {
+            best = .pro
+            plan = .lifetime
+        }
 
         // 권한이 없을 때:
         // TestFlight 빌드는 sandbox에서 자동으로 Pro 부여 (init에서 이미 처리)
         // DEBUG 빌드는 UserDefaults에 저장된 값 존중 (시뮬레이터 테스트용)
         let finalPlan = plan, finalTier = best
         await MainActor.run {
+            self.hasPurchasedProTier = purchasedProTier
             self.activePlan = finalPlan
             if finalPlan != nil {
                 self.isPro = true
@@ -329,6 +356,12 @@ class ProManager {
         Task.detached {
             for await result in Transaction.updates {
                 if case .verified(let transaction) = result {
+                    // 선물은 코드를 올린 뒤에 끝내야 한다 — 여기서 끝내면 돈만 받고 코드가 없다.
+                    // 팁은 권한이 아니다. 둘 다 LeeoKit 엔진이 세고 끝낸다(`ProExtras`).
+                    if transaction.productID == Self.giftProductID || Self.tipProductIDs.contains(transaction.productID) {
+                        await ProExtras.shared.resumePending()
+                        continue
+                    }
                     await transaction.finish()
                 }
                 await self.checkEntitlement()
@@ -375,6 +408,87 @@ class ProManager {
         case .year: return period.value * 365
         @unknown default: return nil
         }
+    }
+}
+
+// MARK: - 무료 한도 (freeGate)
+
+/// 추천 등록의 무료 한도 — 정책은 계약(`GoldweekSpec.monetization` 의 `LeeoGatePolicy`)에 있고, 판정은 LeeoKit 이 한다.
+/// 추천 화면·캘린더 탭이 같은 판정을 쓴다(두 곳이 다른 숫자를 말하면 안 된다).
+///
+/// 무료일 때 그해 추천 목록 **앞에서부터** `ProManager.freeRecommendationAddLimit` 개까지 넣을 수 있다.
+/// 그래서 `current` 는 넣은 개수가 아니라 목록에서의 자리(0부터)다 — 앞 칸이 다 무료면 이 칸은 몇 번째인가.
+enum RecommendationGate {
+    static let key = "recommendationAdd"
+
+    /// 무료로 넣을 수 있는 마지막 몇 칸에 미리 알린다. 벽(페이월)에 부딪히기 전에 안다.
+    static let warnWhenRemaining = 1
+
+    static var policy: LeeoGatePolicy { GoldweekSpec.monetization.gate }
+
+    /// 목록 `index` 번째 추천을 지금 넣을 수 있는가.
+    static func decision(at index: Int, hasPro: Bool) -> LeeoGateDecision {
+        LeeoGate(policy: policy, hasPro: hasPro, isTrialActive: false).evaluate(key, current: index)
+    }
+}
+
+// MARK: - 응원(팁) · 선물
+
+/// LeeoKit 의 팁 · 선물 엔진을 앱 전체에서 하나씩만 둔다.
+///
+/// `LeeoStore` 를 쓰지 않는 까닭: 구독 · 평생 · 트림 판정은 `ProManager` 가 이미 맡고 있다. 스토어를 하나 더 두면
+/// 같은 거래를 두 리스너가 따로 끝낸다. 그래서 엔진만 꺼내 쓰고, 이어 주는 일(받은 선물 → Pro, 거래 갱신 → 엔진)은 여기서 한다.
+/// ⚠️ 상품 ID · 컨테이너는 계약(`GoldweekSpec.monetization`)에 있다. 여기서 다시 적지 않는다.
+@MainActor
+final class ProExtras: ObservableObject {
+    static let shared = ProExtras()
+
+    /// 팁(응원). 판매 중인 팁이 없으면 `isAvailable` 이 false — 설정 행과 부탁 카드가 숨는다.
+    let tipJar: LeeoTipJar?
+    /// Pro 선물. 받은 선물은 `ProManager.checkEntitlement()` 가 평생 Pro 로 친다.
+    let gift: LeeoGiftStore?
+
+    private var cancellables = Set<AnyCancellable>()
+
+    private init() {
+        let config = GoldweekSpec.paywall
+        tipJar = config?.tipJar.map { LeeoTipJar(config: $0) }
+        gift = config?.gift.map { LeeoGiftStore(config: $0) }
+
+        if let gift {
+            // 이미 산 사람은 선물을 받지 않는다(코드를 다른 사람에게 넘기게 둔다). TestFlight 의 Pro 는 산 것이 아니다.
+            gift.alreadyEntitled = { ProManager.shared.hasPurchasedProTier }
+            // 받거나(선물 코드 입력) 잃으면(환불 · 다른 사람이 먼저 씀) 트림을 다시 센다.
+            gift.$redeemed
+                .map { $0 != nil }
+                .removeDuplicates()
+                .dropFirst()
+                .sink { _ in Task { await ProManager.shared.checkEntitlement() } }
+                .store(in: &cancellables)
+        }
+        Task { await start() }
+    }
+
+    private func start() async {
+        // 시험 실행은 서명 없이 돈다 — entitlements 없는 CloudKit 컨테이너를 만들면 그 자리에서 죽는다
+        // (사용 통계와 같은 까닭, `UsageReportingService.isRunningTests`).
+        guard !UsageReportingService.isRunningTests else { return }
+        await gift?.loadProduct()
+        await resumePending()           // 결제는 됐는데 코드를 못 만든 선물 · 세지 못한 팁
+        await tipJar?.loadProducts()    // 설정의 '응원하기' 줄은 상품이 있어야 선다
+        await gift?.refresh()           // 받은 선물이 아직 내 것인지(환불 · 서명)
+    }
+
+    /// 팁 상품이 왔는가. 상품은 앱이 뜬 뒤에 오므로 부탁 카드 · 설정 행이 이걸 보고 다시 그린다.
+    var tipAvailability: AnyPublisher<Bool, Never> {
+        guard let tipJar else { return Just(false).eraseToAnyPublisher() }
+        return tipJar.$products.map { !$0.isEmpty }.removeDuplicates().eraseToAnyPublisher()
+    }
+
+    /// 끝나지 않은 선물 · 팁 거래를 마저 처리한다. `Transaction.updates` 로 들어온 것(승인 대기 뒤 결제)도 이리 온다.
+    func resumePending() async {
+        await gift?.resumePending()
+        await tipJar?.resumePending()
     }
 }
 

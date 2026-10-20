@@ -30,6 +30,13 @@ struct HomeView: View {
     @AppStorage("dismissedHolidayNotices") private var dismissedHolidayNoticesRaw = ""
     @AppStorage("lastProBannerShownAt") private var lastProBannerShownAt: Double = 0
 
+    // 응원(팁) 부탁 — 프로 트림 이상에게만, 숫자로 도움이 보이는 순간에만(`TipAskMoments`)
+    @ObservedObject private var extras = ProExtras.shared
+    @State private var tipMoment: LeeoTipMoment?
+    /// 물을 거리를 정할 때 닿아 있던 순간들 — 카드가 실제로 섰을 때 모두 물은 것으로 적는다
+    @State private var tipReached: [LeeoTipMoment] = []
+    @State private var showingTipJar = false
+
     /// 다가오는 휴가 카드에 공휴일도 함께 보여줄지 (설정 > 공휴일 관리에서 끌 수 있다)
     @AppStorage("showHolidaysInUpcoming") private var showHolidaysInUpcoming = true
 
@@ -250,6 +257,18 @@ struct HomeView: View {
                         )
                     }
 
+                    // 응원 부탁 — 위 Pro 배너와 겹치지 않는다(배너는 무료 사용자, 이 카드는 프로 이상).
+                    // 파는 말 둘이 겹치면 둘 다 약해진다. 플러스에게는 위 등급이 맞는 길이라 묻지 않는다.
+                    if let moment = tipMoment, let tipJar = extras.tipJar {
+                        LeeoTipAskCard(tipJar: tipJar, moment: moment,
+                                       onSupport: {
+                                           showingTipJar = true
+                                           tipMoment = nil
+                                       },
+                                       onLater: { tipMoment = nil })
+                            .onAppear { tipJar.markAsked(covering: tipReached) }
+                    }
+
                     // 다가오는 휴가 (설정에 따라 공휴일 포함)
                     if !upcomingItems.isEmpty {
                         UpcomingLeavesSection(items: upcomingItems)
@@ -310,6 +329,20 @@ struct HomeView: View {
             .sheet(isPresented: $showingCalendarImport, onDismiss: { dismissAutoDetectBanner() }) {
                 CalendarImportSheet(existingRecords: Array(leaveRecords))
             }
+            .sheet(isPresented: $showingTipJar) {
+                if let tipJar = extras.tipJar {
+                    NavigationStack {
+                        LeeoTipJarView<GoldweekSpec>(tipJar: tipJar)
+                            .toolbar {
+                                ToolbarItem(placement: .cancellationAction) {
+                                    Button(Strings.close) { showingTipJar = false }
+                                }
+                            }
+                    }
+                }
+            }
+            // 팁 상품은 앱이 뜬 뒤에 온다. 오면 다시 본다.
+            .onReceive(extras.tipAvailability) { _ in evaluateTipAsk() }
             .onAppear {
                 // 가끔(쿨다운 후) 단일문항 피로 체크인 — 모델을 주관 상태로 보정
                 if profile.userType == .employee, !leaveRecords.isEmpty, !ScreenshotMode.isActive,
@@ -321,6 +354,24 @@ struct HomeView: View {
                 await autoScanCalendar()
             }
         }
+    }
+
+    // MARK: - 응원(팁) 부탁
+
+    /// 물을 때인지 본다. 이미 카드가 서 있으면 그대로 둔다.
+    /// ⚠️ 여기서 물은 것으로 적지 않는다 — 카드가 실제로 섰을 때(`onAppear`) 적는다.
+    private func evaluateTipAsk() {
+        guard tipMoment == nil, ProManager.shared.hasProTier, !ScreenshotMode.isActive,
+              let tipJar = extras.tipJar else { return }
+        let year = Calendar.app.component(.year, from: Date())
+        let reached = TipAskMoments.reached(
+            planCount: ProBenefits.recommendedPlanCount(leaveRecords.map(ProBenefits.Entry.init), year: year),
+            leaveCount: leaveRecords.filter { $0.status != .cancelled }.count,
+            year: year
+        )
+        guard let next = tipJar.momentToAsk(from: reached) else { return }
+        tipReached = reached
+        tipMoment = next
     }
 
     // MARK: - 캘린더 자동 감지 (Pro)

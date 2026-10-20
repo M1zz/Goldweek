@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import LeeoKit
 
 struct RecommendationsView: View {
     @Bindable var profile: UserProfile
@@ -359,12 +360,14 @@ struct RecommendationList: View {
     var body: some View {
         LazyVStack(spacing: 16) {
             ForEach(Array(recommendations.enumerated()), id: \.element.id) { index, recommendation in
-                let requiresPro = !proManager.isPro && index >= freeAddLimit
+                let decision = RecommendationGate.decision(at: index, hasPro: proManager.isPro)
+                let requiresPro = decision.needsPaywall
+                let isAdded = addedRecommendations.contains(recommendation.id)
                 VStack(spacing: 12) {
                     DetailedRecommendationCard(
                         recommendation: recommendation,
                         country: originCountry,
-                        isAdded: addedRecommendations.contains(recommendation.id),
+                        isAdded: isAdded,
                         requiresPro: requiresPro,
                         onAdd: {
                             if requiresPro {
@@ -374,6 +377,11 @@ struct RecommendationList: View {
                             }
                         }
                     )
+
+                    // 무료 칸이 거의 끝났다 — 벽(페이월)에 닿기 전에 미리 알린다
+                    if !isAdded, case .allowedNearLimit(let remaining) = decision {
+                        FreeLimitNotice(remaining: remaining)
+                    }
 
                     // 추천 일정마다 여행 큐레이션 카드 부착 (한국 직장인 한정).
                     // LazyVStack 안이므로 스크롤로 화면에 들어와야만 .task가 발화 → API 호출이 점진적으로 일어남.
@@ -399,6 +407,23 @@ struct RecommendationList: View {
         .sheet(isPresented: $showingPaywall) {
             PaywallView()
         }
+    }
+}
+
+// MARK: - 무료 한도 미리 알림
+
+/// 추천 카드 아래 한 줄 — 무료로 넣을 수 있는 칸이 얼마 남지 않았다(`RecommendationGate`).
+/// 추천 화면과 캘린더 탭이 같은 것을 쓴다.
+struct FreeLimitNotice: View {
+    /// 이 칸을 넣고 나서 남는 무료 칸 수
+    let remaining: Int
+
+    var body: some View {
+        Label(Strings.freeRecommendationNotice(remaining: remaining), systemImage: "info.circle")
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 4)
     }
 }
 

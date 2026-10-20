@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LeeoKit
 
 /// 산 사람이 **지금 무엇을 얼마나 쓰고 있는가**를 센다.
 ///
@@ -42,6 +43,29 @@ enum ProBenefits {
         case .pro: return .family
         case .family: return nil
         }
+    }
+}
+
+/// 응원(팁)을 부탁할 만한 순간 — **이 앱이 그 사람에게 도움이 됐다는 것이 숫자로 보일 때.**
+///
+/// 누구에게 · 얼마나 드물게는 여기서 정하지 않는다. 프로 트림 이상에게만(`HomeView`),
+/// 횟수의 규칙은 LeeoKit(`LeeoTipAskPolicy`: 물으면 60일 쉬고, 낸 사람은 180일, '다음에' 세 번이면 끝).
+/// ⚠️ `id` 는 기기에 "이미 물었다" 로 남는 이름이다. 한 번 정하면 바꾸지 않는다.
+enum TipAskMoments {
+    /// 올해 추천으로 세운 휴가 계획 수(`ProBenefits.recommendedPlanCount`). 큰 것부터.
+    static let plans = [10, 5, 3]
+    /// 지금까지 적어 둔 휴가 기록 수(취소 제외). 큰 것부터.
+    static let leaves = [100, 30]
+
+    /// 넘어선 순간, **인상적인 것부터**. 추천으로 세운 계획이 앞이다(이 앱이 한 일이 가장 분명하다).
+    static func reached(planCount: Int, leaveCount: Int, year: Int) -> [LeeoTipMoment] {
+        let planned = plans.filter { planCount >= $0 }.map { threshold in
+            LeeoTipMoment(id: "plans.\(year).\(threshold)", message: Strings.tipAskPlans(planCount))
+        }
+        let tracked = leaves.filter { leaveCount >= $0 }.map { threshold in
+            LeeoTipMoment(id: "leaves.\(threshold)", message: Strings.tipAskLeaves(leaveCount))
+        }
+        return planned + tracked
     }
 }
 

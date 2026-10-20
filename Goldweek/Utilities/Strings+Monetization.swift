@@ -3,6 +3,7 @@
 //  Goldweek
 //
 //  2.4.0 유료화 정리 — 연간 구독·평생 구매 고르기, 구독 고지, 새로 Pro가 된 기능 문구.
+//  무료 한도 미리 알림 · 응원(팁) · 선물 행 문구.
 //  무엇을 왜 Pro로 두는지는 docs/MONETIZATION.md.
 //
 
@@ -1116,4 +1117,56 @@ extension Strings {
         }
     }
 
+}
+
+// MARK: - 무료 한도 미리 알림 · 응원(팁) · 선물
+
+extension Strings {
+    /// 추천 카드 아래 — 무료로 넣을 수 있는 칸이 거의 끝났다(`RecommendationGate`).
+    /// `remaining` 은 **이 칸을 넣고 나서** 남는 무료 칸 수.
+    static func freeRecommendationNotice(remaining: Int) -> String {
+        let n = remaining
+        if n <= 0 {
+            return pick([.korean: "무료로 넣을 수 있는 마지막 추천이에요", .english: "This is the last recommendation you can add for free", .japanese: "無料で追加できる最後のおすすめです", .chinese: "这是可免费添加的最后一个推荐", .german: "Das ist die letzte Empfehlung, die du kostenlos hinzufügen kannst", .french: "C’est la dernière recommandation que vous pouvez ajouter gratuitement", .spanish: "Es la última recomendación que puedes añadir gratis", .italian: "È l’ultimo suggerimento che puoi aggiungere gratis", .portuguese: "Esta é a última sugestão que você pode adicionar de graça", .chineseTraditional: "這是可免費加入的最後一個推薦", .dutch: "Dit is de laatste aanbeveling die je gratis kunt toevoegen", .swedish: "Det här är det sista förslaget du kan lägga till gratis", .norwegian: "Dette er den siste anbefalingen du kan legge til gratis", .danish: "Dette er den sidste anbefaling, du kan tilføje gratis", .finnish: "Tämä on viimeinen ehdotus, jonka voit lisätä ilmaiseksi", .polish: "To ostatnia rekomendacja, którą możesz dodać za darmo", .czech: "Tohle je poslední doporučení, které můžeš přidat zdarma", .greek: "Αυτή είναι η τελευταία πρόταση που μπορείς να προσθέσεις δωρεάν", .turkish: "Ücretsiz ekleyebileceğin son öneri bu", .russian: "Это последняя рекомендация, которую можно добавить бесплатно", .indonesian: "Ini rekomendasi terakhir yang bisa kamu tambahkan gratis", .thai: "นี่คือคำแนะนำสุดท้ายที่เพิ่มได้ฟรี", .vietnamese: "Đây là gợi ý cuối cùng bạn có thể thêm miễn phí"])
+        }
+        return pick([.korean: "이것 말고 \(n)개를 더 무료로 넣을 수 있어요", .english: "You can add \(n) more for free after this one", .japanese: "このほかに無料であと\(n)件追加できます", .chinese: "除此之外还能免费添加 \(n) 个", .german: "Danach kannst du noch \(n) kostenlos hinzufügen", .french: "Encore gratuites après celle-ci : \(n)", .spanish: "Después de esta te quedan \(n) gratis", .italian: "Dopo questo ne restano \(n) gratis", .portuguese: "Depois desta, restam \(n) grátis", .chineseTraditional: "除此之外還能免費加入 \(n) 個", .dutch: "Hierna kun je er nog \(n) gratis toevoegen", .swedish: "Efter det här kan du lägga till \(n) till gratis", .norwegian: "Etter denne kan du legge til \(n) til gratis", .danish: "Herefter kan du tilføje \(n) mere gratis", .finnish: "Tämän jälkeen voit lisätä vielä \(n) ilmaiseksi", .polish: "Potem możesz dodać za darmo jeszcze: \(n)", .czech: "Potom můžeš zdarma přidat ještě: \(n)", .greek: "Μετά από αυτή μπορείς να προσθέσεις δωρεάν ακόμα: \(n)", .turkish: "Bundan sonra \(n) tane daha ücretsiz ekleyebilirsin", .russian: "После этой можно бесплатно добавить ещё: \(n)", .indonesian: "Setelah ini kamu masih bisa menambahkan \(n) lagi gratis", .thai: "หลังจากนี้เพิ่มได้ฟรีอีก \(n) รายการ", .vietnamese: "Sau gợi ý này bạn còn thêm được \(n) gợi ý miễn phí"])
+    }
+
+    /// 팁 부탁 카드의 숫자 한 줄 — 올해 추천으로 세운 휴가 계획 수(`ProBenefits.recommendedPlanCount`)
+    static func tipAskPlans(_ n: Int) -> String {
+        pick([.korean: "올해 Goldweek 추천으로 휴가 계획을 \(n)개 세웠어요", .english: "You’ve planned \(n) breaks with Goldweek’s recommendations this year", .japanese: "今年はGoldweekのおすすめで休みを\(n)回計画しました", .chinese: "今年你已用 Goldweek 的推荐规划了 \(n) 次休假", .german: "Du hast dieses Jahr \(n) Auszeiten mit Goldweek-Empfehlungen geplant", .french: "Cette année, vous avez planifié \(n) congés grâce aux recommandations de Goldweek", .spanish: "Este año has planificado \(n) descansos con las recomendaciones de Goldweek", .italian: "Quest’anno hai pianificato \(n) pause con i suggerimenti di Goldweek", .portuguese: "Este ano você planejou \(n) folgas com as sugestões do Goldweek", .chineseTraditional: "今年你已用 Goldweek 的推薦規劃了 \(n) 次休假", .dutch: "Je hebt dit jaar \(n) keer vrij gepland met aanbevelingen van Goldweek", .swedish: "Du har planerat \(n) ledigheter med Goldweeks förslag i år", .norwegian: "Du har planlagt fri \(n) ganger med Goldweeks anbefalinger i år", .danish: "Du har planlagt fri \(n) gange med Goldweeks anbefalinger i år", .finnish: "Olet suunnitellut tänä vuonna \(n) lomaa Goldweekin ehdotuksilla", .polish: "Urlopy zaplanowane w tym roku z rekomendacji Goldweek: \(n)", .czech: "Volna naplánovaná letos podle doporučení Goldweeku: \(n)", .greek: "Άδειες που οργάνωσες φέτος με τις προτάσεις του Goldweek: \(n)", .turkish: "Bu yıl Goldweek önerileriyle \(n) izin planladın", .russian: "Отпусков по рекомендациям Goldweek в этом году: \(n)", .indonesian: "Tahun ini kamu sudah merencanakan \(n) cuti dari rekomendasi Goldweek", .thai: "ปีนี้คุณวางแผนวันหยุดจากคำแนะนำของ Goldweek ไปแล้ว \(n) ครั้ง", .vietnamese: "Năm nay bạn đã lên \(n) kỳ nghỉ nhờ gợi ý của Goldweek"])
+    }
+
+    /// 팁 부탁 카드의 숫자 한 줄 — 지금까지 적어 둔 휴가 기록 수
+    static func tipAskLeaves(_ n: Int) -> String {
+        pick([.korean: "Goldweek로 휴가를 \(n)번 챙겼어요", .english: "You’ve tracked \(n) time-off entries in Goldweek", .japanese: "Goldweekで休みを\(n)件記録しました", .chinese: "你已在 Goldweek 记录了 \(n) 次休假", .german: "Du hast \(n) Urlaube in Goldweek festgehalten", .french: "Vous avez noté \(n) congés dans Goldweek", .spanish: "Has anotado \(n) vacaciones en Goldweek", .italian: "Hai registrato \(n) periodi di ferie in Goldweek", .portuguese: "Você já registrou \(n) folgas no Goldweek", .chineseTraditional: "你已在 Goldweek 記錄了 \(n) 次休假", .dutch: "Je hebt \(n) keer verlof bijgehouden in Goldweek", .swedish: "Du har fört in \(n) ledigheter i Goldweek", .norwegian: "Du har registrert fri \(n) ganger i Goldweek", .danish: "Du har registreret fri \(n) gange i Goldweek", .finnish: "Olet kirjannut Goldweekiin \(n) lomaa", .polish: "Urlopy zapisane w Goldweek: \(n)", .czech: "Volna zapsaná v Goldweeku: \(n)", .greek: "Άδειες που κατέγραψες στο Goldweek: \(n)", .turkish: "Goldweek’e \(n) izin kaydettin", .russian: "Отпусков записано в Goldweek: \(n)", .indonesian: "Kamu sudah mencatat \(n) cuti di Goldweek", .thai: "คุณบันทึกวันลาใน Goldweek ไปแล้ว \(n) ครั้ง", .vietnamese: "Bạn đã ghi \(n) lần nghỉ phép trong Goldweek"])
+    }
+
+    /// 설정 — 선물 · 응원 섹션 머리
+    static var giftAndTipSection: String {
+        pick([.korean: "선물과 응원", .english: "Gifts & Support", .japanese: "ギフトと応援", .chinese: "礼物与支持", .german: "Geschenke & Unterstützung", .french: "Cadeaux et soutien", .spanish: "Regalos y apoyo", .italian: "Regali e sostegno", .portuguese: "Presentes e apoio", .chineseTraditional: "禮物與支持", .dutch: "Cadeaus en steun", .swedish: "Gåvor och stöd", .norwegian: "Gaver og støtte", .danish: "Gaver og støtte", .finnish: "Lahjat ja tuki", .polish: "Prezenty i wsparcie", .czech: "Dárky a podpora", .greek: "Δώρα και στήριξη", .turkish: "Hediyeler ve destek", .russian: "Подарки и поддержка", .indonesian: "Hadiah dan dukungan", .thai: "ของขวัญและการสนับสนุน", .vietnamese: "Quà tặng và ủng hộ"])
+    }
+
+    // ⚠️ 아래 넷은 LeeoKit 카탈로그(`LeeoTipText` · `LeeoGiftText`)의 번역을 그대로 옮긴 것이다.
+    //    LeeoKit 문구는 **기기 언어**를 따라서, 앱 언어만 바꾼 사람에게 설정 행이 다른 말로 남는다(지원 섹션 주석 참고).
+
+    /// 설정 — 팁 화면으로 (`LeeoTipText.entry`)
+    static var tipEntry: String {
+        pick([.korean: "개발자 응원하기", .english: "Support the Developer", .japanese: "開発者を応援する", .chinese: "支持开发者", .german: "Entwickler unterstützen", .french: "Soutenir le développeur", .spanish: "Apoya al desarrollador", .italian: "Sostieni lo sviluppatore", .portuguese: "Apoie o desenvolvedor", .chineseTraditional: "支持開發者", .dutch: "Steun de ontwikkelaar", .swedish: "Stöd utvecklaren", .norwegian: "Støtt utvikleren", .danish: "Støt udvikleren", .finnish: "Tue kehittäjää", .polish: "Wesprzyj twórcę", .czech: "Podpořit vývojáře", .greek: "Στήριξε τον δημιουργό", .turkish: "Geliştiriciyi Destekleyin", .russian: "Поддержать разработчика", .indonesian: "Dukung Pengembang", .thai: "สนับสนุนผู้พัฒนา", .vietnamese: "Ủng hộ nhà phát triển"])
+    }
+
+    /// 설정 — 팁 행 아래 한 줄 (`LeeoTipText.entrySubtitle`)
+    static var tipEntrySubtitle: String {
+        pick([.korean: "기능은 그대로, 앱을 더 다듬는 데 쓰여요", .english: "Nothing changes in the app, it helps polish it further", .japanese: "機能はそのまま、アプリをさらに磨くために使われます", .chinese: "功能不变，用来把 App 做得更好", .german: "Die App bleibt gleich, es hilft beim Weiterentwickeln", .french: "Rien ne change dans l'app, cela aide à la peaufiner", .spanish: "No cambia nada en la app, ayuda a pulirla más", .italian: "L'app non cambia, aiuta a migliorarla ancora", .portuguese: "Nada muda no app, ajuda a deixá-lo ainda melhor", .chineseTraditional: "功能不變，用來把 App 做得更好", .dutch: "Er verandert niets in de app, het helpt om hem verder te verbeteren", .swedish: "Inget ändras i appen, det hjälper till att förbättra den", .norwegian: "Ingenting endres i appen, det hjelper til å gjøre den bedre", .danish: "Intet ændres i appen, det hjælper med at gøre den bedre", .finnish: "Sovellus pysyy samana, tuki auttaa hiomaan sitä", .polish: "Funkcje się nie zmieniają, to pomaga dalej dopracowywać aplikację", .czech: "V aplikaci se nic nemění, pomůže to ji dál vylepšovat", .greek: "Τίποτα δεν αλλάζει στην εφαρμογή, βοηθά να γίνει ακόμα καλύτερη", .turkish: "Uygulamada hiçbir şey değişmez, daha da iyileştirmeye yarar", .russian: "Функции не меняются, деньги идут на доработку приложения", .indonesian: "Fitur tetap sama, dipakai untuk menyempurnakan app", .thai: "ฟีเจอร์เหมือนเดิม ใช้เพื่อปรับแอปให้ดียิ่งขึ้น", .vietnamese: "Tính năng giữ nguyên, dùng để hoàn thiện ứng dụng hơn"])
+    }
+
+    /// 설정 — 선물 보내기 (`LeeoGiftText.sendEntry`)
+    static var giftSendEntry: String {
+        pick([.korean: "Pro 선물하기", .english: "Gift Pro", .japanese: "Proをプレゼント", .chinese: "赠送 Pro", .german: "Pro verschenken", .french: "Offrir Pro", .spanish: "Regalar Pro", .italian: "Regala Pro", .portuguese: "Presentear Pro", .chineseTraditional: "贈送 Pro", .dutch: "Pro cadeau geven", .swedish: "Ge bort Pro", .norwegian: "Gi bort Pro", .danish: "Giv Pro i gave", .finnish: "Anna Pro lahjaksi", .polish: "Podaruj Pro", .czech: "Darovat Pro", .greek: "Δώρο Pro", .turkish: "Pro hediye et", .russian: "Подарить Pro", .indonesian: "Hadiahkan Pro", .thai: "มอบ Pro เป็นของขวัญ", .vietnamese: "Tặng Pro"])
+    }
+
+    /// 설정 — 받은 선물 코드 넣기 (`LeeoGiftText.redeemEntry`)
+    static var giftRedeemEntry: String {
+        pick([.korean: "선물 코드 입력", .english: "Redeem Gift Code", .japanese: "ギフトコードを入力", .chinese: "输入礼品码", .german: "Geschenkcode eingeben", .french: "Saisir un code cadeau", .spanish: "Canjear código de regalo", .italian: "Riscatta codice regalo", .portuguese: "Resgatar código de presente", .chineseTraditional: "輸入禮物碼", .dutch: "Cadeaucode invoeren", .swedish: "Lös in presentkod", .norwegian: "Løs inn gavekode", .danish: "Indløs gavekode", .finnish: "Lunasta lahjakoodi", .polish: "Wpisz kod prezentu", .czech: "Zadat dárkový kód", .greek: "Εξαργύρωση κωδικού δώρου", .turkish: "Hediye kodu gir", .russian: "Ввести код подарка", .indonesian: "Tukarkan Kode Hadiah", .thai: "ใส่รหัสของขวัญ", .vietnamese: "Nhập mã quà tặng"])
+    }
 }

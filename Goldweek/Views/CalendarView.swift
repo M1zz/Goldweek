@@ -1299,8 +1299,6 @@ struct CalendarRecommendationSection: View {
 
     @State private var showingPaywall = false
     private let proManager = ProManager.shared
-    /// 무료로 등록할 수 있는 추천 수 — 추천 화면과 같은 규칙을 따른다.
-    private let freeAddLimit = ProManager.freeRecommendationAddLimit
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -1315,7 +1313,8 @@ struct CalendarRecommendationSection: View {
             }
 
             ForEach(Array(recommendations.enumerated()), id: \.element.id) { index, recommendation in
-                let requiresPro = !proManager.isPro && index >= freeAddLimit
+                let decision = RecommendationGate.decision(at: index, hasPro: proManager.isPro)
+                let requiresPro = decision.needsPaywall
                 DetailedRecommendationCard(
                     recommendation: recommendation,
                     country: country,
@@ -1332,6 +1331,11 @@ struct CalendarRecommendationSection: View {
                 )
                 // 아이폰 듀오를 펴면 눌러서 고를 수 있다 — 오른쪽 현황에 넣은 뒤 숫자가 미리 그려진다.
                 .foldPreviewSelectable(recommendation, isAdded: addedIDs.contains(recommendation.id))
+
+                // 무료 칸이 거의 끝났다 — 추천 화면과 같은 미리 알림
+                if !addedIDs.contains(recommendation.id), case .allowedNearLimit(let remaining) = decision {
+                    FreeLimitNotice(remaining: remaining)
+                }
             }
         }
         .sheet(isPresented: $showingPaywall) {
