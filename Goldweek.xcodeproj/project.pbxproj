@@ -599,6 +599,7 @@
 				id,
 				th,
 				vi,
+				"en-GB",
 			);
 			mainGroup = A4000000;
 			packageReferences = (

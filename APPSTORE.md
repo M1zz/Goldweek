@@ -1251,3 +1251,57 @@ https://m1zz.github.io/Goldweek/vi/privacy.html
 ### 마케팅 URL
 
 https://m1zz.github.io/Goldweek/vi/
+
+## en-GB
+
+### 이름
+
+Goldweek: Leave Planner
+
+### 부제
+
+Turn bank holidays into breaks
+
+### 키워드
+
+annual,allowance,long weekend,days off,bridge day,time off,getaway,calendar,accrual,widget,rota,toil
+
+### 프로모션 텍스트
+
+Bank holiday coming up? Goldweek pairs public holidays with weekends to show which days to book off for the longest break. See your leave left on a widget.
+
+### 설명
+
+Goldweek finds the days off that stretch your annual leave the furthest.
+It pairs bank holidays with weekends and shows you how to get the longest break for the fewest days of leave.
+
+Smart suggestions
+For every upcoming bank holiday, see how many days to book off and how many days in a row you will get. You will never miss a bridge day again.
+
+Holidays in 42 countries
+Public holidays for the UK, the US, Canada, Australia, New Zealand and 36 more countries across Europe, Asia, Latin America, the Middle East and Africa. Where holidays vary by state or region, just pick yours. Country not listed? Add your own holidays. You can also choose your weekend days and the first day of the week.
+
+Leave tracking
+See your total, used and remaining days on one screen. Log half days and quarter days, and keep track of extra leave such as time off in lieu along with its expiry date. Tap a date in the calendar to add or edit time off, or import past leave from a photo of your HR screen.
+
+Widget and backup
+Your remaining leave and upcoming time off sit right on your Home Screen. Your records are backed up to iCloud, and you can share your schedule with family. Works on iPhone and iPad.
+
+Plan ahead, use fewer days and enjoy more time off.
+
+Subscriptions
+Goldweek Plus, Pro Yearly and Family Yearly are auto-renewing subscriptions. Payment is charged to your Apple Account and renews unless cancelled at least 24 hours before the period ends. Manage or cancel anytime in Settings.
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://m1zz.github.io/Goldweek/en/privacy.html
+
+### 지원 URL
+
+https://m1zz.github.io/Goldweek/en/support.html
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/Goldweek/en/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/Goldweek/en/

@@ -141,6 +141,12 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -280,6 +286,12 @@
           }
         },
         "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
             "value": "Goldweek"
@@ -427,6 +439,12 @@
             "state": "translated",
             "value": "Goldweek cần truy cập lịch để tìm các sự kiện giống ngày nghỉ mà bạn có thể nhập, và đồng bộ các ngày nghỉ bạn đã ghi vào lịch."
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek needs calendar access to find leave-like events you can import and to sync your registered leaves to your calendar."
+          }
         }
       }
     },
@@ -570,6 +588,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cần quyền camera để chụp lịch sử đơn xin nghỉ và tự động ghi ngày nghỉ của bạn."
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera access is needed to photograph your leave request history and register your leaves automatically."
           }
         }
       }

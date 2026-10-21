@@ -140,6 +140,12 @@
             "state": "translated",
             "value": "%1$@ · nghỉ phép %2$@ ngày"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@ days of leave"
+          }
         }
       }
     },
@@ -275,6 +281,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ ngày"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days"
           }
         }
       }
@@ -412,6 +424,12 @@
             "state": "translated",
             "value": "Còn %@ ngày"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days left"
+          }
         }
       }
     },
@@ -544,6 +562,12 @@
           }
         },
         "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld"
@@ -684,6 +708,12 @@
             "state": "translated",
             "value": "%lld%%"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
         }
       }
     },
@@ -819,6 +849,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Còn %lld%%"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%% left"
           }
         }
       }
@@ -980,6 +1016,12 @@
             "state": "translated",
             "value": "%lld ngày"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days"
+          }
         }
       }
     },
@@ -1140,6 +1182,12 @@
             "state": "translated",
             "value": "%lld ngày"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days"
+          }
         }
       }
     },
@@ -1276,6 +1324,12 @@
             "state": "translated",
             "value": "+%@ ngày"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ days"
+          }
         }
       }
     },
@@ -1408,6 +1462,12 @@
           }
         },
         "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
             "value": "D-"
@@ -1547,6 +1607,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "NGÀY"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DAY"
           }
         }
       }
@@ -1690,6 +1756,12 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -1825,6 +1897,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Đến kỳ làm mới"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Until Reset"
           }
         }
       }
@@ -1986,6 +2064,12 @@
             "state": "translated",
             "value": "Còn %lld ngày đến kỳ làm mới"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days until reset"
+          }
         }
       }
     },
@@ -2121,6 +2205,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mục tiêu"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected"
           }
         }
       }
@@ -2258,6 +2348,12 @@
             "state": "translated",
             "value": "Phép còn lại"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remaining Leave"
+          }
         }
       }
     },
@@ -2393,6 +2489,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Còn %@ ngày phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days of leave left"
           }
         }
       }
@@ -2530,6 +2632,12 @@
             "state": "translated",
             "value": "Xem số phép còn lại và kỳ nghỉ sắp tới"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your remaining leave and upcoming holidays"
+          }
         }
       }
     },
@@ -2665,6 +2773,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kỳ nghỉ sắp tới"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upcoming Leave"
           }
         }
       }
@@ -2802,6 +2916,12 @@
             "state": "translated",
             "value": "Kỳ nghỉ tiếp theo"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next Leave"
+          }
         }
       }
     },
@@ -2937,6 +3057,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Đếm ngược đến kỳ nghỉ tiếp theo"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Count down the days until your next time off"
           }
         }
       }
@@ -3074,6 +3200,12 @@
             "state": "translated",
             "value": "Thưởng"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonus"
+          }
         }
       }
     },
@@ -3209,6 +3341,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tốc độ dùng phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Burn Rate"
           }
         }
       }
@@ -3346,6 +3484,12 @@
             "state": "translated",
             "value": "Tốc độ dùng phép: %@"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Burn rate: %@"
+          }
         }
       }
     },
@@ -3481,6 +3625,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Thực tế"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actual"
           }
         }
       }
@@ -3618,6 +3768,12 @@
             "state": "translated",
             "value": "Thêm kế hoạch nghỉ trong ứng dụng"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a leave plan in the app"
+          }
         }
       }
     },
@@ -3753,6 +3909,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Phép năm"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave"
           }
         }
       }
@@ -3890,6 +4052,12 @@
             "state": "translated",
             "value": "%@ ngày phép"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days of leave"
+          }
         }
       }
     },
@@ -4025,6 +4193,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Còn %@ ngày phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days of leave remaining"
           }
         }
       }
@@ -4162,6 +4336,12 @@
             "state": "translated",
             "value": "Xem tốc độ dùng phép đến kỳ làm mới"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your leave burn rate until the next reset date"
+          }
         }
       }
     },
@@ -4297,6 +4477,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tốc độ dùng phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave Burn Rate"
           }
         }
       }
@@ -4434,6 +4620,12 @@
             "state": "translated",
             "value": "Tình trạng phép"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave Status"
+          }
         }
       }
     },
@@ -4569,6 +4761,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "ngày"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "days"
           }
         }
       }
@@ -4706,6 +4904,12 @@
             "state": "translated",
             "value": "Còn lại"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remaining"
+          }
         }
       }
     },
@@ -4841,6 +5045,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Xem D-day và số phép còn lại trên Màn hình khóa"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your D-day and remaining leave on the lock screen"
           }
         }
       }
@@ -4979,6 +5189,12 @@
             "state": "translated",
             "value": "Xem phép còn lại trên Màn hình khóa"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check remaining leave on lock screen"
+          }
         }
       }
     },
@@ -5114,6 +5330,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tổng số phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Leave"
           }
         }
       }
@@ -5252,6 +5474,12 @@
             "state": "translated",
             "value": "Nghỉ phép"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave"
+          }
         }
       }
     },
@@ -5387,6 +5615,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "D-Day kỳ nghỉ"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave D-Day"
           }
         }
       }
@@ -5524,6 +5758,12 @@
             "state": "translated",
             "value": "Lên kế hoạch kỳ nghỉ tới nhé?"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan your next time off"
+          }
         }
       }
     },
@@ -5660,6 +5900,12 @@
             "state": "translated",
             "value": "Chưa có kế hoạch nghỉ"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Leave Planned"
+          }
         }
       }
     },
@@ -5795,6 +6041,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Không có kỳ nghỉ"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Leave"
           }
         }
       }
@@ -5933,6 +6185,12 @@
             "state": "translated",
             "value": "Lịch nghỉ phép"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave Calendar"
+          }
         }
       }
     },
@@ -6068,6 +6326,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sắp tới rồi ✈️"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting soon ✈️"
           }
         }
       }
@@ -6205,6 +6469,12 @@
             "state": "translated",
             "value": "Đang chờ đón"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something to look forward to"
+          }
         }
       }
     },
@@ -6340,6 +6610,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ngày mai rồi!"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's tomorrow!"
           }
         }
       }
@@ -6477,6 +6753,12 @@
             "state": "translated",
             "value": "Chậm"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slow"
+          }
         }
       }
     },
@@ -6612,6 +6894,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tuần sau"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next week"
           }
         }
       }
@@ -6749,6 +7037,12 @@
             "state": "translated",
             "value": "Nhanh"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fast"
+          }
         }
       }
     },
@@ -6884,6 +7178,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Trong vòng một tháng"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This month"
           }
         }
       }
@@ -7021,6 +7321,12 @@
             "state": "translated",
             "value": "Chưa đầy một tuần!"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This week!"
+          }
         }
       }
     },
@@ -7157,6 +7463,12 @@
             "state": "translated",
             "value": "Vừa phải"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On track"
+          }
         }
       }
     },
@@ -7292,6 +7604,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vừa phải ✓"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On track ✓"
           }
         }
       }
@@ -7430,6 +7748,12 @@
             "state": "translated",
             "value": "Du lịch Đà Nẵng"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beach getaway"
+          }
         }
       }
     },
@@ -7565,6 +7889,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hơi chậm"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A bit slow"
           }
         }
       }
@@ -7702,6 +8032,12 @@
             "state": "translated",
             "value": "Hơi nhanh"
           }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A bit fast"
+          }
         }
       }
     },
@@ -7837,6 +8173,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "🎉 Là hôm nay!"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎉 It's today!"
           }
         }
       }

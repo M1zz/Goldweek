@@ -56,6 +56,13 @@ COPY = {
         ("Holidays for<br>42 countries", "Pick your state or region where it matters"),
         ("Your country,<br>your language", "Available in 23 languages"),
     ],
+    "en-GB": [
+        ("When should you<br>take a break?", "Your last break, your next one, and when to rest"),
+        ("Fewest days off,<br>longest break", "Bank holidays and weekends, combined for you"),
+        ("Your time off<br>at a glance", "Tap any date to add or edit leave"),
+        ("Holidays for<br>42 countries", "Pick your state or region where it matters"),
+        ("Your country,<br>your language", "Available in 23 languages"),
+    ],
     "ja": [
         ("いつ休むのが<br>いい？", "前回と次の休みから、休みどきをお知らせ"),
         ("最少の有給で<br>最長の連休", "祝日と週末を組み合わせて提案します"),
