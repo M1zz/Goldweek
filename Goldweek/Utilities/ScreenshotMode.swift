@@ -61,7 +61,9 @@ enum ScreenshotMode {
         let (country, name, total): (Country, String, Double) = {
             switch lang {
             case .korean: return (.korea, "민지", 20)
-            case .english: return (.usa, "Emily", 20)
+            // 영국 영어(en-GB) 스크린샷은 지역이 GB — 영국 공휴일(bank holiday)과 영국식 날짜로 찍는다
+            case .english:
+                return Locale.current.region?.identifier == "GB" ? (.uk, "Olivia", 25) : (.usa, "Emily", 20)
             case .swedish: return (.sweden, "Emma", 25)
             case .norwegian: return (.norway, "Ingrid", 25)
             case .danish: return (.denmark, "Freja", 25)

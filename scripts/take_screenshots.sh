@@ -30,9 +30,13 @@ apple_lang() {   # 앱 언어 코드 → 시스템 언어 코드
   case "$1" in zh) echo "zh-Hans" ;; pt) echo "pt-BR" ;; *) echo "$1" ;; esac
 }
 
+app_lang() {   # 스크린샷 언어 → 앱 언어 (영국 영어는 앱에선 영어, 지역만 영국)
+  case "$1" in en-GB) echo "en" ;; *) echo "$1" ;; esac
+}
+
 apple_locale() {   # 앱 언어 코드 → 지역 (국가 판별이 지역을 보므로 데모 국가와 맞춘다)
   case "$1" in
-    ko) echo "ko_KR" ;; en) echo "en_US" ;; ja) echo "ja_JP" ;; zh) echo "zh_CN" ;;
+    ko) echo "ko_KR" ;; en) echo "en_US" ;; en-GB) echo "en_GB" ;; ja) echo "ja_JP" ;; zh) echo "zh_CN" ;;
     de) echo "de_DE" ;; fr) echo "fr_FR" ;; es) echo "es_ES" ;; it) echo "it_IT" ;;
     pt) echo "pt_BR" ;; zh-Hant) echo "zh_TW" ;; ru) echo "ru_RU" ;; id) echo "id_ID" ;;
     nl) echo "nl_NL" ;; sv) echo "sv_SE" ;; nb) echo "nb_NO" ;; da) echo "da_DK" ;; fi) echo "fi_FI" ;;
@@ -90,7 +94,7 @@ for lang in "${LANGS[@]}"; do
     xcrun simctl terminate "$DEVICE" "$BUNDLE_ID" 2>/dev/null || true
     xcrun simctl launch "$DEVICE" "$BUNDLE_ID" \
       -screenshotMode YES -screenshotTab "$tab" -screenshotScroll "${scroll:-none}" -isPro YES \
-      -appLanguage "$lang" -AppleLanguages "($sys)" -AppleLocale "$loc" >/dev/null
+      -appLanguage "$(app_lang "$lang")" -AppleLanguages "($sys)" -AppleLocale "$loc" >/dev/null
     sleep "${WAIT:-6}"
     file="$dir/0$i-$name.png"
     # 레포 경로에 한글이 있으면 pwd 가 자모 분리형(NFD)으로 돌려주는데, simctl 은 그 경로에 쓰지 못한다

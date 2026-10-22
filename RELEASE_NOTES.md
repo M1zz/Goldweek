@@ -16,7 +16,7 @@ Redeem offer codes right in the app
 Better with larger text and no colors
 See what’s new once after each update
 
-### 앱스토어 (영국 영어)
+### App Store (en-GB)
 
 See your plan’s benefits in Settings
 Redeem offer codes right in the app
