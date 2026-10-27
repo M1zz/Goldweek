@@ -48,17 +48,113 @@ final class MaturityFeatureTests: XCTestCase {
         XCTAssertEqual(ProBenefits.extra(used: 1, freeLimit: ProManager.freeRecommendationAddLimit), 0)
     }
 
-    func testNextTierStopsAtFamily() {
+    /// 패밀리를 프로에 합쳐 맨 위는 프로다.
+    func testNextTierStopsAtPro() {
+        XCTAssertEqual(ProBenefits.nextTier(after: .free), .plus)
         XCTAssertEqual(ProBenefits.nextTier(after: .plus), .pro)
-        XCTAssertEqual(ProBenefits.nextTier(after: .pro), .family)
-        XCTAssertNil(ProBenefits.nextTier(after: .family))
+        XCTAssertNil(ProBenefits.nextTier(after: .pro))
     }
 
     /// 위 등급에서 더 열리는 것은 페이월 비교표에서 가져온다 — 요약 줄을 빼도 비어 있으면 안 된다.
+    /// 무료 칸도 지금 무료로 되는 것을 적는다.
     func testUpgradeListComesFromPaywallTable() {
-        for tier in [ProTier.plus, .pro, .family] {
+        for tier in PaywallView.ladder {
             XCTAssertFalse(PaywallView.features(of: tier).filter { !$0.isSummary }.isEmpty, "\(tier)")
         }
+    }
+
+    // MARK: - 세 칸 권한 (무료 · 플러스 · 프로, 2.4.2)
+
+    private func resolve(_ ids: [String], gifted: Bool = false, pass: Bool = false) -> ProManager.Entitlement {
+        ProManager.resolve(owned: ids.map { (productID: $0, expires: nil) }, gifted: gifted, passActive: pass)
+    }
+
+    /// 새 상품: 플러스 평생 · 올리기 · 졸업. 연 구독은 같은 칸의 평생과 같은 권한이다.
+    func testNewProductsOpenTheirTier() {
+        XCTAssertEqual(resolve([ProManager.plusLifetimeProductID]).tier, .plus)
+        XCTAssertEqual(resolve([ProManager.plusLifetimeProductID]).plan, .lifetime)
+        XCTAssertEqual(resolve([ProManager.plusProductID]).tier, .plus)
+        XCTAssertEqual(resolve([ProManager.plusProductID]).plan, .yearly(expires: nil))
+        XCTAssertEqual(resolve([ProManager.yearlyProductID]).tier, .pro)
+        XCTAssertEqual(resolve([ProManager.yearlyProductID]).plan, .yearly(expires: nil))
+        XCTAssertEqual(resolve([ProManager.proProductID]).plan, .lifetime)
+    }
+
+    /// 졸업 상품 = 프로 평생. 구독이 아직 살아 있어도 평생이 앞선다.
+    func testGraduateIsProLifetime() {
+        let r = resolve([ProManager.yearlyProductID, ProManager.proGraduateProductID])
+        XCTAssertEqual(r.tier, .pro)
+        XCTAssertEqual(r.plan, .lifetime)
+        XCTAssertTrue(r.ownsProLifetime)
+        XCTAssertTrue(r.purchasedProTier)
+    }
+
+    /// 올리기 = 플러스 평생에서 프로 평생. 플러스 평생을 산 사람에게 프로 평생 버튼은 올리기 상품을 판다.
+    func testUpgradeFromPlusLifetime() {
+        let plusOnly = resolve([ProManager.plusLifetimeProductID])
+        XCTAssertTrue(plusOnly.ownsPlusLifetime)
+        XCTAssertFalse(plusOnly.ownsProLifetime)
+        XCTAssertEqual(ProManager.lifetimeID(for: .pro, ownsPlusLifetime: true), ProManager.proUpgradeProductID)
+        XCTAssertEqual(ProManager.lifetimeID(for: .pro, ownsPlusLifetime: false), ProManager.proProductID)
+        XCTAssertEqual(ProManager.lifetimeID(for: .plus, ownsPlusLifetime: true), ProManager.plusLifetimeProductID)
+        XCTAssertEqual(ProManager.yearlyID(for: .plus), ProManager.plusProductID)
+        XCTAssertEqual(ProManager.yearlyID(for: .pro), ProManager.yearlyProductID)
+
+        let upgraded = resolve([ProManager.plusLifetimeProductID, ProManager.proUpgradeProductID])
+        XCTAssertEqual(upgraded.tier, .pro)
+        XCTAssertEqual(upgraded.plan, .lifetime)
+        XCTAssertTrue(upgraded.ownsProLifetime)
+    }
+
+    /// 예전 상품은 판매를 멈춰도 권한이 그대로다. 패밀리 구독자는 끝날 때까지 프로와 같다.
+    func testLegacyProductsKeepAccess() {
+        let expires = day(2027, 3, 1)
+        let family = ProManager.resolve(owned: [(productID: ProManager.familyProductID, expires: expires)],
+                                        gifted: false, passActive: false)
+        XCTAssertEqual(family.tier, .pro)
+        XCTAssertEqual(family.plan, .yearly(expires: expires))
+        XCTAssertFalse(ProManager.saleProductIDs.contains(ProManager.familyProductID))
+        XCTAssertTrue(ProManager.allProductIDs.contains(ProManager.familyProductID))
+        // 2.4.0 전 평생 구매자
+        XCTAssertEqual(resolve([ProManager.proProductID]).tier, .pro)
+        // 2.4.0 전 설치자(빌드 11 이하)는 새로 유료가 된 기능을 계속 무료로 쓴다
+        XCTAssertTrue(ProManager.isLegacyBuild("11"))
+    }
+
+    /// 선물은 프로 평생과 같고, 언제나 평생 패스는 이 앱의 가장 높은 칸(프로)을 연다. 둘 다 산 것은 아니다.
+    func testGiftAndForeverPassOpenPro() {
+        for r in [resolve([], gifted: true), resolve([], pass: true), resolve([ProManager.plusProductID], pass: true)] {
+            XCTAssertEqual(r.tier, .pro)
+            XCTAssertEqual(r.plan, .lifetime)
+            XCTAssertFalse(r.purchasedProTier)
+        }
+        // 이미 산 프로 구독은 그대로 둔다(구독 관리 줄이 사라지지 않게)
+        XCTAssertEqual(resolve([ProManager.yearlyProductID], pass: true).plan, .yearly(expires: nil))
+        XCTAssertEqual(resolve([]).tier, .free)
+        XCTAssertNil(resolve([]).plan)
+    }
+
+    /// 패스 상품은 앱의 권한 목록에 넣지 않는다. 패스가 따로 판정한다.
+    func testForeverPassProductsAreNotEntitlements() {
+        for id in LeeoForeverPassRule.productIDs(bundleID: "com.Ysoup.LeaveWise") {
+            XCTAssertEqual(ProManager.tier(of: id), .free, id)
+            XCTAssertFalse(ProManager.allProductIDs.contains(id), id)
+        }
+        XCTAssertTrue(LeeoForeverPassRule.family.contains("com.Ysoup.LeaveWise"))
+    }
+
+    /// 졸업은 자동 갱신 구독에게만 제안한다. 평생 상품은 대상이 아니다.
+    func testGraduationTargetsSubscriptionsOnly() {
+        XCTAssertEqual(ProManager.subscriptionProductIDs,
+                       [ProManager.plusProductID, ProManager.yearlyProductID, ProManager.familyProductID])
+        for id in [ProManager.proProductID, ProManager.plusLifetimeProductID, ProManager.proUpgradeProductID,
+                   ProManager.proGraduateProductID] {
+            XCTAssertTrue(ProManager.isLifetime(id), id)
+        }
+        for id in ProManager.subscriptionProductIDs {
+            XCTAssertFalse(ProManager.isLifetime(id), id)
+        }
+        XCTAssertFalse(ProManager.isLifetime(ProManager.giftProductID))
     }
 
     // MARK: - 무료 한도 (freeGate)
@@ -97,9 +193,11 @@ final class MaturityFeatureTests: XCTestCase {
         XCTAssertEqual(gift.grantsProductID, ProManager.proProductID)
         XCTAssertTrue(paywall.entitlementIDs.contains(gift.grantsProductID))
         XCTAssertEqual(gift.containerIdentifier, "iCloud.com.Ysoup.FeedbackHub")
-        // 기존 상품 ID 는 그대로다
-        XCTAssertEqual(ProManager.allProductIDs, ["com.Ysoup.LeaveWise.plus.annual", "com.Ysoup.LeaveWise.pro.yearly",
-                                                  "com.Ysoup.LeaveWise.pro", "com.Ysoup.LeaveWise.family.yearly"])
+        // 기존 상품 ID 는 그대로다. 패밀리는 팔지 않지만 권한 목록에는 남는다.
+        XCTAssertEqual(paywall.productIDs, ["com.Ysoup.LeaveWise.plus.annual", "com.Ysoup.LeaveWise.plus",
+                                            "com.Ysoup.LeaveWise.pro.yearly", "com.Ysoup.LeaveWise.pro",
+                                            "com.Ysoup.LeaveWise.pro.upgrade", "com.Ysoup.LeaveWise.pro.graduate"])
+        XCTAssertEqual(paywall.entitlementIDs, Set(paywall.productIDs + ["com.Ysoup.LeaveWise.family.yearly"]))
     }
 
     /// LeeoKit 사전 점검이 수익화 구성에서 잡는 것이 없다(선물이 아무것도 안 엶 · 팁이 Pro 를 엶 · 길 없는 페이월).
@@ -163,13 +261,19 @@ final class MaturityFeatureTests: XCTestCase {
                 Strings.benefitsSummaryExtra(1), Strings.benefitsSummaryExtra(4),
                 Strings.benefitsAllUnlocked(.pro), Strings.benefitsLimitsHeader,
                 Strings.benefitsRecommendationsRow, Strings.benefitsFreeVsNow(free: 3, now: 5),
-                Strings.benefitsBeyondFree(2), Strings.benefitsUnlockedHeader(.family),
-                Strings.benefitsFamilyMembers, Strings.benefitsMoreHeader(.pro), Strings.benefitsExplore(.family),
+                Strings.benefitsBeyondFree(2), Strings.benefitsUnlockedHeader(.pro),
+                Strings.benefitsFamilyMembers, Strings.benefitsMoreHeader(.pro), Strings.benefitsExplore(.plus),
                 Strings.benefitsSeeAll, Strings.benefitsRowHint, Strings.a11yLeaveDeleted,
                 Strings.a11yRecommendationAdded("X"),
                 Strings.freeRecommendationNotice(remaining: 0), Strings.freeRecommendationNotice(remaining: 1),
                 Strings.tipAskPlans(5), Strings.tipAskLeaves(30), Strings.giftAndTipSection,
                 Strings.tipEntry, Strings.tipEntrySubtitle, Strings.giftSendEntry, Strings.giftRedeemEntry,
+                // 세 칸 페이월 (2.4.2)
+                Strings.trimName(.free), Strings.trimName(.plus), Strings.trimName(.pro),
+                Strings.trimTagline(.free), Strings.trimTagline(.plus), Strings.trimTagline(.pro),
+                Strings.paywallLadderTitle, Strings.paywallLadderSubtitle, Strings.freeFeatTracking,
+                Strings.freeFeatHolidays, Strings.freeFeatRecommendations(3), Strings.freeFeatRest,
+                Strings.freeFeatBackupShare, Strings.switchToLifetimeEntry, Strings.togetherLocked, Strings.trimIncluded,
             ]
             for text in texts {
                 XCTAssertFalse(text.trimmingCharacters(in: .whitespaces).isEmpty, "\(lang.rawValue) 빈 문구")

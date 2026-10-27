@@ -11,15 +11,16 @@ import SwiftUI
 import Combine
 import LeeoKit
 
-/// 유료 트림. 위 트림은 아래 트림 기능을 모두 포함한다 — 무엇을 왜 어느 트림에 두는지는 docs/MONETIZATION.md.
+/// 유료 칸. 위 칸은 아래 칸 기능을 모두 포함한다. 무엇을 왜 어느 칸에 두는지는 docs/MONETIZATION.md.
 /// - 플러스: 최적 플래너·추천 무제한·다른 해 추천·캘린더 앱으로 보내기 (`isPro`로 본다)
-/// - 프로: + 보너스 연차·캘린더 자동 감지·종류별 한도·학교 달력 (`hasProTier`·`has(_:)`)
-/// - 패밀리: 프로를 App Store 가족 공유로 6명까지
+/// - 프로: + 보너스 연차·캘린더 자동 감지·종류별 한도·학교 달력·함께 쉬기·가족 기념일 (`hasProTier`·`has(_:)`)
+///
+/// 2.4.2 전에는 프로 위에 패밀리(rawValue 3)가 있었다. 패밀리는 프로에 합쳤다.
+/// 기기에 남은 3 은 프로로 읽는다(`init`).
 enum ProTier: Int, Comparable, CaseIterable {
     case free
     case plus
     case pro
-    case family
 
     static func < (a: ProTier, b: ProTier) -> Bool { a.rawValue < b.rawValue }
 }
@@ -49,16 +50,29 @@ class ProManager {
 
     /// App Store Connect·기존 사용자 영수증과의 계약 — 변경 금지.
     /// GoldweekSpec(LeeoKit 계약)도 이 값을 참조한다.
-    /// 평생 상품(비소모성). 2.4.0 전에는 이것 하나만 팔았다.
+    /// 프로 평생(비소모성). 2.4.0 전에는 이것 하나만 팔았다.
     static let proProductID = "com.Ysoup.LeaveWise.pro"
-    /// 연간 자동 갱신 구독들 — App Store Connect 구독 그룹 "Goldweek" (레벨: 패밀리 1, 프로 2, 플러스 3).
-    /// 프로 연간
+    /// 연 구독들. App Store Connect 구독 그룹 "Goldweek" 하나에 프로가 위 레벨, 플러스가 아래 레벨.
+    /// 프로 연 구독
     static let yearlyProductID = "com.Ysoup.LeaveWise.pro.yearly"
-    /// 플러스 연간 (`plus.yearly`는 App Store Connect에서 이미 쓰인 ID라 `annual`)
+    /// 플러스 연 구독 (`plus.yearly`는 App Store Connect에서 이미 쓰인 ID라 `annual`)
     static let plusProductID = "com.Ysoup.LeaveWise.plus.annual"
-    /// 패밀리 연간 — 가족 공유 켬
+    /// 플러스 평생(비소모성)
+    static let plusLifetimeProductID = "com.Ysoup.LeaveWise.plus"
+    /// 플러스 평생을 산 사람이 프로 평생으로 올리는 값(비소모성). 열면 프로 평생과 같다.
+    static let proUpgradeProductID = "com.Ysoup.LeaveWise.pro.upgrade"
+    /// 구독 졸업: 구독 중인 사람만 보는 프로 평생(비소모성, `LeeoGraduation`). 열면 프로 평생과 같다.
+    static let proGraduateProductID = "com.Ysoup.LeaveWise.pro.graduate"
+    /// 패밀리 연 구독. **판매를 멈췄다**(2.4.2). 구독 중인 사람은 끝날 때까지 프로와 같은 권한이다.
     static let familyProductID = "com.Ysoup.LeaveWise.family.yearly"
-    static let allProductIDs = [plusProductID, yearlyProductID, proProductID, familyProductID]
+
+    /// 지금 파는 상품, 화면 순서대로. 패밀리는 없다.
+    static let saleProductIDs = [plusProductID, plusLifetimeProductID, yearlyProductID, proProductID,
+                                 proUpgradeProductID, proGraduateProductID]
+    /// 권한을 여는 상품 전부. 판매를 멈춘 상품도 빼지 않는다(산 사람 · 구독 중인 사람의 권한은 그대로).
+    static let allProductIDs = saleProductIDs + [familyProductID]
+    /// 자동 갱신 구독. 구독 졸업을 제안할 대상이다.
+    static let subscriptionProductIDs: Set<String> = [plusProductID, yearlyProductID, familyProductID]
 
     /// Pro 선물 (소모성). 산 사람이 아니라 **코드를 받은 사람**에게 평생 Pro(`proProductID`)를 연다(`LeeoGiftStore`).
     /// ⚠️ `allProductIDs` 에 넣지 않는다 — 넣으면 선물을 산 사람이 Pro 가 되고, 결제가 코드 없이 끝난다.
@@ -76,14 +90,55 @@ class ProManager {
     /// '내 혜택' 화면의 "무료 한도와 비교" 가 모두 이 값을 쓴다(두 곳이 다른 숫자를 말하면 안 된다).
     static let freeRecommendationAddLimit = 3
 
-    /// 상품이 여는 트림
+    /// 상품이 여는 칸. 연 구독은 같은 칸의 평생과 같은 권한이다.
     static func tier(of productID: String) -> ProTier {
         switch productID {
-        case plusProductID: return .plus
-        case familyProductID: return .family
-        case proProductID, yearlyProductID: return .pro
+        case plusProductID, plusLifetimeProductID: return .plus
+        case proProductID, yearlyProductID, proUpgradeProductID, proGraduateProductID, familyProductID: return .pro
         default: return .free
         }
+    }
+
+    /// 한 번 사면 끝나는 상품인가 (자동 갱신 구독이 아닌 권한 상품)
+    static func isLifetime(_ productID: String) -> Bool {
+        tier(of: productID) != .free && !subscriptionProductIDs.contains(productID)
+    }
+
+    /// 가진 권한을 한데 모은 결과. `checkEntitlement` 가 쓰고, 시험이 StoreKit 없이 부른다.
+    struct Entitlement: Equatable {
+        var tier: ProTier = .free
+        var plan: ActivePlan?
+        /// 산 것만으로 프로 이상인가 (선물 · 패스 제외)
+        var purchasedProTier = false
+        /// 플러스 평생을 샀는가. 그러면 프로 평생은 올리기 상품으로 판다.
+        var ownsPlusLifetime = false
+        /// 프로 평생(올리기 · 졸업 포함)을 샀는가
+        var ownsProLifetime = false
+    }
+
+    /// 가진 결제(상품 ID · 만료일), 받은 선물, 언제나 평생 패스로 칸을 정한다.
+    /// 가장 높은 칸을 고르고, 같은 칸이면 평생이 구독보다 앞선다.
+    /// 받은 선물은 프로 평생을 산 것과 같고, 패스는 이 앱의 가장 높은 칸(프로)을 연다.
+    static func resolve(owned: [(productID: String, expires: Date?)], gifted: Bool, passActive: Bool) -> Entitlement {
+        var result = Entitlement()
+        for item in owned {
+            let t = tier(of: item.productID)
+            guard t != .free else { continue }
+            let lifetime = isLifetime(item.productID)
+            if item.productID == plusLifetimeProductID { result.ownsPlusLifetime = true }
+            if lifetime && t == .pro { result.ownsProLifetime = true }
+            let currentIsLifetime = result.plan == .lifetime
+            if t > result.tier || (t == result.tier && lifetime && !currentIsLifetime) {
+                result.tier = t
+                result.plan = lifetime ? .lifetime : .yearly(expires: item.expires)
+            }
+        }
+        result.purchasedProTier = result.tier >= .pro
+        if (gifted || passActive), result.tier < .pro {
+            result.tier = .pro
+            result.plan = .lifetime
+        }
+        return result
     }
 
     /// 2.4.0 전 마지막 빌드 번호. App Store 최초 다운로드가 이 빌드 이하면 기존 설치자다
@@ -107,7 +162,7 @@ class ProManager {
         }
     }
 
-    /// 지금 트림. TestFlight·DEBUG로 열린 경우는 패밀리.
+    /// 지금 칸. TestFlight·DEBUG로 열린 경우는 프로(가장 높은 칸).
     private(set) var tier: ProTier {
         didSet { UserDefaults.standard.set(tier.rawValue, forKey: Self.tierKey) }
     }
@@ -118,6 +173,10 @@ class ProManager {
 
     /// **산 것만으로** 프로 트림 이상인가 (받은 선물 제외). 이미 산 사람은 선물을 받지 않고 코드를 넘기게 둔다.
     private(set) var hasPurchasedProTier = false
+    /// 플러스 평생을 샀는가. 그러면 페이월의 프로 평생 버튼이 올리기 상품(`proUpgradeProductID`)을 판다.
+    private(set) var ownsPlusLifetime = false
+    /// 프로 평생을 샀는가 (올리기 · 졸업 포함). 언제나 평생 패스를 올리기 값으로 보인다.
+    private(set) var ownsProLifetime = false
 
     /// 무료 체험을 받을 수 있는 구독 상품
     private(set) var trialEligibleIDs: Set<String> = []
@@ -141,9 +200,10 @@ class ProManager {
         let isTF = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
         self.isPro = storedIsPro || isTF
         if isTF {
-            self.tier = .family
-        } else if let raw = defaults.object(forKey: Self.tierKey) as? Int, let saved = ProTier(rawValue: raw) {
-            self.tier = saved
+            self.tier = .pro
+        } else if let raw = defaults.object(forKey: Self.tierKey) as? Int {
+            // 예전 패밀리(3)는 프로에 합쳤다
+            self.tier = ProTier(rawValue: min(raw, ProTier.pro.rawValue)) ?? .free
         } else {
             // 2.4.0 전 평생 구매자는 트림 표시가 없다 — 권한 확인 전까지 프로로 둔다
             self.tier = storedIsPro ? .pro : .free
@@ -205,14 +265,25 @@ class ProManager {
     var lifetimeProduct: Product? { products.first { $0.id == Self.proProductID } }
     var yearlyProduct: Product? { products.first { $0.id == Self.yearlyProductID } }
 
+    /// 칸의 연 구독 상품 ID
+    static func yearlyID(for tier: ProTier) -> String {
+        tier == .plus ? plusProductID : yearlyProductID
+    }
+
+    /// 칸의 평생 상품 ID. 플러스 평생을 이미 산 사람에게 프로 평생은 올리기 상품이다.
+    static func lifetimeID(for tier: ProTier, ownsPlusLifetime: Bool) -> String {
+        if tier == .plus { return plusLifetimeProductID }
+        return ownsPlusLifetime ? proUpgradeProductID : proProductID
+    }
+
     func loadProducts() async {
         isLoading = true
         productLoadFailed = false
         defer { isLoading = false }
 
         do {
-            let loaded = try await Product.products(for: Self.allProductIDs)
-            products = Self.allProductIDs.compactMap { id in loaded.first { $0.id == id } }
+            let loaded = try await Product.products(for: Self.saleProductIDs)
+            products = Self.saleProductIDs.compactMap { id in loaded.first { $0.id == id } }
             var eligible: Set<String> = []
             for product in products {
                 guard let sub = product.subscription, sub.introductoryOffer?.paymentMode == .freeTrial,
@@ -264,12 +335,15 @@ class ProManager {
         }
     }
 
-    /// 구매 이벤트 슬라이스 — 2.4.0 전 집계와 이어지게 프로 연간은 그대로 "yearly"
+    /// 구매 이벤트 슬라이스. 2.4.0 전 집계와 이어지게 프로 연간은 그대로 "yearly", 프로 평생은 "lifetime"
     static func planSlice(_ productID: String) -> String {
         switch productID {
         case plusProductID: return "plus"
+        case plusLifetimeProductID: return "plus_lifetime"
         case familyProductID: return "family"
         case yearlyProductID: return "yearly"
+        case proUpgradeProductID: return "upgrade"
+        case proGraduateProductID: return "graduate"
         default: return "lifetime"
         }
     }
@@ -291,6 +365,7 @@ class ProManager {
         do {
             try await AppStore.sync()
             await ProExtras.shared.gift?.refresh()   // 다른 기기에서 받은 선물도 다시 찾는다
+            await ProExtras.shared.pass.refresh()    // 다른 앱에서 산 언제나 평생 패스도 다시 찾는다
             await checkEntitlement()
             logInfo("구매 복원 완료", category: .app)
             return isPro ? .restored : .nothingToRestore
@@ -302,40 +377,30 @@ class ProManager {
 
     // MARK: - Check Entitlement
 
-    /// 가진 상품 중 가장 높은 트림. 같은 트림이면 평생이 구독보다 앞선다.
-    /// 구독이 끝나거나 환불되면 여기서 내려간다. 가족 공유로 받은 패밀리도 currentEntitlements 에 들어온다.
+    /// 가진 상품 중 가장 높은 칸(`resolve`). 구독이 끝나거나 환불되면 여기서 내려간다.
+    /// 가족 공유로 받은 예전 패밀리도 currentEntitlements 에 들어온다.
     func checkEntitlement() async {
-        var plan: ActivePlan?
-        var best: ProTier = .free
+        var owned: [(productID: String, expires: Date?)] = []
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result, transaction.revocationDate == nil else { continue }
-            let t = Self.tier(of: transaction.productID)
-            guard t != .free else { continue }
-            let isLifetime = transaction.productID == Self.proProductID
-            if t > best || (t == best && isLifetime) {
-                best = t
-                plan = isLifetime ? .lifetime : .yearly(expires: transaction.expirationDate)
-            }
+            owned.append((transaction.productID, transaction.expirationDate))
         }
-        let purchasedProTier = best >= .pro
-
-        // 받은 선물은 평생 Pro 를 산 것과 같다(`LeeoGiftConfig.grantsProductID`). 산 것이 더 높으면 그대로 둔다.
-        let gifted = await MainActor.run { ProExtras.shared.gift?.redeemed != nil }
-        if gifted, best < .pro {
-            best = .pro
-            plan = .lifetime
+        let (gifted, passActive) = await MainActor.run {
+            (ProExtras.shared.gift?.redeemed != nil, ProExtras.shared.pass.isActive)
         }
+        let found = Self.resolve(owned: owned, gifted: gifted, passActive: passActive)
 
         // 권한이 없을 때:
         // TestFlight 빌드는 sandbox에서 자동으로 Pro 부여 (init에서 이미 처리)
         // DEBUG 빌드는 UserDefaults에 저장된 값 존중 (시뮬레이터 테스트용)
-        let finalPlan = plan, finalTier = best
         await MainActor.run {
-            self.hasPurchasedProTier = purchasedProTier
-            self.activePlan = finalPlan
-            if finalPlan != nil {
+            self.hasPurchasedProTier = found.purchasedProTier
+            self.ownsPlusLifetime = found.ownsPlusLifetime
+            self.ownsProLifetime = found.ownsProLifetime
+            self.activePlan = found.plan
+            if found.plan != nil {
                 self.isPro = true
-                self.tier = isTestFlight ? .family : finalTier
+                self.tier = isTestFlight ? .pro : found.tier
             } else {
                 #if DEBUG
                 let storedIsPro = UserDefaults.standard.bool(forKey: "isPro")
@@ -343,10 +408,30 @@ class ProManager {
                 #else
                 self.isPro = isTestFlight
                 #endif
-                self.tier = self.isPro ? .family : .free
+                self.tier = self.isPro ? .pro : .free
             }
             self.purchaseState = self.isPro ? .purchased : .notPurchased
         }
+    }
+
+    // MARK: - 구독 졸업
+
+    /// 지금 살아 있는 구독. 없으면 nil. 졸업 제안과 설정의 '평생으로 바꾸기' 줄이 쓴다.
+    func currentSubscription() async -> LeeoGraduation.Subscription? {
+        await LeeoGraduation.currentSubscription(among: Self.subscriptionProductIDs)
+    }
+
+    /// 졸업 상품(구독 중인 사람만 사는 프로 평생). 판매 목록에 없으면 nil.
+    var graduateProduct: Product? { product(Self.proGraduateProductID) }
+
+    /// 앱을 열 때 졸업 시트를 띄울 때인가. 띄울 때라면 띄운 것으로 적는다(창마다 한 번).
+    func takeGraduationOfferIfDue() async -> Bool {
+        guard !isTestFlight, !ownsProLifetime, let sub = await currentSubscription(),
+              LeeoGraduation.isDue(sub, lastOffered: LeeoGraduation.lastOffered()) else { return false }
+        if products.isEmpty { await loadProducts() }
+        guard graduateProduct != nil else { return false }
+        LeeoGraduation.markOffered()
+        return true
     }
 
     // MARK: - Transaction Listener
@@ -447,6 +532,9 @@ final class ProExtras: ObservableObject {
     let tipJar: LeeoTipJar?
     /// Pro 선물. 받은 선물은 `ProManager.checkEntitlement()` 가 평생 Pro 로 친다.
     let gift: LeeoGiftStore?
+    /// 언제나 평생 패스(LeeoKit). 열려 있으면 `ProManager.checkEntitlement()` 가 프로로 친다.
+    /// ⚠️ 패스 상품(`<번들>.forever` …)은 `ProManager.allProductIDs` 에 넣지 않는다. 판정은 패스가 따로 한다.
+    let pass = LeeoForeverPass(containerIdentifier: "iCloud.com.Ysoup.FeedbackHub")
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -466,6 +554,12 @@ final class ProExtras: ObservableObject {
                 .sink { _ in Task { await ProManager.shared.checkEntitlement() } }
                 .store(in: &cancellables)
         }
+        // 패스가 열리거나 닫히면(이 앱 · 다른 앱에서 사거나 만료) 칸을 다시 센다.
+        pass.$isActive
+            .removeDuplicates()
+            .dropFirst()
+            .sink { _ in Task { await ProManager.shared.checkEntitlement() } }
+            .store(in: &cancellables)
         Task { await start() }
     }
 
@@ -477,6 +571,7 @@ final class ProExtras: ObservableObject {
         await resumePending()           // 결제는 됐는데 코드를 못 만든 선물 · 세지 못한 팁
         await tipJar?.loadProducts()    // 설정의 '응원하기' 줄은 상품이 있어야 선다
         await gift?.refresh()           // 받은 선물이 아직 내 것인지(환불 · 서명)
+        await pass.refresh()            // 이 앱이나 다른 앱에서 산 언제나 평생 패스
     }
 
     /// 팁 상품이 왔는가. 상품은 앱이 뜬 뒤에 오므로 부탁 카드 · 설정 행이 이걸 보고 다시 그린다.

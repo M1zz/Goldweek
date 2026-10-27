@@ -35,13 +35,12 @@ enum ProBenefits {
     /// 무료 한도를 넘어 쓰는 만큼. 한도 안이면 0 — 0 을 화면에 달면 손해 본 것처럼 읽히니 그리지 않는다.
     static func extra(used: Int, freeLimit: Int) -> Int { max(0, used - freeLimit) }
 
-    /// 지금 등급 바로 위 등급. 맨 위(패밀리)면 nil.
+    /// 지금 등급 바로 위 등급. 맨 위(프로)면 nil.
     static func nextTier(after tier: ProTier) -> ProTier? {
         switch tier {
         case .free: return .plus
         case .plus: return .pro
-        case .pro: return .family
-        case .family: return nil
+        case .pro: return nil
         }
     }
 }

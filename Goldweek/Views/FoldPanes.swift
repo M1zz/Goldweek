@@ -8,7 +8,7 @@
 //
 //  - 펼치면 오른쪽(세로면 위)에는 **현황**이 선다. 왼쪽(아래)은 캘린더 · 가족 · 설정 중 고른 탭.
 //    그래서 현황 탭은 따로 서지 않고, 펼친 탭 막대에는 셋만 선다.
-//    가족 탭만 오른쪽에 다 같이 쉬는 날(`FamilyTogetherView`, 패밀리)이 선다.
+//    가족 탭만 오른쪽에 다 같이 쉬는 날(`FamilyTogetherView`, 프로)이 선다.
 //  - 캘린더에서 추천을 누르면 현황에 "추가하면 남은 연차 N일"이 미리 그려진다(`FoldLeavePreview`).
 //    넣기 전에 결과를 보는 것 — 접힌 선의 '하기 전 | 한 뒤'가 이 앱에서 하는 일이다.
 //
@@ -128,13 +128,13 @@ extension FoldTab where Result == HomeView {
     }
 }
 
-/// 가족 탭의 오른쪽 판. 패밀리면 다 같이 쉬는 날, 아니면 현황.
-/// 잠금은 그대로다 — 펼친다고 패밀리 기능이 열리지 않는다.
+/// 가족 탭의 오른쪽 판. 프로면 다 같이 쉬는 날, 아니면 현황.
+/// 잠금은 그대로다. 펼친다고 프로 기능이 열리지 않는다.
 struct FoldFamilyResult: View {
     @Bindable var profile: UserProfile
 
     var body: some View {
-        if ProManager.shared.tier >= .family {
+        if ProManager.shared.hasProTier {
             NavigationStack { FamilyTogetherView(profile: profile) }
         } else {
             HomeView(profile: profile)

@@ -43,6 +43,8 @@ struct ContentView: View {
     @State private var showingTutorial = false
     /// 업데이트 뒤 처음 열 때 한 번 — 처음 설치한 사람에게는 뜨지 않는다(WhatsNewGate)
     @State private var showingWhatsNew = false
+    /// 구독 중인 사람에게 6개월째 · 갱신 7일 전에 한 번씩 평생가를 보인다(LeeoGraduation)
+    @State private var showingGraduation = false
     /// 만족 순간에 띄우는 만족도 프롬프트 (추천 등록·플랜 등록·휴가 복귀)
     @State private var reviewMoments = ReviewMoments.shared
 
@@ -68,6 +70,15 @@ struct ContentView: View {
                         // 첫 화면이 자리 잡은 뒤에 — 실행 직후 시트가 튀어나오면 놀란다
                         try? await Task.sleep(nanoseconds: 900_000_000)
                         showingWhatsNew = true
+                    }
+                    .sheet(isPresented: $showingGraduation) { GraduationSheet() }
+                    .task {
+                        // 다른 시트(새로운 기능 · 사용법)와 겹치지 않게 늦게, 그것들이 없을 때만
+                        guard !ScreenshotMode.isActive, !LaunchSafety.isSafeMode else { return }
+                        try? await Task.sleep(nanoseconds: 2_500_000_000)
+                        guard !showingWhatsNew, !showingTutorial,
+                              await ProManager.shared.takeGraduationOfferIfDue() else { return }
+                        showingGraduation = true
                     }
                     .task {
                         guard !hasSeenTutorial else { return }
@@ -276,7 +287,7 @@ struct ContentView: View {
             hasher.combine(record.typeRaw)
             hasher.combine(record.statusRaw)
         }
-        // 가족 기념일도 함께 올린다 (패밀리 · 함께 쉬기)
+        // 가족 기념일도 함께 올린다 (프로 · 함께 쉬기)
         for anniversary in anniversaries {
             hasher.combine(anniversary.id)
             hasher.combine(anniversary.date)

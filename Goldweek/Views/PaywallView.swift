@@ -2,11 +2,14 @@
 //  PaywallView.swift
 //  Goldweek
 //
-//  Pro 기능 업그레이드 페이월 뷰 (다국어 지원)
+//  요금제 페이월 (다국어 지원). 무료 · 플러스 · 프로 세 칸을 위에서 아래로 놓고,
+//  유료 칸마다 연 구독과 평생을 고른다(LeeoKit `LeeoTermPicker`). 칸 아래에 언제나 평생 패스 한 줄.
+//  무엇을 왜 어느 칸에 두는지는 docs/MONETIZATION.md.
 //
 
 import SwiftUI
 import StoreKit
+import LeeoKit
 
 struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
@@ -15,36 +18,59 @@ struct PaywallView: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var isSuccess = false
-    @State private var selectedTier: ProTier
-    @State private var selectedProductID: String
+    /// 칸마다 고른 길 (연 구독 / 평생)
+    @State private var terms: [ProTier: LeeoPlanTerm]
+    /// 지금 결제 중인 칸
+    @State private var buyingTier: ProTier?
     /// App Store 오퍼 코드 입력 시트 (StoreKit 2). 받은 코드는 `Transaction.updates` 로 들어와 Pro 가 열린다.
     @State private var showingOfferCode = false
+    /// 처음 보여 줄 칸. 다른 화면이 칸을 정해 열었을 때만 그 칸으로 내려 준다.
+    private let focusTier: ProTier
+    private let scrollsToFocus: Bool
 
-    /// - Parameter initialProductID: 처음 골라 둘 상품 (기본: 프로 연간). 스크린샷 모드에서도 쓴다.
+    /// - Parameter initialProductID: 처음 보여 줄 칸과 길을 정하는 상품 (기본: 프로 연 구독). 스크린샷 모드에서도 쓴다.
     init(initialProductID: String? = nil) {
         let id = initialProductID ?? ScreenshotMode.paywallProductID ?? ProManager.yearlyProductID
         let tier = ProManager.tier(of: id)
-        _selectedTier = State(initialValue: tier == .free ? .pro : tier)
-        _selectedProductID = State(initialValue: tier == .free ? ProManager.yearlyProductID : id)
+        focusTier = tier == .free ? .pro : tier
+        scrollsToFocus = initialProductID != nil || ScreenshotMode.paywallProductID != nil
+        let lifetime = ProManager.isLifetime(id)
+        _terms = State(initialValue: [
+            .plus: tier == .plus && lifetime ? .lifetime : .yearly,
+            .pro: tier == .pro && lifetime ? .lifetime : .yearly,
+        ])
     }
 
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 24) {
-                    headerSection
-                    trimPicker
-                    featuresSection
-                    pricingSection
-                    purchaseButtons
-                    footerSection
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 20) {
+                        headerSection
+                        ForEach(Self.ladder, id: \.self) { tier in
+                            tierCard(tier).id(tier)
+                        }
+                        // 언제나 평생 패스: 이 개발자의 모든 앱을 평생으로. 패스 상품은 LeeoKit 이 판다.
+                        LeeoForeverPassLine(pass: ProExtras.shared.pass, ownsLifetimePro: proManager.ownsProLifetime)
+                            .padding(.horizontal, 4)
+                        // 평생 가격이 오르기 전까지만 서는 한 줄 (이미 산 사람은 그대로)
+                        LeeoLifetimePriceNotice()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 4)
+                        storeActions
+                        footerSection
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 32)
                 }
-                .padding(.horizontal)
-                .padding(.bottom, 32)
+                .onAppear {
+                    UsageReportingService.record(event: "paywall_view")
+                    guard scrollsToFocus else { return }
+                    DispatchQueue.main.async { proxy.scrollTo(focusTier, anchor: .top) }
+                }
             }
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear { UsageReportingService.record(event: "paywall_view") }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(Strings.cancel) {
@@ -66,6 +92,9 @@ struct PaywallView: View {
         }
     }
 
+    /// 화면에 놓는 칸, 위에서 아래로
+    static let ladder: [ProTier] = [.free, .plus, .pro]
+
     // MARK: - Header Section
 
     private var headerSection: some View {
@@ -74,78 +103,45 @@ struct PaywallView: View {
                 Circle()
                     .fill(.yellow.opacity(0.15))
                     .frame(width: 84, height: 84)
-                Image(systemName: Self.icon(of: selectedTier))
+                Image(systemName: Self.icon(of: .pro))
                     .font(.system(.largeTitle))
                     .foregroundStyle(.yellow)
                     .voDecorative()
             }
             .padding(.top, 4)
 
-            // 이미 이 등급을 쓰는 사람에게는 파는 말 대신 "모두 열려 있어요" — '내 혜택'의 전체 보기도 이 화면이다.
-            Text(proManager.tier >= selectedTier ? Strings.benefitsAllUnlocked(selectedTier) : Strings.trimTagline(selectedTier))
+            // 맨 위 칸을 쓰는 사람에게는 파는 말 대신 "모두 열려 있어요". '내 혜택'의 전체 보기도 이 화면이다.
+            Text(proManager.tier >= .pro ? Strings.benefitsAllUnlocked(.pro) : Strings.paywallLadderTitle)
                 .font(.title2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
+            if proManager.tier < .pro {
+                Text(Strings.paywallLadderSubtitle)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 
     static func icon(of tier: ProTier) -> String {
         switch tier {
-        case .free, .plus: return "sparkles"
+        case .free: return "leaf.fill"
+        case .plus: return "sparkles"
         case .pro: return "crown.fill"
-        case .family: return "person.3.fill"
         }
     }
 
-    // MARK: - 트림 고르기
-
-    private var trimPicker: some View {
-        HStack(spacing: 8) {
-            ForEach([ProTier.plus, .pro, .family], id: \.self) { tier in
-                let isSelected = selectedTier == tier
-                Button {
-                    selectedTier = tier
-                    selectedProductID = Self.defaultProductID(for: tier)
-                    HapticFeedback.selection()
-                } label: {
-                    VStack(spacing: 4) {
-                        Text(Strings.trimName(tier))
-                            .font(.headline)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-                        Text(tier == .pro ? Strings.trimPopular : " ")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(isSelected ? Color.white.opacity(0.9) : Color.accentColor)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .foregroundStyle(isSelected ? Color.white : Color.primary)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(isSelected ? Color.accentColor : Color(.systemGray6))
-                    )
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(isSelected ? .isSelected : [])
-            }
-        }
-    }
-
+    /// 칸을 처음 보여 줄 때 고를 상품 (연 구독)
     static func defaultProductID(for tier: ProTier) -> String {
-        switch tier {
-        case .free, .pro: return ProManager.yearlyProductID
-        case .plus: return ProManager.plusProductID
-        case .family: return ProManager.familyProductID
-        }
+        ProManager.yearlyID(for: tier == .free ? .pro : tier)
     }
 
-    // MARK: - Features Section
+    // MARK: - 칸 카드
 
-    /// 등급 비교표의 한 줄 — '내 혜택' 화면도 이 목록을 그대로 쓴다(목록은 여기 한 곳에만 적는다).
+    /// 등급 비교표의 한 줄. '내 혜택' 화면도 이 목록을 그대로 쓴다(목록은 여기 한 곳에만 적는다).
     struct TrimFeature: Hashable {
         let icon: String
         let color: Color
@@ -153,12 +149,19 @@ struct PaywallView: View {
         var isSummary = false
     }
 
-    private var features: [TrimFeature] { Self.features(of: selectedTier) }
-
-    /// 등급이 더하는 기능. 위 등급은 맨 앞 요약 줄(`isSummary`)로 아래 등급을 모두 포함한다고 말한다.
+    /// 칸이 여는 기능. 위 칸은 맨 앞 요약 줄(`isSummary`)로 아래 칸을 모두 포함한다고 말한다.
+    /// 무료 칸은 지금 무료로 되는 것을 적는다.
     static func features(of tier: ProTier) -> [TrimFeature] {
         switch tier {
-        case .free, .plus:
+        case .free:
+            return [
+                TrimFeature(icon: "calendar.badge.checkmark", color: AppTheme.Colors.brand, title: Strings.freeFeatTracking),
+                TrimFeature(icon: "flag.fill", color: .red, title: Strings.freeFeatHolidays),
+                TrimFeature(icon: "lightbulb", color: .orange, title: Strings.freeFeatRecommendations(ProManager.freeRecommendationAddLimit)),
+                TrimFeature(icon: "bell.badge", color: .purple, title: Strings.freeFeatRest),
+                TrimFeature(icon: "icloud", color: .blue, title: Strings.freeFeatBackupShare),
+            ]
+        case .plus:
             return [
                 TrimFeature(icon: "sparkles", color: AppTheme.Colors.bonus, title: Strings.proFeatureAIAnnualPlanner),
                 TrimFeature(icon: "lightbulb.fill", color: .orange, title: Strings.featUnlimitedRecs),
@@ -172,134 +175,131 @@ struct PaywallView: View {
                 TrimFeature(icon: "gauge.with.needle", color: .teal, title: Strings.paywallAllowanceFeature),
                 TrimFeature(icon: "doc.viewfinder", color: .indigo, title: Strings.schoolImportTitle),
                 TrimFeature(icon: "calendar.badge.clock", color: .blue, title: Strings.autoDetectSettingTitle),
-            ]
-        case .family:
-            return [
-                TrimFeature(icon: "checkmark.seal.fill", color: .accentColor, title: Strings.trimEverythingIn(Strings.trimName(.pro)), isSummary: true),
-                TrimFeature(icon: "person.2.fill", color: .pink, title: Strings.featFamilySharing),
+                TrimFeature(icon: "person.2.fill", color: .pink, title: Strings.togetherTitle),
+                TrimFeature(icon: "heart.fill", color: .red, title: Strings.familyAnniversariesTitle),
             ]
         }
     }
 
-    private var featuresSection: some View {
+    private func tierCard(_ tier: ProTier) -> some View {
         VStack(spacing: 0) {
-            ForEach(Array(features.enumerated()), id: \.element) { index, feature in
+            cardHeader(tier)
+            Divider()
+            ForEach(Array(Self.features(of: tier).enumerated()), id: \.element) { index, feature in
                 if index > 0 { Divider().padding(.leading, 54) }
-                HStack(spacing: 12) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 7)
-                            .fill(feature.color.opacity(0.15))
-                            .frame(width: 30, height: 30)
-                        Image(systemName: feature.icon)
-                            .font(.system(.body))
-                            .foregroundColor(feature.color)
-                            .voDecorative()
-                    }
-                    Text(feature.title)
-                        .font(.body)
-                        .fontWeight(feature.isSummary ? .semibold : .regular)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Image(systemName: "checkmark")
-                        .font(.body.weight(.semibold))
-                        .foregroundStyle(.green)
-                        .voDecorative()
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 11)
-                .accessibilityElement(children: .combine)
+                featureRow(feature)
+            }
+            // 무료 칸은 버튼이 없다. 지금 무료로 되는 것을 적는 카드다.
+            if tier != .free {
+                Divider()
+                buySection(tier)
+                    .padding(14)
             }
         }
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 14)
-                .stroke(Color(.systemGray5), lineWidth: 1)
+                .stroke(tier == .pro ? Color.accentColor : Color(.systemGray5), lineWidth: tier == .pro ? 2 : 1)
         )
-        .animation(.default, value: selectedTier)
     }
 
-    // MARK: - Pricing Section
-
-    /// 고른 트림에서 살 수 있는 상품 (화면 순서)
-    private var tierProductIDs: [String] {
-        switch selectedTier {
-        case .free, .pro: return [ProManager.yearlyProductID, ProManager.proProductID]
-        case .plus: return [ProManager.plusProductID]
-        case .family: return [ProManager.familyProductID]
-        }
-    }
-
-    private var tierHasPrice: Bool {
-        tierProductIDs.contains { PaywallPrice.price(of: $0) != nil }
-    }
-
-    private var pricingSection: some View {
-        VStack(spacing: 10) {
-            if !tierHasPrice {
-                // 가격 로드 실패/로딩 중 — 빈칸 대신 상태를 보여준다
-                VStack(spacing: 10) {
-                    if proManager.productLoadFailed || proManager.hasAnyPrice {
-                        HStack(spacing: 6) {
-                            Image(systemName: "wifi.exclamationmark")
-                                .foregroundColor(.orange)
-                                .voDecorative()
-                            Text(Strings.priceLoadFailed)
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        Button {
-                            Task { await proManager.loadProducts() }
-                        } label: {
-                            Text(Strings.retry)
-                                .font(.body.weight(.semibold))
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 8)
-                                .background(Color.accentColor.opacity(0.12))
-                                .foregroundColor(.accentColor)
-                                .clipShape(Capsule())
-                        }
-                    } else {
-                        ProgressView()
-                            .padding(.vertical, 8)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(Color(.systemGray6))
-                )
-            } else if proManager.tier < selectedTier {
-                ForEach(tierProductIDs, id: \.self) { id in
-                    if let price = PaywallPrice.price(of: id) {
-                        TrimPriceCard(isSelected: selectedProductID == id,
-                                      title: id == ProManager.proProductID ? Strings.planLifetime : Strings.planYearly,
-                                      price: id == ProManager.proProductID ? price.display : Strings.yearlyPriceLabel(price.display),
-                                      caption: caption(for: id, price: price)) {
-                            selectedProductID = id
-                            HapticFeedback.selection()
-                        }
-                    }
-                }
+    private func cardHeader(_ tier: ProTier) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: Self.icon(of: tier))
+                .font(.title3)
+                .foregroundStyle(tier == .free ? Color.green : Color.yellow)
+                .frame(width: 30)
+                .voDecorative()
+            VStack(alignment: .leading, spacing: 2) {
+                Text(Strings.trimName(tier))
+                    .font(.title3.weight(.bold))
+                Text(Strings.trimTagline(tier))
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 8)
+            if proManager.tier == tier {
+                badge(Strings.planActive, color: .green)
+            } else if tier == .pro {
+                badge(Strings.trimPopular, color: .accentColor)
             }
         }
+        .padding(14)
+        .accessibilityElement(children: .combine)
     }
 
-    private func caption(for id: String, price: PaywallPrice) -> String {
-        if id == ProManager.proProductID { return Strings.oneTimePurchase }
-        if let days = PaywallPrice.trialDays(of: id) { return Strings.trialThenPrice(days, price.display) }
-        if id == ProManager.familyProductID { return Strings.familyPerPersonHint(price.perMonth(dividedBy: 6)) }
-        return Strings.perMonthHint(price.perMonth(dividedBy: 1))
+    private func badge(_ text: String, color: Color) -> some View {
+        Text(text)
+            .font(.footnote.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(color.opacity(0.15))
+            .foregroundStyle(color)
+            .clipShape(Capsule())
+            .lineLimit(1)
     }
 
-    // MARK: - Purchase Buttons
+    private func featureRow(_ feature: TrimFeature) -> some View {
+        HStack(spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 7)
+                    .fill(feature.color.opacity(0.15))
+                    .frame(width: 30, height: 30)
+                Image(systemName: feature.icon)
+                    .font(.system(.body))
+                    .foregroundColor(feature.color)
+                    .voDecorative()
+            }
+            Text(feature.title)
+                .font(.body)
+                .fontWeight(feature.isSummary ? .semibold : .regular)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+            Image(systemName: "checkmark")
+                .font(.body.weight(.semibold))
+                .foregroundStyle(.green)
+                .voDecorative()
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 11)
+        .accessibilityElement(children: .combine)
+    }
+
+    // MARK: - 사기
+
+    /// 칸의 연 구독 상품 (불러온 것만)
+    private func yearlyProduct(_ tier: ProTier) -> Product? {
+        proManager.product(ProManager.yearlyID(for: tier))
+    }
+
+    /// 칸의 평생 상품. 플러스 평생을 산 사람에게 프로 평생은 올리기 상품이다.
+    private func lifetimeProduct(_ tier: ProTier) -> Product? {
+        proManager.product(ProManager.lifetimeID(for: tier, ownsPlusLifetime: proManager.ownsPlusLifetime))
+    }
+
+    /// 고른 길. 고른 쪽 상품이 없으면(App Store Connect 에 아직 없음) 있는 쪽으로 옮긴다.
+    private func term(_ tier: ProTier) -> LeeoPlanTerm {
+        let chosen = terms[tier] ?? .yearly
+        switch chosen {
+        case .yearly: return yearlyProduct(tier) == nil && lifetimeProduct(tier) != nil ? .lifetime : .yearly
+        case .lifetime: return lifetimeProduct(tier) == nil && yearlyProduct(tier) != nil ? .yearly : .lifetime
+        }
+    }
+
+    private func termBinding(_ tier: ProTier) -> Binding<LeeoPlanTerm> {
+        Binding(get: { term(tier) }, set: { terms[tier] = $0; HapticFeedback.selection() })
+    }
+
+    private func selectedProduct(_ tier: ProTier) -> Product? {
+        term(tier) == .yearly ? yearlyProduct(tier) : lifetimeProduct(tier)
+    }
 
     @ViewBuilder
-    private var purchaseButtons: some View {
-        if proManager.tier >= selectedTier {
-            // 이미 이 트림 이상 — 구매 버튼 대신 상태를 분명히 보여 준다
+    private func buySection(_ tier: ProTier) -> some View {
+        if proManager.tier >= tier {
+            // 이미 이 칸 이상. 구매 버튼 대신 상태를 분명히 보여 준다
             HStack(spacing: 8) {
                 Image(systemName: "checkmark.seal.fill")
                     .foregroundColor(.green)
@@ -309,51 +309,99 @@ struct PaywallView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity)
-            .padding()
+            .padding(12)
             .background(Color.green.opacity(0.12))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        } else if yearlyProduct(tier) == nil && lifetimeProduct(tier) == nil {
+            priceStatus
         } else {
-            purchaseActions
+            VStack(spacing: 12) {
+                LeeoTermPicker(term: termBinding(tier), yearly: yearlyProduct(tier), lifetime: lifetimeProduct(tier))
+                purchaseButton(tier)
+            }
         }
     }
 
-    private var purchaseTitle: String {
-        if let days = PaywallPrice.trialDays(of: selectedProductID) { return Strings.startTrial(days) }
-        return Strings.startTrim(Strings.trimName(selectedTier))
+    /// 가격 로드 실패/로딩 중. 빈칸 대신 상태를 보여준다
+    private var priceStatus: some View {
+        VStack(spacing: 10) {
+            if proManager.productLoadFailed || proManager.hasAnyPrice {
+                HStack(spacing: 6) {
+                    Image(systemName: "wifi.exclamationmark")
+                        .foregroundColor(.orange)
+                        .voDecorative()
+                    Text(Strings.priceLoadFailed)
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Button {
+                    Task { await proManager.loadProducts() }
+                } label: {
+                    Text(Strings.retry)
+                        .font(.body.weight(.semibold))
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
+                        .background(Color.accentColor.opacity(0.12))
+                        .foregroundColor(.accentColor)
+                        .clipShape(Capsule())
+                }
+            } else {
+                ProgressView()
+                    .padding(.vertical, 8)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(.systemGray6))
+        )
     }
 
-    private var purchaseActions: some View {
-        VStack(spacing: 12) {
-            Button(action: purchase) {
-                HStack(spacing: 8) {
-                    if proManager.isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                            .scaleEffect(0.85)
-                    } else {
-                        Image(systemName: Self.icon(of: selectedTier))
-                    }
-                    Text(proManager.isLoading ? Strings.purchasing : purchaseTitle)
-                        .fontWeight(.semibold)
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 52)
-                .background(proManager.isLoading || !tierHasPrice ? Color.gray : Color.accentColor)
-                .foregroundColor(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-            }
-            // 가격을 확인할 수 없는 상태에서는 구매를 막는다
-            .disabled(proManager.isLoading || !tierHasPrice)
+    private func purchaseTitle(_ tier: ProTier) -> String {
+        if term(tier) == .yearly, let days = proManager.trialDays(for: ProManager.yearlyID(for: tier)) {
+            return Strings.startTrial(days)
+        }
+        return Strings.startTrim(Strings.trimName(tier))
+    }
 
+    private func purchaseButton(_ tier: ProTier) -> some View {
+        let buying = buyingTier == tier
+        return Button { purchase(tier) } label: {
+            HStack(spacing: 8) {
+                if buying {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .scaleEffect(0.85)
+                } else {
+                    Image(systemName: Self.icon(of: tier))
+                }
+                Text(buying ? Strings.purchasing : purchaseTitle(tier))
+                    .fontWeight(.semibold)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(minHeight: 52)
+            .background(proManager.isLoading || selectedProduct(tier) == nil ? Color.gray : Color.accentColor)
+            .foregroundColor(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+        }
+        // 가격을 확인할 수 없는 상태에서는 구매를 막는다
+        .disabled(proManager.isLoading || selectedProduct(tier) == nil)
+    }
+
+    /// 복원 · 오퍼 코드. 칸마다가 아니라 한 번만 둔다.
+    private var storeActions: some View {
+        VStack(spacing: 4) {
             Button(action: restorePurchases) {
                 Text(Strings.restorePurchase)
                     .fontWeight(.medium)
                     .foregroundColor(.accentColor)
-                    .frame(height: 44)
+                    .frame(minHeight: 44)
             }
             .disabled(proManager.isLoading)
 
-            // 받은 오퍼 코드(할인·무료 기간)를 앱 안에서 바로 쓴다 — App Store 앱을 따로 열지 않아도 된다.
+            // 받은 오퍼 코드(할인·무료 기간)를 앱 안에서 바로 쓴다. App Store 앱을 따로 열지 않아도 된다.
             Button {
                 UsageReportingService.record(event: "offer_code_open:paywall")
                 showingOfferCode = true
@@ -395,13 +443,15 @@ struct PaywallView: View {
 
     // MARK: - Actions
 
-    private func purchase() {
-        let tier = selectedTier
+    private func purchase(_ tier: ProTier) {
+        guard let product = selectedProduct(tier) else { return }
+        buyingTier = tier
         Task {
+            defer { buyingTier = nil }
             do {
-                try await proManager.purchase(selectedProductID)
+                try await proManager.purchase(product.id)
                 // 사용자가 취소한 경우 purchase()는 에러 없이 리턴되므로
-                // 실제로 그 트림이 열렸을 때만 성공 알림을 띄운다
+                // 실제로 그 칸이 열렸을 때만 성공 알림을 띄운다
                 guard proManager.tier >= tier else { return }
                 UsageReportingService.record(event: "paywall_purchase:success")
                 await MainActor.run {
@@ -409,7 +459,7 @@ struct PaywallView: View {
                     alertMessage = Strings.youArePro
                     showingAlert = true
                 }
-                // 구매 완료 직후 리뷰 요청 — 가장 만족도 높은 시점
+                // 구매 완료 직후 리뷰 요청. 가장 만족도 높은 시점
                 try? await Task.sleep(for: .seconds(1.5))
                 ReviewManager.shared.requestReviewAfterPurchase(using: requestReview)
             } catch {
@@ -444,87 +494,22 @@ struct PaywallView: View {
     }
 }
 
-// MARK: - 트림 요금 카드
+// MARK: - 구독 졸업
 
-private struct TrimPriceCard: View {
-    let isSelected: Bool
-    let title: String
-    let price: String
-    let caption: String
-    let action: () -> Void
+/// 구독 중인 사람에게 보이는 졸업가 화면(LeeoKit). 사면 칸을 다시 센다.
+/// 졸업 상품은 앱이 뜬 뒤에 올 수 있어 이 화면이 직접 읽고, 없으면 불러온다.
+struct GraduationSheet: View {
+    private let proManager = ProManager.shared
 
     var body: some View {
-        Button(action: action) {
-            HStack(spacing: 12) {
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .font(.title3)
-                    .foregroundStyle(isSelected ? Color.accentColor : Color(.systemGray3))
-                    .voDecorative()
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(.headline)
-                    Text(caption)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 8)
-                Text(price)
-                    .font(.title3.weight(.bold))
-                    .foregroundStyle(isSelected ? Color.accentColor : .primary)
-                    .multilineTextAlignment(.trailing)
-            }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(isSelected ? Color.accentColor.opacity(0.08) : Color(.systemBackground))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(isSelected ? Color.accentColor : Color(.systemGray4), lineWidth: isSelected ? 2 : 1)
-            )
-            .contentShape(Rectangle())
+        LeeoGraduationOfferView(graduate: proManager.graduateProduct) {
+            UsageReportingService.record(event: "purchase_plan:graduate")
+            await proManager.checkEntitlement()
         }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
-    }
-}
-
-// MARK: - 가격
-
-/// 페이월이 보여 줄 가격. App Store에서 불러온 상품이 기준이고,
-/// 스크린샷 모드(DEBUG)에서만 상품을 못 불러오면 App Store Connect에 넣은 미국 가격을 쓴다 — 심사용 화면 촬영.
-struct PaywallPrice {
-    let display: String
-    private let amount: Decimal
-    private let format: Decimal.FormatStyle.Currency
-
-    func perMonth(dividedBy people: Int) -> String {
-        (amount / Decimal(12 * max(people, 1))).formatted(format)
-    }
-
-    static func price(of id: String) -> PaywallPrice? {
-        if let product = ProManager.shared.product(id) {
-            return PaywallPrice(display: product.displayPrice, amount: product.price, format: product.priceFormatStyle)
+        .task {
+            if proManager.graduateProduct == nil { await proManager.loadProducts() }
         }
-        guard ScreenshotMode.isActive, let usd = screenshotUSD[id] else { return nil }
-        let format = Decimal.FormatStyle.Currency(code: "USD", locale: Locale(identifier: "en_US"))
-        return PaywallPrice(display: usd.formatted(format), amount: usd, format: format)
     }
-
-    static func trialDays(of id: String) -> Int? {
-        if ProManager.shared.product(id) != nil { return ProManager.shared.trialDays(for: id) }
-        guard ScreenshotMode.isActive else { return nil }
-        return [ProManager.yearlyProductID, ProManager.familyProductID].contains(id) ? 7 : nil
-    }
-
-    /// docs/MONETIZATION.md 의 미국 가격
-    private static let screenshotUSD: [String: Decimal] = [
-        ProManager.plusProductID: Decimal(string: "9.99")!,
-        ProManager.yearlyProductID: Decimal(string: "19.99")!,
-        ProManager.proProductID: Decimal(string: "49.99")!,
-        ProManager.familyProductID: Decimal(string: "29.99")!,
-    ]
 }
 
 // MARK: - 요금제 고르기

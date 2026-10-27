@@ -3,7 +3,7 @@
   "nonRenewingSubscriptions": [],
   "products": [
     {
-      "displayPrice": "49.99",
+      "displayPrice": "59.99",
       "familyShareable": true,
       "internalID": "9C1E2A33-0B44-4C55-8D66-7E8F90A1B2C3",
       "localizations": [
@@ -20,6 +20,66 @@
       ],
       "productID": "com.Ysoup.LeaveWise.pro",
       "referenceName": "Goldweek Pro Lifetime",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29.99",
+      "familyShareable": false,
+      "internalID": "7EC73D86-5DE8-47FB-83DD-64EAE6EB757B",
+      "localizations": [
+        {
+          "description": "Everything in Plus, forever",
+          "displayName": "Goldweek Plus (Lifetime)",
+          "locale": "en_US"
+        },
+        {
+          "description": "플러스 기능을 평생 사용",
+          "displayName": "Goldweek 플러스 (평생)",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.plus",
+      "referenceName": "Goldweek Plus Lifetime",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29.99",
+      "familyShareable": false,
+      "internalID": "46B63DD0-FBB3-47F7-9AD2-B499DB62D8D7",
+      "localizations": [
+        {
+          "description": "From Plus lifetime to Pro lifetime",
+          "displayName": "Goldweek Pro Upgrade (Lifetime)",
+          "locale": "en_US"
+        },
+        {
+          "description": "플러스 평생에서 프로 평생으로",
+          "displayName": "Goldweek 프로로 올리기 (평생)",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.pro.upgrade",
+      "referenceName": "Goldweek Pro Upgrade from Plus Lifetime",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "41.99",
+      "familyShareable": false,
+      "internalID": "CF6C4945-3FE8-4CF1-A592-44BA3E463CFC",
+      "localizations": [
+        {
+          "description": "Switch your subscription to Pro lifetime",
+          "displayName": "Goldweek Pro (Lifetime, for subscribers)",
+          "locale": "en_US"
+        },
+        {
+          "description": "구독을 프로 평생으로 바꾸기",
+          "displayName": "Goldweek 프로 (평생, 구독자용)",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.pro.graduate",
+      "referenceName": "Goldweek Pro Graduate Lifetime",
       "type": "NonConsumable"
     },
     {
@@ -117,45 +177,16 @@
         {
           "adHocOffers": [],
           "codeOffers": [],
-          "displayPrice": "29.99",
-          "familyShareable": true,
-          "groupNumber": 1,
-          "internalID": "E2B05735-47E6-5E39-A2EF-D4BCB7C59092",
-          "introductoryOffer": {
-            "internalID": "B07FA188-326B-5FAF-A5CE-7AD5E7DB7096",
-            "paymentMode": "free",
-            "subscriptionPeriod": "P1W"
-          },
-          "localizations": [
-            {
-              "description": "Pro for up to 6 family members",
-              "displayName": "Goldweek Family",
-              "locale": "en_US"
-            },
-            {
-              "description": "프로를 가족 6명이 함께",
-              "displayName": "Goldweek 패밀리",
-              "locale": "ko"
-            }
-          ],
-          "productID": "com.Ysoup.LeaveWise.family.yearly",
-          "recurringSubscriptionPeriod": "P1Y",
-          "referenceName": "Goldweek Family Yearly",
-          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
-          "type": "RecurringSubscription",
-          "winbackOffers": []
-        },
-        {
-          "adHocOffers": [],
-          "codeOffers": [],
           "displayPrice": "19.99",
           "familyShareable": false,
-          "groupNumber": 2,
+          "groupNumber": 1,
           "internalID": "EAE534BD-ACA4-5F9F-827B-F9D12A45E046",
           "introductoryOffer": {
-            "internalID": "AD94D862-B2F9-55DC-A580-B0A366B821D8",
-            "paymentMode": "free",
-            "subscriptionPeriod": "P1W"
+            "displayPrice": "9.99",
+            "internalID": "1F81318C-09DA-4692-A987-9F6C130063B5",
+            "numberOfPeriods": 1,
+            "paymentMode": "payUpFront",
+            "subscriptionPeriod": "P1Y"
           },
           "localizations": [
             {
@@ -181,9 +212,15 @@
           "codeOffers": [],
           "displayPrice": "9.99",
           "familyShareable": false,
-          "groupNumber": 3,
+          "groupNumber": 2,
           "internalID": "9C85C1AC-6094-5429-BA3A-CB3B4B55014F",
-          "introductoryOffer": null,
+          "introductoryOffer": {
+            "displayPrice": "4.99",
+            "internalID": "C5E8A4E9-D3B6-44DC-B63D-923E7C14A58C",
+            "numberOfPeriods": 1,
+            "paymentMode": "payUpFront",
+            "subscriptionPeriod": "P1Y"
+          },
           "localizations": [
             {
               "description": "Plans your time off for you",

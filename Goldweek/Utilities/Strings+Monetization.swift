@@ -418,31 +418,25 @@ extension Strings {
     }
 }
 
-// MARK: - 트림 (플러스 · 프로 · 패밀리)
+// MARK: - 칸 (무료 · 플러스 · 프로)
 
 extension Strings {
-    /// 트림 이름 (무료는 플러스로 대신 — 화면에 쓰지 않는다)
+    /// 칸 이름
     static func trimName(_ tier: ProTier) -> String {
-        let lang = LanguageManager.shared.currentLanguage
-        let rows: [AppLanguage: String]
         switch tier {
-        case .plus, .free: rows = [.korean: "플러스", .english: "Plus", .japanese: "プラス", .chinese: "Plus", .german: "Plus", .french: "Plus", .spanish: "Plus", .italian: "Plus", .portuguese: "Plus", .chineseTraditional: "Plus", .dutch: "Plus", .swedish: "Plus", .norwegian: "Plus", .danish: "Plus", .finnish: "Plus", .polish: "Plus", .czech: "Plus", .greek: "Plus", .turkish: "Plus", .russian: "Plus", .indonesian: "Plus", .thai: "Plus", .vietnamese: "Plus"]
-        case .pro: rows = [.korean: "프로", .english: "Pro", .japanese: "プロ", .chinese: "Pro", .german: "Pro", .french: "Pro", .spanish: "Pro", .italian: "Pro", .portuguese: "Pro", .chineseTraditional: "Pro", .dutch: "Pro", .swedish: "Pro", .norwegian: "Pro", .danish: "Pro", .finnish: "Pro", .polish: "Pro", .czech: "Pro", .greek: "Pro", .turkish: "Pro", .russian: "Pro", .indonesian: "Pro", .thai: "Pro", .vietnamese: "Pro"]
-        case .family: rows = [.korean: "패밀리", .english: "Family", .japanese: "ファミリー", .chinese: "家庭版", .german: "Familie", .french: "Famille", .spanish: "Familia", .italian: "Famiglia", .portuguese: "Família", .chineseTraditional: "家庭版", .dutch: "Gezin", .swedish: "Familj", .norwegian: "Familie", .danish: "Familie", .finnish: "Perhe", .polish: "Rodzina", .czech: "Rodina", .greek: "Οικογένεια", .turkish: "Aile", .russian: "Семья", .indonesian: "Keluarga", .thai: "ครอบครัว", .vietnamese: "Gia đình"]
+        case .free: return pick([.korean: "무료", .english: "Free", .japanese: "無料", .chinese: "免费版", .german: "Gratis", .french: "Gratuit", .spanish: "Gratis", .italian: "Gratis", .portuguese: "Grátis", .chineseTraditional: "免費版", .dutch: "Gratis", .swedish: "Gratis", .norwegian: "Gratis", .danish: "Gratis", .finnish: "Ilmainen", .polish: "Darmowy", .czech: "Zdarma", .greek: "Δωρεάν", .turkish: "Ücretsiz", .russian: "Бесплатно", .indonesian: "Gratis", .thai: "ฟรี", .vietnamese: "Miễn phí"])
+        case .plus: return pick([.korean: "플러스", .english: "Plus", .japanese: "プラス", .chinese: "Plus", .german: "Plus", .french: "Plus", .spanish: "Plus", .italian: "Plus", .portuguese: "Plus", .chineseTraditional: "Plus", .dutch: "Plus", .swedish: "Plus", .norwegian: "Plus", .danish: "Plus", .finnish: "Plus", .polish: "Plus", .czech: "Plus", .greek: "Plus", .turkish: "Plus", .russian: "Plus", .indonesian: "Plus", .thai: "Plus", .vietnamese: "Plus"])
+        case .pro: return pick([.korean: "프로", .english: "Pro", .japanese: "プロ", .chinese: "Pro", .german: "Pro", .french: "Pro", .spanish: "Pro", .italian: "Pro", .portuguese: "Pro", .chineseTraditional: "Pro", .dutch: "Pro", .swedish: "Pro", .norwegian: "Pro", .danish: "Pro", .finnish: "Pro", .polish: "Pro", .czech: "Pro", .greek: "Pro", .turkish: "Pro", .russian: "Pro", .indonesian: "Pro", .thai: "Pro", .vietnamese: "Pro"])
         }
-        return rows[lang] ?? rows[.english] ?? ""
     }
 
-    /// 트림 한 줄 설명
+    /// 칸 한 줄 설명
     static func trimTagline(_ tier: ProTier) -> String {
-        let lang = LanguageManager.shared.currentLanguage
-        let rows: [AppLanguage: String]
         switch tier {
-        case .plus, .free: rows = [.korean: "연차 계획을 알아서 짜 줘요", .english: "Plans your time off for you", .japanese: "休みの計画を自動で立てます", .chinese: "自动帮你规划休假", .german: "Plant deinen Urlaub für dich", .french: "Planifie vos congés pour vous", .spanish: "Planifica tus vacaciones por ti", .italian: "Pianifica le ferie al posto tuo", .portuguese: "Planeja suas folgas por você", .chineseTraditional: "自動幫你規劃休假", .dutch: "Plant je verlof voor je", .swedish: "Planerar ledigheten åt dig", .norwegian: "Planlegger fridagene for deg", .danish: "Planlægger din ferie for dig", .finnish: "Suunnittelee lomasi puolestasi", .polish: "Planuje urlop za ciebie", .czech: "Naplánuje dovolenou za tebe", .greek: "Σχεδιάζει τις άδειές σου για σένα", .turkish: "İzinlerini senin için planlar", .russian: "Сам планирует ваш отпуск", .indonesian: "Merencanakan cutimu otomatis", .thai: "วางแผนวันลาให้คุณ", .vietnamese: "Tự lên kế hoạch nghỉ phép cho bạn"]
-        case .pro: rows = [.korean: "내 직장 규칙까지 그대로", .english: "Fits your workplace rules too", .japanese: "職場のルールにもそのまま対応", .chinese: "连单位的规定也能照顾到", .german: "Passt auch zu den Regeln deines Jobs", .french: "S’adapte aussi aux règles de votre travail", .spanish: "Se adapta también a las reglas de tu trabajo", .italian: "Si adatta anche alle regole del tuo lavoro", .portuguese: "Segue também as regras do seu trabalho", .chineseTraditional: "連公司的規定也能照顧到", .dutch: "Past ook bij de regels van je werk", .swedish: "Följer även reglerna på jobbet", .norwegian: "Følger også reglene på jobben", .danish: "Følger også reglerne på jobbet", .finnish: "Taipuu myös työpaikan sääntöihin", .polish: "Uwzględnia też zasady w twojej pracy", .czech: "Zvládne i pravidla tvé práce", .greek: "Ταιριάζει και στους κανόνες της δουλειάς σου", .turkish: "İş yerinin kurallarına da uyar", .russian: "Учитывает и правила вашей работы", .indonesian: "Sesuai juga dengan aturan kantormu", .thai: "รองรับกฎของที่ทำงานคุณด้วย", .vietnamese: "Hợp cả với quy định nơi làm việc"]
-        case .family: rows = [.korean: "프로를 가족 6명이 함께", .english: "Pro for up to 6 family members", .japanese: "プロを家族6人まで", .chinese: "最多6位家人共享 Pro", .german: "Pro für bis zu 6 Familienmitglieder", .french: "Pro pour 6 membres de la famille", .spanish: "Pro para hasta 6 familiares", .italian: "Pro per un massimo di 6 familiari", .portuguese: "Pro para até 6 pessoas da família", .chineseTraditional: "最多6位家人共享 Pro", .dutch: "Pro voor maximaal 6 gezinsleden", .swedish: "Pro för upp till 6 i familjen", .norwegian: "Pro for opptil 6 i familien", .danish: "Pro til op til 6 i familien", .finnish: "Pro jopa 6 perheenjäsenelle", .polish: "Pro dla maksymalnie 6 osób z rodziny", .czech: "Pro až pro 6 členů rodiny", .greek: "Pro για έως 6 μέλη της οικογένειας", .turkish: "Pro, 6 aile üyesine kadar", .russian: "Pro для 6 членов семьи", .indonesian: "Pro untuk hingga 6 anggota keluarga", .thai: "Pro สำหรับครอบครัวสูงสุด 6 คน", .vietnamese: "Pro cho tối đa 6 người trong gia đình"]
+        case .free: return pick([.korean: "쉬는 습관은 무료로", .english: "Healthy rest habits, free", .japanese: "休む習慣は無料で", .chinese: "好好休息的习惯，免费", .german: "Gute Pausen, kostenlos", .french: "Bien se reposer, gratuitement", .spanish: "Descansar bien, gratis", .italian: "Riposare bene, gratis", .portuguese: "Descansar bem, de graça", .chineseTraditional: "好好休息的習慣，免費", .dutch: "Goed uitrusten, gratis", .swedish: "Bra vila, gratis", .norwegian: "God hvile, gratis", .danish: "God hvile, gratis", .finnish: "Hyvä lepo, ilmaiseksi", .polish: "Dobry odpoczynek za darmo", .czech: "Dobrý odpočinek zdarma", .greek: "Σωστή ξεκούραση, δωρεάν", .turkish: "İyi dinlenme, ücretsiz", .russian: "Хороший отдых бесплатно", .indonesian: "Istirahat yang baik, gratis", .thai: "พักผ่อนให้ดี ใช้ฟรี", .vietnamese: "Nghỉ ngơi đúng cách, miễn phí"])
+        case .plus: return pick([.korean: "연차 계획을 알아서 짜 줘요", .english: "Plans your time off for you", .japanese: "休みの計画を自動で立てます", .chinese: "自动帮你规划休假", .german: "Plant deinen Urlaub für dich", .french: "Planifie vos congés pour vous", .spanish: "Planifica tus vacaciones por ti", .italian: "Pianifica le ferie al posto tuo", .portuguese: "Planeja suas folgas por você", .chineseTraditional: "自動幫你規劃休假", .dutch: "Plant je verlof voor je", .swedish: "Planerar ledigheten åt dig", .norwegian: "Planlegger fridagene for deg", .danish: "Planlægger din ferie for dig", .finnish: "Suunnittelee lomasi puolestasi", .polish: "Planuje urlop za ciebie", .czech: "Naplánuje dovolenou za tebe", .greek: "Σχεδιάζει τις άδειές σου για σένα", .turkish: "İzinlerini senin için planlar", .russian: "Сам планирует ваш отпуск", .indonesian: "Merencanakan cutimu otomatis", .thai: "วางแผนวันลาให้คุณ", .vietnamese: "Tự lên kế hoạch nghỉ phép cho bạn"])
+        case .pro: return pick([.korean: "내 직장 규칙과 가족 일정까지", .english: "Fits your workplace rules and your family", .japanese: "職場のルールも家族の予定も", .chinese: "连单位规定和家人日程都照顾到", .german: "Passt zu deinen Jobregeln und deiner Familie", .french: "S’adapte à votre travail et à votre famille", .spanish: "Se adapta a tu trabajo y a tu familia", .italian: "Si adatta al tuo lavoro e alla tua famiglia", .portuguese: "Segue as regras do trabalho e a sua família", .chineseTraditional: "連公司規定和家人行程都照顧到", .dutch: "Past bij je werkregels en je gezin", .swedish: "Följer jobbets regler och familjen", .norwegian: "Følger jobbens regler og familien", .danish: "Følger jobbets regler og familien", .finnish: "Taipuu työpaikan sääntöihin ja perheeseen", .polish: "Uwzględnia zasady w pracy i rodzinę", .czech: "Zvládne pravidla v práci i rodinu", .greek: "Ταιριάζει στη δουλειά και στην οικογένειά σου", .turkish: "İş kurallarına ve ailene uyar", .russian: "Учитывает правила работы и семью", .indonesian: "Sesuai aturan kantor dan keluargamu", .thai: "รองรับกฎที่ทำงานและครอบครัวของคุณ", .vietnamese: "Hợp quy định nơi làm và cả gia đình"])
         }
-        return rows[lang] ?? rows[.english] ?? ""
     }
 
     /// 주력 트림 표시
@@ -561,63 +555,7 @@ extension Strings {
         }
     }
 
-    /// 트림 기능 — 가족 공유
-    static var featFamilySharing: String {
-        switch LanguageManager.shared.currentLanguage {
-        case .korean: return "가족 최대 6명이 함께 쓰기 (가족 공유)"
-        case .english: return "Up to 6 family members (Family Sharing)"
-        case .japanese: return "家族6人まで一緒に使える（ファミリー共有）"
-        case .chinese: return "最多6位家人一起用（家人共享）"
-        case .german: return "Bis zu 6 Familienmitglieder (Familienfreigabe)"
-        case .french: return "Jusqu’à 6 membres (Partage familial)"
-        case .spanish: return "Hasta 6 familiares (En familia)"
-        case .italian: return "Fino a 6 familiari (In famiglia)"
-        case .portuguese: return "Até 6 pessoas (Compartilhamento Familiar)"
-        case .chineseTraditional: return "最多6位家人一起用（家人共享）"
-        case .dutch: return "Tot 6 gezinsleden (Delen met gezin)"
-        case .swedish: return "Upp till 6 i familjen (Familjedelning)"
-        case .norwegian: return "Opptil 6 i familien (Familiedeling)"
-        case .danish: return "Op til 6 i familien (Familiedeling)"
-        case .finnish: return "Jopa 6 perheenjäsentä (Perhejako)"
-        case .polish: return "Do 6 osób z rodziny (Chmura rodzinna)"
-        case .czech: return "Až 6 členů rodiny (Rodinné sdílení)"
-        case .greek: return "Έως 6 μέλη (Οικογενειακή κοινή χρήση)"
-        case .turkish: return "6 aile üyesine kadar (Aile Paylaşımı)"
-        case .russian: return "До 6 членов семьи (Семейный доступ)"
-        case .indonesian: return "Hingga 6 anggota (Berbagi Keluarga)"
-        case .thai: return "สมาชิกครอบครัวสูงสุด 6 คน (การแชร์กันในครอบครัว)"
-        case .vietnamese: return "Tối đa 6 người (Chia sẻ trong gia đình)"
-        }
-    }
 
-    /// 요금 카드 — 무료 체험
-    static func trialThenPrice(_ days: Int, _ price: String) -> String {
-        switch LanguageManager.shared.currentLanguage {
-        case .korean: return "\(days)일 무료, 이후 연 \(price)"
-        case .english: return "\(days) days free, then \(price)/year"
-        case .japanese: return "\(days)日間無料、その後 年額\(price)"
-        case .chinese: return "免费 \(days) 天，之后每年 \(price)"
-        case .german: return "\(days) Tage gratis, dann \(price)/Jahr"
-        case .french: return "\(days) jours gratuits, puis \(price)/an"
-        case .spanish: return "\(days) días gratis, luego \(price)/año"
-        case .italian: return "\(days) giorni gratis, poi \(price)/anno"
-        case .portuguese: return "\(days) dias grátis, depois \(price)/ano"
-        case .chineseTraditional: return "免費 \(days) 天，之後每年 \(price)"
-        case .dutch: return "\(days) dagen gratis, daarna \(price)/jaar"
-        case .swedish: return "\(days) dagar gratis, sedan \(price)/år"
-        case .norwegian: return "\(days) dager gratis, deretter \(price)/år"
-        case .danish: return "\(days) dage gratis, derefter \(price)/år"
-        case .finnish: return "\(days) päivää maksutta, sitten \(price)/vuosi"
-        case .polish: return "\(days) dni za darmo, potem \(price)/rok"
-        case .czech: return "\(days) dní zdarma, pak \(price)/rok"
-        case .greek: return "\(days) ημέρες δωρεάν, μετά \(price)/έτος"
-        case .turkish: return "\(days) gün ücretsiz, sonra yıllık \(price)"
-        case .russian: return "\(days) дней бесплатно, затем \(price) в год"
-        case .indonesian: return "Gratis \(days) hari, lalu \(price)/tahun"
-        case .thai: return "ฟรี \(days) วัน จากนั้นปีละ \(price)"
-        case .vietnamese: return "Miễn phí \(days) ngày, sau đó \(price)/năm"
-        }
-    }
 
     /// 구매 버튼 — 무료 체험
     static func startTrial(_ days: Int) -> String {
@@ -677,39 +615,11 @@ extension Strings {
         }
     }
 
-    /// 패밀리 카드 — 한 사람 몫
-    static func familyPerPersonHint(_ price: String) -> String {
-        switch LanguageManager.shared.currentLanguage {
-        case .korean: return "6명이면 한 사람당 한 달 \(price)꼴"
-        case .english: return "About \(price)/month per person for 6"
-        case .japanese: return "6人なら1人あたり月\(price)ほど"
-        case .chinese: return "6人共用，每人每月约 \(price)"
-        case .german: return "Bei 6 Personen ca. \(price) pro Kopf/Monat"
-        case .french: return "Environ \(price)/mois par personne à 6"
-        case .spanish: return "Unos \(price)/mes por persona entre 6"
-        case .italian: return "Circa \(price)/mese a persona in 6"
-        case .portuguese: return "Cerca de \(price)/mês por pessoa para 6"
-        case .chineseTraditional: return "6人共用，每人每月約 \(price)"
-        case .dutch: return "Ongeveer \(price)/maand per persoon met 6"
-        case .swedish: return "Cirka \(price)/månad per person för 6"
-        case .norwegian: return "Omtrent \(price)/måned per person for 6"
-        case .danish: return "Omkring \(price)/måned pr. person for 6"
-        case .finnish: return "Noin \(price)/kk henkeä kohden kuudelle"
-        case .polish: return "Ok. \(price)/mies. na osobę przy 6"
-        case .czech: return "Asi \(price)/měsíc na osobu při 6"
-        case .greek: return "Περίπου \(price)/μήνα ανά άτομο για 6"
-        case .turkish: return "6 kişide kişi başı ayda yaklaşık \(price)"
-        case .russian: return "Около \(price) в месяц на человека при 6"
-        case .indonesian: return "Sekitar \(price)/bulan per orang untuk 6"
-        case .thai: return "ราว \(price)/เดือนต่อคน เมื่อใช้ 6 คน"
-        case .vietnamese: return "Khoảng \(price)/tháng mỗi người nếu 6 người"
-        }
-    }
 
     /// 이미 쓰고 있는 트림 이하
     static var trimIncluded: String {
         switch LanguageManager.shared.currentLanguage {
-        case .korean: return "이용 중인 트림에 들어 있어요"
+        case .korean: return "지금 쓰는 요금제에 들어 있어요"
         case .english: return "Included in your plan"
         case .japanese: return "ご利用中のプランに含まれています"
         case .chinese: return "已包含在你的方案中"
@@ -737,10 +647,10 @@ extension Strings {
 
 }
 
-// MARK: - 패밀리 · 함께 쉬기
+// MARK: - 함께 쉬기 (프로)
 
 extension Strings {
-    /// 패밀리 기능 이름
+    /// 함께 쉬기 이름
     static var togetherTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "함께 쉬기"
@@ -800,31 +710,7 @@ extension Strings {
 
     /// 잠겼을 때
     static var togetherLocked: String {
-        switch LanguageManager.shared.currentLanguage {
-        case .korean: return "패밀리에서 쓸 수 있어요"
-        case .english: return "Available with Family"
-        case .japanese: return "ファミリーで使えます"
-        case .chinese: return "家庭版可用"
-        case .german: return "Mit Familie verfügbar"
-        case .french: return "Disponible avec Famille"
-        case .spanish: return "Disponible con Familia"
-        case .italian: return "Disponibile con Famiglia"
-        case .portuguese: return "Disponível no Família"
-        case .chineseTraditional: return "家庭版可用"
-        case .dutch: return "Beschikbaar met Gezin"
-        case .swedish: return "Ingår i Familj"
-        case .norwegian: return "Tilgjengelig med Familie"
-        case .danish: return "Tilgængelig med Familie"
-        case .finnish: return "Saatavilla Perhe-tilauksella"
-        case .polish: return "Dostępne w planie Rodzina"
-        case .czech: return "K dispozici v plánu Rodina"
-        case .greek: return "Διαθέσιμο με Οικογένεια"
-        case .turkish: return "Aile ile kullanılabilir"
-        case .russian: return "Доступно в тарифе «Семья»"
-        case .indonesian: return "Tersedia di Keluarga"
-        case .thai: return "ใช้ได้กับแผนครอบครัว"
-        case .vietnamese: return "Có trong gói Gia đình"
-        }
+        pick([.korean: "프로에서 쓸 수 있어요", .english: "Available with Pro", .japanese: "プロで使えます", .chinese: "Pro 可用", .german: "Mit Pro verfügbar", .french: "Disponible avec Pro", .spanish: "Disponible con Pro", .italian: "Disponibile con Pro", .portuguese: "Disponível no Pro", .chineseTraditional: "Pro 可用", .dutch: "Beschikbaar met Pro", .swedish: "Ingår i Pro", .norwegian: "Tilgjengelig med Pro", .danish: "Tilgængelig med Pro", .finnish: "Kuuluu Pro-versioon", .polish: "Dostępne w Pro", .czech: "K dispozici v Pro", .greek: "Διαθέσιμο με Pro", .turkish: "Pro ile kullanılabilir", .russian: "Доступно в Pro", .indonesian: "Tersedia di Pro", .thai: "ใช้ได้กับ Pro", .vietnamese: "Có trong gói Pro"])
     }
 
     /// 나
@@ -1168,5 +1054,50 @@ extension Strings {
     /// 설정 — 받은 선물 코드 넣기 (`LeeoGiftText.redeemEntry`)
     static var giftRedeemEntry: String {
         pick([.korean: "선물 코드 입력", .english: "Redeem Gift Code", .japanese: "ギフトコードを入力", .chinese: "输入礼品码", .german: "Geschenkcode eingeben", .french: "Saisir un code cadeau", .spanish: "Canjear código de regalo", .italian: "Riscatta codice regalo", .portuguese: "Resgatar código de presente", .chineseTraditional: "輸入禮物碼", .dutch: "Cadeaucode invoeren", .swedish: "Lös in presentkod", .norwegian: "Løs inn gavekode", .danish: "Indløs gavekode", .finnish: "Lunasta lahjakoodi", .polish: "Wpisz kod prezentu", .czech: "Zadat dárkový kód", .greek: "Εξαργύρωση κωδικού δώρου", .turkish: "Hediye kodu gir", .russian: "Ввести код подарка", .indonesian: "Tukarkan Kode Hadiah", .thai: "ใส่รหัสของขวัญ", .vietnamese: "Nhập mã quà tặng"])
+    }
+}
+
+// MARK: - 세 칸 페이월 (2.4.2)
+
+extension Strings {
+    /// 페이월 머리말
+    static var paywallLadderTitle: String {
+        pick([.korean: "필요한 만큼 골라 쓰세요", .english: "Pick what you need", .japanese: "必要な分だけ選べます", .chinese: "按需选择", .german: "Wähle, was du brauchst", .french: "Choisissez ce qu’il vous faut", .spanish: "Elige lo que necesitas", .italian: "Scegli quello che ti serve", .portuguese: "Escolha o que você precisa", .chineseTraditional: "依需要選擇", .dutch: "Kies wat je nodig hebt", .swedish: "Välj det du behöver", .norwegian: "Velg det du trenger", .danish: "Vælg det, du har brug for", .finnish: "Valitse, mitä tarvitset", .polish: "Wybierz to, czego potrzebujesz", .czech: "Vyber si, co potřebuješ", .greek: "Διάλεξε ό,τι χρειάζεσαι", .turkish: "İhtiyacın olanı seç", .russian: "Выберите то, что нужно", .indonesian: "Pilih yang kamu butuhkan", .thai: "เลือกเท่าที่คุณต้องการ", .vietnamese: "Chọn đúng thứ bạn cần"])
+    }
+
+    /// 페이월 머리말 아래 한 줄. 유료 칸마다 연 구독과 평생이 있다.
+    static var paywallLadderSubtitle: String {
+        pick([.korean: "플러스와 프로 모두 연 구독과 평생 중에 고를 수 있어요", .english: "Plus and Pro come yearly or for life", .japanese: "プラスもプロも年額と買い切りから選べます", .chinese: "Plus 和 Pro 都可选择按年订阅或终身购买", .german: "Plus und Pro gibt es jährlich oder lebenslang", .french: "Plus et Pro existent à l’année ou à vie", .spanish: "Plus y Pro, por año o de por vida", .italian: "Plus e Pro, annuali o a vita", .portuguese: "Plus e Pro, por ano ou vitalício", .chineseTraditional: "Plus 和 Pro 都可選擇按年訂閱或終身購買", .dutch: "Plus en Pro per jaar of levenslang", .swedish: "Plus och Pro finns per år eller för livet", .norwegian: "Plus og Pro fås årlig eller for livet", .danish: "Plus og Pro fås årligt eller for livet", .finnish: "Plus ja Pro vuodeksi tai pysyvästi", .polish: "Plus i Pro rocznie albo na zawsze", .czech: "Plus i Pro na rok nebo navždy", .greek: "Plus και Pro, ετήσια ή εφ’ όρου ζωής", .turkish: "Plus ve Pro, yıllık ya da ömür boyu", .russian: "Plus и Pro: на год или навсегда", .indonesian: "Plus dan Pro, tahunan atau selamanya", .thai: "Plus และ Pro เลือกได้ทั้งรายปีหรือตลอดชีพ", .vietnamese: "Plus và Pro có gói theo năm hoặc trọn đời"])
+    }
+
+    /// 무료 칸: 휴가 기록과 남은 연차
+    static var freeFeatTracking: String {
+        pick([.korean: "휴가 기록과 남은 연차", .english: "Log time off and see what’s left", .japanese: "休暇の記録と残りの有給", .chinese: "记录休假，查看剩余年假", .german: "Urlaub eintragen, Resturlaub sehen", .french: "Notez vos congés et voyez le solde", .spanish: "Registra tus días libres y lo que te queda", .italian: "Registra le ferie e vedi quelle rimaste", .portuguese: "Registre folgas e veja o saldo", .chineseTraditional: "記錄休假，查看剩餘特休", .dutch: "Verlof bijhouden en je saldo zien", .swedish: "Logga ledighet och se vad som är kvar", .norwegian: "Før fridager og se hva som er igjen", .danish: "Registrér fridage og se, hvad der er tilbage", .finnish: "Kirjaa lomat ja näe, paljonko on jäljellä", .polish: "Zapisuj urlop i sprawdzaj, ile zostało", .czech: "Zapisuj dovolenou a sleduj, kolik zbývá", .greek: "Κατέγραψε άδειες και δες το υπόλοιπο", .turkish: "İzinlerini kaydet, kalanı gör", .russian: "Учёт отпусков и оставшихся дней", .indonesian: "Catat cuti dan lihat sisanya", .thai: "บันทึกวันลาและดูวันลาที่เหลือ", .vietnamese: "Ghi ngày nghỉ và xem số ngày còn lại"])
+    }
+
+    /// 무료 칸: 나라별 공휴일, 내 공휴일과 방학
+    static var freeFeatHolidays: String {
+        pick([.korean: "나라별 공휴일, 내 공휴일과 방학", .english: "Public holidays, your own days off and school breaks", .japanese: "国ごとの祝日、自分の休日や長期休み", .chinese: "各国公共假日，以及自定义假日和假期", .german: "Feiertage deines Landes, eigene freie Tage und Ferien", .french: "Jours fériés du pays, vos propres jours et vacances", .spanish: "Festivos de tu país, tus propios días y vacaciones escolares", .italian: "Festività del paese, giorni personali e vacanze", .portuguese: "Feriados do país, seus próprios dias e férias escolares", .chineseTraditional: "各國國定假日，以及自訂假日和假期", .dutch: "Feestdagen per land, eigen vrije dagen en vakanties", .swedish: "Helgdagar i ditt land, egna lediga dagar och lov", .norwegian: "Helligdager i landet ditt, egne fridager og ferier", .danish: "Helligdage i dit land, egne fridage og ferier", .finnish: "Maasi pyhäpäivät, omat vapaapäivät ja lomat", .polish: "Święta w twoim kraju, własne dni wolne i ferie", .czech: "Svátky tvé země, vlastní volna a prázdniny", .greek: "Αργίες της χώρας σου, δικές σου μέρες και διακοπές", .turkish: "Ülkenin resmi tatilleri, kendi izin günlerin ve okul tatilleri", .russian: "Праздники вашей страны, свои выходные и каникулы", .indonesian: "Hari libur nasional, hari libur sendiri, dan libur sekolah", .thai: "วันหยุดของแต่ละประเทศ วันหยุดของคุณเองและปิดเทอม", .vietnamese: "Ngày lễ theo quốc gia, ngày nghỉ riêng và kỳ nghỉ học"])
+    }
+
+    /// 무료 칸: 올해 추천 전부 보기, n개까지 넣기 (`ProManager.freeRecommendationAddLimit`)
+    static func freeFeatRecommendations(_ n: Int) -> String {
+        pick([.korean: "올해 추천 전부 보기, \(n)개까지 넣기", .english: "See all of this year’s suggestions, add up to \(n)", .japanese: "今年のおすすめをすべて表示、\(n)件まで登録", .chinese: "查看今年全部推荐，最多添加 \(n) 个", .german: "Alle Vorschläge für dieses Jahr, bis zu \(n) übernehmen", .french: "Toutes les suggestions de l’année, jusqu’à \(n) à ajouter", .spanish: "Todas las sugerencias del año, añade hasta \(n)", .italian: "Tutti i suggerimenti dell’anno, aggiungine fino a \(n)", .portuguese: "Todas as sugestões do ano, adicione até \(n)", .chineseTraditional: "查看今年全部推薦，最多新增 \(n) 個", .dutch: "Alle voorstellen van dit jaar, tot \(n) toevoegen", .swedish: "Alla förslag för i år, lägg till upp till \(n)", .norwegian: "Alle forslag for i år, legg til opptil \(n)", .danish: "Alle forslag for i år, tilføj op til \(n)", .finnish: "Kaikki tämän vuoden ehdotukset, lisää enintään \(n)", .polish: "Wszystkie propozycje na ten rok, dodaj do \(n)", .czech: "Všechny letošní návrhy, přidej až \(n)", .greek: "Όλες οι φετινές προτάσεις, πρόσθεσε έως \(n)", .turkish: "Bu yılın tüm önerileri, en fazla \(n) tane ekle", .russian: "Все рекомендации на этот год, добавить можно до \(n)", .indonesian: "Semua saran tahun ini, tambahkan hingga \(n)", .thai: "ดูคำแนะนำทั้งหมดของปีนี้ เพิ่มได้สูงสุด \(n) รายการ", .vietnamese: "Xem mọi gợi ý năm nay, thêm tối đa \(n)"])
+    }
+
+    /// 무료 칸: 쉬는 간격 안내, 알림, 위젯
+    static var freeFeatRest: String {
+        pick([.korean: "쉬는 간격 안내, 알림, 위젯", .english: "Rest reminders, alerts and widgets", .japanese: "休むタイミングの案内、通知、ウィジェット", .chinese: "休息间隔提醒、通知和小组件", .german: "Pausenhinweise, Mitteilungen und Widgets", .french: "Rappels de repos, notifications et widgets", .spanish: "Avisos de descanso, notificaciones y widgets", .italian: "Promemoria di riposo, notifiche e widget", .portuguese: "Lembretes de descanso, notificações e widgets", .chineseTraditional: "休息間隔提醒、通知和小工具", .dutch: "Rusttips, meldingen en widgets", .swedish: "Vilopåminnelser, notiser och widgetar", .norwegian: "Påminnelser om hvile, varsler og widgeter", .danish: "Påmindelser om pauser, notifikationer og widgets", .finnish: "Lepomuistutukset, ilmoitukset ja widgetit", .polish: "Przypomnienia o odpoczynku, powiadomienia i widżety", .czech: "Připomínky odpočinku, oznámení a widgety", .greek: "Υπενθυμίσεις ξεκούρασης, ειδοποιήσεις και widget", .turkish: "Dinlenme hatırlatmaları, bildirimler ve widget’lar", .russian: "Напоминания об отдыхе, уведомления и виджеты", .indonesian: "Pengingat istirahat, notifikasi, dan widget", .thai: "เตือนให้พัก การแจ้งเตือน และวิดเจ็ต", .vietnamese: "Nhắc nghỉ ngơi, thông báo và tiện ích"])
+    }
+
+    /// 무료 칸: iCloud 백업, 가족과 일정 보기 공유 (같이 계획하기는 프로)
+    static var freeFeatBackupShare: String {
+        pick([.korean: "iCloud 백업, 가족과 일정 공유", .english: "iCloud backup and sharing schedules with family", .japanese: "iCloudバックアップ、家族と予定を共有", .chinese: "iCloud 备份，与家人共享日程", .german: "iCloud-Backup und Pläne mit der Familie teilen", .french: "Sauvegarde iCloud et planning partagé en famille", .spanish: "Copia en iCloud y calendario compartido con la familia", .italian: "Backup su iCloud e programmi condivisi in famiglia", .portuguese: "Backup no iCloud e agenda compartilhada com a família", .chineseTraditional: "iCloud 備份，與家人共享行程", .dutch: "iCloud-back-up en planning delen met je gezin", .swedish: "iCloud-säkerhetskopia och delat schema med familjen", .norwegian: "iCloud-sikkerhetskopi og delt timeplan med familien", .danish: "iCloud-backup og delt plan med familien", .finnish: "iCloud-varmuuskopio ja aikataulun jakaminen perheelle", .polish: "Kopia w iCloud i plan udostępniany rodzinie", .czech: "Záloha na iCloud a sdílení plánu s rodinou", .greek: "Αντίγραφο στο iCloud και κοινό πρόγραμμα με την οικογένεια", .turkish: "iCloud yedeği ve aileyle takvim paylaşımı", .russian: "Резервная копия в iCloud и общий график с семьёй", .indonesian: "Cadangan iCloud dan berbagi jadwal dengan keluarga", .thai: "สำรองข้อมูล iCloud และแชร์ตารางกับครอบครัว", .vietnamese: "Sao lưu iCloud và chia sẻ lịch với gia đình"])
+    }
+
+    /// 설정: 구독 중일 때만 서는 줄. 누르면 구독 졸업(프로 평생) 화면이 뜬다.
+    /// `LeeoLadderText.switchToLifetimeEntry` 의 번역을 그대로 옮겼다. LeeoKit 문구는 기기 언어를 따르므로 앱 언어로 다시 적는다.
+    static var switchToLifetimeEntry: String {
+        pick([.korean: "평생으로 바꾸기", .english: "Switch to Lifetime", .japanese: "買い切りに切り替える", .chinese: "改为永久版", .german: "Zu Lebenslang wechseln", .french: "Passer à l’achat à vie", .spanish: "Cambiar a la versión de por vida", .italian: "Passa alla versione a vita", .portuguese: "Mudar para o vitalício", .chineseTraditional: "改為永久版", .dutch: "Overstappen op levenslang", .swedish: "Byt till livstid", .norwegian: "Bytt til livstid", .danish: "Skift til livstid", .finnish: "Vaihda elinikäiseen", .polish: "Przejdź na dostęp dożywotni", .czech: "Přejít na doživotní verzi", .greek: "Μετάβαση σε εφ’ όρου ζωής", .turkish: "Ömür boyu sürüme geç", .russian: "Перейти на покупку навсегда", .indonesian: "Beralih ke Seumur Hidup", .thai: "เปลี่ยนเป็นตลอดชีพ", .vietnamese: "Chuyển sang trọn đời"])
     }
 }

@@ -19,7 +19,7 @@ struct FamilyView: View {
     var body: some View {
         NavigationStack {
             List {
-                // 패밀리 — 다 같이 쉬는 날 찾기
+                // 프로: 다 같이 쉬는 날 찾기
                 FamilyTogetherEntry(profile: profile)
 
                 ForEach(service.sharedSchedules) { schedule in

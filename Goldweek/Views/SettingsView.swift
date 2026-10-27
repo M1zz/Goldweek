@@ -58,6 +58,8 @@ struct SettingsView: View {
     @State private var showingRestoreConfirm = false
     @State private var showingPaywall = false
     @State private var showingManageSubscription = false
+    /// 구독 졸업(구독을 프로 평생으로) 화면
+    @State private var showingGraduation = false
     @State private var editingBonus: BonusLeave?
     @State private var pendingBonusDeleteOffsets: IndexSet?
     @State private var showingBonusDeleteConfirm = false
@@ -336,6 +338,8 @@ struct SettingsView: View {
                     }
                     if case .yearly = ProManager.shared.activePlan {
                         Button(Strings.manageSubscription) { showingManageSubscription = true }
+                        // 구독 중일 때만 서는 줄: 구독을 평생으로 바꾸는 길을 늘 열어 둔다(LeeoGraduation)
+                        Button(Strings.switchToLifetimeEntry) { showingGraduation = true }
                     }
                 } header: {
                     Text(Strings.planStatusTitle)
@@ -1291,6 +1295,7 @@ struct SettingsView: View {
                 PaywallView()
             }
             .manageSubscriptionsSheet(isPresented: $showingManageSubscription)
+            .sheet(isPresented: $showingGraduation) { GraduationSheet() }
             .sheet(isPresented: $showingCalendarImport) {
                 CalendarImportSheet(existingRecords: Array(leaveRecords))
             }

@@ -2,7 +2,7 @@
 //  ProBenefitsView.swift
 //  Goldweek
 //
-//  설정 > 이용 중인 등급(플러스 · 프로 · 패밀리) > 내 혜택
+//  설정 > 이용 중인 등급(플러스 · 프로) > 내 혜택
 //
 
 import SwiftUI
@@ -135,10 +135,6 @@ struct ProBenefitsView: View {
                          value: Strings.itemCount(schoolBreaks.filter { $0.kind != .blackout }.count)),
                 ValueRow(symbol: "calendar.badge.clock", title: Strings.autoDetectSettingTitle,
                          value: autoDetectEnabled ? Strings.stateOn : Strings.stateOff),
-            ]
-        }
-        if tier >= .family {
-            rows += [
                 ValueRow(symbol: "person.2.fill", title: Strings.benefitsFamilyMembers,
                          value: Strings.peopleCount(ShareSyncService.shared.sharedSchedules.count)),
                 ValueRow(symbol: "heart.fill", title: Strings.familyAnniversariesTitle,

@@ -2,10 +2,10 @@
 //  FamilyTogetherView.swift
 //  Goldweek
 //
-//  패밀리 트림 — 함께 쉬기.
+//  프로 칸: 함께 쉬기 (2.4.2 전에는 패밀리였다).
 //  공유받은 가족 일정(주말·각자 나라의 공휴일·휴가)과 내 일정을 겹쳐
 //  다 같이 쉬는 날, 한 사람만 연차를 내면 다 같이 쉬는 날, 가족 기념일에 누가 쉬는지를 찾는다.
-//  무엇을 왜 패밀리에 두는지는 docs/MONETIZATION.md.
+//  무엇을 왜 프로에 두는지는 docs/MONETIZATION.md.
 //
 
 import SwiftUI
@@ -330,12 +330,12 @@ private struct TogetherLeaveDate: Identifiable {
 
 // MARK: - 가족 탭 입구
 
-/// 가족 탭 맨 위 — 패밀리면 함께 쉬기로, 아니면 패밀리 페이월로
+/// 가족 탭 맨 위. 프로면 함께 쉬기로, 아니면 프로 페이월로
 struct FamilyTogetherEntry: View {
     @Bindable var profile: UserProfile
     @State private var showingPaywall = false
 
-    private var unlocked: Bool { ProManager.shared.tier >= .family }
+    private var unlocked: Bool { ProManager.shared.hasProTier }
 
     var body: some View {
         Section {
@@ -351,7 +351,7 @@ struct FamilyTogetherEntry: View {
             }
         }
         .sheet(isPresented: $showingPaywall) {
-            PaywallView(initialProductID: ProManager.familyProductID)
+            PaywallView(initialProductID: ProManager.yearlyProductID)
         }
     }
 

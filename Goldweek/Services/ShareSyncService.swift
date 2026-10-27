@@ -39,7 +39,7 @@ struct LeaveSnapshot {
     }
 }
 
-/// 가족 기념일 — 함께 쉬기(패밀리)에서 가족이 같이 본다
+/// 가족 기념일: 함께 쉬기(프로)에서 가족이 같이 본다
 struct AnniversarySnapshot: Equatable {
     let id: UUID
     let title: String

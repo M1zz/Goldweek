@@ -2428,13 +2428,14 @@ final class MonetizationTests: XCTestCase {
         XCTAssertEqual(ProManager.yearlyProductID, "com.Ysoup.LeaveWise.pro.yearly")
         XCTAssertEqual(ProManager.plusProductID, "com.Ysoup.LeaveWise.plus.annual")
         XCTAssertEqual(ProManager.familyProductID, "com.Ysoup.LeaveWise.family.yearly")
-        XCTAssertEqual(Set(ProManager.allProductIDs).count, 4)
-        // 평생 구매자는 프로 트림
+        XCTAssertEqual(Set(ProManager.allProductIDs).count, 7)
+        // 평생 구매자는 프로 칸
         XCTAssertEqual(ProManager.tier(of: ProManager.proProductID), .pro)
         XCTAssertEqual(ProManager.tier(of: ProManager.yearlyProductID), .pro)
         XCTAssertEqual(ProManager.tier(of: ProManager.plusProductID), .plus)
-        XCTAssertEqual(ProManager.tier(of: ProManager.familyProductID), .family)
-        XCTAssertTrue(ProTier.family > .pro && ProTier.pro > .plus && ProTier.plus > .free)
+        // 패밀리는 프로에 합쳤다
+        XCTAssertEqual(ProManager.tier(of: ProManager.familyProductID), .pro)
+        XCTAssertTrue(ProTier.pro > .plus && ProTier.plus > .free)
     }
 
     /// 자동 갱신 고지는 심사 필수 — 어느 언어에서도 비면 안 된다
@@ -2556,7 +2557,7 @@ final class FamilyTogetherTests: XCTestCase {
             LanguageManager.shared.currentLanguage = language
             XCTAssertFalse(Strings.togetherTitle.isEmpty)
             XCTAssertTrue(Strings.togetherLeaveNeeded("A", 1, 3).contains("3"))
-            XCTAssertFalse(Strings.trimName(.family).isEmpty)
+            XCTAssertFalse(Strings.togetherLocked.isEmpty)
         }
     }
 }
