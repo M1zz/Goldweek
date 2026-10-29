@@ -1,58 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: วางแผนวันลา</title>
-<meta name="description" content="มีวันหยุดใกล้เข้ามาไหม Goldweek ต่อวันหยุดเข้ากับเสาร์-อาทิตย์ แล้วบอกว่าควรลาวันไหนถึงจะได้หยุดติดกันนานที่สุด ดูวันลาคงเหลือได้จากวิดเจ็ต">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: วางแผนวันลา">
-<meta property="og:description" content="มีวันหยุดใกล้เข้ามาไหม Goldweek ต่อวันหยุดเข้ากับเสาร์-อาทิตย์ แล้วบอกว่าควรลาวันไหนถึงจะได้หยุดติดกันนานที่สุด ดูวันลาคงเหลือได้จากวิดเจ็ต">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/th/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: ลาไม่กี่วัน ได้หยุดยาว</title>
+  <meta name="description" content="Goldweek จับคู่วันหยุดนักขัตฤกษ์กับวันเสาร์อาทิตย์ แล้วบอกว่าควรลาวันไหนถึงได้หยุดยาวที่สุด มีวันหยุดของ 42 ประเทศ และช่วยจัดการวันลา">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: ลาไม่กี่วัน ได้หยุดยาว">
+  <meta property="og:description" content="Goldweek จับคู่วันหยุดนักขัตฤกษ์กับวันเสาร์อาทิตย์ แล้วบอกว่าควรลาวันไหนถึงได้หยุดยาวที่สุด มีวันหยุดของ 42 ประเทศ และช่วยจัดการวันลา">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/th/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/th/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../site.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="ไอคอนแอป Goldweek"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">ฟีเจอร์</a>
-<a href="#screenshots" class="hide-mobile">ภาพหน้าจอ</a>
-<a href="support.html" class="hide-mobile">ช่วยเหลือ</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">ดาวน์โหลด</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Language">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+  <header class="bar">
+    <a class="brand" href="../th/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">ภาษา</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>ลาไม่กี่วัน<br>ได้หยุดยาว</h1>
+        <p class="lead">Goldweek จับคู่วันหยุดกับวันเสาร์อาทิตย์ แล้วบอกชัดๆ ว่าควรลาวันไหนถึงจะได้หยุดยาวที่สุด ไม่ต้องเปิดปฏิทินนั่งนับทีละหน้าอีกต่อไป</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">ดาวน์โหลดฟรีใน App Store</a></div>
+        <p class="muted small">ดาวน์โหลดฟรี การบันทึกวันลาและดูคำแนะนำยังใช้ฟรีตลอด</p>
+      </div>
+      <div class="phone"><img src="../img/th/02-recommend.jpg" alt="ลาไม่กี่วัน ได้หยุดยาว" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+
+    <section class="problem reveal">
+      <h2>เหนื่อยกับการนั่งนับวันในปฏิทินไหม</h2>
+      <p>วันพฤหัสเป็นวันหยุด จะลาวันศุกร์ดีไหม หรือเก็บไว้ต่อกับวันหยุดยาวเดือนหน้า เปิดปฏิทินไปมาจนสุดท้ายก็ลาวันไหนก็ได้ แล้วพอสิ้นปีวันลาที่เหลือก็หายไปเฉยๆ Goldweek คำนวณให้ แล้วแสดงวันที่ทำให้วันลาคุ้มที่สุด</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>เห็นวันลาที่เหลือในพริบตา</h2>
+        <p>วันลาทั้งหมด ที่ใช้ไป และที่เหลือ อยู่ในหน้าเดียว ข้างๆ ยังบอกว่าปีนี้ผ่านไปเท่าไรแล้วเทียบกับวันลาที่ใช้ไป จะได้รู้ทันทีว่าเก็บวันลาไว้มากเกินไปหรือเปล่า<br>ไม่ต้องเปิดแอปก็ดูวันลาที่เหลือและวันหยุดที่ใกล้มาถึงได้จากวิดเจ็ตบนหน้าจอโฮม</p>
+      </div>
+      <div class="phone"><img src="../img/th/01-home.jpg" alt="เห็นวันลาที่เหลือในพริบตา" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>ลงวันลาได้ในปฏิทินเลย</h2>
+        <p>วันหยุด วันลา และวันหยุดยาวที่แนะนำ แสดงเป็นสีในปฏิทิน แตะวันที่เพื่อเพิ่มหรือแก้วันลาได้ทันที รวมถึงลาครึ่งวัน ลาหนึ่งในสี่วัน หรือลาเป็นชั่วโมง<br>ถ่ายรูปหน้าประวัติการลาจากระบบของบริษัท แล้วดึงข้อมูลเก่าเข้ามาได้ในครั้งเดียว</p>
+      </div>
+      <div class="phone"><img src="../img/th/03-calendar.jpg" alt="ลงวันลาได้ในปฏิทินเลย" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>ตามประเทศและรูปแบบงานของคุณ</h2>
+        <p>มีวันหยุดของ 42 ประเทศ ทั้งเอเชีย ยุโรป และอเมริกา ประเทศที่วันหยุดต่างกันตามรัฐหรือภูมิภาคก็เลือกพื้นที่ของคุณได้ ส่วนประเทศที่ยังไม่มีในรายการ เช่น ประเทศไทย ก็ใส่วันหยุดเองได้<br>เลือกวันหยุดสุดสัปดาห์ วันแรกของสัปดาห์ และรูปแบบงานแบบประจำ พาร์ตไทม์ หรือเป็นกะได้ด้วย</p>
+      </div>
+      <div class="phone"><img src="../img/th/04-settings.jpg" alt="ตามประเทศและรูปแบบงานของคุณ" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>เริ่มได้ใน 3 ขั้นตอน</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>บอกว่าคุณทำงานที่ไหน</h3><p>เปิดครั้งแรก เลือกประเทศและจำนวนวันลาต่อปี หรือใส่วันหยุดเองถ้ายังไม่มีประเทศของคุณ</p></li>
+<li class="card"><span class="n">2</span><h3>เลือกคำแนะนำ</h3><p>ในแท็บปฏิทินมีวันหยุดยาวที่แนะนำ เพิ่มอันที่ชอบลงตารางได้เลย</p></li>
+<li class="card"><span class="n">3</span><h3>บันทึกวันลา</h3><p>แตะวันที่ หรือดึงประวัติการลาจากรูปภาพ</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>คำนวณแบบนี้</h2>
+      <div class="card table">
+        <dl><div><dt>ลาเต็มวัน</dt><dd>หัก 1 วัน</dd></div><div><dt>ลาครึ่งวัน</dt><dd>หัก 0.5 วัน</dd></div><div><dt>ลาหนึ่งในสี่วัน</dt><dd>หัก 0.25 วัน</dd></div><div><dt>ลาเป็นชั่วโมง</dt><dd>หักตามชั่วโมงทำงานของวันนั้น</dd></div><div><dt>ลาป่วย ลากิจตามสิทธิ์ ไปราชการ</dt><dd>ไม่หักจากวันลาที่เหลือ</dd></div><div><dt>วันลาโบนัส</dt><dd>วันหยุดชดเชยหรือวันลารางวัลที่ได้เพิ่ม แยกเก็บพร้อมวันหมดอายุ (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">จำนวนวันลาต่อปีและเดือนที่เริ่มนับปีวันลา เปลี่ยนได้ทุกเมื่อในการตั้งค่า</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>พักผ่อนให้ดีใช้ฟรี อยากให้ช่วยวางแผนค่อยจ่าย</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>ฟรี</h3>
+          <ul><li>บันทึกลาเต็มวัน ครึ่งวัน หนึ่งในสี่วัน และรายชั่วโมง พร้อมวันลาที่เหลือ</li><li>วันหยุดของ 42 ประเทศ วันหยุดของคุณเองและวันปิดเทอม</li><li>ดูคำแนะนำทั้งหมดของปีนี้ และเพิ่มลงตารางได้ 3 รายการ</li><li>คำแนะนำเรื่องช่วงพัก การแจ้งเตือน และวิดเจ็ต</li><li>เพิ่มวันลาจากรูปภาพ</li><li>สำรองข้อมูล iCloud และแชร์ตารางกับครอบครัว</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus และ Pro</h3>
+          <ul><li>Plus: วางแผนวันลาให้คุ้มที่สุดทั้งปี</li><li>Plus: เพิ่มคำแนะนำได้ไม่จำกัด รวมถึงของปีที่แล้วและปีหน้า</li><li>Plus: ส่งวันลาไปยังแอปปฏิทิน</li><li>Pro: ทุกอย่างใน Plus พร้อมวันลาโบนัส เพดานรายปีและการยกยอดตามประเภท</li><li>Pro: นำเข้าปฏิทินโรงเรียน และตรวจหาปฏิทินอัตโนมัติ</li><li>Pro: หยุดพร้อมกันทั้งครอบครัว และวันสำคัญของครอบครัว</li></ul>
+          <p class="muted">ทุกระดับเลือกได้ทั้งสมัครสมาชิกรายปี หรือซื้อครั้งเดียวใช้ได้ตลอด</p>
+        </div>
+      </div>
+      <p class="muted">การสมัครสมาชิกรายปีจะต่ออายุอัตโนมัติ หากไม่ยกเลิกอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดรอบ จัดการได้ทุกเมื่อที่ การตั้งค่า &gt; บัญชี Apple &gt; การสมัครสมาชิก</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>คำถามที่พบบ่อย</h2>
+      <div class="faq"><details><summary>วันลาคำนวณไม่ตรง</summary><p>ตรวจดูเดือนที่เริ่มนับปีวันลาและจำนวนวันลาทั้งหมดในการตั้งค่า ลาครึ่งวัน (0.5) และหนึ่งในสี่วัน (0.25) จะถูกหักให้อัตโนมัติ ส่วนประเภทที่ไม่หักวันลา เช่น ลาป่วย ลากิจตามสิทธิ์ หรือไปราชการ จะไม่กระทบวันลาที่เหลือ ถ้ายังไม่ตรง ส่งอีเมลบอกเราได้เลย</p></details>
+<details><summary>วันลาไม่ขึ้นในปฏิทิน</summary><p>วันลาที่ยกเลิกแล้วจะไม่แสดงในปฏิทิน ตรวจดูสถานะของรายการนั้นในหน้าจัดการวันลา การอัปเดตเป็นเวอร์ชันล่าสุดก็อาจช่วยได้</p></details>
+<details><summary>เพิ่มวันลาโบนัสอย่างไร</summary><p>แตะ + ในแท็บภาพรวมเพื่อเปิดหน้าจัดการวันลา แล้วเพิ่มในส่วนวันลาโบนัสด้านล่าง เลือกประเภท (วันหยุดชดเชย วันลารางวัล วันลาพักฟื้น ฯลฯ) ใส่จำนวนวันและวันหมดอายุ (ไม่บังคับ) วันลาโบนัสจะแยกจากวันลาปกติ</p></details>
+<details><summary>ซื้อแล้วแต่ฟีเจอร์ยังไม่ปลดล็อก</summary><p>แตะกู้คืนการซื้อที่ด้านล่างของแท็บการตั้งค่า ระบบจะกู้คืนการซื้อด้วยบัญชี Apple ที่ลงชื่อเข้า App Store อยู่ ถ้ายังไม่ได้ ส่งอีเมลหาเรา</p></details>
+<details><summary>ลบแอปแล้วข้อมูลจะหายไหม</summary><p>ข้อมูลเก็บอยู่ในเครื่อง ลบแอปแล้วข้อมูลจะหายทั้งหมด เปิดสำรองข้อมูล iCloud ไว้เพื่อให้มีสำเนาที่กู้คืนได้ภายหลัง</p></details>
+<details><summary>เพิ่มหรือซ่อนวันหยุดเองได้ไหม</summary><p>ได้ ไปที่วันหยุดและปิดเทอมในการตั้งค่า เพื่อเพิ่มวันหยุดของคุณเองหรือซ่อนวันหยุดเริ่มต้น</p></details>
+<details><summary>รองรับประเทศไหนบ้าง</summary><p>Goldweek มีวันหยุดของ 42 ประเทศ เลือกประเทศในการตั้งค่า (และพื้นที่ สำหรับประเทศที่วันหยุดต่างกันตามพื้นที่) ปฏิทินจะอัปเดตทันที ตอนนี้ยังไม่มีวันหยุดของประเทศไทยในรายการ ใส่วันหยุดเองได้ หรือส่งความคิดเห็นจากในแอปเพื่อขอให้รองรับ</p></details>
+<details><summary>ข้อมูลของฉันเก็บไว้ที่ไหน</summary><p>สิ่งที่คุณบันทึกอยู่ในเครื่องและ iCloud ของคุณเองเท่านั้น นักพัฒนาได้รับแค่สถิติการใช้งานแบบไม่ระบุตัวตน รายงานข้อผิดพลาดแบบไม่ระบุตัวตน และความคิดเห็นที่คุณส่งมาเอง</p></details></div>
+      <p class="contact">ปัญหาที่ยังไม่ได้รับคำตอบด้านบน ไอเดีย หรือบั๊ก ส่งมาที่ <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> ปกติเราตอบภายใน 1 ถึง 2 วันทำการ</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>ปีนี้ ใช้วันลา<br>ให้คุ้มที่สุด</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">ดาวน์โหลดฟรีใน App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="ภาษา"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -73,68 +168,16 @@
 <a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
-<a href="../th/" hreflang="th" lang="th" aria-current="true">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../th/" hreflang="th" lang="th" aria-current="page">ไทย</a>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">นโยบายความเป็นส่วนตัว</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>ลาน้อย ได้หยุดยาวกว่าเดิม</h1>
-<p>Goldweek ช่วยหาว่าควรลาวันไหน ถึงจะได้หยุดยาวที่สุดด้วยวันลาน้อยที่สุด<br>แอปจะต่อวันหยุดเข้ากับเสาร์-อาทิตย์ แล้วแสดงชุดวันลาที่คุ้มที่สุดให้เห็นในหน้าเดียว</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/th-th?size=250x83" alt="ดาวน์โหลดบน App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Goldweek ทำอะไรได้บ้าง</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>คำแนะนำสำหรับทุกวันหยุด</h3>
-<p>สำหรับวันหยุดแต่ละครั้งที่กำลังจะถึง ดูได้ว่าต้องลากี่วัน และจะได้หยุดติดกันกี่วัน วันที่ควรลาเชื่อมวันหยุดจะไม่หลุดสายตาอีก</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>วันหยุดของ 42 ประเทศ และวันหยุดที่ใส่เอง</h3>
-<p>มีวันหยุดนักขัตฤกษ์ของ 42 ประเทศในเอเชีย ยุโรป อเมริกา ตะวันออกกลาง แอฟริกา และโอเชียเนีย ประเทศไทยยังไม่อยู่ในรายการ แต่ใส่วันหยุดของไทยเองได้ในโหมดกำหนดเอง และตั้งวันหยุดที่ตรงกับวันที่เดิมให้ซ้ำทุกปีได้ เลือกวันหยุดสุดสัปดาห์และวันเริ่มต้นสัปดาห์ได้เอง</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>ติดตามวันลา</h3>
-<p>ดูวันลาทั้งหมด วันลาที่ใช้แล้ว และวันลาคงเหลือในหน้าเดียว บันทึกลาครึ่งวันหรือลาเป็นชั่วโมงได้ วันลาเพิ่มเติม เช่น ลาชดเชย ติดตามพร้อมวันหมดอายุ แตะวันที่ในปฏิทินเพื่อเพิ่มหรือแก้ไข หรือนำเข้าประวัติการลาจากรูปหน้าจอระบบของบริษัท</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>วิดเจ็ตและสำรองข้อมูล</h3>
-<p>วันลาคงเหลือและวันหยุดครั้งถัดไปอยู่บนหน้าจอโฮม ข้อมูลสำรองไว้ใน iCloud และแชร์ตารางวันลากับครอบครัวได้ ใช้ได้ทั้ง iPhone และ iPad</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>ภาพจากในแอป</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/th/01-home.png" alt="ภาพหน้าจอ Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/th/02-recommend.png" alt="ภาพหน้าจอ Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/th/03-calendar.png" alt="ภาพหน้าจอ Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/th/04-countries.png" alt="ภาพหน้าจอ Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/th/05-settings.png" alt="ภาพหน้าจอ Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>วางแผนล่วงหน้า ใช้วันลาน้อยลง แล้วได้พักนานขึ้น</h2>
-<p>ดาวน์โหลดฟรี Goldweek Pro เป็นการซื้อครั้งเดียวที่จะซื้อหรือไม่ก็ได้</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/th-th?size=250x83" alt="ดาวน์โหลดบน App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">ช่วยเหลือ</a>
-<a href="privacy.html">นโยบายความเป็นส่วนตัว</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek สงวนลิขสิทธิ์</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
 </body>
 </html>

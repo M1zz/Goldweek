@@ -1,65 +1,166 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: Feriadões e Férias</title>
-<meta name="description" content="Quantos dias de férias você precisa para transformar o próximo feriado em feriadão? O Goldweek combina feriados e fins de semana e mostra seu saldo no widget.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: Feriadões e Férias">
-<meta property="og:description" content="Quantos dias de férias você precisa para transformar o próximo feriado em feriadão? O Goldweek combina feriados e fins de semana e mostra seu saldo no widget.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/pt-BR/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: feriadões longos com poucos dias de férias</title>
+  <meta name="description" content="O Goldweek junta feriados e fins de semana e mostra quais dias tirar para a folga mais longa. Feriados de 42 países e controle de férias.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: feriadões longos com poucos dias de férias">
+  <meta property="og:description" content="O Goldweek junta feriados e fins de semana e mostra quais dias tirar para a folga mais longa. Feriados de 42 países e controle de férias.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/pt-BR/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/pt-BR/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../site.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Ícone do app Goldweek"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Recursos</a>
-<a href="#screenshots" class="hide-mobile">Capturas de tela</a>
-<a href="support.html" class="hide-mobile">Suporte</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Baixar</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Idioma">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Pular para o conteúdo</a>
+  <header class="bar">
+    <a class="brand" href="../pt-BR/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Idiomas</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Poucos dias de folga,<br>feriadões longos</h1>
+        <p class="lead">O Goldweek junta feriados e fins de semana e mostra exatamente quais dias tirar para ter a folga mais longa. Chega de virar as páginas do calendário contando nos dedos.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Baixar grátis na App Store</a><a class="try" href="#try">Até onde vão suas folgas? ↓</a></div>
+        <p class="muted small">Download grátis. O controle das férias e as sugestões continuam grátis.</p>
+      </div>
+      <div class="phone"><img src="../img/pt-BR/02-recommend.jpg" alt="Poucos dias de folga, feriadões longos" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>Até onde vão suas folgas?</h2>
+      <p class="muted">Escolha quantos dias você pode tirar. Você vê as folgas mais longas que eles rendem em volta dos próximos feriados.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Até onde vão suas folgas?&quot;, &quot;lead&quot;: &quot;Escolha quantos dias você pode tirar. Você vê as folgas mais longas que eles rendem em volta dos próximos feriados.&quot;, &quot;ask&quot;: &quot;Quantos dias você pode tirar?&quot;, &quot;based&quot;: &quot;Com base nos feriados nacionais do Brasil&quot;, &quot;note&quot;: &quot;Estas são as sugestões do próprio app. No app, elas também consideram seu estado, os dias que sobram e as folgas já marcadas, e você adiciona à agenda com um toque.&quot;, &quot;leave&quot;: &quot;{n} d de férias&quot;, &quot;rest&quot;: &quot;{n} d de folga&quot;, &quot;legend&quot;: [&quot;Dia útil&quot;, &quot;Férias&quot;, &quot;Feriado&quot;, &quot;Fim de semana&quot;], &quot;weekdays&quot;: [&quot;Dom&quot;, &quot;Seg&quot;, &quot;Ter&quot;, &quot;Qua&quot;, &quot;Qui&quot;, &quot;Sex&quot;, &quot;Sáb&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;Emenda: Confraternização Universal&quot;}, {&quot;d&quot;: &quot;WWHHL&quot;, &quot;s&quot;: &quot;2026-02-14&quot;, &quot;t&quot;: &quot;Férias perto de Carnaval&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2026-04-18&quot;, &quot;t&quot;: &quot;Emenda: Tiradentes&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-06-04&quot;, &quot;t&quot;: &quot;Emenda: Corpus Christi&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-11-18&quot;, &quot;t&quot;: &quot;Férias perto de Dia da Consciência Negra&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-12-23&quot;, &quot;t&quot;: &quot;Férias perto de Natal&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-09-05&quot;, &quot;t&quot;: &quot;Férias perto de Independência do Brasil&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-10-10&quot;, &quot;t&quot;: &quot;Férias perto de Nossa Senhora Aparecida&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2026-11-14&quot;, &quot;t&quot;: &quot;Férias perto de Proclamação da República&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-04-01&quot;, &quot;t&quot;: &quot;Férias perto de Sexta-feira Santa&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-10-31&quot;, &quot;t&quot;: &quot;Férias perto de Finados&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-04-29&quot;, &quot;t&quot;: &quot;Férias perto de Dia do Trabalhador&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2027-10-09&quot;, &quot;t&quot;: &quot;Emenda: Nossa Senhora Aparecida&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2027-12-25&quot;, &quot;t&quot;: &quot;Férias perto de Natal&quot;}, {&quot;d&quot;: &quot;WWHHL&quot;, &quot;s&quot;: &quot;2027-02-06&quot;, &quot;t&quot;: &quot;Férias perto de Carnaval&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2027-04-21&quot;, &quot;t&quot;: &quot;Férias perto de Tiradentes&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-05-27&quot;, &quot;t&quot;: &quot;Emenda: Corpus Christi&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2027-09-04&quot;, &quot;t&quot;: &quot;Emenda: Independência do Brasil&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2027-10-30&quot;, &quot;t&quot;: &quot;Emenda: Finados&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-11-13&quot;, &quot;t&quot;: &quot;Férias perto de Proclamação da República&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2027-03-24&quot;, &quot;t&quot;: &quot;Férias perto de Sexta-feira Santa&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2027-05-01&quot;, &quot;t&quot;: &quot;Férias perto de Dia do Trabalhador&quot;}, {&quot;d&quot;: &quot;LLLHW&quot;, &quot;s&quot;: &quot;2027-11-17&quot;, &quot;t&quot;: &quot;Férias perto de Dia da Consciência Negra&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-10-12&quot;, &quot;t&quot;: &quot;Emenda: Nossa Senhora Aparecida&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-11-02&quot;, &quot;t&quot;: &quot;Emenda: Finados&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2028-01-01&quot;, &quot;t&quot;: &quot;Férias perto de Confraternização Universal&quot;}, {&quot;d&quot;: &quot;WWHHL&quot;, &quot;s&quot;: &quot;2028-02-26&quot;, &quot;t&quot;: &quot;Férias perto de Carnaval&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-06-15&quot;, &quot;t&quot;: &quot;Emenda: Corpus Christi&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-09-07&quot;, &quot;t&quot;: &quot;Emenda: Independência do Brasil&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-12-23&quot;, &quot;t&quot;: &quot;Férias perto de Natal&quot;}, {&quot;d&quot;: &quot;HLLWWH&quot;, &quot;s&quot;: &quot;2028-11-15&quot;, &quot;t&quot;: &quot;Férias perto de Proclamação da República&quot;}, {&quot;d&quot;: &quot;HWWLL&quot;, &quot;s&quot;: &quot;2028-04-14&quot;, &quot;t&quot;: &quot;Férias perto de Sexta-feira Santa&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2028-04-19&quot;, &quot;t&quot;: &quot;Férias perto de Tiradentes&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Cansado de contar dias no calendário?</h2>
+      <p>Quinta é feriado, então tira a sexta? Ou guarda o dia para emendar o feriadão do mês que vem? De tanto virar página, você acaba tirando um dia qualquer, e em dezembro as férias que sobraram somem. O Goldweek faz a conta e mostra os dias que mais esticam suas folgas.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Suas férias num relance</h2>
+        <p>Total, usadas e restantes numa tela só. Você também vê quanto do ano já passou ao lado de quanto já usou, e percebe na hora se está guardando demais.<br>Os dias que sobram e as próximas folgas ficam num widget na Tela de Início.</p>
+      </div>
+      <div class="phone"><img src="../img/pt-BR/01-home.jpg" alt="Suas férias num relance" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Marque folgas direto no calendário</h2>
+        <p>Feriados, férias e emendas sugeridas aparecem coloridos no calendário. Toque numa data para adicionar ou editar uma folga, inclusive meio período, um quarto do dia ou horas.<br>Você também importa de uma vez as férias antigas a partir de uma foto da tela do RH.</p>
+      </div>
+      <div class="phone"><img src="../img/pt-BR/03-calendar.jpg" alt="Marque folgas direto no calendário" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Seu país, seu jeito de trabalhar</h2>
+        <p>Feriados de 42 países, do Brasil e da América Latina à Europa e à Ásia. Onde os feriados mudam por estado ou região, escolha o seu. Seu país não está na lista? Adicione os feriados você mesmo.<br>Dá para escolher também os dias de fim de semana, o primeiro dia da semana e se você trabalha em horário fixo, meio período ou por turnos.</p>
+      </div>
+      <div class="phone"><img src="../img/pt-BR/04-settings.jpg" alt="Seu país, seu jeito de trabalhar" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Comece em três passos</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Diga onde você trabalha</h3><p>Na primeira vez, escolha seu país e quantos dias de férias você tem por ano.</p></li>
+<li class="card"><span class="n">2</span><h3>Escolha uma sugestão</h3><p>Na aba Calendário estão as emendas sugeridas. Adicione as que você curtir.</p></li>
+<li class="card"><span class="n">3</span><h3>Registre suas folgas</h3><p>Toque numa data ou importe férias antigas por foto.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Como a conta é feita</h2>
+      <div class="card table">
+        <dl><div><dt>Dia inteiro</dt><dd>1 dia do saldo</dd></div><div><dt>Meio período</dt><dd>0,5 dia</dd></div><div><dt>Um quarto do dia</dt><dd>0,25 dia</dd></div><div><dt>Horas</dt><dd>De acordo com suas horas de trabalho naquele dia</dd></div><div><dt>Atestado, licença, viagem a trabalho</dt><dd>Não saem do seu saldo</dd></div><div><dt>Folgas bônus</dt><dd>Dias extras como folgas compensatórias, controlados à parte com data de validade (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Você pode mudar quando quiser o total de dias por ano e o mês em que começa seu período de férias em Ajustes.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Descansar bem é grátis. Planejar fica com o Plus e o Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Grátis</h3>
+          <ul><li>Dias inteiros, meio período, um quarto do dia e horas, com o saldo restante</li><li>Feriados de 42 países, seus feriados e férias escolares</li><li>Todas as sugestões do ano, até 3 adicionadas</li><li>Dicas de intervalo entre folgas, lembretes e widget</li><li>Adicionar férias por foto</li><li>Backup no iCloud e agenda compartilhada com a família</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus e Pro</h3>
+          <ul><li>Plus: Planejador anual ideal</li><li>Plus: Sugestões ilimitadas, inclusive do ano passado e do próximo</li><li>Plus: Enviar folgas para o app Calendário</li><li>Pro: Tudo do Plus, folgas bônus, limites anuais e saldo acumulado por tipo</li><li>Pro: Importar o calendário escolar e detectar o calendário automaticamente</li><li>Pro: Folgas em família e datas especiais da família</li></ul>
+          <p class="muted">Cada nível vem como assinatura anual ou compra única vitalícia.</p>
+        </div>
+      </div>
+      <p class="muted">As assinaturas anuais renovam sozinhas se não forem canceladas pelo menos 24 horas antes do fim do período. Gerencie quando quiser em Ajustes &gt; Conta Apple &gt; Assinaturas.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Perguntas frequentes</h2>
+      <div class="faq"><details><summary>Meu saldo de férias não bate.</summary><p>Confira em Ajustes o mês em que começa seu período de férias e o total de dias por ano. Meio período (0,5) e um quarto do dia (0,25) são descontados automaticamente, e tipos que não contam, como atestado, licença ou viagem a trabalho, não mudam o saldo. Se ainda não bater, mande um e-mail.</p></details>
+<details><summary>Minha folga não aparece no calendário.</summary><p>Folgas canceladas não aparecem no calendário. Confira o status do registro em Gestão de férias. Atualizar para a versão mais recente também pode resolver.</p></details>
+<details><summary>Como adiciono folgas bônus?</summary><p>Toque em + na aba Resumo para abrir Gestão de férias e use a seção Folgas bônus lá embaixo. Escolha um tipo (folga compensatória, prêmio, descanso…), informe os dias e, se quiser, uma data de validade. As folgas bônus ficam separadas das férias normais.</p></details>
+<details><summary>Paguei, mas nada foi liberado.</summary><p>Toque em Restaurar compra no fim da aba Ajustes. A compra é restaurada com a Conta Apple conectada à App Store. Se não funcionar, mande um e-mail.</p></details>
+<details><summary>Perco meus dados se apagar o app?</summary><p>Os dados ficam no aparelho, então apagar o app apaga tudo. Ative o backup no iCloud para guardar uma cópia que dá para restaurar depois.</p></details>
+<details><summary>Posso adicionar meus feriados ou esconder algum?</summary><p>Pode. Em Feriados e férias escolares, nos Ajustes, você adiciona seus feriados ou esconde os padrões.</p></details>
+<details><summary>Quais países são compatíveis?</summary><p>O Goldweek tem os feriados de 42 países. Escolha seu país em Ajustes (e o estado ou região, quando os feriados mudam) e o calendário se atualiza na hora. Se o seu não estiver, adicione os feriados você mesmo ou peça pelo feedback no app.</p></details>
+<details><summary>Onde ficam meus dados?</summary><p>O que você digita fica no seu aparelho ou no seu próprio iCloud. Só recebemos estatísticas de uso anônimas, relatórios de erro anônimos e o feedback que você escolher enviar.</p></details></div>
+      <p class="contact">Para o que não estiver respondido acima, ideias ou bugs, escreva para <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. Costumamos responder em um ou dois dias úteis.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Este ano, faça suas folgas<br>renderem mais</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Baixar grátis na App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Idiomas"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
 <a href="../fr/" hreflang="fr" lang="fr">Français</a>
 <a href="../it/" hreflang="it" lang="it">Italiano</a>
 <a href="../ja/" hreflang="ja" lang="ja">日本語</a>
-<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR" aria-current="true">Português (Brasil)</a>
+<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR" aria-current="page">Português (Brasil)</a>
 <a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
 <a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
 <a href="../ru/" hreflang="ru" lang="ru">Русский</a>
@@ -74,67 +175,16 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Privacidade</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Emende feriados e folgue mais</h1>
-<p>O Goldweek encontra os melhores feriados para emendar e folgar mais.<br>Ele junta feriados e fins de semana e mostra como conseguir o maior descanso usando o menor número de dias de férias.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/pt-br?size=250x83" alt="Baixar na App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>O que o Goldweek faz</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Sugestões inteligentes</h3>
-<p>Para cada feriado que vem por aí, veja quantos dias você precisa tirar e quantos dias seguidos vai descansar. Nenhuma ponte passa batido.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Feriados de 42 países</h3>
-<p>Brasil, Portugal, Argentina, México e outros 37 países da Europa, das Américas, da Ásia, da África e da Oceania. Onde os feriados mudam conforme o estado ou a região, escolha o seu. Seu país não está na lista? Adicione seus próprios feriados. Você também escolhe os dias de fim de semana e o dia em que a semana começa.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Controle das férias</h3>
-<p>Veja em uma só tela os dias totais, usados e restantes. Registre meio período e quarto de período, e acompanhe folgas extras, como as compensatórias, com a data de validade. Toque em uma data do calendário para lançar ou mudar uma folga, ou importe o histórico a partir de uma foto da tela do RH.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget e backup</h3>
-<p>Seu saldo e as próximas folgas ficam na tela de início. Os dados ficam salvos no iCloud e você pode compartilhar sua agenda com a família. Funciona no iPhone e no iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Por dentro do app</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/pt-BR/01-home.png" alt="Captura de tela do Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/pt-BR/02-recommend.png" alt="Captura de tela do Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/pt-BR/03-calendar.png" alt="Captura de tela do Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/pt-BR/04-countries.png" alt="Captura de tela do Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/pt-BR/05-settings.png" alt="Captura de tela do Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Planeje com antecedência, use menos dias e aproveite mais.</h2>
-<p>Download gratuito. O Goldweek Pro é uma compra única opcional.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/pt-br?size=250x83" alt="Baixar na App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Suporte</a>
-<a href="privacy.html">Privacidade</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Todos os direitos reservados.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

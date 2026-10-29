@@ -1,0 +1,152 @@
+{
+  "title": "Goldweek: nghỉ phép ít, được nghỉ dài",
+  "description": "Goldweek ghép ngày lễ với cuối tuần và cho biết nên xin nghỉ ngày nào để được nghỉ dài nhất. Có ngày lễ của 42 quốc gia và quản lý phép năm.",
+  "hero": {
+    "headline": "Xin nghỉ ít ngày,\nđược nghỉ dài",
+    "lead": "Goldweek ghép ngày lễ với cuối tuần và chỉ rõ nên xin nghỉ phép vào ngày nào để được nghỉ liền dài nhất. Không cần lật lịch từng trang ngồi đếm nữa.",
+    "cta": "Tải miễn phí trên App Store",
+    "note": "Tải miễn phí. Ghi phép và xem gợi ý vẫn luôn miễn phí."
+  },
+  "problem": {
+    "title": "Mệt vì ngồi đếm ngày trên lịch?",
+    "text": "Thứ Năm là ngày lễ, có nên xin nghỉ thêm thứ Sáu? Hay để dành nối với kỳ nghỉ dài tháng sau? Lật lịch qua lại mãi rồi cuối cùng xin nghỉ đại một ngày, đến cuối năm số phép còn lại cứ thế mất. Goldweek tính giúp bạn và cho thấy những ngày giúp phép năm kéo dài nhất."
+  },
+  "features": [
+    {
+      "title": "Phép còn lại thấy ngay",
+      "text": "Tổng số, đã dùng và còn lại nằm gọn trên một màn hình. Bên cạnh là năm nay đã trôi qua bao nhiêu so với số phép đã dùng, để bạn biết ngay mình có đang để dành quá nhiều không.\nKhông cần mở ứng dụng, widget trên màn hình chính cho thấy số phép còn lại và kỳ nghỉ sắp tới.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Ghi phép ngay trên lịch",
+      "text": "Ngày lễ, ngày phép và kỳ nghỉ gợi ý hiện bằng màu trên lịch. Chạm vào ngày để thêm hoặc sửa ngày nghỉ, kể cả nửa ngày, một phần tư ngày hay theo giờ.\nBạn cũng có thể chụp màn hình lịch sử nghỉ phép của công ty để nhập dữ liệu cũ một lần.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Theo quốc gia và cách làm việc của bạn",
+      "text": "Có ngày lễ của 42 quốc gia ở châu Á, châu Âu và châu Mỹ. Nơi nào ngày lễ khác nhau theo bang hay vùng thì chọn vùng của bạn. Quốc gia chưa có trong danh sách, như Việt Nam, bạn có thể tự thêm ngày lễ.\nBạn cũng chọn được ngày cuối tuần, ngày đầu tuần và kiểu làm việc cố định, bán thời gian hay theo ca.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Bắt đầu với 3 bước",
+    "items": [
+      {
+        "title": "Cho biết nơi bạn làm việc",
+        "text": "Lần đầu mở, chọn quốc gia và số ngày phép mỗi năm, hoặc tự thêm ngày lễ nếu chưa có quốc gia của bạn."
+      },
+      {
+        "title": "Chọn một gợi ý",
+        "text": "Trong tab Lịch có các kỳ nghỉ gợi ý. Thêm cái bạn thích vào lịch trình."
+      },
+      {
+        "title": "Ghi lại ngày nghỉ",
+        "text": "Chạm vào ngày hoặc nhập lịch sử nghỉ từ ảnh."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Cách tính",
+    "rows": [
+      [
+        "Nghỉ cả ngày",
+        "Trừ 1 ngày"
+      ],
+      [
+        "Nửa ngày",
+        "Trừ 0,5 ngày"
+      ],
+      [
+        "Một phần tư ngày",
+        "Trừ 0,25 ngày"
+      ],
+      [
+        "Theo giờ",
+        "Tính theo số giờ làm của ngày đó"
+      ],
+      [
+        "Nghỉ ốm, nghỉ việc riêng có lương, công tác",
+        "Không trừ vào phép năm"
+      ],
+      [
+        "Phép thưởng",
+        "Ngày nghỉ bù, nghỉ thưởng được cấp thêm, quản lý riêng kèm hạn dùng (Pro)"
+      ]
+    ],
+    "note": "Số ngày phép mỗi năm và tháng bắt đầu năm phép có thể đổi bất cứ lúc nào trong Cài đặt."
+  },
+  "pricing": {
+    "title": "Nghỉ ngơi đúng cách thì miễn phí, nhờ lên kế hoạch mới trả phí",
+    "free": {
+      "name": "Miễn phí",
+      "items": [
+        "Ghi nghỉ cả ngày, nửa ngày, một phần tư ngày, theo giờ và phép còn lại",
+        "Ngày lễ của 42 quốc gia, ngày lễ riêng và kỳ nghỉ học",
+        "Xem mọi gợi ý năm nay, thêm tối đa 3 vào lịch",
+        "Nhắc khoảng cách nghỉ ngơi, thông báo và widget",
+        "Thêm ngày nghỉ từ ảnh",
+        "Sao lưu iCloud và chia sẻ lịch với gia đình"
+      ]
+    },
+    "pro": {
+      "name": "Plus và Pro",
+      "items": [
+        "Plus: Kế hoạch nghỉ phép tối ưu cả năm",
+        "Plus: Thêm gợi ý không giới hạn, xem cả năm trước và năm sau",
+        "Plus: Gửi ngày nghỉ sang ứng dụng Lịch",
+        "Pro: Mọi thứ của Plus, thêm Phép thưởng, hạn mức năm và chuyển phép theo loại",
+        "Pro: Nhập lịch học của trường, tự nhận diện lịch",
+        "Pro: Nghỉ cùng cả nhà và ngày kỷ niệm gia đình"
+      ],
+      "note": "Mỗi gói có thể chọn đăng ký theo năm hoặc mua một lần dùng trọn đời."
+    },
+    "note": "Gói năm tự gia hạn nếu không tắt ít nhất 24 giờ trước khi hết kỳ. Quản lý bất cứ lúc nào trong Cài đặt > Tài khoản Apple > Đăng ký."
+  },
+  "faq": {
+    "title": "Câu hỏi thường gặp",
+    "items": [
+      {
+        "q": "Số phép tính chưa đúng.",
+        "a": "Hãy kiểm tra trong Cài đặt tháng bắt đầu năm phép và tổng số ngày phép. Nửa ngày (0,5) và một phần tư ngày (0,25) được trừ tự động, còn các loại không trừ phép như nghỉ ốm, nghỉ việc riêng có lương hay công tác thì không ảnh hưởng số phép còn lại. Nếu vẫn chưa đúng, hãy gửi email cho chúng tôi."
+      },
+      {
+        "q": "Ngày nghỉ không hiện trên lịch.",
+        "a": "Ngày nghỉ đã hủy sẽ không hiện trên lịch. Hãy kiểm tra trạng thái của mục đó trong Quản lý nghỉ phép. Cập nhật lên phiên bản mới nhất cũng có thể giúp."
+      },
+      {
+        "q": "Thêm Phép thưởng thế nào?",
+        "a": "Chạm + trong tab Tổng quan để mở Quản lý nghỉ phép, rồi dùng mục Phép thưởng ở phía dưới. Chọn loại (nghỉ bù, nghỉ thưởng, nghỉ dưỡng sức…), nhập số ngày và hạn dùng (không bắt buộc). Phép thưởng được quản lý riêng với phép năm thông thường."
+      },
+      {
+        "q": "Đã mua nhưng tính năng chưa mở.",
+        "a": "Chạm Khôi phục giao dịch ở cuối tab Cài đặt. Giao dịch được khôi phục bằng Tài khoản Apple đang đăng nhập App Store. Nếu vẫn không được, hãy gửi email cho chúng tôi."
+      },
+      {
+        "q": "Xóa ứng dụng có mất dữ liệu không?",
+        "a": "Dữ liệu lưu trên máy, nên xóa ứng dụng là mất hết. Hãy bật Sao lưu iCloud để giữ một bản có thể khôi phục sau này."
+      },
+      {
+        "q": "Có tự thêm hoặc ẩn ngày lễ được không?",
+        "a": "Được. Vào Ngày lễ & Kỳ nghỉ học trong Cài đặt để thêm ngày lễ của riêng bạn hoặc ẩn ngày lễ mặc định."
+      },
+      {
+        "q": "Hỗ trợ những quốc gia nào?",
+        "a": "Goldweek có ngày lễ của 42 quốc gia. Chọn quốc gia trong Cài đặt (và vùng, với nơi ngày lễ khác nhau theo vùng), lịch sẽ cập nhật ngay. Hiện chưa có sẵn ngày lễ Việt Nam: bạn có thể tự thêm, hoặc gửi góp ý trong ứng dụng để đề nghị hỗ trợ."
+      },
+      {
+        "q": "Dữ liệu của tôi lưu ở đâu?",
+        "a": "Những gì bạn nhập chỉ nằm trên máy và iCloud của chính bạn. Nhà phát triển chỉ nhận thống kê sử dụng ẩn danh, chẩn đoán lỗi ẩn danh và góp ý do bạn tự gửi."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Năm nay, dùng phép\nthật đáng",
+    "cta": "Tải miễn phí trên App Store"
+  },
+  "ui": {
+    "skip": "Chuyển đến nội dung",
+    "languages": "Ngôn ngữ",
+    "privacy": "Chính sách quyền riêng tư",
+    "contact": "Vấn đề chưa được giải đáp ở trên, ý tưởng hay lỗi, xin gửi đến {email}. Chúng tôi thường trả lời trong 1 đến 2 ngày làm việc."
+  }
+}

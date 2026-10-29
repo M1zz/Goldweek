@@ -1,0 +1,298 @@
+{
+  "title": "Goldweek: pitkät vapaat vähillä lomapäivillä",
+  "description": "Goldweek yhdistää pyhäpäivät ja viikonloput ja näyttää, mitkä päivät pitää ottaa vapaaksi pisintä lomaa varten. Pyhäpäivät 42 maasta.",
+  "hero": {
+    "headline": "Vähän lomapäiviä,\npitkät vapaat",
+    "lead": "Goldweek yhdistää pyhäpäivät ja viikonloput ja näyttää tarkalleen, minä päivinä kannattaa pitää lomaa, jotta vapaata tulee mahdollisimman pitkään. Ei enää kalenterin selaamista ja laskemista.",
+    "cta": "Lataa ilmaiseksi App Storesta",
+    "note": "Ilmainen ladata. Lomien seuranta ja ehdotukset pysyvät ilmaisina."
+  },
+  "demo": {
+    "title": "Kuinka pitkälle lomasi riittää?",
+    "lead": "Valitse, montako lomapäivää voit pitää. Näet pisimmät vapaat, jotka niillä saa tulevien pyhien ympärille.",
+    "ask": "Montako lomapäivää voit pitää?",
+    "based": "Suomen pyhäpäivien mukaan",
+    "note": "Nämä ovat sovelluksen omia ehdotuksia. Sovelluksessa ne huomioivat myös jäljellä olevan lomasi ja jo sovitut vapaat, ja lisäät ehdotuksen yhdellä napautuksella.",
+    "leave": "{n} pv lomaa",
+    "rest": "{n} pv vapaata",
+    "legend": [
+      "Työpäivä",
+      "Vuosiloma",
+      "Pyhäpäivä",
+      "Viikonloppu"
+    ],
+    "weekdays": [
+      "su",
+      "ma",
+      "ti",
+      "ke",
+      "to",
+      "pe",
+      "la"
+    ],
+    "recs": [
+      {
+        "d": "LHHHW",
+        "s": "2026-12-23",
+        "t": "Pidennetty loma: Jouluaatto"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Välipäivä: Uudenvuodenpäivä"
+      },
+      {
+        "d": "HWWHL",
+        "s": "2026-04-03",
+        "t": "Pidennetty loma: Pitkäperjantai"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-05-14",
+        "t": "Välipäivä: Helatorstai"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-01-03",
+        "t": "Välipäivä: Loppiainen"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-06-17",
+        "t": "Pidennetty loma: Juhannusaatto"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2026-12-05",
+        "t": "Pidennetty loma: Itsenäisyyspäivä"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-29",
+        "t": "Pidennetty loma: Vappu"
+      },
+      {
+        "d": "HWWHL",
+        "s": "2027-03-26",
+        "t": "Pidennetty loma: Pitkäperjantai"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-05-06",
+        "t": "Välipäivä: Helatorstai"
+      },
+      {
+        "d": "HWWLLH",
+        "s": "2027-01-01",
+        "t": "Pidennetty loma: Uudenvuodenpäivä"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2027-05-01",
+        "t": "Pidennetty loma: Vappu"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2027-06-23",
+        "t": "Pidennetty loma: Juhannusaatto"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-12-04",
+        "t": "Pidennetty loma: Itsenäisyyspäivä"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-01-06",
+        "t": "Pidennetty loma: Loppiainen"
+      },
+      {
+        "d": "LLHHH",
+        "s": "2027-12-22",
+        "t": "Pidennetty loma: Jouluaatto"
+      },
+      {
+        "d": "WHHHL",
+        "s": "2028-12-23",
+        "t": "Pidennetty loma: Jouluaatto"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-01-06",
+        "t": "Välipäivä: Loppiainen"
+      },
+      {
+        "d": "HWWHL",
+        "s": "2028-04-14",
+        "t": "Pidennetty loma: Pitkäperjantai"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-05-25",
+        "t": "Välipäivä: Helatorstai"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2028-01-01",
+        "t": "Pidennetty loma: Uudenvuodenpäivä"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2028-06-21",
+        "t": "Pidennetty loma: Juhannusaatto"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2028-12-06",
+        "t": "Pidennetty loma: Itsenäisyyspäivä"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-29",
+        "t": "Pidennetty loma: Vappu"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Kyllästyttääkö päivien laskeminen kalenterista?",
+    "text": "Torstai on pyhä, otatko perjantain vapaaksi? Vai säästätkö päivän ensi kuun pitkään viikonloppuun? Tarpeeksi selattuasi otat vapaaksi minkä tahansa päivän, ja joulukuussa ylijääneet lomat katoavat. Goldweek laskee puolestasi ja näyttää päivät, joilla lomasi riittää pisimmälle."
+  },
+  "features": [
+    {
+      "title": "Lomasi yhdellä silmäyksellä",
+      "text": "Kaikki, käytetyt ja jäljellä olevat päivät yhdellä näytöllä. Vieressä näkyy, kuinka pitkällä vuosi on ja kuinka paljon lomaa olet käyttänyt, joten huomaat heti, säästätkö liikaa.\nJäljellä olevat päivät ja tulevat vapaat näkyvät widgetissä Koti-valikossa.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Merkitse vapaat suoraan kalenteriin",
+      "text": "Pyhäpäivät, lomat ja ehdotetut välipäivät näkyvät kalenterissa väreinä. Napauta päivää lisätäksesi tai muokataksesi vapaata, myös puolikkaita päiviä, neljännespäiviä tai tunteja.\nAiemmat lomat tuot kerralla kuvasta, joka on otettu henkilöstöjärjestelmän näkymästä.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Sinun maasi, sinun työaikasi",
+      "text": "Pyhäpäivät 42 maasta, Suomesta ja Pohjoismaista Eurooppaan, Aasiaan ja Amerikkaan. Jos pyhät vaihtelevat alueittain, valitset omasi. Puuttuuko maasi? Lisää omat pyhäpäivät.\nVoit valita myös viikonlopun päivät, viikon ensimmäisen päivän sekä kiinteän työajan, osa-aikatyön tai vuorotyön.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Alkuun kolmessa vaiheessa",
+    "items": [
+      {
+        "title": "Kerro, missä työskentelet",
+        "text": "Ensimmäisellä kerralla valitset maan ja montako lomapäivää sinulla on vuodessa."
+      },
+      {
+        "title": "Valitse ehdotus",
+        "text": "Kalenteri-välilehdellä on ehdotettuja vapaita. Lisää ne, joista pidät."
+      },
+      {
+        "title": "Kirjaa lomasi",
+        "text": "Napauta päivää tai tuo aiemmat lomat kuvasta."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Näin se lasketaan",
+    "rows": [
+      [
+        "Koko päivä",
+        "1 päivä saldosta"
+      ],
+      [
+        "Puoli päivää",
+        "0,5 päivää"
+      ],
+      [
+        "Neljännespäivä",
+        "0,25 päivää"
+      ],
+      [
+        "Tunnit",
+        "Sen päivän työtuntiesi mukaan"
+      ],
+      [
+        "Sairaus, virkavapaa, työmatka",
+        "Ei vähennetä lomasta"
+      ],
+      [
+        "Bonusloma",
+        "Ylimääräiset vapaat kuten pekkaset, kirjataan erikseen viimeisen käyttöpäivän kanssa (Pro)"
+      ]
+    ],
+    "note": "Vuoden lomapäivät ja kuukauden, jolloin lomavuotesi alkaa, voit muuttaa milloin tahansa asetuksista."
+  },
+  "pricing": {
+    "title": "Hyvä lepo on ilmaista. Suunnittelun hoitavat Plus ja Pro.",
+    "free": {
+      "name": "Ilmainen",
+      "items": [
+        "Kokonaiset, puolikkaat ja neljännespäivät sekä tunnit ja jäljellä oleva loma",
+        "Pyhäpäivät 42 maasta, omat pyhät ja koulujen lomat",
+        "Kaikki tämän vuoden ehdotukset, lisää enintään 3",
+        "Vinkit levon väleistä, muistutukset ja widget",
+        "Lisää loma kuvasta",
+        "iCloud-varmuuskopio ja perheen kanssa jaettu aikataulu"
+      ]
+    },
+    "pro": {
+      "name": "Plus ja Pro",
+      "items": [
+        "Plus: Optimaalinen vuosisuunnittelija",
+        "Plus: Rajattomasti ehdotuksia, myös viime ja ensi vuodelle",
+        "Plus: Vie vapaat Kalenteri-appiin",
+        "Pro: Kaikki Plussasta, bonusloma, vuosirajat ja siirrot lomatyypeittäin",
+        "Pro: Koulun kalenterin tuonti ja kalenterin automaattinen tunnistus",
+        "Pro: Yhteiset vapaat ja perheen merkkipäivät"
+      ],
+      "note": "Jokainen taso on saatavilla vuositilauksena tai kertaostona pysyvästi."
+    },
+    "note": "Vuositilaus uusiutuu automaattisesti, ellei sitä peru viimeistään 24 tuntia ennen jakson loppua. Hallitse tilauksia milloin vain kohdassa Asetukset > Apple-tili > Tilaukset."
+  },
+  "faq": {
+    "title": "Usein kysyttyä",
+    "items": [
+      {
+        "q": "Lomasaldoni ei täsmää.",
+        "a": "Tarkista asetuksista, minä kuukautena lomavuotesi alkaa ja montako lomapäivää sinulla on yhteensä. Puolikkaat (0,5) ja neljännespäivät (0,25) vähennetään automaattisesti, eivätkä lomaan laskemattomat tyypit, kuten sairaus, virkavapaa tai työmatka, muuta saldoa. Jos se ei vieläkään täsmää, lähetä meille sähköpostia."
+      },
+      {
+        "q": "Lomani ei näy kalenterissa.",
+        "a": "Peruttuja lomia ei näytetä kalenterissa. Tarkista merkinnän tila Lomien hallinnasta. Päivitys uusimpaan versioon voi myös auttaa."
+      },
+      {
+        "q": "Miten lisään bonusloman?",
+        "a": "Avaa Lomien hallinta napauttamalla + Tila-välilehdellä ja käytä alareunan Bonusloma-osiota. Valitse tyyppi (pekkanen, palkintoloma, palautumisloma…), päivien määrä ja halutessasi viimeinen käyttöpäivä. Bonusloma pidetään erillään tavallisesta lomasta."
+      },
+      {
+        "q": "Maksoin, mutta mitään ei avautunut.",
+        "a": "Napauta Palauta osto Asetukset-välilehden alareunassa. Osto palautetaan sillä Apple-tilillä, jolla olet kirjautunut App Storeen. Jos se ei auta, lähetä meille sähköpostia."
+      },
+      {
+        "q": "Katoavatko tietoni, jos poistan sovelluksen?",
+        "a": "Tiedot ovat laitteella, joten sovelluksen poistaminen poistaa ne. Laita iCloud-varmuuskopio päälle, niin sinulla on kopio, jonka voit palauttaa myöhemmin."
+      },
+      {
+        "q": "Voinko lisätä omia pyhäpäiviä tai piilottaa niitä?",
+        "a": "Kyllä. Asetusten kohdassa Pyhäpäivät ja vapaajaksot voit lisätä omia pyhäpäiviä tai piilottaa oletuksena olevia."
+      },
+      {
+        "q": "Mitä maita tuetaan?",
+        "a": "Goldweekissa on 42 maan pyhäpäivät. Valitse maa asetuksista (ja alue, jos pyhät vaihtelevat alueittain), niin kalenteri päivittyy heti. Jos maatasi ei ole, lisää pyhäpäivät itse tai toivo sitä palautteella sovelluksesta."
+      },
+      {
+        "q": "Mihin tietoni tallennetaan?",
+        "a": "Syöttämäsi tiedot pysyvät laitteellasi tai omassa iCloudissasi. Saamme vain nimettömiä käyttötilastoja, nimettömiä kaatumisraportteja ja palautetta, jonka itse päätät lähettää."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Saa lomasi riittämään\npidemmälle tänä vuonna",
+    "cta": "Lataa ilmaiseksi App Storesta"
+  },
+  "ui": {
+    "skip": "Siirry sisältöön",
+    "languages": "Kielet",
+    "privacy": "Tietosuoja",
+    "contact": "Kaikesta, mihin yllä ei vastattu, ideoista tai virheistä voit kirjoittaa osoitteeseen {email}. Vastaamme yleensä yhden tai kahden arkipäivän kuluessa."
+  }
+}

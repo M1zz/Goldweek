@@ -1,0 +1,263 @@
+{
+  "title": "Goldweek: lang vrij met weinig verlofdagen",
+  "description": "Goldweek koppelt feestdagen aan weekenden en laat zien welke dagen je vrij moet nemen voor de langste vakantie. Feestdagen van 42 landen.",
+  "hero": {
+    "headline": "Weinig verlofdagen,\nlang vrij",
+    "lead": "Goldweek koppelt feestdagen aan weekenden en laat precies zien op welke dagen je verlof moet nemen om het langst vrij te zijn. Nooit meer de kalender doorbladeren en tellen.",
+    "cta": "Gratis downloaden in de App Store",
+    "note": "Gratis downloaden. Verlof bijhouden en suggesties blijven gratis."
+  },
+  "demo": {
+    "title": "Hoe ver kom je met je verlof?",
+    "lead": "Kies hoeveel dagen je vrij kunt nemen. Je ziet de langste vrije periodes die ze opleveren rond de komende feestdagen.",
+    "ask": "Hoeveel verlofdagen kun je opnemen?",
+    "based": "Op basis van de feestdagen in Nederland",
+    "note": "Dit zijn de suggesties van de app zelf. In de app houden ze ook rekening met je resterende verlof en verlof dat al gepland staat, en zet je er een met één tik in je planning.",
+    "leave": "{n}d verlof",
+    "rest": "{n}d vrij",
+    "legend": [
+      "Werkdag",
+      "Vakantiedagen",
+      "Feestdag",
+      "Weekend"
+    ],
+    "weekdays": [
+      "zo",
+      "ma",
+      "di",
+      "wo",
+      "do",
+      "vr",
+      "za"
+    ],
+    "recs": [
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Brugdag Nieuwjaarsdag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-05-14",
+        "t": "Brugdag Hemelvaartsdag"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2026-12-23",
+        "t": "Verlof rond Eerste kerstdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-04-04",
+        "t": "Verlof rond Tweede paasdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-05-23",
+        "t": "Verlof rond Tweede pinksterdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-04-25",
+        "t": "Verlof rond Koningsdag"
+      },
+      {
+        "d": "HHLLL",
+        "s": "2027-12-25",
+        "t": "Verlof rond Eerste kerstdag"
+      },
+      {
+        "d": "WWLH",
+        "s": "2027-04-24",
+        "t": "Brugdag Koningsdag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-05-06",
+        "t": "Brugdag Hemelvaartsdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-03-27",
+        "t": "Verlof rond Tweede paasdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-05-15",
+        "t": "Verlof rond Tweede pinksterdag"
+      },
+      {
+        "d": "WWHHL",
+        "s": "2028-12-23",
+        "t": "Verlof rond Eerste kerstdag"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-01-01",
+        "t": "Verlof rond Nieuwjaarsdag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-04-27",
+        "t": "Brugdag Koningsdag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-05-25",
+        "t": "Brugdag Hemelvaartsdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-06-03",
+        "t": "Verlof rond Tweede pinksterdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-15",
+        "t": "Verlof rond Tweede paasdag"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Moe van dagen tellen in de agenda?",
+    "text": "Donderdag is een feestdag, dus vrijdag vrij nemen? Of de dag bewaren voor het lange weekend volgende maand? Na genoeg bladeren neem je zomaar een dag, en in december verdwijnt je resterende verlof. Goldweek rekent het voor je uit en laat de dagen zien waarmee je verlof het verst reikt."
+  },
+  "features": [
+    {
+      "title": "Je verlof in één oogopslag",
+      "text": "Totaal, opgenomen en over op één scherm. Ernaast zie je hoe ver het jaar al is en hoeveel verlof je hebt gebruikt, zodat je meteen ziet of je te veel spaart.\nJe resterende dagen en komende vrije dagen staan in een widget op je beginscherm.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Verlof direct in de agenda",
+      "text": "Feestdagen, verlof en voorgestelde brugdagen staan in kleur in de agenda. Tik op een datum om verlof toe te voegen of aan te passen, ook halve dagen, kwartdagen of uren.\nEerder verlof zet je in één keer over vanaf een foto van je HR-scherm.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Jouw land, jouw werktijden",
+      "text": "Feestdagen van 42 landen, van Nederland en België tot de rest van Europa, Azië en Amerika. Verschillen ze per regio, kies dan de jouwe. Staat je land er niet bij? Voeg je eigen feestdagen toe.\nJe kiest ook je weekenddagen, de eerste dag van de week en of je vast, parttime of in ploegen werkt.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "In drie stappen begonnen",
+    "items": [
+      {
+        "title": "Vertel waar je werkt",
+        "text": "Bij de eerste keer kies je je land en hoeveel verlofdagen je per jaar hebt."
+      },
+      {
+        "title": "Kies een suggestie",
+        "text": "In het tabblad Agenda staan voorgestelde vrije periodes. Voeg toe wat je bevalt."
+      },
+      {
+        "title": "Houd je verlof bij",
+        "text": "Tik op een datum of zet eerder verlof over vanaf een foto."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Zo wordt er gerekend",
+    "rows": [
+      [
+        "Hele dag",
+        "1 dag van je saldo"
+      ],
+      [
+        "Halve dag",
+        "0,5 dag"
+      ],
+      [
+        "Kwartdag",
+        "0,25 dag"
+      ],
+      [
+        "Uren",
+        "Naar je werkuren op die dag"
+      ],
+      [
+        "Ziekte, bijzonder verlof, dienstreis",
+        "Gaan niet van je verlof af"
+      ],
+      [
+        "Bonusverlof",
+        "Extra vrije dagen zoals compensatie-uren, apart bijgehouden met vervaldatum (Pro)"
+      ]
+    ],
+    "note": "Je jaarlijkse verlof en de maand waarin je verlofjaar begint, pas je altijd aan in Instellingen."
+  },
+  "pricing": {
+    "title": "Goed uitrusten is gratis. Plannen doen Plus en Pro.",
+    "free": {
+      "name": "Gratis",
+      "items": [
+        "Hele, halve en kwartdagen en uren, met je resterende verlof",
+        "Feestdagen van 42 landen, eigen feestdagen en vakanties",
+        "Alle suggesties voor dit jaar zien, er 3 toevoegen",
+        "Tips over rustmomenten, herinneringen en widget",
+        "Verlof toevoegen via foto",
+        "iCloud-back-up en een gedeelde planning met je gezin"
+      ]
+    },
+    "pro": {
+      "name": "Plus en Pro",
+      "items": [
+        "Plus: Optimale jaarplanner",
+        "Plus: Onbeperkt suggesties, ook voor vorig en volgend jaar",
+        "Plus: Verlof naar je Agenda-app sturen",
+        "Pro: Alles uit Plus, bonusverlof, jaarlimieten en meenemen per verlofsoort",
+        "Pro: Schoolagenda importeren en agenda automatisch herkennen",
+        "Pro: Samen vrij en familiedagen"
+      ],
+      "note": "Elk niveau is er als jaarabonnement of als eenmalige aankoop voor altijd."
+    },
+    "note": "Jaarabonnementen verlengen automatisch, tenzij je ze minstens 24 uur voor het einde van de periode opzegt. Beheer ze wanneer je wilt via Instellingen > Apple Account > Abonnementen."
+  },
+  "faq": {
+    "title": "Veelgestelde vragen",
+    "items": [
+      {
+        "q": "Mijn verlofsaldo klopt niet.",
+        "a": "Controleer in Instellingen in welke maand je verlofjaar begint en hoeveel verlofdagen je in totaal hebt. Halve dagen (0,5) en kwartdagen (0,25) gaan er automatisch af, en soorten die niet meetellen, zoals ziekte, bijzonder verlof of dienstreizen, veranderen het saldo niet. Klopt het nog steeds niet, mail ons dan."
+      },
+      {
+        "q": "Mijn verlof staat niet in de agenda.",
+        "a": "Geannuleerd verlof wordt niet in de agenda getoond. Controleer de status van de invoer in Verlofbeheer. Updaten naar de nieuwste versie kan ook helpen."
+      },
+      {
+        "q": "Hoe voeg ik bonusverlof toe?",
+        "a": "Tik op + in het tabblad Status om Verlofbeheer te openen en gebruik onderaan het onderdeel Bonusverlof. Kies een soort (compensatieverlof, beloningsverlof, opladverlof…), vul het aantal dagen in en eventueel een vervaldatum. Bonusverlof wordt apart van je gewone verlof bijgehouden."
+      },
+      {
+        "q": "Ik heb betaald, maar er is niets ontgrendeld.",
+        "a": "Tik onderaan het tabblad Instellingen op Aankoop herstellen. Je aankoop wordt hersteld met het Apple Account waarmee je bent ingelogd in de App Store. Werkt het niet, mail ons dan."
+      },
+      {
+        "q": "Ben ik mijn gegevens kwijt als ik de app verwijder?",
+        "a": "Je gegevens staan op het apparaat, dus als je de app verwijdert, zijn ze weg. Zet iCloud-back-up aan om een kopie te bewaren die je later kunt terugzetten."
+      },
+      {
+        "q": "Kan ik eigen feestdagen toevoegen of er verbergen?",
+        "a": "Ja. Bij Feestdagen en vakanties in Instellingen voeg je eigen feestdagen toe of verberg je standaardfeestdagen."
+      },
+      {
+        "q": "Welke landen worden ondersteund?",
+        "a": "Goldweek kent de feestdagen van 42 landen. Kies je land in Instellingen (en je regio, waar feestdagen verschillen) en de agenda past zich meteen aan. Staat je land er niet bij, voeg de feestdagen dan zelf toe of vraag erom via feedback in de app."
+      },
+      {
+        "q": "Waar worden mijn gegevens bewaard?",
+        "a": "Wat je invoert, blijft op je apparaat of in je eigen iCloud. Wij ontvangen alleen anonieme gebruiksstatistieken, anonieme crashrapporten en feedback die je zelf stuurt."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Haal dit jaar meer\nuit je verlof",
+    "cta": "Gratis downloaden in de App Store"
+  },
+  "ui": {
+    "skip": "Naar de inhoud",
+    "languages": "Talen",
+    "privacy": "Privacybeleid",
+    "contact": "Voor alles wat hierboven niet beantwoord is, ideeën of bugs: mail {email}. We antwoorden meestal binnen een of twee werkdagen."
+  }
+}

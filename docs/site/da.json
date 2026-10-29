@@ -1,0 +1,258 @@
+{
+  "title": "Goldweek: lang fri med få feriedage",
+  "description": "Goldweek kobler helligdage og weekender og viser, hvilke dage du skal holde fri for den længste ferie. Helligdage i 42 lande.",
+  "hero": {
+    "headline": "Få feriedage,\nlang fri",
+    "lead": "Goldweek kobler helligdage og weekender og viser præcis, hvilke dage du skal tage fri for at holde længst muligt fri. Slut med at bladre i kalenderen og tælle.",
+    "cta": "Hent gratis i App Store",
+    "note": "Gratis at hente. Ferieoverblik og forslag er stadig gratis."
+  },
+  "demo": {
+    "title": "Hvor langt rækker dine feriedage?",
+    "lead": "Vælg, hvor mange dage du kan tage fri. Du ser de længste friperioder, de giver omkring de næste helligdage.",
+    "ask": "Hvor mange feriedage kan du tage?",
+    "based": "Ud fra helligdagene i Danmark",
+    "note": "Det er appens egne forslag. I appen tager de også højde for din resterende ferie og fri, du allerede har lagt ind, og du tilføjer et forslag med ét tryk.",
+    "leave": "{n}d ferie",
+    "rest": "{n}d fri",
+    "legend": [
+      "Arbejdsdag",
+      "Årlig ferie",
+      "Helligdag",
+      "Weekend"
+    ],
+    "weekdays": [
+      "søn",
+      "man",
+      "tir",
+      "ons",
+      "tor",
+      "fre",
+      "lør"
+    ],
+    "recs": [
+      {
+        "d": "LHHHW",
+        "s": "2026-12-23",
+        "t": "Forlænget ferie ved Juleaften"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Klemmedag ved Nytårsdag"
+      },
+      {
+        "d": "WWLLLHHWW",
+        "s": "2026-03-28",
+        "t": "Uge fri ved Skærtorsdag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-05-14",
+        "t": "Klemmedag ved Kristi himmelfartsdag"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-06-03",
+        "t": "Forlænget ferie ved Grundlovsdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-05-23",
+        "t": "Forlænget ferie ved 2. pinsedag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-05-06",
+        "t": "Klemmedag ved Kristi himmelfartsdag"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-06-05",
+        "t": "Forlænget ferie ved Grundlovsdag"
+      },
+      {
+        "d": "LLHHH",
+        "s": "2027-12-22",
+        "t": "Forlænget ferie ved Juleaften"
+      },
+      {
+        "d": "WWLLLHHWW",
+        "s": "2027-03-20",
+        "t": "Uge fri ved Skærtorsdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-05-15",
+        "t": "Forlænget ferie ved 2. pinsedag"
+      },
+      {
+        "d": "WHHHL",
+        "s": "2028-12-23",
+        "t": "Forlænget ferie ved Juleaften"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-01-01",
+        "t": "Forlænget ferie ved Nytårsdag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-05-25",
+        "t": "Klemmedag ved Kristi himmelfartsdag"
+      },
+      {
+        "d": "WWLLLHHWW",
+        "s": "2028-04-08",
+        "t": "Uge fri ved Skærtorsdag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-06-03",
+        "t": "Forlænget ferie ved 2. pinsedag"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Træt af at tælle dage i kalenderen?",
+    "text": "Torsdag er helligdag, skal du så tage fredag fri? Eller gemme dagen til den lange weekend næste måned? Efter nok bladren tager du fri en tilfældig dag, og i december forsvinder de feriedage, der blev tilovers. Goldweek regner for dig og viser de dage, der får ferien til at række længst."
+  },
+  "features": [
+    {
+      "title": "Din ferie med ét blik",
+      "text": "I alt, brugt og tilbage på én skærm. Ved siden af ser du, hvor langt året er, og hvor meget ferie du har brugt, så du med det samme kan se, om du sparer for meget op.\nDine resterende dage og kommende fri vises i en widget på hjemmeskærmen.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Læg fri ind direkte i kalenderen",
+      "text": "Helligdage, ferie og foreslåede klemmedage vises i farver i kalenderen. Tryk på en dato for at tilføje eller ændre fri, også halve dage, kvarte dage eller timer.\nTidligere ferie henter du ind på én gang fra et billede af HR-skærmen.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Dit land, din arbejdstid",
+      "text": "Helligdage i 42 lande, fra Danmark og Norden til Europa, Asien og Amerika. Hvor helligdagene varierer efter region, vælger du din. Mangler dit land? Tilføj dine egne helligdage.\nDu kan også vælge weekenddage, ugens første dag, og om du arbejder fast, deltid eller i skiftehold.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Kom i gang på tre trin",
+    "items": [
+      {
+        "title": "Fortæl, hvor du arbejder",
+        "text": "Første gang vælger du land, og hvor mange feriedage du har om året."
+      },
+      {
+        "title": "Vælg et forslag",
+        "text": "På fanen Kalender finder du foreslåede friperioder. Tilføj dem, du kan lide."
+      },
+      {
+        "title": "Registrér din ferie",
+        "text": "Tryk på en dato, eller hent tidligere ferie ind fra et billede."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Sådan regnes der",
+    "rows": [
+      [
+        "Hel dag",
+        "1 dag fra saldoen"
+      ],
+      [
+        "Halv dag",
+        "0,5 dag"
+      ],
+      [
+        "Kvart dag",
+        "0,25 dag"
+      ],
+      [
+        "Timer",
+        "Efter dine arbejdstimer den dag"
+      ],
+      [
+        "Sygdom, særlig frihed, tjenesterejse",
+        "Trækkes ikke fra ferien"
+      ],
+      [
+        "Bonusferie",
+        "Ekstra fridage som afspadsering, holdes for sig med udløbsdato (Pro)"
+      ]
+    ],
+    "note": "Antal feriedage om året og den måned, dit ferieår starter, kan du altid ændre i Indstillinger."
+  },
+  "pricing": {
+    "title": "God hvile er gratis. Planlægningen klarer Plus og Pro.",
+    "free": {
+      "name": "Gratis",
+      "items": [
+        "Hele, halve og kvarte dage og timer, med resterende ferie",
+        "Helligdage i 42 lande, egne helligdage og ferier",
+        "Se alle forslag for i år, tilføj op til 3",
+        "Tips om hvileintervaller, påmindelser og widget",
+        "Tilføj ferie fra et foto",
+        "iCloud-sikkerhedskopi og delt plan med familien"
+      ]
+    },
+    "pro": {
+      "name": "Plus og Pro",
+      "items": [
+        "Plus: Optimal årsplanlægger",
+        "Plus: Ubegrænsede forslag, også for sidste og næste år",
+        "Plus: Send fri til Kalender-appen",
+        "Pro: Alt i Plus, bonusferie, årsgrænser og overførsel pr. type",
+        "Pro: Importér skolekalender og genkend kalender automatisk",
+        "Pro: Fri sammen og familiens mærkedage"
+      ],
+      "note": "Hvert niveau fås som årsabonnement eller engangskøb for altid."
+    },
+    "note": "Årsabonnementer fornyes automatisk, medmindre de slås fra senest 24 timer før periodens udløb. Administrér dem når som helst under Indstillinger > Apple-konto > Abonnementer."
+  },
+  "faq": {
+    "title": "Ofte stillede spørgsmål",
+    "items": [
+      {
+        "q": "Min feriesaldo passer ikke.",
+        "a": "Tjek i Indstillinger, hvilken måned dit ferieår starter, og hvor mange feriedage du har i alt. Halve (0,5) og kvarte dage (0,25) trækkes automatisk, og typer, der ikke tæller, som sygdom, særlig frihed eller tjenesterejser, ændrer ikke saldoen. Passer det stadig ikke, så skriv til os."
+      },
+      {
+        "q": "Min ferie vises ikke i kalenderen.",
+        "a": "Aflyst ferie vises ikke i kalenderen. Tjek status for posten i Ferieadministration. En opdatering til nyeste version kan også hjælpe."
+      },
+      {
+        "q": "Hvordan tilføjer jeg bonusferie?",
+        "a": "Tryk på + på fanen Status for at åbne Ferieadministration, og brug afsnittet Bonusferie nederst. Vælg en type (afspadsering, belønningsfri, restitutionsferie …), antal dage og eventuelt en udløbsdato. Bonusferie holdes adskilt fra almindelig ferie."
+      },
+      {
+        "q": "Jeg har betalt, men intet er låst op.",
+        "a": "Tryk på Gendan køb nederst på fanen Indstillinger. Købet gendannes med den Apple-konto, du er logget ind med i App Store. Hjælper det ikke, så skriv til os."
+      },
+      {
+        "q": "Mister jeg mine data, hvis jeg sletter appen?",
+        "a": "Dine data ligger på enheden, så sletter du appen, forsvinder de. Slå iCloud-sikkerhedskopi til, så du har en kopi, du kan gendanne senere."
+      },
+      {
+        "q": "Kan jeg tilføje egne helligdage eller skjule nogle?",
+        "a": "Ja. Under Helligdage og ferier i Indstillinger tilføjer du egne helligdage eller skjuler standardhelligdage."
+      },
+      {
+        "q": "Hvilke lande understøttes?",
+        "a": "Goldweek kender helligdagene i 42 lande. Vælg land i Indstillinger (og region, hvor helligdagene varierer), så opdateres kalenderen med det samme. Mangler dit land, kan du selv lægge helligdagene ind eller ønske det via feedback i appen."
+      },
+      {
+        "q": "Hvor gemmes mine data?",
+        "a": "Det, du indtaster, bliver på din enhed eller i din egen iCloud. Vi modtager kun anonym brugsstatistik, anonyme nedbrudsrapporter og feedback, du selv vælger at sende."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Få ferien til at række\nlængere i år",
+    "cta": "Hent gratis i App Store"
+  },
+  "ui": {
+    "skip": "Gå til indhold",
+    "languages": "Sprog",
+    "privacy": "Privatlivspolitik",
+    "contact": "Til alt, der ikke er besvaret ovenfor, idéer eller fejl, skriv til {email}. Vi svarer som regel inden for en til to hverdage."
+  }
+}

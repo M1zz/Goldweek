@@ -1,58 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: Lịch nghỉ phép</title>
-<meta name="description" content="Sắp có ngày lễ? Goldweek ghép ngày lễ với cuối tuần và cho bạn biết nên xin nghỉ ngày nào để được kỳ nghỉ dài nhất. Xem số phép còn lại ngay trên tiện ích.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: Lịch nghỉ phép">
-<meta property="og:description" content="Sắp có ngày lễ? Goldweek ghép ngày lễ với cuối tuần và cho bạn biết nên xin nghỉ ngày nào để được kỳ nghỉ dài nhất. Xem số phép còn lại ngay trên tiện ích.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/vi/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: nghỉ phép ít, được nghỉ dài</title>
+  <meta name="description" content="Goldweek ghép ngày lễ với cuối tuần và cho biết nên xin nghỉ ngày nào để được nghỉ dài nhất. Có ngày lễ của 42 quốc gia và quản lý phép năm.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: nghỉ phép ít, được nghỉ dài">
+  <meta property="og:description" content="Goldweek ghép ngày lễ với cuối tuần và cho biết nên xin nghỉ ngày nào để được nghỉ dài nhất. Có ngày lễ của 42 quốc gia và quản lý phép năm.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/vi/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/vi/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../site.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Biểu tượng ứng dụng Goldweek"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Tính năng</a>
-<a href="#screenshots" class="hide-mobile">Ảnh màn hình</a>
-<a href="support.html" class="hide-mobile">Hỗ trợ</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Tải về</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Language">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Chuyển đến nội dung</a>
+  <header class="bar">
+    <a class="brand" href="../vi/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Ngôn ngữ</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Xin nghỉ ít ngày,<br>được nghỉ dài</h1>
+        <p class="lead">Goldweek ghép ngày lễ với cuối tuần và chỉ rõ nên xin nghỉ phép vào ngày nào để được nghỉ liền dài nhất. Không cần lật lịch từng trang ngồi đếm nữa.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Tải miễn phí trên App Store</a></div>
+        <p class="muted small">Tải miễn phí. Ghi phép và xem gợi ý vẫn luôn miễn phí.</p>
+      </div>
+      <div class="phone"><img src="../img/vi/02-recommend.jpg" alt="Xin nghỉ ít ngày, được nghỉ dài" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+
+    <section class="problem reveal">
+      <h2>Mệt vì ngồi đếm ngày trên lịch?</h2>
+      <p>Thứ Năm là ngày lễ, có nên xin nghỉ thêm thứ Sáu? Hay để dành nối với kỳ nghỉ dài tháng sau? Lật lịch qua lại mãi rồi cuối cùng xin nghỉ đại một ngày, đến cuối năm số phép còn lại cứ thế mất. Goldweek tính giúp bạn và cho thấy những ngày giúp phép năm kéo dài nhất.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Phép còn lại thấy ngay</h2>
+        <p>Tổng số, đã dùng và còn lại nằm gọn trên một màn hình. Bên cạnh là năm nay đã trôi qua bao nhiêu so với số phép đã dùng, để bạn biết ngay mình có đang để dành quá nhiều không.<br>Không cần mở ứng dụng, widget trên màn hình chính cho thấy số phép còn lại và kỳ nghỉ sắp tới.</p>
+      </div>
+      <div class="phone"><img src="../img/vi/01-home.jpg" alt="Phép còn lại thấy ngay" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Ghi phép ngay trên lịch</h2>
+        <p>Ngày lễ, ngày phép và kỳ nghỉ gợi ý hiện bằng màu trên lịch. Chạm vào ngày để thêm hoặc sửa ngày nghỉ, kể cả nửa ngày, một phần tư ngày hay theo giờ.<br>Bạn cũng có thể chụp màn hình lịch sử nghỉ phép của công ty để nhập dữ liệu cũ một lần.</p>
+      </div>
+      <div class="phone"><img src="../img/vi/03-calendar.jpg" alt="Ghi phép ngay trên lịch" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Theo quốc gia và cách làm việc của bạn</h2>
+        <p>Có ngày lễ của 42 quốc gia ở châu Á, châu Âu và châu Mỹ. Nơi nào ngày lễ khác nhau theo bang hay vùng thì chọn vùng của bạn. Quốc gia chưa có trong danh sách, như Việt Nam, bạn có thể tự thêm ngày lễ.<br>Bạn cũng chọn được ngày cuối tuần, ngày đầu tuần và kiểu làm việc cố định, bán thời gian hay theo ca.</p>
+      </div>
+      <div class="phone"><img src="../img/vi/04-settings.jpg" alt="Theo quốc gia và cách làm việc của bạn" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Bắt đầu với 3 bước</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Cho biết nơi bạn làm việc</h3><p>Lần đầu mở, chọn quốc gia và số ngày phép mỗi năm, hoặc tự thêm ngày lễ nếu chưa có quốc gia của bạn.</p></li>
+<li class="card"><span class="n">2</span><h3>Chọn một gợi ý</h3><p>Trong tab Lịch có các kỳ nghỉ gợi ý. Thêm cái bạn thích vào lịch trình.</p></li>
+<li class="card"><span class="n">3</span><h3>Ghi lại ngày nghỉ</h3><p>Chạm vào ngày hoặc nhập lịch sử nghỉ từ ảnh.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Cách tính</h2>
+      <div class="card table">
+        <dl><div><dt>Nghỉ cả ngày</dt><dd>Trừ 1 ngày</dd></div><div><dt>Nửa ngày</dt><dd>Trừ 0,5 ngày</dd></div><div><dt>Một phần tư ngày</dt><dd>Trừ 0,25 ngày</dd></div><div><dt>Theo giờ</dt><dd>Tính theo số giờ làm của ngày đó</dd></div><div><dt>Nghỉ ốm, nghỉ việc riêng có lương, công tác</dt><dd>Không trừ vào phép năm</dd></div><div><dt>Phép thưởng</dt><dd>Ngày nghỉ bù, nghỉ thưởng được cấp thêm, quản lý riêng kèm hạn dùng (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Số ngày phép mỗi năm và tháng bắt đầu năm phép có thể đổi bất cứ lúc nào trong Cài đặt.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Nghỉ ngơi đúng cách thì miễn phí, nhờ lên kế hoạch mới trả phí</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Miễn phí</h3>
+          <ul><li>Ghi nghỉ cả ngày, nửa ngày, một phần tư ngày, theo giờ và phép còn lại</li><li>Ngày lễ của 42 quốc gia, ngày lễ riêng và kỳ nghỉ học</li><li>Xem mọi gợi ý năm nay, thêm tối đa 3 vào lịch</li><li>Nhắc khoảng cách nghỉ ngơi, thông báo và widget</li><li>Thêm ngày nghỉ từ ảnh</li><li>Sao lưu iCloud và chia sẻ lịch với gia đình</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus và Pro</h3>
+          <ul><li>Plus: Kế hoạch nghỉ phép tối ưu cả năm</li><li>Plus: Thêm gợi ý không giới hạn, xem cả năm trước và năm sau</li><li>Plus: Gửi ngày nghỉ sang ứng dụng Lịch</li><li>Pro: Mọi thứ của Plus, thêm Phép thưởng, hạn mức năm và chuyển phép theo loại</li><li>Pro: Nhập lịch học của trường, tự nhận diện lịch</li><li>Pro: Nghỉ cùng cả nhà và ngày kỷ niệm gia đình</li></ul>
+          <p class="muted">Mỗi gói có thể chọn đăng ký theo năm hoặc mua một lần dùng trọn đời.</p>
+        </div>
+      </div>
+      <p class="muted">Gói năm tự gia hạn nếu không tắt ít nhất 24 giờ trước khi hết kỳ. Quản lý bất cứ lúc nào trong Cài đặt &gt; Tài khoản Apple &gt; Đăng ký.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Câu hỏi thường gặp</h2>
+      <div class="faq"><details><summary>Số phép tính chưa đúng.</summary><p>Hãy kiểm tra trong Cài đặt tháng bắt đầu năm phép và tổng số ngày phép. Nửa ngày (0,5) và một phần tư ngày (0,25) được trừ tự động, còn các loại không trừ phép như nghỉ ốm, nghỉ việc riêng có lương hay công tác thì không ảnh hưởng số phép còn lại. Nếu vẫn chưa đúng, hãy gửi email cho chúng tôi.</p></details>
+<details><summary>Ngày nghỉ không hiện trên lịch.</summary><p>Ngày nghỉ đã hủy sẽ không hiện trên lịch. Hãy kiểm tra trạng thái của mục đó trong Quản lý nghỉ phép. Cập nhật lên phiên bản mới nhất cũng có thể giúp.</p></details>
+<details><summary>Thêm Phép thưởng thế nào?</summary><p>Chạm + trong tab Tổng quan để mở Quản lý nghỉ phép, rồi dùng mục Phép thưởng ở phía dưới. Chọn loại (nghỉ bù, nghỉ thưởng, nghỉ dưỡng sức…), nhập số ngày và hạn dùng (không bắt buộc). Phép thưởng được quản lý riêng với phép năm thông thường.</p></details>
+<details><summary>Đã mua nhưng tính năng chưa mở.</summary><p>Chạm Khôi phục giao dịch ở cuối tab Cài đặt. Giao dịch được khôi phục bằng Tài khoản Apple đang đăng nhập App Store. Nếu vẫn không được, hãy gửi email cho chúng tôi.</p></details>
+<details><summary>Xóa ứng dụng có mất dữ liệu không?</summary><p>Dữ liệu lưu trên máy, nên xóa ứng dụng là mất hết. Hãy bật Sao lưu iCloud để giữ một bản có thể khôi phục sau này.</p></details>
+<details><summary>Có tự thêm hoặc ẩn ngày lễ được không?</summary><p>Được. Vào Ngày lễ &amp; Kỳ nghỉ học trong Cài đặt để thêm ngày lễ của riêng bạn hoặc ẩn ngày lễ mặc định.</p></details>
+<details><summary>Hỗ trợ những quốc gia nào?</summary><p>Goldweek có ngày lễ của 42 quốc gia. Chọn quốc gia trong Cài đặt (và vùng, với nơi ngày lễ khác nhau theo vùng), lịch sẽ cập nhật ngay. Hiện chưa có sẵn ngày lễ Việt Nam: bạn có thể tự thêm, hoặc gửi góp ý trong ứng dụng để đề nghị hỗ trợ.</p></details>
+<details><summary>Dữ liệu của tôi lưu ở đâu?</summary><p>Những gì bạn nhập chỉ nằm trên máy và iCloud của chính bạn. Nhà phát triển chỉ nhận thống kê sử dụng ẩn danh, chẩn đoán lỗi ẩn danh và góp ý do bạn tự gửi.</p></details></div>
+      <p class="contact">Vấn đề chưa được giải đáp ở trên, ý tưởng hay lỗi, xin gửi đến <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. Chúng tôi thường trả lời trong 1 đến 2 ngày làm việc.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Năm nay, dùng phép<br>thật đáng</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Tải miễn phí trên App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Ngôn ngữ"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -74,67 +169,15 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi" aria-current="true">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi" aria-current="page">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Chính sách quyền riêng tư</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Nối lễ với cuối tuần, nghỉ thật dài</h1>
-<p>Goldweek giúp bạn chọn những ngày xin nghỉ có lợi nhất.<br>Ứng dụng ghép ngày lễ với cuối tuần rồi chỉ ra cách nghỉ được lâu nhất mà tốn ít ngày phép nhất.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/vi-vn?size=250x83" alt="Tải về trên App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Goldweek làm được gì</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Gợi ý cho mỗi dịp lễ</h3>
-<p>Với mỗi ngày lễ sắp tới, bạn biết cần nghỉ phép mấy ngày và sẽ được nghỉ liền bao nhiêu ngày. Không bỏ lỡ ngày nối lễ nào nữa.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Ngày lễ của 42 quốc gia và ngày lễ tự thêm</h3>
-<p>Có sẵn ngày lễ của 42 quốc gia ở châu Á, châu Âu, châu Mỹ, Trung Đông, châu Phi và châu Đại Dương. Việt Nam chưa có trong danh sách, nhưng bạn có thể tự thêm ngày lễ Việt Nam ở chế độ tự thiết lập và đặt các ngày lễ cố định lặp lại hằng năm. Bạn cũng tự chọn ngày cuối tuần và ngày bắt đầu tuần.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Theo dõi phép năm</h3>
-<p>Tổng số phép, phép đã dùng và phép còn lại trên cùng một màn hình. Ghi nghỉ nửa ngày hoặc nghỉ theo giờ, theo dõi các ngày phép thêm như nghỉ bù kèm hạn dùng. Chạm vào một ngày trên lịch để thêm hoặc sửa, hoặc nhập lịch sử nghỉ từ ảnh chụp màn hình hệ thống nhân sự của công ty.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Tiện ích và sao lưu</h3>
-<p>Số phép còn lại và kỳ nghỉ sắp tới hiện ngay trên Màn hình chính. Dữ liệu được sao lưu lên iCloud, và bạn có thể chia sẻ lịch nghỉ với gia đình. Dùng được trên iPhone và iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Bên trong ứng dụng</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/vi/01-home.png" alt="Ảnh chụp màn hình Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/vi/02-recommend.png" alt="Ảnh chụp màn hình Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/vi/03-calendar.png" alt="Ảnh chụp màn hình Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/vi/04-countries.png" alt="Ảnh chụp màn hình Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/vi/05-settings.png" alt="Ảnh chụp màn hình Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Lên kế hoạch sớm, dùng ít phép hơn, nghỉ ngơi nhiều hơn.</h2>
-<p>Tải về miễn phí. Goldweek Pro là gói mua một lần, không bắt buộc.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/vi-vn?size=250x83" alt="Tải về trên App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Hỗ trợ</a>
-<a href="privacy.html">Chính sách quyền riêng tư</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Bảo lưu mọi quyền.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
 </body>
 </html>

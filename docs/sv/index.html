@@ -1,58 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: Semesterplanerare</title>
-<meta name="description" content="Är det en röd dag på väg? Goldweek kombinerar helgdagar och helger och visar vilka dagar du ska ta ledigt för längsta möjliga semester. Kvarvarande dagar syns i widgeten.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: Semesterplanerare">
-<meta property="og:description" content="Är det en röd dag på väg? Goldweek kombinerar helgdagar och helger och visar vilka dagar du ska ta ledigt för längsta möjliga semester. Kvarvarande dagar syns i widgeten.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/sv/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: lång ledighet med få semesterdagar</title>
+  <meta name="description" content="Goldweek kopplar ihop helgdagar och helger och visar vilka dagar du ska ta ledigt för den längsta ledigheten. Helgdagar i 42 länder.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: lång ledighet med få semesterdagar">
+  <meta property="og:description" content="Goldweek kopplar ihop helgdagar och helger och visar vilka dagar du ska ta ledigt för den längsta ledigheten. Helgdagar i 42 länder.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/sv/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/sv/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../site.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Goldweeks appsymbol"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Funktioner</a>
-<a href="#screenshots" class="hide-mobile">Skärmbilder</a>
-<a href="support.html" class="hide-mobile">Support</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Hämta</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Språk">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Hoppa till innehållet</a>
+  <header class="bar">
+    <a class="brand" href="../sv/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Språk</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Få semesterdagar,<br>lång ledighet</h1>
+        <p class="lead">Goldweek kopplar ihop helgdagar med helger och visar exakt vilka dagar du ska ta ledigt för att vara ledig så länge som möjligt. Inget mer bläddrande och räknande i kalendern.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Hämta gratis i App Store</a><a class="try" href="#try">Hur långt räcker din semester? ↓</a></div>
+        <p class="muted small">Gratis att hämta. Att följa semestern och se förslag är fortsatt gratis.</p>
+      </div>
+      <div class="phone"><img src="../img/sv/02-recommend.jpg" alt="Få semesterdagar, lång ledighet" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>Hur långt räcker din semester?</h2>
+      <p class="muted">Välj hur många dagar du kan ta ledigt. Du ser de längsta ledigheterna de ger runt de kommande helgdagarna.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Hur långt räcker din semester?&quot;, &quot;lead&quot;: &quot;Välj hur många dagar du kan ta ledigt. Du ser de längsta ledigheterna de ger runt de kommande helgdagarna.&quot;, &quot;ask&quot;: &quot;Hur många semesterdagar kan du ta?&quot;, &quot;based&quot;: &quot;Utifrån helgdagarna i Sverige&quot;, &quot;note&quot;: &quot;Det här är appens egna förslag. I appen räknar de också med din kvarvarande semester och ledighet du redan bokat, och du lägger in ett förslag med ett tryck.&quot;, &quot;leave&quot;: &quot;{n}d semester&quot;, &quot;rest&quot;: &quot;{n}d ledigt&quot;, &quot;legend&quot;: [&quot;Arbetsdag&quot;, &quot;Semester&quot;, &quot;Helgdag&quot;, &quot;Helg&quot;], &quot;weekdays&quot;: [&quot;sön&quot;, &quot;mån&quot;, &quot;tis&quot;, &quot;ons&quot;, &quot;tors&quot;, &quot;fre&quot;, &quot;lör&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2026-10-31&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Alla helgons dag&quot;}, {&quot;d&quot;: &quot;HHHWL&quot;, &quot;s&quot;: &quot;2026-12-24&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Julafton&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;Klämdag vid Nyårsdagen&quot;}, {&quot;d&quot;: &quot;HHHHL&quot;, &quot;s&quot;: &quot;2026-04-03&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Långfredagen&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-05-14&quot;, &quot;t&quot;: &quot;Klämdag vid Kristi himmelsfärdsdag&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2026-01-03&quot;, &quot;t&quot;: &quot;Klämdag vid Trettondedag jul&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2026-06-17&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Midsommarafton&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-04-29&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Första maj&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2026-05-23&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Pingstdagen&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2026-06-06&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Sveriges nationaldag&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2027-11-06&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Alla helgons dag&quot;}, {&quot;d&quot;: &quot;HHHHL&quot;, &quot;s&quot;: &quot;2027-03-26&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Långfredagen&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-05-06&quot;, &quot;t&quot;: &quot;Klämdag vid Kristi himmelsfärdsdag&quot;}, {&quot;d&quot;: &quot;HHHLL&quot;, &quot;s&quot;: &quot;2027-12-24&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Julafton&quot;}, {&quot;d&quot;: &quot;HWWLLH&quot;, &quot;s&quot;: &quot;2027-01-01&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Nyårsdagen&quot;}, {&quot;d&quot;: &quot;HWLLLH&quot;, &quot;s&quot;: &quot;2027-05-01&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Första maj&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2027-06-23&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Midsommarafton&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2027-12-29&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Nyårsafton&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2027-01-06&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Trettondedag jul&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2027-05-15&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Pingstdagen&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2027-06-05&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Sveriges nationaldag&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2028-11-04&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Alla helgons dag&quot;}, {&quot;d&quot;: &quot;WHHHL&quot;, &quot;s&quot;: &quot;2028-12-23&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Julafton&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-01-06&quot;, &quot;t&quot;: &quot;Klämdag vid Trettondedag jul&quot;}, {&quot;d&quot;: &quot;HHHHL&quot;, &quot;s&quot;: &quot;2028-04-14&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Långfredagen&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-05-25&quot;, &quot;t&quot;: &quot;Klämdag vid Kristi himmelsfärdsdag&quot;}, {&quot;d&quot;: &quot;WHLH&quot;, &quot;s&quot;: &quot;2028-06-03&quot;, &quot;t&quot;: &quot;Klämdag vid Sveriges nationaldag&quot;}, {&quot;d&quot;: &quot;HWLLLH&quot;, &quot;s&quot;: &quot;2028-01-01&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Nyårsdagen&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2028-06-21&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Midsommarafton&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-04-29&quot;, &quot;t&quot;: &quot;Förlängd ledighet vid Första maj&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Trött på att räkna dagar i kalendern?</h2>
+      <p>Torsdag är röd dag, ska du ta fredagen? Eller spara dagen till långhelgen nästa månad? Efter tillräckligt mycket bläddrande tar du ledigt vilken dag som helst, och i december försvinner de dagar som blev över. Goldweek räknar åt dig och visar de dagar som får semestern att räcka längst.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Din semester i en blick</h2>
+        <p>Totalt, uttaget och kvar på en skärm. Bredvid ser du hur långt året har gått och hur mycket semester du har använt, så du direkt ser om du sparar för mycket.<br>Dina kvarvarande dagar och kommande ledigheter syns i en widget på hemskärmen.</p>
+      </div>
+      <div class="phone"><img src="../img/sv/01-home.jpg" alt="Din semester i en blick" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Lägg in ledighet direkt i kalendern</h2>
+        <p>Helgdagar, semester och föreslagna klämdagar syns i färg i kalendern. Tryck på ett datum för att lägga till eller ändra ledighet, även halvdagar, kvartsdagar eller timmar.<br>Tidigare ledigheter tar du in på en gång från ett foto av HR-systemets skärm.</p>
+      </div>
+      <div class="phone"><img src="../img/sv/03-calendar.jpg" alt="Lägg in ledighet direkt i kalendern" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Ditt land, dina arbetstider</h2>
+        <p>Helgdagar i 42 länder, från Sverige och Norden till Europa, Asien och Amerika. Där helgdagar skiljer sig mellan regioner väljer du din. Saknas ditt land? Lägg till egna helgdagar.<br>Du väljer också helgdagarna i veckan, veckans första dag och om du jobbar fast schema, deltid eller skift.</p>
+      </div>
+      <div class="phone"><img src="../img/sv/04-settings.jpg" alt="Ditt land, dina arbetstider" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Kom igång i tre steg</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Berätta var du jobbar</h3><p>Första gången väljer du land och hur många semesterdagar du har per år.</p></li>
+<li class="card"><span class="n">2</span><h3>Välj ett förslag</h3><p>På fliken Kalender finns föreslagna ledigheter. Lägg till dem du gillar.</p></li>
+<li class="card"><span class="n">3</span><h3>För in din ledighet</h3><p>Tryck på ett datum eller ta in tidigare ledighet från ett foto.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Så räknas det</h2>
+      <div class="card table">
+        <dl><div><dt>Heldag</dt><dd>1 dag från saldot</dd></div><div><dt>Halvdag</dt><dd>0,5 dag</dd></div><div><dt>Kvartsdag</dt><dd>0,25 dag</dd></div><div><dt>Timmar</dt><dd>Efter dina arbetstimmar den dagen</dd></div><div><dt>Sjukdom, tjänstledighet, tjänsteresa</dt><dd>Dras inte från semestern</dd></div><div><dt>Bonusledighet</dt><dd>Extra lediga dagar som kompledighet, förs separat med sista giltighetsdag (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Antal semesterdagar per år och månaden då semesteråret börjar kan du ändra när som helst i Inställningar.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Bra vila är gratis. Planeringen sköter Plus och Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Gratis</h3>
+          <ul><li>Heldagar, halvdagar, kvartsdagar och timmar, med kvarvarande semester</li><li>Helgdagar i 42 länder, egna helgdagar och lov</li><li>Se alla förslag för i år, lägg till upp till 3</li><li>Tips om vilointervall, påminnelser och widget</li><li>Lägg till ledighet från ett foto</li><li>iCloud-säkerhetskopia och delat schema med familjen</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus och Pro</h3>
+          <ul><li>Plus: Optimal semesterplanerare</li><li>Plus: Obegränsat med förslag, även för förra och nästa år</li><li>Plus: Skicka ledighet till Kalender-appen</li><li>Pro: Allt i Plus, bonusledighet, årsgränser och sparade dagar per typ</li><li>Pro: Importera skolkalender och automatisk kalenderidentifiering</li><li>Pro: Ledigt tillsammans och familjens högtidsdagar</li></ul>
+          <p class="muted">Varje nivå finns som årsprenumeration eller engångsköp för alltid.</p>
+        </div>
+      </div>
+      <p class="muted">Årsprenumerationer förnyas automatiskt om de inte stängs av senast 24 timmar innan perioden tar slut. Hantera dem när som helst under Inställningar &gt; Apple-konto &gt; Prenumerationer.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Vanliga frågor</h2>
+      <div class="faq"><details><summary>Mitt semestersaldo stämmer inte.</summary><p>Kontrollera i Inställningar vilken månad ditt semesterår börjar och hur många semesterdagar du har totalt. Halvdagar (0,5) och kvartsdagar (0,25) dras automatiskt, och typer som inte räknas, som sjukdom, tjänstledighet eller tjänsteresor, påverkar inte saldot. Stämmer det ändå inte, mejla oss.</p></details>
+<details><summary>Min ledighet syns inte i kalendern.</summary><p>Avbokad ledighet visas inte i kalendern. Kontrollera postens status i Ledighetshantering. Att uppdatera till senaste versionen kan också hjälpa.</p></details>
+<details><summary>Hur lägger jag till bonusledighet?</summary><p>Tryck på + på fliken Status för att öppna Ledighetshantering och använd avsnittet Bonusledighet längst ned. Välj typ (komp, belöningsledighet, återhämtningsledighet …), ange antal dagar och om du vill en sista giltighetsdag. Bonusledighet förs separat från vanlig semester.</p></details>
+<details><summary>Jag har betalat men inget har låsts upp.</summary><p>Tryck på Återställ köp längst ned på fliken Inställningar. Köpet återställs med det Apple-konto du är inloggad med i App Store. Hjälper det inte, mejla oss.</p></details>
+<details><summary>Försvinner mina data om jag raderar appen?</summary><p>Dina data sparas på enheten, så raderar du appen försvinner de. Slå på iCloud-säkerhetskopia så har du en kopia att återställa senare.</p></details>
+<details><summary>Kan jag lägga till egna helgdagar eller dölja några?</summary><p>Ja. Under Helgdagar och lov i Inställningar lägger du till egna helgdagar eller döljer standardhelgdagar.</p></details>
+<details><summary>Vilka länder stöds?</summary><p>Goldweek har helgdagarna för 42 länder. Välj land i Inställningar (och region där helgdagarna skiljer sig) så uppdateras kalendern direkt. Saknas ditt land kan du lägga in helgdagarna själv eller önska det via feedback i appen.</p></details>
+<details><summary>Var sparas mina data?</summary><p>Det du skriver in stannar på din enhet eller i din egen iCloud. Vi får bara anonym användningsstatistik, anonyma kraschrapporter och feedback som du själv väljer att skicka.</p></details></div>
+      <p class="contact">För allt som inte besvaras ovan, idéer eller buggar, mejla <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. Vi svarar oftast inom en eller två arbetsdagar.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Få semestern att räcka<br>längre i år</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Hämta gratis i App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Språk"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -65,7 +166,7 @@
 <a href="../ru/" hreflang="ru" lang="ru">Русский</a>
 <a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
 <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
-<a href="../sv/" hreflang="sv" lang="sv" aria-current="true">Svenska</a>
+<a href="../sv/" hreflang="sv" lang="sv" aria-current="page">Svenska</a>
 <a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
 <a href="../da/" hreflang="da" lang="da">Dansk</a>
 <a href="../fi/" hreflang="fi" lang="fi">Suomi</a>
@@ -74,67 +175,16 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Integritetspolicy</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Längre ledigt, färre dagar</h1>
-<p>Goldweek hittar klämdagarna som ger dig längst ledighet.<br>Appen kombinerar helgdagar och helger och visar hur du får den längsta ledigheten med så få semesterdagar som möjligt.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/sv-se?size=250x83" alt="Hämta i App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Det här gör Goldweek</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Smarta förslag</h3>
-<p>För varje helgdag som närmar sig ser du hur många semesterdagar du behöver ta ut och hur många dagar i rad du sedan är ledig. Du missar aldrig en klämdag igen.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Helgdagar i 42 länder</h3>
-<p>Sverige och 40 andra länder i Europa, Asien, Amerika, Mellanöstern, Afrika och Oceanien. Använder du appen på svenska visas de officiella namnen, som trettondedag jul, Kristi himmelsfärdsdag, Sveriges nationaldag och midsommardagen. Där helgdagarna skiljer sig mellan regioner väljer du bara din egen. Saknas ditt land i listan lägger du in helgdagarna själv.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Koll på semestern</h3>
-<p>Totalt, uttaget och kvar visas på en och samma skärm. Du kan registrera halva dagar och kvartsdagar och hålla koll på extra ledighet, som kompledighet, tillsammans med sista giltighetsdag. Tryck på ett datum i kalendern för att lägga till eller ändra ledighet, eller importera tidigare ledigheter med ett foto av skärmen i företagets personalsystem. Du väljer också själv vilka dagar som är helg och vilken dag veckan börjar.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget och säkerhetskopia</h3>
-<p>Kvarvarande semester och kommande ledigheter syns direkt på hemskärmen. Dina uppgifter säkerhetskopieras till iCloud och du kan dela ditt ledighetsschema med familjen. Fungerar på iPhone och iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>En titt i appen</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/en/01-home.png" alt="Skärmbild från Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/02-recommend.png" alt="Skärmbild från Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/03-calendar.png" alt="Skärmbild från Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/04-countries.png" alt="Skärmbild från Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/05-settings.png" alt="Skärmbild från Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Planera i god tid, ta ut färre dagar och njut av mer ledighet.</h2>
-<p>Gratis att hämta. Goldweek Pro är ett valfritt engångsköp.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/sv-se?size=250x83" alt="Hämta i App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Support</a>
-<a href="privacy.html">Integritetspolicy</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Alla rättigheter förbehållna.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

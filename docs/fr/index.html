@@ -1,62 +1,163 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek - Congés et ponts</title>
-<meta name="description" content="Un jour férié tombe un jeudi ? Goldweek repère le pont à faire et combine fériés et week-ends pour un maximum de repos. Votre solde de congés s&#x27;affiche en widget.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek - Congés et ponts">
-<meta property="og:description" content="Un jour férié tombe un jeudi ? Goldweek repère le pont à faire et combine fériés et week-ends pour un maximum de repos. Votre solde de congés s&#x27;affiche en widget.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/fr/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek : de longs congés avec peu de jours posés</title>
+  <meta name="description" content="Goldweek associe jours fériés et week-ends pour montrer quels jours poser pour la plus longue pause. Jours fériés de 42 pays, suivi des congés.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek : de longs congés avec peu de jours posés">
+  <meta property="og:description" content="Goldweek associe jours fériés et week-ends pour montrer quels jours poser pour la plus longue pause. Jours fériés de 42 pays, suivi des congés.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/fr/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/fr/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../site.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Icône de l’app Goldweek"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Fonctionnalités</a>
-<a href="#screenshots" class="hide-mobile">Captures d’écran</a>
-<a href="support.html" class="hide-mobile">Assistance</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Télécharger</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Langue">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Aller au contenu</a>
+  <header class="bar">
+    <a class="brand" href="../fr/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Langues</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Peu de jours posés,<br>de vrais ponts</h1>
+        <p class="lead">Goldweek associe jours fériés et week-ends et vous montre précisément quels jours poser pour profiter de la plus longue pause. Fini de feuilleter le calendrier en comptant sur vos doigts.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Télécharger gratuitement sur l’App Store</a><a class="try" href="#try">Jusqu’où vont vos congés ? ↓</a></div>
+        <p class="muted small">Téléchargement gratuit. Le suivi des congés et les suggestions restent gratuits.</p>
+      </div>
+      <div class="phone"><img src="../img/fr/02-recommend.jpg" alt="Peu de jours posés, de vrais ponts" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>Jusqu’où vont vos congés ?</h2>
+      <p class="muted">Choisissez combien de jours vous pouvez poser. Vous verrez les plus longues pauses qu’ils permettent autour des prochains jours fériés.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Jusqu’où vont vos congés ?&quot;, &quot;lead&quot;: &quot;Choisissez combien de jours vous pouvez poser. Vous verrez les plus longues pauses qu’ils permettent autour des prochains jours fériés.&quot;, &quot;ask&quot;: &quot;Combien de jours pouvez-vous poser ?&quot;, &quot;based&quot;: &quot;D’après les jours fériés en France&quot;, &quot;note&quot;: &quot;Ce sont les suggestions de l’app elle-même. Dans l’app, elles tiennent aussi compte de votre région, de vos congés restants et de ceux déjà posés, et vous les ajoutez à votre planning d’un geste.&quot;, &quot;leave&quot;: &quot;{n} j de congé&quot;, &quot;rest&quot;: &quot;{n} j de repos&quot;, &quot;legend&quot;: [&quot;Jour ouvré&quot;, &quot;Congés annuels&quot;, &quot;Jour férié&quot;, &quot;Week-end&quot;], &quot;weekdays&quot;: [&quot;Dim&quot;, &quot;Lun&quot;, &quot;Mar&quot;, &quot;Mer&quot;, &quot;Jeu&quot;, &quot;Ven&quot;, &quot;Sam&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2026-10-31&quot;, &quot;t&quot;: &quot;Congé prolongé : Toussaint&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2026-11-11&quot;, &quot;t&quot;: &quot;Congé prolongé : Armistice 1918&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;Pont : Jour de l’an&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-05-14&quot;, &quot;t&quot;: &quot;Pont : Ascension&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2026-07-11&quot;, &quot;t&quot;: &quot;Pont : Fête nationale&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2026-08-15&quot;, &quot;t&quot;: &quot;Congé prolongé : Assomption&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-12-23&quot;, &quot;t&quot;: &quot;Congé prolongé : Noël&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-04-04&quot;, &quot;t&quot;: &quot;Congé prolongé : Lundi de Pâques&quot;}, {&quot;d&quot;: &quot;HWWLL&quot;, &quot;s&quot;: &quot;2026-05-01&quot;, &quot;t&quot;: &quot;Congé prolongé : Fête du Travail&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-11-11&quot;, &quot;t&quot;: &quot;Pont : Armistice 1918&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2027-12-25&quot;, &quot;t&quot;: &quot;Congé prolongé : Noël&quot;}, {&quot;d&quot;: &quot;HLHW&quot;, &quot;s&quot;: &quot;2027-05-06&quot;, &quot;t&quot;: &quot;Pont : Ascension&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2027-07-14&quot;, &quot;t&quot;: &quot;Congé prolongé : Fête nationale&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2027-08-14&quot;, &quot;t&quot;: &quot;Congé prolongé : Assomption&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-10-30&quot;, &quot;t&quot;: &quot;Congé prolongé : Toussaint&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-03-27&quot;, &quot;t&quot;: &quot;Congé prolongé : Lundi de Pâques&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-05-15&quot;, &quot;t&quot;: &quot;Congé prolongé : Lundi de Pentecôte&quot;}, {&quot;d&quot;: &quot;HWLLLH&quot;, &quot;s&quot;: &quot;2027-05-01&quot;, &quot;t&quot;: &quot;Congé prolongé : Fête du Travail&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2028-11-01&quot;, &quot;t&quot;: &quot;Congé prolongé : Toussaint&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2028-01-01&quot;, &quot;t&quot;: &quot;Congé prolongé : Jour de l’an&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-05-25&quot;, &quot;t&quot;: &quot;Pont : Ascension&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2028-08-12&quot;, &quot;t&quot;: &quot;Pont : Assomption&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2028-11-11&quot;, &quot;t&quot;: &quot;Congé prolongé : Armistice 1918&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-12-23&quot;, &quot;t&quot;: &quot;Congé prolongé : Noël&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-06-03&quot;, &quot;t&quot;: &quot;Congé prolongé : Lundi de Pentecôte&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2028-07-12&quot;, &quot;t&quot;: &quot;Congé prolongé : Fête nationale&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-04-15&quot;, &quot;t&quot;: &quot;Congé prolongé : Lundi de Pâques&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-05-06&quot;, &quot;t&quot;: &quot;Congé prolongé : Victoire 1945&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-04-29&quot;, &quot;t&quot;: &quot;Congé prolongé : Fête du Travail&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Marre de compter les jours sur le calendrier ?</h2>
+      <p>Le jeudi est férié : faut-il poser le vendredi ? Ou garder ce jour pour le pont du mois prochain ? À force de tourner les pages, on finit par poser n’importe quel jour, et en décembre les congés restants s’envolent. Goldweek fait le calcul et vous montre les jours qui font durer vos congés le plus longtemps.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Vos congés d’un coup d’œil</h2>
+        <p>Total, posés, restants : tout tient sur un écran. Vous voyez aussi où en est l’année à côté de vos congés déjà utilisés, pour savoir tout de suite si vous en mettez trop de côté.<br>Vos jours restants et vos prochains congés s’affichent sur l’écran d’accueil grâce à un widget.</p>
+      </div>
+      <div class="phone"><img src="../img/fr/01-home.jpg" alt="Vos congés d’un coup d’œil" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Posez vos congés depuis le calendrier</h2>
+        <p>Jours fériés, congés et ponts suggérés apparaissent en couleur dans le calendrier. Touchez une date pour ajouter ou modifier un congé, y compris une demi-journée, un quart de journée ou quelques heures.<br>Vous pouvez aussi importer vos anciens congés d’un coup à partir d’une photo de votre écran RH.</p>
+      </div>
+      <div class="phone"><img src="../img/fr/03-calendar.jpg" alt="Posez vos congés depuis le calendrier" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Votre pays, votre rythme</h2>
+        <p>Les jours fériés de 42 pays, de la France à la Belgique et la Suisse jusqu’à l’Asie et aux Amériques. Là où ils varient selon la région, choisissez la vôtre. Votre pays n’y est pas ? Ajoutez vos propres jours fériés.<br>Vous réglez aussi vos jours de week-end, le premier jour de la semaine et votre rythme : fixe, temps partiel ou travail posté.</p>
+      </div>
+      <div class="phone"><img src="../img/fr/04-settings.jpg" alt="Votre pays, votre rythme" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Trois étapes pour commencer</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Indiquez où vous travaillez</h3><p>Au premier lancement, choisissez votre pays et votre nombre de jours de congés par an.</p></li>
+<li class="card"><span class="n">2</span><h3>Choisissez une suggestion</h3><p>Retrouvez les ponts suggérés dans l’onglet Calendrier et ajoutez ceux qui vous plaisent.</p></li>
+<li class="card"><span class="n">3</span><h3>Notez vos congés</h3><p>Touchez une date, ou importez vos anciens congés depuis une photo.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Comment on compte</h2>
+      <div class="card table">
+        <dl><div><dt>Journée</dt><dd>1 jour décompté</dd></div><div><dt>Demi-journée</dt><dd>0,5 jour</dd></div><div><dt>Quart de journée</dt><dd>0,25 jour</dd></div><div><dt>Heures</dt><dd>Selon vos heures de travail ce jour-là</dd></div><div><dt>Arrêt maladie, congé exceptionnel, déplacement</dt><dd>Non décomptés de vos congés</dd></div><div><dt>Congés bonus</dt><dd>Jours en plus comme les récupérations, suivis à part avec une date d’expiration (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Vous pouvez changer à tout moment votre total de congés annuels et le mois où démarre votre année de congés dans les Réglages.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Bien se reposer, c’est gratuit. La planification, c’est Plus et Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Gratuit</h3>
+          <ul><li>Journées, demi-journées, quarts et heures, avec vos congés restants</li><li>Jours fériés de 42 pays, vos propres fériés et vacances scolaires</li><li>Toutes les suggestions de l’année, jusqu’à 3 ajoutées</li><li>Conseils d’espacement des pauses, rappels et widget</li><li>Ajout de congés par photo</li><li>Sauvegarde iCloud et calendrier partagé en famille</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus et Pro</h3>
+          <ul><li>Plus : Planificateur annuel optimal</li><li>Plus : Suggestions illimitées, y compris l’an dernier et l’an prochain</li><li>Plus : Envoi des congés vers votre app Calendrier</li><li>Pro : Tout Plus, congés bonus, plafonds annuels et report par type</li><li>Pro : Import du calendrier scolaire et détection automatique du calendrier</li><li>Pro : Repos en famille et anniversaires familiaux</li></ul>
+          <p class="muted">Chaque formule existe en abonnement annuel ou en achat unique à vie.</p>
+        </div>
+      </div>
+      <p class="muted">Les abonnements annuels se renouvellent automatiquement s’ils ne sont pas résiliés au moins 24 heures avant la fin de la période. Gérez-les à tout moment dans Réglages &gt; Compte Apple &gt; Abonnements.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Questions fréquentes</h2>
+      <div class="faq"><details><summary>Mon solde de congés ne semble pas juste.</summary><p>Vérifiez dans les Réglages le mois de début de votre année de congés et votre total annuel. Les demi-journées (0,5) et quarts de journée (0,25) sont décomptés automatiquement, et les types qui ne comptent pas, comme les arrêts maladie, congés exceptionnels ou déplacements, ne changent pas le solde. Si ça ne colle toujours pas, écrivez-nous.</p></details>
+<details><summary>Mon congé n’apparaît pas dans le calendrier.</summary><p>Les congés annulés ne s’affichent pas dans le calendrier. Vérifiez le statut de l’entrée dans Gestion des congés. Une mise à jour vers la dernière version peut aussi aider.</p></details>
+<details><summary>Comment ajouter des congés bonus ?</summary><p>Touchez + dans l’onglet Aperçu pour ouvrir Gestion des congés, puis utilisez la section Congés bonus en bas. Choisissez un type (récupération, congé de récompense, congé de ressourcement…), le nombre de jours et, si vous voulez, une date d’expiration. Les congés bonus sont suivis à part de vos congés annuels.</p></details>
+<details><summary>J’ai payé, mais rien n’est débloqué.</summary><p>Touchez Restaurer l’achat en bas de l’onglet Réglages. Votre achat est restauré avec le compte Apple connecté à l’App Store. Si ça ne marche pas, écrivez-nous.</p></details>
+<details><summary>Vais-je perdre mes données si je supprime l’app ?</summary><p>Vos données sont stockées sur l’appareil : supprimer l’app les efface définitivement. Activez la sauvegarde iCloud pour garder une copie à restaurer plus tard.</p></details>
+<details><summary>Puis-je ajouter mes propres jours fériés ou en masquer ?</summary><p>Oui. Dans Jours fériés et vacances, dans les Réglages, vous pouvez ajouter vos propres jours fériés ou masquer ceux proposés par défaut.</p></details>
+<details><summary>Quels pays sont pris en charge ?</summary><p>Goldweek connaît les jours fériés de 42 pays. Choisissez votre pays (et votre région, là où les fériés varient) dans les Réglages, et le calendrier se met à jour aussitôt. Si le vôtre manque, ajoutez ses jours fériés vous-même ou demandez-le via le feedback dans l’app.</p></details>
+<details><summary>Où sont stockées mes données ?</summary><p>Ce que vous saisissez reste sur votre appareil ou dans votre propre iCloud. Nous recevons uniquement des statistiques d’usage anonymes, des rapports de plantage anonymes et les retours que vous choisissez d’envoyer.</p></details></div>
+      <p class="contact">Pour tout ce qui n’est pas couvert ci-dessus, une idée ou un bug, écrivez à <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. Nous répondons en général sous un ou deux jours ouvrés.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Cette année, faites durer<br>vos congés</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Télécharger gratuitement sur l’App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Langues"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
-<a href="../fr/" hreflang="fr" lang="fr" aria-current="true">Français</a>
+<a href="../fr/" hreflang="fr" lang="fr" aria-current="page">Français</a>
 <a href="../it/" hreflang="it" lang="it">Italiano</a>
 <a href="../ja/" hreflang="ja" lang="ja">日本語</a>
 <a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
@@ -74,67 +175,16 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Confidentialité</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Posez moins, partez plus long</h1>
-<p>Goldweek repère les ponts qui vous offrent le plus de jours de repos.<br>L&#x27;app combine jours fériés et week-ends et vous montre comment profiter de la plus longue pause en posant le moins de jours possible.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/fr-fr?size=250x83" alt="Télécharger dans l’App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Ce que fait Goldweek</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Des suggestions malines</h3>
-<p>Pour chaque jour férié à venir, voyez combien de jours poser et combien de jours d&#x27;affilée vous serez au repos. Plus aucun pont ne vous échappe.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Les jours fériés de 42 pays</h3>
-<p>France, Belgique, Suisse, Canada et 37 autres pays d&#x27;Europe, d&#x27;Amérique, d&#x27;Asie, d&#x27;Afrique et d&#x27;Océanie. Là où les jours fériés varient selon la région, choisissez la vôtre. Votre pays n&#x27;est pas dans la liste ? Ajoutez vos propres jours fériés. Vous pouvez aussi choisir vos jours de week-end et le premier jour de la semaine.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Le suivi de vos congés</h3>
-<p>Retrouvez sur un seul écran vos congés acquis, posés et restants. Enregistrez des demi-journées ou des quarts de journée, et suivez vos jours supplémentaires, comme les récupérations, avec leur date d&#x27;expiration. Touchez une date du calendrier pour poser ou modifier un congé, ou importez votre historique à partir d&#x27;une photo de votre espace RH.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget et sauvegarde</h3>
-<p>Votre solde et vos prochains congés s&#x27;affichent sur l&#x27;écran d&#x27;accueil. Vos données sont sauvegardées sur iCloud et vous pouvez partager votre planning avec votre famille. Disponible sur iPhone et iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Aperçu de l’app</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/fr/01-home.png" alt="Capture d’écran de Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/fr/02-recommend.png" alt="Capture d’écran de Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/fr/03-calendar.png" alt="Capture d’écran de Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/fr/04-countries.png" alt="Capture d’écran de Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/fr/05-settings.png" alt="Capture d’écran de Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Anticipez, posez moins de jours et profitez de plus de repos.</h2>
-<p>Téléchargement gratuit. Goldweek Pro est un achat unique facultatif.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/fr-fr?size=250x83" alt="Télécharger dans l’App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Assistance</a>
-<a href="privacy.html">Confidentialité</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Tous droits réservés.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

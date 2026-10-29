@@ -1,0 +1,313 @@
+{
+  "title": "Goldweek: más días libres con menos vacaciones",
+  "description": "Goldweek combina festivos y fines de semana para mostrarte qué días pedir para el puente más largo. Festivos de 42 países y control de vacaciones.",
+  "hero": {
+    "headline": "Pocos días de vacaciones,\npuentes largos",
+    "lead": "Goldweek combina festivos y fines de semana y te muestra exactamente qué días pedir para tener el descanso más largo. Se acabó pasar hojas del calendario contando con los dedos.",
+    "cta": "Descargar gratis en el App Store",
+    "note": "Descarga gratis. El control de vacaciones y las sugerencias siguen siendo gratis."
+  },
+  "demo": {
+    "title": "¿Hasta dónde llegan tus vacaciones?",
+    "lead": "Elige cuántos días puedes pedir. Verás los descansos más largos que consigues con ellos alrededor de los próximos festivos.",
+    "ask": "¿Cuántos días puedes pedir?",
+    "based": "Según los festivos nacionales de España",
+    "note": "Son las sugerencias de la propia app. En la app también tienen en cuenta tu comunidad, los días que te quedan y las vacaciones que ya tienes, y las añades al calendario con un toque.",
+    "leave": "{n} d de vacaciones",
+    "rest": "{n} d libres",
+    "legend": [
+      "Laborable",
+      "Vacaciones",
+      "Festivo",
+      "Fin de semana"
+    ],
+    "weekdays": [
+      "Dom",
+      "Lun",
+      "Mar",
+      "Mié",
+      "Jue",
+      "Vie",
+      "Sáb"
+    ],
+    "recs": [
+      {
+        "d": "WHLH",
+        "s": "2026-12-05",
+        "t": "Puente: Inmaculada Concepción"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Puente: Año Nuevo"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2026-08-15",
+        "t": "Vacaciones junto a Asunción de la Virgen"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-10-10",
+        "t": "Vacaciones junto a Fiesta Nacional de España"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-01-03",
+        "t": "Puente: Epifanía del Señor"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-01",
+        "t": "Vacaciones junto a Viernes Santo"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2026-10-31",
+        "t": "Vacaciones junto a Todos los Santos"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-12-23",
+        "t": "Vacaciones junto a Navidad"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-29",
+        "t": "Vacaciones junto a Día del Trabajador"
+      },
+      {
+        "d": "WWLH",
+        "s": "2027-10-09",
+        "t": "Puente: Fiesta Nacional de España"
+      },
+      {
+        "d": "WWHLH",
+        "s": "2027-12-04",
+        "t": "Vacaciones junto a Día de la Constitución"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-05-01",
+        "t": "Vacaciones junto a Día del Trabajador"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2027-08-14",
+        "t": "Vacaciones junto a Asunción de la Virgen"
+      },
+      {
+        "d": "HWWLLH",
+        "s": "2027-01-01",
+        "t": "Vacaciones junto a Año Nuevo"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2027-03-24",
+        "t": "Vacaciones junto a Viernes Santo"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-10-30",
+        "t": "Vacaciones junto a Todos los Santos"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-12-25",
+        "t": "Vacaciones junto a Navidad"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-01-06",
+        "t": "Vacaciones junto a Epifanía del Señor"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-10-12",
+        "t": "Puente: Fiesta Nacional de España"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2028-11-01",
+        "t": "Vacaciones junto a Todos los Santos"
+      },
+      {
+        "d": "HLHWW",
+        "s": "2028-12-06",
+        "t": "Vacaciones junto a Día de la Constitución"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-01-06",
+        "t": "Puente: Epifanía del Señor"
+      },
+      {
+        "d": "WWLH",
+        "s": "2028-08-12",
+        "t": "Puente: Asunción de la Virgen"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2028-01-01",
+        "t": "Vacaciones junto a Año Nuevo"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2028-04-12",
+        "t": "Vacaciones junto a Viernes Santo"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-12-23",
+        "t": "Vacaciones junto a Navidad"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-29",
+        "t": "Vacaciones junto a Día del Trabajador"
+      }
+    ]
+  },
+  "problem": {
+    "title": "¿Harto de contar días en el calendario?",
+    "text": "El jueves es festivo, ¿pides el viernes? ¿O guardas el día para el puente del mes que viene? Después de pasar muchas hojas acabas cogiendo cualquier día, y en diciembre los días que sobran se pierden. Goldweek hace las cuentas y te enseña los días que más estiran tus vacaciones."
+  },
+  "features": [
+    {
+      "title": "Tus vacaciones de un vistazo",
+      "text": "Total, usados y restantes en una sola pantalla. Además ves cuánto del año ha pasado junto a cuántos días has gastado, para saber al momento si estás guardando demasiados.\nLos días que te quedan y tus próximas vacaciones aparecen en un widget en la pantalla de inicio.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Pide días desde el calendario",
+      "text": "Festivos, vacaciones y puentes sugeridos aparecen en el calendario con su color. Toca una fecha para añadir o editar días libres, también medios días, cuartos de día u horas.\nY puedes importar de una vez las vacaciones pasadas desde una foto de la pantalla de RR. HH.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Tu país, tu forma de trabajar",
+      "text": "Festivos de 42 países, de España y Latinoamérica a Europa y Asia. Donde cambian según la comunidad o región, eliges la tuya. ¿Tu país no está? Añade tus propios festivos.\nTambién eliges tus días de fin de semana, el primer día de la semana y si trabajas con horario fijo, a tiempo parcial o por turnos.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Empieza en tres pasos",
+    "items": [
+      {
+        "title": "Dinos dónde trabajas",
+        "text": "Al abrirla por primera vez, elige tu país y cuántos días de vacaciones tienes al año."
+      },
+      {
+        "title": "Elige una sugerencia",
+        "text": "En la pestaña Calendario verás los puentes sugeridos. Añade los que te gusten."
+      },
+      {
+        "title": "Apunta tus días libres",
+        "text": "Toca una fecha o importa vacaciones pasadas desde una foto."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Cómo se cuenta",
+    "rows": [
+      [
+        "Día completo",
+        "1 día de tu saldo"
+      ],
+      [
+        "Medio día",
+        "0,5 días"
+      ],
+      [
+        "Cuarto de día",
+        "0,25 días"
+      ],
+      [
+        "Horas",
+        "Según tus horas de trabajo ese día"
+      ],
+      [
+        "Baja, permiso retribuido, viaje de trabajo",
+        "No se descuentan de tu saldo"
+      ],
+      [
+        "Días extra",
+        "Días adicionales como los compensatorios, con fecha de caducidad y aparte (Pro)"
+      ]
+    ],
+    "note": "Puedes cambiar cuando quieras tus días de vacaciones al año y el mes en que empieza tu año de vacaciones en Ajustes."
+  },
+  "pricing": {
+    "title": "Descansar bien es gratis. Planificar, con Plus y Pro.",
+    "free": {
+      "name": "Gratis",
+      "items": [
+        "Días completos, medios, cuartos y horas, con tu saldo restante",
+        "Festivos de 42 países, tus propios festivos y vacaciones escolares",
+        "Todas las sugerencias del año, hasta 3 añadidas",
+        "Avisos de descanso, recordatorios y widget",
+        "Añadir vacaciones con una foto",
+        "Copia en iCloud y calendario compartido en familia"
+      ]
+    },
+    "pro": {
+      "name": "Plus y Pro",
+      "items": [
+        "Plus: Planificador anual óptimo",
+        "Plus: Sugerencias ilimitadas, también del año pasado y el próximo",
+        "Plus: Enviar los días libres a tu app de Calendario",
+        "Pro: Todo lo de Plus, días extra, límites anuales y arrastre por tipo",
+        "Pro: Importar el calendario escolar y detección automática de calendario",
+        "Pro: Descanso en familia y aniversarios familiares"
+      ],
+      "note": "Cada nivel está disponible como suscripción anual o como compra única de por vida."
+    },
+    "note": "Las suscripciones anuales se renuevan solas si no las cancelas al menos 24 horas antes de que termine el periodo. Gestiónalas cuando quieras en Ajustes > Cuenta de Apple > Suscripciones."
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "items": [
+      {
+        "q": "Mi saldo de vacaciones no cuadra.",
+        "a": "Revisa en Ajustes el mes en que empieza tu año de vacaciones y tus días totales. Los medios días (0,5) y cuartos de día (0,25) se descuentan solos, y los tipos que no cuentan, como bajas, permisos retribuidos o viajes de trabajo, no cambian el saldo. Si sigue sin cuadrar, escríbenos."
+      },
+      {
+        "q": "Mis vacaciones no aparecen en el calendario.",
+        "a": "Las vacaciones canceladas no se muestran en el calendario. Revisa el estado de la entrada en Gestión de vacaciones. Actualizar a la última versión también puede ayudar."
+      },
+      {
+        "q": "¿Cómo añado días extra?",
+        "a": "Toca + en la pestaña Resumen para abrir Gestión de vacaciones y usa la sección Días extra de abajo. Elige un tipo (compensatorio, premio, descanso…), indica los días y, si quieres, una fecha de caducidad. Los días extra se llevan aparte de tus vacaciones normales."
+      },
+      {
+        "q": "He pagado, pero no se ha desbloqueado nada.",
+        "a": "Toca Restaurar compra al final de la pestaña Ajustes. La compra se restaura con la cuenta de Apple con la que has iniciado sesión en el App Store. Si no funciona, escríbenos."
+      },
+      {
+        "q": "¿Pierdo mis datos si borro la app?",
+        "a": "Los datos se guardan en el dispositivo, así que al borrar la app desaparecen. Activa la copia de seguridad en iCloud para tener una copia que puedas restaurar."
+      },
+      {
+        "q": "¿Puedo añadir mis propios festivos u ocultar alguno?",
+        "a": "Sí. En Festivos y vacaciones escolares, dentro de Ajustes, puedes añadir tus festivos u ocultar los que vienen por defecto."
+      },
+      {
+        "q": "¿Qué países incluye?",
+        "a": "Goldweek incluye los festivos de 42 países. Elige tu país en Ajustes (y tu comunidad o región, donde cambian) y el calendario se actualiza al momento. Si el tuyo no está, añade sus festivos a mano o pídenoslo desde la app."
+      },
+      {
+        "q": "¿Dónde se guardan mis datos?",
+        "a": "Lo que introduces se queda en tu dispositivo o en tu propio iCloud. Solo recibimos estadísticas de uso anónimas, informes de errores anónimos y los comentarios que decidas enviarnos."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Este año, que tus vacaciones\nden para más",
+    "cta": "Descargar gratis en el App Store"
+  },
+  "ui": {
+    "skip": "Ir al contenido",
+    "languages": "Idiomas",
+    "privacy": "Privacidad",
+    "contact": "Para cualquier cosa que no esté arriba, ideas o errores, escribe a {email}. Solemos responder en uno o dos días laborables."
+  }
+}

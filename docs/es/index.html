@@ -1,61 +1,162 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: Puentes y vacaciones</title>
-<meta name="description" content="¿Cuántos días tienes que pedir para hacer puente? Goldweek une festivos y fines de semana para darte más descanso con menos días. Mira los que te quedan en el widget.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: Puentes y vacaciones">
-<meta property="og:description" content="¿Cuántos días tienes que pedir para hacer puente? Goldweek une festivos y fines de semana para darte más descanso con menos días. Mira los que te quedan en el widget.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/es/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: más días libres con menos vacaciones</title>
+  <meta name="description" content="Goldweek combina festivos y fines de semana para mostrarte qué días pedir para el puente más largo. Festivos de 42 países y control de vacaciones.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: más días libres con menos vacaciones">
+  <meta property="og:description" content="Goldweek combina festivos y fines de semana para mostrarte qué días pedir para el puente más largo. Festivos de 42 países y control de vacaciones.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/es/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/es/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../site.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Icono de la app Goldweek"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Funciones</a>
-<a href="#screenshots" class="hide-mobile">Capturas</a>
-<a href="support.html" class="hide-mobile">Soporte</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Descargar</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Idioma">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Ir al contenido</a>
+  <header class="bar">
+    <a class="brand" href="../es/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Idiomas</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Pocos días de vacaciones,<br>puentes largos</h1>
+        <p class="lead">Goldweek combina festivos y fines de semana y te muestra exactamente qué días pedir para tener el descanso más largo. Se acabó pasar hojas del calendario contando con los dedos.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Descargar gratis en el App Store</a><a class="try" href="#try">¿Hasta dónde llegan tus vacaciones? ↓</a></div>
+        <p class="muted small">Descarga gratis. El control de vacaciones y las sugerencias siguen siendo gratis.</p>
+      </div>
+      <div class="phone"><img src="../img/es/02-recommend.jpg" alt="Pocos días de vacaciones, puentes largos" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>¿Hasta dónde llegan tus vacaciones?</h2>
+      <p class="muted">Elige cuántos días puedes pedir. Verás los descansos más largos que consigues con ellos alrededor de los próximos festivos.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;¿Hasta dónde llegan tus vacaciones?&quot;, &quot;lead&quot;: &quot;Elige cuántos días puedes pedir. Verás los descansos más largos que consigues con ellos alrededor de los próximos festivos.&quot;, &quot;ask&quot;: &quot;¿Cuántos días puedes pedir?&quot;, &quot;based&quot;: &quot;Según los festivos nacionales de España&quot;, &quot;note&quot;: &quot;Son las sugerencias de la propia app. En la app también tienen en cuenta tu comunidad, los días que te quedan y las vacaciones que ya tienes, y las añades al calendario con un toque.&quot;, &quot;leave&quot;: &quot;{n} d de vacaciones&quot;, &quot;rest&quot;: &quot;{n} d libres&quot;, &quot;legend&quot;: [&quot;Laborable&quot;, &quot;Vacaciones&quot;, &quot;Festivo&quot;, &quot;Fin de semana&quot;], &quot;weekdays&quot;: [&quot;Dom&quot;, &quot;Lun&quot;, &quot;Mar&quot;, &quot;Mié&quot;, &quot;Jue&quot;, &quot;Vie&quot;, &quot;Sáb&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;WHLH&quot;, &quot;s&quot;: &quot;2026-12-05&quot;, &quot;t&quot;: &quot;Puente: Inmaculada Concepción&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;Puente: Año Nuevo&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2026-08-15&quot;, &quot;t&quot;: &quot;Vacaciones junto a Asunción de la Virgen&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-10-10&quot;, &quot;t&quot;: &quot;Vacaciones junto a Fiesta Nacional de España&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2026-01-03&quot;, &quot;t&quot;: &quot;Puente: Epifanía del Señor&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-04-01&quot;, &quot;t&quot;: &quot;Vacaciones junto a Viernes Santo&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2026-10-31&quot;, &quot;t&quot;: &quot;Vacaciones junto a Todos los Santos&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-12-23&quot;, &quot;t&quot;: &quot;Vacaciones junto a Navidad&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-04-29&quot;, &quot;t&quot;: &quot;Vacaciones junto a Día del Trabajador&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2027-10-09&quot;, &quot;t&quot;: &quot;Puente: Fiesta Nacional de España&quot;}, {&quot;d&quot;: &quot;WWHLH&quot;, &quot;s&quot;: &quot;2027-12-04&quot;, &quot;t&quot;: &quot;Vacaciones junto a Día de la Constitución&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2027-05-01&quot;, &quot;t&quot;: &quot;Vacaciones junto a Día del Trabajador&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2027-08-14&quot;, &quot;t&quot;: &quot;Vacaciones junto a Asunción de la Virgen&quot;}, {&quot;d&quot;: &quot;HWWLLH&quot;, &quot;s&quot;: &quot;2027-01-01&quot;, &quot;t&quot;: &quot;Vacaciones junto a Año Nuevo&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2027-03-24&quot;, &quot;t&quot;: &quot;Vacaciones junto a Viernes Santo&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-10-30&quot;, &quot;t&quot;: &quot;Vacaciones junto a Todos los Santos&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2027-12-25&quot;, &quot;t&quot;: &quot;Vacaciones junto a Navidad&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2027-01-06&quot;, &quot;t&quot;: &quot;Vacaciones junto a Epifanía del Señor&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-10-12&quot;, &quot;t&quot;: &quot;Puente: Fiesta Nacional de España&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2028-11-01&quot;, &quot;t&quot;: &quot;Vacaciones junto a Todos los Santos&quot;}, {&quot;d&quot;: &quot;HLHWW&quot;, &quot;s&quot;: &quot;2028-12-06&quot;, &quot;t&quot;: &quot;Vacaciones junto a Día de la Constitución&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-01-06&quot;, &quot;t&quot;: &quot;Puente: Epifanía del Señor&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2028-08-12&quot;, &quot;t&quot;: &quot;Puente: Asunción de la Virgen&quot;}, {&quot;d&quot;: &quot;HWLLLH&quot;, &quot;s&quot;: &quot;2028-01-01&quot;, &quot;t&quot;: &quot;Vacaciones junto a Año Nuevo&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2028-04-12&quot;, &quot;t&quot;: &quot;Vacaciones junto a Viernes Santo&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-12-23&quot;, &quot;t&quot;: &quot;Vacaciones junto a Navidad&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-04-29&quot;, &quot;t&quot;: &quot;Vacaciones junto a Día del Trabajador&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>¿Harto de contar días en el calendario?</h2>
+      <p>El jueves es festivo, ¿pides el viernes? ¿O guardas el día para el puente del mes que viene? Después de pasar muchas hojas acabas cogiendo cualquier día, y en diciembre los días que sobran se pierden. Goldweek hace las cuentas y te enseña los días que más estiran tus vacaciones.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Tus vacaciones de un vistazo</h2>
+        <p>Total, usados y restantes en una sola pantalla. Además ves cuánto del año ha pasado junto a cuántos días has gastado, para saber al momento si estás guardando demasiados.<br>Los días que te quedan y tus próximas vacaciones aparecen en un widget en la pantalla de inicio.</p>
+      </div>
+      <div class="phone"><img src="../img/es/01-home.jpg" alt="Tus vacaciones de un vistazo" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Pide días desde el calendario</h2>
+        <p>Festivos, vacaciones y puentes sugeridos aparecen en el calendario con su color. Toca una fecha para añadir o editar días libres, también medios días, cuartos de día u horas.<br>Y puedes importar de una vez las vacaciones pasadas desde una foto de la pantalla de RR. HH.</p>
+      </div>
+      <div class="phone"><img src="../img/es/03-calendar.jpg" alt="Pide días desde el calendario" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Tu país, tu forma de trabajar</h2>
+        <p>Festivos de 42 países, de España y Latinoamérica a Europa y Asia. Donde cambian según la comunidad o región, eliges la tuya. ¿Tu país no está? Añade tus propios festivos.<br>También eliges tus días de fin de semana, el primer día de la semana y si trabajas con horario fijo, a tiempo parcial o por turnos.</p>
+      </div>
+      <div class="phone"><img src="../img/es/04-settings.jpg" alt="Tu país, tu forma de trabajar" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Empieza en tres pasos</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Dinos dónde trabajas</h3><p>Al abrirla por primera vez, elige tu país y cuántos días de vacaciones tienes al año.</p></li>
+<li class="card"><span class="n">2</span><h3>Elige una sugerencia</h3><p>En la pestaña Calendario verás los puentes sugeridos. Añade los que te gusten.</p></li>
+<li class="card"><span class="n">3</span><h3>Apunta tus días libres</h3><p>Toca una fecha o importa vacaciones pasadas desde una foto.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Cómo se cuenta</h2>
+      <div class="card table">
+        <dl><div><dt>Día completo</dt><dd>1 día de tu saldo</dd></div><div><dt>Medio día</dt><dd>0,5 días</dd></div><div><dt>Cuarto de día</dt><dd>0,25 días</dd></div><div><dt>Horas</dt><dd>Según tus horas de trabajo ese día</dd></div><div><dt>Baja, permiso retribuido, viaje de trabajo</dt><dd>No se descuentan de tu saldo</dd></div><div><dt>Días extra</dt><dd>Días adicionales como los compensatorios, con fecha de caducidad y aparte (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Puedes cambiar cuando quieras tus días de vacaciones al año y el mes en que empieza tu año de vacaciones en Ajustes.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Descansar bien es gratis. Planificar, con Plus y Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Gratis</h3>
+          <ul><li>Días completos, medios, cuartos y horas, con tu saldo restante</li><li>Festivos de 42 países, tus propios festivos y vacaciones escolares</li><li>Todas las sugerencias del año, hasta 3 añadidas</li><li>Avisos de descanso, recordatorios y widget</li><li>Añadir vacaciones con una foto</li><li>Copia en iCloud y calendario compartido en familia</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus y Pro</h3>
+          <ul><li>Plus: Planificador anual óptimo</li><li>Plus: Sugerencias ilimitadas, también del año pasado y el próximo</li><li>Plus: Enviar los días libres a tu app de Calendario</li><li>Pro: Todo lo de Plus, días extra, límites anuales y arrastre por tipo</li><li>Pro: Importar el calendario escolar y detección automática de calendario</li><li>Pro: Descanso en familia y aniversarios familiares</li></ul>
+          <p class="muted">Cada nivel está disponible como suscripción anual o como compra única de por vida.</p>
+        </div>
+      </div>
+      <p class="muted">Las suscripciones anuales se renuevan solas si no las cancelas al menos 24 horas antes de que termine el periodo. Gestiónalas cuando quieras en Ajustes &gt; Cuenta de Apple &gt; Suscripciones.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Preguntas frecuentes</h2>
+      <div class="faq"><details><summary>Mi saldo de vacaciones no cuadra.</summary><p>Revisa en Ajustes el mes en que empieza tu año de vacaciones y tus días totales. Los medios días (0,5) y cuartos de día (0,25) se descuentan solos, y los tipos que no cuentan, como bajas, permisos retribuidos o viajes de trabajo, no cambian el saldo. Si sigue sin cuadrar, escríbenos.</p></details>
+<details><summary>Mis vacaciones no aparecen en el calendario.</summary><p>Las vacaciones canceladas no se muestran en el calendario. Revisa el estado de la entrada en Gestión de vacaciones. Actualizar a la última versión también puede ayudar.</p></details>
+<details><summary>¿Cómo añado días extra?</summary><p>Toca + en la pestaña Resumen para abrir Gestión de vacaciones y usa la sección Días extra de abajo. Elige un tipo (compensatorio, premio, descanso…), indica los días y, si quieres, una fecha de caducidad. Los días extra se llevan aparte de tus vacaciones normales.</p></details>
+<details><summary>He pagado, pero no se ha desbloqueado nada.</summary><p>Toca Restaurar compra al final de la pestaña Ajustes. La compra se restaura con la cuenta de Apple con la que has iniciado sesión en el App Store. Si no funciona, escríbenos.</p></details>
+<details><summary>¿Pierdo mis datos si borro la app?</summary><p>Los datos se guardan en el dispositivo, así que al borrar la app desaparecen. Activa la copia de seguridad en iCloud para tener una copia que puedas restaurar.</p></details>
+<details><summary>¿Puedo añadir mis propios festivos u ocultar alguno?</summary><p>Sí. En Festivos y vacaciones escolares, dentro de Ajustes, puedes añadir tus festivos u ocultar los que vienen por defecto.</p></details>
+<details><summary>¿Qué países incluye?</summary><p>Goldweek incluye los festivos de 42 países. Elige tu país en Ajustes (y tu comunidad o región, donde cambian) y el calendario se actualiza al momento. Si el tuyo no está, añade sus festivos a mano o pídenoslo desde la app.</p></details>
+<details><summary>¿Dónde se guardan mis datos?</summary><p>Lo que introduces se queda en tu dispositivo o en tu propio iCloud. Solo recibimos estadísticas de uso anónimas, informes de errores anónimos y los comentarios que decidas enviarnos.</p></details></div>
+      <p class="contact">Para cualquier cosa que no esté arriba, ideas o errores, escribe a <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. Solemos responder en uno o dos días laborables.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Este año, que tus vacaciones<br>den para más</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Descargar gratis en el App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Idiomas"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
-<a href="../es/" hreflang="es" lang="es" aria-current="true">Español</a>
+<a href="../es/" hreflang="es" lang="es" aria-current="page">Español</a>
 <a href="../fr/" hreflang="fr" lang="fr">Français</a>
 <a href="../it/" hreflang="it" lang="it">Italiano</a>
 <a href="../ja/" hreflang="ja" lang="ja">日本語</a>
@@ -74,67 +175,16 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Privacidad</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Pide menos días, descansa más</h1>
-<p>Goldweek encuentra los puentes que te dan más días libres.<br>Combina festivos y fines de semana y te muestra cómo conseguir el descanso más largo pidiendo el menor número de días.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/es-es?size=250x83" alt="Descárgalo en el App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Qué hace Goldweek</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Sugerencias inteligentes</h3>
-<p>Para cada festivo que se acerca, ves cuántos días tienes que pedir y cuántos días seguidos vas a descansar. Ningún puente se te escapa.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Festivos de 42 países</h3>
-<p>España, México, Argentina, Chile, Colombia, Perú y otros 35 países de Europa, América, Asia, África y Oceanía. Si los festivos cambian según la comunidad autónoma o la región, elige la tuya. ¿Tu país no está? Añade tus propios festivos. También puedes elegir tus días de fin de semana y el día en que empieza la semana.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Control de tus vacaciones</h3>
-<p>Consulta en una sola pantalla los días totales, los disfrutados y los pendientes. Puedes registrar medias jornadas y cuartos de jornada, y llevar el control de días extra, como los compensatorios, con su fecha de caducidad. Toca una fecha del calendario para añadir o cambiar un día libre, o importa tu historial desde una foto del portal de tu empresa.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget y copia de seguridad</h3>
-<p>Tus días pendientes y tus próximas vacaciones, en la pantalla de inicio. Tus datos se guardan en iCloud y puedes compartir tu calendario con tu familia. Funciona en iPhone y iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Echa un vistazo</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/es/01-home.png" alt="Captura de pantalla de Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/es/02-recommend.png" alt="Captura de pantalla de Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/es/03-calendar.png" alt="Captura de pantalla de Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/es/04-countries.png" alt="Captura de pantalla de Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/es/05-settings.png" alt="Captura de pantalla de Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Planifica con tiempo, pide menos días y disfruta más.</h2>
-<p>Descarga gratuita. Goldweek Pro es una compra única opcional.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/es-es?size=250x83" alt="Descárgalo en el App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Soporte</a>
-<a href="privacy.html">Privacidad</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Todos los derechos reservados.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

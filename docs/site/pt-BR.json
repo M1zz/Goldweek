@@ -1,0 +1,343 @@
+{
+  "title": "Goldweek: feriadões longos com poucos dias de férias",
+  "description": "O Goldweek junta feriados e fins de semana e mostra quais dias tirar para a folga mais longa. Feriados de 42 países e controle de férias.",
+  "hero": {
+    "headline": "Poucos dias de folga,\nferiadões longos",
+    "lead": "O Goldweek junta feriados e fins de semana e mostra exatamente quais dias tirar para ter a folga mais longa. Chega de virar as páginas do calendário contando nos dedos.",
+    "cta": "Baixar grátis na App Store",
+    "note": "Download grátis. O controle das férias e as sugestões continuam grátis."
+  },
+  "demo": {
+    "title": "Até onde vão suas folgas?",
+    "lead": "Escolha quantos dias você pode tirar. Você vê as folgas mais longas que eles rendem em volta dos próximos feriados.",
+    "ask": "Quantos dias você pode tirar?",
+    "based": "Com base nos feriados nacionais do Brasil",
+    "note": "Estas são as sugestões do próprio app. No app, elas também consideram seu estado, os dias que sobram e as folgas já marcadas, e você adiciona à agenda com um toque.",
+    "leave": "{n} d de férias",
+    "rest": "{n} d de folga",
+    "legend": [
+      "Dia útil",
+      "Férias",
+      "Feriado",
+      "Fim de semana"
+    ],
+    "weekdays": [
+      "Dom",
+      "Seg",
+      "Ter",
+      "Qua",
+      "Qui",
+      "Sex",
+      "Sáb"
+    ],
+    "recs": [
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Emenda: Confraternização Universal"
+      },
+      {
+        "d": "WWHHL",
+        "s": "2026-02-14",
+        "t": "Férias perto de Carnaval"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-04-18",
+        "t": "Emenda: Tiradentes"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-06-04",
+        "t": "Emenda: Corpus Christi"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-11-18",
+        "t": "Férias perto de Dia da Consciência Negra"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-12-23",
+        "t": "Férias perto de Natal"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-09-05",
+        "t": "Férias perto de Independência do Brasil"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-10-10",
+        "t": "Férias perto de Nossa Senhora Aparecida"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2026-11-14",
+        "t": "Férias perto de Proclamação da República"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-01",
+        "t": "Férias perto de Sexta-feira Santa"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-10-31",
+        "t": "Férias perto de Finados"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-29",
+        "t": "Férias perto de Dia do Trabalhador"
+      },
+      {
+        "d": "WWLH",
+        "s": "2027-10-09",
+        "t": "Emenda: Nossa Senhora Aparecida"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-12-25",
+        "t": "Férias perto de Natal"
+      },
+      {
+        "d": "WWHHL",
+        "s": "2027-02-06",
+        "t": "Férias perto de Carnaval"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-04-21",
+        "t": "Férias perto de Tiradentes"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-05-27",
+        "t": "Emenda: Corpus Christi"
+      },
+      {
+        "d": "WWLH",
+        "s": "2027-09-04",
+        "t": "Emenda: Independência do Brasil"
+      },
+      {
+        "d": "WWLH",
+        "s": "2027-10-30",
+        "t": "Emenda: Finados"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-11-13",
+        "t": "Férias perto de Proclamação da República"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2027-03-24",
+        "t": "Férias perto de Sexta-feira Santa"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-05-01",
+        "t": "Férias perto de Dia do Trabalhador"
+      },
+      {
+        "d": "LLLHW",
+        "s": "2027-11-17",
+        "t": "Férias perto de Dia da Consciência Negra"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-10-12",
+        "t": "Emenda: Nossa Senhora Aparecida"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-11-02",
+        "t": "Emenda: Finados"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-01-01",
+        "t": "Férias perto de Confraternização Universal"
+      },
+      {
+        "d": "WWHHL",
+        "s": "2028-02-26",
+        "t": "Férias perto de Carnaval"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-06-15",
+        "t": "Emenda: Corpus Christi"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-09-07",
+        "t": "Emenda: Independência do Brasil"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-12-23",
+        "t": "Férias perto de Natal"
+      },
+      {
+        "d": "HLLWWH",
+        "s": "2028-11-15",
+        "t": "Férias perto de Proclamação da República"
+      },
+      {
+        "d": "HWWLL",
+        "s": "2028-04-14",
+        "t": "Férias perto de Sexta-feira Santa"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2028-04-19",
+        "t": "Férias perto de Tiradentes"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Cansado de contar dias no calendário?",
+    "text": "Quinta é feriado, então tira a sexta? Ou guarda o dia para emendar o feriadão do mês que vem? De tanto virar página, você acaba tirando um dia qualquer, e em dezembro as férias que sobraram somem. O Goldweek faz a conta e mostra os dias que mais esticam suas folgas."
+  },
+  "features": [
+    {
+      "title": "Suas férias num relance",
+      "text": "Total, usadas e restantes numa tela só. Você também vê quanto do ano já passou ao lado de quanto já usou, e percebe na hora se está guardando demais.\nOs dias que sobram e as próximas folgas ficam num widget na Tela de Início.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Marque folgas direto no calendário",
+      "text": "Feriados, férias e emendas sugeridas aparecem coloridos no calendário. Toque numa data para adicionar ou editar uma folga, inclusive meio período, um quarto do dia ou horas.\nVocê também importa de uma vez as férias antigas a partir de uma foto da tela do RH.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Seu país, seu jeito de trabalhar",
+      "text": "Feriados de 42 países, do Brasil e da América Latina à Europa e à Ásia. Onde os feriados mudam por estado ou região, escolha o seu. Seu país não está na lista? Adicione os feriados você mesmo.\nDá para escolher também os dias de fim de semana, o primeiro dia da semana e se você trabalha em horário fixo, meio período ou por turnos.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Comece em três passos",
+    "items": [
+      {
+        "title": "Diga onde você trabalha",
+        "text": "Na primeira vez, escolha seu país e quantos dias de férias você tem por ano."
+      },
+      {
+        "title": "Escolha uma sugestão",
+        "text": "Na aba Calendário estão as emendas sugeridas. Adicione as que você curtir."
+      },
+      {
+        "title": "Registre suas folgas",
+        "text": "Toque numa data ou importe férias antigas por foto."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Como a conta é feita",
+    "rows": [
+      [
+        "Dia inteiro",
+        "1 dia do saldo"
+      ],
+      [
+        "Meio período",
+        "0,5 dia"
+      ],
+      [
+        "Um quarto do dia",
+        "0,25 dia"
+      ],
+      [
+        "Horas",
+        "De acordo com suas horas de trabalho naquele dia"
+      ],
+      [
+        "Atestado, licença, viagem a trabalho",
+        "Não saem do seu saldo"
+      ],
+      [
+        "Folgas bônus",
+        "Dias extras como folgas compensatórias, controlados à parte com data de validade (Pro)"
+      ]
+    ],
+    "note": "Você pode mudar quando quiser o total de dias por ano e o mês em que começa seu período de férias em Ajustes."
+  },
+  "pricing": {
+    "title": "Descansar bem é grátis. Planejar fica com o Plus e o Pro.",
+    "free": {
+      "name": "Grátis",
+      "items": [
+        "Dias inteiros, meio período, um quarto do dia e horas, com o saldo restante",
+        "Feriados de 42 países, seus feriados e férias escolares",
+        "Todas as sugestões do ano, até 3 adicionadas",
+        "Dicas de intervalo entre folgas, lembretes e widget",
+        "Adicionar férias por foto",
+        "Backup no iCloud e agenda compartilhada com a família"
+      ]
+    },
+    "pro": {
+      "name": "Plus e Pro",
+      "items": [
+        "Plus: Planejador anual ideal",
+        "Plus: Sugestões ilimitadas, inclusive do ano passado e do próximo",
+        "Plus: Enviar folgas para o app Calendário",
+        "Pro: Tudo do Plus, folgas bônus, limites anuais e saldo acumulado por tipo",
+        "Pro: Importar o calendário escolar e detectar o calendário automaticamente",
+        "Pro: Folgas em família e datas especiais da família"
+      ],
+      "note": "Cada nível vem como assinatura anual ou compra única vitalícia."
+    },
+    "note": "As assinaturas anuais renovam sozinhas se não forem canceladas pelo menos 24 horas antes do fim do período. Gerencie quando quiser em Ajustes > Conta Apple > Assinaturas."
+  },
+  "faq": {
+    "title": "Perguntas frequentes",
+    "items": [
+      {
+        "q": "Meu saldo de férias não bate.",
+        "a": "Confira em Ajustes o mês em que começa seu período de férias e o total de dias por ano. Meio período (0,5) e um quarto do dia (0,25) são descontados automaticamente, e tipos que não contam, como atestado, licença ou viagem a trabalho, não mudam o saldo. Se ainda não bater, mande um e-mail."
+      },
+      {
+        "q": "Minha folga não aparece no calendário.",
+        "a": "Folgas canceladas não aparecem no calendário. Confira o status do registro em Gestão de férias. Atualizar para a versão mais recente também pode resolver."
+      },
+      {
+        "q": "Como adiciono folgas bônus?",
+        "a": "Toque em + na aba Resumo para abrir Gestão de férias e use a seção Folgas bônus lá embaixo. Escolha um tipo (folga compensatória, prêmio, descanso…), informe os dias e, se quiser, uma data de validade. As folgas bônus ficam separadas das férias normais."
+      },
+      {
+        "q": "Paguei, mas nada foi liberado.",
+        "a": "Toque em Restaurar compra no fim da aba Ajustes. A compra é restaurada com a Conta Apple conectada à App Store. Se não funcionar, mande um e-mail."
+      },
+      {
+        "q": "Perco meus dados se apagar o app?",
+        "a": "Os dados ficam no aparelho, então apagar o app apaga tudo. Ative o backup no iCloud para guardar uma cópia que dá para restaurar depois."
+      },
+      {
+        "q": "Posso adicionar meus feriados ou esconder algum?",
+        "a": "Pode. Em Feriados e férias escolares, nos Ajustes, você adiciona seus feriados ou esconde os padrões."
+      },
+      {
+        "q": "Quais países são compatíveis?",
+        "a": "O Goldweek tem os feriados de 42 países. Escolha seu país em Ajustes (e o estado ou região, quando os feriados mudam) e o calendário se atualiza na hora. Se o seu não estiver, adicione os feriados você mesmo ou peça pelo feedback no app."
+      },
+      {
+        "q": "Onde ficam meus dados?",
+        "a": "O que você digita fica no seu aparelho ou no seu próprio iCloud. Só recebemos estatísticas de uso anônimas, relatórios de erro anônimos e o feedback que você escolher enviar."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Este ano, faça suas folgas\nrenderem mais",
+    "cta": "Baixar grátis na App Store"
+  },
+  "ui": {
+    "skip": "Pular para o conteúdo",
+    "languages": "Idiomas",
+    "privacy": "Privacidade",
+    "contact": "Para o que não estiver respondido acima, ideias ou bugs, escreva para {email}. Costumamos responder em um ou dois dias úteis."
+  }
+}

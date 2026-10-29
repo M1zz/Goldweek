@@ -1,0 +1,308 @@
+{
+  "title": "Goldweek: az izinle uzun tatil",
+  "description": "Goldweek resmî tatilleri hafta sonlarıyla birleştirir ve en uzun tatil için hangi günler izin alman gerektiğini gösterir. 42 ülkenin tatilleri.",
+  "hero": {
+    "headline": "Az izin günü,\nuzun tatil",
+    "lead": "Goldweek resmî tatilleri hafta sonlarıyla birleştirir ve en uzun tatili yapmak için hangi günler izin alman gerektiğini tam olarak gösterir. Takvimi sayfa sayfa çevirip saymaya son.",
+    "cta": "App Store’dan ücretsiz indir",
+    "note": "İndirmesi ücretsiz. İzin takibi ve öneriler ücretsiz kalır."
+  },
+  "demo": {
+    "title": "İznin seni ne kadar götürür?",
+    "lead": "Kaç gün izin alabileceğini seç. Yaklaşan tatillerin etrafında bu günlerle yapabileceğin en uzun tatilleri gör.",
+    "ask": "Kaç gün izin alabilirsin?",
+    "based": "Türkiye’deki resmî tatillere göre",
+    "note": "Bunlar doğrudan uygulamanın önerileri. Uygulamada kalan iznini ve önceden planladığın izinleri de hesaba katar, öneriyi tek dokunuşla takvimine eklersin.",
+    "leave": "{n}g izin",
+    "rest": "{n}g tatil",
+    "legend": [
+      "İş Günü",
+      "Yıllık İzin",
+      "Tatil",
+      "Hafta Sonu"
+    ],
+    "weekdays": [
+      "Paz",
+      "Pzt",
+      "Sal",
+      "Çar",
+      "Per",
+      "Cum",
+      "Cmt"
+    ],
+    "recs": [
+      {
+        "d": "HLWW",
+        "s": "2026-10-29",
+        "t": "Cumhuriyet Bayramı Köprü Tatili"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Yılbaşı Köprü Tatili"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-04-23",
+        "t": "Ulusal Egemenlik ve Çocuk Bayramı Köprü Tatili"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2026-07-15",
+        "t": "Demokrasi ve Millî Birlik Günü Uzatılmış İzin"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2026-08-29",
+        "t": "Zafer Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "LLHHH",
+        "s": "2026-03-18",
+        "t": "Ramazan Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-29",
+        "t": "Emek ve Dayanışma Günü Uzatılmış İzin"
+      },
+      {
+        "d": "WWLLHHHHW",
+        "s": "2026-05-23",
+        "t": "Kurban Bayramı Haftası İzni"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-05-16",
+        "t": "Atatürk'ü Anma, Gençlik ve Spor Bayramı Köprü Tatili"
+      },
+      {
+        "d": "HHHLWW",
+        "s": "2027-03-09",
+        "t": "Ramazan Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-07-15",
+        "t": "Demokrasi ve Millî Birlik Günü Köprü Tatili"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2027-10-27",
+        "t": "Cumhuriyet Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "WWLH",
+        "s": "2027-03-06",
+        "t": "Ramazan Bayramı Köprü Tatili"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2027-04-21",
+        "t": "Ulusal Egemenlik ve Çocuk Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "WHHHHLLWW",
+        "s": "2027-05-15",
+        "t": "Kurban Bayramı Haftası İzni"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-08-28",
+        "t": "Zafer Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-05-01",
+        "t": "Emek ve Dayanışma Günü Uzatılmış İzin"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2028-10-28",
+        "t": "Cumhuriyet Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-01-01",
+        "t": "Yılbaşı Uzatılmış İzin"
+      },
+      {
+        "d": "LHHHH",
+        "s": "2028-05-04",
+        "t": "Kurban Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-07-15",
+        "t": "Demokrasi ve Millî Birlik Günü Uzatılmış İzin"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2028-08-30",
+        "t": "Zafer Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "HHHLL",
+        "s": "2028-02-26",
+        "t": "Ramazan Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-29",
+        "t": "Emek ve Dayanışma Günü Uzatılmış İzin"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2028-04-22",
+        "t": "Ulusal Egemenlik ve Çocuk Bayramı Uzatılmış İzin"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2028-05-17",
+        "t": "Atatürk'ü Anma, Gençlik ve Spor Bayramı Uzatılmış İzin"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Takvimde gün saymaktan yoruldun mu?",
+    "text": "Perşembe tatil, cuma izin mi alsan? Yoksa günü gelecek ayki uzun hafta sonuna mı saklasan? Yeterince sayfa çevirince rastgele bir gün izin alırsın, aralıkta da kalan izinler yanıp gider. Goldweek hesabı senin yerine yapar ve iznini en uzağa taşıyan günleri gösterir."
+  },
+  "features": [
+    {
+      "title": "İznin tek bakışta",
+      "text": "Toplam, kullanılan ve kalan izin tek ekranda. Yanında yılın ne kadarının geçtiğini ve ne kadar izin kullandığını görürsün; fazla biriktirip biriktirmediğini hemen anlarsın.\nKalan günlerin ve yaklaşan izinlerin ana ekrandaki widget’ta görünür.",
+      "shot": "01-home"
+    },
+    {
+      "title": "İzni doğrudan takvime ekle",
+      "text": "Resmî tatiller, izinler ve önerilen köprü günleri takvimde renkli görünür. İzin eklemek ya da düzenlemek için bir tarihe dokun; yarım gün, çeyrek gün ve saatlik izin de olur.\nGeçmiş izinlerini İK ekranının fotoğrafından tek seferde aktarabilirsin.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Senin ülken, senin çalışma düzenin",
+      "text": "Türkiye’den Avrupa’ya, Asya’dan Amerika’ya 42 ülkenin resmî tatilleri. Tatillerin bölgeye göre değiştiği yerlerde kendi bölgeni seçersin. Ülken listede yok mu? Kendi tatillerini ekle.\nHafta sonu günlerini, haftanın ilk gününü ve tam zamanlı, yarı zamanlı ya da vardiyalı çalıştığını da ayarlayabilirsin.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Üç adımda başla",
+    "items": [
+      {
+        "title": "Nerede çalıştığını söyle",
+        "text": "İlk açılışta ülkeni ve yılda kaç gün iznin olduğunu seç."
+      },
+      {
+        "title": "Bir öneri seç",
+        "text": "Takvim sekmesinde önerilen tatiller var. Beğendiklerini ekle."
+      },
+      {
+        "title": "İzinlerini kaydet",
+        "text": "Bir tarihe dokun ya da geçmiş izinleri fotoğraftan aktar."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Nasıl hesaplanır",
+    "rows": [
+      [
+        "Tam gün",
+        "Bakiyeden 1 gün"
+      ],
+      [
+        "Yarım gün",
+        "0,5 gün"
+      ],
+      [
+        "Çeyrek gün",
+        "0,25 gün"
+      ],
+      [
+        "Saatlik",
+        "O günkü çalışma saatlerine göre"
+      ],
+      [
+        "Hastalık, mazeret izni, iş seyahati",
+        "Yıllık izinden düşülmez"
+      ],
+      [
+        "Bonus İzin",
+        "Fazla mesai karşılığı gibi ek izinler, son kullanma tarihiyle ayrı tutulur (Pro)"
+      ]
+    ],
+    "note": "Yıllık izin gün sayını ve izin yılının başladığı ayı Ayarlar’dan istediğin zaman değiştirebilirsin."
+  },
+  "pricing": {
+    "title": "İyi dinlenmek ücretsiz. Planlamayı Plus ve Pro üstlenir.",
+    "free": {
+      "name": "Ücretsiz",
+      "items": [
+        "Tam, yarım, çeyrek gün ve saatlik izinler ile kalan izin",
+        "42 ülkenin resmî tatilleri, kendi tatillerin ve okul tatilleri",
+        "Bu yılın tüm önerilerini gör, 3 tanesini ekle",
+        "Dinlenme aralığı ipuçları, hatırlatmalar ve widget",
+        "Fotoğraftan izin ekleme",
+        "iCloud yedekleme ve aileyle paylaşılan takvim"
+      ]
+    },
+    "pro": {
+      "name": "Plus ve Pro",
+      "items": [
+        "Plus: Optimum yıllık plan",
+        "Plus: Sınırsız öneri, geçen ve gelecek yılın önerileri dahil",
+        "Plus: İzinleri Takvim uygulamasına gönder",
+        "Pro: Plus’taki her şey, Bonus İzin, türe göre yıllık sınır ve devir",
+        "Pro: Okul takvimi içe aktarma ve takvimi otomatik algılama",
+        "Pro: Birlikte tatil ve aile yıl dönümleri"
+      ],
+      "note": "Her seviye yıllık abonelik ya da tek seferlik ömür boyu satın alma olarak sunulur."
+    },
+    "note": "Yıllık abonelikler, dönem bitmeden en az 24 saat önce kapatılmazsa otomatik yenilenir. Ayarlar > Apple Hesabı > Abonelikler bölümünden istediğin zaman yönetebilirsin."
+  },
+  "faq": {
+    "title": "Sık sorulan sorular",
+    "items": [
+      {
+        "q": "İzin bakiyem doğru görünmüyor.",
+        "a": "Ayarlar’da izin yılının başladığı ayı ve toplam yıllık izin gününü kontrol et. Yarım gün (0,5) ve çeyrek gün (0,25) otomatik düşülür; hastalık, mazeret izni ya da iş seyahati gibi izinden sayılmayan türler bakiyeyi değiştirmez. Hâlâ tutmuyorsa bize e-posta gönder."
+      },
+      {
+        "q": "İznim takvimde görünmüyor.",
+        "a": "İptal edilen izinler takvimde gösterilmez. Kaydın durumunu İzin Yönetimi’nde kontrol et. En son sürüme güncellemek de işe yarayabilir."
+      },
+      {
+        "q": "Bonus İzin nasıl eklenir?",
+        "a": "İzin Yönetimi’ni açmak için Durum sekmesinde + simgesine dokun ve alttaki Bonus İzin bölümünü kullan. Türünü (fazla mesai izni, ödül izni, yenilenme izni…), gün sayısını ve istersen son kullanma tarihini gir. Bonus İzin, normal yıllık izinden ayrı tutulur."
+      },
+      {
+        "q": "Ödeme yaptım ama hiçbir şey açılmadı.",
+        "a": "Ayarlar sekmesinin altındaki Satın Alımı Geri Yükle’ye dokun. Satın alım, App Store’da oturum açtığın Apple Hesabı ile geri yüklenir. İşe yaramazsa bize e-posta gönder."
+      },
+      {
+        "q": "Uygulamayı silersem verilerim gider mi?",
+        "a": "Veriler cihazda saklanır, bu yüzden uygulamayı silersen kalıcı olarak gider. Daha sonra geri yükleyebileceğin bir kopya için iCloud Yedekleme’yi aç."
+      },
+      {
+        "q": "Kendi tatillerimi ekleyebilir veya bazılarını gizleyebilir miyim?",
+        "a": "Evet. Ayarlar’daki Tatiller ve Molalar bölümünden kendi tatillerini ekleyebilir ya da varsayılan tatilleri gizleyebilirsin."
+      },
+      {
+        "q": "Hangi ülkeler destekleniyor?",
+        "a": "Goldweek 42 ülkenin resmî tatillerini içerir. Ayarlar’dan ülkeni (tatillerin bölgeye göre değiştiği yerlerde bölgeni de) seç, takvim hemen güncellenir. Ülken yoksa tatilleri kendin ekleyebilir ya da uygulamadan geri bildirim göndererek destek isteyebilirsin."
+      },
+      {
+        "q": "Verilerim nerede saklanıyor?",
+        "a": "Girdiğin her şey cihazında ya da kendi iCloud’unda kalır. Biz yalnızca anonim kullanım istatistiklerini, anonim çökme raporlarını ve kendi isteğinle gönderdiğin geri bildirimleri alırız."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Bu yıl iznin\ndaha uzun sürsün",
+    "cta": "App Store’dan ücretsiz indir"
+  },
+  "ui": {
+    "skip": "İçeriğe geç",
+    "languages": "Diller",
+    "privacy": "Gizlilik Politikası",
+    "contact": "Yukarıda yanıtı olmayan her şey, fikirler ya da hatalar için {email} adresine yaz. Genellikle bir iki iş günü içinde yanıt veririz."
+  }
+}

@@ -1,0 +1,343 @@
+{
+  "title": "Goldweek: ponti lunghi con pochi giorni di ferie",
+  "description": "Goldweek abbina festività e weekend e ti mostra quali giorni prendere per la pausa più lunga. Festività di 42 paesi e conteggio delle ferie.",
+  "hero": {
+    "headline": "Pochi giorni di ferie,\nponti lunghi",
+    "lead": "Goldweek abbina festività e weekend e ti mostra esattamente quali giorni chiedere per la pausa più lunga. Basta sfogliare il calendario contando sulle dita.",
+    "cta": "Scarica gratis su App Store",
+    "note": "Download gratuito. Conteggio ferie e suggerimenti restano gratis."
+  },
+  "demo": {
+    "title": "Fin dove arrivano le tue ferie?",
+    "lead": "Scegli quanti giorni puoi prendere. Vedrai le pause più lunghe che ottieni intorno alle prossime festività.",
+    "ask": "Quanti giorni di ferie puoi prendere?",
+    "based": "In base alle festività nazionali in Italia",
+    "note": "Sono i suggerimenti dell’app stessa. Nell’app tengono conto anche della tua regione, delle ferie rimaste e di quelle già prese, e li aggiungi al calendario con un tocco.",
+    "leave": "{n} g di ferie",
+    "rest": "{n} g liberi",
+    "legend": [
+      "Giorno lavorativo",
+      "Ferie",
+      "Festività",
+      "Weekend"
+    ],
+    "weekdays": [
+      "Dom",
+      "Lun",
+      "Mar",
+      "Mer",
+      "Gio",
+      "Ven",
+      "Sab"
+    ],
+    "recs": [
+      {
+        "d": "WHLLL",
+        "s": "2026-10-03",
+        "t": "Ferie attorno a San Francesco d’Assisi"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-12-05",
+        "t": "Ponte: Immacolata Concezione"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Ponte: Capodanno"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-05-30",
+        "t": "Ponte: Festa della Repubblica"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2026-08-15",
+        "t": "Ferie attorno a Ferragosto"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2026-10-31",
+        "t": "Ferie attorno a Ognissanti"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-01-03",
+        "t": "Ponte: Epifania"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-04-04",
+        "t": "Ferie attorno a Lunedì dell’Angelo"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2026-12-23",
+        "t": "Ferie attorno a Natale"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-29",
+        "t": "Ferie attorno a Festa dei Lavoratori"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2026-04-25",
+        "t": "Ferie attorno a Festa della Liberazione"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-12-08",
+        "t": "Ferie attorno a Immacolata Concezione"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2027-04-24",
+        "t": "Ferie attorno a Festa della Liberazione"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-05-01",
+        "t": "Ferie attorno a Festa dei Lavoratori"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-06-02",
+        "t": "Ferie attorno a Festa della Repubblica"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2027-08-14",
+        "t": "Ferie attorno a Ferragosto"
+      },
+      {
+        "d": "HHLLL",
+        "s": "2027-12-25",
+        "t": "Ferie attorno a Natale"
+      },
+      {
+        "d": "HWWLLH",
+        "s": "2027-01-01",
+        "t": "Ferie attorno a Capodanno"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-03-27",
+        "t": "Ferie attorno a Lunedì dell’Angelo"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-10-02",
+        "t": "Ferie attorno a San Francesco d’Assisi"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-01-06",
+        "t": "Ferie attorno a Epifania"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-10-30",
+        "t": "Ferie attorno a Ognissanti"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2028-10-04",
+        "t": "Ferie attorno a San Francesco d’Assisi"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2028-11-01",
+        "t": "Ferie attorno a Ognissanti"
+      },
+      {
+        "d": "WWHHL",
+        "s": "2028-12-23",
+        "t": "Ferie attorno a Natale"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-01-06",
+        "t": "Ponte: Epifania"
+      },
+      {
+        "d": "WWLH",
+        "s": "2028-04-22",
+        "t": "Ponte: Festa della Liberazione"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2028-05-31",
+        "t": "Ferie attorno a Festa della Repubblica"
+      },
+      {
+        "d": "WWLH",
+        "s": "2028-08-12",
+        "t": "Ponte: Ferragosto"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2028-01-01",
+        "t": "Ferie attorno a Capodanno"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2028-12-06",
+        "t": "Ferie attorno a Immacolata Concezione"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-15",
+        "t": "Ferie attorno a Lunedì dell’Angelo"
+      },
+      {
+        "d": "LLWWH",
+        "s": "2028-04-27",
+        "t": "Ferie attorno a Festa dei Lavoratori"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Stanco di contare i giorni sul calendario?",
+    "text": "Il giovedì è festivo: prendi il venerdì? O tieni il giorno per il ponte del mese prossimo? A furia di sfogliare finisci per prendere un giorno qualsiasi, e a dicembre le ferie avanzate vanno perse. Goldweek fa i conti e ti mostra i giorni che allungano di più le tue ferie."
+  },
+  "features": [
+    {
+      "title": "Le tue ferie a colpo d’occhio",
+      "text": "Totali, usate e rimaste in una sola schermata. Vedi anche quanto dell’anno è passato accanto a quante ferie hai usato, così capisci subito se ne stai risparmiando troppe.\nI giorni rimasti e le prossime ferie compaiono in un widget nella schermata Home.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Segna le ferie dal calendario",
+      "text": "Festività, ferie e ponti suggeriti compaiono nel calendario con il loro colore. Tocca una data per aggiungere o modificare un giorno di ferie, anche mezze giornate, quarti di giornata o ore.\nPuoi anche importare in un colpo le ferie passate da una foto della schermata delle risorse umane.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Il tuo paese, il tuo orario",
+      "text": "Festività di 42 paesi, dall’Italia al resto d’Europa, fino ad Asia e Americhe. Dove cambiano per regione, scegli la tua. Il tuo paese manca? Aggiungi le tue festività.\nPuoi impostare anche i giorni del weekend, il primo giorno della settimana e l’orario: fisso, part-time o su turni.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Si parte in tre passi",
+    "items": [
+      {
+        "title": "Dicci dove lavori",
+        "text": "Al primo avvio scegli il paese e quanti giorni di ferie hai all’anno."
+      },
+      {
+        "title": "Scegli un suggerimento",
+        "text": "Nella scheda Calendario trovi i ponti suggeriti. Aggiungi quelli che ti piacciono."
+      },
+      {
+        "title": "Registra le ferie",
+        "text": "Tocca una data o importa le ferie passate da una foto."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Come si conta",
+    "rows": [
+      [
+        "Giornata intera",
+        "1 giorno dal saldo"
+      ],
+      [
+        "Mezza giornata",
+        "0,5 giorni"
+      ],
+      [
+        "Quarto di giornata",
+        "0,25 giorni"
+      ],
+      [
+        "Ore",
+        "In base alle ore di lavoro di quel giorno"
+      ],
+      [
+        "Malattia, permessi, trasferte",
+        "Non scalati dal saldo"
+      ],
+      [
+        "Ferie bonus",
+        "Giorni in più come i recuperi, gestiti a parte con data di scadenza (Pro)"
+      ]
+    ],
+    "note": "Puoi cambiare in qualsiasi momento il totale annuo di ferie e il mese di inizio del tuo anno di ferie nelle Impostazioni."
+  },
+  "pricing": {
+    "title": "Riposare bene è gratis. Pianificare, con Plus e Pro.",
+    "free": {
+      "name": "Gratis",
+      "items": [
+        "Giornate, mezze giornate, quarti e ore, con il saldo rimasto",
+        "Festività di 42 paesi, festività tue e vacanze scolastiche",
+        "Tutti i suggerimenti dell’anno, fino a 3 aggiunti",
+        "Consigli sulle pause, promemoria e widget",
+        "Aggiungi ferie da una foto",
+        "Backup su iCloud e calendario condiviso in famiglia"
+      ]
+    },
+    "pro": {
+      "name": "Plus e Pro",
+      "items": [
+        "Plus: Pianificatore annuale ottimale",
+        "Plus: Suggerimenti illimitati, anche dell’anno scorso e del prossimo",
+        "Plus: Invia le ferie all’app Calendario",
+        "Pro: Tutto Plus, ferie bonus, limiti annui e riporto per tipo",
+        "Pro: Importa il calendario scolastico e rilevamento automatico del calendario",
+        "Pro: Riposo in famiglia e anniversari di famiglia"
+      ],
+      "note": "Ogni livello è disponibile come abbonamento annuale o acquisto unico a vita."
+    },
+    "note": "Gli abbonamenti annuali si rinnovano automaticamente se non li disdici almeno 24 ore prima della scadenza. Gestiscili quando vuoi in Impostazioni > Account Apple > Abbonamenti."
+  },
+  "faq": {
+    "title": "Domande frequenti",
+    "items": [
+      {
+        "q": "Il saldo delle ferie non torna.",
+        "a": "Controlla nelle Impostazioni il mese di inizio del tuo anno di ferie e il totale annuo. Mezze giornate (0,5) e quarti di giornata (0,25) vengono scalati da soli, e i tipi che non contano, come malattia, permessi o trasferte, non cambiano il saldo. Se ancora non torna, scrivici."
+      },
+      {
+        "q": "Le ferie non compaiono nel calendario.",
+        "a": "Le ferie annullate non vengono mostrate nel calendario. Controlla lo stato della voce in Gestione ferie. Anche aggiornare all’ultima versione può aiutare."
+      },
+      {
+        "q": "Come aggiungo ferie bonus?",
+        "a": "Tocca + nella scheda Panoramica per aprire Gestione ferie e usa la sezione Ferie bonus in fondo. Scegli un tipo (recupero, premio, ferie di ricarica…), il numero di giorni e, se vuoi, una data di scadenza. Le ferie bonus sono gestite a parte rispetto alle ferie normali."
+      },
+      {
+        "q": "Ho pagato, ma non si è sbloccato nulla.",
+        "a": "Tocca Ripristina acquisto in fondo alla scheda Impostazioni. L’acquisto viene ripristinato con l’account Apple con cui hai effettuato l’accesso all’App Store. Se non funziona, scrivici."
+      },
+      {
+        "q": "Perdo i dati se elimino l’app?",
+        "a": "I dati sono salvati sul dispositivo, quindi eliminando l’app spariscono. Attiva il backup su iCloud per avere una copia da ripristinare."
+      },
+      {
+        "q": "Posso aggiungere festività mie o nasconderne alcune?",
+        "a": "Sì. In Festività e vacanze, nelle Impostazioni, puoi aggiungere le tue festività o nascondere quelle predefinite."
+      },
+      {
+        "q": "Quali paesi sono supportati?",
+        "a": "Goldweek conosce le festività di 42 paesi. Scegli il paese nelle Impostazioni (e la regione, dove le festività cambiano) e il calendario si aggiorna subito. Se il tuo manca, aggiungi le festività a mano o chiedicelo con il feedback dall’app."
+      },
+      {
+        "q": "Dove vengono salvati i miei dati?",
+        "a": "Quello che inserisci resta sul tuo dispositivo o nel tuo iCloud. Riceviamo solo statistiche d’uso anonime, rapporti sugli arresti anonimi e i feedback che decidi di inviarci."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Quest’anno fai durare\ndi più le tue ferie",
+    "cta": "Scarica gratis su App Store"
+  },
+  "ui": {
+    "skip": "Vai al contenuto",
+    "languages": "Lingue",
+    "privacy": "Privacy",
+    "contact": "Per tutto quello che non trovi qui sopra, idee o bug, scrivi a {email}. Di solito rispondiamo entro uno o due giorni lavorativi."
+  }
+}
