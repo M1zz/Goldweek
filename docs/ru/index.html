@@ -1,58 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: планер отпуска</title>
-<meta name="description" content="Скоро праздник? Goldweek сложит праздники с выходными и подскажет, какие дни взять, чтобы отдыхать дольше. Остаток отпуска виден прямо в виджете.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: планер отпуска">
-<meta property="og:description" content="Скоро праздник? Goldweek сложит праздники с выходными и подскажет, какие дни взять, чтобы отдыхать дольше. Остаток отпуска виден прямо в виджете.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/ru/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: длинный отдых при минимуме дней отпуска</title>
+  <meta name="description" content="Goldweek совмещает праздники с выходными и показывает, какие дни взять, чтобы отдыхать дольше. Праздники 42 стран и учёт отпуска.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: длинный отдых при минимуме дней отпуска">
+  <meta property="og:description" content="Goldweek совмещает праздники с выходными и показывает, какие дни взять, чтобы отдыхать дольше. Праздники 42 стран и учёт отпуска.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/ru/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/ru/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Значок приложения Goldweek"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Возможности</a>
-<a href="#screenshots" class="hide-mobile">Скриншоты</a>
-<a href="support.html" class="hide-mobile">Поддержка</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Скачать</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Язык">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="bar">
+    <a class="brand" href="../ru/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Языки</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Мало дней отпуска,<br>долгий отдых</h1>
+        <p class="lead">Goldweek совмещает праздники с выходными и точно показывает, в какие дни взять отпуск, чтобы отдыхать как можно дольше. Больше не нужно листать календарь и считать.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Скачать бесплатно в App Store</a><a class="try" href="#try">Насколько хватит вашего отпуска? ↓</a></div>
+        <p class="muted small">Скачать можно бесплатно. Учёт отпуска и рекомендации остаются бесплатными.</p>
+      </div>
+      <div class="phone"><img src="../img/ru/02-recommend.jpg" alt="Мало дней отпуска, долгий отдых" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>Насколько хватит вашего отпуска?</h2>
+      <p class="muted">Выберите, сколько дней отпуска вы можете взять. Покажем самый долгий отдых, который они дают вокруг ближайших праздников.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Насколько хватит вашего отпуска?&quot;, &quot;lead&quot;: &quot;Выберите, сколько дней отпуска вы можете взять. Покажем самый долгий отдых, который они дают вокруг ближайших праздников.&quot;, &quot;ask&quot;: &quot;Сколько дней отпуска вы можете взять?&quot;, &quot;based&quot;: &quot;По государственным праздникам России&quot;, &quot;note&quot;: &quot;Это рекомендации самого приложения. В приложении они учитывают и остаток отпуска, и уже запланированные дни, а добавить их в план можно одним нажатием.&quot;, &quot;leave&quot;: &quot;{n} дн. отпуска&quot;, &quot;rest&quot;: &quot;{n} дн. отдыха&quot;, &quot;legend&quot;: [&quot;Рабочий день&quot;, &quot;Отпуск&quot;, &quot;Праздник&quot;, &quot;Выходные&quot;], &quot;weekdays&quot;: [&quot;Вс&quot;, &quot;Пн&quot;, &quot;Вт&quot;, &quot;Ср&quot;, &quot;Чт&quot;, &quot;Пт&quot;, &quot;Сб&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2026-11-04&quot;, &quot;t&quot;: &quot;День народного единства: продлённый отдых&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-04-29&quot;, &quot;t&quot;: &quot;Праздник Весны и Труда: продлённый отдых&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-02-21&quot;, &quot;t&quot;: &quot;День защитника Отечества: продлённый отдых&quot;}, {&quot;d&quot;: &quot;WHHLL&quot;, &quot;s&quot;: &quot;2026-03-07&quot;, &quot;t&quot;: &quot;Международный женский день: продлённый отдых&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-06-10&quot;, &quot;t&quot;: &quot;День России: продлённый отдых&quot;}, {&quot;d&quot;: &quot;HWHLL&quot;, &quot;s&quot;: &quot;2026-05-09&quot;, &quot;t&quot;: &quot;День Победы: продлённый отдых&quot;}, {&quot;d&quot;: &quot;LHHWW&quot;, &quot;s&quot;: &quot;2027-11-03&quot;, &quot;t&quot;: &quot;День народного единства: продлённый отдых&quot;}, {&quot;d&quot;: &quot;LLHHH&quot;, &quot;s&quot;: &quot;2027-12-29&quot;, &quot;t&quot;: &quot;Перенесённый выходной: продлённый отдых&quot;}, {&quot;d&quot;: &quot;WHHLL&quot;, &quot;s&quot;: &quot;2027-02-21&quot;, &quot;t&quot;: &quot;День защитника Отечества: продлённый отдых&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-03-06&quot;, &quot;t&quot;: &quot;Международный женский день: продлённый отдых&quot;}, {&quot;d&quot;: &quot;HWHLL&quot;, &quot;s&quot;: &quot;2027-06-12&quot;, &quot;t&quot;: &quot;День России: продлённый отдых&quot;}, {&quot;d&quot;: &quot;HWHLL&quot;, &quot;s&quot;: &quot;2027-05-01&quot;, &quot;t&quot;: &quot;Праздник Весны и Труда: продлённый отдых&quot;}, {&quot;d&quot;: &quot;WHHLL&quot;, &quot;s&quot;: &quot;2027-05-08&quot;, &quot;t&quot;: &quot;День Победы: продлённый отдых&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Устали считать дни по календарю?</h2>
+      <p>Четверг праздничный, брать ли пятницу? Или сберечь день для длинных выходных в следующем месяце? Пролистав календарь, в итоге берёшь какой попало день, а к декабрю неиспользованный отпуск просто сгорает. Goldweek считает за вас и показывает дни, с которыми отпуска хватает надольше всего.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Весь отпуск на одном экране</h2>
+        <p>Сколько положено, сколько использовано, сколько осталось. Рядом видно, какая часть года прошла и сколько отпуска уже потрачено, так что сразу понятно, не копите ли вы слишком много.<br>Остаток отпуска и ближайшие выходные видны в виджете на экране «Домой».</p>
+      </div>
+      <div class="phone"><img src="../img/ru/01-home.jpg" alt="Весь отпуск на одном экране" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Отмечайте отпуск прямо в календаре</h2>
+        <p>Праздники, отпуск и рекомендованные дни отмечены в календаре разными цветами. Нажмите на дату, чтобы добавить или изменить отпуск, в том числе половину дня, четверть дня или часы.<br>А прошлые отпуска можно сразу перенести с фото экрана из отдела кадров.</p>
+      </div>
+      <div class="phone"><img src="../img/ru/03-calendar.jpg" alt="Отмечайте отпуск прямо в календаре" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Ваша страна, ваш график</h2>
+        <p>Праздники 42 стран: Россия, Европа, Азия, Америка и не только. Где праздники зависят от региона, выберите свой. Вашей страны нет? Добавьте праздники сами.<br>Также можно выбрать выходные дни недели, первый день недели и график: постоянный, неполный день или сменный.</p>
+      </div>
+      <div class="phone"><img src="../img/ru/04-settings.jpg" alt="Ваша страна, ваш график" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Начать можно в три шага</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Укажите, где работаете</h3><p>При первом запуске выберите страну и сколько дней отпуска у вас в году.</p></li>
+<li class="card"><span class="n">2</span><h3>Выберите рекомендацию</h3><p>Во вкладке «Календарь» есть рекомендованный отдых. Добавьте то, что нравится.</p></li>
+<li class="card"><span class="n">3</span><h3>Отмечайте отпуск</h3><p>Нажмите на дату или перенесите прошлые отпуска с фото.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Как считается</h2>
+      <div class="card table">
+        <dl><div><dt>Целый день</dt><dd>1 день из остатка</dd></div><div><dt>Половина дня</dt><dd>0,5 дня</dd></div><div><dt>Четверть дня</dt><dd>0,25 дня</dd></div><div><dt>Часы</dt><dd>По вашим рабочим часам в этот день</dd></div><div><dt>Больничный, отгул по закону, командировка</dt><dd>Не вычитаются из отпуска</dd></div><div><dt>Бонусные дни</dt><dd>Дополнительные дни вроде отгулов за переработку, учитываются отдельно со сроком действия (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Число дней отпуска в году и месяц, с которого начинается ваш отпускной год, можно поменять в настройках в любой момент.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Хорошо отдыхать бесплатно. Планирование берут на себя Plus и Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Бесплатно</h3>
+          <ul><li>Целые дни, половины, четверти и часы, а также остаток отпуска</li><li>Праздники 42 стран, свои праздники и каникулы</li><li>Все рекомендации на этот год, до 3 в план</li><li>Подсказки о перерывах, напоминания и виджет</li><li>Добавить отпуск по фото</li><li>Резервная копия в iCloud и общий с семьёй график</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus и Pro</h3>
+          <ul><li>Plus: Оптимальный план на год</li><li>Plus: Рекомендации без ограничений, включая прошлый и следующий год</li><li>Plus: Перенос отпуска в приложение «Календарь»</li><li>Pro: Всё из Plus, бонусные дни, годовые лимиты и перенос по типам</li><li>Pro: Импорт школьного календаря и автоопределение календаря</li><li>Pro: Совместный отдых и семейные даты</li></ul>
+          <p class="muted">Каждый уровень доступен как годовая подписка или разовая покупка навсегда.</p>
+        </div>
+      </div>
+      <p class="muted">Годовая подписка продлевается автоматически, если её не отключить минимум за 24 часа до конца периода. Управлять можно в любое время: Настройки &gt; Аккаунт Apple &gt; Подписки.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Частые вопросы</h2>
+      <div class="faq"><details><summary>Остаток отпуска считается неправильно.</summary><p>Проверьте в настройках месяц начала отпускного года и общее число дней. Половины дня (0,5) и четверти (0,25) вычитаются автоматически, а типы, которые не идут в счёт отпуска, например больничный, отгул по закону или командировка, остаток не меняют. Если всё равно не сходится, напишите нам.</p></details>
+<details><summary>Отпуск не отображается в календаре.</summary><p>Отменённый отпуск в календаре не показывается. Проверьте статус записи в разделе «Учёт отпусков». Иногда помогает и обновление до последней версии.</p></details>
+<details><summary>Как добавить бонусные дни?</summary><p>Нажмите + во вкладке «Обзор», чтобы открыть «Учёт отпусков», и внизу воспользуйтесь разделом «Бонусные дни». Выберите тип (отгул за переработку, поощрение, восстановительный отпуск и т. п.), укажите число дней и, если нужно, срок действия. Бонусные дни учитываются отдельно от основного отпуска.</p></details>
+<details><summary>Я оплатил, но ничего не открылось.</summary><p>Нажмите «Восстановить покупки» внизу вкладки «Настройки». Покупка восстановится через Аккаунт Apple, с которым вы вошли в App Store. Если не помогло, напишите нам.</p></details>
+<details><summary>Пропадут ли данные, если удалить приложение?</summary><p>Данные хранятся на устройстве, поэтому при удалении приложения они пропадут. Включите резервную копию в iCloud, чтобы потом можно было всё восстановить.</p></details>
+<details><summary>Можно добавить свои праздники или скрыть какие-то?</summary><p>Да. В разделе «Праздники и каникулы» в настройках можно добавить свои праздники или скрыть стандартные.</p></details>
+<details><summary>Какие страны поддерживаются?</summary><p>В Goldweek есть праздники 42 стран. Выберите страну в настройках (и регион, где праздники различаются), и календарь сразу обновится. Если вашей страны нет, добавьте праздники сами или попросите о поддержке через отзыв в приложении. Переносы выходных в России учитываются по мере выхода постановления на год.</p></details>
+<details><summary>Где хранятся мои данные?</summary><p>Всё, что вы вводите, остаётся на устройстве или в вашем собственном iCloud. Мы получаем только анонимную статистику использования, анонимные отчёты о сбоях и отзывы, которые вы сами решите отправить.</p></details></div>
+      <p class="contact">Если ответа выше нет, есть идея или нашлась ошибка, пишите на <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. Обычно отвечаем в течение одного-двух рабочих дней.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Пусть в этом году отпуска<br>хватит надольше</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Скачать бесплатно в App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Языки"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -62,7 +163,7 @@
 <a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
 <a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
 <a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-<a href="../ru/" hreflang="ru" lang="ru" aria-current="true">Русский</a>
+<a href="../ru/" hreflang="ru" lang="ru" aria-current="page">Русский</a>
 <a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
 <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
 <a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
@@ -74,67 +175,16 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Конфиденциальность</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Больше отдыха за меньше дней</h1>
-<p>Goldweek подскажет, в какие дни взять отпуск, чтобы отдохнуть как можно дольше.<br>Приложение складывает праздники с выходными и показывает, как получить самый длинный отдых за наименьшее число дней отпуска.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/ru-ru?size=250x83" alt="Загрузите в App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Что умеет Goldweek</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Подсказки к каждому празднику</h3>
-<p>Для каждого ближайшего праздника видно, сколько дней отпуска нужно взять и сколько дней подряд вы будете отдыхать. Удобные дни-мостики больше не пройдут мимо.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Праздники 42 стран</h3>
-<p>Россия и ещё 40 стран Европы, Азии, Америки, Ближнего Востока, Африки и Океании. Для России учтены переносы выходных по постановлению правительства, включая рабочие субботы. Если праздники зависят от региона, выберите свой. Страны, которой нет в списке, можно настроить вручную.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Учет отпуска</h3>
-<p>Всего, использовано и осталось — на одном экране. Можно отмечать полдня и четверть дня, а дополнительные дни отдыха вести вместе со сроком действия. Нажмите на дату в календаре, чтобы добавить или изменить отпуск, или загрузите прошлые отпуска по фото экрана из кадровой системы.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Виджет и резервная копия</h3>
-<p>Остаток отпуска и ближайший отдых видны прямо на экране «Домой». Записи сохраняются в iCloud, а графиком отпусков можно поделиться с семьей. Работает на iPhone и iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Как это выглядит</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/en/01-home.png" alt="Скриншот Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/02-recommend.png" alt="Скриншот Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/03-calendar.png" alt="Скриншот Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/04-countries.png" alt="Скриншот Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/05-settings.png" alt="Скриншот Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Планируйте заранее, тратьте меньше дней и отдыхайте дольше.</h2>
-<p>Скачать бесплатно. Goldweek Pro — необязательная разовая покупка.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/ru-ru?size=250x83" alt="Загрузите в App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Поддержка</a>
-<a href="privacy.html">Конфиденциальность</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Все права защищены.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

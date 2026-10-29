@@ -1,0 +1,293 @@
+{
+  "title": "Goldweek: libur panjang dengan sedikit cuti",
+  "description": "Goldweek memadukan hari libur nasional dan akhir pekan, lalu menunjukkan hari cuti yang memberi libur terpanjang. Libur 42 negara dan catatan cuti.",
+  "hero": {
+    "headline": "Cuti sedikit,\nlibur panjang",
+    "lead": "Goldweek memadukan hari libur nasional dan akhir pekan, lalu menunjukkan tepatnya hari apa kamu perlu cuti agar liburnya paling panjang. Tidak perlu lagi membolak-balik kalender sambil menghitung.",
+    "cta": "Unduh gratis di App Store",
+    "note": "Unduh gratis. Mencatat cuti dan melihat rekomendasi tetap gratis."
+  },
+  "demo": {
+    "title": "Cutimu cukup untuk libur berapa hari?",
+    "lead": "Pilih berapa hari cuti yang bisa kamu ambil. Kami tunjukkan libur terpanjang yang bisa kamu dapat di sekitar hari libur berikutnya.",
+    "ask": "Berapa hari cuti yang bisa kamu ambil?",
+    "based": "Berdasarkan hari libur nasional di Indonesia",
+    "note": "Ini rekomendasi dari aplikasinya langsung. Di aplikasi, rekomendasi juga memperhitungkan sisa cutimu dan cuti yang sudah dijadwalkan, dan bisa langsung dimasukkan ke jadwal.",
+    "leave": "Cuti {n} hr",
+    "rest": "Libur {n} hr",
+    "legend": [
+      "Hari Kerja",
+      "Cuti Tahunan",
+      "Hari Libur",
+      "Akhir Pekan"
+    ],
+    "weekdays": [
+      "Min",
+      "Sen",
+      "Sel",
+      "Rab",
+      "Kam",
+      "Jum",
+      "Sab"
+    ],
+    "recs": [
+      {
+        "d": "LHHWW",
+        "s": "2026-12-23",
+        "t": "Cuti sambung Hari Raya Natal"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Libur kejepit Tahun Baru Masehi"
+      },
+      {
+        "d": "WWHHL",
+        "s": "2026-02-14",
+        "t": "Cuti sambung Tahun Baru Imlek"
+      },
+      {
+        "d": "HHLWHH",
+        "s": "2026-05-27",
+        "t": "Cuti sambung Iduladha"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-06-13",
+        "t": "Libur kejepit Tahun Baru Islam"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-08-22",
+        "t": "Libur kejepit Maulid Nabi Muhammad SAW"
+      },
+      {
+        "d": "WWLLHHHHH",
+        "s": "2026-03-14",
+        "t": "Seminggu libur Cuti bersama Nyepi"
+      },
+      {
+        "d": "LLHWH",
+        "s": "2026-04-01",
+        "t": "Cuti sambung Wafat Yesus Kristus"
+      },
+      {
+        "d": "LHHWW",
+        "s": "2026-05-13",
+        "t": "Cuti sambung Kenaikan Yesus Kristus"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-01-14",
+        "t": "Cuti sambung Isra Mikraj Nabi Muhammad SAW"
+      },
+      {
+        "d": "HHHHLLLWW",
+        "s": "2026-03-21",
+        "t": "Seminggu libur Cuti bersama Idulfitri"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-29",
+        "t": "Cuti sambung Hari Buruh Internasional"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-08-15",
+        "t": "Cuti sambung Hari Kemerdekaan RI"
+      },
+      {
+        "d": "HWWLH",
+        "s": "2027-01-01",
+        "t": "Cuti sambung Tahun Baru Masehi"
+      },
+      {
+        "d": "WWHHHHLWW",
+        "s": "2027-05-15",
+        "t": "Seminggu libur Iduladha"
+      },
+      {
+        "d": "HLLLWH",
+        "s": "2027-06-01",
+        "t": "Cuti sambung Hari Lahir Pancasila"
+      },
+      {
+        "d": "WHLH",
+        "s": "2027-08-14",
+        "t": "Libur kejepit Hari Kemerdekaan RI"
+      },
+      {
+        "d": "LLHHH",
+        "s": "2027-12-22",
+        "t": "Cuti sambung Hari Raya Natal"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2027-02-03",
+        "t": "Cuti sambung Tahun Baru Imlek"
+      },
+      {
+        "d": "LHHWH",
+        "s": "2027-03-24",
+        "t": "Cuti sambung Wafat Yesus Kristus"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-05-06",
+        "t": "Libur kejepit Kenaikan Yesus Kristus"
+      },
+      {
+        "d": "WWLH",
+        "s": "2027-05-29",
+        "t": "Libur kejepit Hari Lahir Pancasila"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2027-05-01",
+        "t": "Cuti sambung Hari Buruh Internasional"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Capek menghitung hari di kalender?",
+    "text": "Kamis tanggal merah, ambil cuti Jumat? Atau simpan untuk disambung dengan libur panjang bulan depan? Setelah bolak-balik kalender, akhirnya cuti diambil asal saja, dan di akhir tahun sisa cuti hangus begitu saja. Goldweek yang menghitung, lalu menunjukkan hari-hari yang membuat cutimu paling awet."
+  },
+  "features": [
+    {
+      "title": "Sisa cuti terlihat sekilas",
+      "text": "Total, terpakai, dan sisa cuti ada di satu layar. Di sebelahnya terlihat berapa bagian tahun yang sudah lewat dan berapa cuti yang sudah dipakai, jadi kamu langsung tahu kalau terlalu banyak menabung cuti.\nSisa cuti dan libur berikutnya juga tampil di widget layar utama.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Catat cuti langsung di kalender",
+      "text": "Hari libur, cuti, dan rekomendasi libur tampil di kalender dengan warnanya masing-masing. Ketuk tanggal untuk menambah atau mengubah cuti, termasuk setengah hari, seperempat hari, atau per jam.\nKamu juga bisa memasukkan riwayat cuti sekaligus dari foto layar HR kantormu.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Negaramu, jam kerjamu",
+      "text": "Hari libur 42 negara, dari Indonesia dan Asia sampai Eropa dan Amerika. Untuk negara yang liburnya beda per wilayah, pilih wilayahmu. Negaramu tidak ada? Tambahkan hari liburnya sendiri.\nKamu juga bisa memilih hari akhir pekan, hari pertama dalam seminggu, serta jam kerja tetap, paruh waktu, atau sif.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Mulai dalam tiga langkah",
+    "items": [
+      {
+        "title": "Pilih tempat kerjamu",
+        "text": "Saat pertama dibuka, pilih negara dan jumlah cuti tahunanmu."
+      },
+      {
+        "title": "Pilih rekomendasi",
+        "text": "Di tab Kalender ada rekomendasi libur. Tambahkan yang kamu suka ke jadwal."
+      },
+      {
+        "title": "Catat cutimu",
+        "text": "Ketuk tanggal atau masukkan riwayat cuti dari foto."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Cara menghitungnya",
+    "rows": [
+      [
+        "Sehari penuh",
+        "Mengurangi 1 hari"
+      ],
+      [
+        "Setengah hari",
+        "0,5 hari"
+      ],
+      [
+        "Seperempat hari",
+        "0,25 hari"
+      ],
+      [
+        "Per jam",
+        "Sesuai jam kerjamu hari itu"
+      ],
+      [
+        "Sakit, izin resmi, dinas",
+        "Tidak mengurangi sisa cuti"
+      ],
+      [
+        "Cuti Bonus",
+        "Cuti tambahan seperti cuti pengganti, dicatat terpisah dengan tanggal kedaluwarsa (Pro)"
+      ]
+    ],
+    "note": "Jumlah cuti tahunan dan bulan awal tahun cutimu bisa diubah kapan saja di Pengaturan."
+  },
+  "pricing": {
+    "title": "Istirahat cukup itu gratis. Serahkan perencanaan ke Plus dan Pro.",
+    "free": {
+      "name": "Gratis",
+      "items": [
+        "Cuti sehari, setengah, seperempat, dan per jam, beserta sisa cuti",
+        "Hari libur 42 negara, libur sendiri dan libur sekolah",
+        "Lihat semua rekomendasi tahun ini, tambahkan sampai 3",
+        "Pengingat jeda istirahat, notifikasi, dan widget",
+        "Tambah cuti dari foto",
+        "Backup iCloud dan jadwal bersama keluarga"
+      ]
+    },
+    "pro": {
+      "name": "Plus dan Pro",
+      "items": [
+        "Plus: Perencana cuti optimal",
+        "Plus: Rekomendasi tanpa batas, termasuk tahun lalu dan tahun depan",
+        "Plus: Kirim cuti ke aplikasi Kalender",
+        "Pro: Semua fitur Plus, Cuti Bonus, batas tahunan dan carry over per jenis",
+        "Pro: Impor kalender sekolah dan deteksi kalender otomatis",
+        "Pro: Libur bersama keluarga dan hari spesial keluarga"
+      ],
+      "note": "Setiap paket tersedia sebagai langganan tahunan atau sekali beli seumur hidup."
+    },
+    "note": "Langganan tahunan diperpanjang otomatis kecuali dimatikan paling lambat 24 jam sebelum periode berakhir. Atur kapan saja di Pengaturan > Akun Apple > Langganan."
+  },
+  "faq": {
+    "title": "Pertanyaan umum",
+    "items": [
+      {
+        "q": "Sisa cutiku sepertinya tidak tepat.",
+        "a": "Cek di Pengaturan bulan awal tahun cuti dan total cuti tahunanmu. Setengah hari (0,5) dan seperempat hari (0,25) dipotong otomatis, sedangkan jenis yang tidak mengurangi cuti, seperti sakit, izin resmi, atau dinas, tidak mengubah sisa cuti. Kalau masih tidak cocok, kirim email ke kami."
+      },
+      {
+        "q": "Cutiku tidak muncul di kalender.",
+        "a": "Cuti yang dibatalkan tidak tampil di kalender. Cek status catatannya di Kelola cuti. Memperbarui ke versi terbaru juga bisa membantu."
+      },
+      {
+        "q": "Bagaimana cara menambah Cuti Bonus?",
+        "a": "Ketuk + di tab Ringkasan untuk membuka Kelola cuti, lalu gunakan bagian Cuti Bonus di bawah. Pilih jenisnya (cuti pengganti, cuti penghargaan, cuti penyegaran, dan lainnya), isi jumlah hari dan, kalau mau, tanggal kedaluwarsa. Cuti Bonus dicatat terpisah dari cuti tahunan biasa."
+      },
+      {
+        "q": "Sudah bayar, tapi fiturnya belum terbuka.",
+        "a": "Ketuk Pulihkan pembelian di bagian bawah tab Pengaturan. Pembelian dipulihkan dengan Akun Apple yang dipakai masuk ke App Store. Kalau masih belum bisa, kirim email ke kami."
+      },
+      {
+        "q": "Apakah data hilang kalau aplikasinya dihapus?",
+        "a": "Data tersimpan di perangkat, jadi menghapus aplikasi akan menghapus semuanya. Nyalakan Backup iCloud supaya ada salinan yang bisa dipulihkan nanti."
+      },
+      {
+        "q": "Bisa menambah hari libur sendiri atau menyembunyikannya?",
+        "a": "Bisa. Di Hari Libur & Libur Sekolah pada Pengaturan, kamu bisa menambah hari libur sendiri atau menyembunyikan hari libur bawaan."
+      },
+      {
+        "q": "Negara mana saja yang didukung?",
+        "a": "Goldweek punya hari libur 42 negara. Pilih negaramu di Pengaturan (dan wilayahnya, kalau liburnya berbeda per wilayah), lalu kalender langsung menyesuaikan. Kalau negaramu belum ada, tambahkan hari liburnya sendiri atau minta lewat masukan di aplikasi. Untuk Indonesia, cuti bersama mengikuti SKB yang terbit setiap tahun."
+      },
+      {
+        "q": "Di mana dataku disimpan?",
+        "a": "Semua yang kamu masukkan hanya ada di perangkat atau iCloud milikmu sendiri. Kami hanya menerima statistik penggunaan anonim, laporan kerusakan anonim, dan masukan yang kamu kirim sendiri."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Tahun ini, buat cutimu\nlebih awet",
+    "cta": "Unduh gratis di App Store"
+  },
+  "ui": {
+    "skip": "Langsung ke konten",
+    "languages": "Bahasa",
+    "privacy": "Kebijakan Privasi",
+    "contact": "Untuk hal yang belum terjawab di atas, ide fitur, atau laporan bug, kirim ke {email}. Biasanya kami membalas dalam satu atau dua hari kerja."
+  }
+}

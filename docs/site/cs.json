@@ -1,0 +1,308 @@
+{
+  "title": "Goldweek: dlouhé volno s málem dní dovolené",
+  "description": "Goldweek spojí svátky s víkendy a ukáže, které dny si vzít volno, abys měl nejdelší volno. Svátky 42 zemí a přehled dovolené.",
+  "hero": {
+    "headline": "Málo dní dovolené,\ndlouhé volno",
+    "lead": "Goldweek spojí svátky s víkendy a přesně ukáže, které dny si vzít dovolenou, abys měl volno co nejdéle. Konec listování kalendářem a počítání.",
+    "cta": "Stáhnout zdarma v App Store",
+    "note": "Stažení zdarma. Přehled dovolené i návrhy zůstávají zdarma."
+  },
+  "demo": {
+    "title": "Kam až dosáhne tvoje dovolená?",
+    "lead": "Vyber, kolik dní dovolené si můžeš vzít. Uvidíš nejdelší volno, které dají kolem nejbližších svátků.",
+    "ask": "Kolik dní dovolené si můžeš vzít?",
+    "based": "Podle státních svátků v Česku",
+    "note": "Jsou to návrhy přímo z aplikace. V aplikaci počítají i se zbývající dovolenou a volnem, které už máš naplánované, a návrh přidáš jedním klepnutím.",
+    "leave": "Dovolená {n} d",
+    "rest": "Volno {n} d",
+    "legend": [
+      "Pracovní den",
+      "Dovolená",
+      "Svátek",
+      "Víkend"
+    ],
+    "weekdays": [
+      "ne",
+      "po",
+      "út",
+      "st",
+      "čt",
+      "pá",
+      "so"
+    ],
+    "recs": [
+      {
+        "d": "HLLWW",
+        "s": "2026-10-28",
+        "t": "Delší volno: Den vzniku samostatného československého státu"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-11-14",
+        "t": "Prodloužení: Den boje za svobodu a demokracii"
+      },
+      {
+        "d": "LHHHW",
+        "s": "2026-12-23",
+        "t": "Delší volno: Štědrý den"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Prodloužení: Nový rok"
+      },
+      {
+        "d": "HWWHL",
+        "s": "2026-04-03",
+        "t": "Delší volno: Velký pátek"
+      },
+      {
+        "d": "WHHLL",
+        "s": "2026-07-04",
+        "t": "Delší volno: Den slovanských věrozvěstů Cyrila a Metoděje"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-09-26",
+        "t": "Delší volno: Den české státnosti"
+      },
+      {
+        "d": "HWWLL",
+        "s": "2026-05-01",
+        "t": "Delší volno: Svátek práce"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-05-06",
+        "t": "Delší volno: Den vítězství"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-10-28",
+        "t": "Prodloužení: Den vzniku samostatného československého státu"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-11-17",
+        "t": "Delší volno: Den boje za svobodu a demokracii"
+      },
+      {
+        "d": "HWWHL",
+        "s": "2027-03-26",
+        "t": "Delší volno: Velký pátek"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-05-01",
+        "t": "Delší volno: Svátek práce"
+      },
+      {
+        "d": "WWHHL",
+        "s": "2027-07-03",
+        "t": "Delší volno: Den slovanských věrozvěstů Cyrila a Metoděje"
+      },
+      {
+        "d": "WWLH",
+        "s": "2027-09-25",
+        "t": "Prodloužení: Den české státnosti"
+      },
+      {
+        "d": "LLHHH",
+        "s": "2027-12-22",
+        "t": "Delší volno: Štědrý den"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-05-08",
+        "t": "Delší volno: Den vítězství"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-10-28",
+        "t": "Delší volno: Den vzniku samostatného československého státu"
+      },
+      {
+        "d": "WHHHL",
+        "s": "2028-12-23",
+        "t": "Delší volno: Štědrý den"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-01-01",
+        "t": "Delší volno: Nový rok"
+      },
+      {
+        "d": "HWWHL",
+        "s": "2028-04-14",
+        "t": "Delší volno: Velký pátek"
+      },
+      {
+        "d": "HHLWW",
+        "s": "2028-07-05",
+        "t": "Delší volno: Den slovanských věrozvěstů Cyrila a Metoděje"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-09-28",
+        "t": "Prodloužení: Den české státnosti"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2028-11-15",
+        "t": "Delší volno: Den boje za svobodu a demokracii"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-05-06",
+        "t": "Delší volno: Den vítězství"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-29",
+        "t": "Delší volno: Svátek práce"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Už tě nebaví počítat dny v kalendáři?",
+    "text": "Ve čtvrtek je svátek, vzít si pátek? Nebo si den nechat na prodloužený víkend příští měsíc? Po dostatečném listování si nakonec vezmeš volno jen tak nějak a v prosinci ti zbylá dovolená propadne. Goldweek počítá za tebe a ukáže dny, se kterými dovolená vydrží nejdéle."
+  },
+  "features": [
+    {
+      "title": "Dovolená na jeden pohled",
+      "text": "Celkem, vyčerpáno a zbývá na jedné obrazovce. Vedle vidíš, kolik roku už uběhlo a kolik dovolené jsi vyčerpal, takže hned poznáš, jestli si jí nešetříš moc.\nZbývající dny a nejbližší volno ukazuje widget na ploše.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Volno rovnou v kalendáři",
+      "text": "Svátky, dovolená a navržené dny mostu jsou v kalendáři barevně. Klepnutím na datum přidáš nebo upravíš volno, i půlden, čtvrt dne nebo hodiny.\nStarší dovolenou naráz převezmeš z fotky obrazovky personálního systému.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Tvoje země, tvoje pracovní doba",
+      "text": "Svátky 42 zemí, od Česka přes zbytek Evropy po Asii a Ameriku. Kde se svátky liší podle regionu, vybereš ten svůj. Tvoje země chybí? Přidej si vlastní svátky.\nNastavíš i víkendové dny, první den v týdnu a zda pracuješ na pevný úvazek, částečný úvazek nebo na směny.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Začni ve třech krocích",
+    "items": [
+      {
+        "title": "Řekni, kde pracuješ",
+        "text": "Při prvním spuštění vyber zemi a kolik dní dovolené máš za rok."
+      },
+      {
+        "title": "Vyber návrh",
+        "text": "Na kartě Kalendář najdeš navržené volno. Přidej, co se ti líbí."
+      },
+      {
+        "title": "Zapisuj dovolenou",
+        "text": "Klepni na datum, nebo převezmi starší dovolenou z fotky."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Jak se počítá",
+    "rows": [
+      [
+        "Celý den",
+        "1 den ze zůstatku"
+      ],
+      [
+        "Půlden",
+        "0,5 dne"
+      ],
+      [
+        "Čtvrt dne",
+        "0,25 dne"
+      ],
+      [
+        "Hodiny",
+        "Podle tvé pracovní doby v ten den"
+      ],
+      [
+        "Nemoc, překážky v práci, služební cesta",
+        "Neodečítají se z dovolené"
+      ],
+      [
+        "Bonusová dovolená",
+        "Volno navíc, třeba náhradní volno, vedené zvlášť s datem platnosti (Pro)"
+      ]
+    ],
+    "note": "Počet dní dovolené za rok a měsíc, kdy začíná tvůj dovolenkový rok, změníš kdykoli v Nastavení."
+  },
+  "pricing": {
+    "title": "Dobrý odpočinek je zdarma. Plánování zařídí Plus a Pro.",
+    "free": {
+      "name": "Zdarma",
+      "items": [
+        "Celé dny, půldny, čtvrtdny a hodiny se zbývající dovolenou",
+        "Svátky 42 zemí, vlastní svátky a prázdniny",
+        "Všechny návrhy na letošek, až 3 do plánu",
+        "Tipy na odstupy mezi odpočinkem, připomínky a widget",
+        "Přidání dovolené z fotky",
+        "Záloha na iCloud a plán sdílený s rodinou"
+      ]
+    },
+    "pro": {
+      "name": "Plus a Pro",
+      "items": [
+        "Plus: Optimální roční plánovač",
+        "Plus: Neomezené návrhy, i na loňský a příští rok",
+        "Plus: Odeslání volna do aplikace Kalendář",
+        "Pro: Vše z Plus, bonusová dovolená, roční limity a převody podle druhu",
+        "Pro: Import školního kalendáře a automatické rozpoznání kalendáře",
+        "Pro: Volno spolu a rodinná výročí"
+      ],
+      "note": "Každá úroveň je jako roční předplatné nebo jednorázový nákup navždy."
+    },
+    "note": "Roční předplatné se automaticky obnoví, pokud ho nezrušíš nejpozději 24 hodin před koncem období. Spravovat ho můžeš kdykoli v Nastavení > Účet Apple > Předplatná."
+  },
+  "faq": {
+    "title": "Časté otázky",
+    "items": [
+      {
+        "q": "Zůstatek dovolené nesedí.",
+        "a": "Zkontroluj v Nastavení, ve kterém měsíci začíná tvůj dovolenkový rok a kolik dní dovolené máš celkem. Půldny (0,5) a čtvrtdny (0,25) se odečítají automaticky a druhy, které se nepočítají, jako nemoc, překážky v práci nebo služební cesty, zůstatek nemění. Pokud to pořád nesedí, napiš nám."
+      },
+      {
+        "q": "Dovolená se nezobrazuje v kalendáři.",
+        "a": "Zrušená dovolená se v kalendáři nezobrazuje. Zkontroluj stav záznamu ve Správě dovolené. Pomoct může i aktualizace na nejnovější verzi."
+      },
+      {
+        "q": "Jak přidám bonusovou dovolenou?",
+        "a": "Klepnutím na + na kartě Stav otevři Správu dovolené a dole použij část Bonusová dovolená. Vyber druh (náhradní volno, odměna, volno na zotavenou…), počet dní a případně datum platnosti. Bonusová dovolená se vede zvlášť od běžné dovolené."
+      },
+      {
+        "q": "Zaplatil jsem, ale nic se neodemklo.",
+        "a": "Klepni dole na kartě Nastavení na Obnovit nákup. Nákup se obnoví s účtem Apple, kterým jsi přihlášený v App Storu. Když to nepomůže, napiš nám."
+      },
+      {
+        "q": "Přijdu o data, když aplikaci smažu?",
+        "a": "Data jsou uložená v zařízení, takže smazáním aplikace zmizí. Zapni zálohu na iCloud, ať máš kopii, kterou můžeš později obnovit."
+      },
+      {
+        "q": "Můžu přidat vlastní svátky nebo některé skrýt?",
+        "a": "Ano. V části Svátky a prázdniny v Nastavení přidáš vlastní svátky nebo skryješ výchozí."
+      },
+      {
+        "q": "Které země jsou podporované?",
+        "a": "Goldweek zná svátky 42 zemí. Vyber zemi v Nastavení (a region, kde se svátky liší) a kalendář se hned upraví. Pokud tvoje země chybí, přidej svátky sám nebo o ni požádej přes zpětnou vazbu v aplikaci."
+      },
+      {
+        "q": "Kde jsou uložená moje data?",
+        "a": "Co zadáš, zůstává v tvém zařízení nebo v tvém vlastním iCloudu. Dostáváme jen anonymní statistiky používání, anonymní hlášení pádů a zpětnou vazbu, kterou se sám rozhodneš poslat."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Ať ti letos dovolená\nvydrží déle",
+    "cta": "Stáhnout zdarma v App Store"
+  },
+  "ui": {
+    "skip": "Přejít na obsah",
+    "languages": "Jazyky",
+    "privacy": "Ochrana soukromí",
+    "contact": "Se vším, na co výše není odpověď, s nápady nebo chybami piš na {email}. Obvykle odpovídáme do jednoho až dvou pracovních dnů."
+  }
+}

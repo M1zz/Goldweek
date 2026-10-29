@@ -1,58 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hans">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek - 黄金假期规划</title>
-<meta name="description" content="下一个节假日，请几天年假就能连休一大段？Goldweek 帮你把节假日和周末巧妙串联，推荐用最少年假换来最长假期的拼假方案。剩余年假也能在桌面小组件上一眼看清。">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek - 黄金假期规划">
-<meta property="og:description" content="下一个节假日，请几天年假就能连休一大段？Goldweek 帮你把节假日和周末巧妙串联，推荐用最少年假换来最长假期的拼假方案。剩余年假也能在桌面小组件上一眼看清。">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/zh-Hans/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek：用最少的年假，拼出最长的假期</title>
+  <meta name="description" content="Goldweek 把法定节假日和周末拼在一起，告诉你哪几天请假能休得最久。收录 42 个国家的节假日，还能管理年假。">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek：用最少的年假，拼出最长的假期">
+  <meta property="og:description" content="Goldweek 把法定节假日和周末拼在一起，告诉你哪几天请假能休得最久。收录 42 个国家的节假日，还能管理年假。">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/zh-Hans/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Goldweek 应用图标"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">功能</a>
-<a href="#screenshots" class="hide-mobile">截图</a>
-<a href="support.html" class="hide-mobile">支持</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">下载</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="语言">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="bar">
+    <a class="brand" href="../zh-Hans/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">语言</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>少请几天假，<br>多休好几天</h1>
+        <p class="lead">Goldweek 把节假日和周末组合起来，直接告诉你哪几天请年假能连休最久。不用再一页页翻日历数日子。</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">在 App Store 免费下载</a></div>
+        <p class="muted small">免费下载，记录年假和查看推荐一直免费。</p>
+      </div>
+      <div class="phone"><img src="../img/zh-Hans/02-recommend.jpg" alt="少请几天假， 多休好几天" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+
+    <section class="problem reveal">
+      <h2>翻着日历算年假，算累了吗？</h2>
+      <p>周四放假，周五要不要请一天？还是留着跟下个月的假期连起来？日历翻来翻去，最后随便挑了一天，到了年底剩下的年假就这么作废了。Goldweek 替你算好，先把同样的年假能休更久的日子摆在你面前。</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>剩余年假一目了然</h2>
+        <p>总年假、已用、剩余，一个页面全看清。还会把今年过去了多少和年假用了多少并排显示，攒得太多一眼就知道。<br>不用打开 App，主屏幕小组件就能看到剩余年假和即将到来的假期。</p>
+      </div>
+      <div class="phone"><img src="../img/zh-Hans/01-home.jpg" alt="剩余年假一目了然" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>在日历上直接登记</h2>
+        <p>节假日、年假和推荐的连休都会用不同颜色标在日历上。点一下日期就能添加或修改假期，半天、四分之一天和按小时请假也能记。<br>还可以拍下公司请假记录页面，一次导入过去的记录。</p>
+      </div>
+      <div class="phone"><img src="../img/zh-Hans/03-calendar.jpg" alt="在日历上直接登记" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>按你的国家和上班方式来</h2>
+        <p>收录中国、日本、韩国、美国、欧洲、南美、大洋洲等 42 个国家的节假日。各州或地区假日不同的国家可以选自己的地区，列表里没有的国家也能自己添加节假日。<br>周末是哪几天、一周从哪天开始，固定班、兼职、轮班也都能设置。</p>
+      </div>
+      <div class="phone"><img src="../img/zh-Hans/04-settings.jpg" alt="按你的国家和上班方式来" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>三步就能开始</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>告诉它你在哪里上班</h3><p>第一次打开时，选好国家和每年的年假天数就行。</p></li>
+<li class="card"><span class="n">2</span><h3>挑一个推荐</h3><p>在日历标签页的推荐假期里，把喜欢的连休加入日程。</p></li>
+<li class="card"><span class="n">3</span><h3>记下请过的假</h3><p>点日期登记，或用请假记录照片一次导入。</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>这样计算</h2>
+      <div class="card table">
+        <dl><div><dt>全天</dt><dd>扣 1 天</dd></div><div><dt>半天</dt><dd>扣 0.5 天</dd></div><div><dt>四分之一天</dt><dd>扣 0.25 天</dd></div><div><dt>按小时</dt><dd>按当天的工作时长折算</dd></div><div><dt>病假、公假、出差</dt><dd>不从剩余年假里扣</dd></div><div><dt>奖励年假</dt><dd>调休、奖励假这类额外的假期，带有效期单独管理（Pro）</dd></div></dl>
+      </div>
+      <p class="muted">每年的年假天数和年假年度开始的月份，随时可以在设置里修改。</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>好好休息免费，交给它规划再付费</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>免费</h3>
+          <ul><li>全天、半天、四分之一天、按小时记录及剩余年假</li><li>42 个国家的节假日，自定义假日和寒暑假</li><li>查看今年全部推荐，其中 3 个可加入日程</li><li>休息间隔提示、提醒和主屏幕小组件</li><li>用照片登记休假</li><li>iCloud 备份，和家人共享日程</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus 和 Pro</h3>
+          <ul><li>Plus：最佳年度规划</li><li>Plus：推荐无限添加，查看去年和明年的推荐</li><li>Plus：导出到日历 App</li><li>Pro：包含 Plus 全部功能，外加奖励年假、按类型设年度上限和结转</li><li>Pro：导入学校校历，自动识别日历</li><li>Pro：全家一起休、家庭纪念日</li></ul>
+          <p class="muted">每一档都可以选择按年订阅，或一次买断终身使用。</p>
+        </div>
+      </div>
+      <p class="muted">按年订阅如未在到期前 24 小时关闭，会自动续订。可随时在设置 &gt; Apple 账户 &gt; 订阅中管理。</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>常见问题</h2>
+      <div class="faq"><details><summary>年假好像算得不对。</summary><p>请在设置里检查年假年度开始的月份和每年的年假天数。半天（0.5 天）和四分之一天（0.25 天）会自动扣除，病假、公假、出差这类不扣年假的类型不会影响剩余天数。如果还是不对，请发邮件告诉我们。</p></details>
+<details><summary>日历上看不到我的假期。</summary><p>已取消的假期不会显示在日历上。请在年假管理页面确认这条记录的状态。更新到最新版本有时也能解决。</p></details>
+<details><summary>奖励年假怎么登记？</summary><p>在概览标签页点 + 打开年假管理，然后在下方的奖励年假里添加。选好类型（调休、奖励假、休整假等），填入天数和有效期（可选）即可。奖励年假和普通年假分开管理。</p></details>
+<details><summary>已经购买了，功能却没有解锁。</summary><p>请点设置标签页下方的“恢复购买”。会用 App Store 当前登录的 Apple 账户恢复购买记录。仍然不行的话，请发邮件联系我们。</p></details>
+<details><summary>删除 App 后数据会消失吗？</summary><p>数据保存在设备上，删除 App 后会全部清除。打开 iCloud 备份，就能留一份以后可以恢复的副本。</p></details>
+<details><summary>可以自己添加或隐藏节假日吗？</summary><p>可以。在设置的假日·假期管理里，可以添加自己的节假日，也可以隐藏默认的节假日。</p></details>
+<details><summary>支持哪些国家？</summary><p>收录了 42 个国家的节假日。在设置里选好国家（各州或地区假日不同的国家可以选到地区），日历会马上更新。列表里没有的国家，可以自己添加节假日，或在 App 里发送反馈申请支持。中国的调休安排以政府每年公布为准，尚未公布的年份为预估。</p></details>
+<details><summary>我的记录保存在哪里？</summary><p>你输入的内容只保存在设备和你自己的 iCloud 中。开发者只会收到匿名使用统计、匿名错误诊断，以及你主动发送的反馈。</p></details></div>
+      <p class="contact">以上没能解决的问题、功能建议或错误反馈，请发送到 <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>。我们通常会在 1 到 2 个工作日内回复。</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>今年的年假，<br>休得久一点</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">在 App Store 免费下载</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="语言"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -60,7 +155,7 @@
 <a href="../it/" hreflang="it" lang="it">Italiano</a>
 <a href="../ja/" hreflang="ja" lang="ja">日本語</a>
 <a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans" aria-current="true">简体中文</a>
+<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans" aria-current="page">简体中文</a>
 <a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
 <a href="../ru/" hreflang="ru" lang="ru">Русский</a>
 <a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
@@ -74,67 +169,15 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">隐私政策</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>用最少年假，拼出最长连休</h1>
-<p>Goldweek 帮你找到在节假日和周末之间请哪几天假，才能休得最久。<br>不用再一页页翻日历计算，用最少的年假拼出最长假期的方案一目了然。</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/zh-cn?size=250x83" alt="在 App Store 下载" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Goldweek 能帮你做什么</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>拼假推荐</h3>
-<p>针对每个即将到来的节假日，告诉你需要请几天假、可以连休几天。不会错过任何一次拼假机会。</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>42 个国家和地区的节假日</h3>
-<p>收录中国大陆、中国香港、中国台湾、日本、韩国，以及欧洲、美洲、中东、大洋洲等 42 个国家和地区的节假日，中国大陆还会标出调休补班日。节假日因州或地区而异的国家，可以选择你所在的地区。列表里没有的国家可以自己添加节假日，周末和一周的第一天也能自己选。</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>年假管理</h3>
-<p>总天数、已休天数和剩余天数在一个页面上清清楚楚。支持半天和四分之一天的假期记录，调休、奖励假等额外假期也能连同有效期一起管理。在日历上点一下日期即可登记或修改，还能从公司休假记录页面的照片中一次导入记录。</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>桌面小组件与备份</h3>
-<p>不用打开 App，在桌面小组件上就能看到剩余年假和即将到来的假期。记录会备份到 iCloud，也可以和家人共享休假安排。支持 iPhone 和 iPad。</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>看看应用界面</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/zh-Hans/01-home.png" alt="Goldweek 截图" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/zh-Hans/02-recommend.png" alt="Goldweek 截图" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/zh-Hans/03-calendar.png" alt="Goldweek 截图" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/zh-Hans/04-countries.png" alt="Goldweek 截图" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/zh-Hans/05-settings.png" alt="Goldweek 截图" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>今年的年假，别再白白浪费，好好地多休几天吧。</h2>
-<p>免费下载。Goldweek Pro 为可选的一次性购买。</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/zh-cn?size=250x83" alt="在 App Store 下载" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">支持</a>
-<a href="privacy.html">隐私政策</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. 保留所有权利。</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
 </body>
 </html>

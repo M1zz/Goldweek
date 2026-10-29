@@ -1,58 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: Perencana Cuti</title>
-<meta name="description" content="Ada tanggal merah? Goldweek merangkai hari libur dan akhir pekan, lalu menunjukkan hari cuti yang bikin liburanmu paling panjang. Sisa cuti terlihat di widget.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: Perencana Cuti">
-<meta property="og:description" content="Ada tanggal merah? Goldweek merangkai hari libur dan akhir pekan, lalu menunjukkan hari cuti yang bikin liburanmu paling panjang. Sisa cuti terlihat di widget.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/id/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: libur panjang dengan sedikit cuti</title>
+  <meta name="description" content="Goldweek memadukan hari libur nasional dan akhir pekan, lalu menunjukkan hari cuti yang memberi libur terpanjang. Libur 42 negara dan catatan cuti.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: libur panjang dengan sedikit cuti">
+  <meta property="og:description" content="Goldweek memadukan hari libur nasional dan akhir pekan, lalu menunjukkan hari cuti yang memberi libur terpanjang. Libur 42 negara dan catatan cuti.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/id/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/id/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Ikon aplikasi Goldweek"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Fitur</a>
-<a href="#screenshots" class="hide-mobile">Tangkapan layar</a>
-<a href="support.html" class="hide-mobile">Bantuan</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Unduh</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Bahasa">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Langsung ke konten</a>
+  <header class="bar">
+    <a class="brand" href="../id/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Bahasa</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Cuti sedikit,<br>libur panjang</h1>
+        <p class="lead">Goldweek memadukan hari libur nasional dan akhir pekan, lalu menunjukkan tepatnya hari apa kamu perlu cuti agar liburnya paling panjang. Tidak perlu lagi membolak-balik kalender sambil menghitung.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Unduh gratis di App Store</a><a class="try" href="#try">Cutimu cukup untuk libur berapa hari? ↓</a></div>
+        <p class="muted small">Unduh gratis. Mencatat cuti dan melihat rekomendasi tetap gratis.</p>
+      </div>
+      <div class="phone"><img src="../img/id/02-recommend.jpg" alt="Cuti sedikit, libur panjang" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>Cutimu cukup untuk libur berapa hari?</h2>
+      <p class="muted">Pilih berapa hari cuti yang bisa kamu ambil. Kami tunjukkan libur terpanjang yang bisa kamu dapat di sekitar hari libur berikutnya.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Cutimu cukup untuk libur berapa hari?&quot;, &quot;lead&quot;: &quot;Pilih berapa hari cuti yang bisa kamu ambil. Kami tunjukkan libur terpanjang yang bisa kamu dapat di sekitar hari libur berikutnya.&quot;, &quot;ask&quot;: &quot;Berapa hari cuti yang bisa kamu ambil?&quot;, &quot;based&quot;: &quot;Berdasarkan hari libur nasional di Indonesia&quot;, &quot;note&quot;: &quot;Ini rekomendasi dari aplikasinya langsung. Di aplikasi, rekomendasi juga memperhitungkan sisa cutimu dan cuti yang sudah dijadwalkan, dan bisa langsung dimasukkan ke jadwal.&quot;, &quot;leave&quot;: &quot;Cuti {n} hr&quot;, &quot;rest&quot;: &quot;Libur {n} hr&quot;, &quot;legend&quot;: [&quot;Hari Kerja&quot;, &quot;Cuti Tahunan&quot;, &quot;Hari Libur&quot;, &quot;Akhir Pekan&quot;], &quot;weekdays&quot;: [&quot;Min&quot;, &quot;Sen&quot;, &quot;Sel&quot;, &quot;Rab&quot;, &quot;Kam&quot;, &quot;Jum&quot;, &quot;Sab&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;LHHWW&quot;, &quot;s&quot;: &quot;2026-12-23&quot;, &quot;t&quot;: &quot;Cuti sambung Hari Raya Natal&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;Libur kejepit Tahun Baru Masehi&quot;}, {&quot;d&quot;: &quot;WWHHL&quot;, &quot;s&quot;: &quot;2026-02-14&quot;, &quot;t&quot;: &quot;Cuti sambung Tahun Baru Imlek&quot;}, {&quot;d&quot;: &quot;HHLWHH&quot;, &quot;s&quot;: &quot;2026-05-27&quot;, &quot;t&quot;: &quot;Cuti sambung Iduladha&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2026-06-13&quot;, &quot;t&quot;: &quot;Libur kejepit Tahun Baru Islam&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2026-08-22&quot;, &quot;t&quot;: &quot;Libur kejepit Maulid Nabi Muhammad SAW&quot;}, {&quot;d&quot;: &quot;WWLLHHHHH&quot;, &quot;s&quot;: &quot;2026-03-14&quot;, &quot;t&quot;: &quot;Seminggu libur Cuti bersama Nyepi&quot;}, {&quot;d&quot;: &quot;LLHWH&quot;, &quot;s&quot;: &quot;2026-04-01&quot;, &quot;t&quot;: &quot;Cuti sambung Wafat Yesus Kristus&quot;}, {&quot;d&quot;: &quot;LHHWW&quot;, &quot;s&quot;: &quot;2026-05-13&quot;, &quot;t&quot;: &quot;Cuti sambung Kenaikan Yesus Kristus&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-01-14&quot;, &quot;t&quot;: &quot;Cuti sambung Isra Mikraj Nabi Muhammad SAW&quot;}, {&quot;d&quot;: &quot;HHHHLLLWW&quot;, &quot;s&quot;: &quot;2026-03-21&quot;, &quot;t&quot;: &quot;Seminggu libur Cuti bersama Idulfitri&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-04-29&quot;, &quot;t&quot;: &quot;Cuti sambung Hari Buruh Internasional&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-08-15&quot;, &quot;t&quot;: &quot;Cuti sambung Hari Kemerdekaan RI&quot;}, {&quot;d&quot;: &quot;HWWLH&quot;, &quot;s&quot;: &quot;2027-01-01&quot;, &quot;t&quot;: &quot;Cuti sambung Tahun Baru Masehi&quot;}, {&quot;d&quot;: &quot;WWHHHHLWW&quot;, &quot;s&quot;: &quot;2027-05-15&quot;, &quot;t&quot;: &quot;Seminggu libur Iduladha&quot;}, {&quot;d&quot;: &quot;HLLLWH&quot;, &quot;s&quot;: &quot;2027-06-01&quot;, &quot;t&quot;: &quot;Cuti sambung Hari Lahir Pancasila&quot;}, {&quot;d&quot;: &quot;WHLH&quot;, &quot;s&quot;: &quot;2027-08-14&quot;, &quot;t&quot;: &quot;Libur kejepit Hari Kemerdekaan RI&quot;}, {&quot;d&quot;: &quot;LLHHH&quot;, &quot;s&quot;: &quot;2027-12-22&quot;, &quot;t&quot;: &quot;Cuti sambung Hari Raya Natal&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2027-02-03&quot;, &quot;t&quot;: &quot;Cuti sambung Tahun Baru Imlek&quot;}, {&quot;d&quot;: &quot;LHHWH&quot;, &quot;s&quot;: &quot;2027-03-24&quot;, &quot;t&quot;: &quot;Cuti sambung Wafat Yesus Kristus&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-05-06&quot;, &quot;t&quot;: &quot;Libur kejepit Kenaikan Yesus Kristus&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2027-05-29&quot;, &quot;t&quot;: &quot;Libur kejepit Hari Lahir Pancasila&quot;}, {&quot;d&quot;: &quot;HWLLLH&quot;, &quot;s&quot;: &quot;2027-05-01&quot;, &quot;t&quot;: &quot;Cuti sambung Hari Buruh Internasional&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Capek menghitung hari di kalender?</h2>
+      <p>Kamis tanggal merah, ambil cuti Jumat? Atau simpan untuk disambung dengan libur panjang bulan depan? Setelah bolak-balik kalender, akhirnya cuti diambil asal saja, dan di akhir tahun sisa cuti hangus begitu saja. Goldweek yang menghitung, lalu menunjukkan hari-hari yang membuat cutimu paling awet.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Sisa cuti terlihat sekilas</h2>
+        <p>Total, terpakai, dan sisa cuti ada di satu layar. Di sebelahnya terlihat berapa bagian tahun yang sudah lewat dan berapa cuti yang sudah dipakai, jadi kamu langsung tahu kalau terlalu banyak menabung cuti.<br>Sisa cuti dan libur berikutnya juga tampil di widget layar utama.</p>
+      </div>
+      <div class="phone"><img src="../img/id/01-home.jpg" alt="Sisa cuti terlihat sekilas" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Catat cuti langsung di kalender</h2>
+        <p>Hari libur, cuti, dan rekomendasi libur tampil di kalender dengan warnanya masing-masing. Ketuk tanggal untuk menambah atau mengubah cuti, termasuk setengah hari, seperempat hari, atau per jam.<br>Kamu juga bisa memasukkan riwayat cuti sekaligus dari foto layar HR kantormu.</p>
+      </div>
+      <div class="phone"><img src="../img/id/03-calendar.jpg" alt="Catat cuti langsung di kalender" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Negaramu, jam kerjamu</h2>
+        <p>Hari libur 42 negara, dari Indonesia dan Asia sampai Eropa dan Amerika. Untuk negara yang liburnya beda per wilayah, pilih wilayahmu. Negaramu tidak ada? Tambahkan hari liburnya sendiri.<br>Kamu juga bisa memilih hari akhir pekan, hari pertama dalam seminggu, serta jam kerja tetap, paruh waktu, atau sif.</p>
+      </div>
+      <div class="phone"><img src="../img/id/04-settings.jpg" alt="Negaramu, jam kerjamu" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Mulai dalam tiga langkah</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Pilih tempat kerjamu</h3><p>Saat pertama dibuka, pilih negara dan jumlah cuti tahunanmu.</p></li>
+<li class="card"><span class="n">2</span><h3>Pilih rekomendasi</h3><p>Di tab Kalender ada rekomendasi libur. Tambahkan yang kamu suka ke jadwal.</p></li>
+<li class="card"><span class="n">3</span><h3>Catat cutimu</h3><p>Ketuk tanggal atau masukkan riwayat cuti dari foto.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Cara menghitungnya</h2>
+      <div class="card table">
+        <dl><div><dt>Sehari penuh</dt><dd>Mengurangi 1 hari</dd></div><div><dt>Setengah hari</dt><dd>0,5 hari</dd></div><div><dt>Seperempat hari</dt><dd>0,25 hari</dd></div><div><dt>Per jam</dt><dd>Sesuai jam kerjamu hari itu</dd></div><div><dt>Sakit, izin resmi, dinas</dt><dd>Tidak mengurangi sisa cuti</dd></div><div><dt>Cuti Bonus</dt><dd>Cuti tambahan seperti cuti pengganti, dicatat terpisah dengan tanggal kedaluwarsa (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Jumlah cuti tahunan dan bulan awal tahun cutimu bisa diubah kapan saja di Pengaturan.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Istirahat cukup itu gratis. Serahkan perencanaan ke Plus dan Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Gratis</h3>
+          <ul><li>Cuti sehari, setengah, seperempat, dan per jam, beserta sisa cuti</li><li>Hari libur 42 negara, libur sendiri dan libur sekolah</li><li>Lihat semua rekomendasi tahun ini, tambahkan sampai 3</li><li>Pengingat jeda istirahat, notifikasi, dan widget</li><li>Tambah cuti dari foto</li><li>Backup iCloud dan jadwal bersama keluarga</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus dan Pro</h3>
+          <ul><li>Plus: Perencana cuti optimal</li><li>Plus: Rekomendasi tanpa batas, termasuk tahun lalu dan tahun depan</li><li>Plus: Kirim cuti ke aplikasi Kalender</li><li>Pro: Semua fitur Plus, Cuti Bonus, batas tahunan dan carry over per jenis</li><li>Pro: Impor kalender sekolah dan deteksi kalender otomatis</li><li>Pro: Libur bersama keluarga dan hari spesial keluarga</li></ul>
+          <p class="muted">Setiap paket tersedia sebagai langganan tahunan atau sekali beli seumur hidup.</p>
+        </div>
+      </div>
+      <p class="muted">Langganan tahunan diperpanjang otomatis kecuali dimatikan paling lambat 24 jam sebelum periode berakhir. Atur kapan saja di Pengaturan &gt; Akun Apple &gt; Langganan.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Pertanyaan umum</h2>
+      <div class="faq"><details><summary>Sisa cutiku sepertinya tidak tepat.</summary><p>Cek di Pengaturan bulan awal tahun cuti dan total cuti tahunanmu. Setengah hari (0,5) dan seperempat hari (0,25) dipotong otomatis, sedangkan jenis yang tidak mengurangi cuti, seperti sakit, izin resmi, atau dinas, tidak mengubah sisa cuti. Kalau masih tidak cocok, kirim email ke kami.</p></details>
+<details><summary>Cutiku tidak muncul di kalender.</summary><p>Cuti yang dibatalkan tidak tampil di kalender. Cek status catatannya di Kelola cuti. Memperbarui ke versi terbaru juga bisa membantu.</p></details>
+<details><summary>Bagaimana cara menambah Cuti Bonus?</summary><p>Ketuk + di tab Ringkasan untuk membuka Kelola cuti, lalu gunakan bagian Cuti Bonus di bawah. Pilih jenisnya (cuti pengganti, cuti penghargaan, cuti penyegaran, dan lainnya), isi jumlah hari dan, kalau mau, tanggal kedaluwarsa. Cuti Bonus dicatat terpisah dari cuti tahunan biasa.</p></details>
+<details><summary>Sudah bayar, tapi fiturnya belum terbuka.</summary><p>Ketuk Pulihkan pembelian di bagian bawah tab Pengaturan. Pembelian dipulihkan dengan Akun Apple yang dipakai masuk ke App Store. Kalau masih belum bisa, kirim email ke kami.</p></details>
+<details><summary>Apakah data hilang kalau aplikasinya dihapus?</summary><p>Data tersimpan di perangkat, jadi menghapus aplikasi akan menghapus semuanya. Nyalakan Backup iCloud supaya ada salinan yang bisa dipulihkan nanti.</p></details>
+<details><summary>Bisa menambah hari libur sendiri atau menyembunyikannya?</summary><p>Bisa. Di Hari Libur &amp; Libur Sekolah pada Pengaturan, kamu bisa menambah hari libur sendiri atau menyembunyikan hari libur bawaan.</p></details>
+<details><summary>Negara mana saja yang didukung?</summary><p>Goldweek punya hari libur 42 negara. Pilih negaramu di Pengaturan (dan wilayahnya, kalau liburnya berbeda per wilayah), lalu kalender langsung menyesuaikan. Kalau negaramu belum ada, tambahkan hari liburnya sendiri atau minta lewat masukan di aplikasi. Untuk Indonesia, cuti bersama mengikuti SKB yang terbit setiap tahun.</p></details>
+<details><summary>Di mana dataku disimpan?</summary><p>Semua yang kamu masukkan hanya ada di perangkat atau iCloud milikmu sendiri. Kami hanya menerima statistik penggunaan anonim, laporan kerusakan anonim, dan masukan yang kamu kirim sendiri.</p></details></div>
+      <p class="contact">Untuk hal yang belum terjawab di atas, ide fitur, atau laporan bug, kirim ke <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. Biasanya kami membalas dalam satu atau dua hari kerja.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Tahun ini, buat cutimu<br>lebih awet</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Unduh gratis di App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Bahasa"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -63,7 +164,7 @@
 <a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
 <a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
 <a href="../ru/" hreflang="ru" lang="ru">Русский</a>
-<a href="../id/" hreflang="id" lang="id" aria-current="true">Bahasa Indonesia</a>
+<a href="../id/" hreflang="id" lang="id" aria-current="page">Bahasa Indonesia</a>
 <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
 <a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
 <a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
@@ -74,67 +175,16 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Kebijakan Privasi</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Libur panjang, cuti hemat</h1>
-<p>Goldweek membantumu memilih hari cuti yang paling menguntungkan.<br>Hari libur nasional dan akhir pekan dirangkai, lalu Goldweek menunjukkan cara libur paling lama dengan jatah cuti paling sedikit.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/id-id?size=250x83" alt="Unduh di App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Yang bisa dilakukan Goldweek</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Rekomendasi untuk setiap tanggal merah</h3>
-<p>Untuk setiap hari libur yang akan datang, lihat berapa hari cuti yang perlu diambil dan berapa hari kamu bisa libur berturut-turut. Hari kejepit tidak akan terlewat lagi.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Hari libur 42 negara</h3>
-<p>Indonesia dan 40 negara lain di Asia, Eropa, Amerika, Timur Tengah, Afrika, dan Oseania. Untuk Indonesia, libur nasional dan cuti bersama mengikuti SKB 3 Menteri. Kalau hari libur berbeda menurut wilayah, pilih wilayahmu. Negara yang belum ada di daftar bisa diatur sendiri.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Catatan cuti</h3>
-<p>Lihat total cuti, cuti terpakai, dan sisa cuti dalam satu layar. Kamu bisa mencatat cuti setengah hari dan seperempat hari, serta mengelola cuti tambahan beserta tanggal kedaluwarsanya. Ketuk tanggal di kalender untuk mencatat atau mengubah cuti, atau impor riwayat cuti dari foto layar sistem HR kantormu.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget dan cadangan</h3>
-<p>Sisa cuti dan liburan berikutnya langsung terlihat di Layar Utama. Catatanmu dicadangkan ke iCloud, dan jadwal cuti bisa dibagikan ke keluarga. Bisa dipakai di iPhone dan iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Lihat isi aplikasinya</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/en/01-home.png" alt="Tangkapan layar Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/02-recommend.png" alt="Tangkapan layar Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/03-calendar.png" alt="Tangkapan layar Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/04-countries.png" alt="Tangkapan layar Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/05-settings.png" alt="Tangkapan layar Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Rencanakan lebih awal, pakai cuti lebih sedikit, dan nikmati libur lebih lama.</h2>
-<p>Gratis diunduh. Goldweek Pro adalah pembelian sekali bayar yang opsional.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/id-id?size=250x83" alt="Unduh di App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Bantuan</a>
-<a href="privacy.html">Kebijakan Privasi</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Hak cipta dilindungi.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

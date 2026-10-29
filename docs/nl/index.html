@@ -1,58 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: Verlofplanner</title>
-<meta name="description" content="Feestdag in aantocht? Goldweek combineert feestdagen en weekenden en toont welke dagen je vrij neemt voor de langste vakantie. Je resterende verlof zie je in de widget.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: Verlofplanner">
-<meta property="og:description" content="Feestdag in aantocht? Goldweek combineert feestdagen en weekenden en toont welke dagen je vrij neemt voor de langste vakantie. Je resterende verlof zie je in de widget.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/nl/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: lang vrij met weinig verlofdagen</title>
+  <meta name="description" content="Goldweek koppelt feestdagen aan weekenden en laat zien welke dagen je vrij moet nemen voor de langste vakantie. Feestdagen van 42 landen.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: lang vrij met weinig verlofdagen">
+  <meta property="og:description" content="Goldweek koppelt feestdagen aan weekenden en laat zien welke dagen je vrij moet nemen voor de langste vakantie. Feestdagen van 42 landen.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/nl/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/nl/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="App-icoon van Goldweek"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Functies</a>
-<a href="#screenshots" class="hide-mobile">Screenshots</a>
-<a href="support.html" class="hide-mobile">Support</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Downloaden</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Taal">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Naar de inhoud</a>
+  <header class="bar">
+    <a class="brand" href="../nl/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Talen</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Weinig verlofdagen,<br>lang vrij</h1>
+        <p class="lead">Goldweek koppelt feestdagen aan weekenden en laat precies zien op welke dagen je verlof moet nemen om het langst vrij te zijn. Nooit meer de kalender doorbladeren en tellen.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Gratis downloaden in de App Store</a><a class="try" href="#try">Hoe ver kom je met je verlof? ↓</a></div>
+        <p class="muted small">Gratis downloaden. Verlof bijhouden en suggesties blijven gratis.</p>
+      </div>
+      <div class="phone"><img src="../img/nl/02-recommend.jpg" alt="Weinig verlofdagen, lang vrij" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>Hoe ver kom je met je verlof?</h2>
+      <p class="muted">Kies hoeveel dagen je vrij kunt nemen. Je ziet de langste vrije periodes die ze opleveren rond de komende feestdagen.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Hoe ver kom je met je verlof?&quot;, &quot;lead&quot;: &quot;Kies hoeveel dagen je vrij kunt nemen. Je ziet de langste vrije periodes die ze opleveren rond de komende feestdagen.&quot;, &quot;ask&quot;: &quot;Hoeveel verlofdagen kun je opnemen?&quot;, &quot;based&quot;: &quot;Op basis van de feestdagen in Nederland&quot;, &quot;note&quot;: &quot;Dit zijn de suggesties van de app zelf. In de app houden ze ook rekening met je resterende verlof en verlof dat al gepland staat, en zet je er een met één tik in je planning.&quot;, &quot;leave&quot;: &quot;{n}d verlof&quot;, &quot;rest&quot;: &quot;{n}d vrij&quot;, &quot;legend&quot;: [&quot;Werkdag&quot;, &quot;Vakantiedagen&quot;, &quot;Feestdag&quot;, &quot;Weekend&quot;], &quot;weekdays&quot;: [&quot;zo&quot;, &quot;ma&quot;, &quot;di&quot;, &quot;wo&quot;, &quot;do&quot;, &quot;vr&quot;, &quot;za&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;Brugdag Nieuwjaarsdag&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-05-14&quot;, &quot;t&quot;: &quot;Brugdag Hemelvaartsdag&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2026-12-23&quot;, &quot;t&quot;: &quot;Verlof rond Eerste kerstdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-04-04&quot;, &quot;t&quot;: &quot;Verlof rond Tweede paasdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-05-23&quot;, &quot;t&quot;: &quot;Verlof rond Tweede pinksterdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-04-25&quot;, &quot;t&quot;: &quot;Verlof rond Koningsdag&quot;}, {&quot;d&quot;: &quot;HHLLL&quot;, &quot;s&quot;: &quot;2027-12-25&quot;, &quot;t&quot;: &quot;Verlof rond Eerste kerstdag&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2027-04-24&quot;, &quot;t&quot;: &quot;Brugdag Koningsdag&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-05-06&quot;, &quot;t&quot;: &quot;Brugdag Hemelvaartsdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-03-27&quot;, &quot;t&quot;: &quot;Verlof rond Tweede paasdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-05-15&quot;, &quot;t&quot;: &quot;Verlof rond Tweede pinksterdag&quot;}, {&quot;d&quot;: &quot;WWHHL&quot;, &quot;s&quot;: &quot;2028-12-23&quot;, &quot;t&quot;: &quot;Verlof rond Eerste kerstdag&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2028-01-01&quot;, &quot;t&quot;: &quot;Verlof rond Nieuwjaarsdag&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-04-27&quot;, &quot;t&quot;: &quot;Brugdag Koningsdag&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-05-25&quot;, &quot;t&quot;: &quot;Brugdag Hemelvaartsdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-06-03&quot;, &quot;t&quot;: &quot;Verlof rond Tweede pinksterdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-04-15&quot;, &quot;t&quot;: &quot;Verlof rond Tweede paasdag&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Moe van dagen tellen in de agenda?</h2>
+      <p>Donderdag is een feestdag, dus vrijdag vrij nemen? Of de dag bewaren voor het lange weekend volgende maand? Na genoeg bladeren neem je zomaar een dag, en in december verdwijnt je resterende verlof. Goldweek rekent het voor je uit en laat de dagen zien waarmee je verlof het verst reikt.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Je verlof in één oogopslag</h2>
+        <p>Totaal, opgenomen en over op één scherm. Ernaast zie je hoe ver het jaar al is en hoeveel verlof je hebt gebruikt, zodat je meteen ziet of je te veel spaart.<br>Je resterende dagen en komende vrije dagen staan in een widget op je beginscherm.</p>
+      </div>
+      <div class="phone"><img src="../img/nl/01-home.jpg" alt="Je verlof in één oogopslag" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Verlof direct in de agenda</h2>
+        <p>Feestdagen, verlof en voorgestelde brugdagen staan in kleur in de agenda. Tik op een datum om verlof toe te voegen of aan te passen, ook halve dagen, kwartdagen of uren.<br>Eerder verlof zet je in één keer over vanaf een foto van je HR-scherm.</p>
+      </div>
+      <div class="phone"><img src="../img/nl/03-calendar.jpg" alt="Verlof direct in de agenda" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Jouw land, jouw werktijden</h2>
+        <p>Feestdagen van 42 landen, van Nederland en België tot de rest van Europa, Azië en Amerika. Verschillen ze per regio, kies dan de jouwe. Staat je land er niet bij? Voeg je eigen feestdagen toe.<br>Je kiest ook je weekenddagen, de eerste dag van de week en of je vast, parttime of in ploegen werkt.</p>
+      </div>
+      <div class="phone"><img src="../img/nl/04-settings.jpg" alt="Jouw land, jouw werktijden" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>In drie stappen begonnen</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Vertel waar je werkt</h3><p>Bij de eerste keer kies je je land en hoeveel verlofdagen je per jaar hebt.</p></li>
+<li class="card"><span class="n">2</span><h3>Kies een suggestie</h3><p>In het tabblad Agenda staan voorgestelde vrije periodes. Voeg toe wat je bevalt.</p></li>
+<li class="card"><span class="n">3</span><h3>Houd je verlof bij</h3><p>Tik op een datum of zet eerder verlof over vanaf een foto.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Zo wordt er gerekend</h2>
+      <div class="card table">
+        <dl><div><dt>Hele dag</dt><dd>1 dag van je saldo</dd></div><div><dt>Halve dag</dt><dd>0,5 dag</dd></div><div><dt>Kwartdag</dt><dd>0,25 dag</dd></div><div><dt>Uren</dt><dd>Naar je werkuren op die dag</dd></div><div><dt>Ziekte, bijzonder verlof, dienstreis</dt><dd>Gaan niet van je verlof af</dd></div><div><dt>Bonusverlof</dt><dd>Extra vrije dagen zoals compensatie-uren, apart bijgehouden met vervaldatum (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Je jaarlijkse verlof en de maand waarin je verlofjaar begint, pas je altijd aan in Instellingen.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Goed uitrusten is gratis. Plannen doen Plus en Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Gratis</h3>
+          <ul><li>Hele, halve en kwartdagen en uren, met je resterende verlof</li><li>Feestdagen van 42 landen, eigen feestdagen en vakanties</li><li>Alle suggesties voor dit jaar zien, er 3 toevoegen</li><li>Tips over rustmomenten, herinneringen en widget</li><li>Verlof toevoegen via foto</li><li>iCloud-back-up en een gedeelde planning met je gezin</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus en Pro</h3>
+          <ul><li>Plus: Optimale jaarplanner</li><li>Plus: Onbeperkt suggesties, ook voor vorig en volgend jaar</li><li>Plus: Verlof naar je Agenda-app sturen</li><li>Pro: Alles uit Plus, bonusverlof, jaarlimieten en meenemen per verlofsoort</li><li>Pro: Schoolagenda importeren en agenda automatisch herkennen</li><li>Pro: Samen vrij en familiedagen</li></ul>
+          <p class="muted">Elk niveau is er als jaarabonnement of als eenmalige aankoop voor altijd.</p>
+        </div>
+      </div>
+      <p class="muted">Jaarabonnementen verlengen automatisch, tenzij je ze minstens 24 uur voor het einde van de periode opzegt. Beheer ze wanneer je wilt via Instellingen &gt; Apple Account &gt; Abonnementen.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Veelgestelde vragen</h2>
+      <div class="faq"><details><summary>Mijn verlofsaldo klopt niet.</summary><p>Controleer in Instellingen in welke maand je verlofjaar begint en hoeveel verlofdagen je in totaal hebt. Halve dagen (0,5) en kwartdagen (0,25) gaan er automatisch af, en soorten die niet meetellen, zoals ziekte, bijzonder verlof of dienstreizen, veranderen het saldo niet. Klopt het nog steeds niet, mail ons dan.</p></details>
+<details><summary>Mijn verlof staat niet in de agenda.</summary><p>Geannuleerd verlof wordt niet in de agenda getoond. Controleer de status van de invoer in Verlofbeheer. Updaten naar de nieuwste versie kan ook helpen.</p></details>
+<details><summary>Hoe voeg ik bonusverlof toe?</summary><p>Tik op + in het tabblad Status om Verlofbeheer te openen en gebruik onderaan het onderdeel Bonusverlof. Kies een soort (compensatieverlof, beloningsverlof, opladverlof…), vul het aantal dagen in en eventueel een vervaldatum. Bonusverlof wordt apart van je gewone verlof bijgehouden.</p></details>
+<details><summary>Ik heb betaald, maar er is niets ontgrendeld.</summary><p>Tik onderaan het tabblad Instellingen op Aankoop herstellen. Je aankoop wordt hersteld met het Apple Account waarmee je bent ingelogd in de App Store. Werkt het niet, mail ons dan.</p></details>
+<details><summary>Ben ik mijn gegevens kwijt als ik de app verwijder?</summary><p>Je gegevens staan op het apparaat, dus als je de app verwijdert, zijn ze weg. Zet iCloud-back-up aan om een kopie te bewaren die je later kunt terugzetten.</p></details>
+<details><summary>Kan ik eigen feestdagen toevoegen of er verbergen?</summary><p>Ja. Bij Feestdagen en vakanties in Instellingen voeg je eigen feestdagen toe of verberg je standaardfeestdagen.</p></details>
+<details><summary>Welke landen worden ondersteund?</summary><p>Goldweek kent de feestdagen van 42 landen. Kies je land in Instellingen (en je regio, waar feestdagen verschillen) en de agenda past zich meteen aan. Staat je land er niet bij, voeg de feestdagen dan zelf toe of vraag erom via feedback in de app.</p></details>
+<details><summary>Waar worden mijn gegevens bewaard?</summary><p>Wat je invoert, blijft op je apparaat of in je eigen iCloud. Wij ontvangen alleen anonieme gebruiksstatistieken, anonieme crashrapporten en feedback die je zelf stuurt.</p></details></div>
+      <p class="contact">Voor alles wat hierboven niet beantwoord is, ideeën of bugs: mail <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. We antwoorden meestal binnen een of twee werkdagen.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Haal dit jaar meer<br>uit je verlof</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Gratis downloaden in de App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Talen"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -64,7 +165,7 @@
 <a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
 <a href="../ru/" hreflang="ru" lang="ru">Русский</a>
 <a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
-<a href="../nl/" hreflang="nl" lang="nl" aria-current="true">Nederlands</a>
+<a href="../nl/" hreflang="nl" lang="nl" aria-current="page">Nederlands</a>
 <a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
 <a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
 <a href="../da/" hreflang="da" lang="da">Dansk</a>
@@ -74,67 +175,16 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Privacybeleid</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Langer vrij met minder dagen</h1>
-<p>Goldweek vindt de vrije dagen waarmee je het langst op vakantie bent.<br>De app combineert feestdagen en weekenden en laat zien hoe je met zo min mogelijk verlofdagen zo lang mogelijk vrij bent.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/nl-nl?size=250x83" alt="Download in de App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Wat Goldweek voor je doet</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Slimme voorstellen</h3>
-<p>Voor elke feestdag die eraan komt, zie je hoeveel dagen je vrij moet nemen en hoeveel dagen je dan achter elkaar vrij bent. Zo mis je nooit meer een brugdag.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Feestdagen in 42 landen</h3>
-<p>Nederland, België en nog 39 landen in Europa, Azië, Amerika, het Midden-Oosten, Afrika en Oceanië. Gebruik je de app in het Nederlands, dan zie je de officiële namen, zoals Koningsdag, Bevrijdingsdag, Hemelvaartsdag en tweede pinksterdag. Verschillen de feestdagen per regio, kies dan gewoon je eigen regio. Staat je land er niet bij, dan voer je de feestdagen zelf in.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Je verlof in beeld</h3>
-<p>Totaal, opgenomen en resterend verlof op één scherm. Je kunt halve en kwart dagen registreren en extra verlof, zoals compensatieverlof, bijhouden met de vervaldatum erbij. Tik in de kalender op een datum om verlof toe te voegen of te wijzigen, of importeer eerder verlof met een foto van het scherm van je personeelssysteem. Ook je weekenddagen en de eerste dag van de week stel je zelf in.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget en back-up</h3>
-<p>Je resterende verlof en je volgende vrije dagen staan meteen op je beginscherm. Je gegevens worden in iCloud bewaard en je kunt je verlofplanning delen met je gezin. Werkt op iPhone en iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Een kijkje in de app</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/en/01-home.png" alt="Screenshot van Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/02-recommend.png" alt="Screenshot van Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/03-calendar.png" alt="Screenshot van Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/04-countries.png" alt="Screenshot van Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/05-settings.png" alt="Screenshot van Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Plan vooruit, gebruik minder verlof en geniet langer van je vrije tijd.</h2>
-<p>Gratis te downloaden. Goldweek Pro is een optionele eenmalige aankoop.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/nl-nl?size=250x83" alt="Download in de App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Support</a>
-<a href="privacy.html">Privacybeleid</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Alle rechten voorbehouden.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

@@ -1,59 +1,160 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek - PTO and Vacation</title>
-<meta name="description" content="Holiday coming up? Goldweek pairs public holidays with weekends to show which days to take off for the longest break. Check your remaining PTO from a Home Screen widget.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek - PTO and Vacation">
-<meta property="og:description" content="Holiday coming up? Goldweek pairs public holidays with weekends to show which days to take off for the longest break. Check your remaining PTO from a Home Screen widget.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/en/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: turn a few PTO days into long breaks</title>
+  <meta name="description" content="Goldweek pairs public holidays with weekends to show which days to take off for the longest break. Holidays for 42 countries and PTO tracking.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: turn a few PTO days into long breaks">
+  <meta property="og:description" content="Goldweek pairs public holidays with weekends to show which days to take off for the longest break. Holidays for 42 countries and PTO tracking.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/en/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/en/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Goldweek app icon"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Features</a>
-<a href="#screenshots" class="hide-mobile">Screenshots</a>
-<a href="support.html" class="hide-mobile">Support</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Download</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Language">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
-<a href="../en/" hreflang="en" lang="en" aria-current="true">English</a>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="bar">
+    <a class="brand" href="../en/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Languages</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Take one day off.<br>Get four in a row.</h1>
+        <p class="lead">Goldweek pairs public holidays with weekends and shows exactly which days to take off for the longest break. No more flipping through the calendar and counting.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Get it free on the App Store</a><a class="try" href="#try">How far can your PTO go? ↓</a></div>
+        <p class="muted small">Free to download. Tracking your PTO and seeing suggestions stay free.</p>
+      </div>
+      <div class="phone"><img src="../img/en/02-recommend.jpg" alt="Take one day off. Get four in a row." width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>How far can your PTO go?</h2>
+      <p class="muted">Pick how many days you can take off. You'll see the longest breaks those days unlock around the holidays ahead.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;How far can your PTO go?&quot;, &quot;lead&quot;: &quot;Pick how many days you can take off. You&#x27;ll see the longest breaks those days unlock around the holidays ahead.&quot;, &quot;ask&quot;: &quot;How many days can you take off?&quot;, &quot;based&quot;: &quot;Based on public holidays in the USA&quot;, &quot;note&quot;: &quot;These are the app&#x27;s own suggestions. In the app they also account for your state, your remaining PTO and time off you&#x27;ve already booked, and you can add one to your schedule in a tap.&quot;, &quot;leave&quot;: &quot;{n}d leave&quot;, &quot;rest&quot;: &quot;{n}d off&quot;, &quot;legend&quot;: [&quot;Workday&quot;, &quot;Annual Leave&quot;, &quot;Holiday&quot;, &quot;Weekend&quot;], &quot;weekdays&quot;: [&quot;Sun&quot;, &quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-11-26&quot;, &quot;t&quot;: &quot;Thanksgiving Break&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;New Year&#x27;s Day Bridge Holiday&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-10-10&quot;, &quot;t&quot;: &quot;Columbus Day Extended Leave&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2026-11-11&quot;, &quot;t&quot;: &quot;Veterans Day Extended Leave&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-12-23&quot;, &quot;t&quot;: &quot;Christmas Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-02-14&quot;, &quot;t&quot;: &quot;Presidents&#x27; Day Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-05-23&quot;, &quot;t&quot;: &quot;Memorial Day Extended Leave&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-06-17&quot;, &quot;t&quot;: &quot;Juneteenth Extended Leave&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2026-07-01&quot;, &quot;t&quot;: &quot;Independence Day Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-09-05&quot;, &quot;t&quot;: &quot;Labor Day Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-01-17&quot;, &quot;t&quot;: &quot;Martin Luther King Jr. Day Extended Leave&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-11-25&quot;, &quot;t&quot;: &quot;Thanksgiving Break&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-10-09&quot;, &quot;t&quot;: &quot;Columbus Day Extended Leave&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-11-11&quot;, &quot;t&quot;: &quot;Veterans Day Bridge Holiday&quot;}, {&quot;d&quot;: &quot;HHWLL&quot;, &quot;s&quot;: &quot;2027-12-24&quot;, &quot;t&quot;: &quot;Christmas Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-02-13&quot;, &quot;t&quot;: &quot;Presidents&#x27; Day Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-05-29&quot;, &quot;t&quot;: &quot;Memorial Day Extended Leave&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2027-06-16&quot;, &quot;t&quot;: &quot;Juneteenth Extended Leave&quot;}, {&quot;d&quot;: &quot;WHHLL&quot;, &quot;s&quot;: &quot;2027-07-03&quot;, &quot;t&quot;: &quot;Independence Day Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-09-04&quot;, &quot;t&quot;: &quot;Labor Day Extended Leave&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2027-12-29&quot;, &quot;t&quot;: &quot;New Year&#x27;s Day (Observed) Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-01-16&quot;, &quot;t&quot;: &quot;Martin Luther King Jr. Day Extended Leave&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-11-23&quot;, &quot;t&quot;: &quot;Thanksgiving Break&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2028-07-01&quot;, &quot;t&quot;: &quot;July 4th Long Weekend&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-10-07&quot;, &quot;t&quot;: &quot;Columbus Day Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-12-23&quot;, &quot;t&quot;: &quot;Christmas Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-01-15&quot;, &quot;t&quot;: &quot;Martin Luther King Jr. Day Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-02-19&quot;, &quot;t&quot;: &quot;Presidents&#x27; Day Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-05-27&quot;, &quot;t&quot;: &quot;Memorial Day Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-06-17&quot;, &quot;t&quot;: &quot;Juneteenth Extended Leave&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-09-02&quot;, &quot;t&quot;: &quot;Labor Day Extended Leave&quot;}, {&quot;d&quot;: &quot;LLHHW&quot;, &quot;s&quot;: &quot;2028-11-08&quot;, &quot;t&quot;: &quot;Veterans Day Extended Leave&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2028-01-01&quot;, &quot;t&quot;: &quot;New Year&#x27;s Day Extended Leave&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Tired of counting days on the calendar?</h2>
+      <p>Thursday is a holiday, so do you take Friday? Or save the day for next month's long weekend? Flip enough calendar pages and you end up taking whatever day is free, and by December the leftover PTO just disappears. Goldweek does the counting and shows you the days that stretch your PTO the furthest.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Your PTO at a glance</h2>
+        <p>See your total, used and remaining days on one screen. It also shows how far into the year you are next to how much PTO you've used, so you know right away if you're saving too much.<br>Your remaining days and upcoming time off sit right on your Home Screen in a widget.</p>
+      </div>
+      <div class="phone"><img src="../img/en/01-home.jpg" alt="Your PTO at a glance" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Add time off right on the calendar</h2>
+        <p>Holidays, PTO and suggested breaks all show up on the calendar in their own colors. Tap a date to add or edit time off, including half days, quarter days and hours.<br>You can also import past leave in one go from a photo of your HR screen.</p>
+      </div>
+      <div class="phone"><img src="../img/en/03-calendar.jpg" alt="Add time off right on the calendar" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Your country, your schedule</h2>
+        <p>Public holidays for 42 countries, from the US, the UK and Canada to Europe, Asia and Latin America. Where holidays vary by state or region, pick yours. Country not listed? Add your own holidays.<br>You can also set your weekend days, the first day of the week, and fixed, part-time or shift work.</p>
+      </div>
+      <div class="phone"><img src="../img/en/04-settings.jpg" alt="Your country, your schedule" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Three steps to start</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Tell it where you work</h3><p>On first launch, pick your country and how many PTO days you get a year.</p></li>
+<li class="card"><span class="n">2</span><h3>Pick a suggestion</h3><p>Find suggested breaks in the Calendar tab and add the ones you like.</p></li>
+<li class="card"><span class="n">3</span><h3>Log your time off</h3><p>Tap a date, or import past leave from a photo.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>How it counts</h2>
+      <div class="card table">
+        <dl><div><dt>Full day</dt><dd>1 day off your balance</dd></div><div><dt>Half day</dt><dd>0.5 day</dd></div><div><dt>Quarter day</dt><dd>0.25 day</dd></div><div><dt>Hours</dt><dd>Based on the hours you work that day</dd></div><div><dt>Sick leave, official leave, business trips</dt><dd>Not taken from your balance</dd></div><div><dt>Bonus leave</dt><dd>Extra leave such as comp days, tracked separately with an expiration date (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">You can change your total annual leave and the month your leave year starts anytime in Settings.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Resting well is free. Hand over the planning with Plus or Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Free</h3>
+          <ul><li>Full days, half days, quarter days and hours, plus your remaining PTO</li><li>Holidays for 42 countries, plus your own holidays and school breaks</li><li>See every suggestion for this year and add up to 3</li><li>Rest spacing tips, reminders and a Home Screen widget</li><li>Add leave from a photo</li><li>iCloud backup and a shared schedule with family</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus and Pro</h3>
+          <ul><li>Plus: Optimal annual planner</li><li>Plus: Unlimited suggestions, plus last year's and next year's</li><li>Plus: Send time off to your calendar app</li><li>Pro: Everything in Plus, bonus leave, yearly limits and carryover by leave type</li><li>Pro: School calendar import and calendar auto-detection</li><li>Pro: Time off together and family anniversaries</li></ul>
+          <p class="muted">Each tier comes as a yearly subscription or a one-time lifetime purchase.</p>
+        </div>
+      </div>
+      <p class="muted">Yearly subscriptions renew automatically unless turned off at least 24 hours before the period ends. Manage them anytime in Settings &gt; Apple Account &gt; Subscriptions.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Questions</h2>
+      <div class="faq"><details><summary>My leave balance doesn't look right.</summary><p>Check the month your leave year starts and your total annual leave in Settings. Half days (0.5) and quarter days (0.25) are deducted automatically, and types that don't count against your balance, such as sick leave, official leave and business trips, don't change it. If it still looks wrong, email us.</p></details>
+<details><summary>My time off doesn't show up on the calendar.</summary><p>Cancelled time off isn't shown on the calendar. Check the entry's status in Leave Management. Updating to the latest version can also help.</p></details>
+<details><summary>How do I add bonus leave?</summary><p>Tap + in the Status tab to open Leave Management, then use Bonus Leave at the bottom. Choose a type (such as comp days, reward leave or refresh leave), enter the number of days and, if you like, an expiration date. Bonus leave is tracked separately from your regular PTO.</p></details>
+<details><summary>I paid, but nothing unlocked.</summary><p>Tap Restore Purchase at the bottom of the Settings tab. Your purchase is restored with the Apple Account you're signed in to on the App Store. If that doesn't work, email us.</p></details>
+<details><summary>Will I lose my data if I delete the app?</summary><p>Your data is stored on your device, so deleting the app removes it for good. Turn on iCloud Backup to keep a copy you can restore later.</p></details>
+<details><summary>Can I add my own holidays or hide existing ones?</summary><p>Yes. In Holidays &amp; Breaks in Settings, you can add your own holidays or hide any of the default ones.</p></details>
+<details><summary>Which countries are supported?</summary><p>Goldweek includes public holidays for 42 countries. Choose your country (and your state or region, where holidays differ) in Settings, and the calendar updates right away. If yours isn't listed, add its holidays yourself or ask us to support it by sending feedback from the app.</p></details>
+<details><summary>Where is my data stored?</summary><p>What you enter stays on your device or in your own iCloud. We only receive anonymous usage statistics, anonymous crash reports and any feedback you choose to send.</p></details></div>
+      <p class="contact">For anything not covered above, feature ideas or bug reports, email <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. We usually reply within one or two business days.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Make this year's PTO<br>go further</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Get it free on the App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Languages"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+<a href="../en/" hreflang="en" lang="en" aria-current="page">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
 <a href="../fr/" hreflang="fr" lang="fr">Français</a>
@@ -74,67 +175,16 @@
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Privacy Policy</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Turn holidays into long breaks</h1>
-<p>Goldweek finds the days off that stretch your PTO the furthest.<br>It pairs public holidays with weekends and shows you how to get the longest break for the fewest PTO days.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>What Goldweek does</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Smart suggestions</h3>
-<p>For every upcoming holiday, see how many days to take off and how many days in a row you will get. You will never miss a bridge day again.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Holidays in 42 countries</h3>
-<p>Public holidays for the US, the UK, Canada, Australia, New Zealand and 36 more countries across Europe, Asia, Latin America, the Middle East and Africa. Where holidays vary by state or region, just pick yours. Country not listed? Add your own holidays. You can also choose your weekend days and the first day of the week.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>PTO tracking</h3>
-<p>See your total, used and remaining days on one screen. Log half days and quarter days, and keep track of extra leave such as comp days along with their expiration dates. Tap a date in the calendar to add or edit time off, or import past leave from a photo of your HR screen.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget and backup</h3>
-<p>Your remaining PTO and upcoming time off sit right on your Home Screen. Your records are backed up to iCloud, and you can share your schedule with family. Works on iPhone and iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>A look inside</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/en/01-home.png" alt="Goldweek screenshot" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/02-recommend.png" alt="Goldweek screenshot" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/03-calendar.png" alt="Goldweek screenshot" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/04-countries.png" alt="Goldweek screenshot" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/05-settings.png" alt="Goldweek screenshot" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Plan ahead, use fewer days and enjoy more time off.</h2>
-<p>Free to download. Goldweek Pro is an optional one-time purchase.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Support</a>
-<a href="privacy.html">Privacy Policy</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. All rights reserved.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

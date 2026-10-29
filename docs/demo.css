@@ -1,0 +1,40 @@
+/* 골드위크 웹 체험. 날짜 색은 앱의 추천 카드와 같다: 연차 초록, 공휴일 빨강, 주말 파랑. */
+.demo-card { --gw-leave: #15803d; --gw-holiday: #dc2626; --gw-weekend: #2563eb; }
+.gw-q { font-weight: 600; margin-bottom: var(--s3); }
+.gw-chips { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s3); }
+.chip { font: inherit; font-weight: 600; min-height: 44px; padding: 0 var(--s4); border: 0; border-radius: 999px;
+        color: var(--accent); background: var(--bg); cursor: pointer;
+        transition: background .15s var(--ease), transform .15s var(--ease); }
+.chip:hover { background: color-mix(in srgb, var(--accent) 14%, var(--bg)); }
+.chip[aria-checked="true"] { background: var(--accent); color: var(--on-accent); }
+.chip:active { transform: scale(.95); }
+
+.gw-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
+.gw-rec { background: var(--bg); border-radius: var(--r-inner); padding: var(--s4); animation: gw-in .4s var(--ease); }
+.gw-rec h3 { font-size: 1rem; margin-bottom: var(--s1); }
+.gw-rec p { margin: 0; }
+@keyframes gw-in { from { opacity: 0; transform: translateY(8px); } }
+
+.gw-days { list-style: none; padding: 0; margin: var(--s3) 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.gw-day { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 32px; }
+.gw-day small { font-size: 0.6875rem; color: var(--muted); }
+.gw-day span { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+               color: #fff; font-size: 0.8125rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.gw-day.leave span { background: var(--gw-leave); }
+.gw-day.holiday span { background: var(--gw-holiday); }
+.gw-day.weekend span { background: var(--gw-weekend); }
+.gw-day.leave small { color: var(--gw-leave); font-weight: 700; }
+
+.gw-sum { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); font-weight: 600; }
+.gw-sum b { color: var(--gw-leave); font-size: 1.125rem; }
+
+.gw-legend { list-style: none; padding: 0; margin: var(--s4) 0 0; display: flex; flex-wrap: wrap; gap: var(--s4); }
+.gw-legend li::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+                        margin-right: 6px; vertical-align: 0; }
+.gw-legend .leave::before { background: var(--gw-leave); }
+.gw-legend .holiday::before { background: var(--gw-holiday); }
+.gw-legend .weekend::before { background: var(--gw-weekend); }
+.demo-note { margin-top: var(--s3); }
+
+@media (prefers-reduced-motion: reduce) { .gw-rec { animation: none; } }
+@media (max-width: 900px) { .gw-list { grid-template-columns: 1fr; } }

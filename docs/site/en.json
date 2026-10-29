@@ -1,0 +1,343 @@
+{
+  "title": "Goldweek: turn a few PTO days into long breaks",
+  "description": "Goldweek pairs public holidays with weekends to show which days to take off for the longest break. Holidays for 42 countries and PTO tracking.",
+  "hero": {
+    "headline": "Take one day off.\nGet four in a row.",
+    "lead": "Goldweek pairs public holidays with weekends and shows exactly which days to take off for the longest break. No more flipping through the calendar and counting.",
+    "cta": "Get it free on the App Store",
+    "note": "Free to download. Tracking your PTO and seeing suggestions stay free."
+  },
+  "demo": {
+    "title": "How far can your PTO go?",
+    "lead": "Pick how many days you can take off. You'll see the longest breaks those days unlock around the holidays ahead.",
+    "ask": "How many days can you take off?",
+    "based": "Based on public holidays in the USA",
+    "note": "These are the app's own suggestions. In the app they also account for your state, your remaining PTO and time off you've already booked, and you can add one to your schedule in a tap.",
+    "leave": "{n}d leave",
+    "rest": "{n}d off",
+    "legend": [
+      "Workday",
+      "Annual Leave",
+      "Holiday",
+      "Weekend"
+    ],
+    "weekdays": [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "recs": [
+      {
+        "d": "HLWW",
+        "s": "2026-11-26",
+        "t": "Thanksgiving Break"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "New Year's Day Bridge Holiday"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-10-10",
+        "t": "Columbus Day Extended Leave"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2026-11-11",
+        "t": "Veterans Day Extended Leave"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-12-23",
+        "t": "Christmas Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-02-14",
+        "t": "Presidents' Day Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-05-23",
+        "t": "Memorial Day Extended Leave"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-06-17",
+        "t": "Juneteenth Extended Leave"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2026-07-01",
+        "t": "Independence Day Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-09-05",
+        "t": "Labor Day Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-01-17",
+        "t": "Martin Luther King Jr. Day Extended Leave"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-11-25",
+        "t": "Thanksgiving Break"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-10-09",
+        "t": "Columbus Day Extended Leave"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-11-11",
+        "t": "Veterans Day Bridge Holiday"
+      },
+      {
+        "d": "HHWLL",
+        "s": "2027-12-24",
+        "t": "Christmas Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-02-13",
+        "t": "Presidents' Day Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-05-29",
+        "t": "Memorial Day Extended Leave"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2027-06-16",
+        "t": "Juneteenth Extended Leave"
+      },
+      {
+        "d": "WHHLL",
+        "s": "2027-07-03",
+        "t": "Independence Day Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-09-04",
+        "t": "Labor Day Extended Leave"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2027-12-29",
+        "t": "New Year's Day (Observed) Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-01-16",
+        "t": "Martin Luther King Jr. Day Extended Leave"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-11-23",
+        "t": "Thanksgiving Break"
+      },
+      {
+        "d": "WWLH",
+        "s": "2028-07-01",
+        "t": "July 4th Long Weekend"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-10-07",
+        "t": "Columbus Day Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-12-23",
+        "t": "Christmas Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-01-15",
+        "t": "Martin Luther King Jr. Day Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-02-19",
+        "t": "Presidents' Day Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-05-27",
+        "t": "Memorial Day Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-06-17",
+        "t": "Juneteenth Extended Leave"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-09-02",
+        "t": "Labor Day Extended Leave"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2028-11-08",
+        "t": "Veterans Day Extended Leave"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-01-01",
+        "t": "New Year's Day Extended Leave"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Tired of counting days on the calendar?",
+    "text": "Thursday is a holiday, so do you take Friday? Or save the day for next month's long weekend? Flip enough calendar pages and you end up taking whatever day is free, and by December the leftover PTO just disappears. Goldweek does the counting and shows you the days that stretch your PTO the furthest."
+  },
+  "features": [
+    {
+      "title": "Your PTO at a glance",
+      "text": "See your total, used and remaining days on one screen. It also shows how far into the year you are next to how much PTO you've used, so you know right away if you're saving too much.\nYour remaining days and upcoming time off sit right on your Home Screen in a widget.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Add time off right on the calendar",
+      "text": "Holidays, PTO and suggested breaks all show up on the calendar in their own colors. Tap a date to add or edit time off, including half days, quarter days and hours.\nYou can also import past leave in one go from a photo of your HR screen.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Your country, your schedule",
+      "text": "Public holidays for 42 countries, from the US, the UK and Canada to Europe, Asia and Latin America. Where holidays vary by state or region, pick yours. Country not listed? Add your own holidays.\nYou can also set your weekend days, the first day of the week, and fixed, part-time or shift work.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Three steps to start",
+    "items": [
+      {
+        "title": "Tell it where you work",
+        "text": "On first launch, pick your country and how many PTO days you get a year."
+      },
+      {
+        "title": "Pick a suggestion",
+        "text": "Find suggested breaks in the Calendar tab and add the ones you like."
+      },
+      {
+        "title": "Log your time off",
+        "text": "Tap a date, or import past leave from a photo."
+      }
+    ]
+  },
+  "reference": {
+    "title": "How it counts",
+    "rows": [
+      [
+        "Full day",
+        "1 day off your balance"
+      ],
+      [
+        "Half day",
+        "0.5 day"
+      ],
+      [
+        "Quarter day",
+        "0.25 day"
+      ],
+      [
+        "Hours",
+        "Based on the hours you work that day"
+      ],
+      [
+        "Sick leave, official leave, business trips",
+        "Not taken from your balance"
+      ],
+      [
+        "Bonus leave",
+        "Extra leave such as comp days, tracked separately with an expiration date (Pro)"
+      ]
+    ],
+    "note": "You can change your total annual leave and the month your leave year starts anytime in Settings."
+  },
+  "pricing": {
+    "title": "Resting well is free. Hand over the planning with Plus or Pro.",
+    "free": {
+      "name": "Free",
+      "items": [
+        "Full days, half days, quarter days and hours, plus your remaining PTO",
+        "Holidays for 42 countries, plus your own holidays and school breaks",
+        "See every suggestion for this year and add up to 3",
+        "Rest spacing tips, reminders and a Home Screen widget",
+        "Add leave from a photo",
+        "iCloud backup and a shared schedule with family"
+      ]
+    },
+    "pro": {
+      "name": "Plus and Pro",
+      "items": [
+        "Plus: Optimal annual planner",
+        "Plus: Unlimited suggestions, plus last year's and next year's",
+        "Plus: Send time off to your calendar app",
+        "Pro: Everything in Plus, bonus leave, yearly limits and carryover by leave type",
+        "Pro: School calendar import and calendar auto-detection",
+        "Pro: Time off together and family anniversaries"
+      ],
+      "note": "Each tier comes as a yearly subscription or a one-time lifetime purchase."
+    },
+    "note": "Yearly subscriptions renew automatically unless turned off at least 24 hours before the period ends. Manage them anytime in Settings > Apple Account > Subscriptions."
+  },
+  "faq": {
+    "title": "Questions",
+    "items": [
+      {
+        "q": "My leave balance doesn't look right.",
+        "a": "Check the month your leave year starts and your total annual leave in Settings. Half days (0.5) and quarter days (0.25) are deducted automatically, and types that don't count against your balance, such as sick leave, official leave and business trips, don't change it. If it still looks wrong, email us."
+      },
+      {
+        "q": "My time off doesn't show up on the calendar.",
+        "a": "Cancelled time off isn't shown on the calendar. Check the entry's status in Leave Management. Updating to the latest version can also help."
+      },
+      {
+        "q": "How do I add bonus leave?",
+        "a": "Tap + in the Status tab to open Leave Management, then use Bonus Leave at the bottom. Choose a type (such as comp days, reward leave or refresh leave), enter the number of days and, if you like, an expiration date. Bonus leave is tracked separately from your regular PTO."
+      },
+      {
+        "q": "I paid, but nothing unlocked.",
+        "a": "Tap Restore Purchase at the bottom of the Settings tab. Your purchase is restored with the Apple Account you're signed in to on the App Store. If that doesn't work, email us."
+      },
+      {
+        "q": "Will I lose my data if I delete the app?",
+        "a": "Your data is stored on your device, so deleting the app removes it for good. Turn on iCloud Backup to keep a copy you can restore later."
+      },
+      {
+        "q": "Can I add my own holidays or hide existing ones?",
+        "a": "Yes. In Holidays & Breaks in Settings, you can add your own holidays or hide any of the default ones."
+      },
+      {
+        "q": "Which countries are supported?",
+        "a": "Goldweek includes public holidays for 42 countries. Choose your country (and your state or region, where holidays differ) in Settings, and the calendar updates right away. If yours isn't listed, add its holidays yourself or ask us to support it by sending feedback from the app."
+      },
+      {
+        "q": "Where is my data stored?",
+        "a": "What you enter stays on your device or in your own iCloud. We only receive anonymous usage statistics, anonymous crash reports and any feedback you choose to send."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Make this year's PTO\ngo further",
+    "cta": "Get it free on the App Store"
+  },
+  "ui": {
+    "skip": "Skip to content",
+    "languages": "Languages",
+    "privacy": "Privacy Policy",
+    "contact": "For anything not covered above, feature ideas or bug reports, email {email}. We usually reply within one or two business days."
+  }
+}

@@ -1,0 +1,278 @@
+{
+  "title": "Goldweek: mit wenigen Urlaubstagen lange frei",
+  "description": "Goldweek verbindet Feiertage mit Wochenenden und zeigt, welche Brückentage dir die längste Auszeit bringen. Feiertage aus 42 Ländern, Urlaubskonto.",
+  "hero": {
+    "headline": "Wenige Urlaubstage,\nlange Auszeiten",
+    "lead": "Goldweek verbindet Feiertage mit Wochenenden und zeigt genau, an welchen Tagen du Urlaub nehmen solltest, um am längsten frei zu haben. Kein Durchblättern und Zählen im Kalender mehr.",
+    "cta": "Kostenlos im App Store laden",
+    "note": "Kostenlos laden. Urlaubskonto und Vorschläge bleiben gratis."
+  },
+  "demo": {
+    "title": "Wie weit reichen deine Urlaubstage?",
+    "lead": "Wähl, wie viele Urlaubstage du nehmen kannst. Du siehst die längsten Auszeiten, die sie rund um die nächsten Feiertage ergeben.",
+    "ask": "Wie viele Urlaubstage kannst du nehmen?",
+    "based": "Bundesweite Feiertage in Deutschland",
+    "note": "Das sind die Vorschläge der App selbst. In der App berücksichtigt Goldweek auch dein Bundesland, deinen Resturlaub und bereits geplanten Urlaub, und du trägst einen Vorschlag mit einem Tipp ein.",
+    "leave": "{n} Urlaubstg.",
+    "rest": "{n} Tage frei",
+    "legend": [
+      "Werktag",
+      "Jahresurlaub",
+      "Feiertag",
+      "Wochenende"
+    ],
+    "weekdays": [
+      "So",
+      "Mo",
+      "Di",
+      "Mi",
+      "Do",
+      "Fr",
+      "Sa"
+    ],
+    "recs": [
+      {
+        "d": "HWLLL",
+        "s": "2026-10-03",
+        "t": "Verlängerter Urlaub: Tag der Deutschen Einheit"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Brückentage: Neujahr"
+      },
+      {
+        "d": "HWWHL",
+        "s": "2026-04-03",
+        "t": "Verlängerter Urlaub: Karfreitag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-05-14",
+        "t": "Brückentage: Christi Himmelfahrt"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2026-12-23",
+        "t": "Verlängerter Urlaub: 1. Weihnachtstag"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-29",
+        "t": "Verlängerter Urlaub: Tag der Arbeit"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-05-23",
+        "t": "Verlängerter Urlaub: Pfingstmontag"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2027-10-02",
+        "t": "Verlängerter Urlaub: Tag der Deutschen Einheit"
+      },
+      {
+        "d": "HHLLL",
+        "s": "2027-12-25",
+        "t": "Verlängerter Urlaub: 1. Weihnachtstag"
+      },
+      {
+        "d": "HWWHL",
+        "s": "2027-03-26",
+        "t": "Verlängerter Urlaub: Karfreitag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-05-06",
+        "t": "Brückentage: Christi Himmelfahrt"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-05-15",
+        "t": "Verlängerter Urlaub: Pfingstmontag"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2027-05-01",
+        "t": "Verlängerter Urlaub: Tag der Arbeit"
+      },
+      {
+        "d": "WWHHL",
+        "s": "2028-12-23",
+        "t": "Verlängerter Urlaub: 1. Weihnachtstag"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-01-01",
+        "t": "Verlängerter Urlaub: Neujahr"
+      },
+      {
+        "d": "HWWHL",
+        "s": "2028-04-14",
+        "t": "Verlängerter Urlaub: Karfreitag"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-05-25",
+        "t": "Brückentage: Christi Himmelfahrt"
+      },
+      {
+        "d": "WWLH",
+        "s": "2028-09-30",
+        "t": "Brückentage: Tag der Deutschen Einheit"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-06-03",
+        "t": "Verlängerter Urlaub: Pfingstmontag"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-29",
+        "t": "Verlängerter Urlaub: Tag der Arbeit"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Keine Lust mehr, Tage im Kalender zu zählen?",
+    "text": "Donnerstag ist Feiertag, also den Freitag nehmen? Oder lieber für das lange Wochenende nächsten Monat aufheben? Nach genug Blättern nimmst du irgendeinen freien Tag, und im Dezember verfällt der Resturlaub. Goldweek übernimmt das Zählen und zeigt dir die Tage, mit denen dein Urlaub am weitesten reicht."
+  },
+  "features": [
+    {
+      "title": "Dein Urlaub auf einen Blick",
+      "text": "Gesamt, genommen, übrig: alles auf einem Bildschirm. Daneben siehst du, wie weit das Jahr schon ist und wie viel Urlaub du verbraucht hast, so merkst du sofort, ob du zu viel aufsparst.\nResturlaub und anstehende freie Tage zeigt ein Widget direkt auf dem Home-Bildschirm.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Urlaub direkt im Kalender eintragen",
+      "text": "Feiertage, Urlaub und vorgeschlagene Brückentage erscheinen farbig im Kalender. Tipp auf ein Datum, um Urlaub einzutragen oder zu ändern, auch halbe, Viertel- und stundenweise Tage.\nVergangenen Urlaub übernimmst du auf einmal aus einem Foto deiner Urlaubsübersicht.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Dein Land, deine Arbeitszeit",
+      "text": "Feiertage aus 42 Ländern, von Deutschland, Österreich und der Schweiz bis Asien und Amerika. Wo Feiertage je nach Bundesland oder Region abweichen, wählst du deins. Dein Land fehlt? Trag die Feiertage selbst ein.\nAuch Wochenendtage, den ersten Wochentag sowie feste Arbeitszeit, Teilzeit oder Schichtarbeit kannst du festlegen.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "In drei Schritten startklar",
+    "items": [
+      {
+        "title": "Sag, wo du arbeitest",
+        "text": "Beim ersten Start wählst du dein Land und wie viele Urlaubstage du im Jahr hast."
+      },
+      {
+        "title": "Wähl einen Vorschlag",
+        "text": "Im Tab Kalender findest du Vorschläge und übernimmst die, die dir gefallen."
+      },
+      {
+        "title": "Trag deinen Urlaub ein",
+        "text": "Tipp auf ein Datum oder übernimm alten Urlaub per Foto."
+      }
+    ]
+  },
+  "reference": {
+    "title": "So wird gerechnet",
+    "rows": [
+      [
+        "Ganzer Tag",
+        "1 Tag vom Urlaubskonto"
+      ],
+      [
+        "Halber Tag",
+        "0,5 Tage"
+      ],
+      [
+        "Vierteltag",
+        "0,25 Tage"
+      ],
+      [
+        "Stunden",
+        "Nach deiner Arbeitszeit an diesem Tag"
+      ],
+      [
+        "Krankheit, Sonderurlaub, Dienstreise",
+        "Zählt nicht gegen dein Urlaubskonto"
+      ],
+      [
+        "Bonusurlaub",
+        "Zusätzliche freie Tage wie Ausgleichstage, getrennt erfasst mit Ablaufdatum (Pro)"
+      ]
+    ],
+    "note": "Deinen Jahresurlaub und den Monat, in dem dein Urlaubsjahr beginnt, änderst du jederzeit in den Einstellungen."
+  },
+  "pricing": {
+    "title": "Gut erholen ist gratis. Die Planung übernehmen Plus und Pro.",
+    "free": {
+      "name": "Gratis",
+      "items": [
+        "Ganze, halbe, Viertel- und Stundentage samt Resturlaub",
+        "Feiertage aus 42 Ländern, eigene Feiertage und Ferien",
+        "Alle Vorschläge für dieses Jahr sehen, bis zu 3 übernehmen",
+        "Hinweise zu Erholungsabständen, Erinnerungen und Widget",
+        "Urlaub per Foto eintragen",
+        "iCloud-Backup und mit der Familie geteilter Kalender"
+      ]
+    },
+    "pro": {
+      "name": "Plus und Pro",
+      "items": [
+        "Plus: Optimaler Jahresplaner",
+        "Plus: Unbegrenzt Vorschläge, auch für letztes und nächstes Jahr",
+        "Plus: Urlaub in deine Kalender-App übertragen",
+        "Pro: Alles aus Plus, Bonusurlaub, Jahresgrenzen und Übertrag je Urlaubsart",
+        "Pro: Schulkalender importieren, Kalender automatisch erkennen",
+        "Pro: Gemeinsam frei und Familienjahrestage"
+      ],
+      "note": "Jede Stufe gibt es als Jahresabo oder als einmaligen Kauf auf Lebenszeit."
+    },
+    "note": "Jahresabos verlängern sich automatisch, wenn du sie nicht spätestens 24 Stunden vor Ablauf kündigst. Verwalten kannst du sie jederzeit unter Einstellungen > Apple Account > Abonnements."
+  },
+  "faq": {
+    "title": "Häufige Fragen",
+    "items": [
+      {
+        "q": "Mein Urlaubskonto stimmt nicht.",
+        "a": "Prüf in den Einstellungen, in welchem Monat dein Urlaubsjahr beginnt und wie viele Urlaubstage du insgesamt hast. Halbe (0,5) und Vierteltage (0,25) werden automatisch abgezogen, und Arten, die nicht zählen, etwa Krankheit, Sonderurlaub oder Dienstreisen, ändern das Konto nicht. Stimmt es dann immer noch nicht, schreib uns."
+      },
+      {
+        "q": "Mein Urlaub erscheint nicht im Kalender.",
+        "a": "Stornierter Urlaub wird im Kalender nicht angezeigt. Prüf den Status des Eintrags in der Urlaubsverwaltung. Oft hilft auch ein Update auf die neueste Version."
+      },
+      {
+        "q": "Wie trage ich Bonusurlaub ein?",
+        "a": "Tipp im Tab Status auf +, um die Urlaubsverwaltung zu öffnen, und nutz unten den Bereich Bonusurlaub. Wähl eine Art (etwa Ausgleichstage, Prämienurlaub oder Erholungsurlaub), gib die Anzahl der Tage und auf Wunsch ein Ablaufdatum ein. Bonusurlaub wird getrennt vom regulären Urlaub geführt."
+      },
+      {
+        "q": "Ich habe gekauft, aber nichts ist freigeschaltet.",
+        "a": "Tipp unten im Tab Einstellungen auf Kauf wiederherstellen. Dein Kauf wird mit dem Apple Account wiederhergestellt, mit dem du im App Store angemeldet bist. Hilft das nicht, schreib uns."
+      },
+      {
+        "q": "Sind meine Daten weg, wenn ich die App lösche?",
+        "a": "Deine Daten liegen auf dem Gerät, beim Löschen der App sind sie also endgültig weg. Schalte das iCloud-Backup ein, damit du eine Kopie zum Wiederherstellen hast."
+      },
+      {
+        "q": "Kann ich eigene Feiertage hinzufügen oder welche ausblenden?",
+        "a": "Ja. Unter Feiertage & Ferien in den Einstellungen fügst du eigene Feiertage hinzu oder blendest Standardfeiertage aus."
+      },
+      {
+        "q": "Welche Länder werden unterstützt?",
+        "a": "Goldweek kennt die Feiertage von 42 Ländern. Wähl in den Einstellungen dein Land (und, wo Feiertage abweichen, dein Bundesland oder deine Region), und der Kalender passt sich sofort an. Fehlt dein Land, trag die Feiertage selbst ein oder wünsch es dir per Feedback aus der App."
+      },
+      {
+        "q": "Wo werden meine Daten gespeichert?",
+        "a": "Was du eingibst, bleibt auf deinem Gerät oder in deiner eigenen iCloud. Wir erhalten nur anonyme Nutzungsstatistiken, anonyme Absturzberichte und Feedback, das du uns selbst schickst."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Hol dieses Jahr mehr\naus deinem Urlaub",
+    "cta": "Kostenlos im App Store laden"
+  },
+  "ui": {
+    "skip": "Zum Inhalt springen",
+    "languages": "Sprachen",
+    "privacy": "Datenschutz",
+    "contact": "Für alles, was oben nicht beantwortet ist, für Ideen oder Fehlermeldungen schreib an {email}. Wir antworten meist innerhalb von ein bis zwei Werktagen."
+  }
+}

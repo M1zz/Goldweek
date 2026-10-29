@@ -1,0 +1,313 @@
+{
+  "title": "Goldweek: długie wolne przy małej liczbie dni urlopu",
+  "description": "Goldweek łączy święta z weekendami i pokazuje, które dni wziąć wolne, by odpocząć najdłużej. Święta 42 krajów i ewidencja urlopu.",
+  "hero": {
+    "headline": "Mało dni urlopu,\ndługie wolne",
+    "lead": "Goldweek łączy święta z weekendami i pokazuje dokładnie, w które dni wziąć urlop, żeby mieć jak najdłuższe wolne. Koniec z kartkowaniem kalendarza i liczeniem.",
+    "cta": "Pobierz za darmo z App Store",
+    "note": "Pobieranie za darmo. Ewidencja urlopu i propozycje pozostają darmowe."
+  },
+  "demo": {
+    "title": "Jak daleko sięga twój urlop?",
+    "lead": "Wybierz, ile dni urlopu możesz wziąć. Zobaczysz najdłuższe wolne, jakie dają wokół najbliższych świąt.",
+    "ask": "Ile dni urlopu możesz wziąć?",
+    "based": "Na podstawie świąt w Polsce",
+    "note": "To propozycje samej aplikacji. W aplikacji uwzględniają też pozostały urlop i wolne, które już masz zaplanowane, a dodajesz je jednym stuknięciem.",
+    "leave": "Urlop: {n} d",
+    "rest": "Wolne: {n} d",
+    "legend": [
+      "Dzień roboczy",
+      "Urlop",
+      "Święto",
+      "Weekend"
+    ],
+    "weekdays": [
+      "nd",
+      "pn",
+      "wt",
+      "śr",
+      "czw",
+      "pt",
+      "sob"
+    ],
+    "recs": [
+      {
+        "d": "WHLLL",
+        "s": "2026-10-31",
+        "t": "Wszystkich Świętych: wydłużony urlop"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2026-11-11",
+        "t": "Narodowe Święto Niepodległości: wydłużony urlop"
+      },
+      {
+        "d": "LHHHW",
+        "s": "2026-12-23",
+        "t": "Wigilia Bożego Narodzenia: wydłużony urlop"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Nowy Rok: dzień pomostowy"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-06-04",
+        "t": "Boże Ciało: dzień pomostowy"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2026-08-15",
+        "t": "Wniebowzięcie Najświętszej Maryi Panny: wydłużony urlop"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-01-03",
+        "t": "Święto Trzech Króli: dzień pomostowy"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-04-04",
+        "t": "Poniedziałek Wielkanocny: wydłużony urlop"
+      },
+      {
+        "d": "LLHWH",
+        "s": "2026-04-29",
+        "t": "Święto Pracy: wydłużony urlop"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-11-11",
+        "t": "Narodowe Święto Niepodległości: dzień pomostowy"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-05-27",
+        "t": "Boże Ciało: dzień pomostowy"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2027-08-14",
+        "t": "Wniebowzięcie Najświętszej Maryi Panny: wydłużony urlop"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-10-30",
+        "t": "Wszystkich Świętych: wydłużony urlop"
+      },
+      {
+        "d": "LLHHH",
+        "s": "2027-12-22",
+        "t": "Wigilia Bożego Narodzenia: wydłużony urlop"
+      },
+      {
+        "d": "HWWLLH",
+        "s": "2027-01-01",
+        "t": "Nowy Rok: wydłużony urlop"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-03-27",
+        "t": "Poniedziałek Wielkanocny: wydłużony urlop"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-01-06",
+        "t": "Święto Trzech Króli: wydłużony urlop"
+      },
+      {
+        "d": "HWHLL",
+        "s": "2027-05-01",
+        "t": "Święto Pracy: wydłużony urlop"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2028-11-01",
+        "t": "Wszystkich Świętych: wydłużony urlop"
+      },
+      {
+        "d": "WHHHL",
+        "s": "2028-12-23",
+        "t": "Wigilia Bożego Narodzenia: wydłużony urlop"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-01-06",
+        "t": "Święto Trzech Króli: dzień pomostowy"
+      },
+      {
+        "d": "WWHLH",
+        "s": "2028-04-29",
+        "t": "Święto Pracy: wydłużony urlop"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-06-15",
+        "t": "Boże Ciało: dzień pomostowy"
+      },
+      {
+        "d": "WWLH",
+        "s": "2028-08-12",
+        "t": "Wniebowzięcie Najświętszej Maryi Panny: dzień pomostowy"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-11-11",
+        "t": "Narodowe Święto Niepodległości: wydłużony urlop"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2028-01-01",
+        "t": "Nowy Rok: wydłużony urlop"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-15",
+        "t": "Poniedziałek Wielkanocny: wydłużony urlop"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Masz dość liczenia dni w kalendarzu?",
+    "text": "Czwartek jest świętem, brać piątek? Czy zostawić dzień na długi weekend w przyszłym miesiącu? Po kartkowaniu kalendarza i tak bierzesz wolne w przypadkowy dzień, a w grudniu niewykorzystany urlop przepada. Goldweek liczy za ciebie i pokazuje dni, dzięki którym urlop starcza najdłużej."
+  },
+  "features": [
+    {
+      "title": "Urlop w jednym rzucie oka",
+      "text": "Łącznie, wykorzystane i pozostałe dni na jednym ekranie. Obok widać, jaka część roku minęła i ile urlopu już wykorzystałeś, więc od razu wiesz, czy nie odkładasz za dużo.\nPozostałe dni i najbliższe wolne pokazuje widżet na ekranie początkowym.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Wolne prosto w kalendarzu",
+      "text": "Święta, urlop i proponowane dni pomostowe są w kalendarzu oznaczone kolorami. Stuknij datę, aby dodać lub zmienić wolne, także pół dnia, ćwierć dnia albo godziny.\nWcześniejszy urlop przeniesiesz za jednym razem ze zdjęcia ekranu z systemu kadrowego.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Twój kraj, twój czas pracy",
+      "text": "Święta 42 krajów, od Polski przez resztę Europy po Azję i Amerykę. Gdzie święta różnią się w zależności od regionu, wybierasz swój. Brakuje twojego kraju? Dodaj własne święta.\nUstawisz też dni weekendu, pierwszy dzień tygodnia oraz pracę na stały etat, w niepełnym wymiarze lub zmianową.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Start w trzech krokach",
+    "items": [
+      {
+        "title": "Powiedz, gdzie pracujesz",
+        "text": "Przy pierwszym uruchomieniu wybierz kraj i liczbę dni urlopu w roku."
+      },
+      {
+        "title": "Wybierz propozycję",
+        "text": "Na karcie Kalendarz są proponowane okresy wolnego. Dodaj te, które ci pasują."
+      },
+      {
+        "title": "Zapisuj urlop",
+        "text": "Stuknij datę albo przenieś wcześniejszy urlop ze zdjęcia."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Jak to jest liczone",
+    "rows": [
+      [
+        "Cały dzień",
+        "1 dzień z puli"
+      ],
+      [
+        "Pół dnia",
+        "0,5 dnia"
+      ],
+      [
+        "Ćwierć dnia",
+        "0,25 dnia"
+      ],
+      [
+        "Godziny",
+        "Według twoich godzin pracy w tym dniu"
+      ],
+      [
+        "Zwolnienie lekarskie, urlop okolicznościowy, delegacja",
+        "Nie są odliczane od urlopu"
+      ],
+      [
+        "Urlop bonusowy",
+        "Dodatkowe dni jak wolne za nadgodziny, liczone osobno z datą ważności (Pro)"
+      ]
+    ],
+    "note": "Liczbę dni urlopu w roku i miesiąc, od którego zaczyna się twój rok urlopowy, zmienisz w każdej chwili w Ustawieniach."
+  },
+  "pricing": {
+    "title": "Dobry odpoczynek jest za darmo. Planowanie biorą na siebie Plus i Pro.",
+    "free": {
+      "name": "Za darmo",
+      "items": [
+        "Całe dni, połówki, ćwiartki i godziny oraz pozostały urlop",
+        "Święta 42 krajów, własne święta i ferie",
+        "Wszystkie propozycje na ten rok, do 3 w planie",
+        "Wskazówki o przerwach na odpoczynek, przypomnienia i widżet",
+        "Dodaj urlop ze zdjęcia",
+        "Kopia w iCloud i wspólny plan z rodziną"
+      ]
+    },
+    "pro": {
+      "name": "Plus i Pro",
+      "items": [
+        "Plus: Optymalny planer roczny",
+        "Plus: Nielimitowane propozycje, także na zeszły i przyszły rok",
+        "Plus: Wysyłanie wolnego do aplikacji Kalendarz",
+        "Pro: Wszystko z Plus, urlop bonusowy, roczne limity i przenoszenie według rodzaju",
+        "Pro: Import kalendarza szkolnego i automatyczne wykrywanie kalendarza",
+        "Pro: Wspólne wolne i rodzinne rocznice"
+      ],
+      "note": "Każdy poziom jest dostępny jako subskrypcja roczna albo jednorazowy zakup na zawsze."
+    },
+    "note": "Subskrypcja roczna odnawia się automatycznie, jeśli nie wyłączysz jej co najmniej 24 godziny przed końcem okresu. Zarządzaj nią w dowolnej chwili w Ustawienia > Konto Apple > Subskrypcje."
+  },
+  "faq": {
+    "title": "Częste pytania",
+    "items": [
+      {
+        "q": "Saldo urlopu się nie zgadza.",
+        "a": "Sprawdź w Ustawieniach, w którym miesiącu zaczyna się twój rok urlopowy i ile masz łącznie dni urlopu. Pół dnia (0,5) i ćwierć dnia (0,25) odliczają się automatycznie, a rodzaje, które się nie liczą, jak zwolnienie lekarskie, urlop okolicznościowy czy delegacja, nie zmieniają salda. Jeśli dalej się nie zgadza, napisz do nas."
+      },
+      {
+        "q": "Urlop nie pojawia się w kalendarzu.",
+        "a": "Odwołany urlop nie jest pokazywany w kalendarzu. Sprawdź status wpisu w Zarządzaniu urlopem. Pomóc może też aktualizacja do najnowszej wersji."
+      },
+      {
+        "q": "Jak dodać urlop bonusowy?",
+        "a": "Stuknij + na karcie Stan, aby otworzyć Zarządzanie urlopem, i skorzystaj z sekcji Urlop bonusowy na dole. Wybierz rodzaj (wolne za nadgodziny, nagroda, urlop regeneracyjny…), podaj liczbę dni i, jeśli chcesz, datę ważności. Urlop bonusowy jest liczony osobno od zwykłego."
+      },
+      {
+        "q": "Zapłaciłem, ale nic się nie odblokowało.",
+        "a": "Stuknij Przywróć zakup na dole karty Ustawienia. Zakup zostanie przywrócony z Konta Apple, na które jesteś zalogowany w App Store. Jeśli to nie pomoże, napisz do nas."
+      },
+      {
+        "q": "Czy stracę dane, jeśli usunę aplikację?",
+        "a": "Dane są przechowywane na urządzeniu, więc usunięcie aplikacji je kasuje. Włącz kopię zapasową w iCloud, żeby mieć kopię do późniejszego przywrócenia."
+      },
+      {
+        "q": "Czy mogę dodać własne święta albo ukryć niektóre?",
+        "a": "Tak. W sekcji Święta i przerwy w Ustawieniach dodasz własne święta albo ukryjesz domyślne."
+      },
+      {
+        "q": "Jakie kraje są obsługiwane?",
+        "a": "Goldweek zna święta 42 krajów. Wybierz kraj w Ustawieniach (i region, gdzie święta się różnią), a kalendarz od razu się zaktualizuje. Jeśli twojego kraju brakuje, dodaj święta samodzielnie albo poproś o niego przez opinię w aplikacji."
+      },
+      {
+        "q": "Gdzie są przechowywane moje dane?",
+        "a": "To, co wpisujesz, zostaje na urządzeniu albo w twoim własnym iCloud. Otrzymujemy tylko anonimowe statystyki użycia, anonimowe raporty o awariach i opinie, które sam zdecydujesz się wysłać."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "W tym roku niech urlop\nstarczy na dłużej",
+    "cta": "Pobierz za darmo z App Store"
+  },
+  "ui": {
+    "skip": "Przejdź do treści",
+    "languages": "Języki",
+    "privacy": "Polityka prywatności",
+    "contact": "We wszystkich sprawach, na które nie ma odpowiedzi powyżej, z pomysłami albo błędami pisz na {email}. Zwykle odpowiadamy w ciągu jednego lub dwóch dni roboczych."
+  }
+}

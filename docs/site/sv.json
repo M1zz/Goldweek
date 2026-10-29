@@ -1,0 +1,328 @@
+{
+  "title": "Goldweek: lång ledighet med få semesterdagar",
+  "description": "Goldweek kopplar ihop helgdagar och helger och visar vilka dagar du ska ta ledigt för den längsta ledigheten. Helgdagar i 42 länder.",
+  "hero": {
+    "headline": "Få semesterdagar,\nlång ledighet",
+    "lead": "Goldweek kopplar ihop helgdagar med helger och visar exakt vilka dagar du ska ta ledigt för att vara ledig så länge som möjligt. Inget mer bläddrande och räknande i kalendern.",
+    "cta": "Hämta gratis i App Store",
+    "note": "Gratis att hämta. Att följa semestern och se förslag är fortsatt gratis."
+  },
+  "demo": {
+    "title": "Hur långt räcker din semester?",
+    "lead": "Välj hur många dagar du kan ta ledigt. Du ser de längsta ledigheterna de ger runt de kommande helgdagarna.",
+    "ask": "Hur många semesterdagar kan du ta?",
+    "based": "Utifrån helgdagarna i Sverige",
+    "note": "Det här är appens egna förslag. I appen räknar de också med din kvarvarande semester och ledighet du redan bokat, och du lägger in ett förslag med ett tryck.",
+    "leave": "{n}d semester",
+    "rest": "{n}d ledigt",
+    "legend": [
+      "Arbetsdag",
+      "Semester",
+      "Helgdag",
+      "Helg"
+    ],
+    "weekdays": [
+      "sön",
+      "mån",
+      "tis",
+      "ons",
+      "tors",
+      "fre",
+      "lör"
+    ],
+    "recs": [
+      {
+        "d": "HWLLL",
+        "s": "2026-10-31",
+        "t": "Förlängd ledighet vid Alla helgons dag"
+      },
+      {
+        "d": "HHHWL",
+        "s": "2026-12-24",
+        "t": "Förlängd ledighet vid Julafton"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Klämdag vid Nyårsdagen"
+      },
+      {
+        "d": "HHHHL",
+        "s": "2026-04-03",
+        "t": "Förlängd ledighet vid Långfredagen"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-05-14",
+        "t": "Klämdag vid Kristi himmelsfärdsdag"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-01-03",
+        "t": "Klämdag vid Trettondedag jul"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2026-06-17",
+        "t": "Förlängd ledighet vid Midsommarafton"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-04-29",
+        "t": "Förlängd ledighet vid Första maj"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2026-05-23",
+        "t": "Förlängd ledighet vid Pingstdagen"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2026-06-06",
+        "t": "Förlängd ledighet vid Sveriges nationaldag"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-11-06",
+        "t": "Förlängd ledighet vid Alla helgons dag"
+      },
+      {
+        "d": "HHHHL",
+        "s": "2027-03-26",
+        "t": "Förlängd ledighet vid Långfredagen"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-05-06",
+        "t": "Klämdag vid Kristi himmelsfärdsdag"
+      },
+      {
+        "d": "HHHLL",
+        "s": "2027-12-24",
+        "t": "Förlängd ledighet vid Julafton"
+      },
+      {
+        "d": "HWWLLH",
+        "s": "2027-01-01",
+        "t": "Förlängd ledighet vid Nyårsdagen"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2027-05-01",
+        "t": "Förlängd ledighet vid Första maj"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2027-06-23",
+        "t": "Förlängd ledighet vid Midsommarafton"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2027-12-29",
+        "t": "Förlängd ledighet vid Nyårsafton"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-01-06",
+        "t": "Förlängd ledighet vid Trettondedag jul"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2027-05-15",
+        "t": "Förlängd ledighet vid Pingstdagen"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2027-06-05",
+        "t": "Förlängd ledighet vid Sveriges nationaldag"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-11-04",
+        "t": "Förlängd ledighet vid Alla helgons dag"
+      },
+      {
+        "d": "WHHHL",
+        "s": "2028-12-23",
+        "t": "Förlängd ledighet vid Julafton"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-01-06",
+        "t": "Klämdag vid Trettondedag jul"
+      },
+      {
+        "d": "HHHHL",
+        "s": "2028-04-14",
+        "t": "Förlängd ledighet vid Långfredagen"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-05-25",
+        "t": "Klämdag vid Kristi himmelsfärdsdag"
+      },
+      {
+        "d": "WHLH",
+        "s": "2028-06-03",
+        "t": "Klämdag vid Sveriges nationaldag"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2028-01-01",
+        "t": "Förlängd ledighet vid Nyårsdagen"
+      },
+      {
+        "d": "LLHHW",
+        "s": "2028-06-21",
+        "t": "Förlängd ledighet vid Midsommarafton"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-29",
+        "t": "Förlängd ledighet vid Första maj"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Trött på att räkna dagar i kalendern?",
+    "text": "Torsdag är röd dag, ska du ta fredagen? Eller spara dagen till långhelgen nästa månad? Efter tillräckligt mycket bläddrande tar du ledigt vilken dag som helst, och i december försvinner de dagar som blev över. Goldweek räknar åt dig och visar de dagar som får semestern att räcka längst."
+  },
+  "features": [
+    {
+      "title": "Din semester i en blick",
+      "text": "Totalt, uttaget och kvar på en skärm. Bredvid ser du hur långt året har gått och hur mycket semester du har använt, så du direkt ser om du sparar för mycket.\nDina kvarvarande dagar och kommande ledigheter syns i en widget på hemskärmen.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Lägg in ledighet direkt i kalendern",
+      "text": "Helgdagar, semester och föreslagna klämdagar syns i färg i kalendern. Tryck på ett datum för att lägga till eller ändra ledighet, även halvdagar, kvartsdagar eller timmar.\nTidigare ledigheter tar du in på en gång från ett foto av HR-systemets skärm.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Ditt land, dina arbetstider",
+      "text": "Helgdagar i 42 länder, från Sverige och Norden till Europa, Asien och Amerika. Där helgdagar skiljer sig mellan regioner väljer du din. Saknas ditt land? Lägg till egna helgdagar.\nDu väljer också helgdagarna i veckan, veckans första dag och om du jobbar fast schema, deltid eller skift.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Kom igång i tre steg",
+    "items": [
+      {
+        "title": "Berätta var du jobbar",
+        "text": "Första gången väljer du land och hur många semesterdagar du har per år."
+      },
+      {
+        "title": "Välj ett förslag",
+        "text": "På fliken Kalender finns föreslagna ledigheter. Lägg till dem du gillar."
+      },
+      {
+        "title": "För in din ledighet",
+        "text": "Tryck på ett datum eller ta in tidigare ledighet från ett foto."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Så räknas det",
+    "rows": [
+      [
+        "Heldag",
+        "1 dag från saldot"
+      ],
+      [
+        "Halvdag",
+        "0,5 dag"
+      ],
+      [
+        "Kvartsdag",
+        "0,25 dag"
+      ],
+      [
+        "Timmar",
+        "Efter dina arbetstimmar den dagen"
+      ],
+      [
+        "Sjukdom, tjänstledighet, tjänsteresa",
+        "Dras inte från semestern"
+      ],
+      [
+        "Bonusledighet",
+        "Extra lediga dagar som kompledighet, förs separat med sista giltighetsdag (Pro)"
+      ]
+    ],
+    "note": "Antal semesterdagar per år och månaden då semesteråret börjar kan du ändra när som helst i Inställningar."
+  },
+  "pricing": {
+    "title": "Bra vila är gratis. Planeringen sköter Plus och Pro.",
+    "free": {
+      "name": "Gratis",
+      "items": [
+        "Heldagar, halvdagar, kvartsdagar och timmar, med kvarvarande semester",
+        "Helgdagar i 42 länder, egna helgdagar och lov",
+        "Se alla förslag för i år, lägg till upp till 3",
+        "Tips om vilointervall, påminnelser och widget",
+        "Lägg till ledighet från ett foto",
+        "iCloud-säkerhetskopia och delat schema med familjen"
+      ]
+    },
+    "pro": {
+      "name": "Plus och Pro",
+      "items": [
+        "Plus: Optimal semesterplanerare",
+        "Plus: Obegränsat med förslag, även för förra och nästa år",
+        "Plus: Skicka ledighet till Kalender-appen",
+        "Pro: Allt i Plus, bonusledighet, årsgränser och sparade dagar per typ",
+        "Pro: Importera skolkalender och automatisk kalenderidentifiering",
+        "Pro: Ledigt tillsammans och familjens högtidsdagar"
+      ],
+      "note": "Varje nivå finns som årsprenumeration eller engångsköp för alltid."
+    },
+    "note": "Årsprenumerationer förnyas automatiskt om de inte stängs av senast 24 timmar innan perioden tar slut. Hantera dem när som helst under Inställningar > Apple-konto > Prenumerationer."
+  },
+  "faq": {
+    "title": "Vanliga frågor",
+    "items": [
+      {
+        "q": "Mitt semestersaldo stämmer inte.",
+        "a": "Kontrollera i Inställningar vilken månad ditt semesterår börjar och hur många semesterdagar du har totalt. Halvdagar (0,5) och kvartsdagar (0,25) dras automatiskt, och typer som inte räknas, som sjukdom, tjänstledighet eller tjänsteresor, påverkar inte saldot. Stämmer det ändå inte, mejla oss."
+      },
+      {
+        "q": "Min ledighet syns inte i kalendern.",
+        "a": "Avbokad ledighet visas inte i kalendern. Kontrollera postens status i Ledighetshantering. Att uppdatera till senaste versionen kan också hjälpa."
+      },
+      {
+        "q": "Hur lägger jag till bonusledighet?",
+        "a": "Tryck på + på fliken Status för att öppna Ledighetshantering och använd avsnittet Bonusledighet längst ned. Välj typ (komp, belöningsledighet, återhämtningsledighet …), ange antal dagar och om du vill en sista giltighetsdag. Bonusledighet förs separat från vanlig semester."
+      },
+      {
+        "q": "Jag har betalat men inget har låsts upp.",
+        "a": "Tryck på Återställ köp längst ned på fliken Inställningar. Köpet återställs med det Apple-konto du är inloggad med i App Store. Hjälper det inte, mejla oss."
+      },
+      {
+        "q": "Försvinner mina data om jag raderar appen?",
+        "a": "Dina data sparas på enheten, så raderar du appen försvinner de. Slå på iCloud-säkerhetskopia så har du en kopia att återställa senare."
+      },
+      {
+        "q": "Kan jag lägga till egna helgdagar eller dölja några?",
+        "a": "Ja. Under Helgdagar och lov i Inställningar lägger du till egna helgdagar eller döljer standardhelgdagar."
+      },
+      {
+        "q": "Vilka länder stöds?",
+        "a": "Goldweek har helgdagarna för 42 länder. Välj land i Inställningar (och region där helgdagarna skiljer sig) så uppdateras kalendern direkt. Saknas ditt land kan du lägga in helgdagarna själv eller önska det via feedback i appen."
+      },
+      {
+        "q": "Var sparas mina data?",
+        "a": "Det du skriver in stannar på din enhet eller i din egen iCloud. Vi får bara anonym användningsstatistik, anonyma kraschrapporter och feedback som du själv väljer att skicka."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Få semestern att räcka\nlängre i år",
+    "cta": "Hämta gratis i App Store"
+  },
+  "ui": {
+    "skip": "Hoppa till innehållet",
+    "languages": "Språk",
+    "privacy": "Integritetspolicy",
+    "contact": "För allt som inte besvaras ovan, idéer eller buggar, mejla {email}. Vi svarar oftast inom en eller två arbetsdagar."
+  }
+}

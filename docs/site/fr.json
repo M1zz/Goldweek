@@ -1,0 +1,323 @@
+{
+  "title": "Goldweek : de longs congés avec peu de jours posés",
+  "description": "Goldweek associe jours fériés et week-ends pour montrer quels jours poser pour la plus longue pause. Jours fériés de 42 pays, suivi des congés.",
+  "hero": {
+    "headline": "Peu de jours posés,\nde vrais ponts",
+    "lead": "Goldweek associe jours fériés et week-ends et vous montre précisément quels jours poser pour profiter de la plus longue pause. Fini de feuilleter le calendrier en comptant sur vos doigts.",
+    "cta": "Télécharger gratuitement sur l’App Store",
+    "note": "Téléchargement gratuit. Le suivi des congés et les suggestions restent gratuits."
+  },
+  "demo": {
+    "title": "Jusqu’où vont vos congés ?",
+    "lead": "Choisissez combien de jours vous pouvez poser. Vous verrez les plus longues pauses qu’ils permettent autour des prochains jours fériés.",
+    "ask": "Combien de jours pouvez-vous poser ?",
+    "based": "D’après les jours fériés en France",
+    "note": "Ce sont les suggestions de l’app elle-même. Dans l’app, elles tiennent aussi compte de votre région, de vos congés restants et de ceux déjà posés, et vous les ajoutez à votre planning d’un geste.",
+    "leave": "{n} j de congé",
+    "rest": "{n} j de repos",
+    "legend": [
+      "Jour ouvré",
+      "Congés annuels",
+      "Jour férié",
+      "Week-end"
+    ],
+    "weekdays": [
+      "Dim",
+      "Lun",
+      "Mar",
+      "Mer",
+      "Jeu",
+      "Ven",
+      "Sam"
+    ],
+    "recs": [
+      {
+        "d": "WHLLL",
+        "s": "2026-10-31",
+        "t": "Congé prolongé : Toussaint"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2026-11-11",
+        "t": "Congé prolongé : Armistice 1918"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-01-01",
+        "t": "Pont : Jour de l’an"
+      },
+      {
+        "d": "HLWW",
+        "s": "2026-05-14",
+        "t": "Pont : Ascension"
+      },
+      {
+        "d": "WWLH",
+        "s": "2026-07-11",
+        "t": "Pont : Fête nationale"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2026-08-15",
+        "t": "Congé prolongé : Assomption"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2026-12-23",
+        "t": "Congé prolongé : Noël"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2026-04-04",
+        "t": "Congé prolongé : Lundi de Pâques"
+      },
+      {
+        "d": "HWWLL",
+        "s": "2026-05-01",
+        "t": "Congé prolongé : Fête du Travail"
+      },
+      {
+        "d": "HLWW",
+        "s": "2027-11-11",
+        "t": "Pont : Armistice 1918"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2027-12-25",
+        "t": "Congé prolongé : Noël"
+      },
+      {
+        "d": "HLHW",
+        "s": "2027-05-06",
+        "t": "Pont : Ascension"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2027-07-14",
+        "t": "Congé prolongé : Fête nationale"
+      },
+      {
+        "d": "WHLLL",
+        "s": "2027-08-14",
+        "t": "Congé prolongé : Assomption"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-10-30",
+        "t": "Congé prolongé : Toussaint"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-03-27",
+        "t": "Congé prolongé : Lundi de Pâques"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2027-05-15",
+        "t": "Congé prolongé : Lundi de Pentecôte"
+      },
+      {
+        "d": "HWLLLH",
+        "s": "2027-05-01",
+        "t": "Congé prolongé : Fête du Travail"
+      },
+      {
+        "d": "HLLWW",
+        "s": "2028-11-01",
+        "t": "Congé prolongé : Toussaint"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-01-01",
+        "t": "Congé prolongé : Jour de l’an"
+      },
+      {
+        "d": "HLWW",
+        "s": "2028-05-25",
+        "t": "Pont : Ascension"
+      },
+      {
+        "d": "WWLH",
+        "s": "2028-08-12",
+        "t": "Pont : Assomption"
+      },
+      {
+        "d": "HWLLL",
+        "s": "2028-11-11",
+        "t": "Congé prolongé : Armistice 1918"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-12-23",
+        "t": "Congé prolongé : Noël"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-06-03",
+        "t": "Congé prolongé : Lundi de Pentecôte"
+      },
+      {
+        "d": "LLHWW",
+        "s": "2028-07-12",
+        "t": "Congé prolongé : Fête nationale"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-15",
+        "t": "Congé prolongé : Lundi de Pâques"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-05-06",
+        "t": "Congé prolongé : Victoire 1945"
+      },
+      {
+        "d": "WWHLL",
+        "s": "2028-04-29",
+        "t": "Congé prolongé : Fête du Travail"
+      }
+    ]
+  },
+  "problem": {
+    "title": "Marre de compter les jours sur le calendrier ?",
+    "text": "Le jeudi est férié : faut-il poser le vendredi ? Ou garder ce jour pour le pont du mois prochain ? À force de tourner les pages, on finit par poser n’importe quel jour, et en décembre les congés restants s’envolent. Goldweek fait le calcul et vous montre les jours qui font durer vos congés le plus longtemps."
+  },
+  "features": [
+    {
+      "title": "Vos congés d’un coup d’œil",
+      "text": "Total, posés, restants : tout tient sur un écran. Vous voyez aussi où en est l’année à côté de vos congés déjà utilisés, pour savoir tout de suite si vous en mettez trop de côté.\nVos jours restants et vos prochains congés s’affichent sur l’écran d’accueil grâce à un widget.",
+      "shot": "01-home"
+    },
+    {
+      "title": "Posez vos congés depuis le calendrier",
+      "text": "Jours fériés, congés et ponts suggérés apparaissent en couleur dans le calendrier. Touchez une date pour ajouter ou modifier un congé, y compris une demi-journée, un quart de journée ou quelques heures.\nVous pouvez aussi importer vos anciens congés d’un coup à partir d’une photo de votre écran RH.",
+      "shot": "03-calendar"
+    },
+    {
+      "title": "Votre pays, votre rythme",
+      "text": "Les jours fériés de 42 pays, de la France à la Belgique et la Suisse jusqu’à l’Asie et aux Amériques. Là où ils varient selon la région, choisissez la vôtre. Votre pays n’y est pas ? Ajoutez vos propres jours fériés.\nVous réglez aussi vos jours de week-end, le premier jour de la semaine et votre rythme : fixe, temps partiel ou travail posté.",
+      "shot": "04-settings"
+    }
+  ],
+  "steps": {
+    "title": "Trois étapes pour commencer",
+    "items": [
+      {
+        "title": "Indiquez où vous travaillez",
+        "text": "Au premier lancement, choisissez votre pays et votre nombre de jours de congés par an."
+      },
+      {
+        "title": "Choisissez une suggestion",
+        "text": "Retrouvez les ponts suggérés dans l’onglet Calendrier et ajoutez ceux qui vous plaisent."
+      },
+      {
+        "title": "Notez vos congés",
+        "text": "Touchez une date, ou importez vos anciens congés depuis une photo."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Comment on compte",
+    "rows": [
+      [
+        "Journée",
+        "1 jour décompté"
+      ],
+      [
+        "Demi-journée",
+        "0,5 jour"
+      ],
+      [
+        "Quart de journée",
+        "0,25 jour"
+      ],
+      [
+        "Heures",
+        "Selon vos heures de travail ce jour-là"
+      ],
+      [
+        "Arrêt maladie, congé exceptionnel, déplacement",
+        "Non décomptés de vos congés"
+      ],
+      [
+        "Congés bonus",
+        "Jours en plus comme les récupérations, suivis à part avec une date d’expiration (Pro)"
+      ]
+    ],
+    "note": "Vous pouvez changer à tout moment votre total de congés annuels et le mois où démarre votre année de congés dans les Réglages."
+  },
+  "pricing": {
+    "title": "Bien se reposer, c’est gratuit. La planification, c’est Plus et Pro.",
+    "free": {
+      "name": "Gratuit",
+      "items": [
+        "Journées, demi-journées, quarts et heures, avec vos congés restants",
+        "Jours fériés de 42 pays, vos propres fériés et vacances scolaires",
+        "Toutes les suggestions de l’année, jusqu’à 3 ajoutées",
+        "Conseils d’espacement des pauses, rappels et widget",
+        "Ajout de congés par photo",
+        "Sauvegarde iCloud et calendrier partagé en famille"
+      ]
+    },
+    "pro": {
+      "name": "Plus et Pro",
+      "items": [
+        "Plus : Planificateur annuel optimal",
+        "Plus : Suggestions illimitées, y compris l’an dernier et l’an prochain",
+        "Plus : Envoi des congés vers votre app Calendrier",
+        "Pro : Tout Plus, congés bonus, plafonds annuels et report par type",
+        "Pro : Import du calendrier scolaire et détection automatique du calendrier",
+        "Pro : Repos en famille et anniversaires familiaux"
+      ],
+      "note": "Chaque formule existe en abonnement annuel ou en achat unique à vie."
+    },
+    "note": "Les abonnements annuels se renouvellent automatiquement s’ils ne sont pas résiliés au moins 24 heures avant la fin de la période. Gérez-les à tout moment dans Réglages > Compte Apple > Abonnements."
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "items": [
+      {
+        "q": "Mon solde de congés ne semble pas juste.",
+        "a": "Vérifiez dans les Réglages le mois de début de votre année de congés et votre total annuel. Les demi-journées (0,5) et quarts de journée (0,25) sont décomptés automatiquement, et les types qui ne comptent pas, comme les arrêts maladie, congés exceptionnels ou déplacements, ne changent pas le solde. Si ça ne colle toujours pas, écrivez-nous."
+      },
+      {
+        "q": "Mon congé n’apparaît pas dans le calendrier.",
+        "a": "Les congés annulés ne s’affichent pas dans le calendrier. Vérifiez le statut de l’entrée dans Gestion des congés. Une mise à jour vers la dernière version peut aussi aider."
+      },
+      {
+        "q": "Comment ajouter des congés bonus ?",
+        "a": "Touchez + dans l’onglet Aperçu pour ouvrir Gestion des congés, puis utilisez la section Congés bonus en bas. Choisissez un type (récupération, congé de récompense, congé de ressourcement…), le nombre de jours et, si vous voulez, une date d’expiration. Les congés bonus sont suivis à part de vos congés annuels."
+      },
+      {
+        "q": "J’ai payé, mais rien n’est débloqué.",
+        "a": "Touchez Restaurer l’achat en bas de l’onglet Réglages. Votre achat est restauré avec le compte Apple connecté à l’App Store. Si ça ne marche pas, écrivez-nous."
+      },
+      {
+        "q": "Vais-je perdre mes données si je supprime l’app ?",
+        "a": "Vos données sont stockées sur l’appareil : supprimer l’app les efface définitivement. Activez la sauvegarde iCloud pour garder une copie à restaurer plus tard."
+      },
+      {
+        "q": "Puis-je ajouter mes propres jours fériés ou en masquer ?",
+        "a": "Oui. Dans Jours fériés et vacances, dans les Réglages, vous pouvez ajouter vos propres jours fériés ou masquer ceux proposés par défaut."
+      },
+      {
+        "q": "Quels pays sont pris en charge ?",
+        "a": "Goldweek connaît les jours fériés de 42 pays. Choisissez votre pays (et votre région, là où les fériés varient) dans les Réglages, et le calendrier se met à jour aussitôt. Si le vôtre manque, ajoutez ses jours fériés vous-même ou demandez-le via le feedback dans l’app."
+      },
+      {
+        "q": "Où sont stockées mes données ?",
+        "a": "Ce que vous saisissez reste sur votre appareil ou dans votre propre iCloud. Nous recevons uniquement des statistiques d’usage anonymes, des rapports de plantage anonymes et les retours que vous choisissez d’envoyer."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Cette année, faites durer\nvos congés",
+    "cta": "Télécharger gratuitement sur l’App Store"
+  },
+  "ui": {
+    "skip": "Aller au contenu",
+    "languages": "Langues",
+    "privacy": "Confidentialité",
+    "contact": "Pour tout ce qui n’est pas couvert ci-dessus, une idée ou un bug, écrivez à {email}. Nous répondons en général sous un ou deux jours ouvrés."
+  }
+}

@@ -1,58 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="da">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: Ferieplanlægger</title>
-<meta name="description" content="Står der en helligdag for døren? Goldweek kobler helligdage og weekender og viser, hvilke dage du skal tage fri for at få den længste pause. Restferien ses i widgetten.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: Ferieplanlægger">
-<meta property="og:description" content="Står der en helligdag for døren? Goldweek kobler helligdage og weekender og viser, hvilke dage du skal tage fri for at få den længste pause. Restferien ses i widgetten.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/da/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: lang fri med få feriedage</title>
+  <meta name="description" content="Goldweek kobler helligdage og weekender og viser, hvilke dage du skal holde fri for den længste ferie. Helligdage i 42 lande.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: lang fri med få feriedage">
+  <meta property="og:description" content="Goldweek kobler helligdage og weekender og viser, hvilke dage du skal holde fri for den længste ferie. Helligdage i 42 lande.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/da/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/da/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Goldweeks appikon"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Funktioner</a>
-<a href="#screenshots" class="hide-mobile">Skærmbilleder</a>
-<a href="support.html" class="hide-mobile">Support</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Hent</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Sprog">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Gå til indhold</a>
+  <header class="bar">
+    <a class="brand" href="../da/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Sprog</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Få feriedage,<br>lang fri</h1>
+        <p class="lead">Goldweek kobler helligdage og weekender og viser præcis, hvilke dage du skal tage fri for at holde længst muligt fri. Slut med at bladre i kalenderen og tælle.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Hent gratis i App Store</a><a class="try" href="#try">Hvor langt rækker dine feriedage? ↓</a></div>
+        <p class="muted small">Gratis at hente. Ferieoverblik og forslag er stadig gratis.</p>
+      </div>
+      <div class="phone"><img src="../img/da/02-recommend.jpg" alt="Få feriedage, lang fri" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>Hvor langt rækker dine feriedage?</h2>
+      <p class="muted">Vælg, hvor mange dage du kan tage fri. Du ser de længste friperioder, de giver omkring de næste helligdage.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Hvor langt rækker dine feriedage?&quot;, &quot;lead&quot;: &quot;Vælg, hvor mange dage du kan tage fri. Du ser de længste friperioder, de giver omkring de næste helligdage.&quot;, &quot;ask&quot;: &quot;Hvor mange feriedage kan du tage?&quot;, &quot;based&quot;: &quot;Ud fra helligdagene i Danmark&quot;, &quot;note&quot;: &quot;Det er appens egne forslag. I appen tager de også højde for din resterende ferie og fri, du allerede har lagt ind, og du tilføjer et forslag med ét tryk.&quot;, &quot;leave&quot;: &quot;{n}d ferie&quot;, &quot;rest&quot;: &quot;{n}d fri&quot;, &quot;legend&quot;: [&quot;Arbejdsdag&quot;, &quot;Årlig ferie&quot;, &quot;Helligdag&quot;, &quot;Weekend&quot;], &quot;weekdays&quot;: [&quot;søn&quot;, &quot;man&quot;, &quot;tir&quot;, &quot;ons&quot;, &quot;tor&quot;, &quot;fre&quot;, &quot;lør&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;LHHHW&quot;, &quot;s&quot;: &quot;2026-12-23&quot;, &quot;t&quot;: &quot;Forlænget ferie ved Juleaften&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;Klemmedag ved Nytårsdag&quot;}, {&quot;d&quot;: &quot;WWLLLHHWW&quot;, &quot;s&quot;: &quot;2026-03-28&quot;, &quot;t&quot;: &quot;Uge fri ved Skærtorsdag&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-05-14&quot;, &quot;t&quot;: &quot;Klemmedag ved Kristi himmelfartsdag&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-06-03&quot;, &quot;t&quot;: &quot;Forlænget ferie ved Grundlovsdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2026-05-23&quot;, &quot;t&quot;: &quot;Forlænget ferie ved 2. pinsedag&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-05-06&quot;, &quot;t&quot;: &quot;Klemmedag ved Kristi himmelfartsdag&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2027-06-05&quot;, &quot;t&quot;: &quot;Forlænget ferie ved Grundlovsdag&quot;}, {&quot;d&quot;: &quot;LLHHH&quot;, &quot;s&quot;: &quot;2027-12-22&quot;, &quot;t&quot;: &quot;Forlænget ferie ved Juleaften&quot;}, {&quot;d&quot;: &quot;WWLLLHHWW&quot;, &quot;s&quot;: &quot;2027-03-20&quot;, &quot;t&quot;: &quot;Uge fri ved Skærtorsdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-05-15&quot;, &quot;t&quot;: &quot;Forlænget ferie ved 2. pinsedag&quot;}, {&quot;d&quot;: &quot;WHHHL&quot;, &quot;s&quot;: &quot;2028-12-23&quot;, &quot;t&quot;: &quot;Forlænget ferie ved Juleaften&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2028-01-01&quot;, &quot;t&quot;: &quot;Forlænget ferie ved Nytårsdag&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-05-25&quot;, &quot;t&quot;: &quot;Klemmedag ved Kristi himmelfartsdag&quot;}, {&quot;d&quot;: &quot;WWLLLHHWW&quot;, &quot;s&quot;: &quot;2028-04-08&quot;, &quot;t&quot;: &quot;Uge fri ved Skærtorsdag&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-06-03&quot;, &quot;t&quot;: &quot;Forlænget ferie ved 2. pinsedag&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Træt af at tælle dage i kalenderen?</h2>
+      <p>Torsdag er helligdag, skal du så tage fredag fri? Eller gemme dagen til den lange weekend næste måned? Efter nok bladren tager du fri en tilfældig dag, og i december forsvinder de feriedage, der blev tilovers. Goldweek regner for dig og viser de dage, der får ferien til at række længst.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Din ferie med ét blik</h2>
+        <p>I alt, brugt og tilbage på én skærm. Ved siden af ser du, hvor langt året er, og hvor meget ferie du har brugt, så du med det samme kan se, om du sparer for meget op.<br>Dine resterende dage og kommende fri vises i en widget på hjemmeskærmen.</p>
+      </div>
+      <div class="phone"><img src="../img/da/01-home.jpg" alt="Din ferie med ét blik" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Læg fri ind direkte i kalenderen</h2>
+        <p>Helligdage, ferie og foreslåede klemmedage vises i farver i kalenderen. Tryk på en dato for at tilføje eller ændre fri, også halve dage, kvarte dage eller timer.<br>Tidligere ferie henter du ind på én gang fra et billede af HR-skærmen.</p>
+      </div>
+      <div class="phone"><img src="../img/da/03-calendar.jpg" alt="Læg fri ind direkte i kalenderen" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Dit land, din arbejdstid</h2>
+        <p>Helligdage i 42 lande, fra Danmark og Norden til Europa, Asien og Amerika. Hvor helligdagene varierer efter region, vælger du din. Mangler dit land? Tilføj dine egne helligdage.<br>Du kan også vælge weekenddage, ugens første dag, og om du arbejder fast, deltid eller i skiftehold.</p>
+      </div>
+      <div class="phone"><img src="../img/da/04-settings.jpg" alt="Dit land, din arbejdstid" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Kom i gang på tre trin</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Fortæl, hvor du arbejder</h3><p>Første gang vælger du land, og hvor mange feriedage du har om året.</p></li>
+<li class="card"><span class="n">2</span><h3>Vælg et forslag</h3><p>På fanen Kalender finder du foreslåede friperioder. Tilføj dem, du kan lide.</p></li>
+<li class="card"><span class="n">3</span><h3>Registrér din ferie</h3><p>Tryk på en dato, eller hent tidligere ferie ind fra et billede.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Sådan regnes der</h2>
+      <div class="card table">
+        <dl><div><dt>Hel dag</dt><dd>1 dag fra saldoen</dd></div><div><dt>Halv dag</dt><dd>0,5 dag</dd></div><div><dt>Kvart dag</dt><dd>0,25 dag</dd></div><div><dt>Timer</dt><dd>Efter dine arbejdstimer den dag</dd></div><div><dt>Sygdom, særlig frihed, tjenesterejse</dt><dd>Trækkes ikke fra ferien</dd></div><div><dt>Bonusferie</dt><dd>Ekstra fridage som afspadsering, holdes for sig med udløbsdato (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Antal feriedage om året og den måned, dit ferieår starter, kan du altid ændre i Indstillinger.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>God hvile er gratis. Planlægningen klarer Plus og Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Gratis</h3>
+          <ul><li>Hele, halve og kvarte dage og timer, med resterende ferie</li><li>Helligdage i 42 lande, egne helligdage og ferier</li><li>Se alle forslag for i år, tilføj op til 3</li><li>Tips om hvileintervaller, påmindelser og widget</li><li>Tilføj ferie fra et foto</li><li>iCloud-sikkerhedskopi og delt plan med familien</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus og Pro</h3>
+          <ul><li>Plus: Optimal årsplanlægger</li><li>Plus: Ubegrænsede forslag, også for sidste og næste år</li><li>Plus: Send fri til Kalender-appen</li><li>Pro: Alt i Plus, bonusferie, årsgrænser og overførsel pr. type</li><li>Pro: Importér skolekalender og genkend kalender automatisk</li><li>Pro: Fri sammen og familiens mærkedage</li></ul>
+          <p class="muted">Hvert niveau fås som årsabonnement eller engangskøb for altid.</p>
+        </div>
+      </div>
+      <p class="muted">Årsabonnementer fornyes automatisk, medmindre de slås fra senest 24 timer før periodens udløb. Administrér dem når som helst under Indstillinger &gt; Apple-konto &gt; Abonnementer.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Ofte stillede spørgsmål</h2>
+      <div class="faq"><details><summary>Min feriesaldo passer ikke.</summary><p>Tjek i Indstillinger, hvilken måned dit ferieår starter, og hvor mange feriedage du har i alt. Halve (0,5) og kvarte dage (0,25) trækkes automatisk, og typer, der ikke tæller, som sygdom, særlig frihed eller tjenesterejser, ændrer ikke saldoen. Passer det stadig ikke, så skriv til os.</p></details>
+<details><summary>Min ferie vises ikke i kalenderen.</summary><p>Aflyst ferie vises ikke i kalenderen. Tjek status for posten i Ferieadministration. En opdatering til nyeste version kan også hjælpe.</p></details>
+<details><summary>Hvordan tilføjer jeg bonusferie?</summary><p>Tryk på + på fanen Status for at åbne Ferieadministration, og brug afsnittet Bonusferie nederst. Vælg en type (afspadsering, belønningsfri, restitutionsferie …), antal dage og eventuelt en udløbsdato. Bonusferie holdes adskilt fra almindelig ferie.</p></details>
+<details><summary>Jeg har betalt, men intet er låst op.</summary><p>Tryk på Gendan køb nederst på fanen Indstillinger. Købet gendannes med den Apple-konto, du er logget ind med i App Store. Hjælper det ikke, så skriv til os.</p></details>
+<details><summary>Mister jeg mine data, hvis jeg sletter appen?</summary><p>Dine data ligger på enheden, så sletter du appen, forsvinder de. Slå iCloud-sikkerhedskopi til, så du har en kopi, du kan gendanne senere.</p></details>
+<details><summary>Kan jeg tilføje egne helligdage eller skjule nogle?</summary><p>Ja. Under Helligdage og ferier i Indstillinger tilføjer du egne helligdage eller skjuler standardhelligdage.</p></details>
+<details><summary>Hvilke lande understøttes?</summary><p>Goldweek kender helligdagene i 42 lande. Vælg land i Indstillinger (og region, hvor helligdagene varierer), så opdateres kalenderen med det samme. Mangler dit land, kan du selv lægge helligdagene ind eller ønske det via feedback i appen.</p></details>
+<details><summary>Hvor gemmes mine data?</summary><p>Det, du indtaster, bliver på din enhed eller i din egen iCloud. Vi modtager kun anonym brugsstatistik, anonyme nedbrudsrapporter og feedback, du selv vælger at sende.</p></details></div>
+      <p class="contact">Til alt, der ikke er besvaret ovenfor, idéer eller fejl, skriv til <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. Vi svarer som regel inden for en til to hverdage.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Få ferien til at række<br>længere i år</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Hent gratis i App Store</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Sprog"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -67,74 +168,23 @@
 <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
 <a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
 <a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
-<a href="../da/" hreflang="da" lang="da" aria-current="true">Dansk</a>
+<a href="../da/" hreflang="da" lang="da" aria-current="page">Dansk</a>
 <a href="../fi/" hreflang="fi" lang="fi">Suomi</a>
 <a href="../pl/" hreflang="pl" lang="pl">Polski</a>
 <a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Privatlivspolitik</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Længere fri med færre dage</h1>
-<p>Goldweek finder de feriedage, der giver dig mest fri.<br>Appen kobler helligdage og weekender sammen og viser, hvordan du får den længste pause med færrest mulige feriedage.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/da-dk?size=250x83" alt="Hent i App Store" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Det kan Goldweek</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Smarte forslag</h3>
-<p>Ved hver kommende helligdag kan du se, hvor mange feriedage du skal bruge, og hvor mange dage i træk du så har fri. Du går aldrig glip af en klemmedag igen.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Helligdage i 42 lande</h3>
-<p>Danmark og 40 andre lande i Europa, Asien, Amerika, Mellemøsten, Afrika og Oceanien. Når du bruger appen på dansk, står helligdagene med deres danske navne, fra skærtorsdag og Kristi himmelfartsdag til grundlovsdag og juleaften. Hvor helligdagene varierer fra region til region, vælger du blot din egen. Bor du i et land, der ikke er på listen, kan du selv lægge helligdagene ind.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Styr på ferien</h3>
-<p>Se samlede, brugte og resterende feriedage på én skærm. Du kan registrere halve og kvarte dage og holde styr på ekstra fridage som afspadsering sammen med deres udløbsdato. Tryk på en dato i kalenderen for at registrere eller rette ferie, eller hent tidligere ferie ind fra et billede af skærmen i jeres HR-system.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget og backup</h3>
-<p>Restferien og dine næste fridage ligger lige på hjemmeskærmen. Dine registreringer sikkerhedskopieres til iCloud, og du kan dele din ferieplan med familien. Virker på både iPhone og iPad.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Et kig i appen</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/en/01-home.png" alt="Skærmbillede fra Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/02-recommend.png" alt="Skærmbillede fra Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/03-calendar.png" alt="Skærmbillede fra Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/04-countries.png" alt="Skærmbillede fra Goldweek" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/05-settings.png" alt="Skærmbillede fra Goldweek" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Planlæg i god tid, brug færre feriedage og nyd mere fri.</h2>
-<p>Gratis at hente. Goldweek Pro er et valgfrit engangskøb.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/da-dk?size=250x83" alt="Hent i App Store" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Support</a>
-<a href="privacy.html">Privatlivspolitik</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Alle rettigheder forbeholdes.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

@@ -1,58 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: İzin Planlayıcı</title>
-<meta name="description" content="Bayram mı yaklaşıyor? Goldweek resmî tatilleri hafta sonlarıyla birleştirir ve en uzun tatil için hangi günler izin alman gerektiğini gösterir. Kalan iznin widget&#x27;ta.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: İzin Planlayıcı">
-<meta property="og:description" content="Bayram mı yaklaşıyor? Goldweek resmî tatilleri hafta sonlarıyla birleştirir ve en uzun tatil için hangi günler izin alman gerektiğini gösterir. Kalan iznin widget&#x27;ta.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/tr/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: az izinle uzun tatil</title>
+  <meta name="description" content="Goldweek resmî tatilleri hafta sonlarıyla birleştirir ve en uzun tatil için hangi günler izin alman gerektiğini gösterir. 42 ülkenin tatilleri.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: az izinle uzun tatil">
+  <meta property="og:description" content="Goldweek resmî tatilleri hafta sonlarıyla birleştirir ve en uzun tatil için hangi günler izin alman gerektiğini gösterir. 42 ülkenin tatilleri.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/tr/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/tr/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Goldweek uygulama simgesi"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Özellikler</a>
-<a href="#screenshots" class="hide-mobile">Ekran görüntüleri</a>
-<a href="support.html" class="hide-mobile">Destek</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">İndir</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Dil">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">İçeriğe geç</a>
+  <header class="bar">
+    <a class="brand" href="../tr/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Diller</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Az izin günü,<br>uzun tatil</h1>
+        <p class="lead">Goldweek resmî tatilleri hafta sonlarıyla birleştirir ve en uzun tatili yapmak için hangi günler izin alman gerektiğini tam olarak gösterir. Takvimi sayfa sayfa çevirip saymaya son.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">App Store’dan ücretsiz indir</a><a class="try" href="#try">İznin seni ne kadar götürür? ↓</a></div>
+        <p class="muted small">İndirmesi ücretsiz. İzin takibi ve öneriler ücretsiz kalır.</p>
+      </div>
+      <div class="phone"><img src="../img/tr/02-recommend.jpg" alt="Az izin günü, uzun tatil" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>İznin seni ne kadar götürür?</h2>
+      <p class="muted">Kaç gün izin alabileceğini seç. Yaklaşan tatillerin etrafında bu günlerle yapabileceğin en uzun tatilleri gör.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;İznin seni ne kadar götürür?&quot;, &quot;lead&quot;: &quot;Kaç gün izin alabileceğini seç. Yaklaşan tatillerin etrafında bu günlerle yapabileceğin en uzun tatilleri gör.&quot;, &quot;ask&quot;: &quot;Kaç gün izin alabilirsin?&quot;, &quot;based&quot;: &quot;Türkiye’deki resmî tatillere göre&quot;, &quot;note&quot;: &quot;Bunlar doğrudan uygulamanın önerileri. Uygulamada kalan iznini ve önceden planladığın izinleri de hesaba katar, öneriyi tek dokunuşla takvimine eklersin.&quot;, &quot;leave&quot;: &quot;{n}g izin&quot;, &quot;rest&quot;: &quot;{n}g tatil&quot;, &quot;legend&quot;: [&quot;İş Günü&quot;, &quot;Yıllık İzin&quot;, &quot;Tatil&quot;, &quot;Hafta Sonu&quot;], &quot;weekdays&quot;: [&quot;Paz&quot;, &quot;Pzt&quot;, &quot;Sal&quot;, &quot;Çar&quot;, &quot;Per&quot;, &quot;Cum&quot;, &quot;Cmt&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-10-29&quot;, &quot;t&quot;: &quot;Cumhuriyet Bayramı Köprü Tatili&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;Yılbaşı Köprü Tatili&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-04-23&quot;, &quot;t&quot;: &quot;Ulusal Egemenlik ve Çocuk Bayramı Köprü Tatili&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2026-07-15&quot;, &quot;t&quot;: &quot;Demokrasi ve Millî Birlik Günü Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2026-08-29&quot;, &quot;t&quot;: &quot;Zafer Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;LLHHH&quot;, &quot;s&quot;: &quot;2026-03-18&quot;, &quot;t&quot;: &quot;Ramazan Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-04-29&quot;, &quot;t&quot;: &quot;Emek ve Dayanışma Günü Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;WWLLHHHHW&quot;, &quot;s&quot;: &quot;2026-05-23&quot;, &quot;t&quot;: &quot;Kurban Bayramı Haftası İzni&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2026-05-16&quot;, &quot;t&quot;: &quot;Atatürk&#x27;ü Anma, Gençlik ve Spor Bayramı Köprü Tatili&quot;}, {&quot;d&quot;: &quot;HHHLWW&quot;, &quot;s&quot;: &quot;2027-03-09&quot;, &quot;t&quot;: &quot;Ramazan Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-07-15&quot;, &quot;t&quot;: &quot;Demokrasi ve Millî Birlik Günü Köprü Tatili&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2027-10-27&quot;, &quot;t&quot;: &quot;Cumhuriyet Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2027-03-06&quot;, &quot;t&quot;: &quot;Ramazan Bayramı Köprü Tatili&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2027-04-21&quot;, &quot;t&quot;: &quot;Ulusal Egemenlik ve Çocuk Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;WHHHHLLWW&quot;, &quot;s&quot;: &quot;2027-05-15&quot;, &quot;t&quot;: &quot;Kurban Bayramı Haftası İzni&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-08-28&quot;, &quot;t&quot;: &quot;Zafer Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2027-05-01&quot;, &quot;t&quot;: &quot;Emek ve Dayanışma Günü Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2028-10-28&quot;, &quot;t&quot;: &quot;Cumhuriyet Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2028-01-01&quot;, &quot;t&quot;: &quot;Yılbaşı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;LHHHH&quot;, &quot;s&quot;: &quot;2028-05-04&quot;, &quot;t&quot;: &quot;Kurban Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;HWLLL&quot;, &quot;s&quot;: &quot;2028-07-15&quot;, &quot;t&quot;: &quot;Demokrasi ve Millî Birlik Günü Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2028-08-30&quot;, &quot;t&quot;: &quot;Zafer Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;HHHLL&quot;, &quot;s&quot;: &quot;2028-02-26&quot;, &quot;t&quot;: &quot;Ramazan Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-04-29&quot;, &quot;t&quot;: &quot;Emek ve Dayanışma Günü Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2028-04-22&quot;, &quot;t&quot;: &quot;Ulusal Egemenlik ve Çocuk Bayramı Uzatılmış İzin&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2028-05-17&quot;, &quot;t&quot;: &quot;Atatürk&#x27;ü Anma, Gençlik ve Spor Bayramı Uzatılmış İzin&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Takvimde gün saymaktan yoruldun mu?</h2>
+      <p>Perşembe tatil, cuma izin mi alsan? Yoksa günü gelecek ayki uzun hafta sonuna mı saklasan? Yeterince sayfa çevirince rastgele bir gün izin alırsın, aralıkta da kalan izinler yanıp gider. Goldweek hesabı senin yerine yapar ve iznini en uzağa taşıyan günleri gösterir.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>İznin tek bakışta</h2>
+        <p>Toplam, kullanılan ve kalan izin tek ekranda. Yanında yılın ne kadarının geçtiğini ve ne kadar izin kullandığını görürsün; fazla biriktirip biriktirmediğini hemen anlarsın.<br>Kalan günlerin ve yaklaşan izinlerin ana ekrandaki widget’ta görünür.</p>
+      </div>
+      <div class="phone"><img src="../img/tr/01-home.jpg" alt="İznin tek bakışta" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>İzni doğrudan takvime ekle</h2>
+        <p>Resmî tatiller, izinler ve önerilen köprü günleri takvimde renkli görünür. İzin eklemek ya da düzenlemek için bir tarihe dokun; yarım gün, çeyrek gün ve saatlik izin de olur.<br>Geçmiş izinlerini İK ekranının fotoğrafından tek seferde aktarabilirsin.</p>
+      </div>
+      <div class="phone"><img src="../img/tr/03-calendar.jpg" alt="İzni doğrudan takvime ekle" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Senin ülken, senin çalışma düzenin</h2>
+        <p>Türkiye’den Avrupa’ya, Asya’dan Amerika’ya 42 ülkenin resmî tatilleri. Tatillerin bölgeye göre değiştiği yerlerde kendi bölgeni seçersin. Ülken listede yok mu? Kendi tatillerini ekle.<br>Hafta sonu günlerini, haftanın ilk gününü ve tam zamanlı, yarı zamanlı ya da vardiyalı çalıştığını da ayarlayabilirsin.</p>
+      </div>
+      <div class="phone"><img src="../img/tr/04-settings.jpg" alt="Senin ülken, senin çalışma düzenin" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Üç adımda başla</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Nerede çalıştığını söyle</h3><p>İlk açılışta ülkeni ve yılda kaç gün iznin olduğunu seç.</p></li>
+<li class="card"><span class="n">2</span><h3>Bir öneri seç</h3><p>Takvim sekmesinde önerilen tatiller var. Beğendiklerini ekle.</p></li>
+<li class="card"><span class="n">3</span><h3>İzinlerini kaydet</h3><p>Bir tarihe dokun ya da geçmiş izinleri fotoğraftan aktar.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Nasıl hesaplanır</h2>
+      <div class="card table">
+        <dl><div><dt>Tam gün</dt><dd>Bakiyeden 1 gün</dd></div><div><dt>Yarım gün</dt><dd>0,5 gün</dd></div><div><dt>Çeyrek gün</dt><dd>0,25 gün</dd></div><div><dt>Saatlik</dt><dd>O günkü çalışma saatlerine göre</dd></div><div><dt>Hastalık, mazeret izni, iş seyahati</dt><dd>Yıllık izinden düşülmez</dd></div><div><dt>Bonus İzin</dt><dd>Fazla mesai karşılığı gibi ek izinler, son kullanma tarihiyle ayrı tutulur (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Yıllık izin gün sayını ve izin yılının başladığı ayı Ayarlar’dan istediğin zaman değiştirebilirsin.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>İyi dinlenmek ücretsiz. Planlamayı Plus ve Pro üstlenir.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Ücretsiz</h3>
+          <ul><li>Tam, yarım, çeyrek gün ve saatlik izinler ile kalan izin</li><li>42 ülkenin resmî tatilleri, kendi tatillerin ve okul tatilleri</li><li>Bu yılın tüm önerilerini gör, 3 tanesini ekle</li><li>Dinlenme aralığı ipuçları, hatırlatmalar ve widget</li><li>Fotoğraftan izin ekleme</li><li>iCloud yedekleme ve aileyle paylaşılan takvim</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus ve Pro</h3>
+          <ul><li>Plus: Optimum yıllık plan</li><li>Plus: Sınırsız öneri, geçen ve gelecek yılın önerileri dahil</li><li>Plus: İzinleri Takvim uygulamasına gönder</li><li>Pro: Plus’taki her şey, Bonus İzin, türe göre yıllık sınır ve devir</li><li>Pro: Okul takvimi içe aktarma ve takvimi otomatik algılama</li><li>Pro: Birlikte tatil ve aile yıl dönümleri</li></ul>
+          <p class="muted">Her seviye yıllık abonelik ya da tek seferlik ömür boyu satın alma olarak sunulur.</p>
+        </div>
+      </div>
+      <p class="muted">Yıllık abonelikler, dönem bitmeden en az 24 saat önce kapatılmazsa otomatik yenilenir. Ayarlar &gt; Apple Hesabı &gt; Abonelikler bölümünden istediğin zaman yönetebilirsin.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Sık sorulan sorular</h2>
+      <div class="faq"><details><summary>İzin bakiyem doğru görünmüyor.</summary><p>Ayarlar’da izin yılının başladığı ayı ve toplam yıllık izin gününü kontrol et. Yarım gün (0,5) ve çeyrek gün (0,25) otomatik düşülür; hastalık, mazeret izni ya da iş seyahati gibi izinden sayılmayan türler bakiyeyi değiştirmez. Hâlâ tutmuyorsa bize e-posta gönder.</p></details>
+<details><summary>İznim takvimde görünmüyor.</summary><p>İptal edilen izinler takvimde gösterilmez. Kaydın durumunu İzin Yönetimi’nde kontrol et. En son sürüme güncellemek de işe yarayabilir.</p></details>
+<details><summary>Bonus İzin nasıl eklenir?</summary><p>İzin Yönetimi’ni açmak için Durum sekmesinde + simgesine dokun ve alttaki Bonus İzin bölümünü kullan. Türünü (fazla mesai izni, ödül izni, yenilenme izni…), gün sayısını ve istersen son kullanma tarihini gir. Bonus İzin, normal yıllık izinden ayrı tutulur.</p></details>
+<details><summary>Ödeme yaptım ama hiçbir şey açılmadı.</summary><p>Ayarlar sekmesinin altındaki Satın Alımı Geri Yükle’ye dokun. Satın alım, App Store’da oturum açtığın Apple Hesabı ile geri yüklenir. İşe yaramazsa bize e-posta gönder.</p></details>
+<details><summary>Uygulamayı silersem verilerim gider mi?</summary><p>Veriler cihazda saklanır, bu yüzden uygulamayı silersen kalıcı olarak gider. Daha sonra geri yükleyebileceğin bir kopya için iCloud Yedekleme’yi aç.</p></details>
+<details><summary>Kendi tatillerimi ekleyebilir veya bazılarını gizleyebilir miyim?</summary><p>Evet. Ayarlar’daki Tatiller ve Molalar bölümünden kendi tatillerini ekleyebilir ya da varsayılan tatilleri gizleyebilirsin.</p></details>
+<details><summary>Hangi ülkeler destekleniyor?</summary><p>Goldweek 42 ülkenin resmî tatillerini içerir. Ayarlar’dan ülkeni (tatillerin bölgeye göre değiştiği yerlerde bölgeni de) seç, takvim hemen güncellenir. Ülken yoksa tatilleri kendin ekleyebilir ya da uygulamadan geri bildirim göndererek destek isteyebilirsin.</p></details>
+<details><summary>Verilerim nerede saklanıyor?</summary><p>Girdiğin her şey cihazında ya da kendi iCloud’unda kalır. Biz yalnızca anonim kullanım istatistiklerini, anonim çökme raporlarını ve kendi isteğinle gönderdiğin geri bildirimleri alırız.</p></details></div>
+      <p class="contact">Yukarıda yanıtı olmayan her şey, fikirler ya da hatalar için <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> adresine yaz. Genellikle bir iki iş günü içinde yanıt veririz.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Bu yıl iznin<br>daha uzun sürsün</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">App Store’dan ücretsiz indir</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Diller"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -72,69 +173,18 @@
 <a href="../pl/" hreflang="pl" lang="pl">Polski</a>
 <a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
-<a href="../tr/" hreflang="tr" lang="tr" aria-current="true">Türkçe</a>
+<a href="../tr/" hreflang="tr" lang="tr" aria-current="page">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Gizlilik Politikası</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Köprü günleriyle uzun tatil</h1>
-<p>Goldweek, en uzun tatili yapmak için hangi günler izin alman gerektiğini gösterir.<br>Resmî tatilleri hafta sonlarıyla birleştirir ve en az izin günüyle en uzun tatili bulur.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/tr-tr?size=250x83" alt="App Store&#x27;dan indirin" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Goldweek neler yapar</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Her tatil için öneri</h3>
-<p>Yaklaşan her resmî tatilde kaç gün izin alman gerektiğini ve kaç gün üst üste tatil yapacağını görürsün. Köprü günlerini artık kaçırmazsın.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>42 ülkenin resmî tatilleri</h3>
-<p>Türkiye ve Avrupa, Asya, Amerika, Orta Doğu, Afrika ve Okyanusya&#x27;dan 40 ülke daha. Türkiye&#x27;nin tatilleri resmî adlarıyla gelir: Ulusal Egemenlik ve Çocuk Bayramı&#x27;ndan Zafer Bayramı&#x27;na, Ramazan Bayramı&#x27;ndan Kurban Bayramı&#x27;na kadar. Tatillerin bölgeye göre değiştiği ülkelerde kendi bölgeni seçersin. Listede olmayan bir ülkenin tatillerini de kendin ekleyebilirsin.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Yıllık izin takibi</h3>
-<p>Toplam, kullanılan ve kalan izin tek ekranda. Yarım gün ve çeyrek gün izin girebilir, telafi izni gibi ek izinleri son kullanma tarihleriyle birlikte takip edebilirsin. Takvimde bir tarihe dokunarak izin ekle ya da düzenle, geçmiş izinlerini de şirketinin insan kaynakları ekranının fotoğrafından içe aktar.</p><p>Hafta sonu günlerini kendine göre seçersin, hafta sonu çalışıyorsan bile. Haftanın hangi günle başlayacağını da sen belirlersin.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget ve yedekleme</h3>
-<p>Kalan iznin ve yaklaşan tatilin doğrudan Ana Ekran&#x27;da. Kayıtların iCloud&#x27;a yedeklenir, tatil planını ailenle paylaşabilirsin. iPhone ve iPad&#x27;de, 21 dilde çalışır.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Uygulamaya bir göz at</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/en/01-home.png" alt="Goldweek ekran görüntüsü" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/02-recommend.png" alt="Goldweek ekran görüntüsü" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/03-calendar.png" alt="Goldweek ekran görüntüsü" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/04-countries.png" alt="Goldweek ekran görüntüsü" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/05-settings.png" alt="Goldweek ekran görüntüsü" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Önceden planla, daha az izin kullan, daha çok tatil yap.</h2>
-<p>Ücretsiz indir. Goldweek Pro isteğe bağlı, tek seferlik bir satın alımdır.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/tr-tr?size=250x83" alt="App Store&#x27;dan indirin" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Destek</a>
-<a href="privacy.html">Gizlilik Politikası</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Tüm hakları saklıdır.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

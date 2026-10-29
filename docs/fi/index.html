@@ -1,58 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldweek: Lomasuunnittelija</title>
-<meta name="description" content="Arkipyhä tulossa? Goldweek yhdistää pyhäpäivät ja viikonloput ja näyttää, mitkä päivät kannattaa ottaa vapaaksi, jotta loma venyy pisimmäksi. Lomasaldo näkyy widgetissä.">
-<link rel="canonical" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Goldweek: Lomasuunnittelija">
-<meta property="og:description" content="Arkipyhä tulossa? Goldweek yhdistää pyhäpäivät ja viikonloput ja näyttää, mitkä päivät kannattaa ottaa vapaaksi, jotta loma venyy pisimmäksi. Lomasaldo näkyy widgetissä.">
-<meta property="og:url" content="https://m1zz.github.io/Goldweek/fi/">
-<meta property="og:image" content="https://m1zz.github.io/Goldweek/images/app-icon.png">
-<link rel="icon" type="image/png" href="../images/app-icon.png">
-<link rel="apple-touch-icon" href="../images/app-icon.png">
-<link rel="stylesheet" href="../home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goldweek: pitkät vapaat vähillä lomapäivillä</title>
+  <meta name="description" content="Goldweek yhdistää pyhäpäivät ja viikonloput ja näyttää, mitkä päivät pitää ottaa vapaaksi pisintä lomaa varten. Pyhäpäivät 42 maasta.">
+  <meta name="theme-color" content="#0066E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0d0f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6755983135">
+  <link rel="canonical" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/Goldweek/ko/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/Goldweek/en/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/Goldweek/de/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/Goldweek/es/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/Goldweek/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/Goldweek/it/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/Goldweek/ja/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/Goldweek/pt-BR/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/Goldweek/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/Goldweek/zh-Hant/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/Goldweek/ru/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/Goldweek/id/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/Goldweek/nl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/Goldweek/sv/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/Goldweek/nb/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/Goldweek/da/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/Goldweek/fi/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/Goldweek/pl/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/Goldweek/cs/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/Goldweek/el/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/Goldweek/tr/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/Goldweek/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/Goldweek/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/Goldweek/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Goldweek: pitkät vapaat vähillä lomapäivillä">
+  <meta property="og:description" content="Goldweek yhdistää pyhäpäivät ja viikonloput ja näyttää, mitkä päivät pitää ottaa vapaaksi pisintä lomaa varten. Pyhäpäivät 42 maasta.">
+  <meta property="og:url" content="https://m1zz.github.io/Goldweek/fi/">
+  <meta property="og:image" content="https://m1zz.github.io/Goldweek/img/fi/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#0066E6}@media (prefers-color-scheme:dark){:root{--accent:#5AA2FF}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<header>
-<div class="header-inner">
-<a href="./" class="logo"><img src="../images/app-icon.png" alt="Goldweekin sovelluskuvake"><span>Goldweek</span></a>
-<nav class="nav-links">
-<a href="#features" class="hide-mobile">Ominaisuudet</a>
-<a href="#screenshots" class="hide-mobile">Kuvakaappaukset</a>
-<a href="support.html" class="hide-mobile">Tuki</a>
-<a href="https://apps.apple.com/app/id6755983135" class="download-btn" target="_blank" rel="noopener">Lataa</a>
-</nav>
-</div>
-</header>
-<div class="lang-bar"><nav class="langs" aria-label="Kieli">
-<a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+  <a class="skip" href="#main">Siirry sisältöön</a>
+  <header class="bar">
+    <a class="brand" href="../fi/"><img src="../icon.png" alt="" width="32" height="32">Goldweek</a>
+    <a class="lang-link" href="#languages">Kielet</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Vähän lomapäiviä,<br>pitkät vapaat</h1>
+        <p class="lead">Goldweek yhdistää pyhäpäivät ja viikonloput ja näyttää tarkalleen, minä päivinä kannattaa pitää lomaa, jotta vapaata tulee mahdollisimman pitkään. Ei enää kalenterin selaamista ja laskemista.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6755983135">Lataa ilmaiseksi App Storesta</a><a class="try" href="#try">Kuinka pitkälle lomasi riittää? ↓</a></div>
+        <p class="muted small">Ilmainen ladata. Lomien seuranta ja ehdotukset pysyvät ilmaisina.</p>
+      </div>
+      <div class="phone"><img src="../img/fi/02-recommend.jpg" alt="Vähän lomapäiviä, pitkät vapaat" width="600" height="1303" decoding="async"></div>
+    </section>
+
+
+    <section class="reveal" id="try">
+      <h2>Kuinka pitkälle lomasi riittää?</h2>
+      <p class="muted">Valitse, montako lomapäivää voit pitää. Näet pisimmät vapaat, jotka niillä saa tulevien pyhien ympärille.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Kuinka pitkälle lomasi riittää?&quot;, &quot;lead&quot;: &quot;Valitse, montako lomapäivää voit pitää. Näet pisimmät vapaat, jotka niillä saa tulevien pyhien ympärille.&quot;, &quot;ask&quot;: &quot;Montako lomapäivää voit pitää?&quot;, &quot;based&quot;: &quot;Suomen pyhäpäivien mukaan&quot;, &quot;note&quot;: &quot;Nämä ovat sovelluksen omia ehdotuksia. Sovelluksessa ne huomioivat myös jäljellä olevan lomasi ja jo sovitut vapaat, ja lisäät ehdotuksen yhdellä napautuksella.&quot;, &quot;leave&quot;: &quot;{n} pv lomaa&quot;, &quot;rest&quot;: &quot;{n} pv vapaata&quot;, &quot;legend&quot;: [&quot;Työpäivä&quot;, &quot;Vuosiloma&quot;, &quot;Pyhäpäivä&quot;, &quot;Viikonloppu&quot;], &quot;weekdays&quot;: [&quot;su&quot;, &quot;ma&quot;, &quot;ti&quot;, &quot;ke&quot;, &quot;to&quot;, &quot;pe&quot;, &quot;la&quot;], &quot;recs&quot;: [{&quot;d&quot;: &quot;LHHHW&quot;, &quot;s&quot;: &quot;2026-12-23&quot;, &quot;t&quot;: &quot;Pidennetty loma: Jouluaatto&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-01-01&quot;, &quot;t&quot;: &quot;Välipäivä: Uudenvuodenpäivä&quot;}, {&quot;d&quot;: &quot;HWWHL&quot;, &quot;s&quot;: &quot;2026-04-03&quot;, &quot;t&quot;: &quot;Pidennetty loma: Pitkäperjantai&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2026-05-14&quot;, &quot;t&quot;: &quot;Välipäivä: Helatorstai&quot;}, {&quot;d&quot;: &quot;WWLH&quot;, &quot;s&quot;: &quot;2026-01-03&quot;, &quot;t&quot;: &quot;Välipäivä: Loppiainen&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-06-17&quot;, &quot;t&quot;: &quot;Pidennetty loma: Juhannusaatto&quot;}, {&quot;d&quot;: &quot;WHLLL&quot;, &quot;s&quot;: &quot;2026-12-05&quot;, &quot;t&quot;: &quot;Pidennetty loma: Itsenäisyyspäivä&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2026-04-29&quot;, &quot;t&quot;: &quot;Pidennetty loma: Vappu&quot;}, {&quot;d&quot;: &quot;HWWHL&quot;, &quot;s&quot;: &quot;2027-03-26&quot;, &quot;t&quot;: &quot;Pidennetty loma: Pitkäperjantai&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2027-05-06&quot;, &quot;t&quot;: &quot;Välipäivä: Helatorstai&quot;}, {&quot;d&quot;: &quot;HWWLLH&quot;, &quot;s&quot;: &quot;2027-01-01&quot;, &quot;t&quot;: &quot;Pidennetty loma: Uudenvuodenpäivä&quot;}, {&quot;d&quot;: &quot;HWLLLH&quot;, &quot;s&quot;: &quot;2027-05-01&quot;, &quot;t&quot;: &quot;Pidennetty loma: Vappu&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2027-06-23&quot;, &quot;t&quot;: &quot;Pidennetty loma: Juhannusaatto&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2027-12-04&quot;, &quot;t&quot;: &quot;Pidennetty loma: Itsenäisyyspäivä&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2027-01-06&quot;, &quot;t&quot;: &quot;Pidennetty loma: Loppiainen&quot;}, {&quot;d&quot;: &quot;LLHHH&quot;, &quot;s&quot;: &quot;2027-12-22&quot;, &quot;t&quot;: &quot;Pidennetty loma: Jouluaatto&quot;}, {&quot;d&quot;: &quot;WHHHL&quot;, &quot;s&quot;: &quot;2028-12-23&quot;, &quot;t&quot;: &quot;Pidennetty loma: Jouluaatto&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-01-06&quot;, &quot;t&quot;: &quot;Välipäivä: Loppiainen&quot;}, {&quot;d&quot;: &quot;HWWHL&quot;, &quot;s&quot;: &quot;2028-04-14&quot;, &quot;t&quot;: &quot;Pidennetty loma: Pitkäperjantai&quot;}, {&quot;d&quot;: &quot;HLWW&quot;, &quot;s&quot;: &quot;2028-05-25&quot;, &quot;t&quot;: &quot;Välipäivä: Helatorstai&quot;}, {&quot;d&quot;: &quot;HWLLLH&quot;, &quot;s&quot;: &quot;2028-01-01&quot;, &quot;t&quot;: &quot;Pidennetty loma: Uudenvuodenpäivä&quot;}, {&quot;d&quot;: &quot;LLHWW&quot;, &quot;s&quot;: &quot;2028-06-21&quot;, &quot;t&quot;: &quot;Pidennetty loma: Juhannusaatto&quot;}, {&quot;d&quot;: &quot;HLLWW&quot;, &quot;s&quot;: &quot;2028-12-06&quot;, &quot;t&quot;: &quot;Pidennetty loma: Itsenäisyyspäivä&quot;}, {&quot;d&quot;: &quot;WWHLL&quot;, &quot;s&quot;: &quot;2028-04-29&quot;, &quot;t&quot;: &quot;Pidennetty loma: Vappu&quot;}]}"></div>
+    </section>
+
+    <section class="problem reveal">
+      <h2>Kyllästyttääkö päivien laskeminen kalenterista?</h2>
+      <p>Torstai on pyhä, otatko perjantain vapaaksi? Vai säästätkö päivän ensi kuun pitkään viikonloppuun? Tarpeeksi selattuasi otat vapaaksi minkä tahansa päivän, ja joulukuussa ylijääneet lomat katoavat. Goldweek laskee puolestasi ja näyttää päivät, joilla lomasi riittää pisimmälle.</p>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Lomasi yhdellä silmäyksellä</h2>
+        <p>Kaikki, käytetyt ja jäljellä olevat päivät yhdellä näytöllä. Vieressä näkyy, kuinka pitkällä vuosi on ja kuinka paljon lomaa olet käyttänyt, joten huomaat heti, säästätkö liikaa.<br>Jäljellä olevat päivät ja tulevat vapaat näkyvät widgetissä Koti-valikossa.</p>
+      </div>
+      <div class="phone"><img src="../img/fi/01-home.jpg" alt="Lomasi yhdellä silmäyksellä" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Merkitse vapaat suoraan kalenteriin</h2>
+        <p>Pyhäpäivät, lomat ja ehdotetut välipäivät näkyvät kalenterissa väreinä. Napauta päivää lisätäksesi tai muokataksesi vapaata, myös puolikkaita päiviä, neljännespäiviä tai tunteja.<br>Aiemmat lomat tuot kerralla kuvasta, joka on otettu henkilöstöjärjestelmän näkymästä.</p>
+      </div>
+      <div class="phone"><img src="../img/fi/03-calendar.jpg" alt="Merkitse vapaat suoraan kalenteriin" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Sinun maasi, sinun työaikasi</h2>
+        <p>Pyhäpäivät 42 maasta, Suomesta ja Pohjoismaista Eurooppaan, Aasiaan ja Amerikkaan. Jos pyhät vaihtelevat alueittain, valitset omasi. Puuttuuko maasi? Lisää omat pyhäpäivät.<br>Voit valita myös viikonlopun päivät, viikon ensimmäisen päivän sekä kiinteän työajan, osa-aikatyön tai vuorotyön.</p>
+      </div>
+      <div class="phone"><img src="../img/fi/04-settings.jpg" alt="Sinun maasi, sinun työaikasi" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Alkuun kolmessa vaiheessa</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Kerro, missä työskentelet</h3><p>Ensimmäisellä kerralla valitset maan ja montako lomapäivää sinulla on vuodessa.</p></li>
+<li class="card"><span class="n">2</span><h3>Valitse ehdotus</h3><p>Kalenteri-välilehdellä on ehdotettuja vapaita. Lisää ne, joista pidät.</p></li>
+<li class="card"><span class="n">3</span><h3>Kirjaa lomasi</h3><p>Napauta päivää tai tuo aiemmat lomat kuvasta.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Näin se lasketaan</h2>
+      <div class="card table">
+        <dl><div><dt>Koko päivä</dt><dd>1 päivä saldosta</dd></div><div><dt>Puoli päivää</dt><dd>0,5 päivää</dd></div><div><dt>Neljännespäivä</dt><dd>0,25 päivää</dd></div><div><dt>Tunnit</dt><dd>Sen päivän työtuntiesi mukaan</dd></div><div><dt>Sairaus, virkavapaa, työmatka</dt><dd>Ei vähennetä lomasta</dd></div><div><dt>Bonusloma</dt><dd>Ylimääräiset vapaat kuten pekkaset, kirjataan erikseen viimeisen käyttöpäivän kanssa (Pro)</dd></div></dl>
+      </div>
+      <p class="muted">Vuoden lomapäivät ja kuukauden, jolloin lomavuotesi alkaa, voit muuttaa milloin tahansa asetuksista.</p>
+    </section>
+
+
+    <section class="reveal" id="pricing">
+      <h2>Hyvä lepo on ilmaista. Suunnittelun hoitavat Plus ja Pro.</h2>
+      <div class="plans">
+        <div class="card plan free">
+          <h3>Ilmainen</h3>
+          <ul><li>Kokonaiset, puolikkaat ja neljännespäivät sekä tunnit ja jäljellä oleva loma</li><li>Pyhäpäivät 42 maasta, omat pyhät ja koulujen lomat</li><li>Kaikki tämän vuoden ehdotukset, lisää enintään 3</li><li>Vinkit levon väleistä, muistutukset ja widget</li><li>Lisää loma kuvasta</li><li>iCloud-varmuuskopio ja perheen kanssa jaettu aikataulu</li></ul>
+          
+        </div>
+        <div class="card plan pro">
+          <h3>Plus ja Pro</h3>
+          <ul><li>Plus: Optimaalinen vuosisuunnittelija</li><li>Plus: Rajattomasti ehdotuksia, myös viime ja ensi vuodelle</li><li>Plus: Vie vapaat Kalenteri-appiin</li><li>Pro: Kaikki Plussasta, bonusloma, vuosirajat ja siirrot lomatyypeittäin</li><li>Pro: Koulun kalenterin tuonti ja kalenterin automaattinen tunnistus</li><li>Pro: Yhteiset vapaat ja perheen merkkipäivät</li></ul>
+          <p class="muted">Jokainen taso on saatavilla vuositilauksena tai kertaostona pysyvästi.</p>
+        </div>
+      </div>
+      <p class="muted">Vuositilaus uusiutuu automaattisesti, ellei sitä peru viimeistään 24 tuntia ennen jakson loppua. Hallitse tilauksia milloin vain kohdassa Asetukset &gt; Apple-tili &gt; Tilaukset.</p>
+    </section>
+
+    <section class="reveal" id="faq">
+      <h2>Usein kysyttyä</h2>
+      <div class="faq"><details><summary>Lomasaldoni ei täsmää.</summary><p>Tarkista asetuksista, minä kuukautena lomavuotesi alkaa ja montako lomapäivää sinulla on yhteensä. Puolikkaat (0,5) ja neljännespäivät (0,25) vähennetään automaattisesti, eivätkä lomaan laskemattomat tyypit, kuten sairaus, virkavapaa tai työmatka, muuta saldoa. Jos se ei vieläkään täsmää, lähetä meille sähköpostia.</p></details>
+<details><summary>Lomani ei näy kalenterissa.</summary><p>Peruttuja lomia ei näytetä kalenterissa. Tarkista merkinnän tila Lomien hallinnasta. Päivitys uusimpaan versioon voi myös auttaa.</p></details>
+<details><summary>Miten lisään bonusloman?</summary><p>Avaa Lomien hallinta napauttamalla + Tila-välilehdellä ja käytä alareunan Bonusloma-osiota. Valitse tyyppi (pekkanen, palkintoloma, palautumisloma…), päivien määrä ja halutessasi viimeinen käyttöpäivä. Bonusloma pidetään erillään tavallisesta lomasta.</p></details>
+<details><summary>Maksoin, mutta mitään ei avautunut.</summary><p>Napauta Palauta osto Asetukset-välilehden alareunassa. Osto palautetaan sillä Apple-tilillä, jolla olet kirjautunut App Storeen. Jos se ei auta, lähetä meille sähköpostia.</p></details>
+<details><summary>Katoavatko tietoni, jos poistan sovelluksen?</summary><p>Tiedot ovat laitteella, joten sovelluksen poistaminen poistaa ne. Laita iCloud-varmuuskopio päälle, niin sinulla on kopio, jonka voit palauttaa myöhemmin.</p></details>
+<details><summary>Voinko lisätä omia pyhäpäiviä tai piilottaa niitä?</summary><p>Kyllä. Asetusten kohdassa Pyhäpäivät ja vapaajaksot voit lisätä omia pyhäpäiviä tai piilottaa oletuksena olevia.</p></details>
+<details><summary>Mitä maita tuetaan?</summary><p>Goldweekissa on 42 maan pyhäpäivät. Valitse maa asetuksista (ja alue, jos pyhät vaihtelevat alueittain), niin kalenteri päivittyy heti. Jos maatasi ei ole, lisää pyhäpäivät itse tai toivo sitä palautteella sovelluksesta.</p></details>
+<details><summary>Mihin tietoni tallennetaan?</summary><p>Syöttämäsi tiedot pysyvät laitteellasi tai omassa iCloudissasi. Saamme vain nimettömiä käyttötilastoja, nimettömiä kaatumisraportteja ja palautetta, jonka itse päätät lähettää.</p></details></div>
+      <p class="contact">Kaikesta, mihin yllä ei vastattu, ideoista tai virheistä voit kirjoittaa osoitteeseen <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>. Vastaamme yleensä yhden tai kahden arkipäivän kuluessa.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Saa lomasi riittämään<br>pidemmälle tänä vuonna</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6755983135">Lataa ilmaiseksi App Storesta</a>
+    </section>
+  </main>
+
+  <footer>
+    <nav id="languages" class="langs" aria-label="Kielet"><a href="../ko/" hreflang="ko" lang="ko">한국어</a>
 <a href="../en/" hreflang="en" lang="en">English</a>
 <a href="../de/" hreflang="de" lang="de">Deutsch</a>
 <a href="../es/" hreflang="es" lang="es">Español</a>
@@ -68,73 +169,22 @@
 <a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
 <a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
 <a href="../da/" hreflang="da" lang="da">Dansk</a>
-<a href="../fi/" hreflang="fi" lang="fi" aria-current="true">Suomi</a>
+<a href="../fi/" hreflang="fi" lang="fi" aria-current="page">Suomi</a>
 <a href="../pl/" hreflang="pl" lang="pl">Polski</a>
 <a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
 <a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
 <a href="../tr/" hreflang="tr" lang="tr">Türkçe</a>
 <a href="../th/" hreflang="th" lang="th">ไทย</a>
-<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
-</nav></div>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a></nav>
+    <p><a href="privacy.html">Tietosuoja</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Goldweek</p>
+  </footer>
 
-<section class="hero">
-<h1>Pisin vapaa vähillä päivillä</h1>
-<p>Goldweek löytää lomapäivät, joilla saat eniten vapaata.<br>Sovellus yhdistää pyhäpäivät ja viikonloput ja näyttää, miten saat pisimmän vapaan mahdollisimman vähillä lomapäivillä.</p>
-<div class="hero-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/fi-fi?size=250x83" alt="Lataa App Storesta" class="app-store-badge"></a></div>
-</section>
-
-<section class="features" id="features">
-<div class="section-title"><h2>Mitä Goldweek tekee</h2></div>
-<div class="features-grid">
-<div class="feature-card">
-<div class="feature-icon icon-ai">✨</div>
-<h3>Fiksut ehdotukset</h3>
-<p>Näet jokaisen tulevan pyhäpäivän kohdalla, montako lomapäivää tarvitset ja montako päivää putkeen olet silloin vapaalla. Yksikään välipäivä ei enää mene ohi.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-world">🌏</div>
-<h3>Pyhäpäivät 42 maasta</h3>
-<p>Suomi ja 40 muuta maata Euroopasta, Aasiasta, Amerikasta, Lähi-idästä, Afrikasta ja Oseaniasta. Kun käytät sovellusta suomeksi, pyhäpäivät näkyvät virallisilla nimillään loppiaisesta ja helatorstaista juhannusaattoon ja itsenäisyyspäivään. Jos pyhäpäivät vaihtelevat alueittain, valitset vain oman alueesi. Jos maatasi ei ole listalla, voit lisätä pyhäpäivät itse.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-calendar">📅</div>
-<h3>Lomat hallinnassa</h3>
-<p>Kaikki, käytetyt ja jäljellä olevat lomapäivät yhdellä näytöllä. Voit kirjata puolikkaita ja neljäsosapäiviä sekä seurata ylimääräisiä vapaita, kuten pekkasia ja ylityövapaita, viimeisine käyttöpäivineen. Napauta kalenterista päivää lisätäksesi tai muokataksesi lomaa, tai tuo aiemmat lomat kuvasta, joka on otettu työpaikan HR-järjestelmästä.</p>
-</div>
-<div class="feature-card">
-<div class="feature-icon icon-widget">📱</div>
-<h3>Widget ja varmuuskopio</h3>
-<p>Lomasaldo ja tulevat vapaat näkyvät suoraan Koti-valikossa. Merkintäsi varmuuskopioidaan iCloudiin, ja voit jakaa lomasuunnitelman perheen kanssa. Toimii iPhonella ja iPadilla.</p>
-</div>
-</div>
-</section>
-
-<section class="screenshots" id="screenshots">
-<div class="section-title"><h2>Kurkista sisään</h2></div>
-<div class="screenshot-slider">
-<img src="../screenshots/marketing/en/01-home.png" alt="Goldweekin kuvakaappaus" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/02-recommend.png" alt="Goldweekin kuvakaappaus" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/03-calendar.png" alt="Goldweekin kuvakaappaus" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/04-countries.png" alt="Goldweekin kuvakaappaus" loading="lazy" width="1242" height="2688">
-<img src="../screenshots/marketing/en/05-settings.png" alt="Goldweekin kuvakaappaus" loading="lazy" width="1242" height="2688">
-</div>
-</section>
-
-<section class="cta">
-<h2>Suunnittele ajoissa, käytä vähemmän lomapäiviä ja nauti pidemmistä vapaista.</h2>
-<p>Ilmainen ladata. Goldweek Pro on vapaaehtoinen kertaostos.</p>
-<div class="cta-buttons"><a href="https://apps.apple.com/app/id6755983135" target="_blank" rel="noopener"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/fi-fi?size=250x83" alt="Lataa App Storesta" class="app-store-badge on-dark"></a></div>
-</section>
-
-<footer>
-<div class="footer-inner">
-<div class="footer-links">
-<a href="support.html">Tuki</a>
-<a href="privacy.html">Tietosuojaseloste</a>
-<a href="https://github.com/M1zz/Goldweek" target="_blank" rel="noopener">GitHub</a>
-</div>
-<p class="footer-copy">© Goldweek. Kaikki oikeudet pidätetään.</p>
-</div>
-</footer>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>
