@@ -14,7 +14,7 @@ enum CalendarSpan: Int, CaseIterable, Identifiable {
     var id: Int { rawValue }
 
     /// 그 날이 속한 구간의 첫 달 (1월 기준으로 끊는다)
-    func periodStart(containing date: Date, calendar: Calendar = .current) -> Date {
+    func periodStart(containing date: Date, calendar: Calendar = .app) -> Date {
         let c = calendar.dateComponents([.year, .month], from: date)
         let month = ((c.month ?? 1) - 1) / rawValue * rawValue + 1
         return calendar.date(from: DateComponents(year: c.year, month: month, day: 1)) ?? date
@@ -25,7 +25,7 @@ enum CalendarSpan: Int, CaseIterable, Identifiable {
 struct PeriodNavigator: View {
     @Binding var currentMonth: Date
     let span: CalendarSpan
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var start: Date { span.periodStart(containing: currentMonth) }
     private var end: Date { calendar.date(byAdding: .month, value: span.rawValue - 1, to: start) ?? start }
@@ -77,7 +77,7 @@ struct CalendarOverviewGrid: View {
     let onSelectMonth: (Date) -> Void
 
     @Environment(\.horizontalSizeClass) private var sizeClass
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var months: [Date] {
         let start = span.periodStart(containing: currentMonth)
@@ -133,7 +133,7 @@ struct MiniMonthView: View {
     var large = false
 
     @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var firstWeekday: Int { HolidayService.firstWeekday(for: country, override: firstWeekdayRaw) }
 

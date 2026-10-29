@@ -39,6 +39,15 @@ struct LeaveSnapshot {
     }
 }
 
+/// 가족 기념일: 함께 쉬기(프로)에서 가족이 같이 본다
+struct AnniversarySnapshot: Equatable {
+    let id: UUID
+    let title: String
+    let kindRaw: String
+    let date: Date
+    let isLunar: Bool
+}
+
 // MARK: - 공유받은 일정 (참여자 시점)
 struct SharedLeaveItem: Identifiable {
     let id: String
@@ -56,10 +65,14 @@ struct SharedSchedule: Identifiable {
     let zoneID: CKRecordZone.ID
     let ownerName: String
     let leaves: [SharedLeaveItem]
+    /// 공유한 사람의 나라 — 그 사람의 주말·공휴일을 셀 때 (예전 버전이 올린 기록엔 없을 수 있다)
+    var countryRaw: String? = nil
+    /// 공유한 사람의 가족 기념일 (2.4.0부터 올린다)
+    var anniversaries: [AnniversarySnapshot] = []
 
     /// 오늘 이후 끝나는 휴가 (진행 중 포함)
     var upcomingLeaves: [SharedLeaveItem] {
-        let today = Calendar.current.startOfDay(for: Date())
+        let today = Calendar.app.startOfDay(for: Date())
         return leaves.filter { $0.endDate >= today && $0.status != .cancelled }
     }
 }
@@ -74,6 +87,8 @@ final class ShareSyncService {
     private static let zoneName = "GoldweekSchedule"
     private static let profileRecordType = "SharedProfile"
     private static let leaveRecordType = "SharedLeave"
+    /// 2.4.0 새 기록 종류 — CloudKit 콘솔에서 운영 환경에 스키마를 배포해야 한다
+    private static let anniversaryRecordType = "SharedAnniversary"
     private static let profileRecordName = "profile"
     private static let sharedDBSubscriptionID = "goldweek-shared-db-changes"
     private static let sharingEnabledKey = "goldweekScheduleSharingEnabled"
@@ -84,6 +99,8 @@ final class ShareSyncService {
     private(set) var myShare: CKShare?
     private(set) var participantNames: [String] = []
     private(set) var sharedSchedules: [SharedSchedule] = []
+    /// 내 가족 기념일 — 화면(ContentView)이 바뀔 때마다 넣어 두고, 다음 미러링 때 함께 올린다
+    var myAnniversaries: [AnniversarySnapshot] = []
     private(set) var lastSyncDate: Date?
     private(set) var isWorking = false
 
@@ -253,6 +270,29 @@ final class ShareSyncService {
         if !idsToDelete.isEmpty {
             _ = try await privateDB.modifyRecords(saving: [], deleting: idsToDelete)
         }
+
+        // 기념일은 따로 올린다 — 운영 환경에 새 기록 종류가 아직 없어도 휴가 공유는 그대로 되게
+        do {
+            let anniversaryRecords = myAnniversaries.map { a -> CKRecord in
+                let record = CKRecord(recordType: Self.anniversaryRecordType,
+                                      recordID: CKRecord.ID(recordName: "anniv-\(a.id.uuidString)", zoneID: zoneID))
+                record["title"] = a.title as CKRecordValue
+                record["kind"] = a.kindRaw as CKRecordValue
+                record["date"] = a.date as CKRecordValue
+                record["isLunar"] = (a.isLunar ? 1 : 0) as CKRecordValue
+                return record
+            }
+            let keep = Set(anniversaryRecords.map { $0.recordID.recordName })
+            let staleAnniversaries = existing
+                .filter { $0.recordType == Self.anniversaryRecordType && !keep.contains($0.recordID.recordName) }
+                .map { $0.recordID }
+            if !anniversaryRecords.isEmpty || !staleAnniversaries.isEmpty {
+                _ = try await privateDB.modifyRecords(saving: anniversaryRecords, deleting: staleAnniversaries,
+                                                      savePolicy: .allKeys, atomically: false)
+            }
+        } catch {
+            logWarning("가족 기념일 공유 실패: \(error.localizedDescription)", category: .share)
+        }
     }
 
     private func ensureZone() async throws {
@@ -344,11 +384,28 @@ final class ShareSyncService {
                     }
                     .sorted { $0.startDate < $1.startDate }
 
+                let anniversaries = records
+                    .filter { $0.recordType == Self.anniversaryRecordType }
+                    .compactMap { record -> AnniversarySnapshot? in
+                        guard let date = record["date"] as? Date else { return nil }
+                        let name = record.recordID.recordName
+                        return AnniversarySnapshot(
+                            id: UUID(uuidString: String(name.dropFirst("anniv-".count))) ?? UUID(),
+                            title: record["title"] as? String ?? "",
+                            kindRaw: record["kind"] as? String ?? AnniversaryKind.other.rawValue,
+                            date: date,
+                            isLunar: (record["isLunar"] as? Int ?? 0) == 1
+                        )
+                    }
+                let country = records.first { $0.recordType == Self.profileRecordType }?["country"] as? String
+
                 schedules.append(SharedSchedule(
                     id: "\(zone.zoneID.ownerName)|\(zone.zoneID.zoneName)",
                     zoneID: zone.zoneID,
                     ownerName: ownerName,
-                    leaves: leaves
+                    leaves: leaves,
+                    countryRaw: country,
+                    anniversaries: anniversaries
                 ))
             }
 

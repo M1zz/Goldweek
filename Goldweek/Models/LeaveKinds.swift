@@ -224,7 +224,7 @@ struct LeaveKindUsage: Equatable {
 
     /// 한 해, 종류별 사용량
     static func byKind(records: [LeaveRecord], customTypes: [CustomLeaveType], year: Int, startMonth: Int,
-                       asOf now: Date = Date(), calendar: Calendar = .current) -> [LeaveKindRef: LeaveKindUsage] {
+                       asOf now: Date = Date(), calendar: Calendar = .app) -> [LeaveKindRef: LeaveKindUsage] {
         let existing = Set(customTypes.map(\.id))
         var result: [LeaveKindRef: LeaveKindUsage] = [:]
         for r in LeaveUsageCalculator.records(records, inFiscalYear: year, startMonth: startMonth, calendar: calendar)
@@ -245,7 +245,7 @@ struct LeaveKindUsage: Equatable {
     }
 
     /// 기록이 쓴 근무 시간(분) — 종일은 그 기간 근무일마다 그 요일의 근무 시간을 더한다
-    static func workMinutes(of record: LeaveRecord, calendar: Calendar = .current) -> Int {
+    static func workMinutes(of record: LeaveRecord, calendar: Calendar = .app) -> Int {
         if record.length == .full, record.isBulkSummary { return record.daysCount * LeaveLength.workdayMinutes }
         return workMinutes(length: record.length, durationMinutes: record.durationMinutes,
                            start: record.startDate, end: record.endDate, calendar: calendar)
@@ -253,7 +253,7 @@ struct LeaveKindUsage: Equatable {
 
     /// 저장 전 입력값으로도 같은 계산 (휴가 등록 화면의 한도 안내)
     static func workMinutes(length: LeaveLength, durationMinutes: Int?, start: Date, end: Date,
-                            calendar: Calendar = .current) -> Int {
+                            calendar: Calendar = .app) -> Int {
         switch length {
         case .hours:
             return max(0, durationMinutes ?? 0)
@@ -297,7 +297,7 @@ struct LeaveAllowanceCounter: Equatable {
 
     /// 그해 한도 카운터 — 넘겨 쓰기를 켠 종류면 지난해까지 남은 양을 더한다
     static func make(kind: CustomLeaveType, records: [LeaveRecord], year: Int, startMonth: Int,
-                     asOf now: Date = Date(), calendar: Calendar = .current) -> LeaveAllowanceCounter {
+                     asOf now: Date = Date(), calendar: Calendar = .app) -> LeaveAllowanceCounter {
         let mine = records.filter { $0.customTypeId == kind.id }
         let usage = LeaveKindUsage.byKind(records: mine, customTypes: [kind], year: year, startMonth: startMonth,
                                           asOf: now, calendar: calendar)[.custom(kind.id)] ?? LeaveKindUsage()
@@ -309,7 +309,7 @@ struct LeaveAllowanceCounter: Equatable {
     /// 그해로 넘어온 양 (시간이면 분, 일이면 일).
     /// 시작한 해에는 처음 쌓여 있던 양, 그 뒤로는 해마다 (한도 + 넘어온 양 − 쓴 양)을 넘긴다 (모자라면 0).
     static func carryIn(kind: CustomLeaveType, records: [LeaveRecord], year: Int, startMonth: Int,
-                        asOf now: Date = Date(), calendar: Calendar = .current) -> Double {
+                        asOf now: Date = Date(), calendar: Calendar = .app) -> Double {
         guard kind.allowanceCarriesOver, kind.hasAllowance else { return 0 }
         let unit = kind.allowanceIsHours ? 60.0 : 1.0
         let startYear = kind.allowanceStartYear > 0 ? kind.allowanceStartYear
@@ -350,7 +350,7 @@ final class LeaveSettingsSync {
     static let shared = LeaveSettingsSync()
 
     static let keys = ["leaveTypeColors", "leaveKindOrder", "workdayMinutes", "workdayMinutesByWeekday",
-                       "workPattern", "usesHourlyLeave", "shiftDaysOff", "shiftWorkDays"]
+                       "workPattern", "usesHourlyLeave", "shiftDaysOff", "shiftWorkDays", "bonusLeaveInHours"]
 
     private let cloud = NSUbiquitousKeyValueStore.default
     private let defaults = UserDefaults.standard

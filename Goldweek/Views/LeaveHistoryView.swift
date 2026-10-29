@@ -25,7 +25,7 @@ struct LeaveHistoryView: View {
     @State private var recordToEdit: LeaveRecord?
     @State private var showingDeleteError = false
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
     private let initYearStartMonth: Int
 
     private var profile: UserProfile? { profiles.first }
@@ -34,7 +34,7 @@ struct LeaveHistoryView: View {
 
     init(yearStartMonth: Int = 1) {
         self.initYearStartMonth = yearStartMonth
-        let cal = Calendar.current
+        let cal = Calendar.app
         let now = Date()
         let month = cal.component(.month, from: now)
         let year = cal.component(.year, from: now)
@@ -312,6 +312,9 @@ struct LeaveHistoryView: View {
                                 recordToEdit = record
                                 HapticFeedback.selection()
                             }
+                            .accessibilityElement(children: .combine)
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityHint(Text(Strings.editLeaveHint))
                             .swipeActions(edge: .trailing) {
                                 Button(role: .destructive) {
                                     recordToDelete = record
@@ -386,6 +389,7 @@ struct LeaveHistoryView: View {
         do {
             try modelContext.save()
             HapticFeedback.success()
+            A11yAnnounce.post(Strings.a11yLeaveDeleted)
         } catch {
             logError("Failed to delete leave record: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
@@ -542,10 +546,12 @@ struct HistoryRecordRow: View {
                 }
 
                 if !record.note.isEmpty {
+                    // 메모는 길게 쓸 수 있다 — 목록에서는 세 줄까지, 전체는 편집 화면에서
                     Text(record.note)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(3)
+                        .truncationMode(.tail)
                 }
             }
 
@@ -640,7 +646,7 @@ struct EditLeaveSheet: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     init(record: LeaveRecord, profile: UserProfile?, onSave: @escaping () -> Void) {
         self.record = record

@@ -21,7 +21,7 @@ class LeaveManager: ObservableObject {
         country: Country? = nil,
         excludeWeekends: Bool = true
     ) -> Double {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         var currentDate = startDate
         var leaveDays = 0.0
 
@@ -44,7 +44,7 @@ class LeaveManager: ObservableObject {
     
     /// 연차 소진 예상일 계산
     static func calculateExpiryDate(profile: UserProfile) -> Date {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         var components = calendar.dateComponents([.year, .month, .day], from: Date())
         
         // 다음 갱신월 계산
@@ -61,7 +61,7 @@ class LeaveManager: ObservableObject {
     
     /// 월별 연차 사용 통계
     static func getMonthlyUsage(records: [LeaveRecord], year: Int) -> [Int: Double] {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         var monthlyUsage: [Int: Double] = [:]
         
         for month in 1...12 {
@@ -167,7 +167,7 @@ enum LeaveMigrations {
     static func splitRecommendedLeavesIfNeeded(records: [LeaveRecord], context: ModelContext) {
         guard !UserDefaults.standard.bool(forKey: splitRecommendedKey) else { return }
         let dayOff = DayOffCalendar.shared
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         var changed = 0
 
         for record in records where record.isRecommended && record.length == .full && !record.isBulkSummary {

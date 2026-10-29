@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import LeeoKit
 
 struct RecommendationsView: View {
     @Bindable var profile: UserProfile
@@ -26,7 +27,7 @@ struct RecommendationsView: View {
 
     init(profile: UserProfile) {
         self.profile = profile
-        _selectedYear = State(initialValue: Calendar.current.component(.year, from: Date()))
+        _selectedYear = State(initialValue: Calendar.app.component(.year, from: Date()))
     }
 
     /// 사용 확정 연차 — 홈·설정과 **같은 계산기**를 쓴다.
@@ -174,7 +175,7 @@ struct RecommendationsView: View {
 
     /// 주말·공휴일을 뺀 **연차 내는 날만** 휴가로 잡는다 (캘린더 탭과 같은 규칙).
     private func addLeave(from recommendation: LeaveRecommendation) {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let years = Set([recommendation.startDate, recommendation.endDate].map { calendar.component(.year, from: $0) })
         let rangeHolidays = years.flatMap { HolidayService().getHolidays(for: $0, country: profile.country) }
         let records = recommendation.leaveSegments(holidays: rangeHolidays).map {
@@ -194,6 +195,7 @@ struct RecommendationsView: View {
         do {
             try modelContext.save()
             UsageReportingService.record(event: "recommendation_added")
+            A11yAnnounce.post(Strings.a11yRecommendationAdded(recommendation.title))
             HapticFeedback.success()
             ReviewMoments.shared.trigger(.recommendationAdded)
         } catch {
@@ -211,7 +213,7 @@ struct YearPicker: View {
     
     @State private var showingPaywall = false
     private let proManager = ProManager.shared
-    private let currentYear = Calendar.current.component(.year, from: Date())
+    private let currentYear = Calendar.app.component(.year, from: Date())
 
     var body: some View {
         HStack {
@@ -353,17 +355,19 @@ struct RecommendationList: View {
 
     @State private var showingPaywall = false
     private let proManager = ProManager.shared
-    private let freeAddLimit = 3
+    private let freeAddLimit = ProManager.freeRecommendationAddLimit
 
     var body: some View {
         LazyVStack(spacing: 16) {
             ForEach(Array(recommendations.enumerated()), id: \.element.id) { index, recommendation in
-                let requiresPro = !proManager.isPro && index >= freeAddLimit
+                let decision = RecommendationGate.decision(at: index, hasPro: proManager.isPro)
+                let requiresPro = decision.needsPaywall
+                let isAdded = addedRecommendations.contains(recommendation.id)
                 VStack(spacing: 12) {
                     DetailedRecommendationCard(
                         recommendation: recommendation,
                         country: originCountry,
-                        isAdded: addedRecommendations.contains(recommendation.id),
+                        isAdded: isAdded,
                         requiresPro: requiresPro,
                         onAdd: {
                             if requiresPro {
@@ -373,6 +377,11 @@ struct RecommendationList: View {
                             }
                         }
                     )
+
+                    // 무료 칸이 거의 끝났다 — 벽(페이월)에 닿기 전에 미리 알린다
+                    if !isAdded, case .allowedNearLimit(let remaining) = decision {
+                        FreeLimitNotice(remaining: remaining)
+                    }
 
                     // 추천 일정마다 여행 큐레이션 카드 부착 (한국 직장인 한정).
                     // LazyVStack 안이므로 스크롤로 화면에 들어와야만 .task가 발화 → API 호출이 점진적으로 일어남.
@@ -398,6 +407,23 @@ struct RecommendationList: View {
         .sheet(isPresented: $showingPaywall) {
             PaywallView()
         }
+    }
+}
+
+// MARK: - 무료 한도 미리 알림
+
+/// 추천 카드 아래 한 줄 — 무료로 넣을 수 있는 칸이 얼마 남지 않았다(`RecommendationGate`).
+/// 추천 화면과 캘린더 탭이 같은 것을 쓴다.
+struct FreeLimitNotice: View {
+    /// 이 칸을 넣고 나서 남는 무료 칸 수
+    let remaining: Int
+
+    var body: some View {
+        Label(Strings.freeRecommendationNotice(remaining: remaining), systemImage: "info.circle")
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 4)
     }
 }
 
@@ -451,7 +477,7 @@ struct HolidayInfoCard: View {
     let formatter: DateFormatter
     let country: Country
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
     private let holidayService = HolidayService()
 
     /// 카드의 시작일~종료일 사이의 모든 날짜
@@ -555,8 +581,12 @@ struct DetailedRecommendationCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
+                // 추천 제목은 나라·언어에 따라 길어진다 — 두 줄까지, 넘치면 끝을 줄인다
                 Text("🎯 \(recommendation.title)")
                     .font(.headline)
+                    .lineLimit(2)
+                    .truncationMode(.tail)
+                    .allowsTightening(true)
                     .accessibilityLabel(Text(recommendation.title))
                     .voHeader()
 
@@ -680,7 +710,7 @@ struct RecommendationDatePreview: View {
     /// 공휴일 판정 국가 — 빠뜨리면 한국 공휴일로 칠해진다(미국 추수감사절이 "연차"로 보이던 원인)
     let country: Country
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
     private let holidayService = HolidayService()
 
     var extendedDateRange: [Date] {
@@ -802,7 +832,7 @@ struct DatePreviewCell: View {
     let date: Date
     let dayType: DayType
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var dayNumber: Int {
         calendar.component(.day, from: date)
@@ -871,7 +901,7 @@ struct RecommendationCalendarPreview: View {
     let recommendations: [LeaveRecommendation]
     let selectedYear: Int
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -925,7 +955,7 @@ struct MonthPreviewCell: View {
     let recommendations: [LeaveRecommendation]
     let year: Int
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var isPastMonth: Bool {
         let now = Date()
@@ -1134,7 +1164,7 @@ enum TravelSuggestionEngine {
         daysSinceLastLeave: Int? = nil,  // 마지막 휴가 후 경과 일수 (번아웃 컨텍스트)
         limit: Int = 6
     ) -> [(TravelSuggestion, String)] {
-        let month = Calendar.current.component(.month, from: recommendation.startDate)
+        let month = Calendar.app.component(.month, from: recommendation.startDate)
         let season = TravelSeason.from(month: month)
         let days = recommendation.totalDaysOff
         let isOffSeason: (TravelSuggestion) -> Bool = { $0.offSeasonMonths.contains(month) }
@@ -1255,7 +1285,7 @@ struct MyRealTripPromoCard: View {
     @State private var dismissed = false   // 이번 세션 숨김 (현재 코드에선 트리거 없음)
 
     private var daysSinceLastLeave: Int? {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let today = cal.startOfDay(for: Date())
         let lastDate: Date? = allLeaveRecords
             .filter { $0.deductsFromAnnualLeave }
@@ -1374,6 +1404,7 @@ struct MyRealTripPromoCard: View {
         case .newZealand: return "AKL"
         case .russia: return "SVO"   // 모스크바 셰레메티예보
         case .indonesia: return "CGK" // 자카르타
+        case .singapore: return "SIN"
         case .custom: return "ICN"   // 출발지를 알 수 없다 — 기본값
         }
     }
@@ -1410,6 +1441,7 @@ struct MyRealTripPromoCard: View {
                             .font(.title3)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(Text(Strings.a11yCollapse))
                 }
 
                 // 추천 이유 카드 — 도시 + 컨텍스트 이유 강조
@@ -1849,7 +1881,7 @@ struct MRTAccommodationCard: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
-                            .background(.ultraThinMaterial)
+                            .legibleBadgeBackground()
                             .clipShape(Capsule())
                             .padding(8)
                     }
@@ -1968,7 +2000,7 @@ struct MRTLiveTnaCard: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
-                            .background(.ultraThinMaterial)
+                            .legibleBadgeBackground()
                             .clipShape(Capsule())
                             .padding(8)
                     }
@@ -2090,7 +2122,7 @@ struct TravelSuggestionCard: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(.ultraThinMaterial)
+                        .legibleBadgeBackground()
                         .clipShape(Capsule())
                         .padding(10)
 
@@ -2117,7 +2149,7 @@ struct TravelSuggestionCard: View {
                     if !reasonKey.isEmpty {
                         HStack(spacing: 4) {
                             Image(systemName: reasonIcon)
-                                .font(.system(size: 9, weight: .bold))
+                                .font(.caption2.weight(.bold))
                             Text(Strings.travelReasonLabel(reasonKey))
                                 .font(.body.weight(.semibold))
                                 .fixedSize(horizontal: false, vertical: true)
@@ -2139,7 +2171,7 @@ struct TravelSuggestionCard: View {
                         Text(Strings.mrtPromoCTA)
                             .font(.body.weight(.semibold))
                         Image(systemName: "arrow.up.right")
-                            .font(.system(size: 9, weight: .bold))
+                            .font(.caption2.weight(.bold))
                     }
                     .foregroundStyle(accentColor)
                     .padding(.top, 4)
@@ -2173,7 +2205,7 @@ struct LeaveActivityRecommendations: View {
     @State private var isLoading = false
 
     private var totalDaysOff: Int {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let days = cal.dateComponents([.day], from: leave.startDate, to: leave.endDate).day ?? 0
         return max(1, days + 1)
     }
@@ -2544,7 +2576,7 @@ struct OptimalLeavePlannerCard: View {
 
     /// 연휴 1건을 시각화한 카드 — 날짜 · 총 휴식일 · 구성(주말/공휴일/연차) 막대 · 포함 공휴일
     private func breakCard(brk: LeaveBreak) -> some View {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let start = cal.startOfDay(for: brk.startDate)
         let leaveSet = Set(brk.leaveDates.map { cal.startOfDay(for: $0) })
         let days = (0..<max(brk.totalDays, 1)).compactMap {
@@ -2658,7 +2690,7 @@ struct OptimalLeavePlannerCard: View {
         let holidayDates = holidays.map { $0.date }
 
         // 이미 등록된 휴가 날짜는 제외 (중복 방지)
-        let cal = Calendar.current
+        let cal = Calendar.app
         var excluded: Set<Date> = []
         for record in existingLeaveRecords where record.status != .cancelled {
             var d = cal.startOfDay(for: record.startDate)
@@ -2678,7 +2710,7 @@ struct OptimalLeavePlannerCard: View {
 
         // 백그라운드 계산 (DP는 가볍지만 main 스레드 차단 방지)
         let computed = await Task.detached(priority: .userInitiated) { () -> OptimalLeavePlan in
-            LeavePlanner.optimalPlan(
+            AppSignpost.measure("OptimalPlan") { LeavePlanner.optimalPlan(
                 year: year,
                 availableLeaveDays: availableLeaveDays,
                 holidays: holidayDates,
@@ -2688,14 +2720,14 @@ struct OptimalLeavePlannerCard: View {
                 minBreakLength: 3,
                 earliestDate: Date(),
                 calendar: cal
-            )
+            ) }
         }.value
 
         plan = computed
     }
 
     private func batchAdd(plan: OptimalLeavePlan) {
-        let cal = Calendar.current
+        let cal = Calendar.app
         var addedAny = false
         for brk in plan.breaks {
             // 각 연휴마다 1개 LeaveRecord (연속된 leaveDates를 합쳐서)

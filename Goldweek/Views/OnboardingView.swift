@@ -139,6 +139,7 @@ struct OnboardingView: View {
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color(.systemGray5), lineWidth: 1))
                 }
+                .accessibilityLabel(Text(Strings.a11yBack))
             }
 
             Button {
@@ -149,7 +150,7 @@ struct OnboardingView: View {
                     .font(.headline)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 56)
+                    .frame(minHeight: 56)
                     .background(
                         LinearGradient(
                             colors: [AppTheme.Colors.bonus, AppTheme.Colors.bonus.opacity(0.85)],
@@ -227,6 +228,8 @@ struct OnboardingView: View {
 // MARK: - 페이지 1: Hero
 struct HeroPage: View {
     @State private var animate = false
+    /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 28) {
@@ -247,7 +250,7 @@ struct HeroPage: View {
                         )
                     )
                     .frame(width: 280, height: 280)
-                    .scaleEffect(animate ? 1.0 : 0.85)
+                    .scaleEffect(animate || reduceMotion ? 1.0 : 0.85)
                     .opacity(animate ? 1.0 : 0.4)
 
                 ZStack {
@@ -268,7 +271,7 @@ struct HeroPage: View {
                         .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
                         .voDecorative()
                 }
-                .scaleEffect(animate ? 1.0 : 0.7)
+                .scaleEffect(animate || reduceMotion ? 1.0 : 0.7)
                 .opacity(animate ? 1.0 : 0.0)
             }
 
@@ -294,14 +297,14 @@ struct HeroPage: View {
                     .padding(.horizontal, 24)
             }
             .opacity(animate ? 1.0 : 0.0)
-            .offset(y: animate ? 0 : 20)
+            .offset(y: animate || reduceMotion ? 0 : 20)
 
             Spacer()
             Spacer()
         }
         .padding(.horizontal, 24)
         .onAppear {
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.1)) {
+            withAnimation(reduceMotion ? .easeOut(duration: 0.25) : .spring(response: 0.8, dampingFraction: 0.7).delay(0.1)) {
                 animate = true
             }
         }
@@ -310,6 +313,8 @@ struct HeroPage: View {
 
 // MARK: - 페이지 2: 가치 데모 (3일 연차로 9일 연휴)
 struct ValueDemoPage: View {
+    /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var revealedDays: Set<Int> = []
 
     // 9일 연휴 시뮬레이션: 토(주말) 일(주말) 월(공휴) 화(연차) 수(연차) 목(공휴) 금(연차) 토(주말) 일(주말)
@@ -374,7 +379,7 @@ struct ValueDemoPage: View {
                                     .foregroundStyle(.white)
                             }
                         }
-                        .scaleEffect(revealedDays.contains(index) ? 1.0 : 0.9)
+                        .scaleEffect(revealedDays.contains(index) || reduceMotion ? 1.0 : 0.9)
                     }
                 }
             }
@@ -393,6 +398,11 @@ struct ValueDemoPage: View {
         }
         .padding(.horizontal, 24)
         .onAppear {
+            // 움직임 줄이기: 하나씩 튀어나오지 않고 한 번에 서서히
+            if reduceMotion {
+                withAnimation(.easeOut(duration: 0.25)) { revealedDays = Set(dayLabels.indices) }
+                return
+            }
             // 순차적으로 reveal
             for (i, _) in dayLabels.enumerated() {
                 DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.08) {
@@ -433,6 +443,8 @@ struct FeaturesGridPage: View {
     }
 
     @State private var animateIndex = -1
+    /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 24) {
@@ -448,7 +460,7 @@ struct FeaturesGridPage: View {
                     let f = features[i]
                     FeatureCard(icon: f.0, title: f.1, description: f.2, accent: f.3)
                         .opacity(animateIndex >= i ? 1.0 : 0.0)
-                        .offset(y: animateIndex >= i ? 0 : 16)
+                        .offset(y: animateIndex >= i || reduceMotion ? 0 : 16)
                 }
             }
 
@@ -456,6 +468,10 @@ struct FeaturesGridPage: View {
         }
         .padding(.horizontal, 24)
         .onAppear {
+            if reduceMotion {
+                withAnimation(.easeOut(duration: 0.25)) { animateIndex = features.count - 1 }
+                return
+            }
             for i in 0..<features.count {
                 DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.1) {
                     withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
@@ -704,7 +720,10 @@ struct ProShowcasePage: View {
 
     @State private var proManager = ProManager.shared
     @State private var animateFeatures = false
+    /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isPurchasing = false
+    @State private var selectedProductID = ProManager.yearlyProductID
     @State private var alertMessage: String?
 
     private func primaryButton(_ title: String, showsProgress: Bool = false, action: @escaping () -> Void) -> some View {
@@ -718,7 +737,7 @@ struct ProShowcasePage: View {
             .font(.headline)
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
-            .frame(height: 56)
+            .frame(minHeight: 56)
             .background(
                 LinearGradient(
                     colors: [AppTheme.Colors.bonus, AppTheme.Colors.bonus.opacity(0.85)],
@@ -737,7 +756,7 @@ struct ProShowcasePage: View {
         Task {
             defer { isPurchasing = false }
             do {
-                try await proManager.purchase()
+                try await proManager.purchase(selectedProductID)
                 if proManager.isPro {
                     UsageReportingService.record(event: "onboarding_purchase:success")
                     HapticFeedback.success()
@@ -766,7 +785,8 @@ struct ProShowcasePage: View {
             ("lightbulb.fill", Strings.proFeatureRecommendTitle, Strings.proFeatureRecommendDesc, AppTheme.Colors.bonus),
             ("gift.fill", Strings.proFeatureBonusTitle, Strings.proFeatureBonusDesc, AppTheme.Colors.compensatory),
             ("calendar", Strings.proFeatureMultiYearTitle, Strings.proFeatureMultiYearDesc, AppTheme.Colors.brand),
-            ("calendar.badge.plus", Strings.proFeatureCalendarTitle, Strings.proFeatureCalendarDesc, AppTheme.Colors.success)
+            ("calendar.badge.plus", Strings.proFeatureCalendarTitle, Strings.proFeatureCalendarDesc, AppTheme.Colors.success),
+            ("gauge.with.needle", Strings.proFeatureRulesTitle, Strings.proFeatureRulesDesc, AppTheme.Colors.brand)
         ]
     }
 
@@ -810,7 +830,7 @@ struct ProShowcasePage: View {
                     VStack(spacing: 6) {
                         Text(Strings.goldweekPro)
                             .font(.system(.title, weight: .bold))
-                        Text(Strings.proOnboardingSubtitle)
+                        Text(Strings.proOnboardingPitch)
                             .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -825,8 +845,9 @@ struct ProShowcasePage: View {
                         let f = proFeatures[i]
                         ProFeatureRow(icon: f.0, title: f.1, description: f.2, accent: f.3)
                             .opacity(animateFeatures ? 1.0 : 0.0)
-                            .offset(y: animateFeatures ? 0 : 12)
-                            .animation(.spring(response: 0.5, dampingFraction: 0.85).delay(Double(i) * 0.07), value: animateFeatures)
+                            .offset(y: animateFeatures || reduceMotion ? 0 : 12)
+                            .animation(reduceMotion ? .easeOut(duration: 0.25)
+                                       : .spring(response: 0.5, dampingFraction: 0.85).delay(Double(i) * 0.07), value: animateFeatures)
                     }
                 }
                 .padding(.horizontal, 24)
@@ -846,11 +867,9 @@ struct ProShowcasePage: View {
                     .background(AppTheme.Colors.success.opacity(0.12))
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                     .padding(.horizontal, 24)
-                } else if !proManager.proPrice.isEmpty {
-                    Text(Strings.oneTimePurchase)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .padding(.top, 4)
+                } else if proManager.hasAnyPrice {
+                    ProPlanPicker(selectedID: $selectedProductID)
+                        .padding(.horizontal, 24)
                 }
 
                 // CTA — 구매 버튼과 시작 버튼을 분리한다. 예전엔 가격 아래 큰 버튼이 "시작하기"라
@@ -860,20 +879,18 @@ struct ProShowcasePage: View {
                         primaryButton(Strings.getStarted, action: onComplete)
                     } else {
                         primaryButton(
-                            isPurchasing ? Strings.purchasing
-                                : proManager.proPrice.isEmpty ? Strings.purchase
-                                : Strings.unlockProWithPrice(proManager.proPrice),
+                            isPurchasing ? Strings.purchasing : Strings.startPro,
                             showsProgress: isPurchasing,
                             action: purchase
                         )
-                        .disabled(isPurchasing || proManager.proPrice.isEmpty)
+                        .disabled(isPurchasing || !proManager.hasAnyPrice)
 
                         Button(action: onComplete) {
                             Text(Strings.continueWithFree)
                                 .font(.body.weight(.semibold))
                                 .foregroundStyle(AppTheme.Colors.brand)
                                 .frame(maxWidth: .infinity)
-                                .frame(height: 48)
+                                .frame(minHeight: 48)
                                 .background(Color(.systemBackground))
                                 .clipShape(RoundedRectangle(cornerRadius: 14))
                                 .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color(.systemGray4), lineWidth: 1))
@@ -887,6 +904,13 @@ struct ProShowcasePage: View {
                                 .padding(.vertical, 6)
                         }
                         .disabled(isPurchasing)
+
+                        // 자동 갱신 구독 고지 — 구매 버튼과 같은 화면에 있어야 한다 (심사)
+                        Text(Strings.subscriptionDisclosure)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 .padding(.horizontal, 24)

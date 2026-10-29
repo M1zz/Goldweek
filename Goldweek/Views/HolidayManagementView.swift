@@ -16,19 +16,20 @@ struct HolidayManagementView: View {
     @Query(sort: \SchoolBreak.startDate) private var schoolBreaks: [SchoolBreak]
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
 
-    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    @State private var selectedYear: Int = Calendar.app.component(.year, from: Date())
     @State private var showingAddSheet = false
     @State private var holidayToDelete: CustomHoliday?
     @State private var showingDeleteAlert = false
     @State private var showingAddBreak = false
     @State private var showingSchoolImport = false
+    @State private var showingPaywall = false
     @State private var breakToEdit: SchoolBreak?
     @State private var breakToDelete: SchoolBreak?
     @State private var errorMessage = ""
     @State private var showingErrorAlert = false
 
     private let holidayService = HolidayService()
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     // MARK: - Hidden dates helpers
 
@@ -72,6 +73,15 @@ struct HolidayManagementView: View {
                 && calendar.component(.year, from: $0.startDate) <= selectedYear
                 && calendar.component(.year, from: $0.endDate) >= selectedYear
         }
+    }
+
+    /// 보고 있는 해 밖에 있는 방학 수 — 학년은 해를 넘기므로 봄 방학이 다음 해 탭에 숨는다
+    private var breaksInOtherYears: Int {
+        schoolBreaks.filter { $0.kind != .blackout }.count - breaksThisYear.count
+    }
+
+    private var customHolidaysInOtherYears: Int {
+        customHolidays.count - customHolidaysThisYear.count
     }
 
     var body: some View {
@@ -118,6 +128,10 @@ struct HolidayManagementView: View {
                 modelContext.insert(holiday)
                 do {
                     try modelContext.save()
+                    // 다른 해 날짜를 넣었으면 그 해로 넘어가 방금 넣은 게 보이게
+                    if holiday.occurrence(in: selectedYear, calendar: calendar) == nil {
+                        selectedYear = calendar.component(.year, from: date)
+                    }
                 } catch {
                     modelContext.delete(holiday)
                     errorMessage = Strings.saveFailed
@@ -131,10 +145,14 @@ struct HolidayManagementView: View {
                 let item = SchoolBreak(name: name, startDate: start, endDate: end, kind: kind)
                 modelContext.insert(item)
                 saveOrReport { modelContext.delete(item) }
+                showYear(of: item)
             }
         }
         .sheet(isPresented: $showingSchoolImport) {
             SchoolCalendarImportSheet()
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
         }
         .sheet(item: $breakToEdit) { item in
             SchoolBreakEditSheet(defaultYear: selectedYear, existing: item) { name, start, end, kind in
@@ -143,6 +161,7 @@ struct HolidayManagementView: View {
                 item.endDate = calendar.startOfDay(for: end)
                 item.kind = kind
                 saveOrReport { modelContext.rollback() }
+                showYear(of: item)
             }
         }
         .alert(Strings.breakDeleteAlertTitle, isPresented: Binding(
@@ -183,6 +202,40 @@ struct HolidayManagementView: View {
         } message: {
             Text(errorMessage)
         }
+    }
+
+    /// 방학이 보고 있는 해에 걸치지 않으면 시작하는 해로 넘어간다
+    private func showYear(of item: SchoolBreak) {
+        guard item.modelContext != nil else { return }
+        let startYear = calendar.component(.year, from: item.startDate)
+        let endYear = calendar.component(.year, from: item.endDate)
+        if !(startYear...endYear).contains(selectedYear) { selectedYear = startYear }
+    }
+
+    /// 다른 해에도 항목이 있을 때 목록 아래에 붙는 줄 — 모든 해를 모은 화면으로 간다
+    private func otherYearsLink(_ count: Int) -> some View {
+        NavigationLink {
+            AllBreaksAndHolidaysView()
+        } label: {
+            HStack {
+                Text(Strings.datesInOtherYears(count))
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text(Strings.showAllDates)
+                    .fontWeight(.semibold)
+                Image(systemName: "chevron.right")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .voDecorative()
+            }
+            .font(.body)
+            .padding()
+            .background(Color(.systemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal)
+        .padding(.top, 8)
     }
 
     private func saveOrReport(undo: () -> Void) {
@@ -252,10 +305,31 @@ struct HolidayManagementView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal)
 
+            if breaksInOtherYears > 0 {
+                otherYearsLink(breaksInOtherYears)
+            }
+
+            // 학교 달력 가져오기는 Pro (2.4.0 전 설치자는 계속 무료). 방학을 손으로 넣는 건 무료.
             Button {
-                showingSchoolImport = true
+                if ProManager.shared.has(.schoolCalendarImport) {
+                    showingSchoolImport = true
+                } else {
+                    showingPaywall = true
+                }
             } label: {
-                Label(Strings.schoolImportTitle, systemImage: "doc.viewfinder")
+                HStack {
+                    Label(Strings.schoolImportTitle, systemImage: "doc.viewfinder")
+                    Spacer()
+                    if !ProManager.shared.has(.schoolCalendarImport) {
+                        Text("Pro")
+                            .font(.body.weight(.semibold))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.yellow)
+                            .foregroundColor(.black)
+                            .cornerRadius(4)
+                    }
+                }
                     .font(.body.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
@@ -425,11 +499,128 @@ struct HolidayManagementView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal)
 
+            if customHolidaysInOtherYears > 0 {
+                otherYearsLink(customHolidaysInOtherYears)
+            }
+
             Text(Strings.holidayCustomFooter)
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
                 .padding(.top, 6)
+        }
+    }
+}
+
+// MARK: - 방학·내 공휴일 전체
+/// 휴일 관리는 한 해씩 보여 준다. 학년처럼 해를 넘기는 일정은 여기서 한눈에 본다.
+private struct AllBreaksAndHolidaysView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \CustomHoliday.date) private var customHolidays: [CustomHoliday]
+    @Query(sort: \SchoolBreak.startDate) private var schoolBreaks: [SchoolBreak]
+
+    @State private var breakToEdit: SchoolBreak?
+    @State private var breakToDelete: SchoolBreak?
+    @State private var holidayToDelete: CustomHoliday?
+    @State private var errorMessage = ""
+    @State private var showingErrorAlert = false
+
+    private let calendar = Calendar.app
+
+    private var breaks: [SchoolBreak] { schoolBreaks.filter { $0.kind != .blackout } }
+    private var yearlyHolidays: [CustomHoliday] { customHolidays.filter(\.repeatsYearly) }
+    private var datedHolidays: [CustomHoliday] { customHolidays.filter { !$0.repeatsYearly } }
+
+    /// 방학은 시작하는 해, 한 번뿐인 공휴일은 그날의 해로 묶는다
+    private var years: [Int] {
+        Set(breaks.map { calendar.component(.year, from: $0.startDate) }
+            + datedHolidays.map { calendar.component(.year, from: $0.date) }).sorted()
+    }
+
+    var body: some View {
+        List {
+            if !yearlyHolidays.isEmpty {
+                Section(Strings.holidayEveryYear) {
+                    ForEach(yearlyHolidays) { holiday in
+                        CustomHolidayRow(holiday: holiday, date: holiday.date,
+                                         onDelete: { holidayToDelete = holiday })
+                            .listRowInsets(EdgeInsets())
+                    }
+                }
+            }
+            ForEach(years, id: \.self) { year in
+                Section(Strings.yearLabel(year)) {
+                    ForEach(breaks.filter { calendar.component(.year, from: $0.startDate) == year }) { item in
+                        SchoolBreakRow(item: item,
+                                       onEdit: { breakToEdit = item },
+                                       onDelete: { breakToDelete = item })
+                            .listRowInsets(EdgeInsets())
+                    }
+                    ForEach(datedHolidays.filter { calendar.component(.year, from: $0.date) == year }) { holiday in
+                        CustomHolidayRow(holiday: holiday, date: holiday.date,
+                                         onDelete: { holidayToDelete = holiday })
+                            .listRowInsets(EdgeInsets())
+                    }
+                }
+            }
+        }
+        .navigationTitle(Strings.allBreaksAndHolidaysTitle)
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $breakToEdit) { item in
+            SchoolBreakEditSheet(defaultYear: calendar.component(.year, from: item.startDate), existing: item) { name, start, end, kind in
+                item.name = name
+                item.startDate = calendar.startOfDay(for: start)
+                item.endDate = calendar.startOfDay(for: end)
+                item.kind = kind
+                save(failure: Strings.saveFailed) { modelContext.rollback() }
+            }
+        }
+        .alert(Strings.breakDeleteAlertTitle, isPresented: Binding(
+            get: { breakToDelete != nil },
+            set: { if !$0 { breakToDelete = nil } }
+        )) {
+            Button(Strings.cancel, role: .cancel) { breakToDelete = nil }
+            Button(Strings.commonDelete, role: .destructive) {
+                if let item = breakToDelete {
+                    modelContext.delete(item)
+                    save(failure: Strings.deleteFailed) { modelContext.rollback() }
+                }
+                breakToDelete = nil
+            }
+        } message: {
+            Text(breakToDelete?.name ?? "")
+        }
+        .alert(Strings.holidayDeleteAlertTitle, isPresented: Binding(
+            get: { holidayToDelete != nil },
+            set: { if !$0 { holidayToDelete = nil } }
+        )) {
+            Button(Strings.cancel, role: .cancel) { holidayToDelete = nil }
+            Button(Strings.commonDelete, role: .destructive) {
+                if let h = holidayToDelete {
+                    modelContext.delete(h)
+                    save(failure: Strings.deleteFailed) { modelContext.rollback() }
+                }
+                holidayToDelete = nil
+            }
+        } message: {
+            Text(Strings.holidayDeleteAlertMessage)
+        }
+        .alert(Strings.alert, isPresented: $showingErrorAlert) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(errorMessage)
+        }
+    }
+
+    private func save(failure: String, undo: () -> Void) {
+        do {
+            try modelContext.save()
+            HapticFeedback.success()
+        } catch {
+            undo()
+            errorMessage = failure
+            showingErrorAlert = true
+            HapticFeedback.error()
         }
     }
 }
@@ -564,7 +755,7 @@ private struct SchoolBreakRow: View {
     }
 
     private var days: Int {
-        (Calendar.current.dateComponents([.day], from: item.startDate, to: item.endDate).day ?? 0) + 1
+        (Calendar.app.dateComponents([.day], from: item.startDate, to: item.endDate).day ?? 0) + 1
     }
 
     var body: some View {
@@ -626,7 +817,7 @@ struct SchoolBreakEditSheet: View {
          onSave: @escaping (String, Date, Date, SchoolBreakKind) -> Void) {
         self.existing = existing
         self.onSave = onSave
-        let cal = Calendar.current
+        let cal = Calendar.app
         let thisYear = cal.component(.year, from: Date())
         let initialKind = existing?.kind ?? defaultKind
         // 기본값: 올해면 오늘부터 4주, 다른 해면 그해 7월 말부터 4주(여름방학 즈음)
@@ -726,7 +917,7 @@ struct BlackoutPeriodsView: View {
     @State private var itemToDelete: SchoolBreak?
     @State private var showingErrorAlert = false
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     /// 끝나지 않은 기간을 먼저, 지난 기간은 아래로
     private var periods: [SchoolBreak] {
@@ -836,7 +1027,7 @@ struct AddCustomHolidaySheet: View {
         _repeatsYearly = State(initialValue: defaultRepeats)
         var comps = DateComponents()
         comps.year = defaultYear; comps.month = 1; comps.day = 1
-        _date = State(initialValue: Calendar.current.date(from: comps) ?? Date())
+        _date = State(initialValue: Calendar.app.date(from: comps) ?? Date())
     }
 
     var body: some View {
@@ -1055,7 +1246,7 @@ struct SchoolCalendarImportSheet: View {
     private func row(_ item: SchoolCalendarParser.Item) -> some View {
         let isOn = selected.contains(item.id)
         let alreadyOff = DayOffCalendar.shared.workdays(from: item.start, to: item.end) == 0
-        let days = (Calendar.current.dateComponents([.day], from: item.start, to: item.end).day ?? 0) + 1
+        let days = (Calendar.app.dateComponents([.day], from: item.start, to: item.end).day ?? 0) + 1
         return VStack(alignment: .leading, spacing: 8) {
             Button {
                 if isOn { selected.remove(item.id) } else { selected.insert(item.id) }

@@ -11,6 +11,8 @@ import SwiftData
 import PhotosUI
 
 struct PhotoImportSheet: View {
+    /// 안내 그림 크기 — 글자 크기 설정을 따라 커진다
+    @ScaledMetric(relativeTo: .largeTitle) private var heroIconSize: CGFloat = 56
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Query private var existingRecords: [LeaveRecord]
@@ -34,7 +36,7 @@ struct PhotoImportSheet: View {
     @State private var showingResultAlert = false
     @State private var importSucceeded = false
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var body: some View {
         NavigationStack {
@@ -96,7 +98,7 @@ struct PhotoImportSheet: View {
     private var photoPickerView: some View {
         VStack(spacing: 20) {
             Image(systemName: "doc.text.viewfinder")
-                .font(.system(size: 56))
+                .font(.system(size: heroIconSize))
                 .foregroundStyle(.blue)
                 .voDecorative()
 

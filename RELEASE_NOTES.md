@@ -1,220 +1,931 @@
 # Goldweek 릴리즈 노트
 
+## 2.4.2
+
+### 앱스토어 (한국어)
+
+요금제를 무료, 플러스, 프로로 정리했어요
+플러스와 프로는 연 구독과 평생 중에 골라요
+구독 중이면 설정에서 평생으로 바꿀 수 있어요
+함께 쉬기와 가족 기념일이 프로에 들어왔어요
+모든 앱이 열리는 언제나 평생 패스가 생겼어요
+
+### App Store (English)
+
+Plans are now simply Free, Plus and Pro
+Plus and Pro come yearly or lifetime
+Switch your subscription to lifetime
+Time Off Together is now part of Pro
+A new Forever Pass unlocks all our apps
+
+### App Store (en-GB)
+
+Plans are now simply Free, Plus and Pro
+Plus and Pro come yearly or lifetime
+Switch your subscription to lifetime
+Time Off Together is now part of Pro
+A new Forever Pass unlocks all our apps
+
+### 앱스토어 (일본어)
+
+プランを無料、プラス、プロに整理しました
+プラスとプロは年額か買い切りを選べます
+購読中なら設定から買い切りに切り替えられます
+みんなで休むと家族の記念日がプロに入りました
+すべてのアプリが開くずっとパスが登場しました
+
+### 앱스토어 (중국어 간체)
+
+方案整理为免费版、Plus 和 Pro
+Plus 和 Pro 可选按年订阅或终身购买
+订阅用户可在设置中改为永久版
+一起休假和家庭纪念日现已加入 Pro
+新增永久通行证，解锁我们的所有 App
+
+### 앱스토어 (독일어)
+
+Klare Stufen mit Gratis, Plus und Pro
+Plus und Pro jährlich oder lebenslang
+Abo jederzeit auf Lebenslang umstellen
+Gemeinsam frei gehört jetzt zu Pro
+Der Für-immer-Pass öffnet alle Apps
+
+### 앱스토어 (프랑스어)
+
+Gratuit, Plus et Pro, tout simplement
+Plus et Pro à l’année ou à vie
+Passez de l’abonnement à l’achat à vie
+Congés ensemble rejoint Pro
+Le Pass à vie ouvre toutes nos apps
+
+### 앱스토어 (스페인어)
+
+Planes más claros, Gratis, Plus y Pro
+Plus y Pro, por año o de por vida
+Pasa tu suscripción a pago de por vida
+Descansar juntos ahora es parte de Pro
+El Pase para siempre abre todas las apps
+
+### 앱스토어 (이탈리아어)
+
+Piani più chiari, Gratis, Plus e Pro
+Plus e Pro, annuali o a vita
+Ora puoi passare all’acquisto a vita
+Riposare insieme ora fa parte di Pro
+Il Pass per sempre apre tutte le app
+
+### 앱스토어 (포르투갈어 브라질)
+
+Planos mais simples, Grátis, Plus e Pro
+Plus e Pro por ano ou vitalício
+Troque a assinatura pelo vitalício
+Folgas em família agora estão no Pro
+O Passe para sempre abre todos os apps
+
+### 앱스토어 (중국어 번체)
+
+方案整理為免費版、Plus 和 Pro
+Plus 和 Pro 可選按年訂閱或終身購買
+訂閱用戶可在設定中改為永久版
+一起休假和家庭紀念日現已加入 Pro
+新增永久通行證，解鎖我們的所有 App
+
+### 앱스토어 (네덜란드어)
+
+Duidelijke plannen, Gratis, Plus en Pro
+Plus en Pro per jaar of levenslang
+Zet je abonnement om naar levenslang
+Samen vrij hoort nu bij Pro
+De Altijd-pas opent al onze apps
+
+### 앱스토어 (스웨덴어)
+
+Tydligare planer, Gratis, Plus och Pro
+Plus och Pro per år eller för livet
+Byt ditt abonnemang till livstid
+Ledigt tillsammans ingår nu i Pro
+Evighetspass öppnar alla våra appar
+
+### 앱스토어 (노르웨이어 보크말)
+
+Enklere planer, Gratis, Plus og Pro
+Plus og Pro årlig eller for livet
+Bytt abonnementet til livstid
+Fri sammen er nå en del av Pro
+Evighetspass åpner alle appene våre
+
+### 앱스토어 (덴마크어)
+
+Enklere planer, Gratis, Plus og Pro
+Plus og Pro årligt eller for livet
+Skift dit abonnement til livstid
+Fri sammen er nu en del af Pro
+Evighedspas åbner alle vores apps
+
+### 앱스토어 (핀란드어)
+
+Selkeämmät tasot, Ilmainen, Plus ja Pro
+Plus ja Pro vuodeksi tai pysyvästi
+Vaihda tilaus elinikäiseen
+Yhteiset vapaat kuuluvat nyt Prohon
+Ikuinen passi avaa kaikki sovelluksemme
+
+### 앱스토어 (폴란드어)
+
+Prostsze plany, Darmowy, Plus i Pro
+Plus i Pro rocznie albo na zawsze
+Zamień subskrypcję na dostęp dożywotni
+Wspólne wolne jest teraz w Pro
+Przepustka na zawsze otwiera każdą apkę
+
+### 앱스토어 (체코어)
+
+Jednodušší tarify, Zdarma, Plus a Pro
+Plus a Pro na rok nebo navždy
+Předplatné změníš na doživotní verzi
+Společné volno je teď součástí Pro
+Pas navždy otevře všechny naše aplikace
+
+### 앱스토어 (그리스어)
+
+Πιο απλά πλάνα, Δωρεάν, Plus και Pro
+Plus και Pro ετήσια ή εφ’ όρου ζωής
+Άλλαξε τη συνδρομή σε εφ’ όρου ζωής
+Οι κοινές άδειες είναι πλέον στο Pro
+Πάσο για πάντα για όλες τις εφαρμογές
+
+### 앱스토어 (튀르키예어)
+
+Planlar artık Ücretsiz, Plus ve Pro
+Plus ve Pro yıllık ya da ömür boyu
+Aboneliğini ömür boyu sürüme çevir
+Birlikte izin artık Pro’da
+Sonsuz Geçiş tüm uygulamalarımızı açar
+
+### 앱스토어 (러시아어)
+
+Теперь три тарифа, Бесплатно, Plus и Pro
+Plus и Pro на год или навсегда
+Смените подписку на покупку навсегда
+Совместный отдых теперь входит в Pro
+Вечный пропуск ко всем нашим приложениям
+
+### 앱스토어 (인도네시아어)
+
+Paket kini Gratis, Plus, dan Pro
+Plus dan Pro tahunan atau selamanya
+Ubah langganan jadi seumur hidup
+Libur bersama kini bagian dari Pro
+Pass Selamanya untuk semua aplikasi kami
+
+### 앱스토어 (태국어)
+
+แผนใหม่มีฟรี Plus และ Pro
+Plus และ Pro มีทั้งรายปีและตลอดชีพ
+ผู้สมัครสมาชิกเปลี่ยนเป็นตลอดชีพได้
+หยุดพร้อมกันกับครอบครัวอยู่ใน Pro แล้ว
+พาสตลอดกาลปลดล็อกทุกแอปของเรา
+
+### 앱스토어 (베트남어)
+
+Gói mới gọn hơn, Miễn phí, Plus và Pro
+Plus và Pro theo năm hoặc trọn đời
+Đổi gói đăng ký sang trọn đời
+Nghỉ cùng nhau nay có trong Pro
+Vé trọn đời cho mọi ứng dụng
+
+## 2.4.1
+
+### 앱스토어 (한국어)
+
+설정에서 내 혜택과 쓰는 양을 볼 수 있어요
+오퍼 코드를 앱 안에서 바로 쓸 수 있어요
+큰 글씨와 색 없이 구별하기를 더 잘 지원해요
+업데이트 소식을 앱을 열 때 한 번 알려 드려요
+
+### App Store (English)
+
+See your plan’s benefits in Settings
+Redeem offer codes right in the app
+Better with larger text and no colors
+See what’s new once after each update
+
+### App Store (en-GB)
+
+See your plan’s benefits in Settings
+Redeem offer codes right in the app
+Better with larger text and no colour
+See what’s new once after each update
+
+### 앱스토어 (일본어)
+
+設定で特典と利用状況を確認できます
+オファーコードをアプリ内で使えます
+大きな文字や色以外の区別に対応しました
+アップデート内容を初回に一度お知らせします
+
+### 앱스토어 (중국어 간체)
+
+在设置中查看你的权益和使用情况
+可在应用内直接兑换优惠码
+更好地支持大字体和不用颜色区分
+更新后首次打开时介绍新功能
+
+### 앱스토어 (독일어)
+
+Deine Vorteile in den Einstellungen
+Angebotscodes direkt in der App einlösen
+Besser mit großer Schrift
+Neuigkeiten einmal nach jedem Update
+
+### 앱스토어 (프랑스어)
+
+Vos avantages et usages dans Réglages
+Codes promo à utiliser dans l’app
+Mieux adapté aux grands textes
+Les nouveautés après chaque mise à jour
+
+### 앱스토어 (스페인어)
+
+Mira tus ventajas y su uso en Ajustes
+Canjea códigos de oferta en la app
+Mejor con texto grande y sin color
+Novedades tras cada actualización
+
+### 앱스토어 (이탈리아어)
+
+Vantaggi e utilizzo in Impostazioni
+Riscatta i codici offerta nell’app
+Meglio con testo grande e senza colori
+Le novità dopo ogni aggiornamento
+
+### 앱스토어 (포르투갈어 브라질)
+
+Veja seus benefícios e uso em Ajustes
+Resgate códigos de oferta no app
+Melhor com texto grande e sem cores
+Novidades uma vez após cada atualização
+
+### 앱스토어 (중국어 번체)
+
+在設定中查看你的權益和使用情形
+可在 App 內直接兌換優惠代碼
+更好地支援大字體和不以顏色區分
+更新後首次開啟時介紹新功能
+
+### 앱스토어 (네덜란드어)
+
+Je voordelen in Instellingen
+Wissel aanbiedingscodes in de app in
+Beter met grote tekst en zonder kleur
+Eén keer zien wat nieuw is na een update
+
+### 앱스토어 (스웨덴어)
+
+Se dina förmåner och din användning
+Lös in erbjudandekoder direkt i appen
+Bättre med stor text och utan färg
+Se nyheterna efter varje uppdatering
+
+### 앱스토어 (노르웨이어 보크말)
+
+Se fordelene dine i Innstillinger
+Løs inn tilbudskoder rett i appen
+Bedre med stor tekst og uten farger
+Se nyhetene etter hver oppdatering
+
+### 앱스토어 (덴마크어)
+
+Se dine fordele i Indstillinger
+Indløs tilbudskoder direkte i appen
+Bedre med stor tekst og uden farver
+Se nyhederne efter hver opdatering
+
+### 앱스토어 (핀란드어)
+
+Näe etusi ja käyttösi asetuksista
+Lunasta tarjouskoodit sovelluksessa
+Parempi suurella tekstillä
+Uutuudet näkyvät päivityksen jälkeen
+
+### 앱스토어 (폴란드어)
+
+Sprawdź korzyści i użycie w Ustawieniach
+Kody promocyjne prosto w aplikacji
+Lepiej z dużym tekstem i bez kolorów
+Nowości raz po każdej aktualizacji
+
+### 앱스토어 (체코어)
+
+Výhody a využití najdeš v Nastavení
+Nabídkové kódy uplatníš přímo v aplikaci
+Lépe s velkým písmem a bez barev
+Novinky jednou po každé aktualizaci
+
+### 앱스토어 (그리스어)
+
+Δες τα οφέλη και τη χρήση στις Ρυθμίσεις
+Εξαργύρωσε κωδικούς μέσα στην εφαρμογή
+Καλύτερα με μεγάλο κείμενο χωρίς χρώμα
+Τα νέα μία φορά μετά από κάθε ενημέρωση
+
+### 앱스토어 (튀르키예어)
+
+Avantajlarını Ayarlar’da gör
+Teklif kodlarını uygulamada kullan
+Büyük metin desteği daha iyi
+Güncellemeden sonra yenilikleri gör
+
+### 앱스토어 (러시아어)
+
+Ваши преимущества в настройках
+Промокоды прямо в приложении
+Удобнее с крупным текстом и без цвета
+Новинки один раз после обновления
+
+### 앱스토어 (인도네시아어)
+
+Lihat keuntunganmu di Pengaturan
+Tukarkan kode penawaran di aplikasi
+Lebih nyaman untuk teks besar
+Lihat yang baru sekali setelah pembaruan
+
+### 앱스토어 (태국어)
+
+ดูสิทธิประโยชน์และการใช้งานในการตั้งค่า
+ใช้โค้ดข้อเสนอในแอปได้เลย
+รองรับตัวอักษรขนาดใหญ่ได้ดีขึ้น
+แจ้งสิ่งใหม่หนึ่งครั้งหลังอัปเดต
+
+### 앱스토어 (베트남어)
+
+Xem quyền lợi và mức dùng trong Cài đặt
+Đổi mã ưu đãi ngay trong ứng dụng
+Hỗ trợ tốt hơn chữ lớn và không cần màu
+Xem điều mới sau mỗi bản cập nhật
+
+## 2.4.0
+
+### 앱스토어 (한국어)
+
+가족 기념일을 기록하고 미리 휴가를 챙겨요
+패밀리로 가족이 다 같이 쉬는 날을 찾아요
+플러스, 프로, 패밀리 중에서 고를 수 있어요
+싱가포르 공휴일을 지원합니다
+다른 해의 방학과 공휴일도 모두 볼 수 있어요
+
+### App Store (English)
+
+Save family birthdays and plan time off
+Find days the whole family is off
+Choose Plus, Pro or Family
+Singapore holidays are now supported
+See breaks and holidays from every year
+
+### 앱스토어 (일본어)
+
+家族の記念日を記録して休みを準備
+ファミリーで家族みんなの休みを探せます
+プラス、プロ、ファミリーから選べます
+シンガポールの祝日に対応しました
+他の年の休暇と祝日もすべて見られます
+
+### 앱스토어 (중국어 간체)
+
+记录家人纪念日，提前安排休假
+家庭版可找出全家都休息的日子
+可选择 Plus、Pro 或家庭版
+新增新加坡公众假期
+可查看其他年份的假期和节日
+
+### 앱스토어 (독일어)
+
+Familientage speichern und Urlaub planen
+Tage finden, an denen alle frei haben
+Wähle zwischen Plus, Pro und Familie
+Jetzt mit Feiertagen in Singapur
+Ferien und Feiertage aller Jahre ansehen
+
+### 앱스토어 (프랑스어)
+
+Dates de famille et congés à l’avance
+Trouvez les jours libres en famille
+Choisissez Plus, Pro ou Famille
+Les jours fériés de Singapour arrivent
+Voyez vacances et fériés de chaque année
+
+### 앱스토어 (스페인어)
+
+Guarda fechas familiares y pide el día
+Días libres para toda la familia
+Elige entre Plus, Pro y Familia
+Ya incluye los festivos de Singapur
+Vacaciones y festivos de todos los años
+
+### 앱스토어 (이탈리아어)
+
+Salva le ricorrenze e chiedi le ferie
+Giorni liberi per tutta la famiglia
+Scegli tra Plus, Pro e Famiglia
+Ora ci sono le festività di Singapore
+Vacanze e festività di tutti gli anni
+
+### 앱스토어 (포르투갈어 브라질)
+
+Salve datas da família e planeje folgas
+Dias de folga para toda a família
+Escolha entre Plus, Pro e Família
+Agora com feriados de Singapura
+Recessos e feriados de todos os anos
+
+### 앱스토어 (중국어 번체)
+
+記錄家人紀念日，提前安排請假
+家庭版可找出全家都放假的日子
+可選擇 Plus、Pro 或家庭版
+新增新加坡國定假日
+可查看其他年份的假期和節日
+
+### 앱스토어 (네덜란드어)
+
+Bewaar familiedagen en plan je verlof
+Vind dagen dat het hele gezin vrij is
+Kies uit Plus, Pro en Gezin
+Nu met feestdagen van Singapore
+Vakanties en feestdagen van elk jaar
+
+### 앱스토어 (스웨덴어)
+
+Spara familjedagar och planera ledigt
+Hitta dagar då hela familjen är ledig
+Välj mellan Plus, Pro och Familj
+Nu med helgdagar i Singapore
+Lov och helgdagar från alla år
+
+### 앱스토어 (노르웨이어 보크말)
+
+Lagre merkedager og planlegg fri
+Finn dager hele familien har fri
+Velg mellom Plus, Pro og Familie
+Nå med helligdager i Singapore
+Ferier og helligdager fra alle år
+
+### 앱스토어 (덴마크어)
+
+Gem mærkedage og planlæg fri
+Find dage hvor hele familien har fri
+Vælg mellem Plus, Pro og Familie
+Nu med helligdage i Singapore
+Ferier og helligdage fra alle år
+
+### 앱스토어 (핀란드어)
+
+Perheen merkkipäivät ja vapaat ajoissa
+Koko perheen yhteiset vapaapäivät
+Valitse Plus, Pro tai Perhe
+Nyt myös Singaporen pyhäpäivät
+Lomat ja pyhät kaikilta vuosilta
+
+### 앱스토어 (폴란드어)
+
+Zapisuj rodzinne święta i planuj wolne
+Dni wolne dla całej rodziny
+Wybierz Plus, Pro lub Rodzina
+Teraz także święta w Singapurze
+Ferie i święta ze wszystkich lat
+
+### 앱스토어 (체코어)
+
+Ukládej rodinná výročí a plánuj volno
+Najdi dny, kdy má volno celá rodina
+Vyber si Plus, Pro nebo Rodina
+Nově svátky v Singapuru
+Prázdniny a svátky ze všech let
+
+### 앱스토어 (그리스어)
+
+Οικογενειακές γιορτές και άδειες
+Κοινά ρεπό για όλη την οικογένεια
+Διάλεξε Plus, Pro ή Οικογένεια
+Τώρα και οι αργίες της Σιγκαπούρης
+Διακοπές και αργίες κάθε χρονιάς
+
+### 앱스토어 (튀르키예어)
+
+Aile günlerini kaydet, izni planla
+Tüm ailenin izinli olduğu günleri bul
+Plus, Pro veya Aile arasından seç
+Artık Singapur tatilleri de var
+Tüm yılların tatilleri ve bayramları
+
+### 앱스토어 (러시아어)
+
+Сохраняйте семейные даты и берите отгул
+Дни, когда отдыхает вся семья
+Тарифы Plus, Pro и Семья на выбор
+Теперь с праздниками Сингапура
+Каникулы и праздники за все годы
+
+### 앱스토어 (인도네시아어)
+
+Simpan hari penting keluarga dan cuti
+Temukan hari libur bersama keluarga
+Pilih Plus, Pro, atau Keluarga
+Kini mendukung hari libur Singapura
+Lihat libur dan cuti dari semua tahun
+
+### 앱스토어 (태국어)
+
+บันทึกวันสำคัญของครอบครัวและวางแผนลา
+หาวันที่ทั้งครอบครัวหยุดพร้อมกัน
+เลือก Plus, Pro หรือครอบครัว
+รองรับวันหยุดของสิงคโปร์แล้ว
+ดูวันหยุดและปิดเทอมของทุกปีได้
+
+### 앱스토어 (베트남어)
+
+Lưu ngày kỷ niệm gia đình, xin nghỉ sớm
+Tìm ngày cả nhà cùng được nghỉ
+Chọn gói Plus, Pro hoặc Gia đình
+Đã hỗ trợ ngày lễ Singapore
+Xem kỳ nghỉ và ngày lễ của mọi năm
+## 2.3.1
+
+### 앱스토어 (한국어)
+
+보상휴가를 시간 단위로 더할 수 있어요
+시간으로 넣은 휴가는 남은 시간으로 보여요
+같은 날에 휴가를 여러 개 넣을 수 있어요
+위젯의 디데이가 매일 알아서 바뀌어요
+앱을 열 때 가끔 꺼지던 문제를 고쳤어요
+
+### App Store (English)
+
+Add comp time by the hour, not just days
+See your remaining comp time in hours
+Add more than one leave on the same day
+Widget countdowns now update every day
+Fixed the app closing at launch
+
+### 앱스토어 (일본어)
+
+代休を時間単位で追加できます
+時間で追加した休みは残り時間で表示
+同じ日に複数の休暇を登録できます
+ウィジェットのカウントダウンが毎日更新
+起動時にまれに終了する問題を修正
+
+### 앱스토어 (중국어 간체)
+
+调休可以按小时添加了
+按小时添加的假期显示剩余小时
+同一天可以登记多项休假
+小组件倒计时每天自动更新
+修复了启动时偶尔闪退的问题
+
+### 앱스토어 (독일어)
+
+Überstundenausgleich auch in Stunden
+Restzeit wird in Stunden angezeigt
+Mehrere Abwesenheiten am selben Tag
+Widget-Countdown läuft jetzt täglich mit
+Seltenes Schließen beim Start behoben
+
+### 앱스토어 (프랑스어)
+
+Ajoutez vos récupérations à l’heure
+Le solde s’affiche en heures
+Plusieurs congés le même jour
+Le widget se met à jour chaque jour
+L’app ne se ferme plus au lancement
+
+### 앱스토어 (스페인어)
+
+Añade tiempo compensatorio por horas
+Ve el saldo restante en horas
+Varios permisos en el mismo día
+La cuenta atrás del widget se actualiza
+La app ya no se cierra al abrirla
+
+### 앱스토어 (이탈리아어)
+
+Aggiungi i recuperi anche a ore
+Vedi le ore che ti restano
+Più giustificativi nello stesso giorno
+Il widget si aggiorna ogni giorno
+L’app non si chiude più all’avvio
+
+### 앱스토어 (포르투갈어 브라질)
+
+Adicione folgas compensatórias por hora
+Veja o saldo restante em horas
+Várias ausências no mesmo dia
+A contagem do widget atualiza todo dia
+O app não fecha mais ao abrir
+
+### 앱스토어 (중국어 번체)
+
+補休可以按小時新增了
+按小時新增的假會顯示剩餘時數
+同一天可以登記多項休假
+小工具倒數每天自動更新
+修正啟動時偶爾閃退的問題
+
+### 앱스토어 (네덜란드어)
+
+Voeg compensatie-uren per uur toe
+Zie je resterende tijd in uren
+Meerdere verloven op dezelfde dag
+Aftellen in de widget werkt elke dag bij
+App sluit niet meer af bij het openen
+
+### 앱스토어 (스웨덴어)
+
+Lägg till kompledighet per timme
+Se återstående tid i timmar
+Flera ledigheter samma dag
+Widgeten räknar ner varje dag
+Appen stängs inte längre vid start
+
+### 앱스토어 (노르웨이어 보크말)
+
+Legg til avspasering i timer
+Se gjenværende tid i timer
+Flere fravær på samme dag
+Widgetens nedtelling oppdateres daglig
+Appen lukkes ikke lenger ved oppstart
+
+### 앱스토어 (덴마크어)
+
+Tilføj afspadsering i timer
+Se resterende tid i timer
+Flere fravær på samme dag
+Widgettens nedtælling opdateres dagligt
+Appen lukker ikke længere ved start
+
+### 앱스토어 (핀란드어)
+
+Lisää vapaat myös tunteina
+Näe jäljellä oleva aika tunteina
+Useita poissaoloja samalle päivälle
+Widgetin laskuri päivittyy päivittäin
+Sovellus ei enää sulkeudu avattaessa
+
+### 앱스토어 (폴란드어)
+
+Dodawaj odbiór nadgodzin w godzinach
+Pozostały czas widać w godzinach
+Kilka nieobecności w tym samym dniu
+Widżet codziennie odlicza dni
+Aplikacja nie zamyka się przy starcie
+
+### 앱스토어 (체코어)
+
+Náhradní volno lze přidat po hodinách
+Zbývající čas uvidíš v hodinách
+Více volna ve stejný den
+Odpočet ve widgetu se mění každý den
+Aplikace se už nezavírá při spuštění
+
+### 앱스토어 (그리스어)
+
+Προσθέστε ρεπό και σε ώρες
+Δείτε τον υπόλοιπο χρόνο σε ώρες
+Πολλές άδειες την ίδια μέρα
+Το widget μετρά αντίστροφα κάθε μέρα
+Η εφαρμογή δεν κλείνει στην εκκίνηση
+
+### 앱스토어 (튀르키예어)
+
+Telafi iznini saat olarak ekleyin
+Kalan süreyi saat olarak görün
+Aynı güne birden fazla izin ekleyin
+Widget geri sayımı her gün güncellenir
+Uygulama açılışta artık kapanmıyor
+
+### 앱스토어 (러시아어)
+
+Отгулы можно добавлять по часам
+Остаток виден в часах
+Несколько отпусков в один день
+Отсчёт в виджете обновляется каждый день
+Приложение не закрывается при запуске
+
+### 앱스토어 (인도네시아어)
+
+Tambah cuti pengganti per jam
+Lihat sisa waktu dalam jam
+Catat beberapa cuti di hari yang sama
+Hitung mundur widget berubah tiap hari
+Aplikasi tak lagi tertutup saat dibuka
+
+### 앱스토어 (태국어)
+
+เพิ่มวันหยุดชดเชยเป็นชั่วโมงได้แล้ว
+ดูเวลาที่เหลือเป็นชั่วโมง
+ลงวันลาหลายรายการในวันเดียวกันได้
+นับถอยหลังในวิดเจ็ตอัปเดตทุกวัน
+แก้ปัญหาแอปปิดเองตอนเปิดบางครั้ง
+
+### 앱스토어 (베트남어)
+
+Thêm nghỉ bù theo giờ
+Xem thời gian còn lại theo giờ
+Thêm nhiều ngày nghỉ trong cùng một ngày
+Tiện ích đếm ngược cập nhật mỗi ngày
+Sửa lỗi ứng dụng tự tắt khi mở
+
 ## 2.3.0
 
 ### 앱스토어 (한국어)
 
 휴가 종류별 합계와 연간 한도를 볼 수 있어요
-요일마다 근무 시간을 다르게 정할 수 있어요
 교대 근무와 파트타임에 맞게 쉬는 날을 정해요
 캘린더 앱에 휴가를 자동으로 넣어요
 학교 달력 사진이나 PDF로 방학을 한 번에 넣어요
 휴가 불가 기간과 병가 이월을 지원해요
-위젯 문구와 이전 연차 입력 오류를 고쳤어요
 
 ### App Store (English)
 
-See totals and yearly allowances per leave type
-Set different work hours for each weekday
-Shift and part-time schedules for your days off
-Send your leave to the Calendar app automatically
+Totals and yearly limits per leave type
+Days off for shift and part-time work
+Leave added to Calendar automatically
 Import school breaks from a photo or PDF
-No-leave periods and sick days that roll over
-Fixed widget text and past leave entry
+Blackout dates and rollover sick days
 
 ### 앱스토어 (일본어)
 
 休暇の種類ごとの合計と年間上限を表示
-曜日ごとに勤務時間を設定できます
 シフト勤務やパートタイムの休みに対応
 休暇をカレンダーアプリに自動で追加
 学校カレンダーの写真やPDFから休みを追加
 休暇不可期間と病気休暇の繰り越しに対応
-ウィジェットの表示と過去の休暇入力を修正
 
 ### 앱스토어 (중국어 간체)
 
 按假期类型查看合计和年度额度
-可为每个工作日设置不同工时
 支持轮班和兼职的休息日
 自动把假期添加到日历应用
 用照片或 PDF 导入学校假期
 支持禁止请假期间和病假结转
-修复了小组件文字和过往年假录入问题
 
 ### 앱스토어 (독일어)
 
-Summen und Jahreskontingent je Urlaubsart
-Arbeitszeit für jeden Wochentag festlegen
+Summen und Jahreslimit je Urlaubsart
 Freie Tage für Schicht und Teilzeit
 Urlaub automatisch im Kalender eintragen
-Schulferien per Foto oder PDF importieren
-Urlaubssperren und übertragbare Krankheitstage
-Widget-Texte und Resturlaub-Eingabe korrigiert
+Schulferien per Foto oder PDF laden
+Sperrzeiten und übertragbare Krankentage
 
 ### 앱스토어 (프랑스어)
 
-Totaux et quotas annuels par type de congé
-Horaires différents pour chaque jour
-Jours de repos pour postés et temps partiel
-Vos congés ajoutés au Calendrier automatiquement
-Importez les vacances scolaires d’une photo ou d’un PDF
-Périodes sans congé et jours maladie cumulables
-Textes du widget et saisie des congés passés corrigés
+Totaux et quotas annuels par congé
+Repos pour horaires postés ou mi-temps
+Congés ajoutés au Calendrier tout seuls
+Vacances scolaires depuis photo ou PDF
+Dates bloquées, jours maladie reportés
 
 ### 앱스토어 (스페인어)
 
 Totales y cupo anual por tipo de permiso
-Horario distinto para cada día de la semana
 Días libres para turnos y media jornada
-Tus permisos en la app Calendario automáticamente
-Importa vacaciones escolares desde foto o PDF
-Periodos sin permisos y días de enfermedad acumulables
-Corregidos los textos del widget y los días previos
+Permisos añadidos solos al Calendario
+Vacaciones escolares desde foto o PDF
+Periodos bloqueados y bajas acumulables
 
 ### 앱스토어 (이탈리아어)
 
-Totali e monte ore annuale per ogni permesso
-Orario diverso per ogni giorno della settimana
+Totali e monte ore annuo per tipo
 Giorni liberi per turni e part-time
-Ferie inviate in automatico al Calendario
-Importa le vacanze scolastiche da foto o PDF
-Periodi senza ferie e malattia che si accumula
-Corretti i testi del widget e le ferie pregresse
+Ferie inviate da sole al Calendario
+Vacanze scolastiche da foto o PDF
+Periodi bloccati e malattia accumulabile
 
 ### 앱스토어 (포르투갈어 브라질)
 
 Totais e cota anual por tipo de folga
-Horário diferente para cada dia da semana
-Folgas para escala de turnos e meio período
-Suas folgas no app Calendário automaticamente
+Folgas para escala e meio período
+Folgas no app Calendário automaticamente
 Importe férias escolares de foto ou PDF
-Períodos sem folga e dias de doença acumuláveis
-Corrigidos textos do widget e folgas anteriores
+Períodos sem folga e dias de doença
 
 ### 앱스토어 (중국어 번체)
 
 依假別查看合計與年度額度
-可為每個工作日設定不同工時
 支援輪班與兼職的休息日
 自動把假期加入行事曆 App
 用照片或 PDF 匯入學校假期
 支援禁止請假期間與病假結轉
-修正小工具文字與過往特休輸入問題
 
 ### 앱스토어 (네덜란드어)
 
 Totalen en jaartegoed per soort verlof
-Andere werktijden per weekdag
-Vrije dagen voor ploegendienst en deeltijd
+Vrije dagen voor ploegen en deeltijd
 Verlof automatisch in de Agenda
-Schoolvakanties importeren via foto of pdf
+Schoolvakanties uit foto of pdf halen
 Verlofstops en opbouwende ziektedagen
-Widgettekst en eerder verlof invoeren hersteld
 
 ### 앱스토어 (스웨덴어)
 
 Summor och årskvot per ledighetstyp
-Olika arbetstid för varje veckodag
 Lediga dagar för skift och deltid
-Ledigheten läggs in i Kalender automatiskt
+Ledighet läggs in i Kalender automatiskt
 Importera skollov från foto eller PDF
 Spärrperioder och sjukdagar som sparas
-Rättat widgettext och tidigare ledighet
 
 ### 앱스토어 (노르웨이어 보크말)
 
 Summer og årskvote per fraværstype
-Ulik arbeidstid for hver ukedag
 Fridager for skift og deltid
 Fravær legges i Kalender automatisk
 Importer skoleferier fra bilde eller PDF
-Perioder uten fri og sykedager som spares
-Rettet widgettekst og tidligere ferie
+Sperreperioder og sykedager som spares
 
 ### 앱스토어 (덴마크어)
 
 Summer og årskvote for hver fraværstype
-Forskellig arbejdstid for hver ugedag
 Fridage for skiftehold og deltid
 Fravær lægges i Kalender automatisk
 Importér skoleferier fra foto eller PDF
-Perioder uden fri og sygedage der opspares
-Rettet widgettekst og tidligere ferie
+Spærreperioder og sygedage der opspares
 
 ### 앱스토어 (핀란드어)
 
 Summat ja vuosikiintiö vapaatyypeittäin
-Eri työaika jokaiselle viikonpäivälle
 Vapaapäivät vuoro- ja osa-aikatyöhön
 Vapaat Kalenteriin automaattisesti
 Tuo koulun lomat kuvasta tai PDF:stä
 Lomakiellot ja kertyvät sairauspäivät
-Korjattu widgetin tekstit ja aiemmat lomat
 
 ### 앱스토어 (폴란드어)
 
-Sumy i roczny limit dla każdego rodzaju urlopu
-Inny czas pracy dla każdego dnia tygodnia
-Dni wolne przy pracy zmianowej i niepełnym etacie
-Urlop automatycznie w aplikacji Kalendarz
-Import ferii szkolnych ze zdjęcia lub PDF
-Okresy bez urlopu i kumulowane dni chorobowe
-Poprawiono teksty widżetu i wcześniejszy urlop
+Sumy i roczny limit dla rodzajów urlopu
+Dni wolne dla zmian i niepełnego etatu
+Urlop sam trafia do Kalendarza
+Ferie szkolne ze zdjęcia lub PDF
+Blokady urlopu, przenoszone chorobowe
 
 ### 앱스토어 (체코어)
 
-Součty a roční limit pro každý druh volna
-Jiná pracovní doba pro každý den v týdnu
+Součty a roční limit pro druhy volna
 Volné dny pro směny a částečný úvazek
 Volno se samo přidá do Kalendáře
-Import školních prázdnin z fotky nebo PDF
-Období bez dovolené a převáděné dny nemoci
-Opraveny texty widgetu a dřívější dovolená
+Školní prázdniny z fotky nebo PDF
+Blokace dovolené a převáděné dny nemoci
 
 ### 앱스토어 (그리스어)
 
 Σύνολα και ετήσιο όριο ανά τύπο άδειας
-Διαφορετικό ωράριο για κάθε ημέρα
 Ρεπό για βάρδιες και μερική απασχόληση
-Οι άδειες μπαίνουν αυτόματα στο Ημερολόγιο
-Εισαγωγή σχολικών διακοπών από φωτογραφία ή PDF
-Περίοδοι χωρίς άδεια και αναρρωτικές που μεταφέρονται
-Διορθώθηκαν κείμενα widget και παλαιότερες άδειες
+Άδειες αυτόματα στο Ημερολόγιο
+Σχολικές διακοπές από φωτογραφία ή PDF
+Μπλόκο αδειών και μεταφορά αναρρωτικών
 
 ### 앱스토어 (튀르키예어)
 
 İzin türüne göre toplamlar ve yıllık hak
-Her gün için farklı çalışma saati
-Vardiya ve yarı zamanlı için izin günleri
-İzinler Takvim uygulamasına otomatik eklenir
-Okul tatillerini fotoğraf veya PDF ile ekleyin
-İzin yasağı dönemleri ve devreden hastalık izni
-Widget metinleri ve geçmiş izin girişi düzeltildi
+Vardiya ve yarı zaman için izin günleri
+İzinler Takvim'e otomatik eklenir
+Okul tatilleri fotoğraf ya da PDF'ten
+İzin yasakları ve devreden hastalık izni
 
 ### 앱스토어 (러시아어)
 
 Итоги и годовой лимит по типам отпуска
-Разное рабочее время по дням недели
-Выходные для сменного графика и неполного дня
+Выходные для смен и неполного дня
 Отпуск сам попадает в Календарь
-Импорт школьных каникул с фото или PDF
-Периоды без отпуска и накопление больничных
-Исправлены тексты виджета и ввод прошлых отпусков
+Школьные каникулы с фото или из PDF
+Запрет отпуска и накопление больничных
 
 ### 앱스토어 (인도네시아어)
 
 Total dan jatah tahunan per jenis cuti
-Jam kerja berbeda untuk tiap hari
-Hari libur untuk kerja shift dan paruh waktu
+Hari libur untuk shift dan paruh waktu
 Cuti otomatis masuk ke app Kalender
 Impor libur sekolah dari foto atau PDF
-Periode tanpa cuti dan cuti sakit yang terakumulasi
-Perbaikan teks widget dan input cuti sebelumnya
+Larangan cuti dan cuti sakit menumpuk
+
+### 앱스토어 (태국어)
+
+ดูยอดรวมและโควตาต่อปีแยกตามประเภทการลา
+กำหนดวันหยุดสำหรับงานกะและพาร์ตไทม์ได้
+ส่งวันลาเข้าแอปปฏิทินให้อัตโนมัติ
+นำเข้าช่วงปิดเทอมจากรูปหรือ PDF ได้เลย
+รองรับช่วงห้ามลาและยกยอดวันลาป่วย
+
+### 앱스토어 (베트남어)
+
+Tổng và hạn mức năm theo loại nghỉ
+Ngày nghỉ cho làm ca và bán thời gian
+Tự động thêm ngày nghỉ vào ứng dụng Lịch
+Nhập kỳ nghỉ của trường từ ảnh hoặc PDF
+Hỗ trợ ngày cấm nghỉ và cộng dồn nghỉ ốm
 
 ### 개발 메모 (스토어에 올라가지 않음)
 
-버전 번호는 아직 2.2.1 빌드 8 그대로다. 배포할 때 DeployBar에서 2.3.0으로 올린다.
+2.2.2(빌드 10) 다음 배포. DeployBar 에서 --bump minor 로 2.3.0 으로 올린다.
+태국어와 베트남어는 2.2.2 와 합치면서 새 기능 문구 73개와 이 릴리즈노트를 채웠다.
+스토어 문구는 5줄로 줄였다 (요일별 근무 시간과 오류 수정 줄은 뺐다).
 32d80fc 휴가 불가 기간 직접 입력, 보너스 차감, 사진 가져오기에서 빠진 날 채우기
 66004b3 종류별 합계, 연간 한도, 요일별 근무 시간, 수정 화면에서 종류 고르기, 종류 순서 (이탈리아 피드백)
 2776946 이전 연차 일괄 입력: 21개 언어에서 인식, 일과 시간 함께 입력, 남은 연차로 입력 (대만 피드백)
@@ -222,6 +933,176 @@ Perbaikan teks widget dan input cuti sebelumnya
 26a1239 근무 형태 고르기, 교대 근무 일정, 캘린더 앱으로 휴가 보내기 (Pro)
 b1b4f15 학교 달력 가져오기, 병가 이월, 방학 앞뒤 휴가 제한, 위젯 한국어 문구 번역
 실기기 확인 전: 캘린더 권한과 동기화, 학교 달력 인식률, 키값 동기화 권한
+
+## 2.2.2
+
+### 앱스토어 (한국어)
+
+이제 태국어와 베트남어로도 쓸 수 있어요
+위젯과 알림도 태국어와 베트남어로 나와요
+태국력이나 일본 연호 달력에서도 날짜가 맞아요
+위젯이 휴대폰 언어로 제대로 나와요
+
+### App Store (English)
+
+Goldweek now speaks Thai and Vietnamese
+Widgets and alerts are translated too
+Dates stay right with any calendar
+Widgets now match your phone's language
+
+### 앱스토어 (일본어)
+
+タイ語とベトナム語に対応しました
+ウィジェットと通知もタイ語とベトナム語に
+和暦や仏暦の設定でも日付が正しくなりました
+ウィジェットが端末の言語で表示されます
+
+### 앱스토어 (중국어 간체)
+
+新增泰语和越南语
+小组件和通知也支持泰语和越南语
+手机使用佛历或日本年号时，日期也准确无误
+小组件现在按手机语言显示
+
+### 앱스토어 (독일어)
+
+Jetzt auch auf Thai und Vietnamesisch
+Auch Widgets und Mitteilungen übersetzt
+Korrekte Daten bei jedem Kalendertyp
+Widgets jetzt in deiner Gerätesprache
+
+### 앱스토어 (프랑스어)
+
+Disponible en thaï et en vietnamien
+Widgets et notifications traduits aussi
+Dates justes quel que soit le calendrier
+Les widgets parlent votre langue
+
+### 앱스토어 (스페인어)
+
+Ahora en tailandés y vietnamita
+Widgets y avisos también traducidos
+Fechas exactas con cualquier calendario
+Los widgets ya salen en tu idioma
+
+### 앱스토어 (이탈리아어)
+
+Ora anche in thailandese e vietnamita
+Tradotti anche widget e notifiche
+Date giuste con qualsiasi calendario
+I widget ora sono nella tua lingua
+
+### 앱스토어 (포르투갈어 브라질)
+
+Agora em tailandês e vietnamita
+Widgets e notificações também traduzidos
+Datas certas em qualquer calendário
+Widgets agora no idioma do seu celular
+
+### 앱스토어 (중국어 번체)
+
+新增泰文與越南文
+小工具與通知也支援泰文與越南文
+手機使用佛曆或日本年號時，日期也正確無誤
+小工具現在會依手機語言顯示
+
+### 앱스토어 (네덜란드어)
+
+Nu ook in het Thais en Vietnamees
+Ook widgets en meldingen vertaald
+Juiste data bij elke kalenderinstelling
+Widgets nu in de taal van je toestel
+
+### 앱스토어 (스웨덴어)
+
+Nu på thailändska och vietnamesiska
+Widgetar och notiser är också översatta
+Rätt datum oavsett kalenderinställning
+Widgetar visas nu på ditt språk
+
+### 앱스토어 (노르웨이어 보크말)
+
+Nå på thai og vietnamesisk
+Widgeter og varsler er også oversatt
+Riktige datoer uansett kalendertype
+Widgeter vises nå på ditt språk
+
+### 앱스토어 (덴마크어)
+
+Nu på thai og vietnamesisk
+Widgets og notifikationer er nu oversat
+Korrekte datoer uanset kalendertype
+Widgets vises nu på dit sprog
+
+### 앱스토어 (핀란드어)
+
+Nyt myös thaiksi ja vietnamiksi
+Myös widgetit ja ilmoitukset käännetty
+Oikeat päivät millä tahansa kalenterilla
+Widgetit näkyvät nyt laitteesi kielellä
+
+### 앱스토어 (폴란드어)
+
+Teraz także po tajsku i wietnamsku
+Obejmuje to widżety i powiadomienia
+Poprawne daty przy każdym kalendarzu
+Widżety teraz w języku telefonu
+
+### 앱스토어 (체코어)
+
+Nově v thajštině a vietnamštině
+Přeložené jsou i widgety a oznámení
+Správná data při jakémkoli kalendáři
+Widgety jsou teď v jazyce telefonu
+
+### 앱스토어 (그리스어)
+
+Τώρα και στα ταϊλανδικά και βιετναμέζικα
+Μεταφρασμένα widget και ειδοποιήσεις
+Σωστές ημερομηνίες με κάθε ημερολόγιο
+Τα widget εμφανίζονται στη γλώσσα σου
+
+### 앱스토어 (튀르키예어)
+
+Artık Tayca ve Vietnamca da var
+Widget'lar ve bildirimler de çevrildi
+Her takvim ayarında doğru tarihler
+Widget'lar artık cihazınızın dilinde
+
+### 앱스토어 (러시아어)
+
+Теперь на тайском и вьетнамском
+Виджеты и уведомления тоже переведены
+Верные даты при любом календаре
+Виджеты теперь на языке телефона
+
+### 앱스토어 (인도네시아어)
+
+Kini hadir dalam bahasa Thai dan Vietnam
+Widget dan notifikasi ikut diterjemahkan
+Tanggal tetap tepat di kalender apa pun
+Widget kini memakai bahasa ponselmu
+
+### 앱스토어 (태국어)
+
+ใช้แอปเป็นภาษาไทยและเวียดนามได้แล้ว
+วิดเจ็ตและการแจ้งเตือนก็เป็นภาษาไทย
+ตั้งปฏิทินแบบพุทธก็นับวันลาได้ถูกต้อง
+วิดเจ็ตแสดงเป็นภาษาของเครื่องแล้ว
+
+### 앱스토어 (베트남어)
+
+Đã có tiếng Việt và tiếng Thái
+Tiện ích và thông báo cũng có tiếng Việt
+Ngày tháng luôn đúng dù dùng lịch nào
+Tiện ích nay hiển thị đúng ngôn ngữ máy
+
+### 개발 메모 (스토어에 올라가지 않음)
+
+- 앱 언어 th · vi (앱 문자열·위젯·권한 문구·백업/구매 오류·알림), 날짜 로케일 th_TH@calendar=gregorian · vi_VN
+- Calendar.app — 불기·일본식 달력 폰에서도 언제나 양력으로 공휴일·연차 계산
+- 스크린샷 모드: 태국·베트남 데모(직접 입력 공휴일), vi 번아웃 '지난 휴식' 라벨을 짧게(Lần trước)
+- 위젯 하드코딩 한국어(기대 문구·소진 속도·갤러리 예시 메모) → String(localized:) + 위젯 카탈로그 22개 언어, 기기 캘린더 이름·이벤트 일수 표기 현지화
 
 ## 2.2.1
 
@@ -392,6 +1273,22 @@ Buat jenis cuti sendiri dengan warnanya
 Lihat 3, 6, atau 12 bulan sekaligus
 Rencanakan tahun depan, bawa sisa cuti
 Perbaikan tutup paksa saat banyak cuti
+
+### 앱스토어 (태국어)
+
+บันทึกวันลาเป็นชั่วโมงและนาทีได้แล้ว
+สร้างประเภทการลาและเลือกสีได้เอง
+ดูปฏิทิน 3, 6 หรือ 12 เดือนพร้อมกัน
+วางแผนปีหน้าและยกวันลาที่เหลือไปได้
+แก้ปัญหาแอปปิดเองเมื่อมีวันลาเยอะ
+
+### 앱스토어 (베트남어)
+
+Ghi nghỉ phép theo giờ và phút
+Tự tạo loại nghỉ và chọn màu riêng
+Xem lịch 3, 6 hoặc 12 tháng cùng lúc
+Lên kế hoạch năm sau, chuyển phép dư
+Sửa lỗi văng app khi có nhiều ngày nghỉ
 
 ### 개발 메모 (스토어에 올라가지 않음)
 

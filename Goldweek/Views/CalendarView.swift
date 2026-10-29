@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import LeeoKit
 
 struct CalendarView: View {
     @Bindable var profile: UserProfile
@@ -51,7 +52,7 @@ struct CalendarView: View {
 
     private let holidayService = HolidayService()
     private let recommendationEngine = RecommendationEngine()
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var hiddenDates: Set<String> {
         Set(hiddenHolidayDatesRaw.split(separator: ",").map(String.init).filter { !$0.isEmpty })
@@ -74,7 +75,7 @@ struct CalendarView: View {
     }
     /// 보고 있는 달이 내년(다음 연차 해)이면 내년 연차로 추천한다 — 해가 바뀌기 전에도 미리 계획할 수 있게
     private var availableLeave: Double {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let viewing = LeaveUsageCalculator.fiscalYear(for: currentMonth, startMonth: profile.yearStartMonth, calendar: cal)
         let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
         guard viewing > now else { return usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: true) }
@@ -231,6 +232,7 @@ struct CalendarView: View {
         do {
             try modelContext.save()
             HapticFeedback.success()
+            A11yAnnounce.post(Strings.a11yLeaveDeleted)
         } catch {
             logError("휴가 삭제 실패: \(error.localizedDescription)", category: .data)
             HapticFeedback.error()
@@ -261,6 +263,7 @@ struct CalendarView: View {
         do {
             try modelContext.save()
             UsageReportingService.record(event: "recommendation_added")
+            A11yAnnounce.post(Strings.a11yRecommendationAdded(recommendation.title))
             AppTips.recommendation.invalidate(reason: .actionPerformed)
             HapticFeedback.success()
             ReviewMoments.shared.trigger(.recommendationAdded)
@@ -441,7 +444,7 @@ struct HolidayDataNoticeBanner: View {
 struct MonthNavigator: View {
     @Binding var currentMonth: Date
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var monthYearString: String {
         let year = calendar.component(.year, from: currentMonth)
@@ -457,6 +460,8 @@ struct MonthNavigator: View {
                     .foregroundStyle(.blue)
             }
             .accessibilityLabel(Text(Strings.previousMonth))
+            // 음성 제어: "이전 달" 말고 그 달 이름으로도 부를 수 있게
+            .accessibilityInputLabels([Text(Strings.previousMonth), Text(monthLabel(offset: -1))])
 
             Spacer()
 
@@ -472,10 +477,18 @@ struct MonthNavigator: View {
                     .foregroundStyle(.blue)
             }
             .accessibilityLabel(Text(Strings.nextMonth))
+            .accessibilityInputLabels([Text(Strings.nextMonth), Text(monthLabel(offset: 1))])
         }
         .padding(.horizontal)
         .accessibilityAction(named: Text(Strings.previousMonth), previousMonth)
         .accessibilityAction(named: Text(Strings.nextMonth), nextMonth)
+    }
+
+    /// 앞뒤 달의 이름 ("2026년 11월") — 음성 제어로 부르는 이름
+    private func monthLabel(offset: Int) -> String {
+        let target = calendar.date(byAdding: .month, value: offset, to: currentMonth) ?? currentMonth
+        return Strings.monthYearFormat(year: calendar.component(.year, from: target),
+                                       month: calendar.component(.month, from: target))
     }
 
     private func previousMonth() {
@@ -500,8 +513,9 @@ struct CalendarGrid: View {
     var recommendedDates: Set<Date> = []
     var warningDates: Set<Date> = []
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.foldLayout) private var fold
     @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
 
     /// 달력 첫 칸의 요일 (1=일, 2=월, 7=토)
@@ -568,6 +582,7 @@ struct CalendarGrid: View {
                                 isMakeupWorkday: HolidayService.isMakeupWorkday(date, country: DayOffCalendar.shared.country),
                                 isShiftOff: HolidayService.shiftOffKeys.contains(HolidayService.partTimeKey(date)),
                                 isChildBreak: DayOffCalendar.shared.childBreakName(on: date) != nil,
+                                isAnniversary: !DayOffCalendar.shared.anniversaryNames(on: date).isEmpty,
                                 isHomeHoliday: DayOffCalendar.shared.homeHolidayName(on: date) != nil,
                                 barVisible: showsRestBar(date),
                                 barColor: restBarColor(date),
@@ -581,7 +596,7 @@ struct CalendarGrid: View {
                         .buttonStyle(.plain)
                     } else {
                         Color.clear
-                            .frame(height: LayoutMode.isLargeScreen(horizontalSizeClass) ? 64 : 40)
+                            .frame(height: LayoutMode.isLargeScreen(horizontalSizeClass) || fold.isUnfolded ? 64 : 40)
                             .accessibilityHidden(true)
                     }
                 }
@@ -705,6 +720,8 @@ struct DayCell: View {
     var isShiftOff: Bool = false
     /// 자녀 방학 — 날짜 위쪽에 청록 선 (참고 표시라 배경은 건드리지 않는다)
     var isChildBreak: Bool = false
+    /// 가족 기념일 — 왼쪽 위 작은 하트 (쉬는 날 표시와 겹치지 않게)
+    var isAnniversary: Bool = false
     /// 사는 곳에만 있는 공휴일 — 쉬는 날로 치지 않으면 빈 링으로, 치면 일반 공휴일처럼 보인다
     var isHomeHoliday: Bool = false
     var barVisible: Bool = false
@@ -715,11 +732,19 @@ struct DayCell: View {
     var isBurnoutWarning: Bool = false
     let isToday: Bool
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     // iPad·Mac 처럼 넓으면 칸을 키운다 — 폰 크기 그대로면 넓은 화면에서 달력이 작고 허전하다
     @Environment(\.horizontalSizeClass) private var sizeClass
-    private var isWide: Bool { LayoutMode.isLargeScreen(sizeClass) }
+    /// 아이폰 듀오를 펴면 판 한 장도 폰보다 넓다(가로 약 463pt, 세로 669pt) — 칸을 키운다.
+    @Environment(\.foldLayout) private var fold
+    private var isWide: Bool { LayoutMode.isLargeScreen(sizeClass) || fold.isUnfolded }
+    /// '색 없이 구별' — 공휴일은 날짜에 밑줄, 추천일은 작은 별을 더한다(색만으로 구분하지 않게)
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
+    /// '대비 증가' — 오늘 링을 굵게, 흐린 보조 표시를 진하게
+    @Environment(\.colorSchemeContrast) private var contrast
+    /// 칸 모서리의 작은 표시(하트·班·휴무) — 글자 크기 설정을 따라 커진다
+    @ScaledMetric(relativeTo: .caption2) private var markFontSize: CGFloat = 9
     private var cellHeight: CGFloat { isWide ? 64 : 40 }
     private var circleSize: CGFloat { isWide ? 46 : 34 }
     private var markOffset: CGFloat { isWide ? 22 : 14 }
@@ -768,7 +793,7 @@ struct DayCell: View {
                     .frame(width: circleSize, height: circleSize)
             } else if isToday {
                 Circle()
-                    .stroke(AppTheme.Colors.brand, lineWidth: 2)
+                    .stroke(AppTheme.Colors.brand, lineWidth: contrast == .increased ? 3 : 2)
                     .frame(width: circleSize, height: circleSize)
             }
 
@@ -804,11 +829,27 @@ struct DayCell: View {
             Text("\(dayNumber)")
                 .font(.system(isWide ? .title3 : .body, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
+                .underline(differentiateWithoutColor && (isHoliday || isHomeHoliday) && !isSelected)
+
+            if isAnniversary && !isSelected {
+                Image(systemName: "heart.fill")
+                    .font(.system(size: markFontSize * (isWide ? 1.1 : 0.8)))
+                    .foregroundStyle(.pink)
+                    .offset(x: -markOffset, y: -markOffset)
+            }
+
+            // 색 없이 구별: 노란 칠만으로는 추천일을 알아볼 수 없다
+            if differentiateWithoutColor && isRecommended && !isSelected {
+                Image(systemName: "star.fill")
+                    .font(.system(size: markFontSize * (isWide ? 1.1 : 0.8)))
+                    .foregroundStyle(.orange)
+                    .offset(x: -markOffset, y: markOffset)
+            }
 
             if (isMakeupWorkday || isShiftOff) && !isSelected {
                 Text(isShiftOff ? Strings.shiftOff : Strings.makeupWorkdayMark)
-                    .font(.system(size: isWide ? 11 : 9, weight: .semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: markFontSize * (isWide ? 1.2 : 1), weight: .semibold))
+                    .foregroundStyle(contrast == .increased ? .primary : .secondary)
                     .offset(x: markOffset, y: -markOffset)
             }
         }
@@ -816,6 +857,7 @@ struct DayCell: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Strings.accessibilityDayLabel(day: dayNumber, isToday: isToday, isHoliday: isHoliday, isLeave: isLeave, isSelected: isSelected))
         .accessibilityHint(isRecommended ? Text(Strings.recommendedSchedule) : Text(""))
+        .accessibilityValue(isAnniversary ? Text(Strings.familyAnniversaryTag) : Text(""))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
@@ -843,6 +885,7 @@ struct DayCell: View {
 
 // MARK: - 범례
 struct LegendView: View {
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
     var showsRecommendation: Bool = false
     var showsWarning: Bool = false
     var showsMyBreak: Bool = false
@@ -865,7 +908,8 @@ struct LegendView: View {
             }
             LegendItem(color: AppTheme.Colors.weekend, text: Strings.weekend)
             if showsRecommendation {
-                LegendItem(color: .yellow, text: Strings.tabRecommendations)
+                LegendItem(color: .yellow, text: Strings.tabRecommendations,
+                           symbol: differentiateWithoutColor ? "star.fill" : nil)
             }
             if showsWarning {
                 LegendItem(color: AppTheme.Colors.compensatory, text: Strings.burnoutWarningLegend, dashed: true)
@@ -894,10 +938,17 @@ struct LegendItem: View {
     var dashed = false
     /// 사는 곳 공휴일처럼 빈 링으로 그린다
     var hollow = false
+    /// '색 없이 구별' 일 때 점 대신 그리는 기호 — 달력 칸에 붙는 기호와 같다
+    var symbol: String? = nil
 
     var body: some View {
         HStack(spacing: 4) {
-            if hollow {
+            if let symbol {
+                Image(systemName: symbol)
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
+                    .voDecorative()
+            } else if hollow {
                 Circle()
                     .stroke(color, lineWidth: 1.5)
                     .frame(width: 8, height: 8)
@@ -989,25 +1040,27 @@ struct SelectedDateInfo: View {
     /// MRT 여행 큐레이션 카드 노출 여부 (한국어 + 한국 거주 + 직장인일 때만)
     var showsTravelSuggestions: Bool = false
     var originCountry: Country = .korea
-    /// 선택한 날짜로 바로 휴가를 등록하는 액션 (등록된 휴가가 없는 날짜에만 노출)
+    /// 선택한 날짜로 바로 휴가를 등록하는 액션 (종일 휴가가 없는 날짜에만 노출)
     var onAddLeave: (() -> Void)? = nil
     /// 그 날 등록된 휴가를 바로 고치거나 지우는 액션 (휴가가 있는 날짜에만 노출)
     var onEditLeave: ((LeaveRecord) -> Void)? = nil
     var onDeleteLeave: ((LeaveRecord) -> Void)? = nil
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var holidayOnDate: Holiday? {
         holidays.first { calendar.isDate($0.date, inSameDayAs: date) }
     }
 
-    var leaveOnDate: LeaveRecord? {
+    /// 그 날의 휴가 전부 — 같은 날 연차 2시간 + 특별휴가 1시간처럼 여러 개일 수 있다 (이탈리아 피드백 3차)
+    var leavesOnDate: [LeaveRecord] {
         let dayStart = calendar.startOfDay(for: date)
-        return leaveRecords.first { record in
+        return leaveRecords.filter { record in
             let recordStart = calendar.startOfDay(for: record.startDate)
             let recordEnd = calendar.startOfDay(for: record.endDate)
             return dayStart >= recordStart && dayStart <= recordEnd && record.status != .cancelled
         }
+        .sorted { $0.startDate < $1.startDate }
     }
 
     /// 선택일이 포함된 추천 일정 (있으면 상세 표시)
@@ -1090,6 +1143,18 @@ struct SelectedDateInfo: View {
             // 교대 근무 — 이 날을 휴무/근무로
             ShiftDayRow(date: date)
 
+            ForEach(DayOffCalendar.shared.anniversaryNames(on: date), id: \.self) { name in
+                HStack {
+                    Image(systemName: "heart.fill")
+                        .foregroundStyle(.pink)
+                        .voDecorative()
+                    Text(name)
+                    Text("(\(Strings.familyAnniversaryTag))")
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityElement(children: .combine)
+            }
+
             if let childBreak = DayOffCalendar.shared.childBreakName(on: date) {
                 HStack {
                     Image(systemName: "figure.and.child.holdinghands")
@@ -1102,7 +1167,8 @@ struct SelectedDateInfo: View {
                 .accessibilityElement(children: .combine)
             }
 
-            if let leave = leaveOnDate {
+            ForEach(Array(leavesOnDate.enumerated()), id: \.element.id) { index, leave in
+                if index > 0 { Divider() }
                 HStack {
                     Image(systemName: "calendar.badge.checkmark")
                         .foregroundStyle(leave.displayColor)
@@ -1144,22 +1210,23 @@ struct SelectedDateInfo: View {
             }
 
             // 추천 일정 상세 (실제 등록 휴가가 없을 때) — "일정 없음" 대신 표시
-            if leaveOnDate == nil, let rec = recommendationOnDate {
+            if leavesOnDate.isEmpty, let rec = recommendationOnDate {
                 recommendationDetail(rec)
             }
 
-            if holidayOnDate == nil && leaveOnDate == nil && recommendationOnDate == nil {
+            if holidayOnDate == nil && leavesOnDate.isEmpty && recommendationOnDate == nil {
                 Text(Strings.noSchedule)
                     .foregroundStyle(.secondary)
             }
 
-            // 선택한 날짜로 바로 등록 — 이미 휴가가 있는 날은 숨긴다
-            if leaveOnDate == nil, let onAddLeave {
+            // 선택한 날짜로 바로 등록 — 종일 휴가가 있는 날만 숨긴다.
+            // 반차·시간 단위 휴가가 있는 날은 다른 종류를 더 넣을 수 있다 (연차 2시간 + 특별휴가 1시간)
+            if !leavesOnDate.contains(where: { $0.length == .full }), let onAddLeave {
                 Button(action: onAddLeave) {
                     HStack(spacing: 6) {
                         Image(systemName: "plus.circle.fill")
                             .voDecorative()
-                        Text(Strings.addLeaveOnThisDate)
+                        Text(leavesOnDate.isEmpty ? Strings.addLeaveOnThisDate : Strings.addAnotherLeaveOnThisDate)
                             .fontWeight(.semibold)
                     }
                     .font(.body)
@@ -1232,8 +1299,6 @@ struct CalendarRecommendationSection: View {
 
     @State private var showingPaywall = false
     private let proManager = ProManager.shared
-    /// 무료로 등록할 수 있는 추천 수 — 추천 화면과 같은 규칙을 따른다.
-    private let freeAddLimit = 3
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -1248,7 +1313,8 @@ struct CalendarRecommendationSection: View {
             }
 
             ForEach(Array(recommendations.enumerated()), id: \.element.id) { index, recommendation in
-                let requiresPro = !proManager.isPro && index >= freeAddLimit
+                let decision = RecommendationGate.decision(at: index, hasPro: proManager.isPro)
+                let requiresPro = decision.needsPaywall
                 DetailedRecommendationCard(
                     recommendation: recommendation,
                     country: country,
@@ -1258,10 +1324,18 @@ struct CalendarRecommendationSection: View {
                         if requiresPro {
                             showingPaywall = true
                         } else {
+                            FoldLeavePreview.shared.clear()
                             onAdd(recommendation)
                         }
                     }
                 )
+                // 아이폰 듀오를 펴면 눌러서 고를 수 있다 — 오른쪽 현황에 넣은 뒤 숫자가 미리 그려진다.
+                .foldPreviewSelectable(recommendation, isAdded: addedIDs.contains(recommendation.id))
+
+                // 무료 칸이 거의 끝났다 — 추천 화면과 같은 미리 알림
+                if !addedIDs.contains(recommendation.id), case .allowedNearLimit(let remaining) = decision {
+                    FreeLimitNotice(remaining: remaining)
+                }
             }
         }
         .sheet(isPresented: $showingPaywall) {
@@ -1300,6 +1374,8 @@ struct LeaveListRowInteractive: View {
                 }
                 .opacity(offset < 0 ? 1 : 0)
                 .accessibilityLabel(Text(Strings.delete))
+                // VoiceOver 는 밀어서 여는 대신 행의 '삭제' 동작을 쓴다
+                .accessibilityHidden(true)
             }
 
             LeaveListRow(leave: leave, isUpcoming: isUpcoming)
@@ -1329,6 +1405,15 @@ struct LeaveListRowInteractive: View {
                         HapticFeedback.selection()
                     }
                 }
+                // 밀어서 지우기는 VoiceOver·음성 제어로 할 수 없으므로 행 동작으로도 둔다
+                .accessibilityElement(children: .combine)
+                .accessibilityAddTraits(onEdit != nil ? .isButton : [])
+                .accessibilityHint(onEdit != nil ? Text(Strings.editLeaveHint) : Text(""))
+                .accessibilityActions {
+                    if let onDelete {
+                        Button(Strings.delete) { onDelete(leave) }
+                    }
+                }
         }
         .frame(maxWidth: .infinity)
     }
@@ -1339,7 +1424,7 @@ struct LeaveListRow: View {
     let leave: LeaveRecord
     let isUpcoming: Bool
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var dateText: String {
         let formatter = DateFormatter()

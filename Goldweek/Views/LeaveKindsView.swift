@@ -181,6 +181,7 @@ struct LeaveKindEditor: View {
     @State private var startBalanceMinutes = 0
     @State private var startBalanceDays = 0.0
     @State private var didLoad = false
+    @State private var showingPaywall = false
 
     private var startMonth: Int { profiles.first?.yearStartMonth ?? 1 }
     private var currentYear: Int { LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: startMonth) }
@@ -228,6 +229,9 @@ struct LeaveKindEditor: View {
                 }
                 allowanceSection
             }
+            .sheet(isPresented: $showingPaywall) {
+                PaywallView()
+            }
             .navigationTitle(kind?.name ?? Strings.addLeaveKind)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -269,7 +273,26 @@ struct LeaveKindEditor: View {
     @ViewBuilder
     private var allowanceSection: some View {
         Section {
-            Toggle(Strings.allowanceToggle, isOn: $hasAllowance.animation())
+            // 한도는 Pro (2.4.0 전 설치자는 계속 무료). 이미 켜 둔 한도는 끄고 고칠 수 있게 그대로 둔다.
+            Toggle(isOn: Binding(
+                get: { hasAllowance },
+                set: { on in
+                    if on, !ProManager.shared.has(.leaveKindAllowance) {
+                        showingPaywall = true
+                    } else {
+                        withAnimation { hasAllowance = on }
+                    }
+                }
+            )) {
+                HStack(spacing: 6) {
+                    Text(Strings.allowanceToggle)
+                    if !ProManager.shared.has(.leaveKindAllowance) {
+                        Image(systemName: "crown.fill")
+                            .foregroundStyle(.yellow)
+                            .voDecorative()
+                    }
+                }
+            }
             if hasAllowance {
                 if LeaveLength.usesHourlyLeave || allowanceIsHours {
                 Picker(Strings.allowanceUnitLabel, selection: $allowanceIsHours) {
@@ -312,7 +335,11 @@ struct LeaveKindEditor: View {
         } header: {
             Text(Strings.allowanceSection)
         } footer: {
-            if hasAllowance { Text(Strings.allowanceFooter) }
+            if hasAllowance {
+                Text(Strings.allowanceFooter)
+            } else if !ProManager.shared.has(.leaveKindAllowance) {
+                Text(Strings.allowanceProFooter)
+            }
         }
         if hasAllowance {
             carryOverSection
@@ -480,8 +507,14 @@ private struct LeaveKindStatsRow: View {
         return usage.hasHourRecords
     }
 
+    /// 연차(ferie)는 일수로 세는 휴가라 일수를 먼저 크게, 시간은 아래에 (이탈리아 피드백 3차)
+    private var daysFirst: Bool {
+        if case .builtIn(let type) = ref { return type.deductsFromAnnual }
+        return false
+    }
+
     private func amount(days: Double, minutes: Int) -> String {
-        showsHours ? Strings.durationText(minutes: minutes) : Strings.dayCount(days)
+        showsHours && !daysFirst ? Strings.durationText(minutes: minutes) : Strings.dayCount(days)
     }
 
     var body: some View {
@@ -517,8 +550,10 @@ private struct LeaveKindStatsRow: View {
                         .foregroundStyle(.red)
                 }
             } else if showsHours {
-                // 시간으로 보여 줄 때는 일수도 함께 (시간 단위 휴가는 하루 근무 시간 기준 일수)
-                Text(Strings.dayCount(usage.usedDays + usage.plannedDays))
+                // 시간으로 보여 줄 때는 일수도 함께 (시간 단위 휴가는 하루 근무 시간 기준 일수).
+                // 연차는 반대로 일수가 위, 시간이 여기
+                Text(daysFirst ? Strings.durationText(minutes: usage.usedMinutes + usage.plannedMinutes)
+                               : Strings.dayCount(usage.usedDays + usage.plannedDays))
                     .font(.body)
                     .foregroundStyle(.secondary)
             }
@@ -578,7 +613,7 @@ struct WorkdayHoursView: View {
     }
 
     private var weekdayNames: [String] {
-        var cal = Calendar.current
+        var cal = Calendar.app
         cal.locale = Locale(identifier: Strings.localeIdentifier)
         return cal.standaloneWeekdaySymbols
     }

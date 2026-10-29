@@ -93,6 +93,7 @@ final class TimeMachineService {
             let holidays = try context.fetch(FetchDescriptor<CustomHoliday>())
             let breaks = try context.fetch(FetchDescriptor<SchoolBreak>())
             let kinds = try context.fetch(FetchDescriptor<CustomLeaveType>())
+            let anniversaries = try context.fetch(FetchDescriptor<FamilyAnniversary>())
 
             // 프로필조차 없는 완전히 빈 상태는 저장할 가치가 없다
             guard !profiles.isEmpty else { return false }
@@ -108,7 +109,8 @@ final class TimeMachineService {
                 bonusLeaves: bonuses.map(TMBonusData.init),
                 customHolidays: holidays.map(TMHolidayData.init),
                 schoolBreaks: breaks.isEmpty ? nil : breaks.map(TMBreakData.init),
-                leaveKinds: kinds.isEmpty ? nil : kinds.map(TMLeaveKindData.init)
+                leaveKinds: kinds.isEmpty ? nil : kinds.map(TMLeaveKindData.init),
+                familyAnniversaries: anniversaries.isEmpty ? nil : anniversaries.map(TMAnniversaryData.init)
             )
 
             snapshot.contentHash = try Self.contentHash(of: snapshot)
@@ -222,6 +224,7 @@ final class TimeMachineService {
         try context.fetch(FetchDescriptor<CustomHoliday>()).forEach { context.delete($0) }
         try context.fetch(FetchDescriptor<SchoolBreak>()).forEach { context.delete($0) }
         try context.fetch(FetchDescriptor<CustomLeaveType>()).forEach { context.delete($0) }
+        try context.fetch(FetchDescriptor<FamilyAnniversary>()).forEach { context.delete($0) }
 
         if let profileData = snapshot.profiles.first {
             let existing = try context.fetch(FetchDescriptor<UserProfile>())
@@ -237,6 +240,7 @@ final class TimeMachineService {
         snapshot.customHolidays.forEach { context.insert($0.materialize()) }
         snapshot.schoolBreaks?.forEach { context.insert($0.materialize()) }
         snapshot.leaveKinds?.forEach { context.insert($0.materialize()) }
+        snapshot.familyAnniversaries?.forEach { context.insert($0.materialize()) }
 
         try context.save()
     }
@@ -294,6 +298,7 @@ final class TimeMachineService {
             let customHolidays: [TMHolidayData]
             let schoolBreaks: [TMBreakData]?
             let leaveKinds: [TMLeaveKindData]?
+            let familyAnniversaries: [TMAnniversaryData]?
         }
         let payload = Payload(
             profiles: snapshot.profiles,
@@ -301,7 +306,8 @@ final class TimeMachineService {
             bonusLeaves: snapshot.bonusLeaves,
             customHolidays: snapshot.customHolidays,
             schoolBreaks: snapshot.schoolBreaks,
-            leaveKinds: snapshot.leaveKinds
+            leaveKinds: snapshot.leaveKinds,
+            familyAnniversaries: snapshot.familyAnniversaries
         )
         let data = try stableEncoder().encode(payload)
         return SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
@@ -341,6 +347,8 @@ struct TimeMachineSnapshot: Codable {
     var schoolBreaks: [TMBreakData]? = nil
     /// 직접 만든 휴가 종류 — 나중에 추가된 필드라 옵셔널 (예전 스냅샷의 체크섬이 그대로 맞는다)
     var leaveKinds: [TMLeaveKindData]? = nil
+    /// 가족 기념일 — 나중에 추가된 필드라 옵셔널 (예전 스냅샷의 체크섬이 그대로 맞는다)
+    var familyAnniversaries: [TMAnniversaryData]? = nil
 }
 
 struct TMProfileData: Codable {
@@ -540,6 +548,36 @@ struct TMBreakData: Codable {
     func materialize() -> SchoolBreak {
         let item = SchoolBreak(name: name, startDate: startDate, endDate: endDate,
                                kind: SchoolBreakKind(rawValue: kindRaw) ?? .child)
+        item.id = id
+        item.createdAt = createdAt
+        return item
+    }
+}
+
+struct TMAnniversaryData: Codable {
+    let id: UUID
+    let name: String
+    let relation: String
+    let kindRaw: String
+    let date: Date
+    let isLunar: Bool
+    let reminds: Bool
+    let createdAt: Date
+
+    init(from item: FamilyAnniversary) {
+        self.id = item.id
+        self.name = item.name
+        self.relation = item.relation
+        self.kindRaw = item.kindRaw
+        self.date = item.date
+        self.isLunar = item.isLunar
+        self.reminds = item.reminds
+        self.createdAt = item.createdAt
+    }
+
+    func materialize() -> FamilyAnniversary {
+        let item = FamilyAnniversary(name: name, relation: relation, kind: AnniversaryKind(rawValue: kindRaw) ?? .other,
+                                     date: date, isLunar: isLunar, reminds: reminds)
         item.id = id
         item.createdAt = createdAt
         return item

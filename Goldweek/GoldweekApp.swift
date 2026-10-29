@@ -21,10 +21,16 @@ struct GoldweekApp: App {
 
     init() {
         AppLogger.shared.info("Goldweek 앱 초기화 시작", category: .app)
+        // 연속으로 시작에 실패했으면 이번 실행은 세이프 모드 — 없어도 되는 시작 작업을 건너뛴다
+        LaunchSafety.beginLaunch()
+        // 업데이트한 사람인지 새로 온 사람인지 — 온보딩이 값을 바꾸기 전에 적어 둔다
+        WhatsNewGate.captureLaunchState()
 
         // StoreKit 거래 리스너를 실행 즉시 붙인다 — 앱 밖에서 리딤한 오퍼 코드·대기 중 구매가
         // Transaction.updates 로 들어오는데, Pro 화면을 처음 열 때까지 미루면 놓치거나 늦게 반영된다.
         _ = ProManager.shared
+        // 선물 · 응원(팁) 엔진 — 결제는 됐는데 코드를 못 만든 선물을 실행하자마자 마저 만든다
+        _ = ProExtras.shared
 
         // 휴식 레이더 알림 델리게이트 등록 (포그라운드 표시 + 탭/스누즈 추적)
         NotificationService.registerDelegate()
@@ -60,9 +66,10 @@ struct GoldweekApp: App {
             CustomHoliday.self,
             SchoolBreak.self,
             CustomLeaveType.self,
+            FamilyAnniversary.self,
         ])
 
-        sharedModelContainer = Self.createModelContainer(schema: schema)
+        sharedModelContainer = AppSignpost.measure("ModelContainer") { Self.createModelContainer(schema: schema) }
         Self.sharedContainerForBackup = sharedModelContainer
         ScreenshotMode.seed(container: sharedModelContainer)
 
@@ -74,13 +81,17 @@ struct GoldweekApp: App {
         }
         #endif
         // "기능 팁 다시 보기"를 눌렀다면 여기서 되돌린다 — configure 전에만 유효하다
-        AppTips.performPendingResetIfNeeded()
-        if ScreenshotMode.isActive { Tips.hideAllTipsForTesting() }
-        try? Tips.configure([.displayFrequency(.daily)])
+        if !LaunchSafety.isSafeMode {
+            AppTips.performPendingResetIfNeeded()
+            if ScreenshotMode.isActive { Tips.hideAllTipsForTesting() }
+            try? Tips.configure([.displayFrequency(.daily)])
+        }
 
         checkICloudStatus()
         // 휴가 종류 색·순서·근무 시간 — 기기끼리 iCloud 로 맞춘다
-        LeaveSettingsSync.shared.start()
+        if !LaunchSafety.isSafeMode {
+            LeaveSettingsSync.shared.start()
+        }
 
         AppLogger.shared.info("Goldweek 앱 초기화 완료", category: .app)
     }
@@ -88,7 +99,12 @@ struct GoldweekApp: App {
     private static func createModelContainer(schema: Schema) -> ModelContainer {
         // CloudKit 동기화는 ShareSyncService가 CKRecord로 직접 처리 —
         // entitlement 감지로 .automatic이 CloudKit 미러링을 켜면 모델 검증 실패로 컨테이너 생성이 throw됨
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, cloudKitDatabase: .none)
+        let config: ModelConfiguration
+        if let url = storeURLOutsideAppGroup() {
+            config = ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none)
+        } else {
+            config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, cloudKitDatabase: .none)
+        }
 
         do {
             let container = try ModelContainer(for: schema, configurations: [config])
@@ -122,6 +138,54 @@ struct GoldweekApp: App {
                 fatalError("인메모리 ModelContainer 생성 불가: \(error)")
             }
         }
+    }
+
+    /// 저장소를 앱 전용 컨테이너에 둔다 (App Group 에 있던 기존 저장소는 한 번 옮긴다).
+    ///
+    /// App Group 엔타이틀먼트가 있으면 SwiftData 는 기본으로 공유 컨테이너에 저장소를 만든다.
+    /// 공유 컨테이너의 SQLite 잠금을 쥔 채 앱이 정지되면 iOS 가 0xdead10cc 로 죽인다 —
+    /// 프리워밍으로 미리 뜬 앱이 이 init 의 컨테이너 열기 도중 정지돼 실제로 죽었다 (2.2.2·2.3.0, iPhone 11).
+    /// 위젯은 App Group UserDefaults 만 읽으므로 저장소를 공유할 이유가 없다.
+    /// - Returns: 쓸 저장소 URL. 옮기다 실패하면 nil — 예전 자리(SwiftData 기본)를 그대로 쓴다.
+    private static func storeURLOutsideAppGroup() -> URL? {
+        let fm = FileManager.default
+        guard let appSupport = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return nil }
+        let dest = appSupport.appendingPathComponent("default.store")
+        let suffixes = ["-wal", "-shm", ""]  // 본 파일을 마지막에 — 그게 "옮김 완료" 표시라 중간에 끊겨도 다음 실행이 이어 옮긴다
+
+        // 이미 옮겼거나 처음부터 여기 있다
+        if fm.fileExists(atPath: dest.path) { return dest }
+
+        do {
+            try fm.createDirectory(at: appSupport, withIntermediateDirectories: true)
+        } catch {
+            AppLogger.shared.error("Application Support 폴더 생성 실패: \(error.localizedDescription)", category: .data)
+            return nil
+        }
+
+        guard let group = fm.containerURL(forSecurityApplicationGroupIdentifier: "group.com.Ysoup.LeaveWise")?
+            .appendingPathComponent("Library/Application Support/default.store"),
+              fm.fileExists(atPath: group.path) else {
+            return dest  // 새 설치 — 처음부터 앱 전용 컨테이너에 만든다
+        }
+
+        // 본 파일·WAL·SHM 을 함께 옮긴다. 하나라도 실패하면 옮긴 것을 되돌리고 예전 자리를 쓴다.
+        var moved: [(from: URL, to: URL)] = []
+        for suffix in suffixes {
+            let from = URL(fileURLWithPath: group.path + suffix)
+            let to = URL(fileURLWithPath: dest.path + suffix)
+            guard fm.fileExists(atPath: from.path) else { continue }
+            do {
+                try fm.moveItem(at: from, to: to)
+                moved.append((from, to))
+            } catch {
+                AppLogger.shared.error("저장소 이동 실패 (\(suffix.isEmpty ? "store" : suffix)): \(error.localizedDescription) — 되돌림", category: .data)
+                for m in moved.reversed() { try? fm.moveItem(at: m.to, to: m.from) }
+                return nil
+            }
+        }
+        AppLogger.shared.info("저장소를 App Group 에서 앱 전용 컨테이너로 옮김 (\(moved.count)개 파일)", category: .data)
+        return dest
     }
 
     /// 타임머신 스냅샷 → 레거시 자동 백업 순으로 데이터 복구를 시도한다

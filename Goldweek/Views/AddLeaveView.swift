@@ -138,6 +138,8 @@ struct LeaveStatusHeader: View {
     let bonusLeave: Double
     let totalAvailable: Double
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     private func formatD(_ v: Double) -> String {
         v == v.rounded() ? "\(Int(v))" : String(format: "%.1f", v)
     }
@@ -158,6 +160,8 @@ struct LeaveStatusHeader: View {
             case .turkish: return "\(Strings.basicLeave) \(formatD(remainingLeave)) gün, \(Strings.bonus) \(formatD(bonusLeave)) gün, \(Strings.totalAvailable) \(formatD(totalAvailable)) gün"
             case .russian: return "\(Strings.basicLeave) \(formatD(remainingLeave)) \(ruPlural(remainingLeave, "день", "дня", "дней")), \(Strings.bonus) \(formatD(bonusLeave)) \(ruPlural(bonusLeave, "день", "дня", "дней")), \(Strings.totalAvailable) \(formatD(totalAvailable)) \(ruPlural(totalAvailable, "день", "дня", "дней"))"
             case .indonesian: return "\(Strings.basicLeave) \(formatD(remainingLeave)) hari, \(Strings.bonus) \(formatD(bonusLeave)) hari, \(Strings.totalAvailable) \(formatD(totalAvailable)) hari"
+            case .thai: return "\(Strings.basicLeave) \(formatD(remainingLeave)) วัน, \(Strings.bonus) \(formatD(bonusLeave)) วัน, \(Strings.totalAvailable) \(formatD(totalAvailable)) วัน"
+            case .vietnamese: return "\(Strings.basicLeave) \(formatD(remainingLeave)) ngày, \(Strings.bonus) \(formatD(bonusLeave)) ngày, \(Strings.totalAvailable) \(formatD(totalAvailable)) ngày"
             case .dutch: return "\(Strings.basicLeave) \(formatD(remainingLeave)) dagen, \(Strings.bonus) \(formatD(bonusLeave)) dagen, \(Strings.totalAvailable) \(formatD(totalAvailable)) dagen"
             case .japanese: return "\(Strings.basicLeave) \(formatD(remainingLeave))日、\(Strings.bonus) \(formatD(bonusLeave))日、\(Strings.totalAvailable) \(formatD(totalAvailable))日"
             case .chinese: return "\(Strings.basicLeave) \(formatD(remainingLeave))天，\(Strings.bonus) \(formatD(bonusLeave))天，\(Strings.totalAvailable) \(formatD(totalAvailable))天"
@@ -182,6 +186,8 @@ struct LeaveStatusHeader: View {
             case .turkish: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) gün"
             case .russian: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) \(ruPlural(totalAvailable, "день", "дня", "дней"))"
             case .indonesian: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) hari"
+            case .thai: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) วัน"
+            case .vietnamese: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) ngày"
             case .dutch: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) dagen"
             case .japanese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))日"
             case .chinese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))天"
@@ -196,7 +202,11 @@ struct LeaveStatusHeader: View {
     }
 
     var body: some View {
-        HStack(spacing: 16) {
+        // 아주 큰 글씨에서는 '기본 + 보너스 = 총' 을 가로로 놓으면 화면 밖으로 밀려나므로 세로로 쌓는다
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 16))
+        layout {
             if bonusLeave > 0 {
                 // 보너스가 있을 때만 "기본 + 보너스 = 총" 분해를 보여준다.
                 VStack(alignment: .leading, spacing: 4) {
@@ -321,7 +331,7 @@ struct LeaveRegistrationView: View {
     var blockedWarning: String? {
         let dayOff = DayOffCalendar.shared
         guard dayOff.hasLeaveRestrictions else { return nil }
-        let cal = Calendar.current
+        let cal = Calendar.app
         var d = cal.startOfDay(for: startDate)
         let end = cal.startOfDay(for: length == .full ? endDate : startDate)
         var nearHoliday = false
@@ -338,7 +348,7 @@ struct LeaveRegistrationView: View {
 
     /// 시작~끝 달력 일수
     var calendarDays: Int {
-        let cal = Calendar.current
+        let cal = Calendar.app
         return (cal.dateComponents([.day], from: cal.startOfDay(for: startDate), to: cal.startOfDay(for: endDate)).day ?? 0) + 1
     }
 
@@ -357,7 +367,7 @@ struct LeaveRegistrationView: View {
 
     /// 시작일이 올해가 아닌 해에 속하면 그 해 (예: 10월에 잡는 내년 1월 휴가)
     var futureFiscalYear: Int? {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let target = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: profile.yearStartMonth, calendar: cal)
         let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
         return target > now ? target : nil
@@ -523,13 +533,11 @@ struct LeaveRegistrationView: View {
                                     Text(Strings.leaveLengthName(len))
                                         .font(.body)
                                         .fontWeight(.semibold)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.7)
+                                        .cellLabel()
                                     Text(len == .hours ? Strings.hoursLengthHint
                                          : len == .quarter ? "0.25\(Strings.dayUnitSuffix)" : len == .half ? "0.5\(Strings.dayUnitSuffix)" : "1\(Strings.dayUnitSuffix)~")
                                         .font(.body)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.7)
+                                        .cellLabel()
                                         .opacity(0.8)
                                 }
                                 .frame(maxWidth: .infinity)
@@ -601,8 +609,7 @@ struct LeaveRegistrationView: View {
                                                 Text(kind.name)
                                                     .font(.body)
                                                     .fontWeight(.semibold)
-                                                    .lineLimit(1)
-                                                    .minimumScaleFactor(0.7)
+                                                    .cellLabel()
                                             }
                                             .frame(maxWidth: .infinity)
                                             .padding(.vertical, 8)
@@ -627,8 +634,7 @@ struct LeaveRegistrationView: View {
                                     Text(Strings.addLeaveKind)
                                         .font(.body)
                                         .fontWeight(.semibold)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.7)
+                                        .cellLabel()
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 8)
@@ -736,7 +742,7 @@ struct LeaveRegistrationView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                if startDate < Calendar.current.startOfDay(for: Date()) {
+                if startDate < Calendar.app.startOfDay(for: Date()) {
                     HStack(spacing: 6) {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
@@ -799,7 +805,7 @@ struct LeaveRegistrationView: View {
             }
         }
         .onChange(of: startDate) { oldStart, newStart in
-            let calendar = Calendar.current
+            let calendar = Calendar.app
             if length != .full {
                 endDate = newStart
             } else {
@@ -866,13 +872,13 @@ struct LeaveRegistrationView: View {
         isNoteFocused = false
 
         let actualEndDate = length != .full ? startDate : endDate
-        let today = Calendar.current.startOfDay(for: Date())
+        let today = Calendar.app.startOfDay(for: Date())
         let isPastLeave = startDate < today
         let status: LeaveStatus = isPastLeave ? .used : .planned
 
         let record = LeaveRecord(
-            startDate: Calendar.current.startOfDay(for: startDate),
-            endDate: Calendar.current.startOfDay(for: actualEndDate),
+            startDate: Calendar.app.startOfDay(for: startDate),
+            endDate: Calendar.app.startOfDay(for: actualEndDate),
             type: category,
             status: status,
             note: note,
@@ -1001,13 +1007,14 @@ struct BonusLeaveView: View {
     @State private var bonusType: BonusLeaveType = .compensatory
     @State private var bonusReason = ""
     @State private var hasExpiration = false
-    @State private var expirationDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())!
+    @State private var expirationDate = Calendar.app.date(byAdding: .month, value: 3, to: Date())!
     @State private var pendingDeleteOffsets: IndexSet?
     @State private var showingDeleteConfirm = false
     @State private var errorMessage = ""
     @State private var showingErrorAlert = false
 
-    private var isPro: Bool { ProManager.shared.isPro }
+    /// 보너스 연차는 프로 트림부터
+    private var isPro: Bool { ProManager.shared.hasProTier }
 
     var activeBonusLeaves: [BonusLeave] {
         bonusLeaves.filter { !$0.isUsed }
@@ -1061,6 +1068,9 @@ struct BonusLeaveView: View {
                         BonusLeaveRow(bonus: bonus, editable: true)
                             .contentShape(Rectangle())
                             .onTapGesture { editingBonus = bonus }
+                            .accessibilityElement(children: .combine)
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityHint(Text(Strings.editLeaveHint))
                     }
                     .onDelete(perform: deleteActiveBonus)
                 }
@@ -1183,10 +1193,23 @@ struct AddBonusLeaveSheet: View {
 
     let onSave: () -> Void
 
+    /// 시간으로 넣기 — 보상휴가는 몇 시간씩 쌓이는 경우가 많다 (피드백: "add comp time by hour")
+    @AppStorage(BonusLeave.inputInHoursKey) private var inHours = false
+    @State private var bonusMinutes = 60
+
     var body: some View {
         NavigationStack {
             Form {
                 Section(Strings.leaveDaysSection) {
+                    Picker(Strings.allowanceUnitLabel, selection: $inHours) {
+                        Text(Strings.allowanceUnitDays).tag(false)
+                        Text(Strings.leaveHoursLabel).tag(true)
+                    }
+                    .pickerStyle(.segmented)
+
+                    if inHours {
+                        BonusHoursInput(minutes: $bonusMinutes)
+                    } else {
                     HStack {
                         Text(Strings.daysToAdd)
                         Spacer()
@@ -1217,7 +1240,14 @@ struct AddBonusLeaveSheet: View {
                             .accessibilityAddTraits(bonusDays == days ? .isSelected : [])
                         }
                     }
+                    }
                 }
+                .onChange(of: bonusMinutes) { _, m in if inHours { bonusDays = LeaveLength.days(forMinutes: m) } }
+                .onChange(of: inHours) { _, hours in
+                    if hours { bonusDays = LeaveLength.days(forMinutes: bonusMinutes) }
+                    else { bonusDays = 1.0 }
+                }
+                .onAppear { if inHours { bonusDays = LeaveLength.days(forMinutes: bonusMinutes) } }
 
                 Section(Strings.typeSection) {
                     Picker(Strings.typeSection, selection: $bonusType) {
@@ -1253,7 +1283,11 @@ struct AddBonusLeaveSheet: View {
                     Button(Strings.cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(Strings.save) { onSave() }
+                    Button(Strings.save) {
+                        // 시간으로 더했으면 시간 단위로도 쓸 수 있게 "시간 단위" 버튼을 켠다
+                        if inHours { LeaveLength.usesHourlyLeave = true }
+                        onSave()
+                    }
                         .disabled(bonusDays <= 0)
                 }
             }
@@ -1274,20 +1308,33 @@ struct EditBonusLeaveSheet: View {
     @State private var editedHasExpiration: Bool
     @State private var editedExpirationDate: Date
     @State private var showingSaveError = false
+    @AppStorage(BonusLeave.inputInHoursKey) private var inHours = false
+    @State private var editedMinutes: Int
 
     init(bonus: BonusLeave) {
         self.bonus = bonus
         _editedDays = State(initialValue: bonus.days)
+        _editedMinutes = State(initialValue: BonusLeave.minutes(forDays: bonus.days))
         _editedType = State(initialValue: bonus.type)
         _editedReason = State(initialValue: bonus.reason)
         _editedHasExpiration = State(initialValue: bonus.expirationDate != nil)
-        _editedExpirationDate = State(initialValue: bonus.expirationDate ?? Calendar.current.date(byAdding: .month, value: 3, to: Date())!)
+        _editedExpirationDate = State(initialValue: bonus.expirationDate ?? Calendar.app.date(byAdding: .month, value: 3, to: Date())!)
     }
 
     var body: some View {
         NavigationStack {
             Form {
                 Section(Strings.leaveDaysSection) {
+                    Picker(Strings.allowanceUnitLabel, selection: $inHours) {
+                        Text(Strings.allowanceUnitDays).tag(false)
+                        Text(Strings.leaveHoursLabel).tag(true)
+                    }
+                    .pickerStyle(.segmented)
+
+                    if inHours {
+                        BonusHoursInput(minutes: $editedMinutes,
+                                        minimumMinutes: BonusLeave.minutes(forDays: bonus.usedDays))
+                    } else {
                     HStack {
                         Text(Strings.daysToAdd)
                         Spacer()
@@ -1321,14 +1368,18 @@ struct EditBonusLeaveSheet: View {
                         }
                     }
 
+                    }
+
                     if bonus.usedDays > 0 {
                         HStack {
                             Image(systemName: "info.circle")
                                 .foregroundStyle(.blue)
                                 .font(.body)
                             Text(Strings.bonusEditUsedRemaining(
-                                used: String(format: "%.2g", bonus.usedDays),
-                                remaining: String(format: "%.2g", max(0, editedDays - bonus.usedDays))
+                                used: inHours ? Strings.durationText(minutes: BonusLeave.minutes(forDays: bonus.usedDays))
+                                              : String(format: "%.2g", bonus.usedDays),
+                                remaining: inHours ? Strings.durationText(minutes: BonusLeave.minutes(forDays: max(0, editedDays - bonus.usedDays)))
+                                                   : String(format: "%.2g", max(0, editedDays - bonus.usedDays))
                             ))
                                 .font(.body)
                                 .foregroundStyle(.secondary)
@@ -1360,6 +1411,11 @@ struct EditBonusLeaveSheet: View {
                 } footer: {
                     Text(Strings.expirationFooter)
                 }
+            }
+            .onChange(of: editedMinutes) { _, m in if inHours { editedDays = LeaveLength.days(forMinutes: m) } }
+            .onChange(of: inHours) { _, hours in
+                // 단위만 바꿀 때는 양을 그대로 두고 표시만 바꾼다
+                if hours { editedMinutes = BonusLeave.minutes(forDays: editedDays) }
             }
             .navigationTitle(Strings.bonusEditTitle)
             .navigationBarTitleDisplayMode(.inline)
@@ -1398,10 +1454,63 @@ struct EditBonusLeaveSheet: View {
     }
 }
 
+// MARK: - 보너스 연차 — 시간으로 넣기
+/// 시간(직접 입력, 하루를 넘어도 됨) + 분(5분 단위), 그리고 며칠로 더해지는지
+struct BonusHoursInput: View {
+    @Binding var minutes: Int
+    var minimumMinutes: Int = 0
+
+    var body: some View {
+        HStack {
+            Text(Strings.leaveHoursLabel)
+            Spacer()
+            TextField("0", value: Binding(get: { minutes / 60 },
+                                          set: { minutes = max(minimumMinutes, max(0, min(9999, $0)) * 60 + minutes % 60) }),
+                      format: .number)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.trailing)
+                .monospacedDigit()
+                .frame(maxWidth: 100)
+        }
+        Stepper(value: Binding(get: { minutes % 60 },
+                               set: { minutes = max(minimumMinutes, (minutes / 60) * 60 + $0) }),
+                in: 0...55, step: 5) {
+            HStack {
+                Text(Strings.leaveMinutesLabel)
+                Spacer()
+                Text("\(minutes % 60)").monospacedDigit().foregroundStyle(.secondary)
+            }
+        }
+        HStack(spacing: 8) {
+            ForEach([1, 2, 4, 8], id: \.self) { h in
+                Button {
+                    minutes = max(minimumMinutes, h * 60)
+                } label: {
+                    Text(Strings.durationText(minutes: h * 60))
+                        .font(.body).fontWeight(.medium)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .background(minutes == h * 60 ? Color.blue : Color(.systemGray5))
+                        .foregroundStyle(minutes == h * 60 ? .white : .primary)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(minutes == h * 60 ? .isSelected : [])
+            }
+        }
+        Text(Strings.bonusHoursFooter(workday: Strings.durationText(minutes: LeaveLength.workdayMinutes),
+                                      days: Strings.dayCount(LeaveLength.days(forMinutes: minutes))))
+            .font(.body)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
 // MARK: - 보너스 연차 행
 struct BonusLeaveRow: View {
     let bonus: BonusLeave
     var editable: Bool = false
+    @AppStorage(BonusLeave.inputInHoursKey) private var inHours = false
 
     var body: some View {
         HStack {
@@ -1414,7 +1523,9 @@ struct BonusLeaveRow: View {
                     Text(Strings.bonusLeaveTypeName(bonus.type))
                         .font(.body)
                         .fontWeight(.medium)
-                    Text("\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
+                    Text(inHours
+                         ? "\(Strings.durationText(minutes: BonusLeave.minutes(forDays: bonus.remainingDays)))/\(Strings.durationText(minutes: BonusLeave.minutes(forDays: bonus.days)))"
+                         : "\(String(format: "%.1f", bonus.remainingDays))/\(String(format: "%.1f", bonus.days))\(Strings.dayUnitSuffix)")
                         .font(.body)
                         .foregroundStyle(AppTheme.Colors.bonus)
                 }
@@ -1469,7 +1580,7 @@ struct LeaveRecordRow: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "M/d"
 
-        if record.type == .half || record.type == .quarter || Calendar.current.isDate(record.startDate, inSameDayAs: record.endDate) {
+        if record.type == .half || record.type == .quarter || Calendar.app.isDate(record.startDate, inSameDayAs: record.endDate) {
             return formatter.string(from: record.startDate)
         }
         return "\(formatter.string(from: record.startDate)) - \(formatter.string(from: record.endDate))"

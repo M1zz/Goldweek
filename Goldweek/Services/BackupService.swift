@@ -271,6 +271,8 @@ class BackupService {
         bonusLeaves: [BonusLeave]
     ) async throws {
         logInfo("iCloud 백업 시작", category: .backup)
+        let signpost = AppSignpost.signposter.beginInterval("iCloudBackup", id: AppSignpost.signposter.makeSignpostID())
+        defer { AppSignpost.signposter.endInterval("iCloudBackup", signpost) }
         logDebug("iCloud 사용 가능 여부: \(isICloudAvailable)", category: .iCloud)
 
         guard let url = iCloudBackupURL else {
@@ -967,6 +969,30 @@ enum BackupError: LocalizedError {
             case .integrityVerificationFailed: return "Verifikasi integritas backup gagal."
             case .backupRotationFailed: return "Rotasi file backup gagal."
             case .checksumMismatch: return "File backup rusak. (Checksum tidak cocok)"
+            }
+        case .thai:
+            switch self {
+            case .iCloudNotAvailable: return "ใช้ iCloud ไม่ได้ เปิด iCloud Drive ในการตั้งค่า"
+            case .localPathNotAvailable: return "เข้าถึงพื้นที่จัดเก็บในเครื่องไม่ได้"
+            case .backupNotFound: return "ไม่พบไฟล์สำรองข้อมูล"
+            case .invalidBackupData: return "อ่านข้อมูลสำรองไม่ได้"
+            case .encryptionFailed: return "เข้ารหัสข้อมูลสำรองไม่สำเร็จ"
+            case .decryptionFailed: return "ถอดรหัสข้อมูลสำรองไม่สำเร็จ อาจเป็นข้อมูลสำรองจากอุปกรณ์อื่น"
+            case .integrityVerificationFailed: return "ตรวจสอบความถูกต้องของข้อมูลสำรองไม่ผ่าน"
+            case .backupRotationFailed: return "หมุนเวียนไฟล์สำรองข้อมูลไม่สำเร็จ"
+            case .checksumMismatch: return "ไฟล์สำรองข้อมูลเสียหาย (Checksum ไม่ตรงกัน)"
+            }
+        case .vietnamese:
+            switch self {
+            case .iCloudNotAvailable: return "Không dùng được iCloud. Hãy bật iCloud Drive trong Cài đặt."
+            case .localPathNotAvailable: return "Không truy cập được bộ nhớ trên máy."
+            case .backupNotFound: return "Không tìm thấy tệp sao lưu."
+            case .invalidBackupData: return "Không đọc được dữ liệu sao lưu."
+            case .encryptionFailed: return "Mã hóa bản sao lưu thất bại."
+            case .decryptionFailed: return "Giải mã bản sao lưu thất bại. Có thể đây là bản sao lưu từ thiết bị khác."
+            case .integrityVerificationFailed: return "Kiểm tra tính toàn vẹn của bản sao lưu thất bại."
+            case .backupRotationFailed: return "Xoay vòng tệp sao lưu thất bại."
+            case .checksumMismatch: return "Tệp sao lưu bị hỏng. (Checksum không khớp)"
             }
         case .dutch:
             switch self {

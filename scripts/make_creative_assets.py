@@ -23,7 +23,8 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 PROFILE = tempfile.mkdtemp(prefix="goldweek-creative-chrome-")
 
 # 앱 언어 코드(raw · marketing 폴더 이름) → App Store Connect 로케일 (--storetext 로 확인한 것)
-STORE = {"en": "en-US", "de": "de-DE", "es": "es-ES", "fr": "fr-FR", "nl": "nl-NL", "nb": "no"}
+STORE = {"en": "en-US", "en-GB": "en-GB", "de": "de-DE", "es": "es-ES", "fr": "fr-FR", "nl": "nl-NL", "nb": "no"}
+# creative/nb 는 no 를 가리키는 링크 — DeployBar 검사는 nb(LOCALES), 올리기는 no(스토어 로케일)를 본다
 
 # (가로, 세로, 안전 영역 left, top, right, bottom)
 SPEC = {
@@ -36,6 +37,7 @@ SPEC = {
 HEADER = {
     "ko":      ("황금연휴 플래너", "연차는 조금만,<br>연휴는 길게"),
     "en":      ("PTO planner", "Take fewer days off.<br>Get longer breaks."),
+    "en-GB":   ("Leave planner", "Take fewer days off.<br>Get longer breaks."),
     "de":      ("Brückentage", "Weniger Urlaub,<br>länger frei"),
     "es":      ("Puentes y vacaciones", "Pide menos días,<br>descansa más"),
     "fr":      ("Congés et ponts", "Posez moins,<br>partez plus longtemps"),
@@ -55,12 +57,15 @@ HEADER = {
     "cs":      ("Plánovač dovolené", "Méně dní dovolené,<br>delší volno"),
     "el":      ("Πλάνο άδειας", "Λιγότερη άδεια,<br>περισσότερη ξεκούραση"),
     "tr":      ("İzin planlayıcı", "Daha az izin,<br>daha uzun tatil"),
+    "th":      ("วางแผนวันลา", "ลาน้อย<br>ได้หยุดยาว"),
+    "vi":      ("Lịch nghỉ phép", "Ít ngày phép,<br>nghỉ thật dài"),
 }
 
 # 검색 결과: 스크린샷 1장(홈 · "언제 쉬어야 할까?")과 **같은 이야기**. 눈썹글은 그 나라 사람이 검색창에 치는 말.
 SEARCH = {
     "ko":      ("연차 관리", "언제 쉬어야<br>할까?", "지난 휴가와 다음 휴가로 쉴 때를 알려 드려요"),
     "en":      ("PTO tracker", "When should you<br>take a break?", "Your last break, your next one, and when to rest"),
+    "en-GB":   ("Leave tracker", "When should you<br>take a break?", "Your last break, your next one, and when to rest"),
     "de":      ("Urlaubsplaner", "Wann brauchst du<br>eine Pause?", "Letzter Urlaub, nächster Urlaub und wann es Zeit wird"),
     "es":      ("Calendario de vacaciones", "¿Cuándo deberías<br>descansar?", "Tu último descanso, el próximo y cuándo parar"),
     "fr":      ("Planning des congés", "Quand faut-il<br>souffler&nbsp;?", "Dernier congé, prochain congé&nbsp;: on vous dit quand"),
@@ -80,6 +85,8 @@ SEARCH = {
     "cs":      ("Kalendář dovolené", "Kdy si<br>dát volno?", "Poslední volno, to příští a kdy si odpočinout"),
     "el":      ("Ημερολόγιο αργιών", "Πότε να πάρεις<br>ρεπό;", "Το τελευταίο, το επόμενο και πότε να ξεκουραστείς"),
     "tr":      ("Yıllık izin", "Ne zaman<br>izin almalı?", "Son tatilin, sıradaki tatilin ve dinlenme zamanın"),
+    "th":      ("ปฏิทินวันลา", "ถึงเวลาพัก<br>หรือยัง?", "หยุดครั้งก่อน ครั้งถัดไป และเวลาที่ควรพัก"),
+    "vi":      ("Quản lý phép năm", "Khi nào nên<br>nghỉ ngơi?", "Lần nghỉ trước, lần nghỉ tới và lúc cần nghỉ"),
 }
 
 BRAND = "#0066FF"

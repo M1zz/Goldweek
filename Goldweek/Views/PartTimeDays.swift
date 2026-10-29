@@ -72,7 +72,7 @@ struct PartTimeDayRow: View {
     @AppStorage("partTimeSwaps") private var swapsRaw = ""
     @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
     @State private var showingMove = false
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var key: String { HolidayService.partTimeKey(date) }
     private var isRegularOff: Bool {
@@ -130,7 +130,7 @@ private struct PartTimeMoveSheet: View {
     let firstWeekday: Int
     @Environment(\.dismiss) private var dismiss
     @AppStorage("partTimeSwaps") private var swapsRaw = ""
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     /// 그 주(달력 첫 요일 기준)에서 지금 일하는 날
     private var candidates: [Date] {
@@ -233,7 +233,7 @@ struct ShiftScheduleView: View {
     @AppStorage("shiftWorkDays") private var workRaw = ""
     @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
     @State private var weekOffset = 0
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     private var weekStart: Date {
         let today = calendar.startOfDay(for: Date())

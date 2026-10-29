@@ -1,0 +1,250 @@
+{
+  "identifier": "3B8E9F10-5C2D-4A7B-8E6F-1A2B3C4D5E6F",
+  "nonRenewingSubscriptions": [],
+  "products": [
+    {
+      "displayPrice": "59.99",
+      "familyShareable": true,
+      "internalID": "9C1E2A33-0B44-4C55-8D66-7E8F90A1B2C3",
+      "localizations": [
+        {
+          "description": "Everything in Pro, forever",
+          "displayName": "Goldweek Pro (Lifetime)",
+          "locale": "en_US"
+        },
+        {
+          "description": "프로 기능을 평생 사용",
+          "displayName": "Goldweek 프로 (평생)",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.pro",
+      "referenceName": "Goldweek Pro Lifetime",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29.99",
+      "familyShareable": false,
+      "internalID": "7EC73D86-5DE8-47FB-83DD-64EAE6EB757B",
+      "localizations": [
+        {
+          "description": "Everything in Plus, forever",
+          "displayName": "Goldweek Plus (Lifetime)",
+          "locale": "en_US"
+        },
+        {
+          "description": "플러스 기능을 평생 사용",
+          "displayName": "Goldweek 플러스 (평생)",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.plus",
+      "referenceName": "Goldweek Plus Lifetime",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29.99",
+      "familyShareable": false,
+      "internalID": "46B63DD0-FBB3-47F7-9AD2-B499DB62D8D7",
+      "localizations": [
+        {
+          "description": "From Plus lifetime to Pro lifetime",
+          "displayName": "Goldweek Pro Upgrade (Lifetime)",
+          "locale": "en_US"
+        },
+        {
+          "description": "플러스 평생에서 프로 평생으로",
+          "displayName": "Goldweek 프로로 올리기 (평생)",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.pro.upgrade",
+      "referenceName": "Goldweek Pro Upgrade from Plus Lifetime",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "41.99",
+      "familyShareable": false,
+      "internalID": "CF6C4945-3FE8-4CF1-A592-44BA3E463CFC",
+      "localizations": [
+        {
+          "description": "Switch your subscription to Pro lifetime",
+          "displayName": "Goldweek Pro (Lifetime, for subscribers)",
+          "locale": "en_US"
+        },
+        {
+          "description": "구독을 프로 평생으로 바꾸기",
+          "displayName": "Goldweek 프로 (평생, 구독자용)",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.pro.graduate",
+      "referenceName": "Goldweek Pro Graduate Lifetime",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "49.99",
+      "familyShareable": false,
+      "internalID": "9D27FCCF-0E22-5FD7-9D9A-1ADB08915251",
+      "localizations": [
+        {
+          "description": "A one-time code that unlocks Goldweek Pro (lifetime) for someone else.",
+          "displayName": "Gift Goldweek Pro",
+          "locale": "en_US"
+        },
+        {
+          "description": "다른 사람의 Goldweek 프로(평생)를 여는 일회용 선물 코드",
+          "displayName": "Goldweek 프로 선물",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.gift.pro",
+      "referenceName": "Goldweek Pro Gift (consumable)",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "0.99",
+      "familyShareable": false,
+      "internalID": "555A467A-4CFF-515B-A9C0-E1F6F7EF890C",
+      "localizations": [
+        {
+          "description": "A one-time tip for the developer. Unlocks nothing.",
+          "displayName": "A coffee",
+          "locale": "en_US"
+        },
+        {
+          "description": "개발자에게 보내는 한 번의 응원. 열리는 기능은 없습니다.",
+          "displayName": "커피 한 잔",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.tip.small",
+      "referenceName": "Tip small (consumable)",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "2.99",
+      "familyShareable": false,
+      "internalID": "397A4461-1E67-5FF0-B478-6A7F2F9C319E",
+      "localizations": [
+        {
+          "description": "A one-time tip for the developer. Unlocks nothing.",
+          "displayName": "A snack",
+          "locale": "en_US"
+        },
+        {
+          "description": "개발자에게 보내는 한 번의 응원. 열리는 기능은 없습니다.",
+          "displayName": "간식 한 번",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.tip.medium",
+      "referenceName": "Tip medium (consumable)",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "9.99",
+      "familyShareable": false,
+      "internalID": "B7093849-9DCB-59FB-B25B-CA78B2061771",
+      "localizations": [
+        {
+          "description": "A one-time tip for the developer. Unlocks nothing.",
+          "displayName": "A hearty meal",
+          "locale": "en_US"
+        },
+        {
+          "description": "개발자에게 보내는 한 번의 응원. 열리는 기능은 없습니다.",
+          "displayName": "든든한 한 끼",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.tip.large",
+      "referenceName": "Tip large (consumable)",
+      "type": "Consumable"
+    }
+  ],
+  "settings": {
+    "_applicationInternalID": "6755983135",
+    "_developerTeamID": "",
+    "_lastSynchronizedDate": 0
+  },
+  "subscriptionGroups": [
+    {
+      "id": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+      "localizations": [],
+      "name": "Goldweek",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "19.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "EAE534BD-ACA4-5F9F-827B-F9D12A45E046",
+          "introductoryOffer": {
+            "displayPrice": "9.99",
+            "internalID": "1F81318C-09DA-4692-A987-9F6C130063B5",
+            "numberOfPeriods": 1,
+            "paymentMode": "payUpFront",
+            "subscriptionPeriod": "P1Y"
+          },
+          "localizations": [
+            {
+              "description": "Fits your workplace rules too",
+              "displayName": "Goldweek Pro",
+              "locale": "en_US"
+            },
+            {
+              "description": "내 직장 규칙까지 그대로",
+              "displayName": "Goldweek 프로",
+              "locale": "ko"
+            }
+          ],
+          "productID": "com.Ysoup.LeaveWise.pro.yearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Goldweek Pro Yearly",
+          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "9.99",
+          "familyShareable": false,
+          "groupNumber": 2,
+          "internalID": "9C85C1AC-6094-5429-BA3A-CB3B4B55014F",
+          "introductoryOffer": {
+            "displayPrice": "4.99",
+            "internalID": "C5E8A4E9-D3B6-44DC-B63D-923E7C14A58C",
+            "numberOfPeriods": 1,
+            "paymentMode": "payUpFront",
+            "subscriptionPeriod": "P1Y"
+          },
+          "localizations": [
+            {
+              "description": "Plans your time off for you",
+              "displayName": "Goldweek Plus",
+              "locale": "en_US"
+            },
+            {
+              "description": "연차 계획을 알아서 짜 줘요",
+              "displayName": "Goldweek 플러스",
+              "locale": "ko"
+            }
+          ],
+          "productID": "com.Ysoup.LeaveWise.plus.annual",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Goldweek Plus Yearly",
+          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        }
+      ]
+    }
+  ],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}

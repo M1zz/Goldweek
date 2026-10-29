@@ -59,7 +59,7 @@ final class PhotoImportService {
     static func missingLeaves(_ leaves: [ImportedLeave],
                               existingRecords: [LeaveRecord],
                               isDayOff: (Date) -> Bool,
-                              calendar: Calendar = .current) -> ScanResult {
+                              calendar: Calendar = .app) -> ScanResult {
         // 날짜별로 이미 등록된 양 — 취소된 기록은 없는 것으로 본다
         var covered: [Date: Double] = [:]
         for record in existingRecords where record.status != .cancelled {
@@ -237,7 +237,7 @@ enum SchoolCalendarParser {
     // MARK: 학년도
 
     /// 글에 "2026-2027", "2026–27" 이 있으면 그 시작 해, 없으면 오늘 기준 (6월부터 새 학년도)
-    static func schoolYearStart(in text: String, now: Date = Date(), calendar: Calendar = .current) -> Int {
+    static func schoolYearStart(in text: String, now: Date = Date(), calendar: Calendar = .app) -> Int {
         if let m = firstMatch(#"(20\d\d)\s*[-–—/]\s*(20\d\d|\d\d)\b"#, in: text),
            let a = Int(m[1]) {
             let bRaw = m[2]
@@ -251,7 +251,7 @@ enum SchoolCalendarParser {
     // MARK: 읽기
 
     static func parse(text: String, schoolYearStart: Int? = nil, dayFirst: Bool = Self.localeIsDayFirst,
-                      calendar: Calendar = .current) -> [Item] {
+                      calendar: Calendar = .app) -> [Item] {
         let lines = text.components(separatedBy: .newlines)
             .map { $0.trimmingCharacters(in: .whitespaces) }
             .filter { !$0.isEmpty }

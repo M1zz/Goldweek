@@ -9,7 +9,7 @@ import Foundation
 
 class HolidayService {
 
-    let calendar = Calendar.current
+    let calendar = Calendar.app
 
     /// 음력 공휴일 테이블(한국 설날/추석, 중국 춘절 등)이 정확하게 수록된 마지막 연도.
     /// 이후 연도는 근사치 폴백이라 실제 날짜와 다를 수 있다 — 테이블 확장 시 함께 갱신할 것.
@@ -22,6 +22,7 @@ class HolidayService {
         // 러시아는 휴일 이동, 인도네시아는 공휴일 날짜 자체를 정부가 해마다 정한다
         if country == .russia { return year <= Self.russiaOfficialLastYear }
         if country == .indonesia { return Self.hasIndonesiaOfficialSchedule(year) }
+        if country == .singapore { return Self.hasSingaporeOfficialSchedule(year) }
         if country == .custom { return true }   // 기본 공휴일이 없으니 틀릴 것도 없다
         return year <= Self.reliableDataLastYear
     }
@@ -207,6 +208,8 @@ class HolidayService {
                 result = getRussiaHolidays(for: year)
             case .indonesia:
                 result = getIndonesiaHolidays(for: year)
+            case .singapore:
+                result = getSingaporeHolidays(for: year)
             case .custom:
                 result = []   // 전부 사용자가 직접 넣는다
             }
@@ -453,6 +456,8 @@ class HolidayService {
         case .turkish: subLabel = "İkame Tatil"
         case .russian: subLabel = "Перенесённый выходной"
         case .indonesian: subLabel = "Libur Pengganti"
+        case .thai: subLabel = "วันหยุดชดเชย"
+        case .vietnamese: subLabel = "Nghỉ bù"
         case .dutch: subLabel = "Vervangende feestdag"
         case .japanese: subLabel = "振替休日"
         case .chinese: subLabel = "补休日"
@@ -604,6 +609,8 @@ class HolidayService {
             case .turkish: return "Telafi Tatili"
             case .russian: return "Перенесённый выходной"
             case .indonesian: return "Libur Pengganti"
+            case .thai: return "วันหยุดชดเชย"
+            case .vietnamese: return "Nghỉ bù"
             case .dutch: return "Vervangende feestdag"
             case .japanese: return "振替休日"
             case .chinese: return "补休日"
@@ -643,6 +650,8 @@ class HolidayService {
             case .turkish: return "Vatandaş Tatili"
             case .russian: return "Народный выходной"
             case .indonesian: return "Hari Libur Warga"
+            case .thai: return "วันหยุดของประชาชน"
+            case .vietnamese: return "Ngày nghỉ của công dân"
             case .dutch: return "Burgerfeestdag"
             case .japanese: return "国民の休日"
             case .chinese: return "国民休息日"
@@ -703,7 +712,7 @@ class HolidayService {
     }
 
     /// 주말이지만 출근하는 날인지 (중국 调休 补班 · 러시아 рабочая суббота · 파트타임 쉬는 날을 옮겨 일하는 날)
-    static func isMakeupWorkday(_ date: Date, country: Country, calendar: Calendar = .current, includeShift: Bool = true) -> Bool {
+    static func isMakeupWorkday(_ date: Date, country: Country, calendar: Calendar = .app, includeShift: Bool = true) -> Bool {
         let k = partTimeKey(date)
         if partTimeSwapWorkKeys.contains(k) || (includeShift && shiftWorkKeys.contains(k)) { return true }
         let c = calendar.dateComponents([.year, .month, .day], from: date)
@@ -799,13 +808,13 @@ class HolidayService {
     static func partTimeKey(_ date: Date) -> String { partTimeKeyFormatter.string(from: date) }
 
     /// 요일만 보고 주말인지 — 보충 근무일은 따지지 않는다 (달력 색칠용)
-    static func isWeekendDay(_ date: Date, country: Country, calendar: Calendar = .current) -> Bool {
+    static func isWeekendDay(_ date: Date, country: Country, calendar: Calendar = .app) -> Bool {
         weekendDays(for: country).contains(calendar.component(.weekday, from: date))
     }
 
     /// 쉬는 주말인지 — 그 나라 주말 중 보충 근무일이 아닌 날. 파트타임 쉬는 날을 옮겨 쉬는 날도 여기 든다.
     /// 교대 근무 표시(휴무·근무)가 가장 먼저다 — includeShift 를 끄면 원래 상태
-    static func isRestWeekend(_ date: Date, country: Country, calendar: Calendar = .current, includeShift: Bool = true) -> Bool {
+    static func isRestWeekend(_ date: Date, country: Country, calendar: Calendar = .app, includeShift: Bool = true) -> Bool {
         let k = partTimeKey(date)
         if includeShift {
             if shiftOffKeys.contains(k) { return true }
@@ -817,7 +826,7 @@ class HolidayService {
     }
 
     /// 한 해의 보충 근무일 (startOfDay) — 연휴 플래너용. 파트타임 쉬는 날을 옮겨 일하는 날도 포함.
-    static func makeupWorkdays(for year: Int, country: Country, calendar: Calendar = .current) -> Set<Date> {
+    static func makeupWorkdays(for year: Int, country: Country, calendar: Calendar = .app) -> Set<Date> {
         let swapped = (partTimeSwaps.map(\.from) + Array(shiftWorkKeys)).compactMap { partTimeKeyFormatter.date(from: $0) }
             .filter { calendar.component(.year, from: $0) == year }
             .map { calendar.startOfDay(for: $0) }
@@ -1009,6 +1018,8 @@ class HolidayService {
         case .turkish: return "Uygulanan Gün"
         case .russian: return "Перенесённый"
         case .indonesian: return "Pengganti"
+        case .thai: return "ชดเชย"
+        case .vietnamese: return "Nghỉ bù"
         case .dutch: return "Vrije dag"
         case .japanese: return "振替"
         case .chinese: return "补休"

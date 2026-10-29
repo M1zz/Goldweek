@@ -47,7 +47,7 @@ struct SettingsView: View {
     @State private var bonusType: BonusLeaveType = .compensatory
     @State private var bonusReason = ""
     @State private var hasExpiration = false
-    @State private var expirationDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())!
+    @State private var expirationDate = Calendar.app.date(byAdding: .month, value: 3, to: Date())!
 
     // 백업 관련 상태
     @State private var isBackingUp = false
@@ -57,6 +57,9 @@ struct SettingsView: View {
     @State private var backupAlertMessage = ""
     @State private var showingRestoreConfirm = false
     @State private var showingPaywall = false
+    @State private var showingManageSubscription = false
+    /// 구독 졸업(구독을 프로 평생으로) 화면
+    @State private var showingGraduation = false
     @State private var editingBonus: BonusLeave?
     @State private var pendingBonusDeleteOffsets: IndexSet?
     @State private var showingBonusDeleteConfirm = false
@@ -67,6 +70,8 @@ struct SettingsView: View {
     @State private var showingTutorial = false
     @State private var showingOnboardingReplay = false
     @State private var showingTipsResetNotice = false
+    @State private var showingOfferCode = false
+    @State private var showingWhatsNew = false
     @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
     /// 캘린더 앱으로 휴가 보내기 — CalendarService.autoSyncKey
     @AppStorage(CalendarService.autoSyncKey) private var calendarAutoSync = false
@@ -137,7 +142,7 @@ struct SettingsView: View {
 
     /// 현재 회계연도 시작일 (yearStartMonth 기준) — LeaveStatusCard와 동일 계산
     var annualYearStart: Date {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let now = Date()
         let year = cal.component(.year, from: now)
         let month = cal.component(.month, from: now)
@@ -147,7 +152,7 @@ struct SettingsView: View {
     }
 
     var annualYearEnd: Date {
-        Calendar.current.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
+        Calendar.app.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
     }
 
     /// 이 화면이 쓰는 모든 숫자의 출처 — 홈 카드와 같은 계산기, 같은 입력.
@@ -262,19 +267,28 @@ struct SettingsView: View {
                 }
 
                 // 이용 중인 버전 — 오퍼 코드를 리딤한 사람도 Pro가 켜졌는지 바로 알 수 있게
-                Section(Strings.planStatusTitle) {
+                Section {
                     if ProManager.shared.isPro {
+                        // 누르면 **지금 누리는 혜택과 그 양**을 본다(ProBenefitsView).
+                        // "이용 중" 한 줄은 영수증일 뿐이다 — 무엇을 얼마나 쓰고 있는지가 보여야 산 값이 보인다.
+                        NavigationLink(destination: ProBenefitsView()) {
                         HStack(spacing: 12) {
                             Image(systemName: "crown.fill")
                                 .foregroundStyle(AppTheme.Colors.bonus)
                                 .frame(width: 28)
                                 .voDecorative()
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.goldweekPro)
+                                Text("Goldweek \(Strings.trimName(ProManager.shared.tier))")
                                     .fontWeight(.semibold)
-                                Text(Strings.proActiveMessage)
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
+                                if case .yearly(let expires) = ProManager.shared.activePlan, let expires {
+                                    Text(Strings.yearlyPlanUntil(expires.appFormatted()))
+                                        .font(.body)
+                                        .foregroundStyle(.secondary)
+                                } else {
+                                    Text(Strings.proActiveMessage)
+                                        .font(.body)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                             Spacer()
                             Text(Strings.planActive)
@@ -286,6 +300,9 @@ struct SettingsView: View {
                                 .clipShape(Capsule())
                         }
                         .accessibilityElement(children: .combine)
+                        }
+                        .accessibilityHint(Strings.benefitsRowHint)
+                        .accessibilityInputLabels([Text(Strings.benefitsTitle), Text(Strings.trimName(ProManager.shared.tier))])
                     } else {
                         HStack(spacing: 12) {
                             Image(systemName: "person.crop.circle")
@@ -304,8 +321,37 @@ struct SettingsView: View {
                             Button(Strings.planUpgrade) { showingPaywall = true }
                                 .buttonStyle(.borderedProminent)
                                 .tint(AppTheme.Colors.bonus)
+                                .accessibilityInputLabels([Text(Strings.planUpgrade), Text("Pro")])
+                        }
+                        // 받은 오퍼 코드를 바로 쓴다 (StoreKit 2 오퍼 코드 시트)
+                        Button {
+                            UsageReportingService.record(event: "offer_code_open:settings")
+                            showingOfferCode = true
+                        } label: {
+                            Label(Strings.redeemOfferCode, systemImage: "ticket")
+                        }
+                        .offerCodeRedemption(isPresented: $showingOfferCode) { result in
+                            if case .success = result {
+                                Task { await ProManager.shared.checkEntitlement() }
+                            }
                         }
                     }
+                    if case .yearly = ProManager.shared.activePlan {
+                        Button(Strings.manageSubscription) { showingManageSubscription = true }
+                        // 구독 중일 때만 서는 줄: 구독을 평생으로 바꾸는 길을 늘 열어 둔다(LeeoGraduation)
+                        Button(Strings.switchToLifetimeEntry) { showingGraduation = true }
+                    }
+                } header: {
+                    Text(Strings.planStatusTitle)
+                } footer: {
+                    if !ProManager.shared.isPro, ProManager.shared.isLegacyUser {
+                        Text(Strings.legacyFeaturesNote)
+                    }
+                }
+
+                // 선물 · 응원 — 상품이 App Store 에 있을 때만 줄이 선다
+                if let gift = ProExtras.shared.gift, let tipJar = ProExtras.shared.tipJar {
+                    GiftAndTipSection(gift: gift, tipJar: tipJar)
                 }
 
                 // 국가 및 언어
@@ -473,6 +519,23 @@ struct SettingsView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(Strings.holidayMgmtTitle)
                                 Text(Strings.holidayMgmtSubtitle)
+                                    .font(.body)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+
+                    // 가족 기념일 — 쉬는 날은 아니지만 가족에게는 공휴일 같은 날
+                    NavigationLink(destination: FamilyAnniversariesView()) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "heart.fill")
+                                .foregroundStyle(.pink)
+                                .frame(width: 28)
+                                .voDecorative()
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.familyAnniversariesTitle)
+                                Text(Strings.familyAnniversariesSubtitle)
                                     .font(.body)
                                     .foregroundStyle(.secondary)
                             }
@@ -709,20 +772,20 @@ struct SettingsView: View {
                     .accessibilityHint(Text(Strings.includeBonusHint))
 
                     Button {
-                        if ProManager.shared.isPro {
+                        if ProManager.shared.hasProTier {
                             showingBonusLeaveSheet = true
                         } else {
                             showingPaywall = true
                         }
                     } label: {
                         HStack {
-                            Image(systemName: ProManager.shared.isPro ? "plus.circle.fill" : "crown.fill")
-                                .foregroundStyle(ProManager.shared.isPro ? AppTheme.Colors.bonus : .yellow)
+                            Image(systemName: ProManager.shared.hasProTier ? "plus.circle.fill" : "crown.fill")
+                                .foregroundStyle(ProManager.shared.hasProTier ? AppTheme.Colors.bonus : .yellow)
                                 .voDecorative()
                             Text(Strings.addBonusLeave)
-                                .foregroundStyle(ProManager.shared.isPro ? .primary : .secondary)
+                                .foregroundStyle(ProManager.shared.hasProTier ? .primary : .secondary)
                             Spacer()
-                            if ProManager.shared.isPro {
+                            if ProManager.shared.hasProTier {
                                 Image(systemName: "chevron.right")
                                     .foregroundStyle(.secondary)
                                     .font(.body)
@@ -927,7 +990,7 @@ struct SettingsView: View {
                     }
 
                     // 캘린더 자동 감지 (Pro)
-                    if ProManager.shared.isPro {
+                    if ProManager.shared.hasProTier {
                         Toggle(isOn: $autoDetectEnabled) {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(Strings.autoDetectSettingTitle)
@@ -1100,6 +1163,13 @@ struct SettingsView: View {
                         Label(Strings.helpOnboarding, systemImage: "sparkles.rectangle.stack")
                     }
 
+                    // 업데이트 뒤 한 번 떴던 "새로운 기능" — 놓쳤거나 다시 보고 싶을 때
+                    Button {
+                        showingWhatsNew = true
+                    } label: {
+                        Label(Strings.whatsNewEntry, systemImage: "gift")
+                    }
+
                     Button {
                         AppTips.requestResetOnNextLaunch()
                         showingTipsResetNotice = true
@@ -1121,6 +1191,11 @@ struct SettingsView: View {
                 Section {
                     NavigationLink(destination: LeeoFeedbackView<GoldweekSpec>()) {
                         Label(Strings.sendFeedback, systemImage: "envelope.badge")
+                    }
+
+                    // 앞으로 만들 기능 — 원본은 GoldweekRoadmap.swift
+                    NavigationLink(destination: RoadmapScreen()) {
+                        Label(RoadmapL10n.entry, systemImage: "map")
                     }
 
                     Button {
@@ -1176,6 +1251,11 @@ struct SettingsView: View {
 
                 // 개발자 문의
                 DeveloperContactSection()
+
+                // 같은 개발자가 만든 다른 앱 — 지금 쓰는 앱(Goldweek)은 목록에서 빠진다
+                Section {
+                    LeeoFamilySettingsRow<GoldweekSpec>()
+                }
             }
             // 프로필 값은 @Bindable 바인딩이라 SwiftData 자동 저장에 맡겨져 있었다.
             // 자동 저장은 "곧" 저장할 뿐 그 시점을 보장하지 않는다 — 총 연차처럼 잔여 계산의
@@ -1214,6 +1294,8 @@ struct SettingsView: View {
             .sheet(isPresented: $showingPaywall) {
                 PaywallView()
             }
+            .manageSubscriptionsSheet(isPresented: $showingManageSubscription)
+            .sheet(isPresented: $showingGraduation) { GraduationSheet() }
             .sheet(isPresented: $showingCalendarImport) {
                 CalendarImportSheet(existingRecords: Array(leaveRecords))
             }
@@ -1222,6 +1304,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingTutorial) {
                 TutorialView()
+            }
+            .sheet(isPresented: $showingWhatsNew) {
+                WhatsNewView { showingWhatsNew = false }
             }
             .sheet(isPresented: $showingOnboardingReplay) {
                 // 다시 볼 때는 프로필을 새로 만들지 않고 기존 값을 갱신한다(OnboardingView 안에서 처리)
@@ -1513,6 +1598,67 @@ struct DeveloperContactSection: View {
     }
 }
 
+// MARK: - 선물 · 응원
+
+/// Pro 선물하기 · 선물 코드 입력 · 개발자 응원하기.
+///
+/// 화면 안쪽은 LeeoKit 것을 그대로 쓰고(`LeeoGiftView` · `LeeoGiftRedeemView` · `LeeoTipJarView`),
+/// 행 이름만 앱 언어를 따르게 앱 문구로 그린다(지원 섹션과 같은 까닭).
+/// ⚠️ 상품이 App Store Connect 에 없으면(`isAvailable` false) 줄을 세우지 않는다 — 눌러도 살 수 없는 줄이 된다.
+///    다만 이미 보냈거나 받은 선물, 결제는 됐는데 코드를 못 만든 선물이 있으면 선물 줄은 남긴다(찾아갈 곳이 있어야 한다).
+struct GiftAndTipSection: View {
+    @ObservedObject var gift: LeeoGiftStore
+    @ObservedObject var tipJar: LeeoTipJar
+    @State private var showingGiftSupport = false
+
+    private var showsGift: Bool {
+        gift.isAvailable || gift.pendingCount > 0 || !gift.sentGifts.isEmpty || gift.redeemed != nil
+    }
+
+    var body: some View {
+        if showsGift || tipJar.isAvailable {
+            Section {
+                if showsGift {
+                    NavigationLink(destination: LeeoGiftView<GoldweekSpec>(gift: gift, showsRedeemLink: false,
+                                                                           onContactSupport: { showingGiftSupport = true })) {
+                        Label(Strings.giftSendEntry, systemImage: "gift.fill")
+                    }
+                    // 이미 산 사람은 받을 것이 없다(코드를 다른 사람에게 넘긴다). 받은 사람은 받은 선물을 다시 본다.
+                    if !ProManager.shared.hasPurchasedProTier || gift.redeemed != nil {
+                        NavigationLink(destination: LeeoGiftRedeemView<GoldweekSpec>(gift: gift,
+                                                                                     onContactSupport: { showingGiftSupport = true })) {
+                            Label(Strings.giftRedeemEntry, systemImage: "giftcard")
+                        }
+                    }
+                }
+                if tipJar.isAvailable {
+                    NavigationLink(destination: LeeoTipJarView<GoldweekSpec>(tipJar: tipJar)) {
+                        Label {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.tipEntry)
+                                Text(Strings.tipEntrySubtitle)
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+                            }
+                        } icon: {
+                            Image(systemName: "heart")
+                        }
+                    }
+                }
+            } header: {
+                Text(Strings.giftAndTipSection)
+            }
+            .sheet(isPresented: $showingGiftSupport) {
+                NavigationStack {
+                    // 결제 문제로 바로 — 결제 번호·코드를 붙여 개발자가 바로 찾게 한다
+                    LeeoFeedbackView<GoldweekSpec>(initialType: .bug, extraInfo: gift.supportLines,
+                                                   initialCategory: .purchase)
+                }
+            }
+        }
+    }
+}
+
 // MARK: - 설정 요약 행
 struct PreferenceSummaryRow: View {
     let icon: String
@@ -1576,7 +1722,7 @@ struct CalendarImportSheet: View {
     @State private var showingResultAlert = false
     @State private var importSucceeded = false
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     var body: some View {
         NavigationStack {

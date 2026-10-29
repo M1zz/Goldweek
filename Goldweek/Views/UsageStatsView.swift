@@ -343,12 +343,12 @@ struct UsageStatsView: View {
     // MARK: - 집계 (클라이언트 계산)
 
     private func activeCount(days: Int) -> Int {
-        let cutoff = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
+        let cutoff = Calendar.app.date(byAdding: .day, value: -days, to: Date()) ?? Date()
         return snapshots.filter { ($0.lastActiveAt ?? .distantPast) >= cutoff }.count
     }
 
     private func newCount(days: Int) -> Int {
-        let cutoff = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
+        let cutoff = Calendar.app.date(byAdding: .day, value: -days, to: Date()) ?? Date()
         return snapshots.filter { ($0.installDate ?? .distantPast) >= cutoff }.count
     }
 
@@ -592,7 +592,7 @@ struct UsageTrendChart: View {
     private var scrollAlignment: DateComponents {
         switch unit {
         case .day: return DateComponents(hour: 0)
-        case .week: return DateComponents(hour: 0, weekday: Calendar.current.firstWeekday)
+        case .week: return DateComponents(hour: 0, weekday: Calendar.app.firstWeekday)
         case .month: return DateComponents(day: 1)
         case .year: return DateComponents(month: 1, day: 1)
         }

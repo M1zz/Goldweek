@@ -5,7 +5,7 @@
 # 탭마다 시뮬레이터 화면을 캡처한다. 결과: docs/screenshots/raw/<로케일>/<번호>-<화면>.png (원본 — 스토어에 안 올라감)
 # 제출본은 scripts/make_marketing_screenshots.py 가 이 원본으로 docs/screenshots/marketing/<로케일>/ 에 만든다.
 #
-# 사용법: scripts/take_screenshots.sh [언어...]   (기본: 21개 언어 전부)
+# 사용법: scripts/take_screenshots.sh [언어...]   (기본: 23개 언어 전부)
 #         IPAD=1 scripts/take_screenshots.sh …   iPad 13" (2064×2752) — 원본은 raw/ipad/<로케일>/
 
 set -euo pipefail
@@ -19,7 +19,7 @@ fi
 BUNDLE_ID="com.Ysoup.LeaveWise"
 DERIVED="${DERIVED:-$ROOT/build/screenshots-dd}"
 OUT="${OUT:-$ROOT/docs/screenshots/raw${IPAD:+/ipad}}"
-LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr es it pt zh-Hant ru id nl sv nb da fi pl cs el tr)
+LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr es it pt zh-Hant ru id nl sv nb da fi pl cs el tr th vi)
 
 # 탭 번호:이름[:스크롤 위치] (MainTabView 의 tag, ScreenshotMode.scrollTarget)
 SHOTS=("0:home" "1:recommend:recommendations" "1:calendar:nextYear" "3:settings")
@@ -30,13 +30,18 @@ apple_lang() {   # 앱 언어 코드 → 시스템 언어 코드
   case "$1" in zh) echo "zh-Hans" ;; pt) echo "pt-BR" ;; *) echo "$1" ;; esac
 }
 
+app_lang() {   # 스크린샷 언어 → 앱 언어 (영국 영어는 앱에선 영어, 지역만 영국)
+  case "$1" in en-GB) echo "en" ;; *) echo "$1" ;; esac
+}
+
 apple_locale() {   # 앱 언어 코드 → 지역 (국가 판별이 지역을 보므로 데모 국가와 맞춘다)
   case "$1" in
-    ko) echo "ko_KR" ;; en) echo "en_US" ;; ja) echo "ja_JP" ;; zh) echo "zh_CN" ;;
+    ko) echo "ko_KR" ;; en) echo "en_US" ;; en-GB) echo "en_GB" ;; ja) echo "ja_JP" ;; zh) echo "zh_CN" ;;
     de) echo "de_DE" ;; fr) echo "fr_FR" ;; es) echo "es_ES" ;; it) echo "it_IT" ;;
     pt) echo "pt_BR" ;; zh-Hant) echo "zh_TW" ;; ru) echo "ru_RU" ;; id) echo "id_ID" ;;
     nl) echo "nl_NL" ;; sv) echo "sv_SE" ;; nb) echo "nb_NO" ;; da) echo "da_DK" ;; fi) echo "fi_FI" ;;
-    pl) echo "pl_PL" ;; cs) echo "cs_CZ" ;; el) echo "el_GR" ;; tr) echo "tr_TR" ;; *) echo "$1" ;;
+    pl) echo "pl_PL" ;; cs) echo "cs_CZ" ;; el) echo "el_GR" ;; tr) echo "tr_TR" ;;
+    th) echo "th_TH" ;; vi) echo "vi_VN" ;; *) echo "$1" ;;
   esac
 }
 
@@ -89,7 +94,7 @@ for lang in "${LANGS[@]}"; do
     xcrun simctl terminate "$DEVICE" "$BUNDLE_ID" 2>/dev/null || true
     xcrun simctl launch "$DEVICE" "$BUNDLE_ID" \
       -screenshotMode YES -screenshotTab "$tab" -screenshotScroll "${scroll:-none}" -isPro YES \
-      -appLanguage "$lang" -AppleLanguages "($sys)" -AppleLocale "$loc" >/dev/null
+      -appLanguage "$(app_lang "$lang")" -AppleLanguages "($sys)" -AppleLocale "$loc" >/dev/null
     sleep "${WAIT:-6}"
     file="$dir/0$i-$name.png"
     # 레포 경로에 한글이 있으면 pwd 가 자모 분리형(NFD)으로 돌려주는데, simctl 은 그 경로에 쓰지 못한다

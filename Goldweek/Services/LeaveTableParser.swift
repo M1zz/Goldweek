@@ -180,7 +180,7 @@ enum LeaveTableParser {
         let fraction: Double?          // 유형명의 "(1/2)" 등에서 추출한 하루 대비 비율
 
         var isMultiDay: Bool {
-            !Calendar.current.isDate(startDate, inSameDayAs: endDate)
+            !Calendar.app.isDate(startDate, inSameDayAs: endDate)
         }
     }
 
@@ -230,7 +230,7 @@ enum LeaveTableParser {
         }
         var end = start
         if dates.count >= 2, dates[1] >= start,
-           let gap = Calendar.current.dateComponents([.day], from: start, to: dates[1]).day,
+           let gap = Calendar.app.dateComponents([.day], from: start, to: dates[1]).day,
            gap <= maxRangeDays {
             end = dates[1]
         }
@@ -355,8 +355,8 @@ enum LeaveTableParser {
         components.year = year
         components.month = month
         components.day = day
-        guard let date = Calendar.current.date(from: components) else { return nil }
-        return Calendar.current.startOfDay(for: date)
+        guard let date = Calendar.app.date(from: components) else { return nil }
+        return Calendar.app.startOfDay(for: date)
     }
 
     private static func int(_ match: NSTextCheckingResult, _ index: Int, _ row: String) -> Int? {

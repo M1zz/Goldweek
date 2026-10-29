@@ -30,6 +30,13 @@ struct HomeView: View {
     @AppStorage("dismissedHolidayNotices") private var dismissedHolidayNoticesRaw = ""
     @AppStorage("lastProBannerShownAt") private var lastProBannerShownAt: Double = 0
 
+    // 응원(팁) 부탁 — 프로 트림 이상에게만, 숫자로 도움이 보이는 순간에만(`TipAskMoments`)
+    @ObservedObject private var extras = ProExtras.shared
+    @State private var tipMoment: LeeoTipMoment?
+    /// 물을 거리를 정할 때 닿아 있던 순간들 — 카드가 실제로 섰을 때 모두 물은 것으로 적는다
+    @State private var tipReached: [LeeoTipMoment] = []
+    @State private var showingTipJar = false
+
     /// 다가오는 휴가 카드에 공휴일도 함께 보여줄지 (설정 > 공휴일 관리에서 끌 수 있다)
     @AppStorage("showHolidaysInUpcoming") private var showHolidaysInUpcoming = true
 
@@ -64,7 +71,7 @@ struct HomeView: View {
             return ("📅", Strings.proBannerAutoDetect)
         }
 
-        let cal = Calendar.current
+        let cal = Calendar.app
         let now = Date()
         let month = cal.component(.month, from: now)
         let year = cal.component(.year, from: now)
@@ -112,7 +119,7 @@ struct HomeView: View {
     }
 
     var upcomingLeaves: [LeaveRecord] {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let currentYear = calendar.component(.year, from: Date())
         let today = calendar.startOfDay(for: Date())
 
@@ -134,7 +141,7 @@ struct HomeView: View {
     private var upcomingHolidayBlocks: [UpcomingItem] {
         guard showHolidaysInUpcoming else { return [] }
 
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let today = calendar.startOfDay(for: Date())
         let year = calendar.component(.year, from: today)
         let holidays = holidayService.getHolidays(for: year, country: profile.country,
@@ -185,7 +192,7 @@ struct HomeView: View {
     var shouldShowPastLeavePrompt: Bool {
         guard !hasSeenPastLeavePrompt, leaveRecords.isEmpty else { return false }
         guard profile.userType == .employee else { return false }
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let month = calendar.component(.month, from: Date())
         let startMonth = profile.yearStartMonth
         let monthsElapsed = (month - startMonth + 12) % 12
@@ -250,10 +257,25 @@ struct HomeView: View {
                         )
                     }
 
+                    // 응원 부탁 — 위 Pro 배너와 겹치지 않는다(배너는 무료 사용자, 이 카드는 프로 이상).
+                    // 파는 말 둘이 겹치면 둘 다 약해진다. 플러스에게는 위 등급이 맞는 길이라 묻지 않는다.
+                    if let moment = tipMoment, let tipJar = extras.tipJar {
+                        LeeoTipAskCard(tipJar: tipJar, moment: moment,
+                                       onSupport: {
+                                           showingTipJar = true
+                                           tipMoment = nil
+                                       },
+                                       onLater: { tipMoment = nil })
+                            .onAppear { tipJar.markAsked(covering: tipReached) }
+                    }
+
                     // 다가오는 휴가 (설정에 따라 공휴일 포함)
                     if !upcomingItems.isEmpty {
                         UpcomingLeavesSection(items: upcomingItems)
                     }
+
+                    // 45일 안의 가족 기념일 — 평일이면 그날 바로 휴가를 낼 수 있게
+                    UpcomingAnniversariesCard(profile: profile)
 
                     // 내역 안내는 **인라인**으로 — 팝오버로 띄우면 화면 맨 아래라
                     // 탭바에 물려 잘린다(여백을 줄 자리가 없다).
@@ -307,6 +329,20 @@ struct HomeView: View {
             .sheet(isPresented: $showingCalendarImport, onDismiss: { dismissAutoDetectBanner() }) {
                 CalendarImportSheet(existingRecords: Array(leaveRecords))
             }
+            .sheet(isPresented: $showingTipJar) {
+                if let tipJar = extras.tipJar {
+                    NavigationStack {
+                        LeeoTipJarView<GoldweekSpec>(tipJar: tipJar)
+                            .toolbar {
+                                ToolbarItem(placement: .cancellationAction) {
+                                    Button(Strings.close) { showingTipJar = false }
+                                }
+                            }
+                    }
+                }
+            }
+            // 팁 상품은 앱이 뜬 뒤에 온다. 오면 다시 본다.
+            .onReceive(extras.tipAvailability) { _ in evaluateTipAsk() }
             .onAppear {
                 // 가끔(쿨다운 후) 단일문항 피로 체크인 — 모델을 주관 상태로 보정
                 if profile.userType == .employee, !leaveRecords.isEmpty, !ScreenshotMode.isActive,
@@ -320,11 +356,29 @@ struct HomeView: View {
         }
     }
 
+    // MARK: - 응원(팁) 부탁
+
+    /// 물을 때인지 본다. 이미 카드가 서 있으면 그대로 둔다.
+    /// ⚠️ 여기서 물은 것으로 적지 않는다 — 카드가 실제로 섰을 때(`onAppear`) 적는다.
+    private func evaluateTipAsk() {
+        guard tipMoment == nil, ProManager.shared.hasProTier, !ScreenshotMode.isActive,
+              let tipJar = extras.tipJar else { return }
+        let year = Calendar.app.component(.year, from: Date())
+        let reached = TipAskMoments.reached(
+            planCount: ProBenefits.recommendedPlanCount(leaveRecords.map(ProBenefits.Entry.init), year: year),
+            leaveCount: leaveRecords.filter { $0.status != .cancelled }.count,
+            year: year
+        )
+        guard let next = tipJar.momentToAsk(from: reached) else { return }
+        tipReached = reached
+        tipMoment = next
+    }
+
     // MARK: - 캘린더 자동 감지 (Pro)
 
     /// Pro 사용자 대상 자동 스캔 — 권한을 새로 요청하지는 않고, 이미 허용된 경우에만 조용히 탐색
     private func autoScanCalendar() async {
-        guard ProManager.shared.isPro, autoDetectEnabled else { return }
+        guard ProManager.shared.hasProTier, autoDetectEnabled else { return }
         guard CalendarService.shared.isAuthorized else { return }
 
         do {
@@ -670,6 +724,8 @@ struct EmptyHomeCard: View {
 // MARK: - 단일문항 피로 체크인 (SIB 0~10)
 struct FatigueCheckInView: View {
     @Environment(\.dismiss) private var dismiss
+    /// 큰 숫자·그림 — 글자 크기 설정을 따라 커진다
+    @ScaledMetric(relativeTo: .largeTitle) private var heroSize: CGFloat = 40
     @State private var value: Double = 5
     /// 콘텐츠 실제 높이 — 시트를 콘텐츠에 딱 맞춰 여백을 균형 있게 (버튼이 아래로 뜨지 않게)
     @State private var contentHeight: CGFloat = 0
@@ -678,7 +734,7 @@ struct FatigueCheckInView: View {
         ScrollView {
             VStack(spacing: 20) {
                 Image(systemName: "heart.text.square.fill")
-                    .font(.system(size: 40))
+                    .font(.system(size: heroSize))
                     .foregroundStyle(AppTheme.Colors.brand)
                     .voDecorative()
 
@@ -695,7 +751,8 @@ struct FatigueCheckInView: View {
 
                 VStack(spacing: 8) {
                     Text("\(Int(value))")
-                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                        .font(.system(size: heroSize, weight: .bold, design: .rounded))
+                        .contentTransition(.numericText(value: value))
                         .foregroundStyle(AppTheme.Colors.brand)
                         .monospacedDigit()
                     Slider(value: $value, in: 0...10, step: 1)
@@ -750,6 +807,22 @@ struct FatigueCheckInView: View {
 // MARK: - 연차 현황 카드
 struct LeaveStatusCard: View {
     @Bindable var profile: UserProfile
+    /// 숫자 색 — 밝은 바탕에서 시안·초록은 글자로 쓰기엔 옅다(대비 4.5:1 미만, 접근성 자동 점검).
+    /// 밝은 모드에서는 같은 색 계열의 짙은 쪽을, 어두운 모드에서는 원래 밝은 색을 쓴다.
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    /// 통계 3열 배치 — 아주 큰 글씨에서는 세 칸이 좁아 글자가 잘리므로 세로로 쌓는다
+    private var statsLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+            : AnyLayout(HStackLayout())
+    }
+    private var plannedNumberColor: Color {
+        colorScheme == .dark ? .cyan : Color(red: 0.0, green: 0.45, blue: 0.58)
+    }
+    private var remainingNumberColor: Color {
+        colorScheme == .dark ? .green : Color(red: 0.10, green: 0.48, blue: 0.20)
+    }
     @Query(filter: #Predicate<BonusLeave> { $0.isUsed == false })
     private var activeBonusLeaves: [BonusLeave]
     @Query private var allBonusLeaves: [BonusLeave]
@@ -818,6 +891,14 @@ struct LeaveStatusCard: View {
     private var isLeisure: Bool { profile.userType == .leisure }
     private var hasGoal: Bool { profile.totalAnnualLeave > 0 }
 
+    /// 아이폰 듀오를 펴고 캘린더에서 고른 추천의 연차 일수. 고른 것이 없으면 0.
+    /// 고르는 일은 펼친 화면에서만 생기고, 접으면 거둔다(→ FoldPanes.swift `foldHomeTabRedirect`).
+    private var previewDays: Double {
+        guard !isLeisure || hasGoal else { return 0 }
+        let preview = FoldLeavePreview.shared
+        return preview.isShowing ? preview.leaveDays : 0
+    }
+
     var body: some View {
         VStack(spacing: 16) {
             // 헤더 — 보너스 포함 여부는 설정 화면에서 제어한다.
@@ -852,6 +933,7 @@ struct LeaveStatusCard: View {
                 }
                 .popoverTip(AppTips.photoImport)
                 .accessibilityLabel(Text(Strings.importFromPhoto))
+                .accessibilityInputLabels([Text(Strings.importFromPhoto)])
 
                 Button {
                     showingAddLeave = true
@@ -864,6 +946,7 @@ struct LeaveStatusCard: View {
                         .clipShape(Circle())
                 }
                 .accessibilityLabel(Text(Strings.registerLeave))
+                .accessibilityInputLabels([Text(Strings.registerLeave), Text(Strings.addLeave)])
             }
 
             // 프로그레스 바 — 완료(파랑) / 예정(시안) / 남은(초록) 3분할
@@ -873,6 +956,7 @@ struct LeaveStatusCard: View {
                     let usedFrac   = min(max(displayUsed  / total, 0), 1)
                     let plannedFrac = min(max(plannedLeave / total, 0), 1 - usedFrac)
                     let remFrac    = max(1 - usedFrac - plannedFrac, 0)
+                    let previewFrac = min(max(previewDays / total, 0), remFrac)
                     let w = geometry.size.width
 
                     ZStack(alignment: .leading) {
@@ -889,12 +973,17 @@ struct LeaveStatusCard: View {
                                 Color.cyan.opacity(0.85)
                                     .frame(width: max(w * plannedFrac - 1, 0))
                             }
-                            if remFrac > 0 {
+                            // 아이폰 듀오: 왼쪽에서 고른 추천을 넣으면 줄어들 자리 (→ FoldPanes.swift)
+                            if previewFrac > 0 {
+                                FoldPreviewStripes()
+                                    .frame(width: max(w * previewFrac - 1, 0))
+                            }
+                            if remFrac - previewFrac > 0 {
                                 let remColors: [Color] = isLeisure
                                     ? [.purple, .pink]
                                     : (includeBonusInStatus && remainingBonusLeave > 0 ? [AppTheme.Colors.bonus, Color.yellow] : [.green, .mint])
                                 LinearGradient(colors: remColors, startPoint: .leading, endPoint: .trailing)
-                                    .frame(width: max(w * remFrac, 0))
+                                    .frame(width: max(w * (remFrac - previewFrac), 0))
                             }
                         }
                         .clipShape(Capsule())
@@ -903,14 +992,13 @@ struct LeaveStatusCard: View {
                 .frame(height: 20)
             }
 
-            // 통계 3열
-            HStack {
+            // 통계 3열 — 아주 큰 글씨에서는 세로로 쌓는다
+            statsLayout {
                 VStack(alignment: .leading) {
                     Text(Strings.statUsed)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
+                        .cellLabel(minScale: 0.75)
                     Text("\(Strings.dayCount(displayUsed))")
                         .font(.title2.bold())
                         .foregroundStyle(.blue)
@@ -922,11 +1010,10 @@ struct LeaveStatusCard: View {
                     Text(Strings.statPlanned)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
+                        .cellLabel(minScale: 0.75)
                     Text("\(Strings.dayCount(plannedLeave))")
                         .font(.title2.bold())
-                        .foregroundStyle(.cyan)
+                        .foregroundStyle(plannedNumberColor)
                 }
 
                 Spacer()
@@ -935,8 +1022,7 @@ struct LeaveStatusCard: View {
                     Text(isLeisure ? (hasGoal ? Strings.statRemainingGoal : Strings.statPlanned) : Strings.remaining)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
+                        .cellLabel(minScale: 0.75)
                     if isLeisure && !hasGoal {
                         // 무제한 모드: 총 계획/완료일 표시
                         Text("\(Strings.dayCount(actualUsed + plannedLeave))")
@@ -947,12 +1033,25 @@ struct LeaveStatusCard: View {
                             .font(.title2.bold())
                             .foregroundStyle(
                                 isLeisure ? .purple
-                                : includeBonusInStatus && remainingBonusLeave > 0 ? AppTheme.Colors.bonus : .green
+                                : includeBonusInStatus && remainingBonusLeave > 0 ? AppTheme.Colors.bonus : remainingNumberColor
                             )
                     }
                 }
             }
             .voCard(VoiceOverLabel.leaveBalance(total: totalLeave, used: displayUsed, remaining: effectiveRemaining))
+
+            if previewDays > 0 {
+                HStack(spacing: 8) {
+                    FoldPreviewStripes()
+                        .frame(width: 22, height: 14)
+                        .clipShape(Capsule())
+                    Text(Strings.foldAddPreview(Strings.dayCount(max(effectiveRemaining - previewDays, 0))))
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.blue)
+                    Spacer(minLength: 0)
+                }
+                .transition(.opacity)
+            }
 
             // 보너스 연차 사용 현황 — 부여받은 보너스가 있으면 항상 표시
             if !isLeisure, grantedBonusLeave > 0 {
@@ -1029,7 +1128,7 @@ struct LeaveStatusCard: View {
     /// 연차 현황 + 다가오는 휴가를 담은 공유용 이미지 렌더링
     @MainActor
     private func renderShareImage() -> UIImage? {
-        let today = Calendar.current.startOfDay(for: Date())
+        let today = Calendar.app.startOfDay(for: Date())
         let upcoming = allLeaveRecords
             .filter { $0.status == .planned && $0.startDate >= today }
             .sorted { $0.startDate < $1.startDate }
@@ -1090,7 +1189,7 @@ struct SharePlanPreviewSheet: View {
                             .font(.body.weight(.semibold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
-                            .frame(height: 50)
+                            .frame(minHeight: 50)
                             .background(AppTheme.Colors.brand)
                             .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
@@ -1296,7 +1395,7 @@ struct UpcomingLeaveRow: View {
     let item: UpcomingItem
 
     var daysUntil: Int {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         return calendar.dateComponents([.day],
                                        from: calendar.startOfDay(for: Date()),
                                        to: calendar.startOfDay(for: item.startDate)).day ?? 0
@@ -1304,7 +1403,7 @@ struct UpcomingLeaveRow: View {
 
     /// 올해 일정이면 연도를 뺀다 — "Sep 24, 2026 - Sep 26, 2026"은 한 줄에 안 들어가 두 줄로 접힌다.
     private var dateRangeText: String {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let thisYear = calendar.component(.year, from: Date())
         let sameYear = calendar.component(.year, from: item.startDate) == thisYear
             && calendar.component(.year, from: item.endDate) == thisYear
@@ -1322,9 +1421,9 @@ struct UpcomingLeaveRow: View {
             let days = item.days.map { Strings.dayCount($0) } ?? ""
             return [item.typeLabel, days].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " ")
         case .holiday:
-            let count = (Calendar.current.dateComponents([.day],
-                                                         from: Calendar.current.startOfDay(for: item.startDate),
-                                                         to: Calendar.current.startOfDay(for: item.endDate)).day ?? 0) + 1
+            let count = (Calendar.app.dateComponents([.day],
+                                                         from: Calendar.app.startOfDay(for: item.startDate),
+                                                         to: Calendar.app.startOfDay(for: item.endDate)).day ?? 0) + 1
             return "\(Strings.holiday) \(Strings.dayCount(Double(count)))"
         }
     }
@@ -1344,21 +1443,23 @@ struct UpcomingLeaveRow: View {
                         .font(.body.bold())
                 }
 
+                // 회색 카드 위의 시스템 보조색은 대비가 모자라다(접근성 자동 점검) — 본문색을 조금 덜어 쓴다
                 Text(dateRangeText)
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.primary.opacity(0.72))
             }
 
             Spacer()
 
             VStack(alignment: .trailing) {
+                // 빨강·파랑 글자는 회색 바탕에서 큰 글자(3:1)일 때만 대비를 넘는다
                 Text("D-\(daysUntil)")
-                    .font(.headline)
+                    .font(.title3.bold())
                     .foregroundStyle(item.kind == .holiday ? .red : .blue)
 
                 Text(trailingText)
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.primary.opacity(0.72))
             }
         }
         .padding()
@@ -1482,7 +1583,7 @@ struct PastLeaveQuickEntrySheet: View {
     @State private var isSaving = false
     @State private var showingSaveError = false
 
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
     private var workday: Int { LeaveLength.workdayMinutes }
 
     /// 지금 속한 연차 해의 시작일 (기준월이 지금 달보다 뒤면 작년)
@@ -1705,7 +1806,7 @@ struct BurnoutPaceCard: View {
         )
     }
 
-    private let cal = Calendar.current
+    private let cal = Calendar.app
 
     // MARK: 회계연도 범위
     private var annualYearStart: Date {
@@ -1985,8 +2086,7 @@ struct BurnoutPaceCard: View {
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)   // "Сегодня" 가 "Сегодн/я" 로 끊기지 않게
+                // 한 줄로 묶어 줄이던 것을 풀고, 대신 칸 폭을 글자 크기에 맞춰 키운다(todayNodeWidth)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -2041,13 +2141,18 @@ struct BurnoutPaceCard: View {
             }
             .frame(width: w)
         }
-        .frame(height: 68)
+        // 높이를 글자 크기에 맞춰 키운다 — 68 로 묶어 두면 칸 제목이 두 줄이 될 때(좁은 폭·큰 글씨) 값이 잘렸다
+        .frame(height: timelineHeight)
     }
+
+    /// 점 + 제목 두 줄 + 값 한 줄이 들어가는 높이 (본문 크기 기준 88)
+    @ScaledMetric(relativeTo: .body) private var timelineHeight: CGFloat = 88
 
     /// 연결선이 선으로 보이려면 최소 이만큼은 있어야 한다 — 이보다 좁아지면 양 끝 칸을 줄인다.
     private var minTrackWidth: CGFloat { 120 }
     /// '오늘' 표식(동그라미 + 글자)의 폭 — 트랙 가장자리에서 멈추는 기준.
-    private var todayNodeWidth: CGFloat { 64 }
+    /// "Сегодня" 가 본문 크기에서 한 줄에 들어가는 폭, 글자 크기 설정을 따라 커진다.
+    @ScaledMetric(relativeTo: .body) private var todayNodeWidth: CGFloat = 76
     /// 양 끝 칸의 점 중심 높이 — 선을 그 점들과 같은 높이에 맞춘다.
     private var trackDotY: CGFloat { 5 }
 
@@ -2063,11 +2168,12 @@ struct BurnoutPaceCard: View {
             Circle()
                 .fill(hasData ? color : Color(.systemGray4))
                 .frame(width: 10, height: 10)
+            // 줄 수를 묶지 않는다 — 큰 글씨에서 제목이 "Next br…" 로 잘렸다(접근성 자동 점검)
             Text(title)
                 .font(.body)
                 .foregroundStyle(.secondary)
-                .lineLimit(2)
                 .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
             Text(value)
                 .font(.body.weight(.semibold))
                 .foregroundStyle(hasData ? .primary : .secondary)

@@ -34,10 +34,31 @@ enum GoldweekSpec: LeeoAppSpec {
         marketingURL: URL(string: "https://m1zz.github.io/Goldweek/")!
     )
 
-    /// 수익모델 — 무료로 쓰다가 한 번 사면 평생(구독 아님).
-    /// ⚠️ productID는 App Store Connect·기존 사용자 영수증과의 계약이다 — 변경 금지.
-    static let monetization = LeeoMonetization.freemium(
-        LeeoPurchaseConfig(productIDs: [ProManager.proProductID])
+    /// 수익모델: 무료 · 플러스 · 프로 세 칸. 유료 칸마다 연 구독과 평생을 나란히 판다 (2.4.2부터).
+    /// ⚠️ productID는 App Store Connect·기존 사용자 영수증과의 계약이다. 변경 금지.
+    /// 판매를 멈춘 패밀리는 판매 목록(productIDs)에서만 빠지고 권한 목록(entitlementIDs)에는 남는다.
+    static let monetization = LeeoMonetization.freemiumSubscription(
+        LeeoSubscriptionConfig(
+            productIDs: ProManager.saleProductIDs,
+            termsURL: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!,
+            entitlementIDs: Set(ProManager.allProductIDs),
+            // 무료로 넣을 수 있는 추천 수. 마지막 칸에 닿기 전에 미리 알린다(`RecommendationGate`).
+            gate: LeeoGatePolicy(
+                freeLimits: [RecommendationGate.key: ProManager.freeRecommendationAddLimit],
+                warnWhenRemaining: RecommendationGate.warnWhenRemaining
+            ),
+            // Pro 선물하기. 보내는 사람은 소모성 선물 상품을 사고, 받는 사람은 평생 Pro 를 산 것과 같아진다.
+            // 선물 기록은 피드백과 같은 허브 컨테이너의 공개 DB 에 둔다. entitlements 에 이미 있다.
+            // ⚠️ 선물 상품은 productIDs · entitlementIDs 에 넣지 않는다. 넣으면 선물을 산 사람이 Pro 가 된다.
+            gift: LeeoGiftConfig(
+                productID: ProManager.giftProductID,
+                grantsProductID: ProManager.proProductID,
+                containerIdentifier: "iCloud.com.Ysoup.FeedbackHub"
+            ),
+            // 팁(응원). 이미 다 가진 사람이 더 내고 싶을 때. 아무것도 열지 않는 소모성 상품이다.
+            // ⚠️ 이것도 productIDs · entitlementIDs 에 넣지 않는다(사전 점검 `tip.sellsPro`).
+            tipJar: LeeoTipJarConfig(productIDs: ProManager.tipProductIDs)
+        )
     )
 
     /// "리뷰 남기기"가 App Store 작성 페이지로 바로 가게 한다.

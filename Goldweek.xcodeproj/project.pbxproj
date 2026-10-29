@@ -8,10 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */; };
+		13C98A5D19B0235F1B8C04E8 /* Strings+Maturity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD901DC2F5444B40010EE450 /* Strings+Maturity.swift */; };
+		1F30894D9E1BC580DD2EC7F1 /* FoldPanes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BD92084C0B9068BED80207 /* FoldPanes.swift */; };
 		236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */; };
+		29CFA424077E4FC938B27794 /* GoldweekRoadmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7E7019BF358938CD858EB3 /* GoldweekRoadmap.swift */; };
+		2AE2312E8EB1B07F3AF5E5D2 /* GoldweekUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D35DB33D18EC67F75F03AC /* GoldweekUITests.swift */; };
+		35D9534563A1F8ED09CFFA9F /* ProBenefits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9D82AEBA902FD3CECB22C6 /* ProBenefits.swift */; };
 		3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F973B8901CC9124460DC0A /* PartTimeDays.swift */; };
+		4A9A7B42ACEB11E2088E3326 /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC8937F7C1DA7BA2C27AC0 /* WhatsNewView.swift */; };
 		5CDAC8A0B908A3183B17E747 /* LeaveKinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79243653112DBACB8C8953B /* LeaveKinds.swift */; };
+		66A2BBF0A63A4632A187F5D2 /* Strings+Monetization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */; };
+		75040D99ADBCBD0CCCA466AB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F206B195E40D49B741CBFB68 /* PrivacyInfo.xcprivacy */; };
+		7742C50334E3AD7E821C6C62 /* LaunchSafety.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894561BA0757CA4397D4F482 /* LaunchSafety.swift */; };
 		7BC4167236E5FF0979D0BFFC /* Strings+PartTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */; };
+		7CE684CE43F66CEBB9E32BA0 /* ProBenefitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5188D6069DFBC27D689B2866 /* ProBenefitsView.swift */; };
 		9C2035682F29933E00AF1279 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9C2035672F29933E00AF1279 /* Localizable.xcstrings */; };
 		9C5397B92F4E825600905CF0 /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5397B82F4E825600905CF0 /* ReviewManager.swift */; };
 		9C61C0042EDD629400BC5930 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C61C0032EDD629400BC5930 /* WidgetKit.framework */; };
@@ -68,6 +78,7 @@
 		A1000098 /* DayOffCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000098 /* DayOffCalendar.swift */; };
 		A1000099 /* ScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000099 /* ScreenshotMode.swift */; };
 		A10000W1 /* WorldHolidays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000W1 /* WorldHolidays.swift */; };
+		A3FFEA928086F8B5A2792749 /* MaturityFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5905F2D583D5738917370D03 /* MaturityFeatureTests.swift */; };
 		B1000001 /* GoldweekSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000001 /* GoldweekSpec.swift */; };
 		B1000002 /* UsageReportingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000002 /* UsageReportingService.swift */; };
 		B1000003 /* UsageInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000003 /* UsageInsights.swift */; };
@@ -77,11 +88,22 @@
 		B1000010 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B1000011 /* LeeoKit */; };
 		B1000020 /* LeaveUsageCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000020 /* LeaveUsageCalculator.swift */; };
 		B1000021 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000021 /* TutorialView.swift */; };
+		BF28326CF828E830D60A580A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F0004AF8483A83DDDF01B5 /* Foundation.framework */; };
 		EFCC106F139C9439F277D6BF /* Strings+LeaveCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */; };
 		F0AB849B5E6EB9CF20DDE9A3 /* Strings+PlanAhead.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */; };
+		FA11A0012F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */; };
+		FA11A0032F0C4D2E00A1B001 /* FamilyAnniversaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */; };
+		FA11A0052F0C4D2E00A1B001 /* FamilyTogetherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		5EB6453617315984F41246C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A7000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A5000001;
+			remoteInfo = Goldweek;
+		};
 		9C61C0152EDD629600BC5930 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A7000001 /* Project object */;
@@ -117,9 +139,17 @@
 		09F973B8901CC9124460DC0A /* PartTimeDays.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PartTimeDays.swift; sourceTree = "<group>"; };
 		0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+LeaveCustomization.swift"; sourceTree = "<group>"; };
 		3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+PartTime.swift"; sourceTree = "<group>"; };
+		47F0004AF8483A83DDDF01B5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		4CCC8937F7C1DA7BA2C27AC0 /* WhatsNewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
 		4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+CountryRequest.swift"; sourceTree = "<group>"; };
+		5188D6069DFBC27D689B2866 /* ProBenefitsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProBenefitsView.swift; sourceTree = "<group>"; };
 		584ABA642F211E0C008AD1DB /* Goldweek.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Goldweek.entitlements; sourceTree = "<group>"; };
 		584ABA652F211E1E008AD1DB /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
+		5905F2D583D5738917370D03 /* MaturityFeatureTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MaturityFeatureTests.swift; sourceTree = "<group>"; };
+		5E9D82AEBA902FD3CECB22C6 /* ProBenefits.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProBenefits.swift; sourceTree = "<group>"; };
+		80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+Monetization.swift"; sourceTree = "<group>"; };
+		894561BA0757CA4397D4F482 /* LaunchSafety.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LaunchSafety.swift; sourceTree = "<group>"; };
+		8E9BD27D3793DB137E69D54C /* GoldweekUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GoldweekUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C2035672F29933E00AF1279 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		9C5397B82F4E825600905CF0 /* ReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewManager.swift; sourceTree = "<group>"; };
 		9C61C0012EDD629400BC5930 /* widgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = widgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -177,6 +207,7 @@
 		A2000098 /* DayOffCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOffCalendar.swift; sourceTree = "<group>"; };
 		A2000099 /* ScreenshotMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotMode.swift; sourceTree = "<group>"; };
 		A20000W1 /* WorldHolidays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldHolidays.swift; sourceTree = "<group>"; };
+		AD901DC2F5444B40010EE450 /* Strings+Maturity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+Maturity.swift"; sourceTree = "<group>"; };
 		B2000001 /* GoldweekSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldweekSpec.swift; sourceTree = "<group>"; };
 		B2000002 /* UsageReportingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageReportingService.swift; sourceTree = "<group>"; };
 		B2000003 /* UsageInsights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageInsights.swift; sourceTree = "<group>"; };
@@ -186,9 +217,16 @@
 		B2000020 /* LeaveUsageCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveUsageCalculator.swift; sourceTree = "<group>"; };
 		B2000021 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		B2000030 /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		B8BD92084C0B9068BED80207 /* FoldPanes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FoldPanes.swift; sourceTree = "<group>"; };
 		D79243653112DBACB8C8953B /* LeaveKinds.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LeaveKinds.swift; sourceTree = "<group>"; };
 		DA3B5BBD68F2C9CD75F7A10A /* LeaveKindsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LeaveKindsView.swift; sourceTree = "<group>"; };
 		E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarOverview.swift; sourceTree = "<group>"; };
+		E9D35DB33D18EC67F75F03AC /* GoldweekUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoldweekUITests.swift; sourceTree = "<group>"; };
+		F206B195E40D49B741CBFB68 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+FamilyAnniversary.swift"; sourceTree = "<group>"; };
+		FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyAnniversaryView.swift; sourceTree = "<group>"; };
+		FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyTogetherView.swift; sourceTree = "<group>"; };
+		FC7E7019BF358938CD858EB3 /* GoldweekRoadmap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoldweekRoadmap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -217,6 +255,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2D308C7BEEBA57419E5F8060 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF28326CF828E830D60A580A /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9C61BFFE2EDD629400BC5930 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -249,8 +295,17 @@
 			children = (
 				9C61C0032EDD629400BC5930 /* WidgetKit.framework */,
 				9C61C0052EDD629400BC5930 /* SwiftUI.framework */,
+				9EC6F85539E8377B996F829F /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9EC6F85539E8377B996F829F /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				47F0004AF8483A83DDDF01B5 /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 		A4000000 = {
@@ -263,6 +318,7 @@
 				9C61C0072EDD629400BC5930 /* widget */,
 				9C61C0022EDD629400BC5930 /* Frameworks */,
 				A4000002 /* Products */,
+				FC75AD399E5271075A9EFD84 /* GoldweekUITests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -284,6 +340,8 @@
 				A2000062 /* BurnoutEngineTests.swift */,
 				A2000063 /* LeaveTableParserTests.swift */,
 				B2000005 /* UsageInsightsTests.swift */,
+				F206B195E40D49B741CBFB68 /* PrivacyInfo.xcprivacy */,
+				5905F2D583D5738917370D03 /* MaturityFeatureTests.swift */,
 			);
 			path = Goldweek;
 			sourceTree = "<group>";
@@ -294,6 +352,7 @@
 				A2000000 /* Goldweek.app */,
 				9C61C0012EDD629400BC5930 /* widgetExtension.appex */,
 				A2000037 /* GoldweekTests.xctest */,
+				8E9BD27D3793DB137E69D54C /* GoldweekUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -323,6 +382,8 @@
 				A2000013 /* Components.swift */,
 				A2000034 /* PaywallView.swift */,
 				A2000035 /* HolidayManagementView.swift */,
+				FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */,
+				FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */,
 				A2000053 /* ShareScheduleView.swift */,
 				A2000054 /* FamilyView.swift */,
 				A2000056 /* TimeMachineView.swift */,
@@ -333,6 +394,9 @@
 				DA3B5BBD68F2C9CD75F7A10A /* LeaveKindsView.swift */,
 				E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */,
 				09F973B8901CC9124460DC0A /* PartTimeDays.swift */,
+				B8BD92084C0B9068BED80207 /* FoldPanes.swift */,
+				5188D6069DFBC27D689B2866 /* ProBenefitsView.swift */,
+				4CCC8937F7C1DA7BA2C27AC0 /* WhatsNewView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -363,6 +427,9 @@
 				B2000020 /* LeaveUsageCalculator.swift */,
 				B2000002 /* UsageReportingService.swift */,
 				B2000003 /* UsageInsights.swift */,
+				FC7E7019BF358938CD858EB3 /* GoldweekRoadmap.swift */,
+				5E9D82AEBA902FD3CECB22C6 /* ProBenefits.swift */,
+				894561BA0757CA4397D4F482 /* LaunchSafety.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -376,9 +443,12 @@
 				A2000050 /* Accessibility.swift */,
 				A2000064 /* AppTips.swift */,
 				0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */,
+				FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */,
 				3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */,
 				017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */,
+				80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */,
 				4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */,
+				AD901DC2F5444B40010EE450 /* Strings+Maturity.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -391,9 +461,36 @@
 			path = Theme;
 			sourceTree = "<group>";
 		};
+		FC75AD399E5271075A9EFD84 /* GoldweekUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E9D35DB33D18EC67F75F03AC /* GoldweekUITests.swift */,
+			);
+			name = GoldweekUITests;
+			path = GoldweekUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		51D0E79CE60BC6929ACA9445 /* GoldweekUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F41B3E6AE15D31BAB1718088 /* Build configuration list for PBXNativeTarget "GoldweekUITests" */;
+			buildPhases = (
+				34BC672F7282507FB11926BE /* Sources */,
+				2D308C7BEEBA57419E5F8060 /* Frameworks */,
+				A67800A0C77A50980504F910 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1A1F94D809C9672F55F78821 /* PBXTargetDependency */,
+			);
+			name = GoldweekUITests;
+			productName = GoldweekUITests;
+			productReference = 8E9BD27D3793DB137E69D54C /* GoldweekUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		9C61C0002EDD629400BC5930 /* widgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9C61C01C2EDD629600BC5930 /* Build configuration list for PBXNativeTarget "widgetExtension" */;
@@ -500,6 +597,9 @@
 				tr,
 				ru,
 				id,
+				th,
+				vi,
+				"en-GB",
 			);
 			mainGroup = A4000000;
 			packageReferences = (
@@ -512,6 +612,7 @@
 				A5000001 /* Goldweek */,
 				9C61C0002EDD629400BC5930 /* widgetExtension */,
 				A5000002 /* GoldweekTests */,
+				51D0E79CE60BC6929ACA9445 /* GoldweekUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -531,6 +632,7 @@
 			files = (
 				A1000003 /* Assets.xcassets in Resources */,
 				A1000040 /* InfoPlist.xcstrings in Resources */,
+				75040D99ADBCBD0CCCA466AB /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -541,9 +643,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A67800A0C77A50980504F910 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		34BC672F7282507FB11926BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AE2312E8EB1B07F3AF5E5D2 /* GoldweekUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9C61BFFD2EDD629400BC5930 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -596,6 +713,8 @@
 				A1000033 /* CalendarService.swift in Sources */,
 				A1000034 /* PaywallView.swift in Sources */,
 				A1000035 /* HolidayManagementView.swift in Sources */,
+				FA11A0032F0C4D2E00A1B001 /* FamilyAnniversaryView.swift in Sources */,
+				FA11A0052F0C4D2E00A1B001 /* FamilyTogetherView.swift in Sources */,
 				A1000052 /* ShareSyncService.swift in Sources */,
 				A1000053 /* ShareScheduleView.swift in Sources */,
 				A1000054 /* FamilyView.swift in Sources */,
@@ -610,12 +729,21 @@
 				A1000051 /* LeavePlanner.swift in Sources */,
 				5CDAC8A0B908A3183B17E747 /* LeaveKinds.swift in Sources */,
 				EFCC106F139C9439F277D6BF /* Strings+LeaveCustomization.swift in Sources */,
+				FA11A0012F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift in Sources */,
 				9CA11B8BA50188BC875C430D /* LeaveKindsView.swift in Sources */,
 				236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */,
 				3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */,
 				7BC4167236E5FF0979D0BFFC /* Strings+PartTime.swift in Sources */,
 				F0AB849B5E6EB9CF20DDE9A3 /* Strings+PlanAhead.swift in Sources */,
+				66A2BBF0A63A4632A187F5D2 /* Strings+Monetization.swift in Sources */,
 				10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */,
+				1F30894D9E1BC580DD2EC7F1 /* FoldPanes.swift in Sources */,
+				29CFA424077E4FC938B27794 /* GoldweekRoadmap.swift in Sources */,
+				35D9534563A1F8ED09CFFA9F /* ProBenefits.swift in Sources */,
+				7742C50334E3AD7E821C6C62 /* LaunchSafety.swift in Sources */,
+				7CE684CE43F66CEBB9E32BA0 /* ProBenefitsView.swift in Sources */,
+				4A9A7B42ACEB11E2088E3326 /* WhatsNewView.swift in Sources */,
+				13C98A5D19B0235F1B8C04E8 /* Strings+Maturity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,12 +755,19 @@
 				A1000036 /* LeaveCalculationTests.swift in Sources */,
 				A1000062 /* BurnoutEngineTests.swift in Sources */,
 				A1000063 /* LeaveTableParserTests.swift in Sources */,
+				A3FFEA928086F8B5A2792749 /* MaturityFeatureTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1A1F94D809C9672F55F78821 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Goldweek;
+			target = A5000001 /* Goldweek */;
+			targetProxy = 5EB6453617315984F41246C5 /* PBXContainerItemProxy */;
+		};
 		9C61C0162EDD629600BC5930 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9C61C0002EDD629400BC5930 /* widgetExtension */;
@@ -646,6 +781,24 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		39AC93B11479A6D3E88B5D9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QGAQ3AY3R3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Ysoup.LeaveWise.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Goldweek;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		9C61C0192EDD629600BC5930 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -945,6 +1098,23 @@
 			};
 			name = Release;
 		};
+		EF2F53B66EC52874251FDEE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QGAQ3AY3R3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Ysoup.LeaveWise.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Goldweek;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -984,6 +1154,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		F41B3E6AE15D31BAB1718088 /* Build configuration list for PBXNativeTarget "GoldweekUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39AC93B11479A6D3E88B5D9D /* Release */,
+				EF2F53B66EC52874251FDEE1 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -992,7 +1171,7 @@
 			repositoryURL = "https://github.com/M1zz/LeeoKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.15.0;
+				minimumVersion = 3.26.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

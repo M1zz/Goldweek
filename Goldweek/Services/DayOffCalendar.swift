@@ -6,6 +6,7 @@
 //
 //  쉬는 날 = 주말 + 국가 공휴일(숨긴 날 제외) + 내가 추가한 공휴일 + 내 방학.
 //  자녀 방학은 쉬는 날이 아니다(참고용) — `childBreaks`로 따로 들고 있다.
+//  가족 기념일도 쉬는 날이 아니다 — `anniversaries`로 따로 들고 달력 표시·추천에만 쓴다.
 //
 //  LeaveRecord.effectiveLeaveDays 같은 모델 계산은 다른 데이터를 조회할 수 없어서,
 //  ContentView 가 사용자 설정이 바뀔 때마다 `update`로 밀어 넣는다.
@@ -31,6 +32,15 @@ final class DayOffCalendar {
     private(set) var childBreaks: [(name: String, start: Date, end: Date)] = []
     /// 내 방학 기간 — 번아웃 계산에서 휴식으로 본다
     private(set) var myBreaks: [(name: String, start: Date, end: Date)] = []
+    /// 가족 기념일 — 모델 대신 값만 들고 있다(추천 엔진이 다른 스레드에서 읽는다)
+    private(set) var anniversaries: [Anniversary] = []
+    @ObservationIgnored private var anniversaryCache: [Int: [String: [String]]] = [:]
+
+    struct Anniversary: Equatable {
+        let title: String
+        let date: Date
+        let isLunar: Bool
+    }
 
     @ObservationIgnored private var yearCache: [Int: Set<String>] = [:]
     /// 사는 곳에만 있는 공휴일 (연도 → dateKey → 이름)
@@ -45,7 +55,7 @@ final class DayOffCalendar {
     @ObservationIgnored private var blackoutCache: [Int: Set<String>] = [:]
     @ObservationIgnored private let lock = NSLock()
     @ObservationIgnored private let service = HolidayService()
-    @ObservationIgnored private let calendar = Calendar.current
+    @ObservationIgnored private let calendar = Calendar.app
     @ObservationIgnored private let keyFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd"
@@ -56,7 +66,16 @@ final class DayOffCalendar {
     /// 추천 캐시 키 등에 쓰는 요약값 — 설정이 바뀌면 달라진다
     private(set) var fingerprint = ""
 
-    func update(country: Country, customHolidays: [CustomHoliday], hiddenDates: Set<String>, breaks: [SchoolBreak]) {
+    func update(country: Country, customHolidays: [CustomHoliday], hiddenDates: Set<String>, breaks: [SchoolBreak],
+                anniversaries anniversaryModels: [FamilyAnniversary] = []) {
+        let newAnniversaries = anniversaryModels
+            .map { Anniversary(title: $0.displayTitle, date: $0.date, isLunar: $0.isLunar) }
+            .sorted { ($0.date, $0.title) < ($1.date, $1.title) }
+        if newAnniversaries != anniversaries {
+            lock.lock(); anniversaryCache = [:]; lock.unlock()
+            anniversaries = newAnniversaries
+        }
+
         var custom: [String: String] = [:]
         var yearly: [String: String] = [:]
         for h in customHolidays {
@@ -96,6 +115,7 @@ final class DayOffCalendar {
         let newFingerprint = "\(country.rawValue)|\(weekend)|blackout\(blackout)|\(HolidayService.selectedRegionCode)|\(HolidayService.workPattern.rawValue)|\(HolidayService.partTimeSwapsRaw)|\(HolidayService.shiftDaysOffRaw)|\(HolidayService.shiftWorkDaysRaw)|\(HolidayService.homeCountryCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
             + children.map { "\(key($0.start))~\(key($0.end))" }.joined(separator: ",")
             + "|nogo:" + blackoutRanges.map { "\(key($0.start))~\(key($0.end))" }.sorted().joined(separator: ",")
+            + "|anniv:" + newAnniversaries.map { "\(key($0.date))\($0.isLunar ? "L" : "")\($0.title)" }.joined(separator: ",")
         guard newFingerprint != fingerprint else { return }
 
         lock.lock(); yearCache = [:]; homeCache = [:]; blackoutCache = [:]; lock.unlock()
@@ -269,6 +289,41 @@ final class DayOffCalendar {
     func overlapsChildBreak(start: Date, end: Date) -> Bool {
         let s = calendar.startOfDay(for: start), e = calendar.startOfDay(for: end)
         return childBreaks.contains { s <= $0.end && e >= $0.start }
+    }
+
+    /// 그날의 가족 기념일 이름들
+    func anniversaryNames(on date: Date) -> [String] {
+        guard !anniversaries.isEmpty else { return [] }
+        return anniversaryDays(in: calendar.component(.year, from: date))[key(date)] ?? []
+    }
+
+    /// 기간 안에 드는 가족 기념일 이름들 (날짜순)
+    func anniversaryNames(from start: Date, to end: Date) -> [String] {
+        guard !anniversaries.isEmpty else { return [] }
+        var names: [String] = []
+        var d = calendar.startOfDay(for: start)
+        let last = calendar.startOfDay(for: end)
+        while d <= last {
+            names += anniversaryNames(on: d)
+            guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+            d = next
+        }
+        return names
+    }
+
+    private func anniversaryDays(in year: Int) -> [String: [String]] {
+        lock.lock()
+        if let cached = anniversaryCache[year] { lock.unlock(); return cached }
+        let items = anniversaries
+        lock.unlock()
+        var map: [String: [String]] = [:]
+        for item in items {
+            guard let d = FamilyAnniversary.occurrence(of: item.date, isLunar: item.isLunar, in: year, calendar: calendar)
+            else { continue }
+            map[key(d), default: []].append(item.title)
+        }
+        lock.lock(); anniversaryCache[year] = map; lock.unlock()
+        return map
     }
 
     // MARK: - 내부

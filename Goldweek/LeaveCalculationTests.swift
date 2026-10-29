@@ -1172,6 +1172,31 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertTrue(HolidayService().getHolidays(for: 2026, country: .russia).contains { $0.name == "День Победы" })
     }
 
+    func testSingaporeHolidays() {
+        let saved = UserDefaults.standard.string(forKey: "appLanguage")
+        defer { UserDefaults.standard.set(saved, forKey: "appLanguage") }
+        UserDefaults.standard.set("en", forKey: "appLanguage")
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+        let y26 = Dictionary(uniqueKeysWithValues: HolidayService().getHolidays(for: 2026, country: .singapore).map { (f.string(from: $0.date), $0.name) })
+        // MOM 2026: 11일 + 일요일에 걸린 베삭·국경일·디파발리의 월요일 대체 3일
+        XCTAssertEqual(y26.count, 14)
+        XCTAssertEqual(y26["2026-02-17"], "Chinese New Year")
+        XCTAssertEqual(y26["2026-03-21"], "Hari Raya Puasa")
+        XCTAssertEqual(y26["2026-06-01"], "Vesak Day (substitute day)")
+        XCTAssertEqual(y26["2026-08-10"], "National Day (substitute day)")
+        XCTAssertEqual(y26["2026-11-09"], "Deepavali (substitute day)")
+        // 토요일 공휴일은 법정 대체 휴일이 없다 (2026-03-21 하리 라야 푸아사)
+        XCTAssertNil(y26["2026-03-23"])
+        XCTAssertTrue(HolidayService().isHolidayDataReliable(for: 2026, country: .singapore))
+        XCTAssertFalse(HolidayService().isHolidayDataReliable(for: 2027, country: .singapore))
+        // 발표 전 해도 설 이틀·성금요일·국경일·크리스마스는 나온다
+        let y27 = Set(HolidayService().getHolidays(for: 2027, country: .singapore).map { f.string(from: $0.date) })
+        XCTAssertTrue(y27.isSuperset(of: ["2027-02-06", "2027-02-07", "2027-02-08", "2027-03-26", "2027-08-09", "2027-12-25"]))
+        XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_SG")).country, .singapore)
+        XCTAssertEqual(Country.singapore.continent, .asia)
+        XCTAssertFalse(Country.singapore.displayName.isEmpty)
+    }
+
     func testFirstWeekdayFollowsCountry() {
         XCTAssertEqual(Country.spain.standardFirstWeekday, 2)
         XCTAssertEqual(Country.sweden.standardFirstWeekday, 2)
@@ -2129,7 +2154,8 @@ final class LeaveKindAllowanceTests: XCTestCase {
 
     func testBulkEntryInEveryLanguageAndHours() {
         // 번체 중국어로 넣은 일괄 입력도 일괄 입력으로 알아본다 (예전엔 6개 언어만 — 근무일로 세어 줄었다)
-        XCTAssertEqual(LeaveRecord.bulkSummaryNotes.count, 21)
+        XCTAssertEqual(LeaveRecord.bulkSummaryNotes.count, AppLanguage.allCases.count)
+        XCTAssertTrue(LeaveRecord.bulkSummaryNotes.contains("Phép trước đó (nhập gộp)"))
         let tw = LeaveRecord(startDate: d(2026, 1, 1), endDate: d(2026, 1, 10), status: .used, note: "先前特休（批次輸入）")
         XCTAssertTrue(tw.isBulkSummary)
         XCTAssertEqual(tw.effectiveLeaveDays, 10)
@@ -2377,5 +2403,161 @@ final class TeacherFeedbackTests: XCTestCase {
         XCTAssertEqual(ko.first?.start, d(2026, 12, 24))
         XCTAssertEqual(ko.first?.end, d(2027, 2, 28))
         XCTAssertEqual(ko.first?.suggestion, .dayOff)
+    }
+}
+
+// MARK: - 2.4.0 유료화 정리 — 기존 설치자 판별
+
+final class MonetizationTests: XCTestCase {
+    /// App Store 최초 다운로드 빌드가 2.4.0 전(빌드 11 이하)이면 새로 Pro가 된 기능을 계속 무료로 쓴다
+    func testLegacyBuildIsDecidedByOriginalBuildNumber() {
+        XCTAssertTrue(ProManager.isLegacyBuild("1"))
+        XCTAssertTrue(ProManager.isLegacyBuild("3"))
+        XCTAssertTrue(ProManager.isLegacyBuild("11"))
+        XCTAssertFalse(ProManager.isLegacyBuild("12"))
+        XCTAssertFalse(ProManager.isLegacyBuild("40"))
+        // 샌드박스가 돌려주는 "1.0"도 숫자 앞부분으로 읽는다 (TestFlight는 어차피 Pro)
+        XCTAssertTrue(ProManager.isLegacyBuild("1.0"))
+        XCTAssertFalse(ProManager.isLegacyBuild(""))
+        XCTAssertFalse(ProManager.isLegacyBuild("abc"))
+    }
+
+    /// 연간 상품이 먼저 보이고, 평생 상품 ID는 기존 영수증과의 계약이라 바뀌면 안 된다
+    func testProductIDsKeepLifetimeContract() {
+        XCTAssertEqual(ProManager.proProductID, "com.Ysoup.LeaveWise.pro")
+        XCTAssertEqual(ProManager.yearlyProductID, "com.Ysoup.LeaveWise.pro.yearly")
+        XCTAssertEqual(ProManager.plusProductID, "com.Ysoup.LeaveWise.plus.annual")
+        XCTAssertEqual(ProManager.familyProductID, "com.Ysoup.LeaveWise.family.yearly")
+        XCTAssertEqual(Set(ProManager.allProductIDs).count, 7)
+        // 평생 구매자는 프로 칸
+        XCTAssertEqual(ProManager.tier(of: ProManager.proProductID), .pro)
+        XCTAssertEqual(ProManager.tier(of: ProManager.yearlyProductID), .pro)
+        XCTAssertEqual(ProManager.tier(of: ProManager.plusProductID), .plus)
+        // 패밀리는 프로에 합쳤다
+        XCTAssertEqual(ProManager.tier(of: ProManager.familyProductID), .pro)
+        XCTAssertTrue(ProTier.pro > .plus && ProTier.plus > .free)
+    }
+
+    /// 자동 갱신 고지는 심사 필수 — 어느 언어에서도 비면 안 된다
+    func testSubscriptionDisclosureInEveryLanguage() {
+        let original = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = original }
+        for language in AppLanguage.allCases {
+            LanguageManager.shared.currentLanguage = language
+            XCTAssertFalse(Strings.subscriptionDisclosure.isEmpty, "\(language)")
+            XCTAssertTrue(Strings.yearlyPriceLabel("X").contains("X"), "\(language)")
+            XCTAssertTrue(Strings.perMonthHint("X").contains("X"), "\(language)")
+        }
+    }
+}
+
+// MARK: - 가족 기념일
+
+final class FamilyAnniversaryTests: XCTestCase {
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date {
+        Calendar.app.date(from: DateComponents(year: y, month: m, day: day))!
+    }
+
+    func testSolarRepeatsEveryYear() {
+        let item = FamilyAnniversary(name: "", relation: "엄마", kind: .birthday, date: d(1960, 5, 1), isLunar: false)
+        XCTAssertEqual(item.occurrence(in: 2026), d(2026, 5, 1))
+        XCTAssertEqual(item.ordinal(at: d(2026, 5, 1)), 66)
+    }
+
+    func testLeapDayFallsBackToFeb28() {
+        let item = FamilyAnniversary(name: "", relation: "", kind: .birthday, date: d(2024, 2, 29), isLunar: false)
+        XCTAssertEqual(item.occurrence(in: 2026), d(2026, 2, 28))
+        XCTAssertEqual(item.occurrence(in: 2028), d(2028, 2, 29))
+    }
+
+    /// 음력 8월 15일(추석) — 2025년 10월 6일, 2026년 9월 25일
+    func testLunarFollowsLunarDate() {
+        let item = FamilyAnniversary(name: "", relation: "", kind: .memorial, date: d(2025, 10, 6), isLunar: true)
+        XCTAssertEqual(item.occurrence(in: 2026), d(2026, 9, 25))
+        XCTAssertEqual(item.occurrence(in: 2025), d(2025, 10, 6))
+    }
+
+    func testNextOccurrenceRollsToNextYear() {
+        let item = FamilyAnniversary(name: "", relation: "", kind: .wedding, date: d(2010, 3, 1), isLunar: false)
+        XCTAssertEqual(item.nextOccurrence(from: d(2026, 3, 2)), d(2027, 3, 1))
+        XCTAssertEqual(item.nextOccurrence(from: d(2026, 3, 1)), d(2026, 3, 1))
+    }
+
+    func testDisplayTitleFallsBackToRelationAndKind() {
+        let item = FamilyAnniversary(name: "  ", relation: "Mom", kind: .birthday, date: d(1960, 5, 1), isLunar: false)
+        XCTAssertTrue(item.displayTitle.hasPrefix("Mom · "))
+        item.name = "엄마 생신"
+        XCTAssertEqual(item.displayTitle, "엄마 생신")
+    }
+
+    func testAllLanguagesHaveAnniversaryStrings() {
+        let original = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = original }
+        for language in AppLanguage.allCases {
+            LanguageManager.shared.currentLanguage = language
+            XCTAssertFalse(Strings.anniversaryRelationPresets.isEmpty, "\(language)")
+            XCTAssertTrue(Strings.anniversaryLeadTitle("X", days: 14).contains("X"), "\(language)")
+            XCTAssertTrue(Strings.anniversaryOrdinal(.birthday, 7).contains("7"), "\(language)")
+            XCTAssertTrue(Strings.lunarDateLabel(month: 8, day: 15, isLeap: false).contains("15"), "\(language)")
+        }
+    }
+}
+
+/// 패밀리 · 함께 쉬기 계산
+final class FamilyTogetherTests: XCTestCase {
+    private let cal = Calendar.app
+    private func d(_ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: 2026, month: m, day: day))! }
+
+    /// 주말(토·일)만 쉬는 사람 + 추가로 쉬는 날
+    private func member(_ name: String, isMe: Bool = false, extra: [Date] = []) -> TogetherMember {
+        let keys = Set(extra.map { FamilyTogether.key($0) })
+        return TogetherMember(name: name, isMe: isMe) { date in
+            let w = self.cal.component(.weekday, from: date)
+            return w == 1 || w == 7 || keys.contains(FamilyTogether.key(date))
+        }
+    }
+
+    func testEveryoneOffNeedsThreeDaysTogether() {
+        // 2026-10-09(금) 둘 다 쉼 → 금·토·일 3일, 다른 주말 이틀은 안 셈
+        let days = FamilyTogether.days(from: d(10, 1), count: 31)
+        let breaks = FamilyTogether.togetherBreaks(members: [member("나", isMe: true, extra: [d(10, 9)]), member("지수", extra: [d(10, 9)])], days: days)
+        XCTAssertEqual(breaks.count, 1)
+        XCTAssertEqual(breaks.first?.start, d(10, 9))
+        XCTAssertEqual(breaks.first?.days, 3)
+    }
+
+    func testOneLeaveAwayFindsTheOnlyWorker() {
+        // 지수는 10/5(월)~10/9(금) 휴가 → 나만 닷새 내면 되니 안 고르고,
+        // 10/16(금) 지수만 쉬면 나 하루 연차로 3일
+        let days = FamilyTogether.days(from: d(10, 1), count: 31)
+        let me = member("나", isMe: true)
+        let jisu = member("지수", extra: [d(10, 5), d(10, 6), d(10, 7), d(10, 8), d(10, 9), d(10, 16)])
+        let found = FamilyTogether.oneLeaveAway(members: [me, jisu], days: days)
+        XCTAssertEqual(found.count, 1)
+        XCTAssertEqual(found.first?.member, "나")
+        XCTAssertTrue(found.first?.isMe == true)
+        XCTAssertEqual(found.first?.leaveDates, [d(10, 16)])
+        XCTAssertEqual(found.first?.days, 3)
+    }
+
+    func testHalfDayLeaveIsNotADayOff() {
+        let keys = FamilyTogether.fullDayLeaveKeys([
+            (d(10, 13), d(10, 14), LeaveType.annual.rawValue, nil, LeaveStatus.planned.rawValue),
+            (d(10, 20), d(10, 20), LeaveType.half.rawValue, nil, LeaveStatus.planned.rawValue),
+            (d(10, 21), d(10, 21), LeaveType.annual.rawValue, LeaveLength.hours.rawValue, LeaveStatus.planned.rawValue),
+            (d(10, 22), d(10, 22), LeaveType.annual.rawValue, nil, LeaveStatus.cancelled.rawValue),
+        ])
+        XCTAssertEqual(keys, ["2026-10-13", "2026-10-14"])
+    }
+
+    func testTogetherStringsInEveryLanguage() {
+        let original = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = original }
+        for language in AppLanguage.allCases {
+            LanguageManager.shared.currentLanguage = language
+            XCTAssertFalse(Strings.togetherTitle.isEmpty)
+            XCTAssertTrue(Strings.togetherLeaveNeeded("A", 1, 3).contains("3"))
+            XCTAssertFalse(Strings.togetherLocked.isEmpty)
+        }
     }
 }

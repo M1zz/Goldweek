@@ -32,7 +32,7 @@ class WidgetService {
         }
 
         // 기본 연차 정보 (현재 회계연도 기준 — LeaveStatusCard/SettingsView와 동일 계산)
-        let cal = Calendar.current
+        let cal = Calendar.app
         let now = Date()
         let currentMonth = cal.component(.month, from: now)
         let currentYear = cal.component(.year, from: now)
@@ -66,12 +66,24 @@ class WidgetService {
         defaults.set(profile.name, forKey: "userName")
 
         // 다가오는 휴가
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let today = calendar.startOfDay(for: Date())
         let upcomingLeave = leaveRecords
             .filter { $0.status == .planned && $0.startDate >= today }
             .sorted { $0.startDate < $1.startDate }
             .first
+
+        // 다가오는 휴가 목록 — 위젯이 앱을 열지 않아도 날마다 D-day를 다시 세고,
+        // 다음 휴가가 지나가면 그 다음 휴가로 넘어간다 (이탈리아 피드백 3차: 앱을 열어야만 D-day가 바뀌었다)
+        let upcomingList = leaveRecords
+            .filter { $0.status == .planned && $0.endDate >= today }
+            .sorted { $0.startDate < $1.startDate }
+            .prefix(20)
+            .map { ["start": $0.startDate.timeIntervalSince1970,
+                    "end": $0.endDate.timeIntervalSince1970,
+                    "type": $0.type.rawValue,
+                    "note": $0.note] as [String: Any] }
+        defaults.set(Array(upcomingList), forKey: "upcomingLeaves")
 
         if let nextLeave = upcomingLeave {
             defaults.set(nextLeave.startDate, forKey: "nextLeaveDate")
@@ -123,7 +135,7 @@ class WidgetService {
         totalLeave: Double,
         usedLeave: Double
     ) -> (elapsedRatio: Double, idealUsedRatio: Double, actualUsedRatio: Double, burnRate: Double, remainingDays: Int) {
-        let calendar = Calendar.current
+        let calendar = Calendar.app
         let now = Date()
         let currentYear = calendar.component(.year, from: now)
         let currentMonth = calendar.component(.month, from: now)
@@ -195,6 +207,7 @@ class WidgetService {
         defaults.removeObject(forKey: "nextLeaveType")
         defaults.removeObject(forKey: "nextLeaveNote")
         defaults.removeObject(forKey: "userName")
+        defaults.removeObject(forKey: "upcomingLeaves")
         defaults.set(-1, forKey: "daysUntilNextLeave")
         defaults.set(0, forKey: "nextLeaveDuration")
 

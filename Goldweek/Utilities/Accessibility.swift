@@ -46,6 +46,64 @@ extension View {
     }
 }
 
+// MARK: - 화면 밖 변화 알리기
+
+/// 저장·삭제처럼 **화면이 거의 안 바뀌는** 일이 끝났을 때 VoiceOver 가 소리 내어 알린다.
+/// (밀어서 지우면 행이 사라질 뿐이라, 화면을 못 보는 사람은 지워졌는지 알 수 없다.)
+enum A11yAnnounce {
+    static func post(_ message: String) {
+        var text = AttributedString(message)
+        // 지금 읽고 있는 것을 끊지 않고 이어서 읽는다
+        text.accessibilitySpeechAnnouncementPriority = .high
+        AccessibilityNotification.Announcement(text).post()
+    }
+}
+
+// MARK: - 사진 위 배지 배경
+
+/// 사진 위에 흰 글자를 얹는 배지 배경.
+/// 평소에는 반투명 재질이지만 '투명도 줄이기' 를 켜면 불투명한 어두운 바탕,
+/// '대비 증가' 를 켜면 더 짙은 바탕으로 바꿔 흰 글자가 사진에 묻히지 않게 한다.
+private struct LegibleBadgeBackground: ViewModifier {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var contrast
+
+    func body(content: Content) -> some View {
+        if reduceTransparency || contrast == .increased {
+            content.background(Color.black.opacity(contrast == .increased ? 0.85 : 0.7))
+        } else {
+            content.background(.ultraThinMaterial)
+        }
+    }
+}
+
+extension View {
+    func legibleBadgeBackground() -> some View {
+        modifier(LegibleBadgeBackground())
+    }
+}
+
+// MARK: - 칸 안의 짧은 글자
+
+/// 좁은 칸에 들어가는 짧은 글자. 평소엔 한 줄로(조금 줄여서라도) 두고,
+/// 아주 큰 글씨에서는 줄을 바꿔 '…' 로 잘리지 않게 한다.
+private struct CellLabel: ViewModifier {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    let minScale: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 1)
+            .minimumScaleFactor(minScale)
+    }
+}
+
+extension View {
+    func cellLabel(minScale: CGFloat = 0.7) -> some View {
+        modifier(CellLabel(minScale: minScale))
+    }
+}
+
 // MARK: - VoiceOver Label Builders
 
 /// 화면 곳곳에서 재사용되는 VoiceOver 문구 빌더.
@@ -72,6 +130,8 @@ enum VoiceOverLabel {
         case .turkish: return "\(t) günün \(u) günü kullanıldı, \(r) gün kaldı"
         case .russian: return "Отпуск: \(t) \(ruPlural(total, "день", "дня", "дней")), использовано \(u), осталось \(r)"
         case .indonesian: return "\(u) dari \(t) hari terpakai, sisa \(r)"
+        case .thai: return "ใช้แล้ว \(u) จาก \(t) วัน คงเหลือ \(r)"
+        case .vietnamese: return "Đã dùng \(u)/\(t) ngày, còn lại \(r)"
         case .dutch: return "\(u) van \(t) dagen gebruikt, \(r) over"
         case .japanese: return "有給\(t)日中\(u)日使用、残り\(r)日"
         case .chinese: return "年假\(t)天中已使用\(u)天，剩余\(r)天"
@@ -101,6 +161,8 @@ enum VoiceOverLabel {
         case .turkish: return "Kullanılabilir bonus: \(d) gün"
         case .russian: return "Доступно бонусных дней: \(d)"
         case .indonesian: return "Cuti bonus tersedia: \(d) hari"
+        case .thai: return "วันลาโบนัสที่ใช้ได้: \(d) วัน"
+        case .vietnamese: return "Phép thưởng còn dùng được: \(d) ngày"
         case .dutch: return "Bonus beschikbaar: \(d) dagen"
         case .japanese: return "ボーナス使用可能 \(d)日"
         case .chinese: return "可用奖励 \(d) 天"
@@ -130,6 +192,8 @@ enum VoiceOverLabel {
         case .turkish: return "\(dateRange), \(typeLabel) \(d) gün, \(dDay) gün sonra"
         case .russian: return "\(dateRange), \(typeLabel): \(d) \(ruPlural(days, "день", "дня", "дней")), через \(dDay) \(ruPlural(dDay, "день", "дня", "дней"))"
         case .indonesian: return "\(dateRange), \(typeLabel) \(d) hari, \(dDay) hari lagi"
+        case .thai: return "\(dateRange), \(typeLabel) \(d) วัน, อีก \(dDay) วัน"
+        case .vietnamese: return "\(dateRange), \(typeLabel) \(d) ngày, còn \(dDay) ngày nữa"
         case .dutch: return "\(dateRange), \(typeLabel) \(d) dagen, over \(dDay) dagen"
         case .japanese: return "\(dateRange)、\(typeLabel)\(d)日、あと\(dDay)日"
         case .chinese: return "\(dateRange)，\(typeLabel)\(d)天，还有\(dDay)天"
@@ -160,6 +224,8 @@ enum VoiceOverLabel {
             case .turkish: return ", öneri puanı \(score)"
             case .russian: return ", оценка \(score)"
             case .indonesian: return ", skor rekomendasi \(score)"
+            case .thai: return ", คะแนนแนะนำ \(score)"
+            case .vietnamese: return ", điểm gợi ý \(score)"
             case .dutch: return ", aanbevelingsscore \(score)"
             case .japanese: return "、おすすめスコア\(score)"
             case .chinese: return "，推荐分数\(score)"
@@ -184,6 +250,8 @@ enum VoiceOverLabel {
         case .turkish: return "\(dateRange), \(totalDays) günlük tatil, \(leavesNeeded) izin günü gerekli\(scorePart)"
         case .russian: return "\(dateRange), отдых \(totalDays) \(ruPlural(totalDays, "день", "дня", "дней")), нужно \(leavesNeeded) \(ruPlural(leavesNeeded, "день", "дня", "дней")) отпуска\(scorePart)"
         case .indonesian: return "\(dateRange), libur \(totalDays) hari, perlu \(leavesNeeded) hari cuti\(scorePart)"
+        case .thai: return "\(dateRange), หยุด \(totalDays) วัน, ต้องลา \(leavesNeeded) วัน\(scorePart)"
+        case .vietnamese: return "\(dateRange), nghỉ \(totalDays) ngày, cần \(leavesNeeded) ngày phép\(scorePart)"
         case .dutch: return "\(dateRange), vakantie van \(totalDays) dagen, \(leavesNeeded) verlofdagen nodig\(scorePart)"
         case .japanese: return "\(dateRange)、合計\(totalDays)日の連休、有給\(leavesNeeded)日必要\(scorePart)"
         case .chinese: return "\(dateRange)，共\(totalDays)天连假，需请\(leavesNeeded)天年假\(scorePart)"
@@ -215,6 +283,8 @@ enum VoiceOverLabel {
             case .turkish: return " direkt"
             case .russian: return " прямой рейс"
             case .indonesian: return " langsung"
+            case .thai: return " บินตรง"
+            case .vietnamese: return " bay thẳng"
             case .dutch: return " direct"
             case .japanese: return " 直行"
             case .chinese: return " 直飞"
@@ -239,6 +309,8 @@ enum VoiceOverLabel {
         case .turkish: return "\(origin) - \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
         case .russian: return "\(origin) — \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
         case .indonesian: return "\(origin) ke \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
+        case .thai: return "\(origin) ไป \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
+        case .vietnamese: return "\(origin) đến \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
         case .dutch: return "\(origin) naar \(destination), \(dateRange),\(airlinePart)\(directPart), \(priceText)"
         case .japanese: return "\(origin)から\(destination)、\(dateRange)、\(airlinePart)\(directPart)、\(priceText)"
         case .chinese: return "\(origin)到\(destination)，\(dateRange)，\(airlinePart)\(directPart)，\(priceText)"
@@ -270,6 +342,8 @@ enum VoiceOverLabel {
             case .turkish: return ", puan \(r)"
             case .russian: return ", рейтинг \(r)"
             case .indonesian: return ", rating \(r)"
+            case .thai: return ", คะแนน \(r)"
+            case .vietnamese: return ", đánh giá \(r)"
             case .dutch: return ", beoordeling \(r)"
             case .japanese: return "、評価\(r)"
             case .chinese: return "，评分\(r)"
@@ -294,6 +368,8 @@ enum VoiceOverLabel {
         case .turkish: return "\(name)\(ratingPart), \(priceText)"
         case .russian: return "\(name)\(ratingPart), \(priceText)"
         case .indonesian: return "\(name)\(ratingPart), \(priceText)"
+        case .thai: return "\(name)\(ratingPart), \(priceText)"
+        case .vietnamese: return "\(name)\(ratingPart), \(priceText)"
         case .dutch: return "\(name)\(ratingPart), \(priceText)"
         case .japanese: return "\(name)\(ratingPart)、\(priceText)"
         case .chinese: return "\(name)\(ratingPart)，\(priceText)"
@@ -323,6 +399,8 @@ enum VoiceOverLabel {
             case .turkish: return "Bugün"
             case .russian: return "Сегодня"
             case .indonesian: return "Hari ini"
+            case .thai: return "วันนี้"
+            case .vietnamese: return "Hôm nay"
             case .dutch: return "Vandaag"
             case .japanese: return "今日"
             case .chinese: return "今天"
@@ -349,6 +427,8 @@ enum VoiceOverLabel {
             case .turkish: return "\(n) gün sonra"
             case .russian: return "через \(n) \(ruPlural(n, "день", "дня", "дней"))"
             case .indonesian: return "\(n) hari lagi"
+            case .thai: return "อีก \(n) วัน"
+            case .vietnamese: return "\(n) ngày nữa"
             case .dutch: return "over \(n) dagen"
             case .japanese: return "あと\(n)日"
             case .chinese: return "还有\(n)天"
@@ -373,6 +453,8 @@ enum VoiceOverLabel {
             case .turkish: return "\(n) gün önce"
             case .russian: return "\(n) \(ruPlural(n, "день", "дня", "дней")) назад"
             case .indonesian: return "\(n) hari lalu"
+            case .thai: return "\(n) วันที่แล้ว"
+            case .vietnamese: return "\(n) ngày trước"
             case .dutch: return "\(n) dagen geleden"
             case .japanese: return "\(n)日経過"
             case .chinese: return "已过\(n)天"

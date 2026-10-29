@@ -96,6 +96,8 @@ private enum Common {
         case .turkish: return "ikame gün"
         case .russian: return "перенесённый выходной"
         case .indonesian: return "hari pengganti"
+        case .thai: return "วันหยุดชดเชย"
+        case .vietnamese: return "ngày nghỉ bù"
         case .dutch: return "vervangende dag"
         case .japanese: return "振替休日"
         case .chinese: return "补休"
@@ -1915,5 +1917,74 @@ extension HolidayService {
             items.append(([adding(39, to: e)], More.ascension))
         }
         return localized(gulfList(items), .indonesian, ID.local)
+    }
+
+    // MARK: - 싱가포르
+
+    private enum SG {
+        static let chineseNewYear = N(ko: "음력 설", en: "Chinese New Year", ja: "春節", zh: "农历新年", de: "Chinesisches Neujahr", fr: "Nouvel An chinois",
+                                      es: "Año Nuevo chino", it: "Capodanno cinese", pt: "Ano-Novo Chinês", zht: "農曆新年")
+        static let hariRayaPuasa = N(ko: "하리 라야 푸아사 (이드 알피트르)", en: "Hari Raya Puasa", ja: "ハリラヤ・プアサ", zh: "开斋节", de: "Hari Raya Puasa (Zuckerfest)",
+                                     fr: "Hari Raya Puasa (Aïd el-Fitr)", es: "Hari Raya Puasa (Eid al-Fitr)", it: "Hari Raya Puasa (Eid al-Fitr)",
+                                     pt: "Hari Raya Puasa (Eid al-Fitr)", zht: "開齋節")
+        static let hariRayaHaji = N(ko: "하리 라야 하지 (이드 알아드하)", en: "Hari Raya Haji", ja: "ハリラヤ・ハジ", zh: "哈芝节", de: "Hari Raya Haji (Opferfest)",
+                                    fr: "Hari Raya Haji (Aïd el-Kébir)", es: "Hari Raya Haji (Eid al-Adha)", it: "Hari Raya Haji (Eid al-Adha)",
+                                    pt: "Hari Raya Haji (Eid al-Adha)", zht: "哈芝節")
+        static let vesak = N(ko: "베삭 데이 (석가탄신일)", en: "Vesak Day", ja: "ウェーサーカ祭", zh: "卫塞节", de: "Vesakh", fr: "Vesak",
+                             es: "Vesak", it: "Vesak", pt: "Vesak", zht: "衛塞節")
+        static let deepavali = N(ko: "디파발리", en: "Deepavali", ja: "ディーパバリ", zh: "屠妖节", de: "Deepavali (Diwali)", fr: "Deepavali (Diwali)",
+                                 es: "Deepavali (Diwali)", it: "Deepavali (Diwali)", pt: "Deepavali (Diwali)", zht: "屠妖節")
+        static let pollingDay = N(ko: "총선 투표일", en: "Polling Day", ja: "投票日", zh: "投票日", de: "Wahltag", fr: "Jour du scrutin",
+                                  es: "Día de votación", it: "Giorno delle elezioni", pt: "Dia de votação", zht: "投票日")
+
+        /// 인력부(MOM)가 발표한 공휴일. 일요일에 걸린 날은 아래에서 월요일로 옮긴다(토요일은 법정 대체 휴일 없음).
+        /// 2025: MOM 2024-06 발표 + 총선 투표일 · 2026: MOM 2025-06 발표
+        static let official: [Int: [(Int, Int, String)]] = [
+            2025: [(1, 1, "newYear"), (1, 29, "cny"), (1, 30, "cny"), (3, 31, "fitr"), (4, 18, "goodFriday"), (5, 1, "labour"),
+                   (5, 3, "polling"), (5, 12, "vesak"), (6, 7, "adha"), (8, 9, "national"), (10, 20, "deepavali"), (12, 25, "christmas")],
+            2026: [(1, 1, "newYear"), (2, 17, "cny"), (2, 18, "cny"), (3, 21, "fitr"), (4, 3, "goodFriday"), (5, 1, "labour"),
+                   (5, 27, "adha"), (5, 31, "vesak"), (8, 9, "national"), (11, 8, "deepavali"), (12, 25, "christmas")],
+        ]
+
+        /// 발표 전 해의 디파발리 추정 (인도 힌두력 디왈리 기준 — 싱가포르 발표와 하루 다를 수 있다)
+        static let deepavaliEstimate: [Int: (Int, Int)] = [2027: (10, 29), 2028: (10, 17), 2029: (11, 5), 2030: (10, 26)]
+    }
+
+    /// 싱가포르 공휴일 날짜표가 발표된 연도
+    static func hasSingaporeOfficialSchedule(_ year: Int) -> Bool { SG.official[year] != nil }
+
+    /// 싱가포르 — 발표된 해는 MOM 날짜표, 그 밖의 해는 계산 추정치
+    /// (하리 라야는 움 알쿠라 기준이라 하루쯤, 베삭은 음력 4월 15일 기준이라 드물게 한 달까지 다를 수 있다).
+    /// 일요일에 걸린 공휴일은 다음 월요일에 쉰다.
+    func getSingaporeHolidays(for year: Int) -> [Holiday] {
+        let names: [String: N] = [
+            "newYear": Common.newYear, "cny": SG.chineseNewYear, "fitr": SG.hariRayaPuasa, "goodFriday": Common.goodFriday,
+            "labour": Common.labour, "polling": SG.pollingDay, "vesak": SG.vesak, "adha": SG.hariRayaHaji,
+            "national": Gulf.nationalDay, "deepavali": SG.deepavali, "christmas": Common.christmas,
+        ]
+        var items: [([Date], N)]
+        if let table = SG.official[year] {
+            items = table.compactMap { m, d, key in
+                guard let date = day(year, m, d), let n = names[key] else { return nil }
+                return ([date], n)
+            }
+        } else {
+            let cny = lunar(year, month: 1, day: 1)
+            items = [
+                ([day(year, 1, 1)].compactMap { $0 }, Common.newYear),
+                ([cny, cny.map { adding(1, to: $0) }].compactMap { $0 }, SG.chineseNewYear),
+                (hijri(year, month: 10, day: 1), SG.hariRayaPuasa),
+                ([day(year, 5, 1)].compactMap { $0 }, Common.labour),
+                ([lunar(year, month: 4, day: 15)].compactMap { $0 }, SG.vesak),
+                (hijri(year, month: 12, day: 10), SG.hariRayaHaji),
+                ([day(year, 8, 9)].compactMap { $0 }, Gulf.nationalDay),
+                ([SG.deepavaliEstimate[year].flatMap { day(year, $0.0, $0.1) }].compactMap { $0 }, SG.deepavali),
+                ([day(year, 12, 25)].compactMap { $0 }, Common.christmas),
+            ]
+            if let e = easter(year) { items.append(([adding(-2, to: e)], Common.goodFriday)) }
+        }
+        let base = gulfList(items)
+        let substitutes = rollForward(base, substitutable: Set(base.map { dateKey($0.date) }), saturdayToo: false)
+        return (base + substitutes).sorted { $0.date < $1.date }
     }
 }

@@ -12,7 +12,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ · %2$@ days leave"
+            "value": "%1$@ · %2$@ days of leave"
           }
         },
         "ja": {
@@ -127,6 +127,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ · cuti %2$@ hari"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · ลา %2$@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · nghỉ phép %2$@ ngày"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@ days of leave"
           }
         }
       }
@@ -252,6 +270,24 @@
             "state": "translated",
             "value": "%@ hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ngày"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days"
+          }
         }
       }
     },
@@ -376,6 +412,24 @@
             "state": "translated",
             "value": "Sisa %@ hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เหลือ %@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %@ ngày"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days left"
+          }
         }
       }
     },
@@ -496,6 +550,24 @@
           }
         },
         "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        },
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld"
@@ -624,6 +696,24 @@
             "state": "translated",
             "value": "%lld%%"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
         }
       }
     },
@@ -747,6 +837,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sisa %lld%%"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เหลือ %lld%%"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %lld%%"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%% left"
           }
         }
       }
@@ -896,6 +1004,24 @@
             "state": "translated",
             "value": "%lld hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ngày"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days"
+          }
         }
       }
     },
@@ -1044,6 +1170,24 @@
             "state": "translated",
             "value": "%lld hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ngày"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days"
+          }
         }
       }
     },
@@ -1168,6 +1312,24 @@
             "state": "translated",
             "value": "+%@ hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ ngày"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ days"
+          }
         }
       }
     },
@@ -1288,6 +1450,24 @@
           }
         },
         "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-"
+          }
+        },
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
             "value": "D-"
@@ -1415,6 +1595,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "HARI"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NGÀY"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DAY"
           }
         }
       }
@@ -1546,6 +1744,24 @@
             "state": "translated",
             "value": "Goldweek"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goldweek"
+          }
         }
       }
     },
@@ -1669,6 +1885,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hingga diperbarui"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ถึงรอบใหม่"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đến kỳ làm mới"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Until Reset"
           }
         }
       }
@@ -1818,6 +2052,24 @@
             "state": "translated",
             "value": "%lld hari lagi hingga diperbarui"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อีก %lld วันถึงรอบใหม่"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %lld ngày đến kỳ làm mới"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days until reset"
+          }
         }
       }
     },
@@ -1941,6 +2193,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Target"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เป้าหมาย"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mục tiêu"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected"
           }
         }
       }
@@ -2066,6 +2336,24 @@
             "state": "translated",
             "value": "Sisa cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาคงเหลือ"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phép còn lại"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remaining Leave"
+          }
         }
       }
     },
@@ -2189,6 +2477,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sisa cuti %@ hari"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาคงเหลือ %@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %@ ngày phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days of leave left"
           }
         }
       }
@@ -2314,6 +2620,24 @@
             "state": "translated",
             "value": "Lihat sisa cuti dan liburan berikutnya"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ดูวันลาคงเหลือและวันหยุดที่กำลังจะถึง"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem số phép còn lại và kỳ nghỉ sắp tới"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your remaining leave and upcoming holidays"
+          }
         }
       }
     },
@@ -2437,6 +2761,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cuti mendatang"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาที่กำลังจะถึง"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kỳ nghỉ sắp tới"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upcoming Leave"
           }
         }
       }
@@ -2562,6 +2904,24 @@
             "state": "translated",
             "value": "Cuti berikutnya"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาครั้งถัดไป"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kỳ nghỉ tiếp theo"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next Leave"
+          }
         }
       }
     },
@@ -2686,6 +3046,24 @@
             "state": "translated",
             "value": "Hitung mundur menuju cuti berikutnya"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "นับถอยหลังสู่วันหยุดครั้งถัดไป"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đếm ngược đến kỳ nghỉ tiếp theo"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Count down the days until your next time off"
+          }
         }
       }
     },
@@ -2806,6 +3184,24 @@
           }
         },
         "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonus"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "โบนัส"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thưởng"
+          }
+        },
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
             "value": "Bonus"
@@ -2934,6 +3330,24 @@
             "state": "translated",
             "value": "Laju pemakaian"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อัตราการใช้"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tốc độ dùng phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Burn Rate"
+          }
         }
       }
     },
@@ -3057,6 +3471,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Laju pemakaian: %@"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อัตราการใช้: %@"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tốc độ dùng phép: %@"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Burn rate: %@"
           }
         }
       }
@@ -3182,6 +3614,24 @@
             "state": "translated",
             "value": "Aktual"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "จริง"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thực tế"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actual"
+          }
         }
       }
     },
@@ -3305,6 +3755,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tambahkan rencana cuti di aplikasi"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เพิ่มแผนวันลาในแอป"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm kế hoạch nghỉ trong ứng dụng"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a leave plan in the app"
           }
         }
       }
@@ -3430,6 +3898,24 @@
             "state": "translated",
             "value": "Cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ลาพักร้อน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phép năm"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave"
+          }
         }
       }
     },
@@ -3553,6 +4039,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cuti %@ hari"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ลาพักร้อน %@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ngày phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days of leave"
           }
         }
       }
@@ -3678,6 +4182,24 @@
             "state": "translated",
             "value": "Sisa cuti %@ hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ลาพักร้อนเหลือ %@ วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn %@ ngày phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ days of leave remaining"
+          }
         }
       }
     },
@@ -3801,6 +4323,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lihat laju pemakaian cuti hingga jatah diperbarui"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ดูอัตราการใช้วันลาจนถึงรอบใหม่"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem tốc độ dùng phép đến kỳ làm mới"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your leave burn rate until the next reset date"
           }
         }
       }
@@ -3926,6 +4466,24 @@
             "state": "translated",
             "value": "Laju pemakaian cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อัตราการใช้วันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tốc độ dùng phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave Burn Rate"
+          }
         }
       }
     },
@@ -4049,6 +4607,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ringkasan cuti"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "สถานะวันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tình trạng phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave Status"
           }
         }
       }
@@ -4174,6 +4750,24 @@
             "state": "translated",
             "value": "hari"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ngày"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "days"
+          }
         }
       }
     },
@@ -4298,6 +4892,24 @@
             "state": "translated",
             "value": "Sisa"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "คงเหลือ"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Còn lại"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remaining"
+          }
         }
       }
     },
@@ -4421,6 +5033,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lihat D-day dan sisa cuti di Layar Terkunci"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ดู D-day และวันลาคงเหลือบนหน้าจอล็อก"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem D-day và số phép còn lại trên Màn hình khóa"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your D-day and remaining leave on the lock screen"
           }
         }
       }
@@ -4547,6 +5177,24 @@
             "state": "translated",
             "value": "Sisa cuti di Layar Terkunci"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ดูวันลาคงเหลือบนหน้าจอล็อก"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem phép còn lại trên Màn hình khóa"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check remaining leave on lock screen"
+          }
         }
       }
     },
@@ -4670,6 +5318,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Total cuti"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลาทั้งหมด"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tổng số phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Leave"
           }
         }
       }
@@ -4796,6 +5462,24 @@
             "state": "translated",
             "value": "Cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nghỉ phép"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave"
+          }
         }
       }
     },
@@ -4920,6 +5604,24 @@
             "state": "translated",
             "value": "D-Day Cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-Day วันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-Day kỳ nghỉ"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave D-Day"
+          }
         }
       }
     },
@@ -4976,7 +5678,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "來規劃下次休假吧？"
+            "value": "來規劃下次休假吧"
           }
         },
         "nl": {
@@ -5043,6 +5745,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yuk, rencanakan cuti berikutnya"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "มาวางแผนวันหยุดครั้งถัดไปกัน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lên kế hoạch kỳ nghỉ tới nhé?"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan your next time off"
           }
         }
       }
@@ -5168,6 +5888,24 @@
             "state": "translated",
             "value": "Belum ada rencana cuti"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ยังไม่มีแผนลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có kế hoạch nghỉ"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Leave Planned"
+          }
         }
       }
     },
@@ -5291,6 +6029,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tidak ada cuti"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ไม่มีวันลา"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có kỳ nghỉ"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Leave"
           }
         }
       }
@@ -5417,253 +6173,23 @@
             "state": "translated",
             "value": "Kalender Cuti"
           }
-        }
-      }
-    },
-    "🎉 오늘이에요!": {
-      "localizations": {
-        "en": {
+        },
+        "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "🎉 It's today!"
+            "value": "ปฏิทินวันลา"
           }
         },
-        "ja": {
+        "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "🎉 今日です！"
+            "value": "Lịch nghỉ phép"
           }
         },
-        "zh-Hans": {
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
-            "value": "🎉 就是今天！"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 就是今天！"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Heute ist es so weit!"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 C'est aujourd'hui !"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 ¡Es hoy!"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 È oggi!"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 É hoje!"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Het is vandaag!"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Det är idag!"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Det er i dag!"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Det er i dag!"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Se on tänään!"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 To dziś!"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Je to dnes!"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Это сегодня!"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Bugün!"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Είναι σήμερα!"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🎉 Hari ini!"
-          }
-        }
-      }
-    },
-    "내일이에요!": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "It's tomorrow!"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "明日です！"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "就是明天！"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "就是明天！"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Morgen ist es so weit!"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "C'est demain !"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¡Es mañana!"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "È domani!"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "É amanhã!"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Het is morgen!"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Det är imorgon!"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Det er i morgen!"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Det er i morgen!"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se on huomenna!"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To jutro!"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Je to zítra!"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Это завтра!"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yarın!"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Είναι αύριο!"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Besok!"
+            "value": "Leave Calendar"
           }
         }
       }
@@ -5789,377 +6315,23 @@
             "state": "translated",
             "value": "Segera dimulai ✈️"
           }
-        }
-      }
-    },
-    "이번 주 안에!": {
-      "localizations": {
-        "en": {
+        },
+        "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "This week!"
+            "value": "อีกนิดเดียว ✈️"
           }
         },
-        "ja": {
+        "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "今週中！"
+            "value": "Sắp tới rồi ✈️"
           }
         },
-        "zh-Hans": {
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
-            "value": "就在本周！"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "就在本週！"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diese Woche!"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cette semaine !"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¡Esta semana!"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Questa settimana!"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Esta semana!"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deze week!"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Den här veckan!"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I denne uge!"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Denne uken!"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tällä viikolla!"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "W tym tygodniu!"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tento týden!"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "На этой неделе!"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bu hafta!"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Αυτή την εβδομάδα!"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minggu ini!"
-          }
-        }
-      }
-    },
-    "다음 주에요": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Next week"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "来週です"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "就在下周"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "就在下週"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nächste Woche"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La semaine prochaine"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La próxima semana"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La prossima settimana"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Na próxima semana"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volgende week"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nästa vecka"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I næste uge"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Neste uke"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ensi viikolla"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "W przyszłym tygodniu"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Příští týden"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "На следующей неделе"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gelecek hafta"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Την επόμενη εβδομάδα"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minggu depan"
-          }
-        }
-      }
-    },
-    "이번 달이에요": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This month"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今月です"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "就在本月"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "就在本月"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diesen Monat"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ce mois-ci"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Este mes"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Questo mese"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Este mês"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deze maand"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Den här månaden"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I denne måned"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Denne måneden"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tässä kuussa"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "W tym miesiącu"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tento měsíc"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "В этом месяце"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bu ay"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Αυτόν τον μήνα"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bulan ini"
+            "value": "Starting soon ✈️"
           }
         }
       }
@@ -6285,6 +6457,166 @@
             "state": "translated",
             "value": "Ditunggu-tunggu"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "รอคอยอยู่"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang chờ đón"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something to look forward to"
+          }
+        }
+      }
+    },
+    "내일이에요!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's tomorrow!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "明日です！"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "就是明天！"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "就是明天！"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Morgen ist es so weit!"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "C'est demain !"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¡Es mañana!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "È domani!"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "É amanhã!"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Het is morgen!"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Det är imorgon!"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Det er i morgen!"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Det er i morgen!"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se on huomenna!"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To jutro!"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Je to zítra!"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это завтра!"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yarın!"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Είναι αύριο!"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besok!"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "พรุ่งนี้แล้ว!"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngày mai rồi!"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's tomorrow!"
+          }
         }
       }
     },
@@ -6409,129 +6741,733 @@
             "state": "translated",
             "value": "Lambat"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ช้า"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chậm"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slow"
+          }
         }
       }
     },
-    "조금 느림": {
+    "다음 주에요": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "A bit slow"
+            "value": "Next week"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "やや遅め"
+            "value": "来週です"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "略慢"
+            "value": "就在下周"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "略慢"
+            "value": "就在下週"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Etwas langsam"
+            "value": "Nächste Woche"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Un peu lent"
+            "value": "La semaine prochaine"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Algo lento"
+            "value": "La próxima semana"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Un po' lento"
+            "value": "La prossima settimana"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Um pouco lento"
+            "value": "Na próxima semana"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wat langzaam"
+            "value": "Volgende week"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lite långsamt"
+            "value": "Nästa vecka"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lidt langsomt"
+            "value": "I næste uge"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Litt sakte"
+            "value": "Neste uke"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hieman hidas"
+            "value": "Ensi viikolla"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Trochę wolno"
+            "value": "W przyszłym tygodniu"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Trochu pomalé"
+            "value": "Příští týden"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Немного медленно"
+            "value": "На следующей неделе"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Biraz yavaş"
+            "value": "Gelecek hafta"
           }
         },
         "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Λίγο αργός"
+            "value": "Την επόμενη εβδομάδα"
           }
         },
         "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Agak lambat"
+            "value": "Minggu depan"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "สัปดาห์หน้า"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuần sau"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next week"
+          }
+        }
+      }
+    },
+    "빠름": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fast"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "速め"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "偏快"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "偏快"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schnell"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rapide"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rápido"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veloce"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rápido"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snel"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snabbt"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hurtigt"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raskt"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nopea"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Szybko"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rychlé"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Быстро"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hızlı"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Γρήγορος"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cepat"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เร็ว"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhanh"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fast"
+          }
+        }
+      }
+    },
+    "이번 달이에요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This month"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今月です"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "就在本月"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "就在本月"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diesen Monat"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce mois-ci"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este mes"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questo mese"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este mês"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deze maand"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den här månaden"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I denne måned"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denne måneden"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tässä kuussa"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W tym miesiącu"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tento měsíc"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В этом месяце"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu ay"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Αυτόν τον μήνα"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bulan ini"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ภายในหนึ่งเดือน"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trong vòng một tháng"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This month"
+          }
+        }
+      }
+    },
+    "이번 주 안에!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This week!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今週中！"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "就在本周！"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "就在本週！"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Woche!"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette semaine !"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¡Esta semana!"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questa settimana!"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta semana!"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deze week!"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den här veckan!"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I denne uge!"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denne uken!"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tällä viikolla!"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W tym tygodniu!"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tento týden!"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "На этой неделе!"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu hafta!"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Αυτή την εβδομάδα!"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minggu ini!"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ไม่ถึงสัปดาห์!"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa đầy một tuần!"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This week!"
+          }
+        }
+      }
+    },
+    "적정": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On track"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ちょうどいい"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正好"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剛好"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im Plan"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Équilibré"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Equilibrado"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Equilibrato"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Equilibrado"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Op schema"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I fas"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I rute"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passende"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sopiva"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W normie"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Akorát"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ισορροπημένος"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dengeli"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В норме"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "พอดี"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vừa phải"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On track"
           }
         }
       }
@@ -6657,6 +7593,309 @@
             "state": "translated",
             "value": "Sesuai ✓"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "พอดี ✓"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vừa phải ✓"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On track ✓"
+          }
+        }
+      }
+    },
+    "제주도 여행": {
+      "comment": "위젯 갤러리 미리보기에 보이는 예시 휴가 메모",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beach getaway"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沖縄旅行"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "三亚旅行"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "墾丁旅行"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urlaub an der Ostsee"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Week-end en Provence"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Viaje a la playa"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vacanza al mare"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Viagem para a praia"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strandvakantie"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resa till Gotland"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tur til Lofoten"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tur til Skagen"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mökkiloma"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wyjazd nad morze"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Výlet na hory"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ταξίδι στα νησιά"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodrum tatili"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поездка на море"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liburan ke Bali"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เที่ยวเชียงใหม่"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du lịch Đà Nẵng"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beach getaway"
+          }
+        }
+      }
+    },
+    "조금 느림": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A bit slow"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "やや遅め"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "略慢"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "略慢"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Etwas langsam"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un peu lent"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Algo lento"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un po' lento"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um pouco lento"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wat langzaam"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lite långsamt"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lidt langsomt"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Litt sakte"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hieman hidas"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trochę wolno"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trochu pomalé"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Немного медленно"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biraz yavaş"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Λίγο αργός"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agak lambat"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ค่อนข้างช้า"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hơi chậm"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A bit slow"
+          }
         }
       }
     },
@@ -6781,129 +8020,165 @@
             "state": "translated",
             "value": "Agak cepat"
           }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ค่อนข้างเร็ว"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hơi nhanh"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A bit fast"
+          }
         }
       }
     },
-    "빠름": {
+    "🎉 오늘이에요!": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Fast"
+            "value": "🎉 It's today!"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "速め"
+            "value": "🎉 今日です！"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "偏快"
+            "value": "🎉 就是今天！"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "偏快"
+            "value": "🎉 就是今天！"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Schnell"
+            "value": "🎉 Heute ist es so weit!"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Rapide"
+            "value": "🎉 C'est aujourd'hui !"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Rápido"
+            "value": "🎉 ¡Es hoy!"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Veloce"
+            "value": "🎉 È oggi!"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Rápido"
+            "value": "🎉 É hoje!"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Snel"
+            "value": "🎉 Het is vandaag!"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Snabbt"
+            "value": "🎉 Det är idag!"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hurtigt"
+            "value": "🎉 Det er i dag!"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Raskt"
+            "value": "🎉 Det er i dag!"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nopea"
+            "value": "🎉 Se on tänään!"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Szybko"
+            "value": "🎉 To dziś!"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Rychlé"
+            "value": "🎉 Je to dnes!"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Быстро"
+            "value": "🎉 Это сегодня!"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hızlı"
+            "value": "🎉 Bugün!"
           }
         },
         "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Γρήγορος"
+            "value": "🎉 Είναι σήμερα!"
           }
         },
         "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cepat"
+            "value": "🎉 Hari ini!"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎉 วันนี้แล้ว!"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎉 Là hôm nay!"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎉 It's today!"
           }
         }
       }

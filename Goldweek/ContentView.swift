@@ -18,6 +18,7 @@ struct ContentView: View {
     @Query private var bonusLeaves: [BonusLeave]
     @Query private var customHolidays: [CustomHoliday]
     @Query private var schoolBreaks: [SchoolBreak]
+    @Query private var anniversaries: [FamilyAnniversary]
     /// 직접 만든 휴가 종류 — 달력 색·이름이 읽는 LeaveStyleStore 에 맞춰 둔다
     @Query(sort: \CustomLeaveType.createdAt) private var customLeaveTypes: [CustomLeaveType]
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
@@ -40,6 +41,10 @@ struct ContentView: View {
     /// (그 뒤로는 설정 > 도움말에서 사용자가 원할 때만 연다)
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var showingTutorial = false
+    /// 업데이트 뒤 처음 열 때 한 번 — 처음 설치한 사람에게는 뜨지 않는다(WhatsNewGate)
+    @State private var showingWhatsNew = false
+    /// 구독 중인 사람에게 6개월째 · 갱신 7일 전에 한 번씩 평생가를 보인다(LeeoGraduation)
+    @State private var showingGraduation = false
     /// 만족 순간에 띄우는 만족도 프롬프트 (추천 등록·플랜 등록·휴가 복귀)
     @State private var reviewMoments = ReviewMoments.shared
 
@@ -56,6 +61,24 @@ struct ContentView: View {
                     // 온보딩에 더 끼워 넣지 않는 이유: 설득과 사용법은 읽는 마음가짐이 다르다.
                     .sheet(isPresented: $showingTutorial) {
                         TutorialView()
+                    }
+                    .sheet(isPresented: $showingWhatsNew) {
+                        WhatsNewView { showingWhatsNew = false }
+                    }
+                    .task {
+                        guard WhatsNewGate.shouldPresentNow() else { return }
+                        // 첫 화면이 자리 잡은 뒤에 — 실행 직후 시트가 튀어나오면 놀란다
+                        try? await Task.sleep(nanoseconds: 900_000_000)
+                        showingWhatsNew = true
+                    }
+                    .sheet(isPresented: $showingGraduation) { GraduationSheet() }
+                    .task {
+                        // 다른 시트(새로운 기능 · 사용법)와 겹치지 않게 늦게, 그것들이 없을 때만
+                        guard !ScreenshotMode.isActive, !LaunchSafety.isSafeMode else { return }
+                        try? await Task.sleep(nanoseconds: 2_500_000_000)
+                        guard !showingWhatsNew, !showingTutorial,
+                              await ProManager.shared.takeGraduationOfferIfDue() else { return }
+                        showingGraduation = true
                     }
                     .task {
                         guard !hasSeenTutorial else { return }
@@ -85,8 +108,12 @@ struct ContentView: View {
                         if !hasCompletedOnboarding {
                             hasCompletedOnboarding = true
                         }
-                        refreshRestRadar(profile: profile)
-                        syncSharedSchedules(profile: profile)
+                        // 첫 화면이 떴다 — 몇 초 버티면 이번 실행을 성공으로 적는다(연속 크래시 보호)
+                        LaunchSafety.firstScreenAppeared()
+                        if !LaunchSafety.isSafeMode {
+                            refreshRestRadar(profile: profile)
+                            syncSharedSchedules(profile: profile)
+                        }
                     }
                     .onChange(of: scenePhase) { _, newPhase in
                         if newPhase == .active {
@@ -112,6 +139,14 @@ struct ContentView: View {
                     // 캘린더 앱으로 보내기를 켰으면 휴가가 바뀔 때마다 Goldweek 캘린더를 맞춘다
                     .onChange(of: calendarSyncFingerprint, initial: true) { _, _ in
                         CalendarService.shared.scheduleSync(records: leaveRecords)
+                    }
+                    // 가족 기념일 알림 — 기념일이나 휴가가 바뀌면 다시 예약 (그날 휴가가 잡혀 있으면 2주 전 알림은 뺀다)
+                    .onChange(of: anniversaryReminderKey, initial: true) { _, _ in
+                        ShareSyncService.shared.myAnniversaries = anniversaries.map {
+                            AnniversarySnapshot(id: $0.id, title: $0.displayTitle, kindRaw: $0.kindRaw, date: $0.date, isLunar: $0.isLunar)
+                        }
+                        AnniversaryReminders.refresh(anniversaries.map(AnniversaryReminders.Item.init),
+                                                     leaves: leaveRecords.filter { $0.status != .cancelled })
                     }
                     .onChange(of: timeMachineFingerprint) { _, _ in
                         TimeMachineService.shared.scheduleAutoSnapshot(context: modelContext)
@@ -218,6 +253,15 @@ struct ContentView: View {
             hasher.combine(item.endDate)
             hasher.combine(item.kindRaw)
         }
+        for item in anniversaries {
+            hasher.combine(item.id)
+            hasher.combine(item.name)
+            hasher.combine(item.relation)
+            hasher.combine(item.kindRaw)
+            hasher.combine(item.date)
+            hasher.combine(item.isLunar)
+            hasher.combine(item.reminds)
+        }
         for holiday in customHolidays {
             hasher.combine(holiday.id)
             hasher.combine(holiday.date)
@@ -225,6 +269,12 @@ struct ContentView: View {
             hasher.combine(holiday.repeatsYearly)
         }
         return hasher.finalize()
+    }
+
+    private var anniversaryReminderKey: String {
+        guard !anniversaries.isEmpty else { return "" }
+        return anniversaries.map { "\($0.id)\($0.date.timeIntervalSince1970)\($0.isLunar)\($0.reminds)\($0.displayTitle)" }.sorted().joined(separator: "|")
+            + "#" + leaveRecords.map { "\($0.startDate.timeIntervalSince1970)-\($0.endDate.timeIntervalSince1970)\($0.statusRaw)" }.joined(separator: ",")
     }
 
     /// 휴가 기록의 공유 관련 필드 변화 감지용 (개수뿐 아니라 날짜/상태 수정도 포착)
@@ -236,6 +286,13 @@ struct ContentView: View {
             hasher.combine(record.endDate)
             hasher.combine(record.typeRaw)
             hasher.combine(record.statusRaw)
+        }
+        // 가족 기념일도 함께 올린다 (프로 · 함께 쉬기)
+        for anniversary in anniversaries {
+            hasher.combine(anniversary.id)
+            hasher.combine(anniversary.date)
+            hasher.combine(anniversary.isLunar)
+            hasher.combine(anniversary.displayTitle)
         }
         return hasher.finalize()
     }
@@ -258,7 +315,8 @@ struct ContentView: View {
     private func dayOffInputs(profile: UserProfile) -> String {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
-        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(workPatternRaw)|\(shiftDaysOffRaw)|\(shiftWorkDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))"
+        let anniversaryKeys = anniversaries.map { "\($0.date.timeIntervalSince1970)\($0.isLunar ? "L" : "")\($0.displayTitle)" }.sorted()
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(workPatternRaw)|\(shiftDaysOffRaw)|\(shiftWorkDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))|\(anniversaryKeys.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {
@@ -268,7 +326,7 @@ struct ContentView: View {
         HolidayService.homeCountryCode = profile.homeCountry?.rawValue ?? ""
         HolidayService.homeRegionCode = profile.homeRegion?.code ?? ""
         DayOffCalendar.shared.update(country: profile.country, customHolidays: customHolidays,
-                                     hiddenDates: hidden, breaks: schoolBreaks)
+                                     hiddenDates: hidden, breaks: schoolBreaks, anniversaries: anniversaries)
     }
 
     private func updateWidget() {
@@ -298,7 +356,7 @@ struct ContentView: View {
 
     /// 오늘 이후 가장 가까운 "연차 1~N일로 만드는 연휴" 창. LeavePlanner 재사용.
     private func bestRestWindow(profile: UserProfile) -> RestWindowHint? {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let today = cal.startOfDay(for: Date())
         let year = cal.component(.year, from: today)
 
@@ -364,6 +422,8 @@ struct ContentView: View {
 struct MainTabView: View {
     @Bindable var profile: UserProfile
     @State private var selectedTab = ScreenshotMode.initialTab
+    /// 스크린샷 모드에서 페이월을 열어 둔다 (앱 내 구입 심사용 화면)
+    @State private var showingScreenshotPaywall = ScreenshotMode.paywallProductID != nil
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     // 공유받은 일정이 있으면 가족 탭 표시 (@Observable — body에서 읽으면 자동 갱신)
@@ -390,7 +450,9 @@ struct MainTabView: View {
                 }
                 .tag(0)
 
-            CalendarView(profile: profile)
+            // 아이폰 듀오를 펴면 왼쪽(세로면 아래)에 이 탭, 오른쪽(위)에 현황이 선다 (→ Views/FoldPanes.swift).
+            // 접혀 있거나 보통 아이폰이면 `FoldTab` 은 이 탭만 그린다 — 지금 화면 그대로.
+            FoldTab(profile: profile) { CalendarView(profile: profile) }
                 .tabItem {
                     Image(systemName: "calendar")
                     Text(Strings.tabCalendar)
@@ -398,7 +460,7 @@ struct MainTabView: View {
                 .tag(1)
 
             if hasSharedSchedules {
-                FamilyView(profile: profile)
+                FoldTab { FamilyView(profile: profile) } result: { FoldFamilyResult(profile: profile) }
                     .tabItem {
                         Image(systemName: "person.2.fill")
                         Text(Strings.tabFamily)
@@ -406,7 +468,7 @@ struct MainTabView: View {
                     .tag(2)
             }
 
-            SettingsView(profile: profile)
+            FoldTab(profile: profile) { SettingsView(profile: profile) }
                 .tabItem {
                     Image(systemName: "gearshape.fill")
                     Text(Strings.tabSettings)
@@ -414,6 +476,13 @@ struct MainTabView: View {
                 .tag(3)
         }
         .tint(Color(red: 0.0, green: 0.4, blue: 0.9))
+        // 펴면 시스템 탭바 대신 고르는 쪽 판 바닥에 막대가 선다. 현황은 늘 오른쪽 판에 있다.
+        .foldTabBar(items: FoldTabs.items(showsFamily: hasSharedSchedules),
+                    selected: selectedTab == 0 ? 1 : selectedTab) { selectedTab = $0 }
+        .foldHomeTabRedirect(selectedTab: $selectedTab)
+        // 창 크기로 접힘을 재서 아래로 흘린다. 시트 · 알림창도 접힌 선을 비킨다 (LeeoKit Fold).
+        .foldAware()
+        .sheet(isPresented: $showingScreenshotPaywall) { PaywallView() }
     }
 }
 
@@ -480,5 +549,5 @@ struct WideMainView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self], inMemory: true)
+        .modelContainer(for: [UserProfile.self, LeaveRecord.self, BonusLeave.self, CustomHoliday.self, SchoolBreak.self, FamilyAnniversary.self], inMemory: true)
 }

@@ -19,6 +19,9 @@ struct FamilyView: View {
     var body: some View {
         NavigationStack {
             List {
+                // 프로: 다 같이 쉬는 날 찾기
+                FamilyTogetherEntry(profile: profile)
+
                 ForEach(service.sharedSchedules) { schedule in
                     Section {
                         let upcoming = schedule.upcomingLeaves
@@ -101,8 +104,8 @@ struct FamilyLeaveRow: View {
     /// 오늘 기준 진행 중이면 "휴가 중", 아니면 시작까지 남은 일수(D-n)
     @ViewBuilder
     private var badge: some View {
-        let today = Calendar.current.startOfDay(for: Date())
-        let start = Calendar.current.startOfDay(for: leave.startDate)
+        let today = Calendar.app.startOfDay(for: Date())
+        let start = Calendar.app.startOfDay(for: leave.startDate)
 
         if start <= today && leave.endDate >= today {
             Text(Strings.familyOnLeave)
@@ -112,7 +115,7 @@ struct FamilyLeaveRow: View {
                 .background(Color.green.opacity(0.15))
                 .foregroundStyle(.green)
                 .clipShape(Capsule())
-        } else if let days = Calendar.current.dateComponents([.day], from: today, to: start).day, days > 0 {
+        } else if let days = Calendar.app.dateComponents([.day], from: today, to: start).day, days > 0 {
             Text(Strings.familyDday(days))
                 .font(.body.weight(.semibold))
                 .padding(.horizontal, 8)
@@ -125,7 +128,7 @@ struct FamilyLeaveRow: View {
 
     private var dateRangeText: String {
         let start = leave.startDate.appFormatted()
-        if Calendar.current.isDate(leave.startDate, inSameDayAs: leave.endDate) {
+        if Calendar.app.isDate(leave.startDate, inSameDayAs: leave.endDate) {
             return start
         }
         let end = leave.endDate.appFormatted()

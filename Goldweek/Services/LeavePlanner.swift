@@ -74,7 +74,7 @@ enum LeavePlanner {
         weekendDays: Set<Int> = [1, 7],
         minBreakLength: Int = 3,
         earliestDate: Date? = nil,
-        calendar: Calendar = .current
+        calendar: Calendar = .app
     ) -> OptimalLeavePlan {
         guard availableLeaveDays > 0 else {
             return OptimalLeavePlan(breaks: [], totalDaysOff: 0,

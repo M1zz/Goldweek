@@ -110,7 +110,7 @@ enum UsageInsights {
     /// ⚠️ 아직 그날이 오지 않은 설치는 잔존으로 세지 않는다 → 최근 코호트의 D30은 낮게 보인다.
     static func weeklyRetention(snapshots: [UsageReportingService.Snapshot],
                                 events: [UsageReportingService.EventSample],
-                                calendar: Calendar = .current,
+                                calendar: Calendar = .app,
                                 now: Date = Date()) -> [RetentionRow] {
 
         // 설치별 활동일(자정 기준) 집합

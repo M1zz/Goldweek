@@ -139,7 +139,7 @@ final class ReviewManager: ObservableObject {
         
         // 최소 기간 체크
         if let lastDate = lastReviewRequestDate {
-            let daysSinceLastRequest = Calendar.current.dateComponents([.day], from: lastDate, to: Date()).day ?? 0
+            let daysSinceLastRequest = Calendar.app.dateComponents([.day], from: lastDate, to: Date()).day ?? 0
             if daysSinceLastRequest < minimumDaysBetweenRequests {
                 return false
             }
@@ -228,7 +228,7 @@ final class ReviewMoments {
     /// 앱을 열 때 — 최근 끝난 휴가가 있으면 "다녀온 순간", 없으면 오래 쓴 사람 대비용
     @MainActor
     func checkOnOpen(leaveRecords: [LeaveRecord]) {
-        let cal = Calendar.current
+        let cal = Calendar.app
         let today = cal.startOfDay(for: Date())
         let justBack = leaveRecords.contains { r in
             guard r.status != .cancelled else { return false }

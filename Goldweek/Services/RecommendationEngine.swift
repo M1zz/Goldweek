@@ -10,7 +10,7 @@ import Foundation
 class RecommendationEngine {
 
     private let holidayService = HolidayService()
-    private let calendar = Calendar.current
+    private let calendar = Calendar.app
 
     // 캐싱
     private var cachedRecommendations: [LeaveRecommendation] = []
@@ -32,6 +32,9 @@ class RecommendationEngine {
     ) -> [LeaveRecommendation] {
         let targetCountry = country ?? profile.country
         self.country = targetCountry
+        // 성능 측정 — Instruments 의 Points of Interest 에 "Recommendations" 구간으로 보인다
+        let signpost = AppSignpost.signposter.beginInterval("Recommendations", id: AppSignpost.signposter.makeSignpostID())
+        defer { AppSignpost.signposter.endInterval("Recommendations", signpost) }
         logDebug("추천 생성 시작 - 연도: \(year), 잔여연차: \(remainingLeave), 국가: \(targetCountry.rawValue), includePast: \(includePast)", category: .recommendation)
 
         // 캐시 키 생성 — includePast·기존휴가도 키에 포함 (변경 시 캐시 무효화)
@@ -75,6 +78,10 @@ class RecommendationEngine {
         let preferredLength = findPreferredLengthOpportunities(holidays: holidays, year: year, profile: profile)
         recommendations.append(contentsOf: preferredLength)
 
+        // 4-3. 가족 기념일 — 평일이면 가까운 주말까지 이어 그날을 가족과 보낼 연휴를 만든다
+        let anniversaryLeaves = findAnniversaryOpportunities(holidays: holidays, year: year)
+        recommendations.append(contentsOf: anniversaryLeaves)
+
         // 4-2. 실제 달력으로 검증 — 규칙들이 "다리 놓는 날은 평일"이라고 가정해서,
         //      중국 춘절처럼 공휴일이 이어지는 기간엔 주말·공휴일에 연차를 추천하는 일이 있었다.
         //      연차 낼 날(주말·공휴일 제외)을 다시 세어 적힌 일수와 다르면 버린다.
@@ -102,6 +109,14 @@ class RecommendationEngine {
                 scored.matchScore += 1.0
                 if !scored.tags.contains(Strings.childBreakTag) {
                     scored.tags.insert(Strings.childBreakTag, at: 0)
+                }
+            }
+            // 가족 기념일이 든 연휴 — 그날을 가족과 보낼 수 있다. 자녀 방학보다는 덜 앞세운다(하루짜리라서)
+            let anniversaries = dayOff.anniversaryNames(from: recommendation.startDate, to: recommendation.endDate)
+            if let first = anniversaries.first {
+                scored.matchScore += 0.6
+                if !scored.tags.contains(first) {
+                    scored.tags.insert(first, at: 0)
                 }
             }
             return scored
@@ -488,7 +503,7 @@ class RecommendationEngine {
             opportunities.append(contentsOf: findUSAOpportunities(holidays: holidays, year: year))
 
         case .germany, .france, .uk, .canada, .australia, .spain, .italy, .brazil, .taiwan, .hongKong, .uae, .saudiArabia, .qatar, .peru,
-             .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal, .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .turkey, .egypt, .southAfrica, .morocco, .mexico, .argentina, .chile, .colombia, .newZealand, .russia, .indonesia, .custom:
+             .netherlands, .belgium, .austria, .switzerland, .ireland, .portugal, .sweden, .norway, .denmark, .finland, .poland, .czechia, .greece, .turkey, .egypt, .southAfrica, .morocco, .mexico, .argentina, .chile, .colombia, .newZealand, .russia, .indonesia, .singapore, .custom:
             // 알고리즘 기반 OptimalLeavePlannerCard가 자동 처리 (Brückentag / pont / puente / ponte)
             // 여기서는 일반적인 공휴일 연장만 제공
             opportunities.append(contentsOf: findMajorHolidayExtensions(holidays: holidays, year: year, country: country))
@@ -593,6 +608,12 @@ class RecommendationEngine {
         case .indonesian:
             title = "Golden Week"
             desc = "Golden Week Jepang! Cuti \(Int(requiredLeave)) hari, libur \(totalDays) hari."
+        case .thai:
+            title = "โกลเดนวีค"
+            desc = "โกลเดนวีคของญี่ปุ่น! ลา \(Int(requiredLeave)) วัน หยุดได้ \(totalDays) วัน"
+        case .vietnamese:
+            title = "Golden Week"
+            desc = "Golden Week Nhật Bản! Nghỉ phép \(Int(requiredLeave)) ngày, được nghỉ \(totalDays) ngày."
         case .dutch:
             title = "Golden Week"
             desc = "Japans Golden Week! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
@@ -669,6 +690,8 @@ class RecommendationEngine {
                 case .turkish: title = "Obon Tatili"; desc = "Obon sezonu! \(Int(requiredLeave)) izin günüyle \(totalDays) gün tatil."
                 case .russian: title = "Каникулы Обон"; desc = "Сезон Обон! \(Int(requiredLeave)) \(ruPlural(Int(requiredLeave), "день", "дня", "дней")) отпуска — и \(totalDays) \(ruPlural(totalDays, "день", "дня", "дней")) отдыха."
                 case .indonesian: title = "Libur Obon"; desc = "Musim Obon! Cuti \(Int(requiredLeave)) hari, libur \(totalDays) hari."
+                case .thai: title = "หยุดเทศกาลโอบ้ง"; desc = "ช่วงเทศกาลโอบ้ง! ลา \(Int(requiredLeave)) วัน หยุดได้ \(totalDays) วัน"
+                case .vietnamese: title = "Nghỉ lễ Obon"; desc = "Mùa lễ Obon! Nghỉ phép \(Int(requiredLeave)) ngày, được nghỉ \(totalDays) ngày."
                 case .dutch: title = "Obon-vakantie"; desc = "Obon-seizoen! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
                 case .japanese: title = "お盆休み"; desc = "お盆休み！有給\(Int(requiredLeave))日で\(totalDays)連休。"
                 case .chinese: title = "盂兰盆节假期"; desc = "盂兰盆节！请\(Int(requiredLeave))天年假获得\(totalDays)天假期。"
@@ -722,6 +745,8 @@ class RecommendationEngine {
                 case .turkish: title = "Şükran Günü Tatili"; desc = "1 izin günüyle (Cuma) 4 günlük uzun hafta sonu!"
                 case .russian: title = "Выходные на День благодарения"; desc = "1 день отпуска (пятница) — и 4 дня отдыха!"
                 case .indonesian: title = "Libur Thanksgiving"; desc = "Cuti 1 hari (Jumat), libur panjang 4 hari!"
+                case .thai: title = "หยุดยาวขอบคุณพระเจ้า"; desc = "ลา 1 วัน (วันศุกร์) ได้หยุดยาว 4 วัน!"
+                case .vietnamese: title = "Nghỉ lễ Tạ ơn"; desc = "Nghỉ phép 1 ngày (thứ Sáu), được nghỉ liền 4 ngày!"
                 case .dutch: title = "Thanksgiving-vakantie"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                 case .japanese: title = "感謝祭連休"; desc = "金曜1日の有給で4連休！"
                 case .chinese: title = "感恩节假期"; desc = "周五请1天年假获得4天假期！"
@@ -770,6 +795,8 @@ class RecommendationEngine {
                     case .turkish: title = "4 Temmuz Uzun Hafta Sonu"; desc = "1 izin günüyle (Pazartesi) 4 günlük uzun hafta sonu!"
                     case .russian: title = "Длинные выходные 4 июля"; desc = "1 день отпуска (понедельник) — и 4 дня отдыха!"
                     case .indonesian: title = "Libur Panjang 4 Juli"; desc = "Cuti 1 hari (Senin), libur panjang 4 hari!"
+                    case .thai: title = "หยุดยาววันชาติสหรัฐฯ 4 ก.ค."; desc = "ลา 1 วัน (วันจันทร์) ได้หยุดยาว 4 วัน!"
+                    case .vietnamese: title = "Kỳ nghỉ dài 4/7"; desc = "Nghỉ phép 1 ngày (thứ Hai), được nghỉ liền 4 ngày!"
                     case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (maandag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "月曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周一请1天年假获得4天假期！"
@@ -806,6 +833,8 @@ class RecommendationEngine {
                     case .turkish: title = "July 4th Long Weekend"; desc = "1 izin günüyle (Cuma) 4 günlük uzun hafta sonu!"
                     case .russian: title = "Длинные выходные 4 июля"; desc = "1 день отпуска (пятница) — и 4 дня отдыха!"
                     case .indonesian: title = "Libur Panjang 4 Juli"; desc = "Cuti 1 hari (Jumat), libur panjang 4 hari!"
+                    case .thai: title = "หยุดยาววันชาติสหรัฐฯ 4 ก.ค."; desc = "ลา 1 วัน (วันศุกร์) ได้หยุดยาว 4 วัน!"
+                    case .vietnamese: title = "Kỳ nghỉ dài 4/7"; desc = "Nghỉ phép 1 ngày (thứ Sáu), được nghỉ liền 4 ngày!"
                     case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "金曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周五请1天年假获得4天假期！"
@@ -849,13 +878,16 @@ class RecommendationEngine {
                 $0.name.contains("国庆") || $0.name.contains("National Day") ||
                 $0.name.contains("春節") || $0.name.contains("国慶")
             }
-        case .taiwan, .hongKong:
+        case .taiwan, .hongKong, .singapore:
             // 설 연휴 — 이름은 앱 언어에 따라 달라서 여러 표기를 본다
             majorHolidays = holidays.filter {
                 $0.name.contains("春節") || $0.name.contains("春节") || $0.name.contains("農曆") || $0.name.contains("农历") ||
                 $0.name.contains("旧正月") || $0.name.contains("Lunar New Year") || $0.name.contains("춘절") || $0.name.contains("음력 설") ||
                 $0.name.contains("Año Nuevo Lunar") || $0.name.contains("Capodanno lunare") || $0.name.contains("Ano Novo Lunar") ||
-                $0.name.contains("Chinesisches Neujahr") || $0.name.contains("Nouvel An")
+                $0.name.contains("Chinesisches Neujahr") || $0.name.contains("Nouvel An") ||
+                // 싱가포르는 "Chinese New Year"
+                $0.name.contains("Chinese New Year") || $0.name.contains("Año Nuevo chino") || $0.name.contains("Capodanno cinese") ||
+                $0.name.contains("Ano-Novo Chinês")
             }.filter { !$0.isSubstitute }
         default:
             majorHolidays = []
@@ -1112,6 +1144,45 @@ class RecommendationEngine {
             ))
         }
 
+        return result
+    }
+
+    /// 평일에 오는 가족 기념일마다, 연차 1~2일로 주말과 이어지는 가장 짧은 연휴 (3일 이상)
+    private func findAnniversaryOpportunities(holidays: [Holiday], year: Int) -> [LeaveRecommendation] {
+        let dayOff = DayOffCalendar.shared
+        var result: [LeaveRecommendation] = []
+        var seen = Set<Date>()
+        for item in dayOff.anniversaries {
+            guard let day = FamilyAnniversary.occurrence(of: item.date, isLunar: item.isLunar, in: year, calendar: calendar),
+                  !isNonWorkingDay(day, holidays: holidays), seen.insert(day).inserted else { continue }
+            var start = day, end = day, leaveUsed = 1
+            func absorb() {
+                while let p = calendar.date(byAdding: .day, value: -1, to: start), isNonWorkingDay(p, holidays: holidays) { start = p }
+                while let n = calendar.date(byAdding: .day, value: 1, to: end), isNonWorkingDay(n, holidays: holidays) { end = n }
+            }
+            absorb()
+            var total: Int { (calendar.dateComponents([.day], from: start, to: end).day ?? 0) + 1 }
+            // 화·목처럼 주말과 하루 떨어져 있으면 하루를 더 붙인다 (가까운 쪽)
+            if total < 3 {
+                let goRight = workdayGap(after: end, holidays: holidays) <= workdayGap(before: start, holidays: holidays)
+                if goRight, let n = calendar.date(byAdding: .day, value: 1, to: end) { end = n } else if let p = calendar.date(byAdding: .day, value: -1, to: start) { start = p }
+                leaveUsed += 1
+                absorb()
+            }
+            guard total >= 3 else { continue }
+            let names = dayOff.anniversaryNames(on: day)
+            let name = names.first ?? item.title
+            result.append(LeaveRecommendation(
+                title: Strings.anniversaryLeaveTitle(name),
+                description: Strings.anniversaryLeaveDesc(name, leaveDays: leaveUsed, totalDays: total),
+                startDate: start,
+                endDate: end,
+                requiredLeaveDays: Double(leaveUsed),
+                totalDaysOff: total,
+                tags: [Strings.familyAnniversaryTag, Strings.seasonTag(for: calendar.component(.month, from: day))],
+                reason: "가족 기념일"
+            ))
+        }
         return result
     }
 
