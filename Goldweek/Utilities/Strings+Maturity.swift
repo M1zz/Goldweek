@@ -167,4 +167,14 @@ extension Strings {
     static func a11yRecommendationAdded(_ title: String) -> String {
         pick([.korean: "\(title) 추천 일정을 등록했어요", .english: "Added the recommended plan: \(title)", .japanese: "おすすめ日程「\(title)」を登録しました", .chinese: "已添加推荐行程：\(title)", .german: "Vorschlag übernommen: \(title)", .french: "Suggestion ajoutée : \(title)", .spanish: "Plan recomendado añadido: \(title)", .italian: "Piano consigliato aggiunto: \(title)", .portuguese: "Plano sugerido adicionado: \(title)", .chineseTraditional: "已加入推薦行程：\(title)", .dutch: "Voorstel toegevoegd: \(title)", .swedish: "Förslaget har lagts till: \(title)", .norwegian: "Forslaget er lagt til: \(title)", .danish: "Forslaget er tilføjet: \(title)", .finnish: "Ehdotus lisätty: \(title)", .polish: "Dodano propozycję: \(title)", .czech: "Návrh přidán: \(title)", .greek: "Η πρόταση προστέθηκε: \(title)", .turkish: "Öneri eklendi: \(title)", .russian: "Рекомендация добавлена: \(title)", .indonesian: "Rencana rekomendasi ditambahkan: \(title)", .thai: "เพิ่มแผนแนะนำแล้ว: \(title)", .vietnamese: "Đã thêm lịch gợi ý: \(title)"])
     }
+
+    // MARK: - 아이콘만 있는 단추 이름 (VoiceOver · 음성 제어)
+
+    static var a11yCollapse: String {
+        pick([.korean: "접기", .english: "Collapse", .japanese: "閉じる", .chinese: "收起", .german: "Einklappen", .french: "Réduire", .spanish: "Contraer", .italian: "Comprimi", .portuguese: "Recolher", .chineseTraditional: "收合", .dutch: "Inklappen", .swedish: "Fäll ihop", .norwegian: "Skjul", .danish: "Skjul", .finnish: "Pienennä", .polish: "Zwiń", .czech: "Sbalit", .greek: "Σύμπτυξη", .turkish: "Daralt", .russian: "Свернуть", .indonesian: "Ciutkan", .thai: "ย่อ", .vietnamese: "Thu gọn"])
+    }
+
+    static var a11yBack: String {
+        pick([.korean: "이전", .english: "Back", .japanese: "戻る", .chinese: "返回", .german: "Zurück", .french: "Retour", .spanish: "Atrás", .italian: "Indietro", .portuguese: "Voltar", .chineseTraditional: "返回", .dutch: "Terug", .swedish: "Tillbaka", .norwegian: "Tilbake", .danish: "Tilbage", .finnish: "Takaisin", .polish: "Wstecz", .czech: "Zpět", .greek: "Πίσω", .turkish: "Geri", .russian: "Назад", .indonesian: "Kembali", .thai: "ย้อนกลับ", .vietnamese: "Quay lại"])
+    }
 }

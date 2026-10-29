@@ -83,6 +83,27 @@ extension View {
     }
 }
 
+// MARK: - 칸 안의 짧은 글자
+
+/// 좁은 칸에 들어가는 짧은 글자. 평소엔 한 줄로(조금 줄여서라도) 두고,
+/// 아주 큰 글씨에서는 줄을 바꿔 '…' 로 잘리지 않게 한다.
+private struct CellLabel: ViewModifier {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    let minScale: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 1)
+            .minimumScaleFactor(minScale)
+    }
+}
+
+extension View {
+    func cellLabel(minScale: CGFloat = 0.7) -> some View {
+        modifier(CellLabel(minScale: minScale))
+    }
+}
+
 // MARK: - VoiceOver Label Builders
 
 /// 화면 곳곳에서 재사용되는 VoiceOver 문구 빌더.

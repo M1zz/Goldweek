@@ -19,7 +19,7 @@ import LeeoKit
 extension GoldweekSpec {
     static var roadmap: [LeeoRoadmapItem] {[
         // MARK: 다음에 만들어요
-        .init(id: "a11y.voiceover", status: .planned,
+        .init(id: "a11y.voiceover", status: .building,
               title: RoadmapL10n(
                     ko: "VoiceOver로 더 편하게",
                     en: "Better VoiceOver support",
@@ -68,7 +68,7 @@ extension GoldweekSpec {
                     id: "VoiceOver membacakan semua tombol dan info cuti dengan urutan yang tepat.",
                     th: "VoiceOver จะอ่านปุ่มและข้อมูลวันลาให้ครบ ตามลำดับที่เข้าใจง่าย",
                     vi: "VoiceOver đọc đầy đủ các nút và thông tin nghỉ phép theo thứ tự hợp lý.").text),
-        .init(id: "a11y.largetext", status: .planned,
+        .init(id: "a11y.largetext", status: .building,
               title: RoadmapL10n(
                     ko: "큰 글씨에 맞춘 화면",
                     en: "Layouts for larger text",

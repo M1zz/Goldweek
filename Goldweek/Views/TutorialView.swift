@@ -79,7 +79,7 @@ struct TutorialView: View {
                         .font(.body.weight(.semibold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 52)
+                        .frame(minHeight: 52)
                         .background(AppTheme.Colors.brand)
                         .clipShape(RoundedRectangle(cornerRadius: 14))
                 }

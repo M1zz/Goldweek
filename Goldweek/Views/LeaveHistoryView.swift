@@ -312,6 +312,9 @@ struct LeaveHistoryView: View {
                                 recordToEdit = record
                                 HapticFeedback.selection()
                             }
+                            .accessibilityElement(children: .combine)
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityHint(Text(Strings.editLeaveHint))
                             .swipeActions(edge: .trailing) {
                                 Button(role: .destructive) {
                                     recordToDelete = record

@@ -77,7 +77,7 @@ private struct FoldPreviewSelectable: ViewModifier {
                 .onTapGesture {
                     withAnimation(.easeInOut(duration: 0.2)) { preview.toggle(recommendation) }
                 }
-                .accessibilityAddTraits(isOn ? .isSelected : [])
+                .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
         } else {
             content
         }

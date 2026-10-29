@@ -1441,6 +1441,7 @@ struct MyRealTripPromoCard: View {
                             .font(.title3)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(Text(Strings.a11yCollapse))
                 }
 
                 // 추천 이유 카드 — 도시 + 컨텍스트 이유 강조

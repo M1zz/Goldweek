@@ -139,6 +139,7 @@ struct OnboardingView: View {
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color(.systemGray5), lineWidth: 1))
                 }
+                .accessibilityLabel(Text(Strings.a11yBack))
             }
 
             Button {
@@ -149,7 +150,7 @@ struct OnboardingView: View {
                     .font(.headline)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 56)
+                    .frame(minHeight: 56)
                     .background(
                         LinearGradient(
                             colors: [AppTheme.Colors.bonus, AppTheme.Colors.bonus.opacity(0.85)],
@@ -736,7 +737,7 @@ struct ProShowcasePage: View {
             .font(.headline)
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
-            .frame(height: 56)
+            .frame(minHeight: 56)
             .background(
                 LinearGradient(
                     colors: [AppTheme.Colors.bonus, AppTheme.Colors.bonus.opacity(0.85)],
@@ -889,7 +890,7 @@ struct ProShowcasePage: View {
                                 .font(.body.weight(.semibold))
                                 .foregroundStyle(AppTheme.Colors.brand)
                                 .frame(maxWidth: .infinity)
-                                .frame(height: 48)
+                                .frame(minHeight: 48)
                                 .background(Color(.systemBackground))
                                 .clipShape(RoundedRectangle(cornerRadius: 14))
                                 .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color(.systemGray4), lineWidth: 1))

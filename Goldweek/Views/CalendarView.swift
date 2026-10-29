@@ -1374,6 +1374,8 @@ struct LeaveListRowInteractive: View {
                 }
                 .opacity(offset < 0 ? 1 : 0)
                 .accessibilityLabel(Text(Strings.delete))
+                // VoiceOver 는 밀어서 여는 대신 행의 '삭제' 동작을 쓴다
+                .accessibilityHidden(true)
             }
 
             LeaveListRow(leave: leave, isUpcoming: isUpcoming)
@@ -1401,6 +1403,15 @@ struct LeaveListRowInteractive: View {
                     } else {
                         onEdit?(leave)
                         HapticFeedback.selection()
+                    }
+                }
+                // 밀어서 지우기는 VoiceOver·음성 제어로 할 수 없으므로 행 동작으로도 둔다
+                .accessibilityElement(children: .combine)
+                .accessibilityAddTraits(onEdit != nil ? .isButton : [])
+                .accessibilityHint(onEdit != nil ? Text(Strings.editLeaveHint) : Text(""))
+                .accessibilityActions {
+                    if let onDelete {
+                        Button(Strings.delete) { onDelete(leave) }
                     }
                 }
         }

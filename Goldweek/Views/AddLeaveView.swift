@@ -138,6 +138,8 @@ struct LeaveStatusHeader: View {
     let bonusLeave: Double
     let totalAvailable: Double
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     private func formatD(_ v: Double) -> String {
         v == v.rounded() ? "\(Int(v))" : String(format: "%.1f", v)
     }
@@ -200,7 +202,11 @@ struct LeaveStatusHeader: View {
     }
 
     var body: some View {
-        HStack(spacing: 16) {
+        // 아주 큰 글씨에서는 '기본 + 보너스 = 총' 을 가로로 놓으면 화면 밖으로 밀려나므로 세로로 쌓는다
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 16))
+        layout {
             if bonusLeave > 0 {
                 // 보너스가 있을 때만 "기본 + 보너스 = 총" 분해를 보여준다.
                 VStack(alignment: .leading, spacing: 4) {
@@ -527,13 +533,11 @@ struct LeaveRegistrationView: View {
                                     Text(Strings.leaveLengthName(len))
                                         .font(.body)
                                         .fontWeight(.semibold)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.7)
+                                        .cellLabel()
                                     Text(len == .hours ? Strings.hoursLengthHint
                                          : len == .quarter ? "0.25\(Strings.dayUnitSuffix)" : len == .half ? "0.5\(Strings.dayUnitSuffix)" : "1\(Strings.dayUnitSuffix)~")
                                         .font(.body)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.7)
+                                        .cellLabel()
                                         .opacity(0.8)
                                 }
                                 .frame(maxWidth: .infinity)
@@ -605,8 +609,7 @@ struct LeaveRegistrationView: View {
                                                 Text(kind.name)
                                                     .font(.body)
                                                     .fontWeight(.semibold)
-                                                    .lineLimit(1)
-                                                    .minimumScaleFactor(0.7)
+                                                    .cellLabel()
                                             }
                                             .frame(maxWidth: .infinity)
                                             .padding(.vertical, 8)
@@ -631,8 +634,7 @@ struct LeaveRegistrationView: View {
                                     Text(Strings.addLeaveKind)
                                         .font(.body)
                                         .fontWeight(.semibold)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.7)
+                                        .cellLabel()
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 8)
@@ -1066,6 +1068,9 @@ struct BonusLeaveView: View {
                         BonusLeaveRow(bonus: bonus, editable: true)
                             .contentShape(Rectangle())
                             .onTapGesture { editingBonus = bonus }
+                            .accessibilityElement(children: .combine)
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityHint(Text(Strings.editLeaveHint))
                     }
                     .onDelete(perform: deleteActiveBonus)
                 }

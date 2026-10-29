@@ -810,6 +810,13 @@ struct LeaveStatusCard: View {
     /// 숫자 색 — 밝은 바탕에서 시안·초록은 글자로 쓰기엔 옅다(대비 4.5:1 미만, 접근성 자동 점검).
     /// 밝은 모드에서는 같은 색 계열의 짙은 쪽을, 어두운 모드에서는 원래 밝은 색을 쓴다.
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    /// 통계 3열 배치 — 아주 큰 글씨에서는 세 칸이 좁아 글자가 잘리므로 세로로 쌓는다
+    private var statsLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+            : AnyLayout(HStackLayout())
+    }
     private var plannedNumberColor: Color {
         colorScheme == .dark ? .cyan : Color(red: 0.0, green: 0.45, blue: 0.58)
     }
@@ -985,14 +992,13 @@ struct LeaveStatusCard: View {
                 .frame(height: 20)
             }
 
-            // 통계 3열
-            HStack {
+            // 통계 3열 — 아주 큰 글씨에서는 세로로 쌓는다
+            statsLayout {
                 VStack(alignment: .leading) {
                     Text(Strings.statUsed)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
+                        .cellLabel(minScale: 0.75)
                     Text("\(Strings.dayCount(displayUsed))")
                         .font(.title2.bold())
                         .foregroundStyle(.blue)
@@ -1004,8 +1010,7 @@ struct LeaveStatusCard: View {
                     Text(Strings.statPlanned)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
+                        .cellLabel(minScale: 0.75)
                     Text("\(Strings.dayCount(plannedLeave))")
                         .font(.title2.bold())
                         .foregroundStyle(plannedNumberColor)
@@ -1017,8 +1022,7 @@ struct LeaveStatusCard: View {
                     Text(isLeisure ? (hasGoal ? Strings.statRemainingGoal : Strings.statPlanned) : Strings.remaining)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
+                        .cellLabel(minScale: 0.75)
                     if isLeisure && !hasGoal {
                         // 무제한 모드: 총 계획/완료일 표시
                         Text("\(Strings.dayCount(actualUsed + plannedLeave))")
@@ -1185,7 +1189,7 @@ struct SharePlanPreviewSheet: View {
                             .font(.body.weight(.semibold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
-                            .frame(height: 50)
+                            .frame(minHeight: 50)
                             .background(AppTheme.Colors.brand)
                             .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
