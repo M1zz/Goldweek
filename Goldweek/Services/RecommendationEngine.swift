@@ -20,6 +20,41 @@ class RecommendationEngine {
     /// 지금 계산 중인 나라 — 주말 판정(중국 보충 근무일)에 쓴다
     private var country: Country = .korea
 
+    // MARK: - 공휴일에 붙는 추천
+
+    /// 연차가 들고, 기간 안에 공휴일이 하나라도 있는 추천만 남긴다.
+    static func holidayPlans(_ recommendations: [LeaveRecommendation], holidays: [Holiday], calendar: Calendar = .app) -> [LeaveRecommendation] {
+        let holidaySet = Set(holidays.map { calendar.startOfDay(for: $0.date) })
+        return recommendations.filter { rec in
+            guard rec.requiredLeaveDays > 0 else { return false }
+            var d = calendar.startOfDay(for: rec.startDate)
+            let end = calendar.startOfDay(for: rec.endDate)
+            while d <= end {
+                if holidaySet.contains(d) { return true }
+                guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
+                d = next
+            }
+            return false
+        }
+    }
+
+    /// 지금부터 잡을 수 있는 가장 가까운 연휴 — 올해 남은 게 없으면 내년에서 찾는다.
+    func nextHolidayPlan(for profile: UserProfile, remainingLeave: Double, from today: Date = Date()) -> LeaveRecommendation? {
+        guard remainingLeave > 0 else { return nil }
+        let start = calendar.startOfDay(for: today)
+        let year = calendar.component(.year, from: start)
+        for target in [year, year + 1] {
+            let recs = generateRecommendations(for: profile, remainingLeave: remainingLeave, year: target,
+                                               country: profile.country)
+            let holidays = DayOffCalendar.shared.holidays(for: target, country: profile.country)
+            let plan = Self.holidayPlans(recs, holidays: holidays, calendar: calendar)
+                .filter { $0.startDate >= start }
+                .min { $0.startDate < $1.startDate }
+            if let plan { return plan }
+        }
+        return nil
+    }
+
     // MARK: - 추천 생성
 
     func generateRecommendations(

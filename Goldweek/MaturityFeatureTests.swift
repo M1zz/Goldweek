@@ -63,6 +63,28 @@ final class MaturityFeatureTests: XCTestCase {
         }
     }
 
+    // MARK: - 첫 화면 추천
+
+    /// 첫 화면 추천은 앞으로의 날짜이고, 연차가 들고, 넣으면 쉬는 날이 아니라 일하는 날만 기록된다.
+    func testFirstPlanIsUpcomingAndAddable() throws {
+        let profile = UserProfile(name: "", yearStartMonth: 1, totalAnnualLeave: 15)
+        profile.country = .korea
+        let today = Calendar.app.startOfDay(for: Date())
+        let plan = try XCTUnwrap(RecommendationEngine().nextHolidayPlan(for: profile, remainingLeave: 15, from: today))
+        XCTAssertGreaterThanOrEqual(plan.startDate, today)
+        XCTAssertGreaterThan(plan.requiredLeaveDays, 0)
+        let records = plan.plannedRecords(country: .korea)
+        XCTAssertFalse(records.isEmpty)
+        XCTAssertTrue(records.allSatisfy { $0.status == .planned && $0.isRecommended })
+    }
+
+    /// 쓸 연차가 없으면 추천하지 않는다 — 첫 화면은 기존 빈 상태로 돌아간다.
+    func testNoFirstPlanWithoutLeave() {
+        let profile = UserProfile(name: "", yearStartMonth: 1, totalAnnualLeave: 0)
+        profile.country = .korea
+        XCTAssertNil(RecommendationEngine().nextHolidayPlan(for: profile, remainingLeave: 0))
+    }
+
     // MARK: - 세 칸 권한 (무료 · 플러스 · 프로, 2.4.2)
 
     private func resolve(_ ids: [String], gifted: Bool = false, pass: Bool = false) -> ProManager.Entitlement {
@@ -240,6 +262,92 @@ final class MaturityFeatureTests: XCTestCase {
         // 다음 실행 — 이제 온보딩을 마친 사람이지만 이미 본 것으로 적혀 있다
         WhatsNewGate.wasOnboardedAtLaunch = true
         XCTAssertFalse(WhatsNewGate.shouldPresentNow(defaults: defaults))
+    }
+
+    // MARK: - 처음 쓰는 사람의 화면
+
+    private func nextFeature(_ unlocked: Set<SurfaceFeature> = [], records: Int = 0, upcoming: Int = 0,
+                             otherKind: Bool = false, lastUnlock: Date? = nil) -> SurfaceFeature? {
+        SurfaceFeature.next(unlocked: unlocked,
+                            facts: SurfaceFacts(recordCount: records, upcomingCount: upcoming, usesOtherKind: otherKind),
+                            lastUnlock: lastUnlock, now: day(2026, 11, 2), calendar: cal)
+    }
+
+    /// 필요해진 순간에만, 차례대로 하나씩 연다
+    func testSurfaceOpensOneFeatureWhenItsMomentComes() {
+        XCTAssertNil(nextFeature(records: 1))
+        XCTAssertEqual(nextFeature(records: 2), .photoImport)
+        XCTAssertEqual(nextFeature(records: 1, upcoming: 1), .sharePlan)
+        XCTAssertEqual(nextFeature([.photoImport], records: 3), .restPace)
+        XCTAssertEqual(nextFeature(records: 1, otherKind: true), .leaveKinds)
+        XCTAssertEqual(nextFeature([.sharePlan], records: 1, upcoming: 2), .longView)
+        let allButLast = Set(SurfaceFeature.allCases).subtracting([.everything])
+        XCTAssertNil(nextFeature(allButLast, records: 7))
+        XCTAssertEqual(nextFeature(allButLast, records: 8), .everything)
+        XCTAssertNil(nextFeature(Set(SurfaceFeature.allCases), records: 99, upcoming: 9, otherKind: true))
+    }
+
+    /// 조건이 한꺼번에 맞아도 하루에 하나만
+    func testSurfaceOpensAtMostOneFeatureADay() {
+        XCTAssertNil(nextFeature(records: 9, upcoming: 3, otherKind: true, lastUnlock: day(2026, 11, 2)))
+        XCTAssertEqual(nextFeature(records: 9, upcoming: 3, otherKind: true, lastUnlock: day(2026, 11, 1)), .photoImport)
+    }
+
+    func testSimpleSurfaceStringsCoverEveryLanguage() {
+        let saved = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = saved }
+        for lang in AppLanguage.allCases {
+            LanguageManager.shared.currentLanguage = lang
+            let texts = [Strings.showAllFeatures, Strings.showAllFeaturesFooter, Strings.surfaceUnlockHeader]
+                + SurfaceFeature.allCases.flatMap { [Strings.surfaceFeatureTitle($0), Strings.surfaceFeatureDetail($0)] }
+            for text in texts {
+                XCTAssertFalse(text.isEmpty, lang.rawValue)
+                if lang != .korean {
+                    XCTAssertNil(text.range(of: "[가-힣]", options: .regularExpression), "\(lang.rawValue): \(text)")
+                }
+            }
+        }
+    }
+
+    // MARK: - 보조 달력
+
+    /// 각 달력의 새해·첫날로 알려진 양력 날짜 — 칸에는 1일이 나와야 한다
+    func testSecondaryCalendarDays() {
+        XCTAssertEqual(SecondaryCalendar.chinese.dayText(for: day(2026, 2, 17)), "1")   // 설날
+        XCTAssertEqual(SecondaryCalendar.islamic.dayText(for: day(2026, 2, 18)), "1")   // 라마단 1일 (움알쿠라)
+        XCTAssertEqual(SecondaryCalendar.hebrew.dayText(for: day(2026, 9, 12)), "1")    // 로시 하샤나
+        XCTAssertEqual(SecondaryCalendar.persian.dayText(for: day(2026, 3, 21)), "1")   // 노루즈
+        XCTAssertEqual(SecondaryCalendar.indian.dayText(for: day(2026, 3, 22)), "1")    // 차이트라 1일
+        // 불기는 양력과 숫자가 같아 칸에 쓰지 않고, 카드에서 연도로 보여 준다
+        XCTAssertNil(SecondaryCalendar.buddhist.dayText(for: day(2026, 2, 17)))
+
+        let saved = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = saved }
+        LanguageManager.shared.currentLanguage = .english
+        XCTAssertTrue(SecondaryCalendar.buddhist.cardText(for: day(2026, 2, 17)).contains("2569"))
+        XCTAssertTrue(SecondaryCalendar.hebrew.cardText(for: day(2026, 9, 12)).contains("5787"))
+        XCTAssertEqual(SecondaryCalendar.chinese.cardText(for: day(2026, 2, 17)), "Lunar 1/1")
+    }
+
+    /// 고르지 않은 값(빈 문자열)은 보조 달력이 아니고, 모든 달력이 모든 언어에서 글로 나온다
+    func testSecondaryCalendarCoversEveryLanguage() {
+        XCTAssertNil(SecondaryCalendar(rawValue: ""))
+        let saved = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = saved }
+        for lang in AppLanguage.allCases {
+            LanguageManager.shared.currentLanguage = lang
+            let names = SecondaryCalendar.allCases.map(Strings.secondaryCalendarName)
+            XCTAssertEqual(Set(names).count, SecondaryCalendar.allCases.count, lang.rawValue)
+            for text in names + [Strings.secondaryCalendarTitle, Strings.secondaryCalendarNone, Strings.secondaryCalendarFooter] {
+                XCTAssertFalse(text.isEmpty, lang.rawValue)
+                if lang != .korean {
+                    XCTAssertNil(text.range(of: "[가-힣]", options: .regularExpression), "\(lang.rawValue): \(text)")
+                }
+            }
+            for calendar in SecondaryCalendar.allCases {
+                XCTAssertFalse(calendar.cardText(for: day(2026, 11, 1)).isEmpty, lang.rawValue)
+            }
+        }
     }
 
     // MARK: - 새 문구

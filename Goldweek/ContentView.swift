@@ -83,6 +83,8 @@ struct ContentView: View {
                     .task {
                         guard !hasSeenTutorial else { return }
                         hasSeenTutorial = true
+                        // 처음 쓰는 사람은 설명 없이 단순한 화면부터 본다 (사용법은 설정 ▸ 도움말에 있다)
+                        guard !AppSurface.shared.isSimple else { return }
                         // 화면이 자리 잡은 뒤에 — 첫 프레임과 겹치면 놀란다
                         try? await Task.sleep(nanoseconds: 700_000_000)
                         showingTutorial = true
@@ -169,6 +171,10 @@ struct ContentView: View {
                     }
                     .onChange(of: bonusLeaves.count) { _, _ in
                         updateWidget()
+                    }
+                    // 필요해진 순간이 오면 기능을 하나 연다
+                    .onChange(of: surfaceFingerprint, initial: true) { _, _ in
+                        evaluateSurface()
                     }
             } else if hasCompletedOnboarding {
                 // 온보딩 완료했지만 profile이 없는 경우 (빌드로 SwiftData 초기화됨)
@@ -341,7 +347,24 @@ struct ContentView: View {
     // MARK: - Rest Radar (번아웃 평가 + 선제 알림)
 
     /// 휴식 이력으로 번아웃을 평가하고, overdue 이상이면 가까운 저비용 휴식 창과 함께 알림 예약.
+    private var surfaceFingerprint: String {
+        "\(leaveRecords.count)-\(leaveSyncFingerprint)-\(ProManager.shared.isPro)-\(scenePhase == .active)"
+    }
+
+    /// 하나씩 여는 판단은 `SurfaceFeature.next` 에 있다. 여기서는 기록에서 사실만 모은다.
+    private func evaluateSurface() {
+        let active = leaveRecords.filter { $0.status != .cancelled }
+        let today = Calendar.app.startOfDay(for: Date())
+        let facts = SurfaceFacts(recordCount: active.count,
+                                 upcomingCount: active.filter { $0.startDate >= today }.count,
+                                 usesOtherKind: active.contains { !$0.type.deductsFromAnnual || $0.customTypeId != nil })
+        withAnimation(.spring) {
+            AppSurface.shared.evaluate(facts: facts, isPro: ProManager.shared.isPro)
+        }
+    }
+
     private func refreshRestRadar(profile: UserProfile) {
+        guard AppSurface.shared.shows(.restPace) else { return }
         let blocks = BurnoutEngine.restBlocks(from: leaveRecords)
         let assessment = BurnoutEngine().assess(
             breaks: blocks, asOf: Date(),

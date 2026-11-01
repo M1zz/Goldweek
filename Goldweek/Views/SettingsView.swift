@@ -84,6 +84,7 @@ struct SettingsView: View {
     /// 내 주말 ("1,7", "none", 비면 나라 기본) — HolidayService.weekendOverrideRaw 와 같은 키
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
     @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
+    @AppStorage(SecondaryCalendar.storageKey) private var secondaryCalendarRaw = ""
     @AppStorage("rest_radar_enabled") private var restRadarEnabled: Bool = true
 
     // 국가 & 언어
@@ -350,7 +351,7 @@ struct SettingsView: View {
                 }
 
                 // 선물 · 응원 — 상품이 App Store 에 있을 때만 줄이 선다
-                if let gift = ProExtras.shared.gift, let tipJar = ProExtras.shared.tipJar {
+                if AppSurface.shared.shows(.everything), let gift = ProExtras.shared.gift, let tipJar = ProExtras.shared.tipJar {
                     GiftAndTipSection(gift: gift, tipJar: tipJar)
                 }
 
@@ -389,6 +390,7 @@ struct SettingsView: View {
                         }
                     }
 
+                    if AppSurface.shared.shows(.everything) {
                     // 함께 볼 공휴일 — 사는 곳이 다른 지역이거나(스페인 자치주), 회사 본사가 다른 나라일 때
                     Picker(Strings.homeRegionSetting, selection: $selectedHomeCountryRaw) {
                         Text(Strings.homeRegionNone).tag("")
@@ -438,6 +440,8 @@ struct SettingsView: View {
                                 HolidayService.homeHolidaysAreDaysOff = newValue
                                 recommendationEngine.invalidateCache()
                             }
+                    }
+
                     }
 
                     // 주말 — 나라마다 다르고(중동은 금·토), 주말에 일하는 사람도 있다. 비워 두면 나라 기본.
@@ -499,13 +503,28 @@ struct SettingsView: View {
                 } header: {
                     Text(Strings.countryAndLanguage)
                 } footer: {
-                    if !selectedCountry.holidayRegions.isEmpty {
+                    // 처음 쓰는 사람에게는 감춘 설정을 설명하지 않는다
+                    if !AppSurface.shared.shows(.everything) {
+                        Text(Strings.weekendSettingFooter)
+                    } else if !selectedCountry.holidayRegions.isEmpty {
                         Text("\(Strings.holidayRegionFooter(selectedCountry))\n\(Strings.homeRegionFooter)")
                     } else if selectedCountry == .custom {
                         Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
                     } else {
                         Text("\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
                     }
+                }
+
+                if AppSurface.shared.shows(.everything) {
+                Section {
+                    Picker(Strings.secondaryCalendarTitle, selection: $secondaryCalendarRaw) {
+                        Text(Strings.secondaryCalendarNone).tag("")
+                        ForEach(SecondaryCalendar.allCases) { calendar in
+                            Text(Strings.secondaryCalendarName(calendar)).tag(calendar.rawValue)
+                        }
+                    }
+                } footer: {
+                    Text(Strings.secondaryCalendarFooter)
                 }
 
                 // 공휴일 관리
@@ -593,6 +612,8 @@ struct SettingsView: View {
                     }
                 }
 
+                }
+
                 // 연차/휴가 설정
                 let isLeisure = profile.userType == .leisure
                 Section(isLeisure ? Strings.leisureVacationSettings : Strings.annualLeaveSettings) {
@@ -667,6 +688,7 @@ struct SettingsView: View {
                         }
                     }
 
+                    if AppSurface.shared.shows(.everything) {
                     // 공휴일 앞뒤로 휴가를 못 내는 직장(공무원 등) — 추천·최적 플랜이 그 날을 피한다
                     Picker(Strings.blackoutSetting, selection: $holidayBlackoutDays) {
                         Text(Strings.blackoutOff).tag(0)
@@ -760,8 +782,16 @@ struct SettingsView: View {
                     Text(Strings.blackoutFooter)
                         .font(.body)
                         .foregroundStyle(.secondary)
+                    }
                 }
 
+                if !AppSurface.shared.shows(.everything) {
+                    Section {
+                        Button(Strings.showAllFeatures) { withAnimation { AppSurface.shared.showEverything() } }
+                    } footer: {
+                        Text(Strings.showAllFeaturesFooter)
+                    }
+                } else {
                 // 보너스 연차 관리 (Pro 전용, 직장인 모드만)
                 if !isLeisure { Section {
                     // 홈 "연차 현황"에 보너스 합산 여부 (예전엔 홈 화면 토글이었음)
@@ -928,8 +958,11 @@ struct SettingsView: View {
                     StatRow(icon: "chart.pie.fill", iconColor: .orange, title: Strings.leaveUsageRate, value: usageRateText)
                 }
 
+                }
+
                 // 데이터 관리
                 Section {
+                    if AppSurface.shared.shows(.everything) {
                     // 사진에서 휴가 가져오기 (OCR)
                     Button {
                         showingPhotoImport = true
@@ -1038,6 +1071,8 @@ struct SettingsView: View {
                         }
                     }
                     .popoverTip(AppTips.timeMachine)
+
+                    }
 
                     // iCloud 백업
                     Button {

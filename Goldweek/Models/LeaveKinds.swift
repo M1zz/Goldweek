@@ -295,6 +295,16 @@ struct LeaveAllowanceCounter: Equatable {
         planned = kind.allowanceIsHours ? Double(usage.plannedMinutes) : usage.plannedDays
     }
 
+    /// 기본 연차의 카운터 — 남은 양은 홈과 같은 `Summary` 값을 그대로 쓴다.
+    /// 한도를 사용 + 예정 + 남음으로 잡아, 만료된 보너스가 남은 양에 끼지 않고 막대와 숫자가 어긋나지 않는다.
+    init(annual summary: LeaveUsageCalculator.Summary, annualGrant: Double, includingBonus: Bool) {
+        isHours = false
+        carriedIn = summary.carryOver
+        used = summary.used(includingBonus: includingBonus)
+        planned = summary.annualPlanned
+        total = used + planned + summary.remaining(annualGrant: annualGrant, includingBonus: includingBonus)
+    }
+
     /// 그해 한도 카운터 — 넘겨 쓰기를 켠 종류면 지난해까지 남은 양을 더한다
     static func make(kind: CustomLeaveType, records: [LeaveRecord], year: Int, startMonth: Int,
                      asOf now: Date = Date(), calendar: Calendar = .app) -> LeaveAllowanceCounter {

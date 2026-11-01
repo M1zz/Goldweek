@@ -63,7 +63,7 @@ struct AddLeaveView: View {
                 }
 
                 // 탭 선택 — 직장인 모드만 보너스 탭 노출
-                if !isLeisure {
+                if !isLeisure, AppSurface.shared.shows(.leaveKinds) {
                     Picker(Strings.managementType, selection: $selectedTab) {
                         Text(Strings.registerLeave).tag(0)
                         Text(Strings.addLeave).tag(1)
@@ -624,6 +624,7 @@ struct LeaveRegistrationView: View {
                                 }
                             }
                             // 종류 만들기·색 바꾸기
+                            if AppSurface.shared.shows(.leaveKinds) {
                             NavigationLink {
                                 LeaveKindsView()
                             } label: {
@@ -642,6 +643,7 @@ struct LeaveRegistrationView: View {
                                 .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(AppTheme.Colors.brand.opacity(0.4), style: StrokeStyle(lineWidth: 1, dash: [4, 3])))
                             }
                             .buttonStyle(.plain)
+                            }
                         }
                     }
                     .padding(.vertical, 4)

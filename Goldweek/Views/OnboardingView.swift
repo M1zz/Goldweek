@@ -219,6 +219,8 @@ struct OnboardingView: View {
         )
 
         HapticFeedback.success()
+        // 온보딩을 거친 사람은 새로 온 사람이다 — 핵심 기능만 보이는 화면에서 시작한다
+        AppSurface.shared.startSimple()
         withAnimation {
             isOnboardingComplete = true
         }

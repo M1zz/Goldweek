@@ -2152,6 +2152,37 @@ final class LeaveKindAllowanceTests: XCTestCase {
         XCTAssertEqual(orphan[.builtIn(.special)]?.totalCount, 2)
     }
 
+    /// 종류별 합계의 연차 "남음"은 홈과 같은 값이다 (이탈리아 피드백: Ferie 만 남음이 없었다)
+    func testAnnualCounterMatchesHomeRemaining() {
+        func summary(used: Double, planned: Double = 0, granted: Double = 0, usedBonus: Double = 0,
+                     remainingBonus: Double = 0, carryOver: Double = 0) -> LeaveUsageCalculator.Summary {
+            LeaveUsageCalculator.Summary(annualUsed: used, annualPlanned: planned, allTypesUsed: used, allTypesPlanned: planned,
+                                         usedCount: 0, plannedCount: 0, annualUsedCount: 0, annualPlannedCount: 0,
+                                         cancelledCount: 0, grantedBonus: granted, usedBonus: usedBonus,
+                                         remainingBonus: remainingBonus, carryOver: carryOver)
+        }
+
+        // Antonio 의 화면: 22일 중 19일 사용 → 3일 남음
+        let plain = LeaveAllowanceCounter(annual: summary(used: 19), annualGrant: 22, includingBonus: true)
+        XCTAssertEqual(plain.remaining, 3)
+        XCTAssertEqual(plain.text(plain.remaining), Strings.dayCount(3))
+
+        // 예정과 이월도 홈과 같게 센다
+        let carried = LeaveAllowanceCounter(annual: summary(used: 5, planned: 2, carryOver: 4), annualGrant: 10, includingBonus: false)
+        XCTAssertEqual(carried.remaining, 7)
+        XCTAssertEqual(carried.carriedIn, 4)
+
+        // 만료된 보너스는 남은 양에 끼지 않는다
+        let expired = summary(used: 19, granted: 2, usedBonus: 1, remainingBonus: 0)
+        XCTAssertEqual(LeaveAllowanceCounter(annual: expired, annualGrant: 22, includingBonus: true).remaining,
+                       expired.remaining(annualGrant: 22, includingBonus: true))
+
+        // 연차를 넘겨 써도 홈처럼 0 — 음수나 "넘게 썼어요"를 띄우지 않는다
+        let over = LeaveAllowanceCounter(annual: summary(used: 25), annualGrant: 22, includingBonus: false)
+        XCTAssertEqual(over.remaining, 0)
+        XCTAssertFalse(over.isOver)
+    }
+
     func testBulkEntryInEveryLanguageAndHours() {
         // 번체 중국어로 넣은 일괄 입력도 일괄 입력으로 알아본다 (예전엔 6개 언어만 — 근무일로 세어 줄었다)
         XCTAssertEqual(LeaveRecord.bulkSummaryNotes.count, AppLanguage.allCases.count)

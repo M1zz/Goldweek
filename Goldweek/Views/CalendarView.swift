@@ -201,19 +201,7 @@ struct CalendarView: View {
             includePast: false,
             existingLeaveDates: existingLeaveDates
         )
-        let holidaySet = Set(holidays.map { calendar.startOfDay(for: $0.date) })
-        recommendations = recs.filter { rec in
-            guard rec.requiredLeaveDays > 0 else { return false }
-            // 범위 안에 공휴일이 하나라도 포함된 추천만
-            var d = calendar.startOfDay(for: rec.startDate)
-            let end = calendar.startOfDay(for: rec.endDate)
-            while d <= end {
-                if holidaySet.contains(d) { return true }
-                guard let next = calendar.date(byAdding: .day, value: 1, to: d) else { break }
-                d = next
-            }
-            return false
-        }
+        recommendations = RecommendationEngine.holidayPlans(recs, holidays: holidays, calendar: calendar)
     }
 
     /// 휴가 삭제 — 휴가 사용 내역과 같은 규칙을 쓴다.
@@ -242,20 +230,7 @@ struct CalendarView: View {
 
     /// 추천을 등록한다 — 주말·공휴일을 뺀 **연차 내는 날만** 휴가로 잡는다.
     private func addLeave(from recommendation: LeaveRecommendation) {
-        let years = Set([recommendation.startDate, recommendation.endDate].map { calendar.component(.year, from: $0) })
-        let rangeHolidays = years.flatMap {
-            DayOffCalendar.shared.holidays(for: $0, country: profile.country)
-        }
-        let records = recommendation.leaveSegments(holidays: rangeHolidays).map {
-            LeaveRecord(
-                startDate: $0.start,
-                endDate: $0.end,
-                type: .annual,
-                status: .planned,
-                note: recommendation.title,
-                isRecommended: true
-            )
-        }
+        let records = recommendation.plannedRecords(country: profile.country, calendar: calendar)
         guard !records.isEmpty else { return }
         records.forEach { modelContext.insert($0) }
         addedRecommendationIDs.insert(recommendation.id)
@@ -281,6 +256,7 @@ struct CalendarView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     // 보기 범위 — 한 달 / 여러 달
+                    if AppSurface.shared.shows(.longView) {
                     Picker(Strings.calendarSpanLabel, selection: $spanRaw) {
                         ForEach(CalendarSpan.allCases) { s in
                             Text(Strings.calendarSpanName(months: s.rawValue)).tag(s.rawValue)
@@ -289,6 +265,7 @@ struct CalendarView: View {
                     .pickerStyle(.segmented)
                     .onChange(of: spanRaw) { _, new in
                         if new > 1 { UsageReportingService.record(event: "calendar_span:\(new)") }
+                    }
                     }
 
                     if span != .one {
@@ -305,7 +282,9 @@ struct CalendarView: View {
                     MonthNavigator(currentMonth: $currentMonth)
 
                     // 날짜 탭 등록 팁
-                    TipView(AppTips.calendarTap)
+                    if AppSurface.shared.shows(.everything) {
+                        TipView(AppTips.calendarTap)
+                    }
 
                     // 공휴일 데이터 신뢰 범위를 벗어난 연도 안내
                     // (스크린샷 모드는 일부러 내년을 띄우므로 빼 둔다)
@@ -321,19 +300,19 @@ struct CalendarView: View {
                         holidays: holidays,
                         leaveRecords: leaveRecords,
                         recommendedDates: recommendedDates,
-                        warningDates: burnoutWarningDates
+                        warningDates: AppSurface.shared.shows(.restPace) ? burnoutWarningDates : []
                     )
 
                     // 범례
                     LegendView(showsRecommendation: !recommendedDates.isEmpty,
-                               showsWarning: !burnoutWarningDates.isEmpty,
+                               showsWarning: AppSurface.shared.shows(.restPace) && !burnoutWarningDates.isEmpty,
                                showsMyBreak: holidays.contains { $0.isBreak && calendar.isDate($0.date, equalTo: currentMonth, toGranularity: .month) },
                                showsChildBreak: monthHasChildBreak,
                                showsHomeHoliday: monthHasHomeHoliday,
                                leaveKinds: monthLeaveKinds)
 
                     // 추천이 실제로 있을 때만 안내한다 — 없는 기능을 설명하면 소음이다
-                    if !recommendedDates.isEmpty {
+                    if AppSurface.shared.shows(.everything), !recommendedDates.isEmpty {
                         TipView(AppTips.recommendation)
                     }
 
@@ -343,7 +322,7 @@ struct CalendarView: View {
                         holidays: holidays,
                         leaveRecords: leaveRecords,
                         recommendations: recommendations,
-                        showsTravelSuggestions: showsMRTSuggestions,
+                        showsTravelSuggestions: AppSurface.shared.shows(.everything) && showsMRTSuggestions,
                         originCountry: profile.country,
                         onAddLeave: {
                             AppTips.calendarTap.invalidate(reason: .actionPerformed)
@@ -745,9 +724,18 @@ struct DayCell: View {
     @Environment(\.colorSchemeContrast) private var contrast
     /// 칸 모서리의 작은 표시(하트·班·휴무) — 글자 크기 설정을 따라 커진다
     @ScaledMetric(relativeTo: .caption2) private var markFontSize: CGFloat = 9
-    private var cellHeight: CGFloat { isWide ? 64 : 40 }
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @AppStorage(SecondaryCalendar.storageKey) private var secondaryCalendarRaw = ""
+    /// 보조 달력의 날짜 — 아주 큰 글자에서는 칸에 들어가지 않아 날짜 카드에서만 보여 준다
+    private var secondaryDay: String? {
+        guard dynamicTypeSize < .accessibility1 else { return nil }
+        return SecondaryCalendar(rawValue: secondaryCalendarRaw)?.dayText(for: date)
+    }
+    /// 폰에서는 보조 날짜가 들어갈 자리만큼 칸을 키우고 막대·점을 그 아래로 내린다
+    private var cellHeight: CGFloat { isWide ? 64 : (secondaryDay == nil ? 40 : 50) }
     private var circleSize: CGFloat { isWide ? 46 : 34 }
     private var markOffset: CGFloat { isWide ? 22 : 14 }
+    private var restMarkOffset: CGFloat { !isWide && secondaryDay != nil ? 20 : markOffset }
 
     var dayNumber: Int {
         calendar.component(.day, from: date)
@@ -817,19 +805,28 @@ struct DayCell: View {
                 Circle()
                     .fill(AppTheme.Colors.holiday)
                     .frame(width: 6, height: 6)
-                    .offset(y: markOffset)
+                    .offset(y: restMarkOffset)
             } else if isHomeHoliday && !isHoliday && !isSelected && !barVisible {
                 // 사는 곳 공휴일(참고) — 빈 링
                 Circle()
                     .stroke(AppTheme.Colors.holiday, lineWidth: 1.5)
                     .frame(width: 7, height: 7)
-                    .offset(y: markOffset)
+                    .offset(y: restMarkOffset)
             }
 
             Text("\(dayNumber)")
                 .font(.system(isWide ? .title3 : .body, weight: (isToday || isRecommended) ? .bold : .regular))
                 .foregroundStyle(textColor)
                 .underline(differentiateWithoutColor && (isHoliday || isHomeHoliday) && !isSelected)
+                .offset(y: secondaryDay == nil ? 0 : (isWide ? -7 : -5))
+
+            if let secondaryDay {
+                Text(verbatim: secondaryDay)
+                    .font(.system(size: markFontSize * (isWide ? 1.2 : 1)))
+                    .monospacedDigit()
+                    .foregroundStyle(isSelected ? .white : (contrast == .increased ? .primary : .secondary))
+                    .offset(y: isWide ? 11 : 8)
+            }
 
             if isAnniversary && !isSelected {
                 Image(systemName: "heart.fill")
@@ -879,7 +876,7 @@ struct DayCell: View {
             )
             .padding(.leading, leaveConnectsLeft ? -5 : 0)
             .padding(.trailing, leaveConnectsRight ? -5 : 0)
-            .offset(y: markOffset)
+            .offset(y: restMarkOffset)
     }
 }
 
@@ -1046,6 +1043,8 @@ struct SelectedDateInfo: View {
     var onEditLeave: ((LeaveRecord) -> Void)? = nil
     var onDeleteLeave: ((LeaveRecord) -> Void)? = nil
 
+    @AppStorage(SecondaryCalendar.storageKey) private var secondaryCalendarRaw = ""
+
     private let calendar = Calendar.app
 
     var holidayOnDate: Holiday? {
@@ -1078,6 +1077,12 @@ struct SelectedDateInfo: View {
             Text(date.appFormatted(date: .full))
                 .font(.headline)
                 .voHeader()
+
+            if let secondary = SecondaryCalendar(rawValue: secondaryCalendarRaw) {
+                Text(verbatim: secondary.cardText(for: date))
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+            }
 
             if let holiday = holidayOnDate {
                 HStack {

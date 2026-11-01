@@ -29,13 +29,17 @@ struct TutorialView: View {
     }
 
     private var pages: [Page] {
-        [
-            Page(icon: "plus.circle.fill", tint: AppTheme.Colors.brand,
-                 title: Strings.tutorialAddTitle, message: Strings.tutorialAddMessage),
+        let add = Page(icon: "plus.circle.fill", tint: AppTheme.Colors.brand,
+                       title: Strings.tutorialAddTitle, message: Strings.tutorialAddMessage)
+        let recommend = Page(icon: "sparkles", tint: AppTheme.Colors.bonus,
+                             title: Strings.tutorialRecommendTitle, message: Strings.tutorialRecommendMessage)
+        // 처음 쓰는 사람에게는 화면에 있는 것만 알려 준다
+        if AppSurface.shared.isSimple { return [add, recommend] }
+        return [
+            add,
             Page(icon: "doc.text.viewfinder", tint: .blue,
                  title: Strings.tutorialPhotoTitle, message: Strings.tutorialPhotoMessage),
-            Page(icon: "sparkles", tint: AppTheme.Colors.bonus,
-                 title: Strings.tutorialRecommendTitle, message: Strings.tutorialRecommendMessage),
+            recommend,
             Page(icon: "gift.fill", tint: AppTheme.Colors.bonus,
                  title: Strings.tutorialBonusTitle, message: Strings.tutorialBonusMessage),
             Page(icon: "person.2.fill", tint: .green,

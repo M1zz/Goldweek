@@ -435,23 +435,37 @@ struct LeaveKindStatsView: View {
 
     @Query(sort: \CustomLeaveType.createdAt) private var customTypes: [CustomLeaveType]
     @Query private var records: [LeaveRecord]
+    @Query private var profiles: [UserProfile]
+    @Query private var bonuses: [BonusLeave]
+    /// 홈 카드와 같은 설정을 본다 — 연차의 남은 양이 화면마다 달라지면 안 된다
+    @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
     @State private var store = LeaveStyleStore.shared
+    @State private var editing: CustomLeaveType?
 
-    /// 쓴 기록이 있거나 한도를 정한 종류만, 사용자가 정한 순서로
+    /// 기본 연차의 카운터 — 연차를 정해 두지 않았으면 없음
+    private var annualCounter: LeaveAllowanceCounter? {
+        guard let grant = profiles.first?.totalAnnualLeave, grant > 0 else { return nil }
+        let summary = LeaveUsageCalculator.summary(records: records, bonuses: bonuses, year: year,
+                                                   startMonth: startMonth, annualGrant: grant)
+        return LeaveAllowanceCounter(annual: summary, annualGrant: grant, includingBonus: includeBonusInStatus)
+    }
+
+    /// 쓴 기록이 있거나 남은 양을 셀 수 있는 종류만, 사용자가 정한 순서로
     private var rows: [(ref: LeaveKindRef, usage: LeaveKindUsage, kind: CustomLeaveType?, counter: LeaveAllowanceCounter?)] {
         let usage = LeaveKindUsage.byKind(records: records, customTypes: customTypes, year: year, startMonth: startMonth)
+        let annualCounter = annualCounter
         return store.orderedKinds(custom: customTypes).compactMap { ref in
             let kind: CustomLeaveType? = {
                 if case .custom(let id) = ref { return customTypes.first { $0.id == id } }
                 return nil
             }()
             let u = usage[ref] ?? LeaveKindUsage()
-            guard u.totalCount > 0 || kind?.hasAllowance == true else { return nil }
-            let counter = kind.flatMap { k in
+            let counter = ref == .builtIn(.annual) ? annualCounter : kind.flatMap { k in
                 k.hasAllowance ? LeaveAllowanceCounter(kind: k, usage: u,
                                                        carriedIn: LeaveAllowanceCounter.carryIn(kind: k, records: records,
                                                                                                year: year, startMonth: startMonth)) : nil
             }
+            guard u.totalCount > 0 || counter != nil else { return nil }
             return (ref, u, kind, counter)
         }
     }
@@ -466,7 +480,9 @@ struct LeaveKindStatsView: View {
             } else {
                 Section {
                     ForEach(rows, id: \.ref) { row in
-                        LeaveKindStatsRow(ref: row.ref, usage: row.usage, kind: row.kind, counter: row.counter)
+                        LeaveKindStatsRow(ref: row.ref, usage: row.usage, kind: row.kind, counter: row.counter) {
+                            editing = row.kind
+                        }
                     }
                 } header: {
                     Text(verbatim: Strings.yearLabel(year))
@@ -477,6 +493,9 @@ struct LeaveKindStatsView: View {
         }
         .navigationTitle(Strings.statsByKindTitle)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $editing) { kind in
+            LeaveKindEditor(kind: kind)
+        }
     }
 }
 
@@ -486,6 +505,10 @@ private struct LeaveKindStatsRow: View {
     let kind: CustomLeaveType?
     /// 한도가 있는 종류의 카운터 (넘어온 양 포함)
     let counter: LeaveAllowanceCounter?
+    let onSetAllowance: () -> Void
+
+    /// 직접 만든 종류인데 한도가 없으면 "남음" 자리에서 한도를 정하게 한다
+    private var canSetAllowance: Bool { kind != nil && counter == nil }
 
     private var name: String {
         switch ref {
@@ -534,6 +557,18 @@ private struct LeaveKindStatsRow: View {
                 figure(Strings.statPlanned, amount(days: usage.plannedDays, minutes: usage.plannedMinutes), .blue)
                 if let counter {
                     figure(Strings.remaining, counter.text(counter.remaining), counter.isOver ? .red : .primary)
+                } else if canSetAllowance {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(Strings.remaining).font(.body).foregroundStyle(.secondary)
+                        // borderless: 목록 줄 전체가 눌리지 않고 이 글자만 눌린다
+                        Button(Strings.allowanceToggle, action: onSetAllowance)
+                            .buttonStyle(.borderless)
+                            .font(.body.weight(.semibold))
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.7)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
 
@@ -549,7 +584,8 @@ private struct LeaveKindStatsRow: View {
                         .font(.body)
                         .foregroundStyle(.red)
                 }
-            } else if showsHours {
+            }
+            if showsHours && (counter == nil || daysFirst) {
                 // 시간으로 보여 줄 때는 일수도 함께 (시간 단위 휴가는 하루 근무 시간 기준 일수).
                 // 연차는 반대로 일수가 위, 시간이 여기
                 Text(daysFirst ? Strings.durationText(minutes: usage.usedMinutes + usage.plannedMinutes)
@@ -560,6 +596,11 @@ private struct LeaveKindStatsRow: View {
         }
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
+        .accessibilityActions {
+            if canSetAllowance {
+                Button(Strings.allowanceToggle, action: onSetAllowance)
+            }
+        }
     }
 
     private func figure(_ title: String, _ value: String, _ color: Color) -> some View {

@@ -1171,6 +1171,16 @@ enum BonusLeaveType: String, Codable, CaseIterable, Identifiable {
 }
 
 extension LeaveRecommendation {
+    /// 이 추천을 일정에 넣을 때 만들 기록 — 주말·공휴일을 뺀 연차 내는 날만.
+    func plannedRecords(country: Country, calendar: Calendar = .app) -> [LeaveRecord] {
+        let years = Set([startDate, endDate].map { calendar.component(.year, from: $0) })
+        let holidays = years.flatMap { DayOffCalendar.shared.holidays(for: $0, country: country) }
+        return leaveSegments(holidays: holidays, country: country, calendar: calendar).map {
+            LeaveRecord(startDate: $0.start, endDate: $0.end, type: .annual, status: .planned,
+                        note: title, isRecommended: true)
+        }
+    }
+
     /// 추천 기간 중 **실제로 연차를 내야 하는 날**만 연속 구간으로 묶는다.
     ///
     /// 추천의 startDate~endDate는 "쉬는 기간 전체"(주말·공휴일 포함)다. 그대로 등록하면

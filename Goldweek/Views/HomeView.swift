@@ -25,6 +25,11 @@ struct HomeView: View {
     @State private var showingFatigueCheckIn = false
     @State private var showingAddLeave = false
     @State private var showingHolidayManagement = false
+    /// 기록이 없을 때 첫 화면에 보여줄 연휴 추천
+    @State private var firstPlan: LeaveRecommendation?
+    @State private var didLookForFirstPlan = false
+    /// 지난 연차를 넣은 직후에는 이어서 연휴 추천을 보여준다 (기록이 생겨도)
+    @AppStorage("offersPlanAfterPastEntry") private var offersPlanAfterPastEntry = false
     @AppStorage("hasSeenPastLeavePrompt") private var hasSeenPastLeavePrompt = false
     /// 닫은 공휴일 안내 — "unsupported:AT" 또는 "region:germany" 형태로 쌓는다
     @AppStorage("dismissedHolidayNotices") private var dismissedHolidayNoticesRaw = ""
@@ -199,12 +204,52 @@ struct HomeView: View {
         return monthsElapsed >= 1
     }
 
+    /// 아직 잡아 둔 휴가가 없는 첫 단계 — 기록이 없거나, 지난 연차만 막 넣은 참
+    private var offersFirstPlan: Bool {
+        leaveRecords.isEmpty || (offersPlanAfterPastEntry && !leaveRecords.contains { $0.status == .planned })
+    }
+
+    /// 추천에 쓸 연차 — 현황 카드의 남음과 같은 계산
+    private var firstPlanLeave: Double {
+        LeaveUsageCalculator.currentSummary(records: leaveRecords, startMonth: profile.yearStartMonth,
+                                            annualGrant: profile.totalAnnualLeave)
+            .remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)
+    }
+
+    private func findFirstPlan() {
+        firstPlan = offersFirstPlan
+            ? RecommendationEngine().nextHolidayPlan(for: profile, remainingLeave: firstPlanLeave)
+            : nil
+        didLookForFirstPlan = true
+    }
+
+    private func addFirstPlan(_ plan: LeaveRecommendation) {
+        let records = plan.plannedRecords(country: profile.country)
+        guard !records.isEmpty else { return }
+        records.forEach { modelContext.insert($0) }
+        do {
+            try modelContext.save()
+            UsageReportingService.record(event: "recommendation_added")
+            A11yAnnounce.post(Strings.a11yRecommendationAdded(plan.title))
+            AppTips.recommendation.invalidate(reason: .actionPerformed)
+            HapticFeedback.success()
+        } catch {
+            records.forEach { modelContext.delete($0) }
+            HapticFeedback.error()
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
                     // 연차 현황 카드
                     LeaveStatusCard(profile: profile)
+
+                    if let feature = AppSurface.shared.pending {
+                        SurfaceUnlockCard(feature: feature)
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                    }
 
                     // 공휴일 안내 — 지원하지 않는 나라이거나, 지역을 아직 안 고른 나라
                     if let notice = holidayNotice {
@@ -217,30 +262,37 @@ struct HomeView: View {
                     }
 
                     // 가족 일정 공유 팁 (기록이 좀 쌓인 뒤에 노출)
-                    if !leaveRecords.isEmpty {
+                    if AppSurface.shared.shows(.sharePlan), !leaveRecords.isEmpty {
                         TipView(AppTips.familyShare)
                     }
 
                     // 휴가 페이스 (소진 속도 + 번아웃 신호) — 직장인 모드 + 데이터 충분 시
-                    if profile.userType == .employee, profile.totalAnnualLeave > 0, !leaveRecords.isEmpty {
+                    if AppSurface.shared.shows(.restPace), profile.userType == .employee, profile.totalAnnualLeave > 0, !leaveRecords.isEmpty {
                         BurnoutPaceCard(profile: profile, allLeaveRecords: leaveRecords)
                     }
 
-                    // 이전 연차 빠른 입력 배너 (기록 없고 기준월 1개월+ 경과)
+                    // 처음 온 사람에게는 할 일을 하나씩 — 남은 연차를 맞추고, 그다음 연휴를 잡는다
                     if shouldShowPastLeavePrompt {
                         PastLeavePromptBanner(
                             onQuickEntry: { showingPastLeaveEntry = true },
-                            onDismiss: { hasSeenPastLeavePrompt = true }
+                            onNoneYet: { withAnimation(.spring) { hasSeenPastLeavePrompt = true } }
                         )
-                    }
-
-                    // 신규 사용자 빈 상태 — 기록이 하나도 없으면 첫 등록을 유도
-                    if leaveRecords.isEmpty && !shouldShowPastLeavePrompt {
-                        EmptyHomeCard(onAddLeave: { showingAddLeave = true })
+                    } else if offersFirstPlan, didLookForFirstPlan {
+                        if let firstPlan {
+                            FirstPlanCard(
+                                plan: firstPlan,
+                                country: profile.country,
+                                onAdd: { addFirstPlan(firstPlan) },
+                                onPickOther: { showingAddLeave = true },
+                                onDismiss: leaveRecords.isEmpty ? nil : { withAnimation(.spring) { offersPlanAfterPastEntry = false } }
+                            )
+                        } else if leaveRecords.isEmpty {
+                            EmptyHomeCard(onAddLeave: { showingAddLeave = true })
+                        }
                     }
 
                     // 캘린더 자동 감지 결과 배너 (Pro)
-                    if !autoDetectedCandidates.isEmpty {
+                    if AppSurface.shared.shows(.everything), !autoDetectedCandidates.isEmpty {
                         AutoDetectBanner(
                             count: autoDetectedCandidates.count,
                             onReview: { showingCalendarImport = true },
@@ -249,7 +301,7 @@ struct HomeView: View {
                     }
 
                     // Pro 업그레이드 배너 (스마트 트리거: 쿨다운 + 의미 있는 상황일 때만)
-                    if let context = proBannerContext {
+                    if AppSurface.shared.shows(.everything), let context = proBannerContext {
                         ProBannerView(
                             triggerIcon: context.icon,
                             triggerMessage: context.message,
@@ -259,7 +311,7 @@ struct HomeView: View {
 
                     // 응원 부탁 — 위 Pro 배너와 겹치지 않는다(배너는 무료 사용자, 이 카드는 프로 이상).
                     // 파는 말 둘이 겹치면 둘 다 약해진다. 플러스에게는 위 등급이 맞는 길이라 묻지 않는다.
-                    if let moment = tipMoment, let tipJar = extras.tipJar {
+                    if AppSurface.shared.shows(.everything), let moment = tipMoment, let tipJar = extras.tipJar {
                         LeeoTipAskCard(tipJar: tipJar, moment: moment,
                                        onSupport: {
                                            showingTipJar = true
@@ -270,25 +322,32 @@ struct HomeView: View {
                     }
 
                     // 다가오는 휴가 (설정에 따라 공휴일 포함)
-                    if !upcomingItems.isEmpty {
+                    if !upcomingItems.isEmpty, !shouldShowPastLeavePrompt, !offersFirstPlan || firstPlan == nil {
                         UpcomingLeavesSection(items: upcomingItems)
                     }
 
                     // 45일 안의 가족 기념일 — 평일이면 그날 바로 휴가를 낼 수 있게
-                    UpcomingAnniversariesCard(profile: profile)
+                    if AppSurface.shared.shows(.everything) {
+                        UpcomingAnniversariesCard(profile: profile)
 
-                    // 내역 안내는 **인라인**으로 — 팝오버로 띄우면 화면 맨 아래라
-                    // 탭바에 물려 잘린다(여백을 줄 자리가 없다).
-                    TipView(AppTips.leaveHistory)
+                        // 내역 안내는 **인라인**으로 — 팝오버로 띄우면 화면 맨 아래라
+                        // 탭바에 물려 잘린다(여백을 줄 자리가 없다).
+                        TipView(AppTips.leaveHistory)
+                    }
 
-                    // 휴가 사용 내역 버튼 (맨 아래)
-                    LeaveHistoryButton(
-                        usedCount: usedLeavesCount,
-                        action: { showingHistory = true }
-                    )
+                    // 휴가 사용 내역 버튼 (맨 아래) — 내역이 생기기 전에는 열어 볼 것이 없다
+                    if !leaveRecords.isEmpty {
+                        LeaveHistoryButton(
+                            usedCount: usedLeavesCount,
+                            action: { showingHistory = true }
+                        )
+                    }
 
                 }
                 .padding()
+            }
+            .task(id: "\(offersFirstPlan)-\(firstPlanLeave)-\(profile.country.rawValue)") {
+                findFirstPlan()
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -318,7 +377,12 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingPastLeaveEntry) {
                 PastLeaveQuickEntrySheet(profile: profile)
-                    .onDisappear { hasSeenPastLeavePrompt = true }
+                    .onDisappear {
+                        // 취소했으면 질문을 그대로 둔다 — 넣었을 때만 다음 단계로
+                        guard !leaveRecords.isEmpty else { return }
+                        hasSeenPastLeavePrompt = true
+                        offersPlanAfterPastEntry = true
+                    }
             }
             .sheet(isPresented: $showingFatigueCheckIn) {
                 FatigueCheckInView()
@@ -345,12 +409,13 @@ struct HomeView: View {
             .onReceive(extras.tipAvailability) { _ in evaluateTipAsk() }
             .onAppear {
                 // 가끔(쿨다운 후) 단일문항 피로 체크인 — 모델을 주관 상태로 보정
-                if profile.userType == .employee, !leaveRecords.isEmpty, !ScreenshotMode.isActive,
+                if AppSurface.shared.shows(.restPace), profile.userType == .employee, !leaveRecords.isEmpty, !ScreenshotMode.isActive,
                    FatigueCheckIn.isDue(hasHistory: true) {
                     showingFatigueCheckIn = true
                 }
             }
             .task {
+                guard AppSurface.shared.shows(.everything) else { return }
                 await autoScanCalendar()
             }
         }
@@ -440,6 +505,34 @@ struct HomeView: View {
 }
 
 // MARK: - 캘린더 자동 감지 배너
+/// 방금 열린 기능 하나 — 언제 왜 필요한지 말하고, 확인하면 물러난다
+struct SurfaceUnlockCard: View {
+    let feature: SurfaceFeature
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label(Strings.surfaceUnlockHeader, systemImage: "sparkles")
+                .font(.body.weight(.semibold))
+                .foregroundStyle(AppTheme.Colors.brand)
+            Text(Strings.surfaceFeatureTitle(feature))
+                .font(.headline)
+            Text(Strings.surfaceFeatureDetail(feature))
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Button(Strings.confirm) {
+                withAnimation(.spring) { AppSurface.shared.confirmPending() }
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(AppTheme.Colors.brand)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(AppTheme.Colors.brand.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+}
+
 struct AutoDetectBanner: View {
     let count: Int
     let onReview: () -> Void
@@ -677,6 +770,71 @@ struct HolidayRegionNoticeCard: View {
 }
 
 // MARK: - 신규 사용자 빈 상태 카드
+/// 처음 온 사람에게 건네는 할 일 하나 — 가장 가까운 연휴를 한 번에 일정으로 넣는다.
+struct FirstPlanCard: View {
+    let plan: LeaveRecommendation
+    let country: Country
+    let onAdd: () -> Void
+    let onPickOther: () -> Void
+    /// 지난 연차만 넣은 사람은 추천을 치워 둘 수 있다
+    let onDismiss: (() -> Void)?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text(Strings.emptyHomeTitle)
+                    .font(.headline)
+                    .voHeader()
+                Spacer()
+                if let onDismiss {
+                    Button(action: onDismiss) {
+                        Image(systemName: "xmark")
+                            .foregroundStyle(.secondary)
+                    }
+                    .accessibilityLabel(Text(Strings.cancel))
+                }
+            }
+
+            Text(plan.title)
+                .font(.body)
+                .foregroundStyle(.secondary)
+
+            RecommendationDatePreview(startDate: plan.startDate, endDate: plan.endDate, country: country)
+
+            HStack(spacing: 8) {
+                Label(Strings.leaveRequired(Int(plan.requiredLeaveDays)), systemImage: "briefcase.fill")
+                    .foregroundStyle(.blue)
+                Text("→")
+                    .foregroundStyle(.secondary)
+                    .voDecorative()
+                Label(Strings.daysOff(plan.totalDaysOff), systemImage: "sun.max.fill")
+                    .foregroundStyle(.green)
+            }
+            .font(.body.weight(.semibold))
+            .frame(maxWidth: .infinity)
+
+            Button(action: onAdd) {
+                Label(Strings.addToScheduleAction, systemImage: "plus.circle.fill")
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(AppTheme.Colors.brand)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+
+            Button(Strings.emptyHomeCTA, action: onPickOther)
+                .frame(maxWidth: .infinity)
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
+}
+
 struct EmptyHomeCard: View {
     let onAddLeave: () -> Void
 
@@ -906,6 +1064,7 @@ struct LeaveStatusCard: View {
                 Text(isLeisure ? Strings.leisureVacationPlanTitle : Strings.annualLeaveStatusTitle)
                     .font(.headline)
                 Spacer()
+                if AppSurface.shared.shows(.sharePlan) {
                 Button {
                     // 렌더는 시트 안에서 한다 — 여기서 실패하면 버튼이 죽은 것처럼 보인다.
                     showingShareSheet = true
@@ -919,7 +1078,9 @@ struct LeaveStatusCard: View {
                 }
                 .accessibilityLabel(Text(Strings.sharePlan))
                 .popoverTip(AppTips.sharePlan)
+                }
 
+                if AppSurface.shared.shows(.photoImport) {
                 Button {
                     AppTips.photoImport.invalidate(reason: .actionPerformed)
                     showingPhotoImport = true
@@ -934,6 +1095,7 @@ struct LeaveStatusCard: View {
                 .popoverTip(AppTips.photoImport)
                 .accessibilityLabel(Text(Strings.importFromPhoto))
                 .accessibilityInputLabels([Text(Strings.importFromPhoto)])
+                }
 
                 Button {
                     showingAddLeave = true
@@ -1511,59 +1673,53 @@ struct LeaveHistoryButton: View {
 // MARK: - 이전 연차 입력 배너
 struct PastLeavePromptBanner: View {
     let onQuickEntry: () -> Void
-    let onDismiss: () -> Void
+    let onNoneYet: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                HStack(spacing: 6) {
-                    Image(systemName: "calendar.badge.exclamationmark")
-                        .foregroundStyle(.orange)
-                        .voDecorative()
-                    Text(Strings.pastLeavePromptTitle)
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .voHeader()
-                }
-                Spacer()
-                Button(action: onDismiss) {
-                    Image(systemName: "xmark")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                }
-                .accessibilityLabel(Text(Strings.cancel))
-            }
+        VStack(alignment: .leading, spacing: 14) {
+            Text(Strings.pastLeavePromptTitle)
+                .font(.headline)
+                .voHeader()
 
             Text(Strings.pastLeavePromptDesc)
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Button(action: onQuickEntry) {
-                HStack(spacing: 6) {
-                    Image(systemName: "plus.circle.fill")
-                        .voDecorative()
-                    Text(Strings.pastLeaveQuickAdd)
-                        .fontWeight(.semibold)
-                }
-                .font(.body)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .background(Color.orange)
-                .foregroundStyle(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) { answers }
+                VStack(spacing: 10) { answers }
             }
-            .buttonStyle(.plain)
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.orange.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
-                )
-        )
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
+
+    @ViewBuilder private var answers: some View {
+        Button(action: onNoneYet) {
+            Text(Strings.pastLeaveNoneYet)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(Color(.secondarySystemBackground))
+                .foregroundStyle(.primary)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+
+        Button(action: onQuickEntry) {
+            Text(Strings.pastLeaveQuickAdd)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(AppTheme.Colors.brand)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
     }
 }
 
