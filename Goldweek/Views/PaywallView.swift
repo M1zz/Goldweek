@@ -3,7 +3,8 @@
 //  Goldweek
 //
 //  요금제 페이월 (다국어 지원). 무료 · 플러스 · 프로 세 칸을 위에서 아래로 놓고,
-//  유료 칸마다 연 구독과 평생을 고른다(LeeoKit `LeeoTermPicker`). 칸 아래에 언제나 평생 패스 한 줄.
+//  유료 칸마다 연 구독과 평생을 고르고(LeeoKit `LeeoTermPicker`), 주 · 월은 펼쳐서 고른다.
+//  칸 아래에 비교표.
 //  무엇을 왜 어느 칸에 두는지는 docs/MONETIZATION.md.
 //
 
@@ -20,6 +21,8 @@ struct PaywallView: View {
     @State private var isSuccess = false
     /// 칸마다 고른 길 (연 구독 / 평생)
     @State private var terms: [ProTier: LeeoPlanTerm]
+    /// 칸마다 고른 주 · 월 구독. 있으면 `terms` 보다 앞선다.
+    @State private var shortPlans: [ProTier: String] = [:]
     /// 지금 결제 중인 칸
     @State private var buyingTier: ProTier?
     /// App Store 오퍼 코드 입력 시트 (StoreKit 2). 받은 코드는 `Transaction.updates` 로 들어와 Pro 가 열린다.
@@ -50,13 +53,15 @@ struct PaywallView: View {
                         ForEach(Self.ladder, id: \.self) { tier in
                             tierCard(tier).id(tier)
                         }
-                        // 언제나 평생 패스: 이 개발자의 모든 앱을 평생으로. 패스 상품은 LeeoKit 이 판다.
-                        LeeoForeverPassLine(pass: ProExtras.shared.pass, ownsLifetimePro: proManager.ownsProLifetime)
-                            .padding(.horizontal, 4)
-                        // 평생 가격이 오르기 전까지만 서는 한 줄 (이미 산 사람은 그대로)
-                        LeeoLifetimePriceNotice()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 4)
+                        comparisonTable
+                        // 평생 가격이 오르기 전까지만 서는 한 줄
+                        if LeeoLadderSchedule.showsLifetimeNotice() {
+                            Label(Strings.lifetimeDealNotice(LeeoLadderSchedule.lifetimePriceChange.formatted(.dateTime.month(.wide).day())),
+                                  systemImage: "calendar.badge.clock")
+                                .font(.body.weight(.semibold))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 4)
+                        }
                         storeActions
                         footerSection
                     }
@@ -189,6 +194,13 @@ struct PaywallView: View {
                 if index > 0 { Divider().padding(.leading, 54) }
                 featureRow(feature)
             }
+            if tier == .pro, proManager.product(ProManager.proProductID)?.isFamilyShareable == true {
+                Divider()
+                Label(Strings.proLifetimeFamilySharing, systemImage: "person.2.fill")
+                    .font(.body)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(14)
+            }
             // 무료 칸은 버튼이 없다. 지금 무료로 되는 것을 적는 카드다.
             if tier != .free {
                 Divider()
@@ -267,6 +279,85 @@ struct PaywallView: View {
         .accessibilityElement(children: .combine)
     }
 
+    // MARK: - 비교표
+
+    /// 비교표 한 칸: 있음 · 없음 · 글자
+    private enum CompareCell { case yes, no, text(String) }
+
+    private var compareRows: [(title: String, free: CompareCell, plus: CompareCell, pro: CompareCell)] {
+        [
+            (Strings.freeFeatTracking, .yes, .yes, .yes),
+            (Strings.freeFeatHolidays, .yes, .yes, .yes),
+            (Strings.compareRecommendations, .text("\(ProManager.freeRecommendationAddLimit)"),
+             .text(Strings.compareUnlimited), .text(Strings.compareUnlimited)),
+            (Strings.featOtherYears, .no, .yes, .yes),
+            (Strings.proFeatureAIAnnualPlanner, .no, .yes, .yes),
+            (Strings.calendarExportToggle, .no, .yes, .yes),
+            ("\(Strings.bonusLeaveManagement) · \(Strings.paywallAllowanceFeature)", .no, .no, .yes),
+            (Strings.schoolImportTitle, .no, .no, .yes),
+            (Strings.autoDetectSettingTitle, .no, .no, .yes),
+            ("\(Strings.togetherTitle) · \(Strings.familyAnniversariesTitle)", .no, .no, .yes),
+            (Strings.freeFeatRest, .yes, .yes, .yes),
+            (Strings.freeFeatBackupShare, .yes, .yes, .yes),
+        ]
+    }
+
+    private var comparisonTable: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(Strings.compareTitle)
+                .font(.headline)
+                .voHeader()
+                .padding(14)
+            Divider()
+            ForEach(Array(compareRows.enumerated()), id: \.offset) { _, row in
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(row.title)
+                        .font(.body)
+                        .fixedSize(horizontal: false, vertical: true)
+                    HStack(spacing: 8) {
+                        compareValue(.free, row.free)
+                        compareValue(.plus, row.plus)
+                        compareValue(.pro, row.pro)
+                    }
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .accessibilityElement(children: .combine)
+                Divider()
+            }
+        }
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color(.systemGray5), lineWidth: 1))
+    }
+
+    /// 칸 이름과 값을 함께 적는다. 좁은 칸에 세 열로 맞추지 않아 큰 글자와 긴 번역에서도 잘리지 않는다.
+    private func compareValue(_ tier: ProTier, _ cell: CompareCell) -> some View {
+        VStack(spacing: 2) {
+            Text(Strings.trimName(tier))
+                .font(.body)
+                .foregroundStyle(.secondary)
+            switch cell {
+            case .yes:
+                Image(systemName: "checkmark")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(.green)
+                    .accessibilityLabel(Text(Strings.stateOn))
+            case .no:
+                Text(verbatim: "–")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .accessibilityLabel(Text(Strings.stateOff))
+            case .text(let value):
+                Text(value)
+                    .font(.body.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .frame(maxWidth: .infinity)
+    }
+
     // MARK: - 사기
 
     /// 칸의 연 구독 상품 (불러온 것만)
@@ -289,16 +380,18 @@ struct PaywallView: View {
     }
 
     private func termBinding(_ tier: ProTier) -> Binding<LeeoPlanTerm> {
-        Binding(get: { term(tier) }, set: { terms[tier] = $0; HapticFeedback.selection() })
+        Binding(get: { term(tier) }, set: { terms[tier] = $0; shortPlans[tier] = nil; HapticFeedback.selection() })
     }
 
     private func selectedProduct(_ tier: ProTier) -> Product? {
-        term(tier) == .yearly ? yearlyProduct(tier) : lifetimeProduct(tier)
+        if let id = shortPlans[tier], let product = proManager.product(id) { return product }
+        return term(tier) == .yearly ? yearlyProduct(tier) : lifetimeProduct(tier)
     }
 
     @ViewBuilder
     private func buySection(_ tier: ProTier) -> some View {
-        if proManager.tier >= tier {
+        // 주 · 월 구독 중이면 같은 칸의 평생도 살 수 있게 카드를 그대로 둔다
+        if proManager.tier >= tier, !isOnShortTermPlan {
             // 이미 이 칸 이상. 구매 버튼 대신 상태를 분명히 보여 준다
             HStack(spacing: 8) {
                 Image(systemName: "checkmark.seal.fill")
@@ -317,9 +410,58 @@ struct PaywallView: View {
         } else {
             VStack(spacing: 12) {
                 LeeoTermPicker(term: termBinding(tier), yearly: yearlyProduct(tier), lifetime: lifetimeProduct(tier))
+                shortPlanPicker(tier)
                 purchaseButton(tier)
             }
         }
+    }
+
+    private var isOnShortTermPlan: Bool {
+        if case .shortTerm = proManager.activePlan { return true }
+        return false
+    }
+
+    /// 주 · 월 구독. 연 구독이 기본이라 펼쳐야 보인다. 상품이 없으면 줄이 서지 않는다.
+    @ViewBuilder
+    private func shortPlanPicker(_ tier: ProTier) -> some View {
+        let weekly = proManager.product(tier == .plus ? ProManager.plusWeeklyProductID : ProManager.proWeeklyProductID)
+        let monthly = proManager.product(tier == .plus ? ProManager.plusMonthlyProductID : ProManager.proMonthlyProductID)
+        if weekly != nil || monthly != nil {
+            DisclosureGroup(Strings.shortPlansTitle) {
+                VStack(spacing: 4) {
+                    if let weekly { shortPlanRow(tier, weekly, title: Strings.shortPlanWeekly(weekly.displayPrice)) }
+                    if let monthly { shortPlanRow(tier, monthly, title: Strings.shortPlanMonthly(monthly.displayPrice)) }
+                    Text(Strings.shortPlansDisclosure)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.top, 6)
+            }
+            .font(.body)
+        }
+    }
+
+    private func shortPlanRow(_ tier: ProTier, _ product: Product, title: String) -> some View {
+        let selected = shortPlans[tier] == product.id
+        return Button {
+            shortPlans[tier] = selected ? nil : product.id
+            HapticFeedback.selection()
+        } label: {
+            HStack {
+                Text(title)
+                    .foregroundStyle(.primary)
+                Spacer()
+                Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(selected ? Color.accentColor : .secondary)
+                    .voDecorative()
+            }
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
     /// 가격 로드 실패/로딩 중. 빈칸 대신 상태를 보여준다
@@ -360,7 +502,7 @@ struct PaywallView: View {
     }
 
     private func purchaseTitle(_ tier: ProTier) -> String {
-        if term(tier) == .yearly, let days = proManager.trialDays(for: ProManager.yearlyID(for: tier)) {
+        if shortPlans[tier] == nil, term(tier) == .yearly, let days = proManager.trialDays(for: ProManager.yearlyID(for: tier)) {
             return Strings.startTrial(days)
         }
         return Strings.startTrim(Strings.trimName(tier))
