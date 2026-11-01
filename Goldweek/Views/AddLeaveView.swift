@@ -1114,7 +1114,7 @@ struct BonusLeaveView: View {
             EditBonusLeaveSheet(bonus: bonus)
         }
         .sheet(isPresented: $showingPaywall) {
-            PaywallView()
+            PaywallView(initialProductID: ProManager.yearlyProductID)
         }
         .alert(Strings.deleteBonusLeaveTitle, isPresented: $showingDeleteConfirm) {
             Button(Strings.cancel, role: .cancel) { pendingDeleteOffsets = nil }

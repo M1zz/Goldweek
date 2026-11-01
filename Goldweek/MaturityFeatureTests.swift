@@ -157,16 +157,28 @@ final class MaturityFeatureTests: XCTestCase {
         XCTAssertFalse(ProManager.isLifetime(ProManager.giftProductID))
     }
 
+    /// 주 · 월 구독은 칸을 열지만 평생이 아니고, 졸업가 대상도 아니다.
+    func testShortTermPlans() {
+        for id in ProManager.shortTermProductIDs {
+            XCTAssertFalse(ProManager.isLifetime(id), id)
+            XCTAssertFalse(ProManager.subscriptionProductIDs.contains(id), id)
+        }
+        XCTAssertEqual(ProManager.tier(of: ProManager.plusWeeklyProductID), .plus)
+        XCTAssertEqual(ProManager.tier(of: ProManager.proMonthlyProductID), .pro)
+        XCTAssertEqual(resolve([ProManager.proWeeklyProductID]).plan, .shortTerm(expires: nil))
+        XCTAssertEqual(resolve([ProManager.proWeeklyProductID, ProManager.proProductID]).plan, .lifetime)
+    }
+
     // MARK: - 무료 한도 (freeGate)
 
     /// 추천 목록 앞 3칸이 무료 — 마지막 칸에 닿기 전에 미리 알리고, 넷째 칸에서 페이월.
     func testRecommendationGateWarnsBeforeTheWall() {
-        XCTAssertEqual(RecommendationGate.decision(at: 0, hasPro: false), .allowed)
-        XCTAssertEqual(RecommendationGate.decision(at: 1, hasPro: false), .allowedNearLimit(remaining: 1))
-        XCTAssertEqual(RecommendationGate.decision(at: 2, hasPro: false), .allowedNearLimit(remaining: 0))
-        XCTAssertTrue(RecommendationGate.decision(at: 3, hasPro: false).needsPaywall)
-        XCTAssertTrue(RecommendationGate.decision(at: 9, hasPro: false).needsPaywall)
-        XCTAssertEqual(RecommendationGate.decision(at: 9, hasPro: true), .allowed)
+        XCTAssertEqual(RecommendationGate.decision(used: 0, hasPro: false), .allowed)
+        XCTAssertEqual(RecommendationGate.decision(used: 1, hasPro: false), .allowedNearLimit(remaining: 1))
+        XCTAssertEqual(RecommendationGate.decision(used: 2, hasPro: false), .allowedNearLimit(remaining: 0))
+        XCTAssertTrue(RecommendationGate.decision(used: 3, hasPro: false).needsPaywall)
+        XCTAssertTrue(RecommendationGate.decision(used: 9, hasPro: false).needsPaywall)
+        XCTAssertEqual(RecommendationGate.decision(used: 9, hasPro: true), .allowed)
     }
 
     /// 게이트 정책의 한도는 '내 혜택' 이 비교하는 무료 한도와 같은 값이다.
@@ -196,7 +208,9 @@ final class MaturityFeatureTests: XCTestCase {
         // 기존 상품 ID 는 그대로다. 패밀리는 팔지 않지만 권한 목록에는 남는다.
         XCTAssertEqual(paywall.productIDs, ["com.Ysoup.LeaveWise.plus.annual", "com.Ysoup.LeaveWise.plus",
                                             "com.Ysoup.LeaveWise.pro.yearly", "com.Ysoup.LeaveWise.pro",
-                                            "com.Ysoup.LeaveWise.pro.upgrade", "com.Ysoup.LeaveWise.pro.graduate"])
+                                            "com.Ysoup.LeaveWise.pro.upgrade", "com.Ysoup.LeaveWise.pro.graduate",
+                                            "com.Ysoup.LeaveWise.plus.monthly", "com.Ysoup.LeaveWise.plus.weekly",
+                                            "com.Ysoup.LeaveWise.pro.monthly", "com.Ysoup.LeaveWise.pro.weekly"])
         XCTAssertEqual(paywall.entitlementIDs, Set(paywall.productIDs + ["com.Ysoup.LeaveWise.family.yearly"]))
     }
 
@@ -265,7 +279,11 @@ final class MaturityFeatureTests: XCTestCase {
                 Strings.benefitsFamilyMembers, Strings.benefitsMoreHeader(.pro), Strings.benefitsExplore(.plus),
                 Strings.benefitsSeeAll, Strings.benefitsRowHint, Strings.a11yLeaveDeleted,
                 Strings.a11yRecommendationAdded("X"),
-                Strings.freeRecommendationNotice(remaining: 0), Strings.freeRecommendationNotice(remaining: 1),
+                Strings.freeRecommendationNotice(remaining: 1), Strings.freeRecommendationNotice(remaining: 2),
+                Strings.lifetimeDealNotice("X"), Strings.proLifetimeFamilySharing,
+                Strings.compareTitle, Strings.compareRecommendations, Strings.compareUnlimited,
+                Strings.shortPlansTitle, Strings.shortPlanWeekly("X"), Strings.shortPlanMonthly("X"),
+                Strings.shortPlansDisclosure,
                 Strings.tipAskPlans(5), Strings.tipAskLeaves(30), Strings.giftAndTipSection,
                 Strings.tipEntry, Strings.tipEntrySubtitle, Strings.giftSendEntry, Strings.giftRedeemEntry,
                 // 세 칸 페이월 (2.4.2)

@@ -2428,7 +2428,7 @@ final class MonetizationTests: XCTestCase {
         XCTAssertEqual(ProManager.yearlyProductID, "com.Ysoup.LeaveWise.pro.yearly")
         XCTAssertEqual(ProManager.plusProductID, "com.Ysoup.LeaveWise.plus.annual")
         XCTAssertEqual(ProManager.familyProductID, "com.Ysoup.LeaveWise.family.yearly")
-        XCTAssertEqual(Set(ProManager.allProductIDs).count, 7)
+        XCTAssertEqual(Set(ProManager.allProductIDs).count, 11)
         // 평생 구매자는 프로 칸
         XCTAssertEqual(ProManager.tier(of: ProManager.proProductID), .pro)
         XCTAssertEqual(ProManager.tier(of: ProManager.yearlyProductID), .pro)

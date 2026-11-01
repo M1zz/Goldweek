@@ -42,7 +42,7 @@ DeployBar 가 이 파일을 읽어 App Store Connect 의 언어별 칸에 올린
 올해 연차, 그냥 흘려보내지 말고 가장 길게 쉬어 보세요.
 
 구독 안내
-골드위크 플러스, 프로 연간, 패밀리 연간은 자동 갱신 구독입니다. 갱신일 24시간 전까지 해지하지 않으면 Apple 계정으로 자동 결제되며, 설정의 구독 관리에서 언제든 해지할 수 있습니다.
+골드위크 플러스와 프로 구독은 자동 갱신 구독입니다. 갱신일 24시간 전까지 해지하지 않으면 Apple 계정으로 자동 결제되며, 설정의 구독 관리에서 언제든 해지할 수 있습니다.
 이용약관(EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 개인정보처리방침: https://m1zz.github.io/Goldweek/ko/privacy.html
 
@@ -96,7 +96,7 @@ Your remaining PTO and upcoming time off sit right on your Home Screen. Your rec
 Plan ahead, use fewer days and enjoy more time off.
 
 Subscriptions
-Goldweek Plus, Pro Yearly and Family Yearly are auto-renewing subscriptions. Payment is charged to your Apple Account and renews unless canceled at least 24 hours before the period ends. Manage or cancel anytime in Settings.
+Goldweek Plus and Pro subscriptions are auto-renewing subscriptions. Payment is charged to your Apple Account and renews unless canceled at least 24 hours before the period ends. Manage or cancel anytime in Settings.
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Privacy Policy: https://m1zz.github.io/Goldweek/en/privacy.html
 
@@ -150,7 +150,7 @@ Resturlaub und anstehende freie Tage siehst du direkt auf dem Home-Bildschirm. D
 Früh planen, weniger Urlaub nehmen, mehr freie Tage genießen.
 
 Abonnements
-Goldweek Plus, Pro (jährlich) und Familie (jährlich) sind sich automatisch verlängernde Abos. Die Zahlung erfolgt über deinen Apple Account und verlängert sich, sofern du nicht mindestens 24 Stunden vor Ablauf kündigst. Verwalten oder kündigen kannst du jederzeit in den Einstellungen.
+Die Abos von Goldweek Plus und Pro sind sich automatisch verlängernde Abos. Die Zahlung erfolgt über deinen Apple Account und verlängert sich, sofern du nicht mindestens 24 Stunden vor Ablauf kündigst. Verwalten oder kündigen kannst du jederzeit in den Einstellungen.
 Nutzungsbedingungen (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Datenschutzerklärung: https://m1zz.github.io/Goldweek/de/privacy.html
 
@@ -204,7 +204,7 @@ Tus días pendientes y tus próximas vacaciones, en la pantalla de inicio. Tus d
 Planifica con tiempo, pide menos días y disfruta más.
 
 Suscripciones
-Goldweek Plus, Pro anual y Familia anual son suscripciones de renovación automática. El cargo se realiza en tu cuenta de Apple y se renueva salvo que la canceles al menos 24 horas antes de que termine el periodo. Puedes gestionarla o cancelarla cuando quieras en Ajustes.
+Las suscripciones a Goldweek Plus y Pro son suscripciones de renovación automática. El cargo se realiza en tu cuenta de Apple y se renueva salvo que la canceles al menos 24 horas antes de que termine el periodo. Puedes gestionarla o cancelarla cuando quieras en Ajustes.
 Términos de uso (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Política de privacidad: https://m1zz.github.io/Goldweek/es/privacy.html
 
@@ -258,7 +258,7 @@ Votre solde et vos prochains congés s'affichent sur l'écran d'accueil. Vos don
 Anticipez, posez moins de jours et profitez de plus de repos.
 
 Abonnements
-Goldweek Plus, Pro annuel et Famille annuel sont des abonnements à renouvellement automatique. Le paiement est débité sur votre compte Apple et se renouvelle sauf résiliation au moins 24 heures avant la fin de la période. Gérez ou résiliez à tout moment dans Réglages.
+Les abonnements Goldweek Plus et Pro sont des abonnements à renouvellement automatique. Le paiement est débité sur votre compte Apple et se renouvelle sauf résiliation au moins 24 heures avant la fin de la période. Gérez ou résiliez à tout moment dans Réglages.
 Conditions d'utilisation (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Politique de confidentialité: https://m1zz.github.io/Goldweek/fr/privacy.html
 
@@ -312,7 +312,7 @@ Ferie residue e prossimi giorni liberi direttamente nella schermata Home. I dati
 Pianifica in anticipo, usa meno ferie e goditi più tempo libero.
 
 Abbonamenti
-Goldweek Plus, Pro annuale e Famiglia annuale sono abbonamenti a rinnovo automatico. Il pagamento viene addebitato sul tuo Apple Account e si rinnova se non disdici almeno 24 ore prima della scadenza. Puoi gestire o disdire in qualsiasi momento in Impostazioni.
+Gli abbonamenti Goldweek Plus e Pro sono abbonamenti a rinnovo automatico. Il pagamento viene addebitato sul tuo Apple Account e si rinnova se non disdici almeno 24 ore prima della scadenza. Puoi gestire o disdire in qualsiasi momento in Impostazioni.
 Condizioni d'uso (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Informativa sulla privacy: https://m1zz.github.io/Goldweek/it/privacy.html
 
@@ -366,7 +366,7 @@ Goldweekは、祝日と週末のあいだのどこで有給を取れば一番長
 今年の有給、ムダにせず一番長く休みましょう。
 
 サブスクリプションについて
-Goldweek プラス、プロ年額、ファミリー年額は自動更新のサブスクリプションです。期間終了の24時間前までに解約しない限り、Apple Account に自動で請求されます。設定のサブスクリプション管理からいつでも解約できます。
+Goldweek プラスとプロのサブスクリプションは自動更新のサブスクリプションです。期間終了の24時間前までに解約しない限り、Apple Account に自動で請求されます。設定のサブスクリプション管理からいつでも解約できます。
 利用規約（EULA）: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 プライバシーポリシー: https://m1zz.github.io/Goldweek/ja/privacy.html
 
@@ -420,7 +420,7 @@ Seu saldo e as próximas folgas ficam na tela de início. Os dados ficam salvos 
 Planeje com antecedência, use menos dias e aproveite mais.
 
 Assinaturas
-Goldweek Plus, Pro anual e Família anual são assinaturas com renovação automática. A cobrança é feita na sua Conta Apple e renova, a menos que você cancele pelo menos 24 horas antes do fim do período. Gerencie ou cancele quando quiser em Ajustes.
+As assinaturas Goldweek Plus e Pro são assinaturas com renovação automática. A cobrança é feita na sua Conta Apple e renova, a menos que você cancele pelo menos 24 horas antes do fim do período. Gerencie ou cancele quando quiser em Ajustes.
 Termos de Uso (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Política de Privacidade: https://m1zz.github.io/Goldweek/pt-BR/privacy.html
 
@@ -474,7 +474,7 @@ Goldweek 帮你找到在节假日和周末之间请哪几天假，才能休得�
 今年的年假，别再白白浪费，好好地多休几天吧。
 
 订阅说明
-Goldweek 增强版、专业版年付和家庭版年付均为自动续期订阅。费用从你的 Apple 账户扣除，除非在当期结束前至少 24 小时取消，否则将自动续期。可随时在“设置”中管理或取消。
+Goldweek 增强版和专业版订阅均为自动续期订阅。费用从你的 Apple 账户扣除，除非在当期结束前至少 24 小时取消，否则将自动续期。可随时在“设置”中管理或取消。
 使用条款（EULA）: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 隐私政策: https://m1zz.github.io/Goldweek/zh-Hans/privacy.html
 
@@ -528,7 +528,7 @@ Goldweek 幫你找出在國定假日和週末之間該請哪幾天假，才能�
 今年的特休，別再白白浪費，好好多放幾天假吧。
 
 訂閱說明
-Goldweek 增強版、專業版年繳與家庭版年繳皆為自動續訂訂閱。費用會從你的 Apple 帳號扣款，除非在當期結束前至少 24 小時取消，否則將自動續訂。可隨時在「設定」中管理或取消。
+Goldweek 增強版與專業版訂閱皆為自動續訂訂閱。費用會從你的 Apple 帳號扣款，除非在當期結束前至少 24 小時取消，否則將自動續訂。可隨時在「設定」中管理或取消。
 使用條款（EULA）: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 隱私權政策: https://m1zz.github.io/Goldweek/zh-Hant/privacy.html
 
@@ -582,7 +582,7 @@ Goldweek подскажет, в какие дни взять отпуск, чт�
 Планируйте заранее, тратьте меньше дней и отдыхайте дольше.
 
 Подписки
-Goldweek Plus, Pro на год и Семейная на год — подписки с автопродлением. Оплата списывается с вашего Apple Account и продлевается, если не отменить её минимум за 24 часа до конца периода. Управлять подпиской и отменить её можно в Настройках.
+Goldweek Plus и Pro — подписки с автопродлением. Оплата списывается с вашего Apple Account и продлевается, если не отменить её минимум за 24 часа до конца периода. Управлять подпиской и отменить её можно в Настройках.
 Условия использования (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Политика конфиденциальности: https://m1zz.github.io/Goldweek/ru/privacy.html
 
@@ -636,7 +636,7 @@ Sisa cuti dan liburan berikutnya langsung terlihat di Layar Utama. Catatanmu dic
 Rencanakan lebih awal, pakai cuti lebih sedikit, dan nikmati libur lebih lama.
 
 Langganan
-Goldweek Plus, Pro Tahunan, dan Keluarga Tahunan adalah langganan yang diperpanjang otomatis. Pembayaran ditagihkan ke Akun Apple Anda dan diperpanjang kecuali dibatalkan paling lambat 24 jam sebelum periode berakhir. Kelola atau batalkan kapan saja di Pengaturan.
+Goldweek Plus dan Pro adalah langganan yang diperpanjang otomatis. Pembayaran ditagihkan ke Akun Apple Anda dan diperpanjang kecuali dibatalkan paling lambat 24 jam sebelum periode berakhir. Kelola atau batalkan kapan saja di Pengaturan.
 Ketentuan Penggunaan (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Kebijakan Privasi: https://m1zz.github.io/Goldweek/id/privacy.html
 
@@ -690,7 +690,7 @@ Je resterende verlof en je volgende vrije dagen staan meteen op je beginscherm. 
 Plan vooruit, gebruik minder verlof en geniet langer van je vrije tijd.
 
 Abonnementen
-Goldweek Plus, Pro jaarlijks en Gezin jaarlijks zijn automatisch verlengende abonnementen. De betaling loopt via je Apple Account en wordt verlengd tenzij je minstens 24 uur voor het einde van de periode opzegt. Beheer of zeg op wanneer je wilt in Instellingen.
+Goldweek Plus en Pro zijn automatisch verlengende abonnementen. De betaling loopt via je Apple Account en wordt verlengd tenzij je minstens 24 uur voor het einde van de periode opzegt. Beheer of zeg op wanneer je wilt in Instellingen.
 Gebruiksvoorwaarden (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Privacybeleid: https://m1zz.github.io/Goldweek/nl/privacy.html
 
@@ -744,7 +744,7 @@ Kvarvarande semester och kommande ledigheter syns direkt på hemskärmen. Dina u
 Planera i god tid, ta ut färre dagar och njut av mer ledighet.
 
 Prenumerationer
-Goldweek Plus, Pro årsvis och Familj årsvis är prenumerationer som förnyas automatiskt. Betalningen dras från ditt Apple-konto och förnyas om du inte avslutar minst 24 timmar innan perioden slutar. Hantera eller avsluta när som helst i Inställningar.
+Goldweek Plus och Pro är prenumerationer som förnyas automatiskt. Betalningen dras från ditt Apple-konto och förnyas om du inte avslutar minst 24 timmar innan perioden slutar. Hantera eller avsluta när som helst i Inställningar.
 Användarvillkor (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Integritetspolicy: https://m1zz.github.io/Goldweek/sv/privacy.html
 
@@ -798,7 +798,7 @@ Gjenstående ferie og kommende fridager vises rett på Hjem-skjermen. Dataene di
 Planlegg i god tid, bruk færre dager og nyt mer fri.
 
 Abonnementer
-Goldweek Pluss, Pro årlig og Familie årlig er abonnementer som fornyes automatisk. Betalingen belastes Apple-kontoen din og fornyes med mindre du sier opp minst 24 timer før perioden er over. Administrer eller si opp når som helst i Innstillinger.
+Goldweek Pluss og Pro er abonnementer som fornyes automatisk. Betalingen belastes Apple-kontoen din og fornyes med mindre du sier opp minst 24 timer før perioden er over. Administrer eller si opp når som helst i Innstillinger.
 Bruksvilkår (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Personvernerklæring: https://m1zz.github.io/Goldweek/nb/privacy.html
 
@@ -852,7 +852,7 @@ Restferien og dine næste fridage ligger lige på hjemmeskærmen. Dine registrer
 Planlæg i god tid, brug færre feriedage og nyd mere fri.
 
 Abonnementer
-Goldweek Plus, Pro årligt og Familie årligt er abonnementer, der fornyes automatisk. Betalingen trækkes på din Apple-konto og fornyes, medmindre du opsiger mindst 24 timer før perioden slutter. Administrer eller opsig når som helst i Indstillinger.
+Goldweek Plus og Pro er abonnementer, der fornyes automatisk. Betalingen trækkes på din Apple-konto og fornyes, medmindre du opsiger mindst 24 timer før perioden slutter. Administrer eller opsig når som helst i Indstillinger.
 Brugsvilkår (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Privatlivspolitik: https://m1zz.github.io/Goldweek/da/privacy.html
 
@@ -906,7 +906,7 @@ Lomasaldo ja tulevat vapaat näkyvät suoraan Koti-valikossa. Merkintäsi varmuu
 Suunnittele ajoissa, käytä vähemmän lomapäiviä ja nauti pidemmistä vapaista.
 
 Tilaukset
-Goldweek Plus, Pro vuosittain ja Perhe vuosittain ovat automaattisesti uusiutuvia tilauksia. Maksu veloitetaan Apple-tililtäsi, ja tilaus uusiutuu, ellei sitä peruta vähintään 24 tuntia ennen jakson päättymistä. Hallitse tai peru milloin tahansa Asetuksissa.
+Goldweek Plus ja Pro ovat automaattisesti uusiutuvia tilauksia. Maksu veloitetaan Apple-tililtäsi, ja tilaus uusiutuu, ellei sitä peruta vähintään 24 tuntia ennen jakson päättymistä. Hallitse tai peru milloin tahansa Asetuksissa.
 Käyttöehdot (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Tietosuojakäytäntö: https://m1zz.github.io/Goldweek/fi/privacy.html
 
@@ -960,7 +960,7 @@ Pozostały urlop i najbliższe wolne widać od razu na ekranie początkowym. Two
 Planuj z wyprzedzeniem, wykorzystuj mniej dni urlopu i ciesz się dłuższym wypoczynkiem.
 
 Subskrypcje
-Goldweek Plus, Pro roczny i Rodzina roczny to subskrypcje odnawiane automatycznie. Opłata jest pobierana z Twojego Apple Account i odnawia się, jeśli nie anulujesz jej co najmniej 24 godziny przed końcem okresu. Zarządzaj lub anuluj w dowolnej chwili w Ustawieniach.
+Goldweek Plus i Pro to subskrypcje odnawiane automatycznie. Opłata jest pobierana z Twojego Apple Account i odnawia się, jeśli nie anulujesz jej co najmniej 24 godziny przed końcem okresu. Zarządzaj lub anuluj w dowolnej chwili w Ustawieniach.
 Warunki korzystania (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Polityka prywatności: https://m1zz.github.io/Goldweek/pl/privacy.html
 
@@ -1016,7 +1016,7 @@ Zbývající dovolená a nejbližší volno jsou rovnou na ploše. Záznamy se z
 Plánuj dopředu, čerpej méně dní a užij si víc volna.
 
 Předplatné
-Goldweek Plus, Pro roční a Rodina roční jsou automaticky obnovovaná předplatná. Platba se strhává z vašeho Apple účtu a obnoví se, pokud ji nezrušíte alespoň 24 hodin před koncem období. Spravovat nebo zrušit ji můžete kdykoli v Nastavení.
+Goldweek Plus a Pro jsou automaticky obnovovaná předplatná. Platba se strhává z vašeho Apple účtu a obnoví se, pokud ji nezrušíte alespoň 24 hodin před koncem období. Spravovat nebo zrušit ji můžete kdykoli v Nastavení.
 Podmínky použití (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Zásady ochrany osobních údajů: https://m1zz.github.io/Goldweek/cs/privacy.html
 
@@ -1072,7 +1072,7 @@ Widget και αντίγραφο ασφαλείας
 Σχεδίασε από νωρίς, ξόδεψε λιγότερες μέρες άδειας και απόλαυσε περισσότερο ελεύθερο χρόνο.
 
 Συνδρομές
-Οι Goldweek Plus, Pro ετήσια και Οικογένεια ετήσια είναι συνδρομές με αυτόματη ανανέωση. Η χρέωση γίνεται στον λογαριασμό Apple σας και ανανεώνεται, εκτός αν την ακυρώσετε τουλάχιστον 24 ώρες πριν λήξει η περίοδος. Διαχειριστείτε ή ακυρώστε οποτεδήποτε από τις Ρυθμίσεις.
+Τα Goldweek Plus και Pro είναι συνδρομές με αυτόματη ανανέωση. Η χρέωση γίνεται στον λογαριασμό Apple σας και ανανεώνεται, εκτός αν την ακυρώσετε τουλάχιστον 24 ώρες πριν λήξει η περίοδος. Διαχειριστείτε ή ακυρώστε οποτεδήποτε από τις Ρυθμίσεις.
 Όροι χρήσης (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Πολιτική απορρήτου: https://m1zz.github.io/Goldweek/el/privacy.html
 
@@ -1128,7 +1128,7 @@ Kalan iznin ve yaklaşan tatilin doğrudan Ana Ekran'da. Kayıtların iCloud'a y
 Önceden planla, daha az izin kullan, daha çok tatil yap.
 
 Abonelikler
-Goldweek Plus, Pro Yıllık ve Aile Yıllık otomatik yenilenen aboneliklerdir. Ödeme Apple Hesabınızdan alınır ve dönem bitmeden en az 24 saat önce iptal edilmezse yenilenir. Ayarlar'dan istediğiniz zaman yönetebilir veya iptal edebilirsiniz.
+Goldweek Plus ve Pro otomatik yenilenen aboneliklerdir. Ödeme Apple Hesabınızdan alınır ve dönem bitmeden en az 24 saat önce iptal edilmezse yenilenir. Ayarlar'dan istediğiniz zaman yönetebilir veya iptal edebilirsiniz.
 Kullanım Koşulları (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Gizlilik Politikası: https://m1zz.github.io/Goldweek/tr/privacy.html
 
@@ -1182,7 +1182,7 @@ Goldweek ช่วยหาว่าควรลาวันไหน ถึง�
 วางแผนล่วงหน้า ใช้วันลาน้อยลง แล้วได้พักนานขึ้น
 
 การสมัครสมาชิก
-Goldweek พลัส โปรรายปี และแฟมิลีรายปี เป็นการสมัครสมาชิกที่ต่ออายุอัตโนมัติ ระบบจะเรียกเก็บเงินจากบัญชี Apple ของคุณและต่ออายุเว้นแต่จะยกเลิกอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดรอบ จัดการหรือยกเลิกได้ทุกเมื่อในการตั้งค่า
+Goldweek พลัสและโปรเป็นการสมัครสมาชิกที่ต่ออายุอัตโนมัติ ระบบจะเรียกเก็บเงินจากบัญชี Apple ของคุณและต่ออายุเว้นแต่จะยกเลิกอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดรอบ จัดการหรือยกเลิกได้ทุกเมื่อในการตั้งค่า
 ข้อกำหนดการใช้งาน (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 นโยบายความเป็นส่วนตัว: https://m1zz.github.io/Goldweek/th/privacy.html
 
@@ -1236,7 +1236,7 @@ Số phép còn lại và kỳ nghỉ sắp tới hiện ngay trên Màn hình c
 Lên kế hoạch sớm, dùng ít phép hơn, nghỉ ngơi nhiều hơn.
 
 Gói đăng ký
-Goldweek Plus, Pro theo năm và Gia đình theo năm là các gói đăng ký tự động gia hạn. Phí được tính vào Tài khoản Apple của bạn và tự gia hạn trừ khi bạn hủy ít nhất 24 giờ trước khi kỳ hạn kết thúc. Bạn có thể quản lý hoặc hủy bất cứ lúc nào trong Cài đặt.
+Goldweek Plus và Pro là các gói đăng ký tự động gia hạn. Phí được tính vào Tài khoản Apple của bạn và tự gia hạn trừ khi bạn hủy ít nhất 24 giờ trước khi kỳ hạn kết thúc. Bạn có thể quản lý hoặc hủy bất cứ lúc nào trong Cài đặt.
 Điều khoản sử dụng (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Chính sách quyền riêng tư: https://m1zz.github.io/Goldweek/vi/privacy.html
 
@@ -1290,7 +1290,7 @@ Your remaining leave and upcoming time off sit right on your Home Screen. Your r
 Plan ahead, use fewer days and enjoy more time off.
 
 Subscriptions
-Goldweek Plus, Pro Yearly and Family Yearly are auto-renewing subscriptions. Payment is charged to your Apple Account and renews unless cancelled at least 24 hours before the period ends. Manage or cancel anytime in Settings.
+Goldweek Plus and Pro subscriptions are auto-renewing subscriptions. Payment is charged to your Apple Account and renews unless cancelled at least 24 hours before the period ends. Manage or cancel anytime in Settings.
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Privacy Policy: https://m1zz.github.io/Goldweek/en/privacy.html
 

@@ -152,7 +152,7 @@ struct HolidayManagementView: View {
             SchoolCalendarImportSheet()
         }
         .sheet(isPresented: $showingPaywall) {
-            PaywallView()
+            PaywallView(initialProductID: ProManager.yearlyProductID)
         }
         .sheet(item: $breakToEdit) { item in
             SchoolBreakEditSheet(defaultYear: selectedYear, existing: item) { name, start, end, kind in

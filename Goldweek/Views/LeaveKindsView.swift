@@ -230,7 +230,7 @@ struct LeaveKindEditor: View {
                 allowanceSection
             }
             .sheet(isPresented: $showingPaywall) {
-                PaywallView()
+                PaywallView(initialProductID: ProManager.yearlyProductID)
             }
             .navigationTitle(kind?.name ?? Strings.addLeaveKind)
             .navigationBarTitleDisplayMode(.inline)

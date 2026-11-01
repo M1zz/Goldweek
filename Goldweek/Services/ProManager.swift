@@ -63,15 +63,23 @@ class ProManager {
     static let proUpgradeProductID = "com.Ysoup.LeaveWise.pro.upgrade"
     /// 구독 졸업: 구독 중인 사람만 보는 프로 평생(비소모성, `LeeoGraduation`). 열면 프로 평생과 같다.
     static let proGraduateProductID = "com.Ysoup.LeaveWise.pro.graduate"
+    /// 주 · 월 구독. 없으면(App Store Connect 에 아직 없음) 페이월의 펼침 줄이 숨는다.
+    static let plusMonthlyProductID = "com.Ysoup.LeaveWise.plus.monthly"
+    static let plusWeeklyProductID = "com.Ysoup.LeaveWise.plus.weekly"
+    static let proMonthlyProductID = "com.Ysoup.LeaveWise.pro.monthly"
+    static let proWeeklyProductID = "com.Ysoup.LeaveWise.pro.weekly"
+    static let shortTermProductIDs: Set<String> = [plusMonthlyProductID, plusWeeklyProductID,
+                                                   proMonthlyProductID, proWeeklyProductID]
     /// 패밀리 연 구독. **판매를 멈췄다**(2.4.2). 구독 중인 사람은 끝날 때까지 프로와 같은 권한이다.
     static let familyProductID = "com.Ysoup.LeaveWise.family.yearly"
 
     /// 지금 파는 상품, 화면 순서대로. 패밀리는 없다.
     static let saleProductIDs = [plusProductID, plusLifetimeProductID, yearlyProductID, proProductID,
-                                 proUpgradeProductID, proGraduateProductID]
+                                 proUpgradeProductID, proGraduateProductID,
+                                 plusMonthlyProductID, plusWeeklyProductID, proMonthlyProductID, proWeeklyProductID]
     /// 권한을 여는 상품 전부. 판매를 멈춘 상품도 빼지 않는다(산 사람 · 구독 중인 사람의 권한은 그대로).
     static let allProductIDs = saleProductIDs + [familyProductID]
-    /// 자동 갱신 구독. 구독 졸업을 제안할 대상이다.
+    /// 연 구독. 구독 졸업을 제안할 대상이다. 주 · 월 구독에 졸업가를 주면 한 주 값으로 평생이 싸진다.
     static let subscriptionProductIDs: Set<String> = [plusProductID, yearlyProductID, familyProductID]
 
     /// Pro 선물 (소모성). 산 사람이 아니라 **코드를 받은 사람**에게 평생 Pro(`proProductID`)를 연다(`LeeoGiftStore`).
@@ -93,8 +101,9 @@ class ProManager {
     /// 상품이 여는 칸. 연 구독은 같은 칸의 평생과 같은 권한이다.
     static func tier(of productID: String) -> ProTier {
         switch productID {
-        case plusProductID, plusLifetimeProductID: return .plus
-        case proProductID, yearlyProductID, proUpgradeProductID, proGraduateProductID, familyProductID: return .pro
+        case plusProductID, plusLifetimeProductID, plusMonthlyProductID, plusWeeklyProductID: return .plus
+        case proProductID, yearlyProductID, proUpgradeProductID, proGraduateProductID, familyProductID,
+             proMonthlyProductID, proWeeklyProductID: return .pro
         default: return .free
         }
     }
@@ -102,6 +111,7 @@ class ProManager {
     /// 한 번 사면 끝나는 상품인가 (자동 갱신 구독이 아닌 권한 상품)
     static func isLifetime(_ productID: String) -> Bool {
         tier(of: productID) != .free && !subscriptionProductIDs.contains(productID)
+            && !shortTermProductIDs.contains(productID)
     }
 
     /// 가진 권한을 한데 모은 결과. `checkEntitlement` 가 쓰고, 시험이 StoreKit 없이 부른다.
@@ -130,7 +140,13 @@ class ProManager {
             let currentIsLifetime = result.plan == .lifetime
             if t > result.tier || (t == result.tier && lifetime && !currentIsLifetime) {
                 result.tier = t
-                result.plan = lifetime ? .lifetime : .yearly(expires: item.expires)
+                if lifetime {
+                    result.plan = .lifetime
+                } else if shortTermProductIDs.contains(item.productID) {
+                    result.plan = .shortTerm(expires: item.expires)
+                } else {
+                    result.plan = .yearly(expires: item.expires)
+                }
             }
         }
         result.purchasedProTier = result.tier >= .pro
@@ -192,6 +208,8 @@ class ProManager {
         case lifetime
         /// 다음 갱신(또는 끝나는) 날
         case yearly(expires: Date?)
+        /// 주 · 월 구독. 졸업가 대상이 아니라 평생은 페이월에서 산다.
+        case shortTerm(expires: Date?)
     }
 
     private init() {
@@ -344,6 +362,10 @@ class ProManager {
         case yearlyProductID: return "yearly"
         case proUpgradeProductID: return "upgrade"
         case proGraduateProductID: return "graduate"
+        case plusMonthlyProductID: return "plus_monthly"
+        case plusWeeklyProductID: return "plus_weekly"
+        case proMonthlyProductID: return "monthly"
+        case proWeeklyProductID: return "weekly"
         default: return "lifetime"
         }
     }
@@ -501,8 +523,8 @@ class ProManager {
 /// 추천 등록의 무료 한도 — 정책은 계약(`GoldweekSpec.monetization` 의 `LeeoGatePolicy`)에 있고, 판정은 LeeoKit 이 한다.
 /// 추천 화면·캘린더 탭이 같은 판정을 쓴다(두 곳이 다른 숫자를 말하면 안 된다).
 ///
-/// 무료일 때 그해 추천 목록 **앞에서부터** `ProManager.freeRecommendationAddLimit` 개까지 넣을 수 있다.
-/// 그래서 `current` 는 넣은 개수가 아니라 목록에서의 자리(0부터)다 — 앞 칸이 다 무료면 이 칸은 몇 번째인가.
+/// 무료일 때 그해 추천을 **어느 것이든** `ProManager.freeRecommendationAddLimit` 개까지 넣을 수 있다.
+/// 넣은 개수는 '내 혜택' 과 같은 셈법(`ProBenefits.recommendedPlanCount`)이고, 지우면 그 칸이 돌아온다.
 enum RecommendationGate {
     static let key = "recommendationAdd"
 
@@ -511,9 +533,16 @@ enum RecommendationGate {
 
     static var policy: LeeoGatePolicy { GoldweekSpec.monetization.gate }
 
-    /// 목록 `index` 번째 추천을 지금 넣을 수 있는가.
-    static func decision(at index: Int, hasPro: Bool) -> LeeoGateDecision {
-        LeeoGate(policy: policy, hasPro: hasPro, isTrialActive: false).evaluate(key, current: index)
+    /// 이미 `used` 개를 넣었을 때 하나를 더 넣을 수 있는가.
+    static func decision(used: Int, hasPro: Bool) -> LeeoGateDecision {
+        LeeoGate(policy: policy, hasPro: hasPro, isTrialActive: false).evaluate(key, current: used)
+    }
+
+    /// 목록의 연도에 이미 넣은 추천 수. 빈 목록이면 0.
+    static func used(records: [LeaveRecord], recommendations: [LeaveRecommendation]) -> Int {
+        guard let start = recommendations.first?.startDate else { return 0 }
+        return ProBenefits.recommendedPlanCount(records.map(ProBenefits.Entry.init),
+                                                year: Calendar.app.component(.year, from: start))
     }
 }
 

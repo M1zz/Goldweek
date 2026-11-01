@@ -83,7 +83,7 @@
       "type": "NonConsumable"
     },
     {
-      "displayPrice": "49.99",
+      "displayPrice": "59.99",
       "familyShareable": false,
       "internalID": "9D27FCCF-0E22-5FD7-9D9A-1ADB08915251",
       "localizations": [
@@ -236,6 +236,114 @@
           "productID": "com.Ysoup.LeaveWise.plus.annual",
           "recurringSubscriptionPeriod": "P1Y",
           "referenceName": "Goldweek Plus Yearly",
+          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "6.49",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "CC5B3FC6-ACFF-4705-A44A-EDBB7CC612CC",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Goldweek Pro Monthly",
+              "displayName": "Goldweek Pro",
+              "locale": "en_US"
+            },
+            {
+              "description": "Goldweek Pro Monthly",
+              "displayName": "Goldweek 프로",
+              "locale": "ko"
+            }
+          ],
+          "productID": "com.Ysoup.LeaveWise.pro.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Goldweek Pro Monthly",
+          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "2.49",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "B79EF0CC-F946-45E4-B165-F9138AFD906B",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Goldweek Pro Weekly",
+              "displayName": "Goldweek Pro",
+              "locale": "en_US"
+            },
+            {
+              "description": "Goldweek Pro Weekly",
+              "displayName": "Goldweek 프로",
+              "locale": "ko"
+            }
+          ],
+          "productID": "com.Ysoup.LeaveWise.pro.weekly",
+          "recurringSubscriptionPeriod": "P1W",
+          "referenceName": "Goldweek Pro Weekly",
+          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "3.49",
+          "familyShareable": false,
+          "groupNumber": 2,
+          "internalID": "07A94356-53A2-49E8-A9CE-B15EB6766C66",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Goldweek Plus Monthly",
+              "displayName": "Goldweek Plus",
+              "locale": "en_US"
+            },
+            {
+              "description": "Goldweek Plus Monthly",
+              "displayName": "Goldweek 플러스",
+              "locale": "ko"
+            }
+          ],
+          "productID": "com.Ysoup.LeaveWise.plus.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Goldweek Plus Monthly",
+          "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "1.49",
+          "familyShareable": false,
+          "groupNumber": 2,
+          "internalID": "6A866EAF-E095-4510-AD8A-D4DC5EBF6C3C",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Goldweek Plus Weekly",
+              "displayName": "Goldweek Plus",
+              "locale": "en_US"
+            },
+            {
+              "description": "Goldweek Plus Weekly",
+              "displayName": "Goldweek 플러스",
+              "locale": "ko"
+            }
+          ],
+          "productID": "com.Ysoup.LeaveWise.plus.weekly",
+          "recurringSubscriptionPeriod": "P1W",
+          "referenceName": "Goldweek Plus Weekly",
           "subscriptionGroupID": "6A1D2C3E-7B4F-4E21-9C55-0D1E2F3A4B50",
           "type": "RecurringSubscription",
           "winbackOffers": []

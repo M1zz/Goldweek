@@ -58,6 +58,8 @@ struct SettingsView: View {
     @State private var showingRestoreConfirm = false
     @State private var showingPaywall = false
     @State private var showingManageSubscription = false
+    /// 페이월이 앞세울 칸. 기능을 누른 자리가 정한다. 없으면 맨 위부터.
+    @State private var paywallProductID: String?
     /// 구독 졸업(구독을 프로 평생으로) 화면
     @State private var showingGraduation = false
     @State private var editingBonus: BonusLeave?
@@ -340,6 +342,12 @@ struct SettingsView: View {
                         Button(Strings.manageSubscription) { showingManageSubscription = true }
                         // 구독 중일 때만 서는 줄: 구독을 평생으로 바꾸는 길을 늘 열어 둔다(LeeoGraduation)
                         Button(Strings.switchToLifetimeEntry) { showingGraduation = true }
+                    } else if case .shortTerm = ProManager.shared.activePlan {
+                        Button(Strings.manageSubscription) { showingManageSubscription = true }
+                        Button(Strings.switchToLifetimeEntry) {
+                            paywallProductID = ProManager.proProductID
+                            showingPaywall = true
+                        }
                     }
                 } header: {
                     Text(Strings.planStatusTitle)
@@ -775,6 +783,7 @@ struct SettingsView: View {
                         if ProManager.shared.hasProTier {
                             showingBonusLeaveSheet = true
                         } else {
+                            paywallProductID = ProManager.yearlyProductID
                             showingPaywall = true
                         }
                     } label: {
@@ -1002,6 +1011,7 @@ struct SettingsView: View {
                         .tint(.green)
                     } else {
                         Button {
+                            paywallProductID = ProManager.yearlyProductID
                             showingPaywall = true
                         } label: {
                             HStack {
@@ -1291,8 +1301,8 @@ struct SettingsView: View {
             .sheet(item: $editingBonus) { bonus in
                 EditBonusLeaveSheet(bonus: bonus)
             }
-            .sheet(isPresented: $showingPaywall) {
-                PaywallView()
+            .sheet(isPresented: $showingPaywall, onDismiss: { paywallProductID = nil }) {
+                PaywallView(initialProductID: paywallProductID)
             }
             .manageSubscriptionsSheet(isPresented: $showingManageSubscription)
             .sheet(isPresented: $showingGraduation) { GraduationSheet() }
@@ -1369,6 +1379,7 @@ struct SettingsView: View {
             return
         }
         guard ProManager.shared.isPro else {
+            paywallProductID = ProManager.plusProductID
             showingPaywall = true
             return
         }

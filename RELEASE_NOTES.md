@@ -8,7 +8,6 @@
 플러스와 프로는 연 구독과 평생 중에 골라요
 구독 중이면 설정에서 평생으로 바꿀 수 있어요
 함께 쉬기와 가족 기념일이 프로에 들어왔어요
-모든 앱이 열리는 언제나 평생 패스가 생겼어요
 
 ### App Store (English)
 
@@ -16,7 +15,6 @@ Plans are now simply Free, Plus and Pro
 Plus and Pro come yearly or lifetime
 Switch your subscription to lifetime
 Time Off Together is now part of Pro
-A new Forever Pass unlocks all our apps
 
 ### App Store (en-GB)
 
@@ -24,7 +22,6 @@ Plans are now simply Free, Plus and Pro
 Plus and Pro come yearly or lifetime
 Switch your subscription to lifetime
 Time Off Together is now part of Pro
-A new Forever Pass unlocks all our apps
 
 ### 앱스토어 (일본어)
 
@@ -32,7 +29,6 @@ A new Forever Pass unlocks all our apps
 プラスとプロは年額か買い切りを選べます
 購読中なら設定から買い切りに切り替えられます
 みんなで休むと家族の記念日がプロに入りました
-すべてのアプリが開くずっとパスが登場しました
 
 ### 앱스토어 (중국어 간체)
 
@@ -40,7 +36,6 @@ A new Forever Pass unlocks all our apps
 Plus 和 Pro 可选按年订阅或终身购买
 订阅用户可在设置中改为永久版
 一起休假和家庭纪念日现已加入 Pro
-新增永久通行证，解锁我们的所有 App
 
 ### 앱스토어 (독일어)
 
@@ -48,7 +43,6 @@ Klare Stufen mit Gratis, Plus und Pro
 Plus und Pro jährlich oder lebenslang
 Abo jederzeit auf Lebenslang umstellen
 Gemeinsam frei gehört jetzt zu Pro
-Der Für-immer-Pass öffnet alle Apps
 
 ### 앱스토어 (프랑스어)
 
@@ -56,7 +50,6 @@ Gratuit, Plus et Pro, tout simplement
 Plus et Pro à l’année ou à vie
 Passez de l’abonnement à l’achat à vie
 Congés ensemble rejoint Pro
-Le Pass à vie ouvre toutes nos apps
 
 ### 앱스토어 (스페인어)
 
@@ -64,7 +57,6 @@ Planes más claros, Gratis, Plus y Pro
 Plus y Pro, por año o de por vida
 Pasa tu suscripción a pago de por vida
 Descansar juntos ahora es parte de Pro
-El Pase para siempre abre todas las apps
 
 ### 앱스토어 (이탈리아어)
 
@@ -72,7 +64,6 @@ Piani più chiari, Gratis, Plus e Pro
 Plus e Pro, annuali o a vita
 Ora puoi passare all’acquisto a vita
 Riposare insieme ora fa parte di Pro
-Il Pass per sempre apre tutte le app
 
 ### 앱스토어 (포르투갈어 브라질)
 
@@ -80,7 +71,6 @@ Planos mais simples, Grátis, Plus e Pro
 Plus e Pro por ano ou vitalício
 Troque a assinatura pelo vitalício
 Folgas em família agora estão no Pro
-O Passe para sempre abre todos os apps
 
 ### 앱스토어 (중국어 번체)
 
@@ -88,7 +78,6 @@ O Passe para sempre abre todos os apps
 Plus 和 Pro 可選按年訂閱或終身購買
 訂閱用戶可在設定中改為永久版
 一起休假和家庭紀念日現已加入 Pro
-新增永久通行證，解鎖我們的所有 App
 
 ### 앱스토어 (네덜란드어)
 
@@ -96,7 +85,6 @@ Duidelijke plannen, Gratis, Plus en Pro
 Plus en Pro per jaar of levenslang
 Zet je abonnement om naar levenslang
 Samen vrij hoort nu bij Pro
-De Altijd-pas opent al onze apps
 
 ### 앱스토어 (스웨덴어)
 
@@ -104,7 +92,6 @@ Tydligare planer, Gratis, Plus och Pro
 Plus och Pro per år eller för livet
 Byt ditt abonnemang till livstid
 Ledigt tillsammans ingår nu i Pro
-Evighetspass öppnar alla våra appar
 
 ### 앱스토어 (노르웨이어 보크말)
 
@@ -112,7 +99,6 @@ Enklere planer, Gratis, Plus og Pro
 Plus og Pro årlig eller for livet
 Bytt abonnementet til livstid
 Fri sammen er nå en del av Pro
-Evighetspass åpner alle appene våre
 
 ### 앱스토어 (덴마크어)
 
@@ -120,7 +106,6 @@ Enklere planer, Gratis, Plus og Pro
 Plus og Pro årligt eller for livet
 Skift dit abonnement til livstid
 Fri sammen er nu en del af Pro
-Evighedspas åbner alle vores apps
 
 ### 앱스토어 (핀란드어)
 
@@ -128,7 +113,6 @@ Selkeämmät tasot, Ilmainen, Plus ja Pro
 Plus ja Pro vuodeksi tai pysyvästi
 Vaihda tilaus elinikäiseen
 Yhteiset vapaat kuuluvat nyt Prohon
-Ikuinen passi avaa kaikki sovelluksemme
 
 ### 앱스토어 (폴란드어)
 
@@ -136,7 +120,6 @@ Prostsze plany, Darmowy, Plus i Pro
 Plus i Pro rocznie albo na zawsze
 Zamień subskrypcję na dostęp dożywotni
 Wspólne wolne jest teraz w Pro
-Przepustka na zawsze otwiera każdą apkę
 
 ### 앱스토어 (체코어)
 
@@ -144,7 +127,6 @@ Jednodušší tarify, Zdarma, Plus a Pro
 Plus a Pro na rok nebo navždy
 Předplatné změníš na doživotní verzi
 Společné volno je teď součástí Pro
-Pas navždy otevře všechny naše aplikace
 
 ### 앱스토어 (그리스어)
 
@@ -152,7 +134,6 @@ Pas navždy otevře všechny naše aplikace
 Plus και Pro ετήσια ή εφ’ όρου ζωής
 Άλλαξε τη συνδρομή σε εφ’ όρου ζωής
 Οι κοινές άδειες είναι πλέον στο Pro
-Πάσο για πάντα για όλες τις εφαρμογές
 
 ### 앱스토어 (튀르키예어)
 
@@ -160,7 +141,6 @@ Planlar artık Ücretsiz, Plus ve Pro
 Plus ve Pro yıllık ya da ömür boyu
 Aboneliğini ömür boyu sürüme çevir
 Birlikte izin artık Pro’da
-Sonsuz Geçiş tüm uygulamalarımızı açar
 
 ### 앱스토어 (러시아어)
 
@@ -168,7 +148,6 @@ Sonsuz Geçiş tüm uygulamalarımızı açar
 Plus и Pro на год или навсегда
 Смените подписку на покупку навсегда
 Совместный отдых теперь входит в Pro
-Вечный пропуск ко всем нашим приложениям
 
 ### 앱스토어 (인도네시아어)
 
@@ -176,7 +155,6 @@ Paket kini Gratis, Plus, dan Pro
 Plus dan Pro tahunan atau selamanya
 Ubah langganan jadi seumur hidup
 Libur bersama kini bagian dari Pro
-Pass Selamanya untuk semua aplikasi kami
 
 ### 앱스토어 (태국어)
 
@@ -184,7 +162,6 @@ Pass Selamanya untuk semua aplikasi kami
 Plus และ Pro มีทั้งรายปีและตลอดชีพ
 ผู้สมัครสมาชิกเปลี่ยนเป็นตลอดชีพได้
 หยุดพร้อมกันกับครอบครัวอยู่ใน Pro แล้ว
-พาสตลอดกาลปลดล็อกทุกแอปของเรา
 
 ### 앱스토어 (베트남어)
 
@@ -192,7 +169,6 @@ Gói mới gọn hơn, Miễn phí, Plus và Pro
 Plus và Pro theo năm hoặc trọn đời
 Đổi gói đăng ký sang trọn đời
 Nghỉ cùng nhau nay có trong Pro
-Vé trọn đời cho mọi ứng dụng
 
 ## 2.4.1
 
