@@ -7,18 +7,24 @@
 #
 # 사용법: scripts/take_screenshots.sh [언어...]   (기본: 23개 언어 전부)
 #         IPAD=1 scripts/take_screenshots.sh …   iPad 13" (2064×2752) — 원본은 raw/ipad/<로케일>/
+#         DUO=1 DEVICE=<듀오 UDID> DEVELOPER_DIR=<Xcode 27.1>/Contents/Developer scripts/take_screenshots.sh …
+#           iPhone Duo 바깥 화면 (1398×2034) — 원본은 raw/duo/<로케일>/. 화면이 둘이라 바깥(--display=1)만 찍는다.
+#           Xcode 27.1 로 빌드해야 바깥 화면에서 호환 틀(옆 검은 띠) 없이 뜬다.
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-if [ -n "${IPAD:-}" ]; then
+if [ -n "${DUO:-}" ]; then
+  DEVICE="${DEVICE:-iPhone Duo}"   # 접힌 채 바깥 화면 — App Store iPhone Duo 규격 (1398×2034)
+elif [ -n "${IPAD:-}" ]; then
   DEVICE="${DEVICE:-iPad Pro 13-inch (M5)}"   # 13" — App Store iPad 필수 규격 (2064×2752)
 else
   DEVICE="${DEVICE:-iPhone 18 Pro Max}"   # 6.9" — App Store 필수 규격 (1320×2868)
 fi
 BUNDLE_ID="com.Ysoup.LeaveWise"
-DERIVED="${DERIVED:-$ROOT/build/screenshots-dd}"
-OUT="${OUT:-$ROOT/docs/screenshots/raw${IPAD:+/ipad}}"
+DERIVED="${DERIVED:-$ROOT/build/screenshots-dd${DUO:+-duo}}"
+OUT="${OUT:-$ROOT/docs/screenshots/raw${IPAD:+/ipad}${DUO:+/duo}}"
+DISPLAY_ARG=""; [ -n "${DUO:-}" ] && DISPLAY_ARG="--display=1"   # 듀오: 1번 바깥 화면, 3번 안쪽(접혀 있으면 검다)
 LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr es it pt zh-Hant ru id nl sv nb da fi pl cs el tr th vi)
 
 # 탭 번호:이름[:스크롤 위치] (MainTabView 의 tag, ScreenshotMode.scrollTarget)
@@ -100,7 +106,7 @@ for lang in "${LANGS[@]}"; do
     # 레포 경로에 한글이 있으면 pwd 가 자모 분리형(NFD)으로 돌려주는데, simctl 은 그 경로에 쓰지 못한다
     # → 임시 파일로 찍고 옮긴다
     tmp="$(mktemp -t goldweek-shot).png"
-    xcrun simctl io "$DEVICE" screenshot "$tmp" >/dev/null 2>&1
+    xcrun simctl io "$DEVICE" screenshot $DISPLAY_ARG "$tmp" >/dev/null 2>&1
     mv "$tmp" "$file"
     echo "  ✓ $file"
     i=$((i + 1))

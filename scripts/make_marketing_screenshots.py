@@ -13,7 +13,10 @@
 iPad: 원본 docs/screenshots/raw/ipad/<로케일>/ → 제출본 marketing/<로케일>/1x-ipad-….png (2064×2752)
   (DeployBar 는 픽셀 크기로 기기를 가린다 — 같은 폴더에 둬도 iPhone 자리와 섞이지 않는다)
 
-사용법: python3 scripts/make_marketing_screenshots.py [--ipad] [로케일...]
+iPhone Duo(바깥 화면): 원본 docs/screenshots/raw/duo/<로케일>/ → 제출본 marketing/<로케일>/duo-0x-….png (1398×2034)
+  아이폰과 같은 5장 · 같은 순서 · 같은 문구. 아이폰보다 넓고 낮아 글은 위, 기기는 아래로 걸친다.
+
+사용법: python3 scripts/make_marketing_screenshots.py [--ipad | --duo] [로케일...]
 """
 import pathlib, subprocess, sys, tempfile, time
 
@@ -373,10 +376,31 @@ def render_ipad(locale):
         shoot(page(locale, css, body), out_dir / f"{i:02d}-ipad-{name}.png", IW, IH)
 
 
-def render(locale):
+# ── iPhone Duo 바깥 화면 ──────────────────────────────────
+DW, DH = 1398, 2034
+# 아이폰 레이아웃을 이 판에 맞게 줄인다. 바깥 화면은 모서리가 덜 둥글다.
+DUO_CSS = f"""
+html,body {{ width:{DW}px; height:{DH}px; }}
+.headline {{ font-size:96px; }}
+.sub {{ font-size:44px; }}
+.phone {{ border-radius:80px; padding:22px; }}
+.phone img {{ border-radius:58px; }}
+"""
+DUO_LAYOUTS = {
+    "hero-bleed": ".text { padding-top:150px; } .wrap { margin-top:90px; } .phone { width:1080px; }",
+    "left-text": ".text { padding-top:150px; } .wrap { left:330px; top:760px; } .phone { width:960px; }",
+    "text-bottom": ".wrap { margin-top:110px; } .phone { width:1000px; } .text { padding-top:90px; }",
+    "flat-rotate": ".text { padding-top:150px; } .wrap { left:150px; top:780px; } .phone { width:1100px; }",
+    "flags-many": ".text { padding-top:150px; } .grid { grid-template-columns:repeat(7,140px); gap:30px 30px; margin-top:110px; }"
+                  " .grid div { width:140px; height:140px; font-size:88px; }",
+}
+
+
+def render(locale, duo=False):
     out_dir = OUT / locale
     out_dir.mkdir(parents=True, exist_ok=True)
-    for old in out_dir.glob("0*.png"):
+    prefix, raw, w, h_px = ("duo-", RAW / "duo", DW, DH) if duo else ("", RAW, W, H)
+    for old in out_dir.glob(f"{prefix}0*.png"):
         old.unlink()
     for i, ((src, layout), (h, s)) in enumerate(zip(SLIDES, COPY[locale]), start=1):
         text = TEXT.format(h=h, s=s)
@@ -385,18 +409,19 @@ def render(locale):
             body = text + '<div class="grid">' + "".join(f"<div>{f}</div>" for f in ALL_FLAGS) + "</div>"
             name = "countries"
         else:
-            img = RAW / locale / src
+            img = raw / locale / src
             if not img.exists():
                 sys.exit(f"원본 없음: {img} — scripts/take_screenshots.sh 먼저")
             phone = PHONE.format(img=img.as_uri())
             body = phone + text if layout == "text-bottom" else text + phone
             name = src[3:-4]
-        shoot(page(locale, BASE_CSS + LAYOUTS[layout], body), out_dir / f"{i:02d}-{name}.png", W, H)
+        css = BASE_CSS + LAYOUTS[layout] + (DUO_CSS + DUO_LAYOUTS[layout] if duo else "")
+        shoot(page(locale, css, body), out_dir / f"{prefix}{i:02d}-{name}.png", w, h_px)
 
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    ipad = "--ipad" in args
-    locales = [a for a in args if a != "--ipad"] or list(COPY)
+    ipad, duo = "--ipad" in args, "--duo" in args
+    locales = [a for a in args if not a.startswith("--")] or list(COPY)
     for loc in locales:
-        render_ipad(loc) if ipad else render(loc)
+        render_ipad(loc) if ipad else render(loc, duo=duo)
