@@ -8,6 +8,7 @@
 import Foundation
 import XCTest
 import SwiftData
+import CloudKit
 @testable import Goldweek
 
 final class LeaveCalculationTests: XCTestCase {
@@ -2559,5 +2560,88 @@ final class FamilyTogetherTests: XCTestCase {
             XCTAssertTrue(Strings.togetherLeaveNeeded("A", 1, 3).contains("3"))
             XCTAssertFalse(Strings.togetherLocked.isEmpty)
         }
+    }
+}
+
+// MARK: - 앱 업데이트 없이 내려오는 공휴일 고침 (HolidayOverrides.swift)
+
+final class HolidayOverrideTests: XCTestCase {
+    private let cal = Calendar.app
+
+    private func change(_ action: HolidayOverride.Action, _ date: String, country: String = "korea",
+                        region: String? = nil, names: [String: String] = ["ko": "임시공휴일", "en": "Temporary Holiday"],
+                        at seconds: TimeInterval = 0) -> HolidayOverride {
+        HolidayOverride(id: UUID().uuidString, country: country, region: region, date: date, action: action,
+                        names: names, modifiedAt: Date(timeIntervalSince1970: seconds))
+    }
+
+    private func has(_ holidays: [Holiday], _ y: Int, _ m: Int, _ d: Int) -> Holiday? {
+        let day = cal.date(from: DateComponents(year: y, month: m, day: d))!
+        return holidays.first { cal.isDate($0.date, inSameDayAs: day) }
+    }
+
+    func testAddRemoveRename() {
+        let base = HolidayService().getHolidays(for: 2027, country: .korea)
+        XCTAssertNil(has(base, 2027, 4, 7))
+        XCTAssertNotNil(has(base, 2027, 5, 5))
+
+        let added = HolidayService.applying([change(.add, "2027-04-07")], to: base, year: 2027,
+                                            country: .korea, region: nil, language: .korean)
+        XCTAssertEqual(has(added, 2027, 4, 7)?.name, "임시공휴일")
+        XCTAssertEqual(added.count, base.count + 1)
+
+        let removed = HolidayService.applying([change(.remove, "2027-05-05", names: [:])], to: base, year: 2027,
+                                              country: .korea, region: nil, language: .korean)
+        XCTAssertNil(has(removed, 2027, 5, 5))
+
+        let renamed = HolidayService.applying([change(.rename, "2027-05-05", names: ["en": "Kids Day"])], to: base,
+                                              year: 2027, country: .korea, region: nil, language: .japanese)
+        XCTAssertEqual(has(renamed, 2027, 5, 5)?.name, "Kids Day", "없는 언어는 영어 이름")
+    }
+
+    func testOnlyMatchingCountryRegionAndYear() {
+        let base = HolidayService().getHolidays(for: 2027, country: .korea)
+        let others = [change(.add, "2027-04-07", country: "japan"),
+                      change(.add, "2028-04-07"),
+                      change(.add, "2027-04-07", region: "KR-11")]
+        let result = HolidayService.applying(others, to: base, year: 2027, country: .korea, region: nil, language: .korean)
+        XCTAssertEqual(result.count, base.count, "다른 나라 · 다른 해 · 고르지 않은 지역은 덮어쓰지 않는다")
+    }
+
+    func testLaterChangeWins() {
+        let base = HolidayService().getHolidays(for: 2027, country: .korea)
+        let result = HolidayService.applying([change(.remove, "2027-04-07", names: [:], at: 200),
+                                              change(.add, "2027-04-07", at: 100)],
+                                             to: base, year: 2027, country: .korea, region: nil, language: .korean)
+        XCTAssertNil(has(result, 2027, 4, 7), "더했다가 나중에 취소하면 빠진다")
+    }
+
+    func testRejectsBadRecords() {
+        let now = cal.date(from: DateComponents(year: 2026, month: 11, day: 2))!
+        func record(_ fields: [String: Any]) -> CKRecord {
+            let r = CKRecord(recordType: HolidayOverrideStore.recordType)
+            fields.forEach { r[$0.key] = $0.value as? CKRecordValue }
+            return r
+        }
+        let good: [String: Any] = ["country": "korea", "date": "2027-04-07", "action": "add",
+                                   "names": #"{"ko":"임시공휴일"}"#]
+        XCTAssertNotNil(HolidayOverride(record: record(good), now: now))
+        XCTAssertNil(HolidayOverride(record: record(good.merging(["active": 0]) { $1 }), now: now), "꺼 둔 기록")
+        XCTAssertNil(HolidayOverride(record: record(good.merging(["country": "atlantis"]) { $1 }), now: now))
+        XCTAssertNil(HolidayOverride(record: record(good.merging(["date": "2031-01-01"]) { $1 }), now: now), "3년보다 먼 날")
+        XCTAssertNil(HolidayOverride(record: record(good.merging(["date": "2027-13-01"]) { $1 }), now: now))
+        XCTAssertNil(HolidayOverride(record: record(good.merging(["names": "{}"]) { $1 }), now: now), "이름 없는 추가")
+        XCTAssertNotNil(HolidayOverride(record: record(["country": "korea", "date": "2027-05-05", "action": "remove"]), now: now))
+    }
+
+    func testDataVersionFollowsLatestChange() {
+        let saved = HolidayOverrideStore.overrides
+        defer { HolidayOverrideStore.replace(with: saved) }
+        HolidayOverrideStore.replace(with: [])
+        let plain = HolidayOverrideStore.dataVersion
+        XCTAssertFalse(plain.contains("+"))
+        HolidayOverrideStore.replace(with: [change(.add, "2027-04-07", at: 1_800_000_000)])
+        XCTAssertEqual(HolidayOverrideStore.dataVersion, "\(plain)+1800000000")
+        XCTAssertEqual(LeaveRecord(startDate: Date(), endDate: Date()).holidayDataVersion, "\(plain)+1800000000")
     }
 }

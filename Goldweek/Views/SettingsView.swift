@@ -79,7 +79,9 @@ struct SettingsView: View {
     @AppStorage(CalendarService.autoSyncKey) private var calendarAutoSync = false
     @State private var calendarSyncError: String?
     /// 홈 "다가오는 휴가" 카드에 공휴일도 함께 보여줄지 (HomeView와 같은 키를 공유)
-    @AppStorage("showHolidaysInUpcoming") private var showHolidaysInUpcoming = true
+    @AppStorage(HomeLayout.upcomingKey) private var upcomingChoice = HomeLayout.undecided
+    @AppStorage(HomeLayout.holidaysKey) private var holidaysChoice = HomeLayout.undecided
+    @AppStorage(HomeLayout.paceAlwaysKey) private var paceAlways = false
 
     // 홈 "연차 현황"에 보너스 연차를 합산할지 여부 (홈 화면에서 이 설정을 따른다)
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
@@ -207,6 +209,12 @@ struct SettingsView: View {
             .joined(separator: " · ")
     }
 
+    /// 현황 구성 값(0 아직 안 물음 · 1 보기 · 2 안 보기)을 스위치로
+    private func homeChoice(_ choice: Binding<Int>) -> Binding<Bool> {
+        Binding(get: { choice.wrappedValue == HomeLayout.shown },
+                set: { choice.wrappedValue = $0 ? HomeLayout.shown : HomeLayout.hidden })
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -314,7 +322,7 @@ struct SettingsView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(Strings.planFree)
                                     .fontWeight(.semibold)
-                                Text(Strings.freePlanMessage)
+                                Text(Strings.freeFeatRecommendations(ProManager.freeRecommendationAddLimit))
                                     .font(.body)
                                     .foregroundStyle(.secondary)
                             }
@@ -551,11 +559,22 @@ struct SettingsView: View {
                         .accessibilityElement(children: .combine)
                     }
 
-                    // 홈의 "다가오는 휴가" 카드에 공휴일을 섞을지 — 내 휴가만 보고 싶은 사람을 위한 스위치
-                    Toggle(isOn: $showHolidaysInUpcoming) {
+                    // 현황에 보일 것 — 현황에서 '볼게요'로 고른 것을 여기서 켜고 끈다(`HomeLayout`)
+                    Toggle(Strings.upcomingLeaves, isOn: homeChoice($upcomingChoice))
+                        .tint(.orange)
+                    Toggle(isOn: homeChoice($holidaysChoice)) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(Strings.showHolidaysInUpcomingTitle)
                             Text(Strings.showHolidaysInUpcomingDescription)
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .tint(.orange)
+                    Toggle(isOn: $paceAlways) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.homePaceAlways)
+                            Text(Strings.homePaceAlwaysDescription)
                                 .font(.body)
                                 .foregroundStyle(.secondary)
                         }
@@ -1648,7 +1667,7 @@ struct GiftAndTipSection: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(Strings.tipEntry)
                                 Text(Strings.tipEntrySubtitle)
-                                    .font(.footnote)
+                                    .font(.body)
                                     .foregroundStyle(.secondary)
                             }
                         } icon: {

@@ -595,6 +595,9 @@ final class LeaveRecord {
     /// 직접 만든 휴가 종류(CustomLeaveType.id) — 있으면 이름·색은 그 종류를 따른다.
     /// 연차 차감 여부는 typeRaw(.annual / .special)로 함께 저장해 기존 계산이 그대로 돈다.
     var customTypeId: UUID?
+    /// 이 휴가를 잡을 때의 공휴일 데이터 버전(`HolidayOverrideStore.dataVersion`).
+    /// 나중에 공휴일이 바뀌면 그 전에 잡은 계획을 가려낸다. 예전 기록은 nil(모름).
+    var holidayDataVersion: String?
 
     init(
         startDate: Date,
@@ -619,6 +622,7 @@ final class LeaveRecord {
         self.lengthRaw = length?.rawValue
         self.note = note
         self.isRecommended = isRecommended
+        self.holidayDataVersion = HolidayOverrideStore.dataVersion
     }
 
     var type: LeaveType {

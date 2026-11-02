@@ -71,6 +71,7 @@
 		A1000058 /* PhotoImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000058 /* PhotoImportService.swift */; };
 		A1000059 /* PhotoImportSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000059 /* PhotoImportSheet.swift */; };
 		A1000060 /* BurnoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000060 /* BurnoutEngine.swift */; };
+		C1D0A11E5E1D4A7B9F000001 /* HolidayOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D0A11E5E1D4A7B9F000002 /* HolidayOverrides.swift */; };
 		A1000061 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000061 /* NotificationService.swift */; };
 		A1000062 /* BurnoutEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000062 /* BurnoutEngineTests.swift */; };
 		A1000063 /* LeaveTableParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000063 /* LeaveTableParserTests.swift */; };
@@ -200,6 +201,7 @@
 		A2000058 /* PhotoImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoImportService.swift; sourceTree = "<group>"; };
 		A2000059 /* PhotoImportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoImportSheet.swift; sourceTree = "<group>"; };
 		A2000060 /* BurnoutEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngine.swift; sourceTree = "<group>"; };
+		C1D0A11E5E1D4A7B9F000002 /* HolidayOverrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayOverrides.swift; sourceTree = "<group>"; };
 		A2000061 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		A2000062 /* BurnoutEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngineTests.swift; sourceTree = "<group>"; };
 		A2000063 /* LeaveTableParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveTableParserTests.swift; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 				A2000010 /* LeaveManager.swift */,
 				A2000011 /* RecommendationEngine.swift */,
 				A2000060 /* BurnoutEngine.swift */,
+				C1D0A11E5E1D4A7B9F000002 /* HolidayOverrides.swift */,
 				A2000061 /* NotificationService.swift */,
 				A2000012 /* HolidayService.swift */,
 				A20000W1 /* WorldHolidays.swift */,
@@ -691,6 +694,7 @@
 				A1000010 /* LeaveManager.swift in Sources */,
 				A1000011 /* RecommendationEngine.swift in Sources */,
 				A1000060 /* BurnoutEngine.swift in Sources */,
+				C1D0A11E5E1D4A7B9F000001 /* HolidayOverrides.swift in Sources */,
 				A1000061 /* NotificationService.swift in Sources */,
 				A1000012 /* HolidayService.swift in Sources */,
 				A10000W1 /* WorldHolidays.swift in Sources */,

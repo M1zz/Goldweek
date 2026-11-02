@@ -907,7 +907,7 @@ struct ProShowcasePage: View {
 
                         // 자동 갱신 구독 고지 — 구매 버튼과 같은 화면에 있어야 한다 (심사)
                         Text(Strings.subscriptionDisclosure)
-                            .font(.footnote)
+                            .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)

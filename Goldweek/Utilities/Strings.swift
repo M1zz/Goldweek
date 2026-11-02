@@ -8865,7 +8865,7 @@ enum Strings {
 
     static func connectedLeaveDesc(holidayName: String, leaveDays: Int, totalDays: Int) -> String {
         switch lang {
-        case .korean: return "\(holidayName) 연휴를 활용하여 연차 \(leaveDays)일로 \(totalDays)일 연휴를 만들 수 있어요."
+        case .korean: return "\(holidayName.hasSuffix("연휴") ? holidayName : "\(holidayName) 연휴")를 활용하여 연차 \(leaveDays)일로 \(totalDays)일 연휴를 만들 수 있어요."
         case .english: return "Use \(leaveDays) leave days around \(holidayName) for \(totalDays) days off."
         case .swedish: return "Ta \(leaveDays) semesterdagar runt \(holidayName) för \(totalDays) lediga dagar."
         case .norwegian: return "Bruk \(leaveDays) feriedager rundt \(holidayName) for \(totalDays) dager fri."
@@ -18969,35 +18969,6 @@ enum Strings {
         case .italian: return "Pro è attivo. Tutte le funzioni sono sbloccate."
         case .portuguese: return "O Pro está ativo. Todos os recursos estão liberados."
         case .chineseTraditional: return "Pro 已啟用，所有功能皆可使用。"
-        }
-    }
-
-    /// 설정 — 무료 버전 설명
-    static var freePlanMessage: String {
-        switch lang {
-        case .korean: return "추천 일부와 올해 기록만 쓸 수 있어요."
-        case .english: return "Some recommendations and the current year only."
-        case .swedish: return "Vissa förslag och bara innevarande år."
-        case .norwegian: return "Noen anbefalinger og kun inneværende år."
-        case .danish: return "Nogle anbefalinger og kun indeværende år."
-        case .finnish: return "Vain osa ehdotuksista ja nykyinen vuosi."
-        case .polish: return "Część rekomendacji i tylko bieżący rok."
-        case .czech: return "Jen část doporučení a pouze aktuální rok."
-        case .greek: return "Ορισμένες προτάσεις και μόνο το τρέχον έτος."
-        case .turkish: return "Bazı öneriler ve yalnızca mevcut yıl."
-        case .russian: return "Часть рекомендаций и только текущий год."
-        case .indonesian: return "Sebagian rekomendasi dan tahun ini saja."
-        case .thai: return "คำแนะนำบางส่วน และเฉพาะปีนี้"
-        case .vietnamese: return "Một phần gợi ý và chỉ năm nay."
-        case .dutch: return "Een deel van de aanbevelingen en alleen het huidige jaar."
-        case .japanese: return "一部のおすすめと今年の記録のみ使えます。"
-        case .chinese: return "仅可使用部分推荐和今年的记录。"
-        case .german: return "Nur einige Empfehlungen und das aktuelle Jahr."
-        case .french: return "Quelques recommandations et l’année en cours uniquement."
-        case .spanish: return "Solo algunas recomendaciones y el año actual."
-        case .italian: return "Solo alcuni suggerimenti e l’anno in corso."
-        case .portuguese: return "Apenas algumas sugestões e o ano atual."
-        case .chineseTraditional: return "僅可使用部分推薦與今年的紀錄。"
         }
     }
 

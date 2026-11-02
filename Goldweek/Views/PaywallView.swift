@@ -244,7 +244,7 @@ struct PaywallView: View {
 
     private func badge(_ text: String, color: Color) -> some View {
         Text(text)
-            .font(.footnote.weight(.semibold))
+            .font(.body.weight(.semibold))
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
             .background(color.opacity(0.15))
@@ -567,7 +567,7 @@ struct PaywallView: View {
     private var footerSection: some View {
         VStack(spacing: 10) {
             Text(Strings.subscriptionDisclosure)
-                .font(.footnote)
+                .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
