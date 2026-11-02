@@ -224,7 +224,7 @@ struct ProBenefitsView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 if let detail {
                     Text(detail)
-                        .font(.footnote)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                 }
             }

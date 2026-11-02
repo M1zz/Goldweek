@@ -238,7 +238,7 @@ struct FamilyTogetherView: View {
                                     .foregroundStyle(.secondary)
                                 if let by = day.sharedBy {
                                     Text(Strings.togetherSharedBy(by))
-                                        .font(.footnote)
+                                        .font(.body)
                                         .foregroundStyle(.secondary)
                                 }
                                 Text(day.working.isEmpty ? Strings.togetherEveryoneOff : Strings.togetherWorking(day.working.joined(separator: ", ")))

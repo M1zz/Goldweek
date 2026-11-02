@@ -81,6 +81,11 @@ struct ContentView: View {
                         showingGraduation = true
                     }
                     .task {
+                        // 앱 업데이트 없이 내려오는 공휴일 고침(임시공휴일 등) — 하루 두 번까지
+                        guard !ScreenshotMode.isActive, !LaunchSafety.isSafeMode else { return }
+                        await HolidayOverrideStore.refreshIfNeeded()
+                    }
+                    .task {
                         guard !hasSeenTutorial else { return }
                         hasSeenTutorial = true
                         // 처음 쓰는 사람은 설명 없이 단순한 화면부터 본다 (사용법은 설정 ▸ 도움말에 있다)
@@ -503,6 +508,10 @@ struct MainTabView: View {
         .foldTabBar(items: FoldTabs.items(showsFamily: hasSharedSchedules),
                     selected: selectedTab == 0 ? 1 : selectedTab) { selectedTab = $0 }
         .foldHomeTabRedirect(selectedTab: $selectedTab)
+        // 가족 탭을 보던 중 공유가 모두 사라지면 탭이 없어져 화면이 하얗게 빈다
+        .onChange(of: hasSharedSchedules, initial: true) { _, hasShared in
+            if !hasShared && selectedTab == 2 { selectedTab = 0 }
+        }
         // 창 크기로 접힘을 재서 아래로 흘린다. 시트 · 알림창도 접힌 선을 비킨다 (LeeoKit Fold).
         .foldAware()
         .sheet(isPresented: $showingScreenshotPaywall) { PaywallView() }

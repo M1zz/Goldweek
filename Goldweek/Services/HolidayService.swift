@@ -216,6 +216,10 @@ class HolidayService {
             baseHolidaysCache[baseKey] = result
         }
 
+        // 앱 업데이트 없이 내려온 고침(임시공휴일 등) — 받으면 바로 쓰도록 캐시 밖에서 덮어쓴다 (HolidayOverrides.swift)
+        result = Self.applying(HolidayOverrideStore.overrides, to: result, year: year, country: country,
+                               region: region, language: AppLanguage.current, calendar: calendar)
+
         // hiddenDates·customHolidays는 매번 동적이므로 캐시 후 적용
         if !hiddenDates.isEmpty {
             result = result.filter { !hiddenDates.contains(dateKey($0.date)) }

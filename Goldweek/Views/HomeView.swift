@@ -42,8 +42,11 @@ struct HomeView: View {
     @State private var tipReached: [LeeoTipMoment] = []
     @State private var showingTipJar = false
 
-    /// 다가오는 휴가 카드에 공휴일도 함께 보여줄지 (설정 > 공휴일 관리에서 끌 수 있다)
-    @AppStorage("showHolidaysInUpcoming") private var showHolidaysInUpcoming = true
+    /// 현황에 무엇을 둘지 — 사용자가 고른 것만 선다. 처음 필요해지는 순간에 한 번 묻는다(`HomeLayout`)
+    @AppStorage(HomeLayout.upcomingKey) private var upcomingChoice = HomeLayout.undecided
+    @AppStorage(HomeLayout.holidaysKey) private var holidaysChoice = HomeLayout.undecided
+    /// 이번 실행에서 띄운 Pro 배너 — 띄우는 순간 쿨다운이 걸려 조건이 사라져도 배너는 그대로 둔다
+    @State private var shownProBanner: (icon: String, message: String)?
 
     // 캘린더 자동 감지 (Pro)
     @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
@@ -144,8 +147,6 @@ struct HomeView: View {
     /// 올해 남은 공휴일 중 가까운 몇 개 — **붙어 있는 날은 한 줄로 묶는다**(추석 3일이 세 줄로 늘어나지 않게).
     /// 숨긴 공휴일(설정 > 공휴일 관리)은 캘린더와 마찬가지로 여기서도 빠진다.
     private var upcomingHolidayBlocks: [UpcomingItem] {
-        guard showHolidaysInUpcoming else { return [] }
-
         let calendar = Calendar.app
         let today = calendar.startOfDay(for: Date())
         let year = calendar.component(.year, from: today)
@@ -185,8 +186,121 @@ struct HomeView: View {
 
     /// 카드에 그릴 최종 목록 — 내 휴가와 공휴일을 날짜순으로 섞는다.
     var upcomingItems: [UpcomingItem] {
-        (upcomingLeaves.map(UpcomingItem.init(leave:)) + upcomingHolidayBlocks)
-            .sorted { $0.startDate < $1.startDate }
+        let leaves = upcomingChoice == HomeLayout.shown ? upcomingLeaves.map(UpcomingItem.init(leave:)) : []
+        let holidays = holidaysChoice == HomeLayout.shown ? upcomingHolidayBlocks : []
+        return (leaves + holidays).sorted { $0.startDate < $1.startDate }
+    }
+
+    /// 2주 안에 공휴일이 있다 — 공휴일도 함께 볼지 물을 때
+    private var holidaySoon: Bool {
+        guard let first = upcomingHolidayBlocks.first else { return false }
+        let today = Calendar.app.startOfDay(for: Date())
+        return (Calendar.app.dateComponents([.day], from: today, to: first.startDate).day ?? .max) <= 14
+    }
+
+    // MARK: - 한 번에 하나만 띄우는 안내
+
+    private enum HomePrompt {
+        case holidayNotice(HolidayRegionNoticeCard.Notice)
+        case pastLeave
+        case firstPlan(LeaveRecommendation)
+        case emptyHome
+        case autoDetect
+        case offerUpcoming
+        case offerHolidays
+        case pro(icon: String, message: String)
+        case tip(LeeoTipMoment)
+        case featureTip
+    }
+
+    /// 안내 · 제안은 한 번에 하나만 선다. 순서가 우선순위다 — 하나를 닫으면 다음 것이 선다.
+    private var prompt: HomePrompt? {
+        if let notice = holidayNotice { return .holidayNotice(notice) }
+        if shouldShowPastLeavePrompt { return .pastLeave }
+        if offersFirstPlan, didLookForFirstPlan {
+            if let firstPlan { return .firstPlan(firstPlan) }
+            if leaveRecords.isEmpty { return .emptyHome }
+        }
+        if AppSurface.shared.shows(.everything), !autoDetectedCandidates.isEmpty { return .autoDetect }
+        if upcomingChoice == HomeLayout.undecided, !upcomingLeaves.isEmpty { return .offerUpcoming }
+        if holidaysChoice == HomeLayout.undecided, holidaySoon { return .offerHolidays }
+        // 파는 말 · 기능 팁은 앱이 다 열린 뒤에만 (AppSurface)
+        guard AppSurface.shared.shows(.everything) else { return nil }
+        if let banner = shownProBanner ?? proBannerContext { return .pro(icon: banner.icon, message: banner.message) }
+        if let moment = tipMoment, extras.tipJar != nil { return .tip(moment) }
+        if !leaveRecords.isEmpty { return .featureTip }
+        return nil
+    }
+
+    @ViewBuilder
+    private var promptView: some View {
+        switch prompt {
+        case .holidayNotice(let notice):
+            HolidayRegionNoticeCard(
+                profile: profile,
+                notice: notice,
+                onDismiss: { dismissHolidayNotice(notice) },
+                onOpenHolidays: { showingHolidayManagement = true }
+            )
+        case .pastLeave:
+            PastLeavePromptBanner(
+                onQuickEntry: { showingPastLeaveEntry = true },
+                onNoneYet: { withAnimation(.spring) { hasSeenPastLeavePrompt = true } }
+            )
+        case .firstPlan(let plan):
+            FirstPlanCard(
+                plan: plan,
+                country: profile.country,
+                onAdd: { addFirstPlan(plan) },
+                onPickOther: { showingAddLeave = true },
+                onDismiss: leaveRecords.isEmpty ? nil : { withAnimation(.spring) { offersPlanAfterPastEntry = false } }
+            )
+        case .emptyHome:
+            EmptyHomeCard(onAddLeave: { showingAddLeave = true })
+        case .autoDetect:
+            AutoDetectBanner(
+                count: autoDetectedCandidates.count,
+                onReview: { showingCalendarImport = true },
+                onDismiss: { dismissAutoDetectBanner() }
+            )
+        case .offerUpcoming:
+            HomeOfferCard(icon: "calendar.badge.clock", title: Strings.homeOfferUpcoming) { show in
+                withAnimation { upcomingChoice = show ? HomeLayout.shown : HomeLayout.hidden }
+            }
+        case .offerHolidays:
+            HomeOfferCard(icon: "flag.fill", title: Strings.homeOfferHolidays) { show in
+                withAnimation { holidaysChoice = show ? HomeLayout.shown : HomeLayout.hidden }
+            }
+        case .pro(let icon, let message):
+            ProBannerView(
+                triggerIcon: icon,
+                triggerMessage: message,
+                onShow: {
+                    shownProBanner = (icon, message)
+                    lastProBannerShownAt = Date().timeIntervalSince1970
+                }
+            )
+        case .tip(let moment):
+            // 응원 부탁 — 프로 이상에게만(`evaluateTipAsk`). 무료 사용자의 Pro 배너가 앞서므로 둘이 겹치지 않는다.
+            if let tipJar = extras.tipJar {
+                LeeoTipAskCard(tipJar: tipJar, moment: moment,
+                               onSupport: {
+                                   showingTipJar = true
+                                   tipMoment = nil
+                               },
+                               onLater: { tipMoment = nil })
+                    .onAppear { tipJar.markAsked(covering: tipReached) }
+            }
+        case .featureTip:
+            // 기능 팁도 하나씩 — 가족 공유를 알리고, 닫으면 내역 팁
+            if AppTips.familyShare.shouldDisplay {
+                TipView(AppTips.familyShare)
+            } else {
+                TipView(AppTips.leaveHistory)
+            }
+        case nil:
+            EmptyView()
+        }
     }
 
     var usedLeavesCount: Int {
@@ -251,78 +365,16 @@ struct HomeView: View {
                             .transition(.move(edge: .top).combined(with: .opacity))
                     }
 
-                    // 공휴일 안내 — 지원하지 않는 나라이거나, 지역을 아직 안 고른 나라
-                    if let notice = holidayNotice {
-                        HolidayRegionNoticeCard(
-                            profile: profile,
-                            notice: notice,
-                            onDismiss: { dismissHolidayNotice(notice) },
-                            onOpenHolidays: { showingHolidayManagement = true }
-                        )
-                    }
-
-                    // 가족 일정 공유 팁 (기록이 좀 쌓인 뒤에 노출)
-                    if AppSurface.shared.shows(.sharePlan), !leaveRecords.isEmpty {
-                        TipView(AppTips.familyShare)
-                    }
-
-                    // 휴가 페이스 (소진 속도 + 번아웃 신호) — 직장인 모드 + 데이터 충분 시
+                    // 경고 — 쉬지 못했거나 연차가 남을 것 같을 때만 선다. '알겠어요'를 누르면 한동안 접힌다.
                     if AppSurface.shared.shows(.restPace), profile.userType == .employee, profile.totalAnnualLeave > 0, !leaveRecords.isEmpty {
                         BurnoutPaceCard(profile: profile, allLeaveRecords: leaveRecords)
                     }
 
-                    // 처음 온 사람에게는 할 일을 하나씩 — 남은 연차를 맞추고, 그다음 연휴를 잡는다
-                    if shouldShowPastLeavePrompt {
-                        PastLeavePromptBanner(
-                            onQuickEntry: { showingPastLeaveEntry = true },
-                            onNoneYet: { withAnimation(.spring) { hasSeenPastLeavePrompt = true } }
-                        )
-                    } else if offersFirstPlan, didLookForFirstPlan {
-                        if let firstPlan {
-                            FirstPlanCard(
-                                plan: firstPlan,
-                                country: profile.country,
-                                onAdd: { addFirstPlan(firstPlan) },
-                                onPickOther: { showingAddLeave = true },
-                                onDismiss: leaveRecords.isEmpty ? nil : { withAnimation(.spring) { offersPlanAfterPastEntry = false } }
-                            )
-                        } else if leaveRecords.isEmpty {
-                            EmptyHomeCard(onAddLeave: { showingAddLeave = true })
-                        }
-                    }
+                    // 안내 · 제안 · 팁은 한 번에 하나만 — 처음 온 사람에게는 남은 연차 → 첫 연휴 순서
+                    promptView
 
-                    // 캘린더 자동 감지 결과 배너 (Pro)
-                    if AppSurface.shared.shows(.everything), !autoDetectedCandidates.isEmpty {
-                        AutoDetectBanner(
-                            count: autoDetectedCandidates.count,
-                            onReview: { showingCalendarImport = true },
-                            onDismiss: { dismissAutoDetectBanner() }
-                        )
-                    }
-
-                    // Pro 업그레이드 배너 (스마트 트리거: 쿨다운 + 의미 있는 상황일 때만)
-                    if AppSurface.shared.shows(.everything), let context = proBannerContext {
-                        ProBannerView(
-                            triggerIcon: context.icon,
-                            triggerMessage: context.message,
-                            onShow: { lastProBannerShownAt = Date().timeIntervalSince1970 }
-                        )
-                    }
-
-                    // 응원 부탁 — 위 Pro 배너와 겹치지 않는다(배너는 무료 사용자, 이 카드는 프로 이상).
-                    // 파는 말 둘이 겹치면 둘 다 약해진다. 플러스에게는 위 등급이 맞는 길이라 묻지 않는다.
-                    if AppSurface.shared.shows(.everything), let moment = tipMoment, let tipJar = extras.tipJar {
-                        LeeoTipAskCard(tipJar: tipJar, moment: moment,
-                                       onSupport: {
-                                           showingTipJar = true
-                                           tipMoment = nil
-                                       },
-                                       onLater: { tipMoment = nil })
-                            .onAppear { tipJar.markAsked(covering: tipReached) }
-                    }
-
-                    // 다가오는 휴가 (설정에 따라 공휴일 포함)
-                    if !upcomingItems.isEmpty, !shouldShowPastLeavePrompt, !offersFirstPlan || firstPlan == nil {
+                    // 다가오는 휴가 · 공휴일 — 보겠다고 고른 것만
+                    if !upcomingItems.isEmpty {
                         UpcomingLeavesSection(items: upcomingItems)
                     }
 
@@ -330,9 +382,6 @@ struct HomeView: View {
                     if AppSurface.shared.shows(.everything) {
                         UpcomingAnniversariesCard(profile: profile)
 
-                        // 내역 안내는 **인라인**으로 — 팝오버로 띄우면 화면 맨 아래라
-                        // 탭바에 물려 잘린다(여백을 줄 자리가 없다).
-                        TipView(AppTips.leaveHistory)
                     }
 
                     // 휴가 사용 내역 버튼 (맨 아래) — 내역이 생기기 전에는 열어 볼 것이 없다
@@ -408,6 +457,7 @@ struct HomeView: View {
             // 팁 상품은 앱이 뜬 뒤에 온다. 오면 다시 본다.
             .onReceive(extras.tipAvailability) { _ in evaluateTipAsk() }
             .onAppear {
+                HomeLayout.migrateIfNeeded(hasRecords: !leaveRecords.isEmpty)
                 // 가끔(쿨다운 후) 단일문항 피로 체크인 — 모델을 주관 상태로 보정
                 if AppSurface.shared.shows(.restPace), profile.userType == .employee, !leaveRecords.isEmpty, !ScreenshotMode.isActive,
                    FatigueCheckIn.isDue(hasHistory: true) {
@@ -502,6 +552,67 @@ struct HomeView: View {
         autoDetectedCandidates = []
     }
 
+}
+
+// MARK: - 현황 구성
+
+/// 현황에 무엇을 둘지. 사용자가 고른 것만 서고, 처음 필요해지는 순간에 한 번 묻는다.
+/// 값: 0 아직 안 물음 · 1 보기 · 2 안 보기. 설정 > 현황에 보일 것에서 바꾼다.
+enum HomeLayout {
+    static let undecided = 0
+    static let shown = 1
+    static let hidden = 2
+
+    static let upcomingKey = "homeUpcomingChoice"
+    static let holidaysKey = "homeHolidaysChoice"
+    /// 휴가 페이스를 경고가 없어도 늘 보일지
+    static let paceAlwaysKey = "homePaceAlways"
+    private static let migratedKey = "homeLayoutMigrated"
+
+    /// 이 구성이 생기기 전부터 쓰던 사람은 보던 것을 그대로 본다. 새로 깐 사람은 하나씩 묻는다.
+    static func migrateIfNeeded(hasRecords: Bool) {
+        let defaults = UserDefaults.standard
+        guard !defaults.bool(forKey: migratedKey) else { return }
+        defaults.set(true, forKey: migratedKey)
+        guard hasRecords || ScreenshotMode.isActive else { return }
+        defaults.set(shown, forKey: upcomingKey)
+        let showedHolidays = defaults.object(forKey: "showHolidaysInUpcoming") as? Bool ?? true
+        defaults.set(showedHolidays ? shown : hidden, forKey: holidaysKey)
+    }
+}
+
+/// "이걸 현황에 둘까요?" 한 줄 — 볼게요 / 괜찮아요
+struct HomeOfferCard: View {
+    let icon: String
+    let title: String
+    let onChoose: (Bool) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label {
+                Text(title)
+                    .fixedSize(horizontal: false, vertical: true)
+            } icon: {
+                Image(systemName: icon)
+                    .foregroundStyle(.blue)
+                    .voDecorative()
+            }
+            .font(.body.weight(.semibold))
+
+            HStack(spacing: 10) {
+                Button(Strings.homeOfferYes) { onChoose(true) }
+                    .buttonStyle(.borderedProminent)
+                Button(Strings.homeOfferNo) { onChoose(false) }
+                    .buttonStyle(.bordered)
+            }
+            .font(.body)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .transition(.opacity.combined(with: .move(edge: .top)))
+    }
 }
 
 // MARK: - 캘린더 자동 감지 배너
@@ -1064,28 +1175,28 @@ struct LeaveStatusCard: View {
                 Text(isLeisure ? Strings.leisureVacationPlanTitle : Strings.annualLeaveStatusTitle)
                     .font(.headline)
                 Spacer()
-                if AppSurface.shared.shows(.sharePlan) {
-                Button {
-                    // 렌더는 시트 안에서 한다 — 여기서 실패하면 버튼이 죽은 것처럼 보인다.
-                    showingShareSheet = true
+                // 자주 안 쓰는 일은 '더 보기' 안에 — 머리에는 휴가 추가만 늘 보인다.
+                // 처음에는 둘 다 닫혀 있다가 필요해지면 하나씩 열린다(AppSurface).
+                if AppSurface.shared.shows(.sharePlan) || AppSurface.shared.shows(.photoImport) {
+                Menu {
+                    if AppSurface.shared.shows(.sharePlan) {
+                    Button {
+                        // 렌더는 시트 안에서 한다 — 여기서 실패하면 버튼이 죽은 것처럼 보인다.
+                        showingShareSheet = true
+                    } label: {
+                        Label(Strings.sharePlan, systemImage: "square.and.arrow.up")
+                    }
+                    }
+                    if AppSurface.shared.shows(.photoImport) {
+                    Button {
+                        AppTips.photoImport.invalidate(reason: .actionPerformed)
+                        showingPhotoImport = true
+                    } label: {
+                        Label(Strings.importFromPhoto, systemImage: "doc.text.viewfinder")
+                    }
+                    }
                 } label: {
-                    Image(systemName: "square.and.arrow.up")
-                        .font(.body.weight(.semibold))
-                        .foregroundStyle(.blue)
-                        .frame(width: 32, height: 32)
-                        .background(Color.blue.opacity(0.1))
-                        .clipShape(Circle())
-                }
-                .accessibilityLabel(Text(Strings.sharePlan))
-                .popoverTip(AppTips.sharePlan)
-                }
-
-                if AppSurface.shared.shows(.photoImport) {
-                Button {
-                    AppTips.photoImport.invalidate(reason: .actionPerformed)
-                    showingPhotoImport = true
-                } label: {
-                    Image(systemName: "doc.text.viewfinder")
+                    Image(systemName: "ellipsis")
                         .font(.body.weight(.semibold))
                         .foregroundStyle(.blue)
                         .frame(width: 32, height: 32)
@@ -1093,8 +1204,7 @@ struct LeaveStatusCard: View {
                         .clipShape(Circle())
                 }
                 .popoverTip(AppTips.photoImport)
-                .accessibilityLabel(Text(Strings.importFromPhoto))
-                .accessibilityInputLabels([Text(Strings.importFromPhoto)])
+                .accessibilityLabel(Text(Strings.homeMoreActions))
                 }
 
                 Button {
@@ -2080,7 +2190,91 @@ struct BurnoutPaceCard: View {
         }
     }
 
+    // MARK: 경고일 때만 선다
+    /// 설정 > 현황에 보일 것 > 휴가 페이스 늘 보기
+    @AppStorage(HomeLayout.paceAlwaysKey) private var alwaysShow = false
+    /// '알겠어요'로 접은 경고와 다시 보일 때. 더 나빠지면(종류 · 단계가 바뀌면) 바로 다시 선다.
+    @AppStorage("homeWarningSnoozeKey") private var snoozeKey = ""
+    @AppStorage("homeWarningSnoozeUntil") private var snoozeUntil: Double = 0
+
+    private enum Warning: String { case burnout, slow, fast }
+
+    private var warning: Warning? {
+        if assessment.level >= .overdue, assessment.primaryReason != .planAhead { return .burnout }
+        guard yearProgress >= 0.1 else { return nil }
+        if paceCategory == .slow, yearProgress >= 0.5 { return .slow }
+        if paceCategory == .fast || paceCategory == .veryFast { return .fast }
+        return nil
+    }
+
+    private var warningKey: String {
+        guard let warning else { return "" }
+        let step = warning == .burnout ? assessment.level.rawValue : (paceCategory == .veryFast ? 1 : 0)
+        return "\(warning.rawValue)-\(step)"
+    }
+
+    private var isSnoozed: Bool {
+        snoozeKey == warningKey && Date().timeIntervalSince1970 < snoozeUntil
+    }
+
     var body: some View {
+        if alwaysShow {
+            fullCard
+        } else if let warning, !isSnoozed {
+            warningCard(warning)
+        }
+    }
+
+    private func warningCard(_ warning: Warning) -> some View {
+        let color = warning == .burnout ? burnoutColor : paceColor
+        let year = Int(yearProgress * 100)
+        let used = Int(usageProgress * 100)
+        return VStack(alignment: .leading, spacing: 14) {
+            Label {
+                Text(warning == .burnout ? Strings.burnoutSectionTitle : Strings.paceCardTitle)
+            } icon: {
+                Image(systemName: "exclamationmark.circle.fill")
+                    .foregroundStyle(color)
+                    .voDecorative()
+            }
+            .font(.headline)
+
+            Group {
+                switch warning {
+                case .burnout:
+                    Text(assessment.level == .critical ? Strings.burnoutMsgRisky : Strings.burnoutMsgWarning)
+                case .slow:
+                    Text(Strings.paceWarnSlow(year: year, used: used))
+                case .fast:
+                    Text(Strings.paceWarnFast(year: year, used: used))
+                }
+            }
+            .font(.body)
+            .fixedSize(horizontal: false, vertical: true)
+
+            if warning == .burnout {
+                timelineRow
+            } else {
+                paceSection
+            }
+
+            Button(Strings.homeGotIt) {
+                withAnimation {
+                    snoozeKey = warningKey
+                    snoozeUntil = Date().addingTimeInterval(7 * 24 * 3600).timeIntervalSince1970
+                }
+            }
+            .font(.body.weight(.semibold))
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(color.opacity(0.5), lineWidth: 1))
+        .transition(.opacity)
+    }
+
+    private var fullCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             // 헤더
             HStack(spacing: 8) {
@@ -2257,8 +2451,11 @@ struct BurnoutPaceCard: View {
             let frac = todayFraction
             // '오늘' 표식이 트랙 밖으로 밀려나지 않게 가장자리에서 멈춘다
             let nodeX = min(max(trackW * frac, todayNodeWidth / 2), trackW - todayNodeWidth / 2)
+            // 선이 트랙 밖으로 나가 양 끝 칸의 점(지름 10)까지 닿는다
+            let reach = cellW / 2 - 5
 
-            HStack(spacing: 0) {
+            // 위로 맞춰야 양 끝 칸의 점이 선과 같은 높이(trackDotY)에 온다
+            HStack(alignment: .top, spacing: 0) {
                 // 지난 휴가
                 timelineCell(
                     title: Strings.burnoutLast,
@@ -2272,12 +2469,12 @@ struct BurnoutPaceCard: View {
                 // 예전처럼 선을 좌/우 두 칸으로 나눠 넣으면 한쪽 폭이 0에 수렴해 선이 사라진다.
                 ZStack(alignment: .topLeading) {
                     connectorLine(filled: daysSinceLastLeave != nil, color: lastLeaveColor)
-                        .frame(width: nodeX, height: 2)
-                        .position(x: nodeX / 2, y: trackDotY)
+                        .frame(width: nodeX + reach, height: 2)
+                        .position(x: (nodeX - reach) / 2, y: trackDotY)
 
                     connectorLine(filled: nextPlannedLeave != nil, color: AppTheme.Colors.brand)
-                        .frame(width: max(trackW - nodeX, 0), height: 2)
-                        .position(x: nodeX + (trackW - nodeX) / 2, y: trackDotY)
+                        .frame(width: max(trackW - nodeX, 0) + reach, height: 2)
+                        .position(x: nodeX + (trackW - nodeX + reach) / 2, y: trackDotY)
 
                     todayNode
                         .frame(width: todayNodeWidth)

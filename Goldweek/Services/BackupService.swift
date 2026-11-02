@@ -104,6 +104,8 @@ struct LeaveRecordBackup: Codable {
     /// 직접 만든 종류 · 보너스 연결 — 없으면 복원 후 기본 종류로 보이고 보너스 휴가가 연차에서 빠졌다
     var customTypeId: UUID? = nil
     var bonusLeaveId: UUID? = nil
+    /// 잡을 때의 공휴일 데이터 버전 — 2.4.2 부터
+    var holidayDataVersion: String? = nil
 }
 
 struct BonusLeaveBackup: Codable {
@@ -222,7 +224,8 @@ class BackupService {
                 lengthRaw: record.lengthRaw,
                 durationMinutes: record.durationMinutes,
                 customTypeId: record.customTypeId,
-                bonusLeaveId: record.bonusLeaveId
+                bonusLeaveId: record.bonusLeaveId,
+                holidayDataVersion: record.holidayDataVersion
             )
         }
 
@@ -483,6 +486,7 @@ class BackupService {
                 customTypeId: record.customTypeId
             )
             newRecord.lengthRaw = record.lengthRaw
+            newRecord.holidayDataVersion = record.holidayDataVersion
             modelContext.insert(newRecord)
         }
 
