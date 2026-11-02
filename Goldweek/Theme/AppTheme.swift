@@ -105,21 +105,49 @@ enum AppRadius {
     static let inner: CGFloat = 12
 }
 
-/// 앱의 모든 카드 바탕. 그림자 대신 머리카락 굵기 테두리로 떼어 놓는다 —
-/// 그림자는 어두운 모드에서 보이지 않아 카드가 바탕에 녹고, 밝은 모드에서는 화면을 탁하게 한다.
-/// `accent` 를 주면 테두리만 그 색으로 — 경고처럼 눈에 띄어야 하는 카드.
+/// 앱의 모든 카드 바탕 — 위에서 빛이 비치는 한 장의 판처럼 보이게 한다.
+/// - 테두리: 윗변이 밝고 아랫변이 어둡다(빛을 받는 모서리). 머리카락 굵기.
+/// - 그림자: 바로 밑의 짧은 접지 그림자 + 넓고 옅은 공기 그림자 두 겹. 글자에는 그림자를 주지 않는다(바탕에만).
+/// - 어두운 모드: 검은 바탕에서 그림자는 보이지 않으므로 윗부분을 살짝 밝혀 떠 있는 느낌을 낸다.
+/// `accent` 를 주면 테두리를 그 색으로 — 경고처럼 눈에 띄어야 하는 카드.
 struct CardSurface: ViewModifier {
     var accent: Color?
     @Environment(\.displayScale) private var displayScale
+    @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
         let shape = RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous)
+        let dark = colorScheme == .dark
         content
-            .background(Color(.secondarySystemGroupedBackground), in: shape)
-            .overlay {
-                shape.strokeBorder(accent?.opacity(0.45) ?? Color.primary.opacity(0.09),
-                                   lineWidth: accent == nil ? 1 / displayScale : 1)
+            .background {
+                shape
+                    .fill(Color(.secondarySystemGroupedBackground))
+                    .overlay {
+                        // 윗부분의 은은한 빛 — 어두운 모드에서만 (밝은 모드 흰 카드는 이미 밝다)
+                        if dark {
+                            shape.fill(LinearGradient(colors: [.white.opacity(0.06), .clear],
+                                                      startPoint: .top, endPoint: .center))
+                        }
+                    }
+                    .shadow(color: .black.opacity(dark ? 0.5 : 0.06), radius: 1, y: 1)
+                    .shadow(color: .black.opacity(dark ? 0.6 : 0.08), radius: 16, y: 8)
             }
+            .overlay {
+                shape.strokeBorder(edge(dark: dark), lineWidth: accent == nil ? 1 / displayScale : 1)
+            }
+    }
+
+    /// 빛을 받는 윗변은 밝게, 아랫변은 어둡게
+    private func edge(dark: Bool) -> LinearGradient {
+        let colors: [Color]
+        if let accent {
+            colors = [accent.opacity(0.6), accent.opacity(0.25)]
+        } else if dark {
+            colors = [.white.opacity(0.18), .white.opacity(0.04)]
+        } else {
+            colors = [.black.opacity(0.04), .black.opacity(0.12)]
+        }
+        return LinearGradient(colors: colors, startPoint: .top, endPoint: .bottom)
     }
 }
 
