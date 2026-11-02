@@ -32,12 +32,16 @@ extension Calendar {
 /// 처음 쓰는 사람에게 하나씩 여는 기능 — 적은 차례대로, 필요해진 순간이 온 첫 번째 것을 연다.
 /// 달력 · 휴가 등록 · 추천 · 내역 · 근무 형태 설정은 앱의 핵심이라 여기 없다(처음부터 보인다).
 enum SurfaceFeature: String, CaseIterable {
+    /// 앱을 열면 현황부터. 그 전에는 캘린더부터 연다 — 입력 없이도 연휴가 보이고, 현황 숫자는 아직 비어 있다.
+    /// 휴가를 하나 잡아 두면 숫자가 진짜가 된다. 한 번 열리면 되돌리지 않는다(첫 화면이 왔다 갔다 하지 않게).
+    case statusFirst
     case photoImport, sharePlan, restPace, leaveKinds, longView
     /// 나머지 전부. 이것을 확인하면 처음 화면이 끝난다.
     case everything
 
     func isNeeded(_ facts: SurfaceFacts) -> Bool {
         switch self {
+        case .statusFirst: return facts.upcomingCount >= 1        // 잡아 둔 휴가가 생겼다
         case .photoImport: return facts.recordCount >= 2          // 하나씩 넣기가 번거로워진다
         case .sharePlan: return facts.upcomingCount >= 1          // 알릴 일정이 생겼다
         case .restPace: return facts.recordCount >= 3             // 쉬는 흐름이 보일 만큼 쌓였다

@@ -26,6 +26,10 @@ struct CalendarView: View {
     @State private var recordToDelete: LeaveRecord?
     @State private var showingDeleteAlert = false
     @State private var showingDeleteError = false
+    /// 처음 쓰는 사람은 캘린더로 열린다 — 추천이 남은 연차를 바로 세도록 올해 쓴 연차를 여기서 묻는다 (현황과 같은 질문 · 같은 값)
+    @AppStorage("hasSeenPastLeavePrompt") private var hasSeenPastLeavePrompt = false
+    @AppStorage("offersPlanAfterPastEntry") private var offersPlanAfterPastEntry = false
+    @State private var showingPastLeaveEntry = false
 
     @Query private var customHolidays: [CustomHoliday]
     @Query private var allBonusLeaves: [BonusLeave]
@@ -311,6 +315,15 @@ struct CalendarView: View {
                                showsHomeHoliday: monthHasHomeHoliday,
                                leaveKinds: monthLeaveKinds)
 
+                    // 달력 바로 아래, 추천보다 먼저 — 쓴 연차를 알아야 추천이 맞는 일수로 나온다
+                    if !AppSurface.shared.shows(.statusFirst), !hasSeenPastLeavePrompt,
+                       PastLeavePromptBanner.isDue(profile: profile, hasRecords: !leaveRecords.isEmpty) {
+                        PastLeavePromptBanner(
+                            onQuickEntry: { showingPastLeaveEntry = true },
+                            onNoneYet: { withAnimation(.spring) { hasSeenPastLeavePrompt = true } }
+                        )
+                    }
+
                     // 추천이 실제로 있을 때만 안내한다 — 없는 기능을 설명하면 소음이다
                     if AppSurface.shared.shows(.everything), !recommendedDates.isEmpty {
                         TipView(AppTips.recommendation)
@@ -355,6 +368,8 @@ struct CalendarView: View {
                 }
                 .padding()
             }
+            // 카드(`cardSurface`)가 바탕에서 떠 보이도록 한 단계 옅은 바탕
+            .background(Color(.systemGroupedBackground))
             // 스크린샷 모드: 추천 목록이 화면 위로 오게 내려 둔다
             .task(id: upcomingRecommendations.count) {
                 guard ScreenshotMode.scrollTarget == "recommendations", !upcomingRecommendations.isEmpty else { return }
@@ -374,6 +389,15 @@ struct CalendarView: View {
             }
             .sheet(isPresented: $showingAddLeave) {
                 AddLeaveView(profile: profile, initialDate: selectedDate)
+            }
+            .sheet(isPresented: $showingPastLeaveEntry) {
+                PastLeaveQuickEntrySheet(profile: profile)
+                    .onDisappear {
+                        // 현황과 같다 — 취소했으면 질문을 그대로 두고, 넣었을 때만 다음 단계(연휴 제안)로
+                        guard !leaveRecords.isEmpty else { return }
+                        hasSeenPastLeavePrompt = true
+                        offersPlanAfterPastEntry = true
+                    }
             }
             .sheet(item: $recordToEdit) { record in
                 EditLeaveSheet(record: record, profile: profile) {
@@ -583,9 +607,7 @@ struct CalendarGrid: View {
             }
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 5)
+        .cardSurface()
     }
 
     private func isHoliday(_ date: Date) -> Bool {
@@ -1247,8 +1269,7 @@ struct SelectedDateInfo: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardSurface()
     }
 
     private func recRangeText(_ rec: LeaveRecommendation) -> String {

@@ -449,7 +449,11 @@ struct ContentView: View {
 
 struct MainTabView: View {
     @Bindable var profile: UserProfile
-    @State private var selectedTab = ScreenshotMode.initialTab
+    /// 처음 고르는 탭 — 처음엔 캘린더, 휴가를 잡아 두면 현황(`SurfaceFeature.statusFirst`).
+    /// 탭 순서는 그대로다. 앱을 새로 열 때만 정해져, 쓰는 도중에 화면이 옮겨 가지 않는다.
+    @State private var selectedTab = ScreenshotMode.isActive
+        ? ScreenshotMode.initialTab
+        : (AppSurface.shared.shows(.statusFirst) ? 0 : 1)
     /// 스크린샷 모드에서 페이월을 열어 둔다 (앱 내 구입 심사용 화면)
     @State private var showingScreenshotPaywall = ScreenshotMode.paywallProductID != nil
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass

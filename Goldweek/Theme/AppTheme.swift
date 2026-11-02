@@ -97,6 +97,44 @@ struct AppTheme {
     }
 }
 
+// MARK: - 카드 표면
+
+/// 모서리는 두 단계뿐이다 — 카드, 그리고 카드 안의 칸·버튼. 둘 다 연속 곡률(.continuous)이라 모서리가 매끈하다.
+enum AppRadius {
+    static let card: CGFloat = 20
+    static let inner: CGFloat = 12
+}
+
+/// 앱의 모든 카드 바탕. 그림자 대신 머리카락 굵기 테두리로 떼어 놓는다 —
+/// 그림자는 어두운 모드에서 보이지 않아 카드가 바탕에 녹고, 밝은 모드에서는 화면을 탁하게 한다.
+/// `accent` 를 주면 테두리만 그 색으로 — 경고처럼 눈에 띄어야 하는 카드.
+struct CardSurface: ViewModifier {
+    var accent: Color?
+    @Environment(\.displayScale) private var displayScale
+
+    func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous)
+        content
+            .background(Color(.secondarySystemGroupedBackground), in: shape)
+            .overlay {
+                shape.strokeBorder(accent?.opacity(0.45) ?? Color.primary.opacity(0.09),
+                                   lineWidth: accent == nil ? 1 / displayScale : 1)
+            }
+    }
+}
+
+extension View {
+    func cardSurface(accent: Color? = nil) -> some View {
+        modifier(CardSurface(accent: accent))
+    }
+
+    /// 카드 안의 칸 · 숫자 알약 — 카드보다 한 단계 짙은 바탕
+    func innerSurface() -> some View {
+        background(Color(.tertiarySystemGroupedBackground),
+                   in: RoundedRectangle(cornerRadius: AppRadius.inner, style: .continuous))
+    }
+}
+
 // MARK: - Color Extension for Light/Dark Mode
 extension Color {
     init(light: Color, dark: Color) {

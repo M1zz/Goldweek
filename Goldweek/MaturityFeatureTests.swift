@@ -291,10 +291,12 @@ final class MaturityFeatureTests: XCTestCase {
     func testSurfaceOpensOneFeatureWhenItsMomentComes() {
         XCTAssertNil(nextFeature(records: 1))
         XCTAssertEqual(nextFeature(records: 2), .photoImport)
-        XCTAssertEqual(nextFeature(records: 1, upcoming: 1), .sharePlan)
+        // 잡아 둔 휴가가 생기면 첫 화면이 현황으로 — 같은 순간의 공유보다 먼저
+        XCTAssertEqual(nextFeature(records: 1, upcoming: 1), .statusFirst)
+        XCTAssertEqual(nextFeature([.statusFirst], records: 1, upcoming: 1), .sharePlan)
         XCTAssertEqual(nextFeature([.photoImport], records: 3), .restPace)
         XCTAssertEqual(nextFeature(records: 1, otherKind: true), .leaveKinds)
-        XCTAssertEqual(nextFeature([.sharePlan], records: 1, upcoming: 2), .longView)
+        XCTAssertEqual(nextFeature([.statusFirst, .sharePlan], records: 1, upcoming: 2), .longView)
         let allButLast = Set(SurfaceFeature.allCases).subtracting([.everything])
         XCTAssertNil(nextFeature(allButLast, records: 7))
         XCTAssertEqual(nextFeature(allButLast, records: 8), .everything)
@@ -304,7 +306,7 @@ final class MaturityFeatureTests: XCTestCase {
     /// 조건이 한꺼번에 맞아도 하루에 하나만
     func testSurfaceOpensAtMostOneFeatureADay() {
         XCTAssertNil(nextFeature(records: 9, upcoming: 3, otherKind: true, lastUnlock: day(2026, 11, 2)))
-        XCTAssertEqual(nextFeature(records: 9, upcoming: 3, otherKind: true, lastUnlock: day(2026, 11, 1)), .photoImport)
+        XCTAssertEqual(nextFeature(records: 9, upcoming: 3, otherKind: true, lastUnlock: day(2026, 11, 1)), .statusFirst)
     }
 
     func testSimpleSurfaceStringsCoverEveryLanguage() {

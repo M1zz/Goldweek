@@ -307,15 +307,8 @@ struct HomeView: View {
         leaveRecords.filter { $0.status == .used || $0.status == .planned }.count
     }
 
-    /// 연차 기준월 이후 1개월 이상 경과했고 아직 아무 기록도 없는 경우 배너 표시 (직장인만)
     var shouldShowPastLeavePrompt: Bool {
-        guard !hasSeenPastLeavePrompt, leaveRecords.isEmpty else { return false }
-        guard profile.userType == .employee else { return false }
-        let calendar = Calendar.app
-        let month = calendar.component(.month, from: Date())
-        let startMonth = profile.yearStartMonth
-        let monthsElapsed = (month - startMonth + 12) % 12
-        return monthsElapsed >= 1
+        !hasSeenPastLeavePrompt && PastLeavePromptBanner.isDue(profile: profile, hasRecords: !leaveRecords.isEmpty)
     }
 
     /// 아직 잡아 둔 휴가가 없는 첫 단계 — 기록이 없거나, 지난 연차만 막 넣은 참
@@ -395,6 +388,8 @@ struct HomeView: View {
                 }
                 .padding()
             }
+            // 카드(`cardSurface`)가 바탕에서 떠 보이도록 한 단계 옅은 바탕
+            .background(Color(.systemGroupedBackground))
             .task(id: "\(offersFirstPlan)-\(firstPlanLeave)-\(profile.country.rawValue)") {
                 findFirstPlan()
             }
@@ -609,8 +604,7 @@ struct HomeOfferCard: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .cardSurface()
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
 }
@@ -639,8 +633,7 @@ struct SurfaceUnlockCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(AppTheme.Colors.brand.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .cardSurface(accent: AppTheme.Colors.brand)
     }
 }
 
@@ -694,14 +687,7 @@ struct AutoDetectBanner: View {
             .buttonStyle(.plain)
         }
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.green.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color.green.opacity(0.3), lineWidth: 1)
-                )
-        )
+        .cardSurface(accent: .green)
     }
 }
 
@@ -854,14 +840,7 @@ struct HolidayRegionNoticeCard: View {
             }
         }
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.orange.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
-                )
-        )
+        .cardSurface(accent: .orange)
     }
 
     private func actionLabel(icon: String, text: String, filled: Bool) -> some View {
@@ -940,9 +919,7 @@ struct FirstPlanCard: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .cardSurface()
     }
 }
 
@@ -984,9 +961,7 @@ struct EmptyHomeCard: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .cardSurface()
     }
 }
 
@@ -1373,9 +1348,7 @@ struct LeaveStatusCard: View {
             }
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
+        .cardSurface()
         .onAppear {
             // 1) 과거 기록 길이 보정 (자녀돌봄(1/2) 등이 1일로 저장된 데이터 → 0.5일)
             var changed = LeaveRecordMaintenance.backfillLengths(records: allLeaveRecords)
@@ -1651,15 +1624,17 @@ struct UpcomingLeavesSection: View {
                 Spacer()
             }
 
-            ForEach(items) { item in
-                UpcomingLeaveRow(item: item)
+            // 한 카드 안에 줄로 — 줄마다 카드를 따로 두면 상자 속 상자가 된다
+            VStack(spacing: 0) {
+                ForEach(items) { item in
+                    if item.id != items.first?.id { Divider() }
+                    UpcomingLeaveRow(item: item)
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
+        .cardSurface()
     }
 }
 
@@ -1723,20 +1698,21 @@ struct UpcomingLeaveRow: View {
 
             Spacer()
 
-            VStack(alignment: .trailing) {
-                // 빨강·파랑 글자는 회색 바탕에서 큰 글자(3:1)일 때만 대비를 넘는다
+            VStack(alignment: .trailing, spacing: 6) {
+                // 빨강·파랑 글자는 회색 바탕에서 큰 글자(3:1)일 때만 대비를 넘는다 — 그래서 굵게 키운다
                 Text("D-\(daysUntil)")
-                    .font(.title3.bold())
+                    .font(.title3.bold().monospacedDigit())
                     .foregroundStyle(item.kind == .holiday ? .red : .blue)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 2)
+                    .innerSurface()
 
                 Text(trailingText)
                     .font(.body)
                     .foregroundStyle(.primary.opacity(0.72))
             }
         }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.vertical, 12)
         .voCard("\(item.title), \(dateRangeText), \(trailingText), D-\(daysUntil)")
     }
 }
@@ -1770,9 +1746,7 @@ struct LeaveHistoryButton: View {
                     .voDecorative()
             }
             .padding()
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+            .cardSurface()
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text("\(Strings.leaveHistory), \(Strings.checkPastRecords)"))
@@ -1784,6 +1758,14 @@ struct LeaveHistoryButton: View {
 struct PastLeavePromptBanner: View {
     let onQuickEntry: () -> Void
     let onNoneYet: () -> Void
+
+    /// 물을 때인가 — 연차 기준월 이후 1개월 이상 지났고 아직 아무 기록도 없다 (직장인만).
+    /// 이미 답했는지(`hasSeenPastLeavePrompt`)는 부르는 쪽이 본다.
+    static func isDue(profile: UserProfile, hasRecords: Bool, now: Date = Date()) -> Bool {
+        guard !hasRecords, profile.userType == .employee else { return false }
+        let month = Calendar.app.component(.month, from: now)
+        return (month - profile.yearStartMonth + 12) % 12 >= 1
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -1803,9 +1785,7 @@ struct PastLeavePromptBanner: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .cardSurface()
     }
 
     @ViewBuilder private var answers: some View {
@@ -2268,9 +2248,7 @@ struct BurnoutPaceCard: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .overlay(RoundedRectangle(cornerRadius: 16).stroke(color.opacity(0.5), lineWidth: 1))
+        .cardSurface(accent: color)
         .transition(.opacity)
     }
 
@@ -2292,9 +2270,7 @@ struct BurnoutPaceCard: View {
             burnoutSection
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
+        .cardSurface()
     }
 
     // MARK: - 페이스 섹션 (하나의 축 + 두 개의 핀)

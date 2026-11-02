@@ -461,9 +461,7 @@ struct UpcomingAnniversariesCard: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
+            .cardSurface()
             .sheet(item: Binding(
                 get: { leaveDate.map(IdentifiedDate.init) },
                 set: { leaveDate = $0?.date }

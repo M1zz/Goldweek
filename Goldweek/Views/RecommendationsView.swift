@@ -308,9 +308,7 @@ struct RemainingLeaveInfo: View {
             .voDecorative()
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 5)
+        .cardSurface()
         .voCard(VoiceOverLabel.leaveBalance(total: total, used: committed, remaining: available))
     }
 }
@@ -467,9 +465,7 @@ struct UpcomingHolidaysSection: View {
             }
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 5)
+        .cardSurface()
     }
 }
 
@@ -696,9 +692,7 @@ struct DetailedRecommendationCard: View {
             .accessibilityLabel(Text(requiresPro ? Strings.addWithPro : (isAdded ? Strings.addedToScheduleAction : Strings.addToScheduleAction)))
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
+        .cardSurface()
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("\(recommendation.title), \(summaryLabel)"))
     }
@@ -937,9 +931,7 @@ struct RecommendationCalendarPreview: View {
             .frame(maxWidth: .infinity)
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 5)
+        .cardSurface()
     }
 
     private func recommendationsForMonth(_ month: Int) -> [LeaveRecommendation] {
@@ -1523,13 +1515,7 @@ struct MyRealTripPromoCard: View {
                 }
             }
             .padding(16)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 18))
-            .overlay(
-                RoundedRectangle(cornerRadius: 18)
-                    .stroke(AppTheme.Colors.bonus.opacity(0.2), lineWidth: 1)
-            )
-            .shadow(color: AppTheme.Colors.bonus.opacity(0.10), radius: 8, y: 4)
+            .cardSurface(accent: AppTheme.Colors.bonus)
             .task(id: optInTaskKey) {
                 // 펼친 상태에서만 API 호출
                 guard didOptIn else { return }
@@ -2044,12 +2030,7 @@ struct MRTLiveTnaCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .frame(width: 200)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(Color(.systemGray5), lineWidth: 1)
-            )
+            .cardSurface()
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
@@ -2182,12 +2163,7 @@ struct TravelSuggestionCard: View {
                 .padding(.bottom, 12)
             }
             .frame(width: 168)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(Color(.systemGray5), lineWidth: 1)
-            )
+            .cardSurface()
         }
         .buttonStyle(.plain)
     }
@@ -2272,12 +2248,7 @@ struct LeaveActivityRecommendations: View {
             liveSection
         }
         .padding(14)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(Color(.systemGray5), lineWidth: 1)
-        )
+        .cardSurface()
         .task {
             await loadLive()
         }
@@ -2412,12 +2383,7 @@ struct OptimalLeavePlannerCard: View {
             }
         }
         .padding(14)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(AppTheme.Colors.bonus.opacity(0.25), lineWidth: 1)
-        )
+        .cardSurface(accent: AppTheme.Colors.bonus)
         .sheet(isPresented: $showingPaywall) {
             PaywallView(initialProductID: ProManager.plusProductID)
         }
