@@ -83,7 +83,7 @@ struct SharedSchedule: Identifiable {
 final class ShareSyncService {
     static let shared = ShareSyncService()
 
-    static let containerIdentifier = "iCloud.com.Ysoup.LeaveWise"
+    nonisolated static let containerIdentifier = "iCloud.com.Ysoup.LeaveWise"
     private static let zoneName = "GoldweekSchedule"
     private static let profileRecordType = "SharedProfile"
     private static let leaveRecordType = "SharedLeave"

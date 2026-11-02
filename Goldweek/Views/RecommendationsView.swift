@@ -1749,7 +1749,8 @@ struct MRTFlightCard: View {
     }
 
     private var url: URL {
-        URL(string: "https://www.myrealtrip.com/?utm_source=goldweek&utm_medium=app&utm_campaign=flight&utm_content=\(flight.fromCity)-\(flight.toCity)")!
+        URL(string: "https://www.myrealtrip.com/?utm_source=goldweek&utm_medium=app&utm_campaign=flight&utm_content=\(flight.fromCity)-\(flight.toCity)")
+            ?? URL(string: "https://www.myrealtrip.com/")!
     }
 
     var body: some View {

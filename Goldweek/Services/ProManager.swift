@@ -164,10 +164,9 @@ class ProManager {
 
     private var updateListenerTask: Task<Void, Never>?
 
-    // TestFlight 빌드는 sandbox receipt을 사용
-    var isTestFlight: Bool {
-        Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
-    }
+    /// TestFlight 빌드인가 — 앱 거래 기록의 환경이 sandbox 다. `checkEntitlement` 가 채우고,
+    /// 한 번 프로가 되면 `isPro`·`tier` 가 기기에 남아 다음 실행부터는 바로 프로로 뜬다.
+    private(set) var isTestFlight = false
 
     // SwiftUI 옵저베이션을 위해 stored property로 보관하고, didSet으로 UserDefaults 동기화.
     // computed property로 두면 @Observable이 추적하지 못해 구매 직후 UI가 갱신되지 않음.
@@ -215,11 +214,8 @@ class ProManager {
     private init() {
         let defaults = UserDefaults.standard
         let storedIsPro = defaults.bool(forKey: "isPro")
-        let isTF = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
-        self.isPro = storedIsPro || isTF
-        if isTF {
-            self.tier = .pro
-        } else if let raw = defaults.object(forKey: Self.tierKey) as? Int {
+        self.isPro = storedIsPro
+        if let raw = defaults.object(forKey: Self.tierKey) as? Int {
             // 예전 패밀리(3)는 프로에 합쳤다
             self.tier = ProTier(rawValue: min(raw, ProTier.pro.rawValue)) ?? .free
         } else {
@@ -402,6 +398,14 @@ class ProManager {
     /// 가진 상품 중 가장 높은 칸(`resolve`). 구독이 끝나거나 환불되면 여기서 내려간다.
     /// 가족 공유로 받은 예전 패밀리도 currentEntitlements 에 들어온다.
     func checkEntitlement() async {
+        let testFlight: Bool
+        if case .verified(let app) = try? await AppTransaction.shared {
+            testFlight = app.environment == .sandbox
+        } else {
+            testFlight = false
+        }
+        await MainActor.run { self.isTestFlight = testFlight }
+
         var owned: [(productID: String, expires: Date?)] = []
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result, transaction.revocationDate == nil else { continue }
