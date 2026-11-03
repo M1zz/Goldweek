@@ -16,6 +16,8 @@ import LeeoKit
 enum GoldweekSpec: LeeoAppSpec {
     static let appName = "Goldweek"
     static let developerEmail = "leeo@kakao.com"
+    /// 위젯과 나눠 쓰는 기록 — 백업 금고가 함께 떠 둔다.
+    static let appGroups = ["group.com.Ysoup.LeaveWise"]
 
     /// Goldweek.entitlements에 iCloud.com.Ysoup.FeedbackHub 컨테이너가 있어야 한다.
     static let feedback = LeeoFeedbackConfig(

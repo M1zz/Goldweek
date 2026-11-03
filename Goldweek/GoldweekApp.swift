@@ -21,6 +21,8 @@ struct GoldweekApp: App {
     nonisolated(unsafe) static var sharedContainerForBackup: ModelContainer?
 
     init() {
+        // 백업 금고 — 예약된 복원 적용 · 업데이트 직전 백업. 저장소를 열기 전에 가장 먼저.
+        LeeoVault.start(GoldweekSpec.self)
         AppLogger.shared.info("Goldweek 앱 초기화 시작", category: .app)
         // 연속으로 시작에 실패했으면 이번 실행은 세이프 모드 — 없어도 되는 시작 작업을 건너뛴다
         LaunchSafety.beginLaunch()
