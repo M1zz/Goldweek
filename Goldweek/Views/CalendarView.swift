@@ -30,6 +30,12 @@ struct CalendarView: View {
     @AppStorage("hasSeenPastLeavePrompt") private var hasSeenPastLeavePrompt = false
     @AppStorage("offersPlanAfterPastEntry") private var offersPlanAfterPastEntry = false
     @State private var showingPastLeaveEntry = false
+    /// 첫 단계 두 번째 질문 — 앞으로 잡아 둔 휴가를 다 넣었다고 답했는지
+    @AppStorage("hasAnsweredPlannedPrompt") private var hasAnsweredPlannedPrompt = false
+    /// 첫 단계에서 휴가를 고르러 갈 때 — 달력에서 고른 날 대신 내일부터
+    @State private var addLeaveDate: Date?
+    @State private var showingPhotoImport = false
+    @State private var showingCalendarImport = false
 
     @Query private var customHolidays: [CustomHoliday]
     @Query private var allBonusLeaves: [BonusLeave]
@@ -254,11 +260,73 @@ struct CalendarView: View {
         }
     }
 
+    // MARK: 첫 단계
+
+    /// 처음 쓰는 사람(`AppSurface.isSimple`)에게만. 예전부터 쓰던 사람은 이미 기록이 있어 묻지 않는다.
+    private var showsFirstSteps: Bool {
+        AppSurface.shared.isSimple && !ScreenshotMode.isActive
+    }
+
+    private var pastLeaveDue: Bool {
+        !hasSeenPastLeavePrompt && PastLeavePromptBanner.isDue(profile: profile, hasRecords: !leaveRecords.isEmpty)
+    }
+
+    /// 오늘 이후 잡아 둔 휴가 — 가까운 순
+    private var upcomingPlanned: [LeaveRecord] {
+        let today = calendar.startOfDay(for: Date())
+        return leaveRecords.filter { $0.status == .planned && $0.endDate >= today }
+    }
+
+    /// 지난 연차를 물었거나 물을 차례면 두 단계, 아니면 한 단계 (한 단계면 점을 띄우지 않는다)
+    private var firstStepTotal: Int { hasSeenPastLeavePrompt || pastLeaveDue ? 2 : 1 }
+
+    private var easyEntry: EasyEntryActions {
+        EasyEntryActions(onPhoto: { showingPhotoImport = true },
+                         onCalendar: { showingCalendarImport = true })
+    }
+
+    /// 한 번에 넣고 왔으면 지난 연차 질문은 답한 것으로 본다 (넣은 게 없으면 그대로)
+    private func finishEasyEntry() {
+        guard !leaveRecords.isEmpty else { return }
+        hasSeenPastLeavePrompt = true
+    }
+
+    @ViewBuilder
+    private var firstStepCard: some View {
+        if showsFirstSteps {
+            if pastLeaveDue {
+                PastLeavePromptBanner(
+                    onQuickEntry: { showingPastLeaveEntry = true },
+                    onNoneYet: { withAnimation(.spring) { hasSeenPastLeavePrompt = true } },
+                    step: FirstStepIndex(current: 1, total: 2),
+                    easyEntry: easyEntry
+                )
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            } else if !hasAnsweredPlannedPrompt {
+                PlannedLeavePromptCard(
+                    planned: upcomingPlanned,
+                    step: firstStepTotal > 1 ? FirstStepIndex(current: 2, total: 2) : nil,
+                    easyEntry: easyEntry,
+                    onAdd: {
+                        let tomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: Date())) ?? Date()
+                        addLeaveDate = selectedDate > tomorrow ? selectedDate : tomorrow
+                        showingAddLeave = true
+                    },
+                    onDone: { withAnimation(.spring) { hasAnsweredPlannedPrompt = true } }
+                )
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ScrollViewReader { proxy in
             ScrollView {
                 VStack(spacing: 20) {
+                    // 처음 쓰는 사람에게 맨 위에서 하나씩 — 쓴 연차와 잡아 둔 휴가를 알아야 남은 연차 · 추천이 맞는다
+                    firstStepCard
+
                     // 보기 범위 — 한 달 / 여러 달
                     if AppSurface.shared.shows(.longView) {
                     Picker(Strings.calendarSpanLabel, selection: $spanRaw) {
@@ -314,15 +382,6 @@ struct CalendarView: View {
                                showsChildBreak: monthHasChildBreak,
                                showsHomeHoliday: monthHasHomeHoliday,
                                leaveKinds: monthLeaveKinds)
-
-                    // 달력 바로 아래, 추천보다 먼저 — 쓴 연차를 알아야 추천이 맞는 일수로 나온다
-                    if !AppSurface.shared.shows(.statusFirst), !hasSeenPastLeavePrompt,
-                       PastLeavePromptBanner.isDue(profile: profile, hasRecords: !leaveRecords.isEmpty) {
-                        PastLeavePromptBanner(
-                            onQuickEntry: { showingPastLeaveEntry = true },
-                            onNoneYet: { withAnimation(.spring) { hasSeenPastLeavePrompt = true } }
-                        )
-                    }
 
                     // 추천이 실제로 있을 때만 안내한다 — 없는 기능을 설명하면 소음이다
                     if AppSurface.shared.shows(.everything), !recommendedDates.isEmpty {
@@ -388,7 +447,14 @@ struct CalendarView: View {
                 Text(Strings.saveFailed)
             }
             .sheet(isPresented: $showingAddLeave) {
-                AddLeaveView(profile: profile, initialDate: selectedDate)
+                AddLeaveView(profile: profile, initialDate: addLeaveDate ?? selectedDate)
+                    .onDisappear { addLeaveDate = nil }
+            }
+            .sheet(isPresented: $showingPhotoImport, onDismiss: finishEasyEntry) {
+                PhotoImportSheet()
+            }
+            .sheet(isPresented: $showingCalendarImport, onDismiss: finishEasyEntry) {
+                CalendarImportSheet(existingRecords: Array(leaveRecords))
             }
             .sheet(isPresented: $showingPastLeaveEntry) {
                 PastLeaveQuickEntrySheet(profile: profile)

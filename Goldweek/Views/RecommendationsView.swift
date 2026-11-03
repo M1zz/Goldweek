@@ -752,16 +752,16 @@ struct RecommendationDatePreview: View {
                 Spacer()
             }
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 6) {
-                    ForEach(Array(extendedDateRange.enumerated()), id: \.offset) { _, date in
-                        DatePreviewCell(
-                            date: date,
-                            dayType: getDayType(for: date)
-                        )
-                    }
+            // 들어가면 가운데, 길면 옆으로 넘긴다
+            ViewThatFits(in: .horizontal) {
+                dateCells
+                    .frame(maxWidth: .infinity)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    dateCells
+                        .padding(.horizontal, 2)
                 }
             }
+            .padding(.vertical, 4)
 
             // 긴 언어(러시아어 등)에서 "Празд-ник"처럼 단어가 끊기지 않게 자리가 모자라면 다음 줄로
             LeaveFlowLayout(spacing: 12, lineSpacing: 4) {
@@ -775,6 +775,17 @@ struct RecommendationDatePreview: View {
         .padding(12)
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private var dateCells: some View {
+        HStack(spacing: 8) {
+            ForEach(Array(extendedDateRange.enumerated()), id: \.offset) { _, date in
+                DatePreviewCell(
+                    date: date,
+                    dayType: getDayType(for: date)
+                )
+            }
+        }
     }
 
     private func getDayType(for date: Date) -> DayType {
@@ -828,6 +839,8 @@ struct DatePreviewCell: View {
     let dayType: DayType
 
     private let calendar = Calendar.app
+    /// 글자 크기를 키워도 숫자가 원에 꽉 끼지 않게 같이 커진다
+    @ScaledMetric(relativeTo: .body) private var circleSize: CGFloat = 36
 
     var dayNumber: Int {
         calendar.component(.day, from: date)
@@ -839,15 +852,17 @@ struct DatePreviewCell: View {
     }
 
     var body: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 6) {
             Text(weekdayName)
                 .font(.system(.body, weight: .medium))
                 .foregroundStyle(dayType == .holiday ? .red : (dayType == .saturday || dayType == .sunday ? .blue : .secondary))
 
             Text("\(dayNumber)")
                 .font(.system(.body, weight: .semibold))
+                .monospacedDigit()
+                .minimumScaleFactor(0.8)
                 .foregroundStyle(.white)
-                .frame(width: 28, height: 28)
+                .frame(width: circleSize, height: circleSize)
                 .background(dayType.color)
                 .clipShape(Circle())
         }

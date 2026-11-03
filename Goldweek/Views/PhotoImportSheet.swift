@@ -96,16 +96,25 @@ struct PhotoImportSheet: View {
     // MARK: - 사진 선택 화면
 
     private var photoPickerView: some View {
+        // 안내가 세 줄로 늘어 큰 글씨에서는 넘칠 수 있다 — 넘치면 굴린다
+        ScrollView {
         VStack(spacing: 20) {
             Image(systemName: "doc.text.viewfinder")
                 .font(.system(size: heroIconSize))
                 .foregroundStyle(.blue)
                 .voDecorative()
 
-            Text(Strings.photoImportGuide)
+            // 처음 하는 사람도 따라 할 수 있게 — 화면 열기 → 캡처 → 고르기
+            VStack(alignment: .leading, spacing: 14) {
+                guideStep(1, Strings.photoStepOpen)
+                guideStep(2, Self.hasHomeButton ? Strings.photoStepCaptureHome : Strings.photoStepCaptureFaceID)
+                guideStep(3, Strings.photoStepPick)
+            }
+            .padding(.horizontal, 32)
+
+            Label(Strings.photoPrivacy, systemImage: "lock.fill")
                 .font(.body)
                 .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
 
             if let errorMessage = scanErrorMessage {
@@ -117,6 +126,13 @@ struct PhotoImportSheet: View {
             }
 
             VStack(spacing: 12) {
+                // 캡처가 가장 쉬운 길이라 사진 고르기를 앞에, 모니터를 찍는 카메라는 그다음
+                PhotosPicker(selection: $pickedItem, matching: .images) {
+                    Label(Strings.choosePhoto, systemImage: "photo.on.rectangle")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
                     Button {
                         showingCamera = true
@@ -124,18 +140,36 @@ struct PhotoImportSheet: View {
                         Label(Strings.takePhoto, systemImage: "camera.fill")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.bordered)
                 }
-
-                PhotosPicker(selection: $pickedItem, matching: .images) {
-                    Label(Strings.choosePhoto, systemImage: "photo.on.rectangle")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
             }
             .padding(.horizontal, 40)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 32)
+        }
+    }
+
+    private func guideStep(_ number: Int, _ text: String) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+            Text("\(number)")
+                .font(.body.weight(.bold))
+                .foregroundStyle(.white)
+                .frame(minWidth: 28, minHeight: 28)
+                .background(Circle().fill(AppTheme.Colors.brand))
+                .voDecorative()
+            Text(text)
+                .font(.body)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    /// 홈 버튼이 있는 기기인지 — 화면 아래 안전 영역이 없으면 홈 버튼 기기
+    private static var hasHomeButton: Bool {
+        let window = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first
+        return (window?.safeAreaInsets.bottom ?? 0) == 0
     }
 
     private var scanningView: some View {

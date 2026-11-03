@@ -1758,6 +1758,10 @@ struct LeaveHistoryButton: View {
 struct PastLeavePromptBanner: View {
     let onQuickEntry: () -> Void
     let onNoneYet: () -> Void
+    /// 처음 쓰는 사람의 몇 번째 단계인지 (캘린더) — nil 이면 표시하지 않는다
+    var step: FirstStepIndex? = nil
+    /// 캡처 · 캘린더로 한 번에 넣기 (캘린더 첫 단계) — 없으면 줄을 띄우지 않는다
+    var easyEntry: EasyEntryActions? = nil
 
     /// 물을 때인가 — 연차 기준월 이후 1개월 이상 지났고 아직 아무 기록도 없다 (직장인만).
     /// 이미 답했는지(`hasSeenPastLeavePrompt`)는 부르는 쪽이 본다.
@@ -1769,6 +1773,8 @@ struct PastLeavePromptBanner: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
+            if let step { FirstStepLabel(step: step) }
+
             Text(Strings.pastLeavePromptTitle)
                 .font(.headline)
                 .voHeader()
@@ -1782,6 +1788,8 @@ struct PastLeavePromptBanner: View {
                 HStack(spacing: 10) { answers }
                 VStack(spacing: 10) { answers }
             }
+
+            if let easyEntry { EasyEntryRow(actions: easyEntry) }
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1810,6 +1818,158 @@ struct PastLeavePromptBanner: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - 처음 쓰는 사람의 첫 단계 (캘린더)
+/// 처음 쓰는 사람에게 하나씩 묻는다 — 올해 쓴 연차 → 앞으로 잡아 둔 휴가. 답하면 다음 질문으로 바뀌고, 다 답하면 사라진다.
+struct FirstStepIndex: Equatable {
+    let current: Int
+    let total: Int
+}
+
+struct FirstStepLabel: View {
+    let step: FirstStepIndex
+
+    var body: some View {
+        HStack(spacing: 6) {
+            ForEach(1...step.total, id: \.self) { i in
+                Capsule()
+                    .fill(i <= step.current ? AppTheme.Colors.brand : Color(.systemGray4))
+                    .frame(width: i == step.current ? 18 : 8, height: 6)
+            }
+        }
+        .accessibilityElement()
+        .accessibilityLabel(Text("\(step.current) / \(step.total)"))
+    }
+}
+
+/// 앞으로 잡아 둔 휴가 넣기. 하나 넣으면 넣은 날을 보여 주고 "더 있나요?"로 바뀐다.
+struct PlannedLeavePromptCard: View {
+    /// 오늘 이후 잡아 둔 휴가 (가까운 순)
+    let planned: [LeaveRecord]
+    var step: FirstStepIndex? = nil
+    var easyEntry: EasyEntryActions? = nil
+    let onAdd: () -> Void
+    let onDone: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            if let step { FirstStepLabel(step: step) }
+
+            Text(planned.isEmpty ? Strings.plannedPromptTitle : Strings.plannedMoreTitle)
+                .font(.headline)
+                .voHeader()
+
+            if planned.isEmpty {
+                Text(Strings.plannedPromptDesc)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(planned.prefix(3)) { record in
+                        Label(rangeText(record), systemImage: "checkmark.circle.fill")
+                            .font(.body)
+                            .foregroundStyle(.primary)
+                            .labelStyle(PlannedRowLabelStyle(color: record.displayColor))
+                    }
+                }
+            }
+
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) { answers }
+                VStack(spacing: 10) { answers }
+            }
+
+            // 넣기 시작했으면 "하나 더"가 길이다 — 한 번에 넣는 길은 아직 하나도 없을 때만
+            if planned.isEmpty, let easyEntry { EasyEntryRow(actions: easyEntry) }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardSurface()
+    }
+
+    private func rangeText(_ record: LeaveRecord) -> String {
+        Calendar.app.isDate(record.startDate, inSameDayAs: record.endDate)
+            ? record.startDate.appMonthDay
+            : "\(record.startDate.appMonthDay) → \(record.endDate.appMonthDay)"
+    }
+
+    @ViewBuilder private var answers: some View {
+        Button(action: onDone) {
+            Text(planned.isEmpty ? Strings.plannedPromptNone : Strings.plannedDone)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(Color(.secondarySystemBackground))
+                .foregroundStyle(.primary)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+
+        Button(action: onAdd) {
+            Text(planned.isEmpty ? Strings.plannedPromptAdd : Strings.plannedAddAnother)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(AppTheme.Colors.brand)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+/// 한 번에 넣는 길 — 회사 휴가 화면 캡처, 아이폰 캘린더
+struct EasyEntryActions {
+    let onPhoto: () -> Void
+    let onCalendar: () -> Void
+}
+
+struct EasyEntryRow: View {
+    let actions: EasyEntryActions
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Divider()
+            Text(Strings.easyEntryTitle)
+                .font(.body)
+                .foregroundStyle(.secondary)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) { buttons }
+                VStack(alignment: .leading, spacing: 8) { buttons }
+            }
+        }
+    }
+
+    @ViewBuilder private var buttons: some View {
+        pill(Strings.easyEntryPhoto, icon: "camera.viewfinder", action: actions.onPhoto)
+        pill(Strings.easyEntryCalendar, icon: "calendar", action: actions.onCalendar)
+    }
+
+    private func pill(_ title: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: icon)
+                .font(.body.weight(.medium))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(AppTheme.Colors.brand.opacity(0.12))
+                .foregroundStyle(AppTheme.Colors.brand)
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct PlannedRowLabelStyle: LabelStyle {
+    let color: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 8) {
+            configuration.icon.foregroundStyle(color)
+            configuration.title
+        }
     }
 }
 
