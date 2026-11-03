@@ -260,11 +260,24 @@ enum LeaveUsageCalculator {
             .reduce(0) { $0 + $1.effectiveLeaveDays }
     }
 
+    /// 사용자가 직접 적은 "그 해로 넘어온 연차" — 적었으면 계산 대신 이 값을 쓴다. 안 적었으면 nil.
+    /// (앱을 올해 처음 써서 지난해 기록이 없는 사람은 계산으로는 넘어온 양을 알 수 없다)
+    static func carryOverManual(year: Int) -> Double? {
+        UserDefaults.standard.object(forKey: "carryOverManual.\(year)") as? Double
+    }
+
+    static func setCarryOverManual(_ days: Double?, year: Int) {
+        let key = "carryOverManual.\(year)"
+        if let days { UserDefaults.standard.set(max(0, days), forKey: key) } else { UserDefaults.standard.removeObject(forKey: key) }
+    }
+
     /// 지난해에서 그 해로 넘어오는 연차 (기한과 상관없이 넘어온 양). 앞의 해를 몇 해까지 거슬러 계산한다.
     static func carryOverIn(year: Int, records: [LeaveRecord], annualGrant: Double, startMonth: YearStart,
-                            depth: Int = 3, calendar: Calendar = .app) -> Double {
+                            depth: Int = 3, usesManual: Bool = true, calendar: Calendar = .app) -> Double {
+        if usesManual, let manual = carryOverManual(year: year) { return manual }
         let cap = carryOverMaxDays
-        guard cap != 0, depth > 0, annualGrant > 0 else { return 0 }
+        let previousGrant = grant(year: year - 1, fallback: annualGrant, startMonth: startMonth, calendar: calendar)
+        guard cap != 0, depth > 0, previousGrant > 0 else { return 0 }
         let previous = year - 1
         // 기록이 하나도 없는 해부터는 이 앱을 안 쓴 해라 넘길 게 없다고 본다
         guard !self.records(records, inFiscalYear: previous, startMonth: startMonth, calendar: calendar).isEmpty else { return 0 }
@@ -273,7 +286,7 @@ enum LeaveUsageCalculator {
         // 지난해 안에서 기한이 지나 사라진 몫은 빼고 남은 양
         let prevUsable = carryOverUsableAtYearEnd(carryIn: prevCarry, year: previous, records: records,
                                                   startMonth: startMonth, calendar: calendar)
-        let left = max(0, annualGrant + prevUsable - committed(records, year: previous, startMonth: startMonth, calendar: calendar))
+        let left = max(0, previousGrant + prevUsable - committed(records, year: previous, startMonth: startMonth, calendar: calendar))
         return cap < 0 ? left : min(Double(cap), left)
     }
 
@@ -299,8 +312,129 @@ enum LeaveUsageCalculator {
                                 excluding: UUID? = nil, calendar: Calendar = .app) -> Double {
         let others = excluding.map { id in records.filter { $0.id != id } } ?? records
         let year = fiscalYear(for: date, startMonth: startMonth, calendar: calendar)
-        let carry = carryOverUsable(year: year, on: date, records: others, annualGrant: annualGrant,
-                                    startMonth: startMonth, calendar: calendar)
-        return max(0, annualGrant + carry - committed(others, year: year, startMonth: startMonth, calendar: calendar))
+        func balance(on day: Date) -> Double {
+            let carry = carryOverUsable(year: year, on: day, records: others, annualGrant: annualGrant,
+                                        startMonth: startMonth, calendar: calendar)
+            guard let accrual else {
+                return annualGrant + carry - committed(others, year: year, startMonth: startMonth, calendar: calendar)
+            }
+            // 쌓이는 연차: 그날까지 쌓인 만큼에서, 그날까지 시작한 휴가만 뺀다
+            let nextDay = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: day)) ?? day
+            return accrual.earned(year: year, startMonth: startMonth, through: day, calendar: calendar) + carry
+                - committed(others, year: year, startMonth: startMonth, before: nextDay, calendar: calendar)
+        }
+        guard accrual != nil else { return max(0, balance(on: date)) }
+        // 이날 쓰면 뒤에 잡아 둔 휴가 때 모자라지 않아야 한다 → 이날과 뒤의 휴가 시작일마다 잔액을 보고 가장 적은 값
+        let later = self.records(others, inFiscalYear: year, startMonth: startMonth, calendar: calendar)
+            .filter { $0.status != .cancelled && $0.deductsFromAnnualLeave && $0.startDate > date }
+            .map(\.startDate)
+        return max(0, ([date] + later).map(balance(on:)).min() ?? 0)
+    }
+
+    // MARK: - 쌓이는 연차 (미국 사용자 피드백)
+    //
+    // 연차를 받는 방식은 둘이다.
+    //  · 한 번에 받음 — 해가 시작될 때 1년치(`totalAnnualLeave`)를 받는다. 예전부터의 방식.
+    //  · 조금씩 쌓임 — 급여일마다 정해진 양(예: 2.31시간)이 쌓인다. 미국 회사에 흔하다.
+    // 쌓임이면 `totalAnnualLeave` 는 "그 해 끝까지 쌓일 양"으로 맞춰 두고(→ `syncAccrualTotal`),
+    // 휴가를 넣을 수 있는지는 **그 휴가 날까지 쌓인 양**으로 따진다(→ `availableAnnual`).
+
+    struct Accrual: Equatable {
+        enum Period: String, CaseIterable, Identifiable {
+            case weekly, biweekly, semimonthly, monthly
+            var id: String { rawValue }
+        }
+
+        /// 급여일 한 번에 쌓이는 양 (`isHours` 면 시간, 아니면 일)
+        var amount: Double
+        var isHours: Bool
+        var period: Period
+        /// 급여일 하나 — 매주·2주마다·매달은 이 날을 기준으로 돈다 (한 달에 두 번은 15일·말일 고정)
+        var payDay: Date
+
+        /// 한 번에 쌓이는 양을 일로 — 시간이면 하루 근무 시간으로 나눈다
+        var daysPerPeriod: Double {
+            isHours ? amount * 60 / Double(max(1, LeaveLength.workdayMinutes)) : amount
+        }
+
+        /// `start`~`end` (둘 다 포함) 사이의 급여일
+        func payDates(from start: Date, through end: Date, calendar: Calendar = .app) -> [Date] {
+            let from = calendar.startOfDay(for: start), to = calendar.startOfDay(for: end)
+            guard from <= to else { return [] }
+            var dates: [Date] = []
+            switch period {
+            case .weekly, .biweekly:
+                let step = period == .weekly ? 7 : 14
+                let anchor = calendar.startOfDay(for: payDay)
+                let offset = calendar.dateComponents([.day], from: anchor, to: from).day ?? 0
+                var k = Int((Double(offset) / Double(step)).rounded(.up))
+                while let d = calendar.date(byAdding: .day, value: k * step, to: anchor), d <= to {
+                    dates.append(d); k += 1
+                }
+            case .semimonthly, .monthly:
+                let wanted = calendar.component(.day, from: payDay)
+                var month = calendar.date(from: calendar.dateComponents([.year, .month], from: from)) ?? from
+                while month <= to {
+                    let last = calendar.range(of: .day, in: .month, for: month)?.count ?? 28
+                    let days = period == .monthly ? [min(wanted, last)] : [15, last]
+                    for day in days {
+                        if let d = calendar.date(byAdding: .day, value: day - 1, to: month), d >= from, d <= to {
+                            dates.append(d)
+                        }
+                    }
+                    month = calendar.date(byAdding: .month, value: 1, to: month) ?? to.addingTimeInterval(1)
+                }
+            }
+            return dates
+        }
+
+        /// 그 회계연도 시작부터 `date` 까지 쌓인 연차 (일)
+        func earned(year: Int, startMonth: YearStart, through date: Date, calendar: Calendar = .app) -> Double {
+            let start = fiscalYearStart(year: year, startMonth: startMonth, calendar: calendar)
+            let end = min(date, fiscalYearEnd(year: year, startMonth: startMonth, calendar: calendar))
+            return Double(payDates(from: start, through: end, calendar: calendar).count) * daysPerPeriod
+        }
+
+        /// 그 해 끝까지 쌓일 연차 (일)
+        func yearTotal(year: Int, startMonth: YearStart, calendar: Calendar = .app) -> Double {
+            earned(year: year, startMonth: startMonth,
+                   through: fiscalYearEnd(year: year, startMonth: startMonth, calendar: calendar), calendar: calendar)
+        }
+    }
+
+    /// 지금 설정된 쌓이는 연차. 한 번에 받는 방식이면 nil. 설정 화면의 @AppStorage 와 같은 키를 쓴다.
+    static var accrual: Accrual? {
+        get {
+            let d = UserDefaults.standard
+            guard let period = Accrual.Period(rawValue: d.string(forKey: "accrualPeriod") ?? "") else { return nil }
+            return Accrual(amount: d.double(forKey: "accrualAmount"),
+                           isHours: d.bool(forKey: "accrualIsHours"),
+                           period: period,
+                           payDay: Date(timeIntervalSinceReferenceDate: d.double(forKey: "accrualPayDay")))
+        }
+        set {
+            let d = UserDefaults.standard
+            guard let newValue else { d.removeObject(forKey: "accrualPeriod"); return }
+            d.set(newValue.period.rawValue, forKey: "accrualPeriod")
+            d.set(newValue.amount, forKey: "accrualAmount")
+            d.set(newValue.isHours, forKey: "accrualIsHours")
+            d.set(newValue.payDay.timeIntervalSinceReferenceDate, forKey: "accrualPayDay")
+        }
+    }
+
+    /// 그 해의 1년치 연차 — 쌓임이면 그 해 끝까지 쌓일 양, 아니면 `fallback`(총 연차)
+    static func grant(year: Int, fallback: Double, startMonth: YearStart, calendar: Calendar = .app) -> Double {
+        accrual?.yearTotal(year: year, startMonth: startMonth, calendar: calendar) ?? fallback
+    }
+
+    /// 쌓임이면 총 연차를 올해 끝까지 쌓일 양으로 맞춘다 — 총 연차를 읽는 화면·위젯이 따로 계산하지 않게.
+    @discardableResult
+    static func syncAccrualTotal(_ profile: UserProfile, now: Date = Date(), calendar: Calendar = .app) -> Bool {
+        guard profile.userType == .employee, let accrual else { return false }
+        let year = fiscalYear(for: now, startMonth: profile.yearStart, calendar: calendar)
+        let total = (accrual.yearTotal(year: year, startMonth: profile.yearStart, calendar: calendar) * 100).rounded() / 100
+        guard abs(profile.totalAnnualLeave - total) > 0.001 else { return false }
+        profile.totalAnnualLeave = total
+        return true
     }
 }

@@ -4,6 +4,7 @@
 
 ### 앱스토어 (한국어)
 
+급여일마다 쌓이는 연차도 관리할 수 있어요
 요금제를 무료, 플러스, 프로로 정리했어요
 플러스와 프로는 연 구독과 평생 중에 골라요
 구독 중이면 설정에서 평생으로 바꿀 수 있어요
@@ -11,6 +12,7 @@
 
 ### App Store (English)
 
+Track leave that builds up each payday
 Plans are now simply Free, Plus and Pro
 Plus and Pro come yearly or lifetime
 Switch your subscription to lifetime
@@ -18,6 +20,7 @@ Time Off Together is now part of Pro
 
 ### App Store (en-GB)
 
+Track leave that builds up each payday
 Plans are now simply Free, Plus and Pro
 Plus and Pro come yearly or lifetime
 Switch your subscription to lifetime
@@ -25,6 +28,7 @@ Time Off Together is now part of Pro
 
 ### 앱스토어 (일본어)
 
+給料日ごとにたまる休暇も管理できます
 プランを無料、プラス、プロに整理しました
 プラスとプロは年額か買い切りを選べます
 購読中なら設定から買い切りに切り替えられます
@@ -32,6 +36,7 @@ Time Off Together is now part of Pro
 
 ### 앱스토어 (중국어 간체)
 
+现在可管理每个发薪日累积的年假
 方案整理为免费版、Plus 和 Pro
 Plus 和 Pro 可选按年订阅或终身购买
 订阅用户可在设置中改为永久版
@@ -39,6 +44,7 @@ Plus 和 Pro 可选按年订阅或终身购买
 
 ### 앱스토어 (독일어)
 
+Urlaub, der sich pro Gehalt ansammelt
 Klare Stufen mit Gratis, Plus und Pro
 Plus und Pro jährlich oder lebenslang
 Abo jederzeit auf Lebenslang umstellen
@@ -46,6 +52,7 @@ Gemeinsam frei gehört jetzt zu Pro
 
 ### 앱스토어 (프랑스어)
 
+Suivez les congés acquis à chaque paie
 Gratuit, Plus et Pro, tout simplement
 Plus et Pro à l’année ou à vie
 Passez de l’abonnement à l’achat à vie
@@ -53,6 +60,7 @@ Congés ensemble rejoint Pro
 
 ### 앱스토어 (스페인어)
 
+Lleva los días que acumulas cada pago
 Planes más claros, Gratis, Plus y Pro
 Plus y Pro, por año o de por vida
 Pasa tu suscripción a pago de por vida
@@ -60,6 +68,7 @@ Descansar juntos ahora es parte de Pro
 
 ### 앱스토어 (이탈리아어)
 
+Segui le ferie che maturano a ogni paga
 Piani più chiari, Gratis, Plus e Pro
 Plus e Pro, annuali o a vita
 Ora puoi passare all’acquisto a vita
@@ -67,6 +76,7 @@ Riposare insieme ora fa parte di Pro
 
 ### 앱스토어 (포르투갈어 브라질)
 
+Acompanhe folgas que acumulam no salário
 Planos mais simples, Grátis, Plus e Pro
 Plus e Pro por ano ou vitalício
 Troque a assinatura pelo vitalício
@@ -74,6 +84,7 @@ Folgas em família agora estão no Pro
 
 ### 앱스토어 (중국어 번체)
 
+現在可管理每個發薪日累積的特休
 方案整理為免費版、Plus 和 Pro
 Plus 和 Pro 可選按年訂閱或終身購買
 訂閱用戶可在設定中改為永久版
@@ -81,6 +92,7 @@ Plus 和 Pro 可選按年訂閱或終身購買
 
 ### 앱스토어 (네덜란드어)
 
+Volg verlof dat je per loon opbouwt
 Duidelijke plannen, Gratis, Plus en Pro
 Plus en Pro per jaar of levenslang
 Zet je abonnement om naar levenslang
@@ -88,6 +100,7 @@ Samen vrij hoort nu bij Pro
 
 ### 앱스토어 (스웨덴어)
 
+Följ semester som tjänas in varje lön
 Tydligare planer, Gratis, Plus och Pro
 Plus och Pro per år eller för livet
 Byt ditt abonnemang till livstid
@@ -95,6 +108,7 @@ Ledigt tillsammans ingår nu i Pro
 
 ### 앱스토어 (노르웨이어 보크말)
 
+Følg ferie som opptjenes hver lønning
 Enklere planer, Gratis, Plus og Pro
 Plus og Pro årlig eller for livet
 Bytt abonnementet til livstid
@@ -102,6 +116,7 @@ Fri sammen er nå en del av Pro
 
 ### 앱스토어 (덴마크어)
 
+Følg ferie, der optjenes ved hver løn
 Enklere planer, Gratis, Plus og Pro
 Plus og Pro årligt eller for livet
 Skift dit abonnement til livstid
@@ -109,6 +124,7 @@ Fri sammen er nu en del af Pro
 
 ### 앱스토어 (핀란드어)
 
+Seuraa palkkapäivinä kertyvää lomaa
 Selkeämmät tasot, Ilmainen, Plus ja Pro
 Plus ja Pro vuodeksi tai pysyvästi
 Vaihda tilaus elinikäiseen
@@ -116,6 +132,7 @@ Yhteiset vapaat kuuluvat nyt Prohon
 
 ### 앱스토어 (폴란드어)
 
+Śledź urlop naliczany co wypłatę
 Prostsze plany, Darmowy, Plus i Pro
 Plus i Pro rocznie albo na zawsze
 Zamień subskrypcję na dostęp dożywotni
@@ -123,6 +140,7 @@ Wspólne wolne jest teraz w Pro
 
 ### 앱스토어 (체코어)
 
+Sledujte dovolenou, která přibývá
 Jednodušší tarify, Zdarma, Plus a Pro
 Plus a Pro na rok nebo navždy
 Předplatné změníš na doživotní verzi
@@ -130,6 +148,7 @@ Společné volno je teď součástí Pro
 
 ### 앱스토어 (그리스어)
 
+Άδεια που συσσωρεύεται σε κάθε μισθό
 Πιο απλά πλάνα, Δωρεάν, Plus και Pro
 Plus και Pro ετήσια ή εφ’ όρου ζωής
 Άλλαξε τη συνδρομή σε εφ’ όρου ζωής
@@ -137,6 +156,7 @@ Plus και Pro ετήσια ή εφ’ όρου ζωής
 
 ### 앱스토어 (튀르키예어)
 
+Her maaşta biriken izni takip edin
 Planlar artık Ücretsiz, Plus ve Pro
 Plus ve Pro yıllık ya da ömür boyu
 Aboneliğini ömür boyu sürüme çevir
@@ -144,6 +164,7 @@ Birlikte izin artık Pro’da
 
 ### 앱스토어 (러시아어)
 
+Отпуск, начисляемый с каждой зарплатой
 Теперь три тарифа, Бесплатно, Plus и Pro
 Plus и Pro на год или навсегда
 Смените подписку на покупку навсегда
@@ -151,6 +172,7 @@ Plus и Pro на год или навсегда
 
 ### 앱스토어 (인도네시아어)
 
+Pantau cuti yang bertambah tiap gajian
 Paket kini Gratis, Plus, dan Pro
 Plus dan Pro tahunan atau selamanya
 Ubah langganan jadi seumur hidup
@@ -158,6 +180,7 @@ Libur bersama kini bagian dari Pro
 
 ### 앱스토어 (태국어)
 
+ติดตามวันลาที่สะสมทุกรอบเงินเดือน
 แผนใหม่มีฟรี Plus และ Pro
 Plus และ Pro มีทั้งรายปีและตลอดชีพ
 ผู้สมัครสมาชิกเปลี่ยนเป็นตลอดชีพได้
@@ -165,6 +188,7 @@ Plus และ Pro มีทั้งรายปีและตลอดชี�
 
 ### 앱스토어 (베트남어)
 
+Theo dõi phép tích lũy mỗi kỳ lương
 Gói mới gọn hơn, Miễn phí, Plus và Pro
 Plus và Pro theo năm hoặc trọn đời
 Đổi gói đăng ký sang trọn đời

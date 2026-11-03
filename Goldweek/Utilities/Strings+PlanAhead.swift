@@ -574,4 +574,493 @@ extension Strings {
         case .vietnamese: return "Còn \(d)"
         }
     }
+
+    // MARK: - 쌓이는 연차 (미국 사용자 피드백)
+
+    /// 설정 — 연차 받는 방식 (한 번에 / 쌓임)
+    static var accrualSetting: String {
+        switch planLang {
+        case .korean: return "연차 받는 방식"
+        case .english: return "How You Earn Leave"
+        case .japanese: return "休暇の付与方法"
+        case .chinese: return "年假发放方式"
+        case .german: return "Wie du Urlaub erhältst"
+        case .french: return "Mode d’acquisition des congés"
+        case .spanish: return "Cómo recibes tus días"
+        case .italian: return "Come maturano le ferie"
+        case .portuguese: return "Como você recebe folgas"
+        case .chineseTraditional: return "特休發放方式"
+        case .dutch: return "Hoe je verlof krijgt"
+        case .swedish: return "Hur du får semester"
+        case .norwegian: return "Hvordan du får ferie"
+        case .danish: return "Sådan får du ferie"
+        case .finnish: return "Miten lomaa kertyy"
+        case .polish: return "Sposób naliczania urlopu"
+        case .czech: return "Jak získáváte dovolenou"
+        case .greek: return "Πώς παίρνετε άδεια"
+        case .turkish: return "İzin nasıl verilir"
+        case .russian: return "Как начисляется отпуск"
+        case .indonesian: return "Cara mendapat cuti"
+        case .thai: return "วิธีได้รับวันลา"
+        case .vietnamese: return "Cách nhận ngày phép"
+        }
+    }
+
+    /// 1년치를 한 번에 받음
+    static var accrualLumpSum: String {
+        switch planLang {
+        case .korean: return "1년치를 한 번에"
+        case .english: return "All at once each year"
+        case .japanese: return "1年分をまとめて"
+        case .chinese: return "每年一次性发放"
+        case .german: return "Einmal pro Jahr komplett"
+        case .french: return "En une fois chaque année"
+        case .spanish: return "Todos a la vez cada año"
+        case .italian: return "Tutte insieme ogni anno"
+        case .portuguese: return "Tudo de uma vez no ano"
+        case .chineseTraditional: return "每年一次給足"
+        case .dutch: return "In één keer per jaar"
+        case .swedish: return "Allt på en gång varje år"
+        case .norwegian: return "Alt på én gang hvert år"
+        case .danish: return "Alt på én gang hvert år"
+        case .finnish: return "Kerralla vuoden alussa"
+        case .polish: return "Całość raz w roku"
+        case .czech: return "Celá najednou každý rok"
+        case .greek: return "Όλη μαζί κάθε χρόνο"
+        case .turkish: return "Her yıl tek seferde"
+        case .russian: return "Сразу за весь год"
+        case .indonesian: return "Sekaligus tiap tahun"
+        case .thai: return "ได้ครั้งเดียวทั้งปี"
+        case .vietnamese: return "Nhận một lần mỗi năm"
+        }
+    }
+
+    /// 급여일마다 쌓이는 양
+    static var accrualAmount: String {
+        switch planLang {
+        case .korean: return "급여일마다 쌓이는 양"
+        case .english: return "Earned per pay period"
+        case .japanese: return "給料日ごとにたまる量"
+        case .chinese: return "每个发薪日累积"
+        case .german: return "Pro Gehaltsperiode"
+        case .french: return "Acquis par période de paie"
+        case .spanish: return "Por periodo de pago"
+        case .italian: return "Per periodo di paga"
+        case .portuguese: return "Por período de pagamento"
+        case .chineseTraditional: return "每個發薪日累積"
+        case .dutch: return "Per loonperiode"
+        case .swedish: return "Per löneperiod"
+        case .norwegian: return "Per lønnsperiode"
+        case .danish: return "Pr. lønperiode"
+        case .finnish: return "Palkkakautta kohden"
+        case .polish: return "Na okres rozliczeniowy"
+        case .czech: return "Za výplatní období"
+        case .greek: return "Ανά περίοδο μισθοδοσίας"
+        case .turkish: return "Her maaş döneminde"
+        case .russian: return "За расчётный период"
+        case .indonesian: return "Per periode gaji"
+        case .thai: return "ต่อรอบเงินเดือน"
+        case .vietnamese: return "Mỗi kỳ lương"
+        }
+    }
+
+    /// 단위 — 일
+    static var accrualUnitDays: String {
+        switch planLang {
+        case .korean: return "일"
+        case .english: return "days"
+        case .japanese: return "日"
+        case .chinese: return "天"
+        case .german: return "Tage"
+        case .french: return "jours"
+        case .spanish: return "días"
+        case .italian: return "giorni"
+        case .portuguese: return "dias"
+        case .chineseTraditional: return "天"
+        case .dutch: return "dagen"
+        case .swedish: return "dagar"
+        case .norwegian: return "dager"
+        case .danish: return "dage"
+        case .finnish: return "päivää"
+        case .polish: return "dni"
+        case .czech: return "dny"
+        case .greek: return "ημέρες"
+        case .turkish: return "gün"
+        case .russian: return "дн."
+        case .indonesian: return "hari"
+        case .thai: return "วัน"
+        case .vietnamese: return "ngày"
+        }
+    }
+
+    /// 단위 — 시간
+    static var accrualUnitHours: String {
+        switch planLang {
+        case .korean: return "시간"
+        case .english: return "hours"
+        case .japanese: return "時間"
+        case .chinese: return "小时"
+        case .german: return "Std."
+        case .french: return "heures"
+        case .spanish: return "horas"
+        case .italian: return "ore"
+        case .portuguese: return "horas"
+        case .chineseTraditional: return "小時"
+        case .dutch: return "uur"
+        case .swedish: return "timmar"
+        case .norwegian: return "timer"
+        case .danish: return "timer"
+        case .finnish: return "tuntia"
+        case .polish: return "godz."
+        case .czech: return "hod."
+        case .greek: return "ώρες"
+        case .turkish: return "saat"
+        case .russian: return "ч"
+        case .indonesian: return "jam"
+        case .thai: return "ชั่วโมง"
+        case .vietnamese: return "giờ"
+        }
+    }
+
+    /// 최근 급여일 — 매주·2주마다·매달의 기준
+    static var accrualPayDay: String {
+        switch planLang {
+        case .korean: return "최근 급여일"
+        case .english: return "A recent payday"
+        case .japanese: return "直近の給料日"
+        case .chinese: return "最近一次发薪日"
+        case .german: return "Letzter Zahltag"
+        case .french: return "Dernier jour de paie"
+        case .spanish: return "Último día de pago"
+        case .italian: return "Ultimo giorno di paga"
+        case .portuguese: return "Último dia de pagamento"
+        case .chineseTraditional: return "最近一次發薪日"
+        case .dutch: return "Laatste betaaldag"
+        case .swedish: return "Senaste lönedag"
+        case .norwegian: return "Siste lønningsdag"
+        case .danish: return "Seneste lønningsdag"
+        case .finnish: return "Viimeisin palkkapäivä"
+        case .polish: return "Ostatni dzień wypłaty"
+        case .czech: return "Poslední výplatní den"
+        case .greek: return "Τελευταία ημέρα πληρωμής"
+        case .turkish: return "Son maaş günü"
+        case .russian: return "Последний день зарплаты"
+        case .indonesian: return "Hari gajian terakhir"
+        case .thai: return "วันเงินเดือนออกล่าสุด"
+        case .vietnamese: return "Ngày nhận lương gần nhất"
+        }
+    }
+
+    /// 지금까지 쌓인 연차
+    static var accrualEarnedSoFar: String {
+        switch planLang {
+        case .korean: return "지금까지 쌓인 연차"
+        case .english: return "Earned so far"
+        case .japanese: return "これまでにたまった休暇"
+        case .chinese: return "目前已累积"
+        case .german: return "Bisher angesammelt"
+        case .french: return "Acquis jusqu’ici"
+        case .spanish: return "Acumulado hasta hoy"
+        case .italian: return "Maturate finora"
+        case .portuguese: return "Acumulado até agora"
+        case .chineseTraditional: return "目前已累積"
+        case .dutch: return "Tot nu toe opgebouwd"
+        case .swedish: return "Intjänat hittills"
+        case .norwegian: return "Opptjent hittil"
+        case .danish: return "Optjent indtil nu"
+        case .finnish: return "Kertynyt tähän mennessä"
+        case .polish: return "Naliczone do dziś"
+        case .czech: return "Dosud naspořeno"
+        case .greek: return "Έχουν συσσωρευτεί"
+        case .turkish: return "Şimdiye kadar biriken"
+        case .russian: return "Начислено на сегодня"
+        case .indonesian: return "Terkumpul sejauh ini"
+        case .thai: return "สะสมถึงตอนนี้"
+        case .vietnamese: return "Đã tích lũy đến nay"
+        }
+    }
+
+    /// 연말까지 쌓일 연차 — 쌓임일 때 '총 연차' 자리
+    static var accrualYearTotal: String {
+        switch planLang {
+        case .korean: return "연말까지 쌓일 연차"
+        case .english: return "By the end of the year"
+        case .japanese: return "年度末までにたまる休暇"
+        case .chinese: return "到年底将累积"
+        case .german: return "Bis Jahresende"
+        case .french: return "D’ici la fin de l’année"
+        case .spanish: return "Hasta fin de año"
+        case .italian: return "Entro fine anno"
+        case .portuguese: return "Até o fim do ano"
+        case .chineseTraditional: return "到年底將累積"
+        case .dutch: return "Tot het einde van het jaar"
+        case .swedish: return "Till årets slut"
+        case .norwegian: return "Innen årets slutt"
+        case .danish: return "Inden årets udgang"
+        case .finnish: return "Vuoden loppuun mennessä"
+        case .polish: return "Do końca roku"
+        case .czech: return "Do konce roku"
+        case .greek: return "Έως το τέλος του έτους"
+        case .turkish: return "Yıl sonuna kadar"
+        case .russian: return "К концу года"
+        case .indonesian: return "Hingga akhir tahun"
+        case .thai: return "ภายในสิ้นปี"
+        case .vietnamese: return "Đến cuối năm"
+        }
+    }
+
+    /// 쌓이는 연차 설명
+    static var accrualFooter: String {
+        switch planLang {
+        case .korean: return "회사가 급여일마다 연차를 조금씩 쌓아 준다면 고르세요. 휴가는 그날까지 쌓인 연차로 넣을 수 있고, 뒤에 잡아 둔 휴가 몫도 남겨 둡니다. 시간으로 적으면 하루 근무 시간으로 일수를 셉니다."
+        case .english: return "Choose this if your employer adds leave each payday. You can book time off with what you’ll have earned by that day, and the app keeps enough for leave you’ve already planned later. Hours are converted to days using your workday length."
+        case .japanese: return "給料日ごとに休暇が少しずつ付与される会社なら選んでください。休暇はその日までにたまった分で登録でき、あとに予定した休暇の分も残しておきます。時間で入力すると1日の勤務時間で日数に換算します。"
+        case .chinese: return "如果公司在每个发薪日累积一点年假，请选择此项。可以用到那天为止累积的年假来安排休假，并为之后已安排的休假留出余量。按小时填写时，会按每天的工作时长换算成天数。"
+        case .german: return "Wähle das, wenn dein Arbeitgeber dir mit jeder Gehaltszahlung Urlaub gutschreibt. Du kannst Urlaub mit dem eintragen, was bis zu diesem Tag angesammelt ist, und die App hält genug für später geplanten Urlaub zurück. Stunden werden über deine tägliche Arbeitszeit in Tage umgerechnet."
+        case .french: return "Choisissez cette option si votre employeur crédite des congés à chaque paie. Vous pouvez poser des congés avec ce que vous aurez acquis à cette date, et l’app garde de quoi couvrir les congés déjà prévus plus tard. Les heures sont converties en jours selon la durée de votre journée de travail."
+        case .spanish: return "Elígelo si tu empresa te suma días en cada pago. Puedes reservar vacaciones con lo que tendrás acumulado ese día, y la app guarda lo necesario para las que ya planeaste más adelante. Las horas se convierten en días según tu jornada laboral."
+        case .italian: return "Scegli questa opzione se l’azienda ti accredita ferie a ogni busta paga. Puoi inserire le ferie con quanto avrai maturato entro quel giorno, e l’app tiene da parte quanto serve per quelle già pianificate più avanti. Le ore vengono convertite in giorni in base alla tua giornata lavorativa."
+        case .portuguese: return "Escolha esta opção se a empresa acrescenta folgas a cada pagamento. Você pode marcar folgas com o que terá acumulado até aquele dia, e o app reserva o suficiente para as que já planejou depois. Horas são convertidas em dias pela sua jornada de trabalho."
+        case .chineseTraditional: return "如果公司在每個發薪日累積一點特休，請選這項。可以用到那天為止累積的特休來排假，也會為之後已排好的假留下額度。用小時填寫時，會依每天的工作時數換算成天數。"
+        case .dutch: return "Kies dit als je werkgever bij elke loonbetaling verlof opbouwt. Je kunt verlof boeken met wat je op die dag hebt opgebouwd, en de app houdt genoeg over voor verlof dat je later al hebt gepland. Uren worden omgerekend naar dagen op basis van je werkdag."
+        case .swedish: return "Välj detta om din arbetsgivare lägger till semester vid varje löneutbetalning. Du kan boka ledigt med det du har tjänat in till den dagen, och appen sparar tillräckligt för ledighet du redan har planerat senare. Timmar räknas om till dagar utifrån din arbetsdag."
+        case .norwegian: return "Velg dette hvis arbeidsgiveren legger til ferie for hver lønnsutbetaling. Du kan legge inn fri med det du har opptjent til den dagen, og appen holder av nok til fri du allerede har planlagt senere. Timer regnes om til dager ut fra arbeidsdagen din."
+        case .danish: return "Vælg dette, hvis din arbejdsgiver lægger ferie til ved hver lønudbetaling. Du kan booke fri med det, du har optjent til den dag, og appen holder nok tilbage til fri, du allerede har planlagt senere. Timer regnes om til dage ud fra din arbejdsdag."
+        case .finnish: return "Valitse tämä, jos työnantaja kerryttää lomaa jokaisena palkkapäivänä. Voit merkitä lomaa sillä, mitä on kertynyt siihen päivään mennessä, ja sovellus jättää riittävästi myöhemmin suunnitelluille lomille. Tunnit muutetaan päiviksi työpäiväsi pituuden mukaan."
+        case .polish: return "Wybierz to, jeśli pracodawca dolicza urlop przy każdej wypłacie. Urlop możesz zaplanować z tego, co narośnie do danego dnia, a aplikacja zostawi zapas na urlopy zaplanowane później. Godziny są przeliczane na dni według długości dnia pracy."
+        case .czech: return "Zvolte, pokud vám zaměstnavatel připisuje dovolenou s každou výplatou. Dovolenou můžete zadat z toho, co do daného dne naspoříte, a aplikace ponechá dost na dovolenou naplánovanou později. Hodiny se převádějí na dny podle délky pracovního dne."
+        case .greek: return "Επιλέξτε το αν ο εργοδότης σας προσθέτει άδεια σε κάθε μισθοδοσία. Μπορείτε να κλείσετε άδεια με όσα θα έχετε συσσωρεύσει έως εκείνη τη μέρα, και η εφαρμογή κρατά αρκετά για άδειες που έχετε ήδη προγραμματίσει αργότερα. Οι ώρες μετατρέπονται σε ημέρες με βάση τη διάρκεια της εργάσιμης ημέρας σας."
+        case .turkish: return "İşvereniniz her maaş gününde izin ekliyorsa bunu seçin. İzni o güne kadar biriken miktarla girebilirsiniz; uygulama daha sonra planladığınız izinler için de yeterince ayırır. Saatler, günlük çalışma sürenize göre güne çevrilir."
+        case .russian: return "Выберите, если работодатель начисляет отпуск с каждой зарплатой. Отпуск можно запланировать из того, что накопится к этому дню, а приложение оставит запас на уже запланированный позже отпуск. Часы переводятся в дни по длительности вашего рабочего дня."
+        case .indonesian: return "Pilih ini jika perusahaan menambah cuti setiap gajian. Kamu bisa mencatat cuti dengan jumlah yang sudah terkumpul sampai hari itu, dan aplikasi menyisakan cukup untuk cuti yang sudah direncanakan setelahnya. Jam diubah ke hari sesuai lama hari kerjamu."
+        case .thai: return "เลือกข้อนี้ถ้าบริษัทเพิ่มวันลาให้ทุกครั้งที่จ่ายเงินเดือน คุณลงวันลาได้ตามที่สะสมถึงวันนั้น และแอปจะกันส่วนไว้สำหรับวันลาที่วางแผนไว้หลังจากนั้น ถ้ากรอกเป็นชั่วโมง จะแปลงเป็นวันตามชั่วโมงทำงานต่อวัน"
+        case .vietnamese: return "Chọn mục này nếu công ty cộng phép cho bạn mỗi kỳ lương. Bạn có thể đặt lịch nghỉ bằng số phép đã tích lũy đến ngày đó, và ứng dụng sẽ chừa đủ cho những ngày nghỉ đã lên kế hoạch sau đó. Số giờ được đổi sang ngày theo thời gian làm việc mỗi ngày của bạn."
+        }
+    }
+
+    /// 홈 — 쌓이는 연차: 지금 쓸 수 있는 {n} · 지금까지 쌓인 {m}
+    static func accrualHomeLine(available n: String, earned m: String) -> String {
+        switch planLang {
+        case .korean: return "지금 쓸 수 있는 연차 \(n) · 지금까지 \(m) 쌓임"
+        case .english: return "Available now \(n) · \(m) earned so far"
+        case .japanese: return "今使える休暇 \(n)・これまでに\(m)"
+        case .chinese: return "现在可用 \(n) · 已累积 \(m)"
+        case .german: return "Jetzt verfügbar: \(n) · bisher \(m) angesammelt"
+        case .french: return "Disponible maintenant : \(n) · \(m) acquis jusqu’ici"
+        case .spanish: return "Disponible ahora: \(n) · \(m) acumulados"
+        case .italian: return "Disponibili ora: \(n) · \(m) maturate finora"
+        case .portuguese: return "Disponível agora: \(n) · \(m) acumulados"
+        case .chineseTraditional: return "現在可用 \(n) · 已累積 \(m)"
+        case .dutch: return "Nu beschikbaar: \(n) · \(m) opgebouwd"
+        case .swedish: return "Tillgängligt nu: \(n) · \(m) intjänat"
+        case .norwegian: return "Tilgjengelig nå: \(n) · \(m) opptjent"
+        case .danish: return "Til rådighed nu: \(n) · \(m) optjent"
+        case .finnish: return "Käytettävissä nyt \(n) · kertynyt \(m)"
+        case .polish: return "Dostępne teraz: \(n) · naliczone \(m)"
+        case .czech: return "K dispozici teď: \(n) · naspořeno \(m)"
+        case .greek: return "Διαθέσιμες τώρα: \(n) · συσσωρεύτηκαν \(m)"
+        case .turkish: return "Şu an kullanılabilir: \(n) · biriken \(m)"
+        case .russian: return "Доступно сейчас: \(n) · начислено \(m)"
+        case .indonesian: return "Tersedia sekarang \(n) · terkumpul \(m)"
+        case .thai: return "ใช้ได้ตอนนี้ \(n) · สะสมแล้ว \(m)"
+        case .vietnamese: return "Dùng được ngay \(n) · đã tích lũy \(m)"
+        }
+    }
+
+    /// 휴가 넣기 — 그날까지 쌓인 연차로 쓸 수 있는 {r}
+    static func accrualByDateNote(_ r: String) -> String {
+        switch planLang {
+        case .korean: return "이날까지 쌓인 연차로 \(r) 쓸 수 있어요"
+        case .english: return "By this day you’ll have \(r) to use"
+        case .japanese: return "この日までにたまる休暇で\(r)使えます"
+        case .chinese: return "到这一天可用 \(r)"
+        case .german: return "Bis zu diesem Tag stehen dir \(r) zur Verfügung"
+        case .french: return "À cette date, vous aurez \(r) disponibles"
+        case .spanish: return "Para ese día tendrás \(r) disponibles"
+        case .italian: return "Per quel giorno avrai \(r) disponibili"
+        case .portuguese: return "Até esse dia você terá \(r) disponíveis"
+        case .chineseTraditional: return "到這一天可用 \(r)"
+        case .dutch: return "Op die dag heb je \(r) beschikbaar"
+        case .swedish: return "Den dagen har du \(r) att använda"
+        case .norwegian: return "Den dagen har du \(r) å bruke"
+        case .danish: return "Den dag har du \(r) til rådighed"
+        case .finnish: return "Siihen päivään mennessä käytettävissä \(r)"
+        case .polish: return "Do tego dnia będziesz mieć \(r)"
+        case .czech: return "K tomuto dni budete mít \(r)"
+        case .greek: return "Έως εκείνη τη μέρα θα έχετε \(r)"
+        case .turkish: return "O güne kadar kullanabileceğin: \(r)"
+        case .russian: return "К этому дню будет доступно \(r)"
+        case .indonesian: return "Sampai hari itu tersedia \(r)"
+        case .thai: return "ถึงวันนั้นจะใช้ได้ \(r)"
+        case .vietnamese: return "Đến ngày đó bạn có \(r) để dùng"
+        }
+    }
+
+    /// 올해 넘어온 연차 — 직접 적기 (비우면 자동)
+    static var carryOverManualLabel: String {
+        switch planLang {
+        case .korean: return "올해 넘어온 연차"
+        case .english: return "Carried over this year"
+        case .japanese: return "今年度に繰り越した休暇"
+        case .chinese: return "今年结转的年假"
+        case .german: return "In dieses Jahr übertragen"
+        case .french: return "Reportés sur cette année"
+        case .spanish: return "Arrastrados a este año"
+        case .italian: return "Riportate quest’anno"
+        case .portuguese: return "Transferidas para este ano"
+        case .chineseTraditional: return "今年遞延的特休"
+        case .dutch: return "Meegenomen naar dit jaar"
+        case .swedish: return "Sparat till i år"
+        case .norwegian: return "Overført til i år"
+        case .danish: return "Overført til i år"
+        case .finnish: return "Siirretty tälle vuodelle"
+        case .polish: return "Przeniesione na ten rok"
+        case .czech: return "Převedeno do letoška"
+        case .greek: return "Μεταφέρθηκαν φέτος"
+        case .turkish: return "Bu yıla devreden"
+        case .russian: return "Перенесено на этот год"
+        case .indonesian: return "Dibawa ke tahun ini"
+        case .thai: return "ยกมาปีนี้"
+        case .vietnamese: return "Chuyển sang năm nay"
+        }
+    }
+
+    /// 직접 안 적었을 때 보이는 자동 계산값 — {d} 일수
+    static func carryOverManualAuto(_ d: String) -> String {
+        switch planLang {
+        case .korean: return "자동 \(d)"
+        case .english: return "Auto \(d)"
+        case .japanese: return "自動 \(d)"
+        case .chinese: return "自动 \(d)"
+        case .german: return "Automatisch \(d)"
+        case .french: return "Auto \(d)"
+        case .spanish: return "Auto \(d)"
+        case .italian: return "Auto \(d)"
+        case .portuguese: return "Automático \(d)"
+        case .chineseTraditional: return "自動 \(d)"
+        case .dutch: return "Automatisch \(d)"
+        case .swedish: return "Automatiskt \(d)"
+        case .norwegian: return "Automatisk \(d)"
+        case .danish: return "Automatisk \(d)"
+        case .finnish: return "Automaattinen \(d)"
+        case .polish: return "Automatycznie \(d)"
+        case .czech: return "Automaticky \(d)"
+        case .greek: return "Αυτόματα \(d)"
+        case .turkish: return "Otomatik \(d)"
+        case .russian: return "Авто \(d)"
+        case .indonesian: return "Otomatis \(d)"
+        case .thai: return "อัตโนมัติ \(d)"
+        case .vietnamese: return "Tự động \(d)"
+        }
+    }
+
+    /// 쌓이는 주기 이름 (설정의 '연차 받는 방식' 고르기)
+    static func accrualPeriodName(_ period: LeaveUsageCalculator.Accrual.Period) -> String {
+        switch period {
+        case .weekly:
+            switch planLang {
+            case .korean: return "매주 쌓임"
+            case .english: return "Accrues weekly"
+            case .japanese: return "毎週たまる"
+            case .chinese: return "每周累积"
+            case .german: return "Wöchentlich angesammelt"
+            case .french: return "Acquis chaque semaine"
+            case .spanish: return "Se acumula cada semana"
+            case .italian: return "Maturate ogni settimana"
+            case .portuguese: return "Acumula toda semana"
+            case .chineseTraditional: return "每週累積"
+            case .dutch: return "Elke week opgebouwd"
+            case .swedish: return "Tjänas in varje vecka"
+            case .norwegian: return "Opptjenes hver uke"
+            case .danish: return "Optjenes hver uge"
+            case .finnish: return "Kertyy viikoittain"
+            case .polish: return "Narasta co tydzień"
+            case .czech: return "Přibývá každý týden"
+            case .greek: return "Συσσωρεύεται κάθε εβδομάδα"
+            case .turkish: return "Her hafta birikir"
+            case .russian: return "Начисляется каждую неделю"
+            case .indonesian: return "Bertambah tiap minggu"
+            case .thai: return "สะสมทุกสัปดาห์"
+            case .vietnamese: return "Cộng dồn mỗi tuần"
+            }
+        case .biweekly:
+            switch planLang {
+            case .korean: return "2주마다 쌓임"
+            case .english: return "Accrues every 2 weeks"
+            case .japanese: return "2週ごとにたまる"
+            case .chinese: return "每两周累积"
+            case .german: return "Alle 2 Wochen angesammelt"
+            case .french: return "Acquis toutes les 2 semaines"
+            case .spanish: return "Se acumula cada 2 semanas"
+            case .italian: return "Maturate ogni 2 settimane"
+            case .portuguese: return "Acumula a cada 2 semanas"
+            case .chineseTraditional: return "每兩週累積"
+            case .dutch: return "Elke 2 weken opgebouwd"
+            case .swedish: return "Tjänas in varannan vecka"
+            case .norwegian: return "Opptjenes annenhver uke"
+            case .danish: return "Optjenes hver anden uge"
+            case .finnish: return "Kertyy 2 viikon välein"
+            case .polish: return "Narasta co 2 tygodnie"
+            case .czech: return "Přibývá každé 2 týdny"
+            case .greek: return "Συσσωρεύεται κάθε 2 εβδομάδες"
+            case .turkish: return "2 haftada bir birikir"
+            case .russian: return "Начисляется раз в 2 недели"
+            case .indonesian: return "Bertambah tiap 2 minggu"
+            case .thai: return "สะสมทุก 2 สัปดาห์"
+            case .vietnamese: return "Cộng dồn mỗi 2 tuần"
+            }
+        case .semimonthly:
+            switch planLang {
+            case .korean: return "한 달에 두 번 쌓임 (15일·말일)"
+            case .english: return "Twice a month (15th & last day)"
+            case .japanese: return "月2回たまる（15日・月末）"
+            case .chinese: return "每月累积两次（15日、月末）"
+            case .german: return "Zweimal im Monat (15. & Monatsende)"
+            case .french: return "Deux fois par mois (le 15 et en fin de mois)"
+            case .spanish: return "Dos veces al mes (día 15 y fin de mes)"
+            case .italian: return "Due volte al mese (il 15 e a fine mese)"
+            case .portuguese: return "Duas vezes por mês (dia 15 e fim do mês)"
+            case .chineseTraditional: return "每月累積兩次（15日、月底）"
+            case .dutch: return "Twee keer per maand (de 15e en eind van de maand)"
+            case .swedish: return "Två gånger i månaden (den 15:e och sista)"
+            case .norwegian: return "To ganger i måneden (den 15. og siste)"
+            case .danish: return "To gange om måneden (den 15. og sidste)"
+            case .finnish: return "Kahdesti kuussa (15. ja kuun viimeinen)"
+            case .polish: return "Dwa razy w miesiącu (15. i ostatni dzień)"
+            case .czech: return "Dvakrát měsíčně (15. a poslední den)"
+            case .greek: return "Δύο φορές τον μήνα (15 και τέλος μήνα)"
+            case .turkish: return "Ayda iki kez (15'i ve ay sonu)"
+            case .russian: return "Дважды в месяц (15-го и в конце месяца)"
+            case .indonesian: return "Dua kali sebulan (tgl 15 & akhir bulan)"
+            case .thai: return "เดือนละ 2 ครั้ง (วันที่ 15 และสิ้นเดือน)"
+            case .vietnamese: return "Hai lần mỗi tháng (ngày 15 và cuối tháng)"
+            }
+        case .monthly:
+            switch planLang {
+            case .korean: return "매달 쌓임"
+            case .english: return "Accrues monthly"
+            case .japanese: return "毎月たまる"
+            case .chinese: return "每月累积"
+            case .german: return "Monatlich angesammelt"
+            case .french: return "Acquis chaque mois"
+            case .spanish: return "Se acumula cada mes"
+            case .italian: return "Maturate ogni mese"
+            case .portuguese: return "Acumula todo mês"
+            case .chineseTraditional: return "每月累積"
+            case .dutch: return "Elke maand opgebouwd"
+            case .swedish: return "Tjänas in varje månad"
+            case .norwegian: return "Opptjenes hver måned"
+            case .danish: return "Optjenes hver måned"
+            case .finnish: return "Kertyy kuukausittain"
+            case .polish: return "Narasta co miesiąc"
+            case .czech: return "Přibývá každý měsíc"
+            case .greek: return "Συσσωρεύεται κάθε μήνα"
+            case .turkish: return "Her ay birikir"
+            case .russian: return "Начисляется каждый месяц"
+            case .indonesian: return "Bertambah tiap bulan"
+            case .thai: return "สะสมทุกเดือน"
+            case .vietnamese: return "Cộng dồn mỗi tháng"
+            }
+        }
+    }
 }

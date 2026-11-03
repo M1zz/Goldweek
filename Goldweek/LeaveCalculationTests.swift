@@ -1878,6 +1878,79 @@ final class PlanAheadCarryOverTests: XCTestCase {
     }
 }
 
+// MARK: - 쌓이는 연차 (미국 사용자 피드백: 급여일마다 2.31시간)
+
+final class AccrualLeaveTests: XCTestCase {
+    private let cal = Calendar.current
+    private func d(_ y: Int, _ m: Int, _ day: Int) -> Date { cal.date(from: DateComponents(year: y, month: m, day: day))! }
+    private typealias Accrual = LeaveUsageCalculator.Accrual
+
+    override func setUp() {
+        DayOffCalendar.shared.update(country: .usa, customHolidays: [], hiddenDates: [], breaks: [])
+        LeaveLength.workdayMinutes = 480
+    }
+
+    override func tearDown() {
+        LeaveUsageCalculator.accrual = nil
+        LeaveUsageCalculator.setCarryOverManual(nil, year: 2027)
+        LeaveUsageCalculator.carryOverMaxDays = 0
+        DayOffCalendar.shared.update(country: .korea, customHolidays: [], hiddenDates: [], breaks: [])
+    }
+
+    func testPayDatesPerYear() {
+        let payDay = d(2026, 1, 2)   // 금요일
+        let start = d(2026, 1, 1), end = d(2026, 12, 31)
+        XCTAssertEqual(Accrual(amount: 1, isHours: false, period: .weekly, payDay: payDay).payDates(from: start, through: end, calendar: cal).count, 52)
+        XCTAssertEqual(Accrual(amount: 1, isHours: false, period: .biweekly, payDay: payDay).payDates(from: start, through: end, calendar: cal).count, 26)
+        XCTAssertEqual(Accrual(amount: 1, isHours: false, period: .semimonthly, payDay: payDay).payDates(from: start, through: end, calendar: cal).count, 24)
+        // 매달 31일 급여 → 짧은 달은 말일
+        let monthly = Accrual(amount: 1, isHours: false, period: .monthly, payDay: d(2026, 1, 31))
+        let dates = monthly.payDates(from: start, through: end, calendar: cal)
+        XCTAssertEqual(dates.count, 12)
+        XCTAssertEqual(dates[1], d(2026, 2, 28))
+        // 기준 급여일이 범위보다 뒤에 있어도 앞으로 거슬러 센다
+        XCTAssertEqual(Accrual(amount: 1, isHours: false, period: .biweekly, payDay: d(2026, 11, 20))
+            .payDates(from: start, through: end, calendar: cal).first, d(2026, 1, 2))
+    }
+
+    /// 2주마다 2.31시간, 하루 8시간 → 3월 1일까지 급여일 5번
+    func testHoursConvertToDays() {
+        let accrual = Accrual(amount: 2.31, isHours: true, period: .biweekly, payDay: d(2026, 1, 2))
+        XCTAssertEqual(accrual.earned(year: 2026, startMonth: 1, through: d(2026, 3, 1), calendar: cal), 5 * 2.31 / 8, accuracy: 0.0001)
+        XCTAssertEqual(accrual.yearTotal(year: 2026, startMonth: 1, calendar: cal), 26 * 2.31 / 8, accuracy: 0.0001)
+    }
+
+    /// 휴가는 그날까지 쌓인 만큼만, 뒤에 잡아 둔 휴가 몫은 남겨 둔다
+    func testAvailableOnDateKeepsLaterPlans() {
+        LeaveUsageCalculator.accrual = Accrual(amount: 1, isHours: false, period: .biweekly, payDay: d(2026, 1, 2))
+        // 2월 9일까지 급여일 3번(1/2, 1/16, 1/30)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2026, 2, 9), records: [], annualGrant: 26, startMonth: 1), 3)
+        // 3월 2~6일(5일)을 잡아 두면: 3월 2일까지 5번 쌓여 그 휴가로 다 쓴다 → 2월에 더 쓰면 3월 휴가가 모자란다
+        let march = LeaveRecord(startDate: d(2026, 3, 2), endDate: d(2026, 3, 6), status: .planned)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2026, 2, 9), records: [march], annualGrant: 26, startMonth: 1), 0)
+        // 6월이면 그 사이 더 쌓여 있다: 6/1까지 11번 − 5
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2026, 6, 1), records: [march], annualGrant: 26, startMonth: 1), 6)
+    }
+
+    func testManualCarryOverOverridesCalculation() {
+        LeaveUsageCalculator.carryOverMaxDays = 0
+        LeaveUsageCalculator.setCarryOverManual(4, year: 2027)
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: [], annualGrant: 20, startMonth: 1), 4)
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: [], annualGrant: 20, startMonth: 1, usesManual: false), 0)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2027, 2, 1), records: [], annualGrant: 20, startMonth: 1), 24)
+    }
+
+    func testSyncTotalToYearEnd() {
+        let profile = UserProfile(totalAnnualLeave: 10)
+        LeaveUsageCalculator.accrual = Accrual(amount: 1.25, isHours: false, period: .monthly, payDay: d(2026, 1, 15))
+        XCTAssertTrue(LeaveUsageCalculator.syncAccrualTotal(profile, now: d(2026, 5, 1), calendar: cal))
+        XCTAssertEqual(profile.totalAnnualLeave, 15)   // 1.25 × 12
+        LeaveUsageCalculator.accrual = Accrual(amount: 2, isHours: false, period: .monthly, payDay: d(2026, 1, 15))
+        LeaveUsageCalculator.syncAccrualTotal(profile, now: d(2026, 5, 1), calendar: cal)
+        XCTAssertEqual(profile.totalAnnualLeave, 24)
+    }
+}
+
 // MARK: - 최적 연차 플랜이 죽지 않는다 (이탈리아 사용자: 1월부터 휴가를 넣다가 5월쯤에서 크래시)
 
 final class LeavePlannerCrashTests: XCTestCase {

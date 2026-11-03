@@ -1075,6 +1075,8 @@ struct LeaveStatusCard: View {
     @Query private var allLeaveRecords: [LeaveRecord]
     @Environment(\.modelContext) private var modelContext
     @AppStorage("includeBonusInStatus") private var includeBonusInStatus: Bool = true
+    /// 쌓이는 연차를 켜고 끄면 아래 줄이 바로 바뀌게 — 값은 LeaveUsageCalculator.accrual 이 읽는다
+    @AppStorage("accrualPeriod") private var accrualPeriodRaw = ""
     @State private var showingAddLeave = false
     @State private var showingPhotoImport = false
     @State private var showingShareSheet = false
@@ -1288,6 +1290,22 @@ struct LeaveStatusCard: View {
                 }
             }
             .voCard(VoiceOverLabel.leaveBalance(total: totalLeave, used: displayUsed, remaining: effectiveRemaining))
+
+            // 쌓이는 연차: 위 숫자는 연말 기준이라, 오늘 실제로 쓸 수 있는 양을 따로 보여 준다
+            if !isLeisure, !accrualPeriodRaw.isEmpty, let accrual = LeaveUsageCalculator.accrual {
+                let now = Date()
+                let year = LeaveUsageCalculator.fiscalYear(for: now, startMonth: profile.yearStart)
+                let available = LeaveUsageCalculator.availableAnnual(on: now, records: allLeaveRecords,
+                                                                     annualGrant: profile.totalAnnualLeave,
+                                                                     startMonth: profile.yearStart)
+                let earned = accrual.earned(year: year, startMonth: profile.yearStart, through: now)
+                Label(Strings.accrualHomeLine(available: Strings.dayCount(available), earned: Strings.dayCount(earned)),
+                      systemImage: "chart.line.uptrend.xyaxis")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
 
             if previewDays > 0 {
                 HStack(spacing: 8) {

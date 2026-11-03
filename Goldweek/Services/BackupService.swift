@@ -49,6 +49,11 @@ struct LeaveKindSettingsBackup: Codable {
     var shiftDaysOff: String?
     var shiftWorkDays: String?
     var usesHourlyLeave: Bool?
+    /// 연차 받는 방식 — 쌓이는 주기·양·단위·급여일 (예전 백업에는 없다)
+    var accrualPeriod: String?
+    var accrualAmount: Double?
+    var accrualIsHours: Bool?
+    var accrualPayDay: Date?
 
     static func current() -> LeaveKindSettingsBackup {
         let defaults = UserDefaults.standard
@@ -62,7 +67,11 @@ struct LeaveKindSettingsBackup: Codable {
             workPattern: defaults.string(forKey: HolidayService.workPatternKey),
             shiftDaysOff: HolidayService.shiftDaysOffRaw,
             shiftWorkDays: HolidayService.shiftWorkDaysRaw,
-            usesHourlyLeave: defaults.object(forKey: LeaveLength.usesHourlyLeaveKey) as? Bool
+            usesHourlyLeave: defaults.object(forKey: LeaveLength.usesHourlyLeaveKey) as? Bool,
+            accrualPeriod: LeaveUsageCalculator.accrual?.period.rawValue,
+            accrualAmount: LeaveUsageCalculator.accrual?.amount,
+            accrualIsHours: LeaveUsageCalculator.accrual?.isHours,
+            accrualPayDay: LeaveUsageCalculator.accrual?.payDay
         )
     }
 
@@ -75,6 +84,10 @@ struct LeaveKindSettingsBackup: Codable {
         if let shiftDaysOff { HolidayService.shiftDaysOffRaw = shiftDaysOff }
         if let shiftWorkDays { HolidayService.shiftWorkDaysRaw = shiftWorkDays }
         if let usesHourlyLeave { LeaveLength.usesHourlyLeave = usesHourlyLeave }
+        if let accrualPeriod, let period = LeaveUsageCalculator.Accrual.Period(rawValue: accrualPeriod) {
+            LeaveUsageCalculator.accrual = .init(amount: accrualAmount ?? 0, isHours: accrualIsHours ?? false,
+                                                 period: period, payDay: accrualPayDay ?? Date())
+        }
     }
 }
 

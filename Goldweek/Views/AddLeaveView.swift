@@ -726,6 +726,15 @@ struct LeaveRegistrationView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
+                // 쌓이는 연차면 그 날까지 쌓인 양으로 쓸 수 있는 만큼 — "그때 얼마나 있을까"를 고르는 자리에서 바로
+                if futureFiscalYear == nil, LeaveUsageCalculator.accrual != nil, profile.userType != .leisure,
+                   category.deductsFromAnnual, selectedBonusLeave == nil {
+                    Label(Strings.accrualByDateNote(Strings.dayCount(availableForStartDate)), systemImage: "chart.line.uptrend.xyaxis")
+                        .font(.body)
+                        .foregroundStyle(AppTheme.Colors.brand)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
                 // 연간 한도가 있는 종류(이탈리아 permessi 의 monte ore)면 등록 후 남는 양 — 넘어도 막지는 않는다
                 if let note = allowanceNote {
                     Label(note.text, systemImage: note.isOver ? "exclamationmark.triangle.fill" : "gauge.with.dots.needle.33percent")

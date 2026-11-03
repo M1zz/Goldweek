@@ -110,6 +110,13 @@ struct SettingsView: View {
     /// 남은 연차 이월 상한(0 안 함, -1 전부)·사용 기한(개월) — LeaveUsageCalculator 와 같은 키
     @AppStorage("carryOverMaxDays") private var carryOverMaxDays = 0
     @AppStorage("carryOverExpiryMonths") private var carryOverExpiryMonths = 0
+    /// 연차 받는 방식 — 비면 1년치를 한 번에, 아니면 쌓이는 주기. LeaveUsageCalculator.accrual 과 같은 키
+    @AppStorage("accrualPeriod") private var accrualPeriodRaw = ""
+    @AppStorage("accrualAmount") private var accrualAmount = 0.0
+    @AppStorage("accrualIsHours") private var accrualIsHours = false
+    @AppStorage("accrualPayDay") private var accrualPayDay = Date().timeIntervalSinceReferenceDate
+    /// 올해 넘어온 연차를 직접 적은 값 — 비면 자동 계산
+    @State private var carryOverManual: Double? = nil
     /// 파트타임 매주 쉬는 요일 — HolidayService.partTimeDaysOffRaw 와 같은 키
     @AppStorage("partTimeDaysOff") private var partTimeDaysOffRaw = ""
     @State private var selectedLanguage: AppLanguage
@@ -165,6 +172,17 @@ struct SettingsView: View {
     }
 
     var committedLeave: Double { usage.annualCommitted }
+
+    private var currentFiscalYear: Int {
+        LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart)
+    }
+
+    /// 직접 적지 않았을 때 계산으로 넘어오는 연차 — 입력칸의 안내 글자
+    private var autoCarryOver: Double {
+        LeaveUsageCalculator.carryOverIn(year: currentFiscalYear, records: Array(leaveRecords),
+                                         annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStart,
+                                         usesManual: false)
+    }
 
     /// 아직 쓸 수 있는 보너스 (만료분 제외) — 홈 카드와 **같은 계산기**를 쓴다
     var activeBonusLeave: Double { usage.remainingBonus }
@@ -664,6 +682,45 @@ struct SettingsView: View {
                         .voCard("\(Strings.availableLeaveLabel) \(Strings.dayCount(totalAvailableLeave))")
                     }
 
+                    // 연차 받는 방식 — 1년치를 한 번에, 또는 급여일마다 조금씩 쌓임 (미국 사용자 피드백)
+                    if !isLeisure {
+                        Picker(Strings.accrualSetting, selection: $accrualPeriodRaw) {
+                            Text(Strings.accrualLumpSum).tag("")
+                            ForEach(LeaveUsageCalculator.Accrual.Period.allCases) { period in
+                                Text(Strings.accrualPeriodName(period)).tag(period.rawValue)
+                            }
+                        }
+                    }
+
+                    if !isLeisure, let accrual = LeaveUsageCalculator.accrual {
+                        HStack {
+                            Text(Strings.accrualAmount)
+                            Spacer()
+                            TextField("0", value: $accrualAmount, format: .number.precision(.fractionLength(0...2)))
+                                .keyboardType(.decimalPad)
+                                .multilineTextAlignment(.trailing)
+                                .frame(maxWidth: 80)
+                            Picker("", selection: $accrualIsHours) {
+                                Text(Strings.accrualUnitDays).tag(false)
+                                Text(Strings.accrualUnitHours).tag(true)
+                            }
+                            .labelsHidden()
+                            .fixedSize()
+                        }
+                        if accrual.period != .semimonthly {
+                            DatePicker(Strings.accrualPayDay, selection: Binding(
+                                get: { Date(timeIntervalSinceReferenceDate: accrualPayDay) },
+                                set: { accrualPayDay = $0.timeIntervalSinceReferenceDate }
+                            ), displayedComponents: .date)
+                        }
+                        LabeledContent(Strings.accrualEarnedSoFar,
+                                       value: Strings.dayCount(accrual.earned(year: LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart),
+                                                                              startMonth: profile.yearStart, through: Date())))
+                        LabeledContent(Strings.accrualYearTotal, value: Strings.dayCount(profile.totalAnnualLeave))
+                        Text(Strings.accrualFooter)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    } else {
                     HStack {
                         Text(isLeisure ? Strings.leisureAnnualGoal : Strings.totalLeave)
                         Spacer()
@@ -684,6 +741,7 @@ struct SettingsView: View {
                                 step: 1
                             )
                         }
+                    }
                     }
 
                     HStack {
@@ -748,6 +806,19 @@ struct SettingsView: View {
                                 }
                             }
                             .onChange(of: carryOverExpiryMonths) { _, _ in recommendationEngine.invalidateCache() }
+                        }
+                        // 올해 넘어온 연차 — 지난해 기록이 없어 계산할 수 없으면 직접 적는다. 비우면 자동
+                        HStack {
+                            Text(Strings.carryOverManualLabel)
+                            Spacer()
+                            TextField(Strings.carryOverManualAuto(Strings.dayCount(autoCarryOver)),
+                                      value: $carryOverManual, format: .number.precision(.fractionLength(0...2)))
+                                .keyboardType(.decimalPad)
+                                .multilineTextAlignment(.trailing)
+                        }
+                        .onChange(of: carryOverManual) { _, v in
+                            LeaveUsageCalculator.setCarryOverManual(v, year: currentFiscalYear)
+                            recommendationEngine.invalidateCache()
                         }
                         Text(Strings.carryOverFooter)
                             .font(.body)
@@ -1330,6 +1401,16 @@ struct SettingsView: View {
             // 자동 저장은 "곧" 저장할 뿐 그 시점을 보장하지 않는다 — 총 연차처럼 잔여 계산의
             // 근거가 되는 값은 바뀐 즉시 디스크에 있어야 한다(강제 종료·크래시 대비).
             .onChange(of: profile.totalAnnualLeave) { _, _ in persistProfile() }
+            // 쌓이는 연차 설정이 바뀌면 총 연차(연말까지 쌓일 양)를 다시 맞춘다
+            .onChange(of: "\(accrualPeriodRaw)|\(accrualAmount)|\(accrualIsHours)|\(accrualPayDay)|\(profile.yearStartMonth)|\(profile.yearStartDay)|\(workdayMinutes)", initial: true) { _, _ in
+                // 급여일을 안 고른 채 켜면 기본값(오늘)이 저장되지 않아 계산이 엉뚱한 날을 기준으로 돈다
+                if !accrualPeriodRaw.isEmpty, UserDefaults.standard.object(forKey: "accrualPayDay") == nil {
+                    accrualPayDay = Date().timeIntervalSinceReferenceDate
+                }
+                LeaveUsageCalculator.syncAccrualTotal(profile)
+                recommendationEngine.invalidateCache()
+            }
+            .onAppear { carryOverManual = LeaveUsageCalculator.carryOverManual(year: currentFiscalYear) }
             .onChange(of: profile.yearStartMonth) { _, month in
                 // 그 달에 없는 날이면 마지막 날로 (3월 31일 → 4월로 바꾸면 30일)
                 profile.yearStartDay = min(profile.yearStartDay, YearStart.selectableDays(inMonth: month))

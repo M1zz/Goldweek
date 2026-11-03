@@ -107,6 +107,7 @@ struct ContentView: View {
                            leaveRecords.contains(where: { $0.length == .hours }) {
                             LeaveLength.usesHourlyLeave = true
                         }
+                        LeaveUsageCalculator.syncAccrualTotal(profile)
                         updateWidget()
                         ReviewManager.shared.recordLaunch()
                         // 사람이 앱을 실제로 연 순간 — 실행 횟수·활동일·설치 스냅샷이 여기서 나간다.
@@ -125,6 +126,8 @@ struct ContentView: View {
                     .onChange(of: scenePhase) { _, newPhase in
                         if newPhase == .active {
                             LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
+                            // 쌓이는 연차: 해가 바뀌면 총 연차(그 해 끝까지 쌓일 양)를 새 해에 맞춘다
+                            LeaveUsageCalculator.syncAccrualTotal(profile)
                             updateWidget()
                             UsageReportingService.reportForegroundOpen(context: modelContext)
                             reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
@@ -390,17 +393,13 @@ struct ContentView: View {
         let year = cal.component(.year, from: today)
 
         // 가용 연차
-        let committed = leaveRecords
-            .filter { ($0.status == .used || $0.status == .planned) && $0.deductsFromAnnualLeave }
-            .reduce(0.0) { $0 + $1.effectiveLeaveDays }
         let bonus = bonusLeaves
             .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > Date()) }
             .reduce(0.0) { $0 + $1.remainingDays }
-        // 지난해에서 넘어온 연차도 쓸 수 있는 양에 든다
-        let carry = LeaveUsageCalculator.carryOverUsable(year: LeaveUsageCalculator.fiscalYear(for: today, startMonth: profile.yearStart),
-                                                         on: today, records: leaveRecords, annualGrant: profile.totalAnnualLeave,
-                                                         startMonth: profile.yearStart)
-        let available = Int((max(0, profile.totalAnnualLeave + carry - committed) + bonus).rounded(.down))
+        // 올해 쓸 수 있는 연차 (넘어온 연차 · 쌓이는 연차 포함) — 계산은 다른 화면과 같은 곳에서
+        let annual = LeaveUsageCalculator.availableAnnual(on: today, records: leaveRecords,
+                                                          annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStart)
+        let available = Int((annual + bonus).rounded(.down))
         guard available >= 1 else { return nil }
 
         let holidays = HolidayService().getHolidays(for: year, country: profile.country).map { $0.date }
