@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02C3DC49A66860B13B6126FF /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 54AFE1A202355C31964C529E /* AppShortcuts.xcstrings */; };
 		10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */; };
 		13C98A5D19B0235F1B8C04E8 /* Strings+Maturity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD901DC2F5444B40010EE450 /* Strings+Maturity.swift */; };
 		1F30894D9E1BC580DD2EC7F1 /* FoldPanes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BD92084C0B9068BED80207 /* FoldPanes.swift */; };
@@ -22,6 +23,7 @@
 		7742C50334E3AD7E821C6C62 /* LaunchSafety.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894561BA0757CA4397D4F482 /* LaunchSafety.swift */; };
 		7BC4167236E5FF0979D0BFFC /* Strings+PartTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */; };
 		7CE684CE43F66CEBB9E32BA0 /* ProBenefitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5188D6069DFBC27D689B2866 /* ProBenefitsView.swift */; };
+		822C36ACF4633F97AA71D066 /* GoldweekIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B652F693B74D9614C6A46C4 /* GoldweekIntents.swift */; };
 		9C2035682F29933E00AF1279 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9C2035672F29933E00AF1279 /* Localizable.xcstrings */; };
 		9C5397B92F4E825600905CF0 /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5397B82F4E825600905CF0 /* ReviewManager.swift */; };
 		9C61C0042EDD629400BC5930 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C61C0032EDD629400BC5930 /* WidgetKit.framework */; };
@@ -71,7 +73,6 @@
 		A1000058 /* PhotoImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000058 /* PhotoImportService.swift */; };
 		A1000059 /* PhotoImportSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000059 /* PhotoImportSheet.swift */; };
 		A1000060 /* BurnoutEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000060 /* BurnoutEngine.swift */; };
-		C1D0A11E5E1D4A7B9F000001 /* HolidayOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D0A11E5E1D4A7B9F000002 /* HolidayOverrides.swift */; };
 		A1000061 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000061 /* NotificationService.swift */; };
 		A1000062 /* BurnoutEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000062 /* BurnoutEngineTests.swift */; };
 		A1000063 /* LeaveTableParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000063 /* LeaveTableParserTests.swift */; };
@@ -90,6 +91,7 @@
 		B1000020 /* LeaveUsageCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000020 /* LeaveUsageCalculator.swift */; };
 		B1000021 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000021 /* TutorialView.swift */; };
 		BF28326CF828E830D60A580A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F0004AF8483A83DDDF01B5 /* Foundation.framework */; };
+		C1D0A11E5E1D4A7B9F000001 /* HolidayOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D0A11E5E1D4A7B9F000002 /* HolidayOverrides.swift */; };
 		EFCC106F139C9439F277D6BF /* Strings+LeaveCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */; };
 		F0AB849B5E6EB9CF20DDE9A3 /* Strings+PlanAhead.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */; };
 		FA11A0012F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */; };
@@ -141,9 +143,11 @@
 		0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+LeaveCustomization.swift"; sourceTree = "<group>"; };
 		3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+PartTime.swift"; sourceTree = "<group>"; };
 		47F0004AF8483A83DDDF01B5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		4B652F693B74D9614C6A46C4 /* GoldweekIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoldweekIntents.swift; sourceTree = "<group>"; };
 		4CCC8937F7C1DA7BA2C27AC0 /* WhatsNewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
 		4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+CountryRequest.swift"; sourceTree = "<group>"; };
 		5188D6069DFBC27D689B2866 /* ProBenefitsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProBenefitsView.swift; sourceTree = "<group>"; };
+		54AFE1A202355C31964C529E /* AppShortcuts.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = AppShortcuts.xcstrings; sourceTree = "<group>"; };
 		584ABA642F211E0C008AD1DB /* Goldweek.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Goldweek.entitlements; sourceTree = "<group>"; };
 		584ABA652F211E1E008AD1DB /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
 		5905F2D583D5738917370D03 /* MaturityFeatureTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MaturityFeatureTests.swift; sourceTree = "<group>"; };
@@ -201,7 +205,6 @@
 		A2000058 /* PhotoImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoImportService.swift; sourceTree = "<group>"; };
 		A2000059 /* PhotoImportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoImportSheet.swift; sourceTree = "<group>"; };
 		A2000060 /* BurnoutEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngine.swift; sourceTree = "<group>"; };
-		C1D0A11E5E1D4A7B9F000002 /* HolidayOverrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayOverrides.swift; sourceTree = "<group>"; };
 		A2000061 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		A2000062 /* BurnoutEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurnoutEngineTests.swift; sourceTree = "<group>"; };
 		A2000063 /* LeaveTableParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveTableParserTests.swift; sourceTree = "<group>"; };
@@ -220,6 +223,7 @@
 		B2000021 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		B2000030 /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
 		B8BD92084C0B9068BED80207 /* FoldPanes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FoldPanes.swift; sourceTree = "<group>"; };
+		C1D0A11E5E1D4A7B9F000002 /* HolidayOverrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayOverrides.swift; sourceTree = "<group>"; };
 		D79243653112DBACB8C8953B /* LeaveKinds.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LeaveKinds.swift; sourceTree = "<group>"; };
 		DA3B5BBD68F2C9CD75F7A10A /* LeaveKindsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LeaveKindsView.swift; sourceTree = "<group>"; };
 		E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarOverview.swift; sourceTree = "<group>"; };
@@ -321,6 +325,7 @@
 				9C61C0022EDD629400BC5930 /* Frameworks */,
 				A4000002 /* Products */,
 				FC75AD399E5271075A9EFD84 /* GoldweekUITests */,
+				54AFE1A202355C31964C529E /* AppShortcuts.xcstrings */,
 			);
 			sourceTree = "<group>";
 		};
@@ -433,6 +438,7 @@
 				FC7E7019BF358938CD858EB3 /* GoldweekRoadmap.swift */,
 				5E9D82AEBA902FD3CECB22C6 /* ProBenefits.swift */,
 				894561BA0757CA4397D4F482 /* LaunchSafety.swift */,
+				4B652F693B74D9614C6A46C4 /* GoldweekIntents.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -636,6 +642,7 @@
 				A1000003 /* Assets.xcassets in Resources */,
 				A1000040 /* InfoPlist.xcstrings in Resources */,
 				75040D99ADBCBD0CCCA466AB /* PrivacyInfo.xcprivacy in Resources */,
+				02C3DC49A66860B13B6126FF /* AppShortcuts.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -748,6 +755,7 @@
 				7CE684CE43F66CEBB9E32BA0 /* ProBenefitsView.swift in Sources */,
 				4A9A7B42ACEB11E2088E3326 /* WhatsNewView.swift in Sources */,
 				13C98A5D19B0235F1B8C04E8 /* Strings+Maturity.swift in Sources */,
+				822C36ACF4633F97AA71D066 /* GoldweekIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

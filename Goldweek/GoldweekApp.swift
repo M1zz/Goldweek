@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import AppIntents
 import CloudKit
 import UIKit
 import TipKit
@@ -71,6 +72,9 @@ struct GoldweekApp: App {
 
         sharedModelContainer = AppSignpost.measure("ModelContainer") { Self.createModelContainer(schema: schema) }
         Self.sharedContainerForBackup = sharedModelContainer
+        // Siri · 단축어가 같은 저장소를 읽게 한다 (→ Services/GoldweekIntents.swift)
+        let container = sharedModelContainer
+        AppDependencyManager.shared.add(dependency: container)
         ScreenshotMode.seed(container: sharedModelContainer)
 
         // 기능 팁 (TipKit) — 하루 1개씩 노출, 기능 사용 시 각 팁이 invalidate 됨
