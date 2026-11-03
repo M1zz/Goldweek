@@ -20,8 +20,10 @@ struct TutorialView: View {
     @State private var currentPage = 0
 
     /// 한 페이지 = 기능 하나. 순서는 사람이 실제로 밟는 순서다(등록 → 가져오기 → 추천 → 보너스 → 공유 → 위젯).
+    /// id 는 그림 이름으로 고정한다 — `pages` 는 그릴 때마다 새로 만들어지므로 UUID() 를 쓰면
+    /// 페이지를 넘길 때마다 모든 페이지가 새 것으로 바뀌어 미끄러지는 애니메이션 없이 휙 넘어간다.
     private struct Page: Identifiable {
-        let id = UUID()
+        var id: String { icon }
         let icon: String
         let tint: Color
         let title: String
@@ -74,7 +76,7 @@ struct TutorialView: View {
 
                 Button {
                     if currentPage < pages.count - 1 {
-                        withAnimation { currentPage += 1 }
+                        withAnimation(.smooth(duration: 0.45)) { currentPage += 1 }
                     } else {
                         dismiss()
                     }

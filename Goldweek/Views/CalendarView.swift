@@ -447,7 +447,8 @@ struct CalendarView: View {
                 Text(Strings.saveFailed)
             }
             .sheet(isPresented: $showingAddLeave) {
-                AddLeaveView(profile: profile, initialDate: addLeaveDate ?? selectedDate)
+                // 달력에서 바로 고르고 저장 — 반차 · 종류 · 메모는 그 안에서 원래 양식으로
+                QuickAddLeaveSheet(profile: profile, initialDate: addLeaveDate ?? selectedDate)
                     .onDisappear { addLeaveDate = nil }
             }
             .sheet(isPresented: $showingPhotoImport, onDismiss: finishEasyEntry) {

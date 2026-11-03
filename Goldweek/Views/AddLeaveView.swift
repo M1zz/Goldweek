@@ -12,6 +12,8 @@ import StoreKit   // @Environment(\.requestReview) 의 RequestReviewAction
 struct AddLeaveView: View {
     @Bindable var profile: UserProfile
     var initialDate: Date? = nil
+    /// 빠른 넣기에서 고른 끝나는 날 — "반차 · 종류 · 메모"로 넘어올 때 기간을 그대로 잇는다
+    var initialEndDate: Date? = nil
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \LeaveRecord.startDate, order: .reverse) private var leaveRecords: [LeaveRecord]
@@ -80,7 +82,8 @@ struct AddLeaveView: View {
                         profile: profile,
                         totalAvailableLeave: totalAvailableLeave,
                         leaveRecords: Array(leaveRecords.prefix(5)),
-                        initialDate: initialDate
+                        initialDate: initialDate,
+                        initialEndDate: initialEndDate
                     )
                 } else {
                     BonusLeaveView(bonusLeaves: bonusLeaves)
@@ -286,9 +289,12 @@ struct LeaveRegistrationView: View {
     let totalAvailableLeave: Double
     let leaveRecords: [LeaveRecord]
     var initialDate: Date? = nil
+    var initialEndDate: Date? = nil
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.requestReview) private var requestReview
+    /// 처음 열 때 시작일을 바꾸면 아래 onChange 가 끝나는 날을 길이만큼 옮긴다 — 그때 받은 끝나는 날을 쓴다
+    @State private var pendingInitialEnd: Date?
 
     @Query private var allLeaveRecords: [LeaveRecord]
 
@@ -808,6 +814,11 @@ struct LeaveRegistrationView: View {
         }
         .onChange(of: startDate) { oldStart, newStart in
             let calendar = Calendar.app
+            if let end = pendingInitialEnd {
+                pendingInitialEnd = nil
+                endDate = max(end, newStart)
+                return
+            }
             if length != .full {
                 endDate = newStart
             } else {
@@ -822,8 +833,10 @@ struct LeaveRegistrationView: View {
         }
         .onAppear {
             if let date = initialDate {
+                let end = max(initialEndDate ?? date, date)
+                if startDate != date { pendingInitialEnd = end }
                 startDate = date
-                endDate = date
+                endDate = end
             }
         }
         .alert(Strings.alert, isPresented: $showingAlert) {
@@ -1642,4 +1655,517 @@ struct LeaveRecordRow: View {
     @Previewable @State var profile = UserProfile(name: "Test", yearStartMonth: 1, totalAnnualLeave: 15, usedLeave: 5)
 
     AddLeaveView(profile: profile)
+}
+
+// MARK: - 빠른 휴가 넣기
+//
+// 시트 양식 대신 달력 하나로 — 시작일과 끝나는 날을 누르면 "연차 2일 → 5일 쉼"이 바로 보이고,
+// 하루만 더 쓰면 연휴가 이어질 때만 한 번 제안한다. 반차 · 종류 · 메모는 원래 양식(`AddLeaveView`)으로 넘긴다.
+// 레퍼런스: Airbnb 날짜 고르기(두 번 눌러 기간), Google Flights 날짜 색(효율), 항공권 앱의 "하루 일찍" 넛지.
+
+struct QuickAddLeaveSheet: View {
+    @Bindable var profile: UserProfile
+    let initialDate: Date
+
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @Query private var allLeaveRecords: [LeaveRecord]
+    @Query(filter: #Predicate<BonusLeave> { $0.isUsed == false })
+    private var unusedBonusLeaves: [BonusLeave]
+    @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
+
+    @State private var month = Date()
+    @State private var start = Date()
+    @State private var end = Date()
+    @State private var didSetUp = false
+    @State private var saved: Saved?
+    @State private var shownRemaining: Double = 0
+    @State private var showingFullForm = false
+    @State private var recordCountBeforeFullForm = 0
+    @State private var showingSaveError = false
+
+    private let calendar = Calendar.app
+    private var dayOff: DayOffCalendar { .shared }
+    private var isLeisure: Bool { profile.userType == .leisure }
+
+    struct Saved: Equatable {
+        let start: Date
+        let rest: Int
+        let leave: Double
+        let remainingAfter: Double
+    }
+
+    struct Block { let start: Date; let end: Date; var days: Int }
+
+    // MARK: 계산
+
+    private func day(_ d: Date, _ n: Int) -> Date {
+        calendar.date(byAdding: .day, value: n, to: d) ?? d
+    }
+
+    /// 이미 넣어 둔 종일 휴가 날 — 연휴를 이을 때 쉬는 날로 본다
+    private var existingLeaveDays: Set<Date> {
+        var set = Set<Date>()
+        for r in allLeaveRecords where r.status != .cancelled && r.length == .full {
+            var d = calendar.startOfDay(for: r.startDate)
+            let last = calendar.startOfDay(for: r.endDate)
+            var guardCount = 0
+            while d <= last && guardCount < 400 {
+                set.insert(d); d = day(d, 1); guardCount += 1
+            }
+        }
+        return set
+    }
+
+    private func isOff(_ d: Date, leave: Set<Date>) -> Bool {
+        dayOff.isDayOff(d) || leave.contains(calendar.startOfDay(for: d))
+    }
+
+    /// 고른 기간 앞뒤로 쉬는 날을 이어 붙인 덩어리
+    private func block(from s: Date, to e: Date, leave: Set<Date>) -> Block {
+        var a = calendar.startOfDay(for: s)
+        var b = calendar.startOfDay(for: e)
+        var n = 0
+        while isOff(day(a, -1), leave: leave) && n < 60 { a = day(a, -1); n += 1 }
+        n = 0
+        while isOff(day(b, 1), leave: leave) && n < 60 { b = day(b, 1); n += 1 }
+        let days = (calendar.dateComponents([.day], from: a, to: b).day ?? 0) + 1
+        return Block(start: a, end: b, days: days)
+    }
+
+    private var leaveDays: Double { Double(dayOff.workdays(from: start, to: end)) }
+
+    private var available: Double {
+        LeaveUsageCalculator.availableAnnual(on: start, records: Array(allLeaveRecords),
+                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStartMonth)
+    }
+
+    private var canSave: Bool {
+        leaveDays > 0 && (isLeisure || leaveDays <= available)
+    }
+
+    /// 하루만 더 쓰면 주말 · 공휴일이 이어져 연휴가 3일 이상 길어질 때만
+    private func magnet(leave: Set<Date>) -> (start: Date, end: Date, day: Date, block: Block)? {
+        let current = block(from: start, to: end, leave: leave)
+        if !isLeisure && leaveDays + 1 > available { return nil }
+        var best: (start: Date, end: Date, day: Date, block: Block)?
+        for candidate in [day(current.start, -1), day(current.end, 1)] {
+            let s = min(start, candidate), e = max(end, candidate)
+            let b = block(from: s, to: e, leave: leave)
+            if b.days - current.days >= 3, b.days > (best?.block.days ?? 0) {
+                best = (s, e, candidate, b)
+            }
+        }
+        return best
+    }
+
+    private var blockedWarning: String? {
+        guard dayOff.hasLeaveRestrictions else { return nil }
+        var d = calendar.startOfDay(for: start)
+        let last = calendar.startOfDay(for: end)
+        var near = false
+        while d <= last {
+            if !dayOff.isDayOff(d) {
+                if let name = dayOff.blackoutPeriodName(on: d) { return Strings.blackoutPeriodWarning(name) }
+                if dayOff.isLeaveBlocked(d) { near = true }
+            }
+            d = day(d, 1)
+        }
+        return near ? Strings.blackoutWarning : nil
+    }
+
+    // MARK: 화면
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                if let saved {
+                    savedView(saved)
+                        .transition(.opacity.combined(with: .scale(scale: 0.96)))
+                } else {
+                    pickView
+                }
+            }
+            .background(Color(.systemGroupedBackground))
+            .navigationTitle(Strings.registerLeave)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(Strings.close) { dismiss() }
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                if saved == nil { saveBar }
+            }
+        }
+        .onAppear {
+            guard !didSetUp else { return }
+            didSetUp = true
+            let d = calendar.startOfDay(for: initialDate)
+            start = d; end = d
+            month = calendar.date(from: calendar.dateComponents([.year, .month], from: d)) ?? d
+        }
+        .sheet(isPresented: $showingFullForm, onDismiss: {
+            // 원래 양식에서 넣었으면 이 화면도 닫는다 — 그냥 닫았으면 고르던 그대로 둔다
+            if allLeaveRecords.count > recordCountBeforeFullForm { dismiss() }
+        }) {
+            AddLeaveView(profile: profile, initialDate: start, initialEndDate: end)
+        }
+        .alert(Strings.alert, isPresented: $showingSaveError) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(Strings.saveFailed)
+        }
+    }
+
+    private var pickView: some View {
+        let leave = existingLeaveDays
+        let current = block(from: start, to: end, leave: leave)
+        let mag = magnet(leave: leave)
+        let single = calendar.isDate(start, inSameDayAs: end)
+        return VStack(alignment: .leading, spacing: 16) {
+            // 요약 — 고르는 대로 바로 바뀐다
+            VStack(alignment: .leading, spacing: 4) {
+                Text(leaveDays > 0 ? Strings.quickAddSummary(leave: leaveDays, rest: current.days)
+                                   : Strings.quickAddNoLeaveNeeded)
+                    .font(.title2.bold())
+                    .contentTransition(.numericText())
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(verbatim: "\(current.start.appMonthDay) – \(current.end.appMonthDay)")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+            }
+            .accessibilityElement(children: .combine)
+            .animation(.snappy, value: current.days)
+
+            QuickAddMonthGrid(
+                month: $month,
+                start: start, end: end,
+                restBlock: (current.start, current.end),
+                ghost: mag.map { ($0.block.start, $0.block.end) },
+                showsHeat: single,
+                firstWeekday: HolidayService.firstWeekday(for: dayOff.country, override: firstWeekdayRaw),
+                isOff: { isOff($0, leave: leave) },
+                heatDays: { block(from: $0, to: $0, leave: leave).days },
+                onTap: pick
+            )
+            .padding()
+            .cardSurface()
+
+            if single {
+                Text(Strings.quickAddHint)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            // 하루만 더 쓰면 연휴가 이어질 때 — 한 번에 하나만
+            if let mag {
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(Strings.quickAddMagnet(rest: mag.block.days))
+                            .font(.body.bold())
+                        Text(verbatim: mag.day.appFormatted(date: .full))
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 8)
+                    Button(Strings.quickAddAttach) {
+                        withAnimation(.snappy) { start = mag.start; end = mag.end }
+                        HapticFeedback.success()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.Colors.gold)
+                }
+                .padding()
+                .background(AppTheme.Colors.gold.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
+                .overlay(RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(AppTheme.Colors.gold, style: StrokeStyle(lineWidth: 1.5, dash: [5, 4])))
+                .accessibilityElement(children: .combine)
+                .transition(.opacity.combined(with: .move(edge: .bottom)))
+            }
+
+            // 문제가 있을 때만 한 줄
+            if leaveDays > 0, !isLeisure, leaveDays > available {
+                Label(Strings.insufficientLeave, systemImage: "exclamationmark.circle.fill")
+                    .font(.body)
+                    .foregroundStyle(.orange)
+            } else if let warning = blockedWarning {
+                Label(warning, systemImage: "exclamationmark.triangle.fill")
+                    .font(.body)
+                    .foregroundStyle(.orange)
+                    .fixedSize(horizontal: false, vertical: true)
+            } else if start < calendar.startOfDay(for: Date()) {
+                Label(Strings.pastLeaveAutoUsed, systemImage: "checkmark.circle.fill")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding()
+        .animation(.snappy, value: mag?.day)
+    }
+
+    private var saveBar: some View {
+        HStack(spacing: 12) {
+            Button {
+                recordCountBeforeFullForm = allLeaveRecords.count
+                showingFullForm = true
+            } label: {
+                Text(Strings.quickAddMoreOptions)
+                    .font(.body)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+            }
+            .buttonStyle(.bordered)
+
+            Button(action: save) {
+                Text(Strings.save)
+                    .font(.body.bold())
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(!canSave)
+        }
+        .controlSize(.large)
+        .padding()
+        .background(.bar)
+    }
+
+    private func savedView(_ s: Saved) -> some View {
+        let today = calendar.startOfDay(for: Date())
+        let dday = calendar.dateComponents([.day], from: today, to: s.start).day ?? 0
+        return VStack(spacing: 16) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 56))
+                .foregroundStyle(AppTheme.Colors.gold)
+                .symbolEffect(.bounce, value: saved)
+                .voDecorative()
+            if dday >= 0 {
+                Text(verbatim: dday == 0 ? "D-Day" : "D-\(dday)")
+                    .font(.system(.largeTitle, design: .rounded, weight: .black))
+                    .foregroundStyle(AppTheme.Colors.gold)
+            }
+            Text(Strings.quickAddRestDays(s.rest))
+                .font(.title2.bold())
+            Text(verbatim: s.start.appFormatted(date: .full))
+                .font(.body)
+                .foregroundStyle(.secondary)
+            if !isLeisure {
+                Text(Strings.quickAddRemaining(shownRemaining))
+                    .font(.title3.bold())
+                    .monospacedDigit()
+                    .contentTransition(.numericText(value: shownRemaining))
+                    .foregroundStyle(AppTheme.Colors.brand)
+            }
+            Button {
+                dismiss()
+            } label: {
+                Text(Strings.confirm).font(.body.bold()).frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+            .padding(.top, 8)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(24)
+        .cardSurface()
+        .padding()
+        .accessibilityElement(children: .combine)
+    }
+
+    // MARK: 동작
+
+    /// 하루만 골라 둔 상태에서 뒤의 날을 누르면 기간, 그 밖에는 그 날 하루로 새로 고른다
+    private func pick(_ d: Date) {
+        let d = calendar.startOfDay(for: d)
+        withAnimation(.snappy) {
+            if calendar.isDate(start, inSameDayAs: end), d > start {
+                end = d
+            } else {
+                start = d; end = d
+            }
+        }
+        HapticFeedback.selection()
+    }
+
+    private func save() {
+        guard canSave else { return }
+        let leave = existingLeaveDays
+        let rest = block(from: start, to: end, leave: leave).days
+        let before = available
+        let used = leaveDays
+        let today = calendar.startOfDay(for: Date())
+        let record = LeaveRecord(
+            startDate: calendar.startOfDay(for: start),
+            endDate: calendar.startOfDay(for: end),
+            type: .annual,
+            status: start < today ? .used : .planned,
+            length: .full
+        )
+        modelContext.insert(record)
+        do {
+            try modelContext.save()
+            let records = allLeaveRecords.filter { $0.id != record.id } + [record]
+            if BonusLeaveReconciler.reconcile(records: records, bonuses: unusedBonusLeaves) {
+                try? modelContext.save()
+            }
+        } catch {
+            modelContext.delete(record)
+            HapticFeedback.error()
+            showingSaveError = true
+            return
+        }
+        HapticFeedback.success()
+        UsageReportingService.record(event: "leave_added:\(LeaveType.annual.rawValue)")
+        UsageReportingService.record(event: "leave_added_quick")
+        ReviewManager.shared.recordLeaveRegistration()
+
+        // 남은 연차가 굴러가며 줄어든다
+        shownRemaining = before
+        withAnimation(.snappy) {
+            saved = Saved(start: block(from: start, to: end, leave: leave).start, rest: rest,
+                          leave: used, remainingAfter: before - used)
+        }
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(350))
+            withAnimation(.smooth(duration: 0.6)) { shownRemaining = before - used }
+        }
+    }
+}
+
+/// 빠른 넣기 달력 — 고른 기간, 이어지는 쉬는 날, 자석 제안 칸, 하루 고른 동안의 효율 색
+private struct QuickAddMonthGrid: View {
+    @Binding var month: Date
+    let start: Date
+    let end: Date
+    let restBlock: (Date, Date)
+    let ghost: (Date, Date)?
+    let showsHeat: Bool
+    let firstWeekday: Int
+    let isOff: (Date) -> Bool
+    let heatDays: (Date) -> Int
+    let onTap: (Date) -> Void
+
+    private let calendar = Calendar.app
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
+
+    private var days: [Date?] {
+        guard let range = calendar.range(of: .day, in: .month, for: month),
+              let first = calendar.date(from: calendar.dateComponents([.year, .month], from: month)) else { return [] }
+        let blanks = (calendar.component(.weekday, from: first) - firstWeekday + 7) % 7
+        var result: [Date?] = Array(repeating: nil, count: blanks)
+        for n in range { result.append(calendar.date(byAdding: .day, value: n - 1, to: first)) }
+        while result.count % 7 != 0 { result.append(nil) }
+        return result
+    }
+
+    private var weekdays: [Int] { (0..<7).map { (firstWeekday - 1 + $0) % 7 + 1 } }
+
+    private func within(_ d: Date, _ r: (Date, Date)) -> Bool {
+        let s = calendar.startOfDay(for: d)
+        return s >= calendar.startOfDay(for: r.0) && s <= calendar.startOfDay(for: r.1)
+    }
+
+    private func shiftMonth(_ n: Int) {
+        withAnimation(.snappy) {
+            month = calendar.date(byAdding: .month, value: n, to: month) ?? month
+        }
+        HapticFeedback.selection()
+    }
+
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack {
+                Button { shiftMonth(-1) } label: {
+                    Image(systemName: "chevron.left").font(.body.bold()).frame(width: 44, height: 44)
+                }
+                .accessibilityLabel(Text(Strings.previousMonth))
+                Spacer()
+                Text(verbatim: Strings.monthYearFormat(year: calendar.component(.year, from: month), month: calendar.component(.month, from: month)))
+                    .font(.headline)
+                Spacer()
+                Button { shiftMonth(1) } label: {
+                    Image(systemName: "chevron.right").font(.body.bold()).frame(width: 44, height: 44)
+                }
+                .accessibilityLabel(Text(Strings.nextMonth))
+            }
+
+            HStack(spacing: 0) {
+                ForEach(weekdays, id: \.self) { w in
+                    Text(Strings.weekdays[w - 1])
+                        .font(.body.bold())
+                        .foregroundStyle(w == 1 ? AppTheme.Colors.holiday : w == 7 ? AppTheme.Colors.brand : .secondary)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+            .accessibilityHidden(true)
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 7), spacing: 4) {
+                ForEach(Array(days.enumerated()), id: \.offset) { _, date in
+                    if let date {
+                        cell(date)
+                    } else {
+                        Color.clear.frame(height: 44).accessibilityHidden(true)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func cell(_ date: Date) -> some View {
+        let off = isOff(date)
+        let selected = within(date, (start, end))
+        let isLeave = selected && !off
+        let inRest = within(date, restBlock)
+        let inGhost = ghost.map { within(date, $0) && !inRest } ?? false
+        let heat = (showsHeat && !off && !selected) ? heatDays(date) : 0
+        let weekday = calendar.component(.weekday, from: date)
+
+        Button { onTap(date) } label: {
+            ZStack {
+                // 이어지는 쉬는 날 띠
+                if inRest {
+                    Rectangle().fill(AppTheme.Colors.brand.opacity(0.14))
+                } else if heat >= 4 {
+                    RoundedRectangle(cornerRadius: 10).fill(AppTheme.Colors.gold.opacity(0.45)).padding(2)
+                } else if heat == 3 {
+                    RoundedRectangle(cornerRadius: 10).fill(AppTheme.Colors.gold.opacity(0.2)).padding(2)
+                }
+                if isLeave {
+                    Circle().fill(AppTheme.Colors.brand).padding(3)
+                }
+                if inGhost {
+                    RoundedRectangle(cornerRadius: 10)
+                        .strokeBorder(AppTheme.Colors.gold, style: StrokeStyle(lineWidth: 2, dash: [4, 3]))
+                        .padding(2)
+                }
+                Text(verbatim: "\(calendar.component(.day, from: date))")
+                    .font(.body.weight(isLeave ? .bold : .regular))
+                    .monospacedDigit()
+                    .underline(differentiateWithoutColor && off && weekday != 1 && weekday != 7)
+                    .foregroundStyle(isLeave ? Color.white
+                                     : off ? (weekday == 7 ? AppTheme.Colors.brand : AppTheme.Colors.holiday)
+                                     : Color.primary)
+                if calendar.isDateInToday(date) && !isLeave {
+                    Circle().strokeBorder(Color.primary.opacity(0.35), lineWidth: 1).padding(5)
+                }
+            }
+            .frame(height: 44)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(verbatim: date.appFormatted(date: .full)))
+        .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+}
+
+/// 골드위크의 금색 — 연휴 · 효율 색 · 자석 제안
+private extension AppTheme.Colors {
+    static var gold: Color {
+        Color(light: Color(red: 0.85, green: 0.6, blue: 0.0),
+              dark: Color(red: 1.0, green: 0.76, blue: 0.2))
+    }
 }

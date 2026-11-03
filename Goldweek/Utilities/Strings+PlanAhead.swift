@@ -335,3 +335,243 @@ extension Strings {
 
     static var photoPrivacy: String { pick([.korean: "사진은 이 기기 안에서만 읽고 어디로도 보내지 않아요", .english: "Photos are read only on this device and never sent anywhere", .japanese: "写真はこの端末の中だけで読み取り、どこにも送信しません", .chinese: "照片只在本机内识别，不会发送到任何地方", .german: "Fotos werden nur auf diesem Gerät gelesen und nirgendwohin gesendet", .french: "Les photos sont lues uniquement sur cet appareil et ne sont envoyées nulle part", .spanish: "Las fotos se leen solo en este dispositivo y no se envían a ningún sitio", .italian: "Le foto vengono lette solo su questo dispositivo e non inviate altrove", .portuguese: "As fotos são lidas só neste aparelho e não são enviadas a lugar nenhum", .chineseTraditional: "照片只在本機內辨識，不會傳送到任何地方", .dutch: "Foto’s worden alleen op dit apparaat gelezen en nergens heen gestuurd", .swedish: "Bilder läses bara på den här enheten och skickas ingenstans", .norwegian: "Bilder leses bare på denne enheten og sendes ingen steder", .danish: "Billeder læses kun på denne enhed og sendes ingen steder hen", .finnish: "Kuvat luetaan vain tällä laitteella eikä niitä lähetetä minnekään", .polish: "Zdjęcia są odczytywane tylko na tym urządzeniu i nigdzie nie są wysyłane", .czech: "Fotky se čtou jen v tomto zařízení a nikam se neposílají", .greek: "Οι φωτογραφίες διαβάζονται μόνο σε αυτή τη συσκευή και δεν στέλνονται πουθενά", .turkish: "Fotoğraflar yalnızca bu cihazda okunur, hiçbir yere gönderilmez", .russian: "Фото распознаются только на этом устройстве и никуда не отправляются", .indonesian: "Foto hanya dibaca di perangkat ini dan tidak dikirim ke mana pun", .thai: "อ่านรูปภาพในเครื่องนี้เท่านั้น ไม่ส่งไปที่ใด", .vietnamese: "Ảnh chỉ được đọc trên thiết bị này và không gửi đi đâu cả"]) }
 }
+
+// MARK: - 빠른 휴가 넣기 (달력에서 고르고 바로 저장)
+
+extension Strings {
+    private static var quickLang: AppLanguage { LanguageManager.shared.currentLanguage }
+
+    /// 고른 기간 요약 — "연차 2일 → 5일 쉼"
+    static func quickAddSummary(leave: Double, rest: Int) -> String {
+        let d = dayCount(leave)
+        switch quickLang {
+        case .korean: return "연차 \(d) → \(rest)일 쉼"
+        case .english: return "\(d) of leave → \(rest) days off"
+        case .japanese: return "休暇\(d) → \(rest)日休み"
+        case .chinese: return "用\(d)年假 → 连休\(rest)天"
+        case .german: return "\(d) Urlaub → \(rest) Tage frei"
+        case .french: return "\(d) de congé → \(rest) jours de repos"
+        case .spanish: return "\(d) de vacaciones → \(rest) días libres"
+        case .italian: return "\(d) di ferie → \(rest) giorni liberi"
+        case .portuguese: return "\(d) de folga → \(rest) dias de descanso"
+        case .chineseTraditional: return "用\(d)特休 → 連休\(rest)天"
+        case .dutch: return "\(d) verlof → \(rest) dagen vrij"
+        case .swedish: return "\(d) semester → \(rest) dagar ledigt"
+        case .norwegian: return "\(d) ferie → \(rest) dager fri"
+        case .danish: return "\(d) ferie → \(rest) dage fri"
+        case .finnish: return "\(d) lomaa → \(rest) päivää vapaata"
+        case .polish: return "\(d) urlopu → \(rest) dni wolnego"
+        case .czech: return "\(d) dovolené → \(rest) dní volna"
+        case .greek: return "\(d) άδεια → \(rest) ημέρες ελεύθερες"
+        case .turkish: return "\(d) izin → \(rest) gün tatil"
+        case .russian: return "\(d) отпуска → \(rest) дн. отдыха"
+        case .indonesian: return "Cuti \(d) → libur \(rest) hari"
+        case .thai: return "ลา \(d) → หยุด \(rest) วัน"
+        case .vietnamese: return "Nghỉ phép \(d) → được nghỉ \(rest) ngày"
+        }
+    }
+
+    /// 고른 날이 모두 쉬는 날일 때
+    static var quickAddNoLeaveNeeded: String {
+        switch quickLang {
+        case .korean: return "모두 쉬는 날이라 연차가 들지 않아요"
+        case .english: return "These are all days off, so no leave is needed"
+        case .japanese: return "すべて休みの日なので休暇は要りません"
+        case .chinese: return "都是休息日，不用请年假"
+        case .german: return "Das sind alles freie Tage, du brauchst keinen Urlaub"
+        case .french: return "Ce sont tous des jours de repos, aucun congé nécessaire"
+        case .spanish: return "Todos son días libres, no necesitas vacaciones"
+        case .italian: return "Sono tutti giorni liberi, non servono ferie"
+        case .portuguese: return "Todos são dias de folga, não precisa usar férias"
+        case .chineseTraditional: return "都是休息日，不用請特休"
+        case .dutch: return "Dit zijn allemaal vrije dagen, je hebt geen verlof nodig"
+        case .swedish: return "Alla är lediga dagar, du behöver ingen semester"
+        case .norwegian: return "Alle er fridager, du trenger ikke ferie"
+        case .danish: return "Alle er fridage, du behøver ikke ferie"
+        case .finnish: return "Kaikki ovat vapaapäiviä, lomaa ei tarvita"
+        case .polish: return "To same dni wolne, urlop nie jest potrzebny"
+        case .czech: return "Všechno jsou volné dny, dovolená není potřeba"
+        case .greek: return "Είναι όλες ελεύθερες ημέρες, δεν χρειάζεται άδεια"
+        case .turkish: return "Hepsi tatil günü, izin gerekmiyor"
+        case .russian: return "Это все выходные, отпуск не нужен"
+        case .indonesian: return "Semuanya hari libur, tidak perlu cuti"
+        case .thai: return "เป็นวันหยุดทั้งหมด ไม่ต้องใช้วันลา"
+        case .vietnamese: return "Đều là ngày nghỉ, không cần dùng phép"
+        }
+    }
+
+    /// 하루만 더 쓰면 연휴가 이어질 때 — "하루만 더 쓰면 9연휴"
+    static func quickAddMagnet(rest: Int) -> String {
+        switch quickLang {
+        case .korean: return "하루만 더 쓰면 \(rest)연휴"
+        case .english: return "One more day makes it \(rest) days off"
+        case .japanese: return "あと1日で\(rest)連休"
+        case .chinese: return "再请一天就是\(rest)连休"
+        case .german: return "Ein Tag mehr ergibt \(rest) freie Tage"
+        case .french: return "Un jour de plus et c'est \(rest) jours de repos"
+        case .spanish: return "Un día más y son \(rest) días libres"
+        case .italian: return "Un giorno in più e sono \(rest) giorni liberi"
+        case .portuguese: return "Mais um dia e são \(rest) dias de descanso"
+        case .chineseTraditional: return "再請一天就是\(rest)連休"
+        case .dutch: return "Eén dag meer en je hebt \(rest) dagen vrij"
+        case .swedish: return "En dag till ger \(rest) lediga dagar"
+        case .norwegian: return "Én dag til gir \(rest) fridager"
+        case .danish: return "Én dag mere giver \(rest) fridage"
+        case .finnish: return "Yksi päivä lisää, niin vapaata on \(rest) päivää"
+        case .polish: return "Jeszcze jeden dzień i masz \(rest) dni wolnego"
+        case .czech: return "Ještě jeden den a máš \(rest) dní volna"
+        case .greek: return "Μία ημέρα ακόμη και έχεις \(rest) ημέρες ελεύθερες"
+        case .turkish: return "Bir gün daha alırsan \(rest) gün tatil"
+        case .russian: return "Ещё один день, и отдых составит \(rest) дн."
+        case .indonesian: return "Tambah satu hari jadi libur \(rest) hari"
+        case .thai: return "ลาเพิ่มอีกวันเดียว ได้หยุด \(rest) วัน"
+        case .vietnamese: return "Thêm một ngày là được nghỉ \(rest) ngày"
+        }
+    }
+
+    /// 자석 제안 받기 버튼
+    static var quickAddAttach: String {
+        switch quickLang {
+        case .korean: return "붙이기"
+        case .english: return "Add"
+        case .japanese: return "追加"
+        case .chinese: return "加上"
+        case .german: return "Hinzufügen"
+        case .french: return "Ajouter"
+        case .spanish: return "Añadir"
+        case .italian: return "Aggiungi"
+        case .portuguese: return "Adicionar"
+        case .chineseTraditional: return "加上"
+        case .dutch: return "Toevoegen"
+        case .swedish: return "Lägg till"
+        case .norwegian: return "Legg til"
+        case .danish: return "Tilføj"
+        case .finnish: return "Lisää"
+        case .polish: return "Dodaj"
+        case .czech: return "Přidat"
+        case .greek: return "Προσθήκη"
+        case .turkish: return "Ekle"
+        case .russian: return "Добавить"
+        case .indonesian: return "Tambah"
+        case .thai: return "เพิ่ม"
+        case .vietnamese: return "Thêm"
+        }
+    }
+
+    /// 반차 · 종류 · 메모를 고르는 원래 양식으로
+    static var quickAddMoreOptions: String {
+        switch quickLang {
+        case .korean: return "반차 · 종류 · 메모"
+        case .english: return "Half Day, Type, Note"
+        case .japanese: return "半休・種類・メモ"
+        case .chinese: return "半天 · 类型 · 备注"
+        case .german: return "Halber Tag, Art, Notiz"
+        case .french: return "Demi-journée, type, note"
+        case .spanish: return "Medio día, tipo, nota"
+        case .italian: return "Mezza giornata, tipo, nota"
+        case .portuguese: return "Meio período, tipo, nota"
+        case .chineseTraditional: return "半天 · 類型 · 備註"
+        case .dutch: return "Halve dag, soort, notitie"
+        case .swedish: return "Halvdag, typ, anteckning"
+        case .norwegian: return "Halv dag, type, notat"
+        case .danish: return "Halv dag, type, note"
+        case .finnish: return "Puolikas päivä, tyyppi, muistiinpano"
+        case .polish: return "Pół dnia, rodzaj, notatka"
+        case .czech: return "Půlden, druh, poznámka"
+        case .greek: return "Μισή ημέρα, είδος, σημείωση"
+        case .turkish: return "Yarım gün, tür, not"
+        case .russian: return "Полдня, вид, заметка"
+        case .indonesian: return "Setengah hari, jenis, catatan"
+        case .thai: return "ครึ่งวัน · ประเภท · บันทึก"
+        case .vietnamese: return "Nửa ngày, loại, ghi chú"
+        }
+    }
+
+    /// 하루만 고른 동안의 안내 — 끝나는 날을 누르게, 금색의 뜻
+    static var quickAddHint: String {
+        switch quickLang {
+        case .korean: return "끝나는 날을 누르면 기간이 돼요. 금색일수록 연차 하루로 오래 쉬어요."
+        case .english: return "Tap an end date to make a range. Gold days give a longer break for one day of leave."
+        case .japanese: return "終わりの日をタップすると期間になります。金色ほど1日の休暇で長く休めます。"
+        case .chinese: return "点结束日期即可选成一段。越金色，请一天年假休得越久。"
+        case .german: return "Tippe auf ein Enddatum für einen Zeitraum. Goldene Tage bringen mit einem Urlaubstag die längste Pause."
+        case .french: return "Touchez une date de fin pour choisir une période. Les jours dorés donnent la plus longue pause pour un jour de congé."
+        case .spanish: return "Toca una fecha final para elegir un periodo. Los días dorados dan el descanso más largo con un día de vacaciones."
+        case .italian: return "Tocca una data di fine per scegliere un periodo. I giorni dorati danno la pausa più lunga con un giorno di ferie."
+        case .portuguese: return "Toque numa data final para escolher um período. Os dias dourados rendem a pausa mais longa com um dia de folga."
+        case .chineseTraditional: return "點結束日期即可選成一段。越金色，請一天特休休得越久。"
+        case .dutch: return "Tik op een einddatum voor een periode. Gouden dagen geven met één verlofdag de langste pauze."
+        case .swedish: return "Tryck på ett slutdatum för att välja en period. Gyllene dagar ger längst ledighet för en semesterdag."
+        case .norwegian: return "Trykk på en sluttdato for å velge en periode. Gylne dager gir lengst fri for én feriedag."
+        case .danish: return "Tryk på en slutdato for at vælge en periode. Gyldne dage giver længst fri for én feriedag."
+        case .finnish: return "Napauta loppupäivää valitaksesi jakson. Kultaiset päivät antavat pisimmän vapaan yhdellä lomapäivällä."
+        case .polish: return "Stuknij datę końcową, aby wybrać okres. Złote dni dają najdłuższy odpoczynek za jeden dzień urlopu."
+        case .czech: return "Klepnutím na koncové datum vybereš období. Zlaté dny dají za jeden den dovolené nejdelší volno."
+        case .greek: return "Πάτησε μια ημερομηνία λήξης για να επιλέξεις διάστημα. Οι χρυσές ημέρες δίνουν το μεγαλύτερο διάλειμμα με μία ημέρα άδειας."
+        case .turkish: return "Aralık seçmek için bitiş gününe dokun. Altın günler bir günlük izinle en uzun tatili verir."
+        case .russian: return "Нажмите дату окончания, чтобы выбрать период. Золотые дни дают самый долгий отдых за один день отпуска."
+        case .indonesian: return "Ketuk tanggal akhir untuk memilih rentang. Hari berwarna emas memberi libur terpanjang dengan satu hari cuti."
+        case .thai: return "แตะวันสิ้นสุดเพื่อเลือกช่วง วันสีทองยิ่งเข้มยิ่งได้หยุดนานด้วยวันลาวันเดียว"
+        case .vietnamese: return "Chạm vào ngày kết thúc để chọn khoảng. Ngày màu vàng cho kỳ nghỉ dài nhất với một ngày phép."
+        }
+    }
+
+    /// 저장한 뒤 — "6일 쉬어요"
+    static func quickAddRestDays(_ n: Int) -> String {
+        switch quickLang {
+        case .korean: return "\(n)일 쉬어요"
+        case .english: return "\(n) days off"
+        case .japanese: return "\(n)日休めます"
+        case .chinese: return "休息\(n)天"
+        case .german: return "\(n) Tage frei"
+        case .french: return "\(n) jours de repos"
+        case .spanish: return "\(n) días libres"
+        case .italian: return "\(n) giorni liberi"
+        case .portuguese: return "\(n) dias de descanso"
+        case .chineseTraditional: return "休息\(n)天"
+        case .dutch: return "\(n) dagen vrij"
+        case .swedish: return "\(n) dagar ledigt"
+        case .norwegian: return "\(n) dager fri"
+        case .danish: return "\(n) dage fri"
+        case .finnish: return "\(n) päivää vapaata"
+        case .polish: return "\(n) dni wolnego"
+        case .czech: return "\(n) dní volna"
+        case .greek: return "\(n) ημέρες ελεύθερες"
+        case .turkish: return "\(n) gün tatil"
+        case .russian: return "\(n) дн. отдыха"
+        case .indonesian: return "Libur \(n) hari"
+        case .thai: return "หยุด \(n) วัน"
+        case .vietnamese: return "Nghỉ \(n) ngày"
+        }
+    }
+
+    /// 저장한 뒤 남은 연차 — "남은 연차 9일"
+    static func quickAddRemaining(_ days: Double) -> String {
+        let d = dayCount(days)
+        switch quickLang {
+        case .korean: return "남은 연차 \(d)"
+        case .english: return "\(d) left"
+        case .japanese: return "残り\(d)"
+        case .chinese: return "剩余\(d)"
+        case .german: return "Noch \(d)"
+        case .french: return "Il reste \(d)"
+        case .spanish: return "Quedan \(d)"
+        case .italian: return "Restano \(d)"
+        case .portuguese: return "Restam \(d)"
+        case .chineseTraditional: return "剩餘\(d)"
+        case .dutch: return "Nog \(d)"
+        case .swedish: return "\(d) kvar"
+        case .norwegian: return "\(d) igjen"
+        case .danish: return "\(d) tilbage"
+        case .finnish: return "Jäljellä \(d)"
+        case .polish: return "Zostało: \(d)"
+        case .czech: return "Zbývá \(d)"
+        case .greek: return "Απομένουν \(d)"
+        case .turkish: return "\(d) kaldı"
+        case .russian: return "Осталось \(d)"
+        case .indonesian: return "Sisa \(d)"
+        case .thai: return "เหลือ \(d)"
+        case .vietnamese: return "Còn \(d)"
+        }
+    }
+}

@@ -432,7 +432,8 @@ struct HomeView: View {
                 FatigueCheckInView()
             }
             .sheet(isPresented: $showingAddLeave) {
-                AddLeaveView(profile: profile)
+                QuickAddLeaveSheet(profile: profile,
+                                   initialDate: Calendar.app.date(byAdding: .day, value: 1, to: Calendar.app.startOfDay(for: Date())) ?? Date())
             }
             .sheet(isPresented: $showingCalendarImport, onDismiss: { dismissAutoDetectBanner() }) {
                 CalendarImportSheet(existingRecords: Array(leaveRecords))
