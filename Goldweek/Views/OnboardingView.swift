@@ -17,6 +17,8 @@ struct OnboardingView: View {
     @State private var userName = ""
     @State private var totalLeave: Double = 15
     @State private var yearStartMonth = 1
+    /// 기준일의 '일' — 고르지 않으면 1일 (입사일 기준 회사만 바꾼다)
+    @State private var yearStartDay = 1
     /// 공휴일 기준 나라 — 기기 지역을 먼저, 지원하지 않는 지역이면 언어로 고른다 (영어 → 미국)
     @State private var country = Country.fromDeviceLocale()
     @State private var didLoadExisting = false
@@ -55,6 +57,7 @@ struct OnboardingView: View {
                         userName: $userName,
                         totalLeave: $totalLeave,
                         yearStartMonth: $yearStartMonth,
+                        yearStartDay: $yearStartDay,
                         country: $country,
                         isNameFocused: $isNameFieldFocused
                     )
@@ -172,6 +175,7 @@ struct OnboardingView: View {
         guard let existing = (try? modelContext.fetch(FetchDescriptor<UserProfile>()))?.first else { return }
         totalLeave = existing.totalAnnualLeave
         yearStartMonth = existing.yearStartMonth
+        yearStartDay = existing.yearStartDay
         country = existing.country
     }
 
@@ -188,6 +192,7 @@ struct OnboardingView: View {
         if let existing {
             existing.name = userName.isEmpty ? existing.name : userName
             existing.yearStartMonth = yearStartMonth
+            existing.yearStartDay = yearStartDay
             existing.totalAnnualLeave = totalLeave
             if existing.country != country { existing.country = country }   // 같으면 고른 주·지역 유지
             profile = existing
@@ -199,6 +204,7 @@ struct OnboardingView: View {
                 usedLeave: 0,
                 country: country
             )
+            profile.yearStartDay = yearStartDay
             modelContext.insert(profile)
         }
         do {
@@ -533,6 +539,7 @@ struct SetupPage: View {
     @Binding var userName: String
     @Binding var totalLeave: Double
     @Binding var yearStartMonth: Int
+    @Binding var yearStartDay: Int
     @Binding var country: Country
     var isNameFocused: FocusState<Bool>.Binding
 
@@ -676,7 +683,8 @@ struct SetupPage: View {
                         Label(Strings.yearStartMonthLabel, systemImage: "arrow.clockwise")
                             .font(.headline)
                         Spacer()
-                        Text(Strings.monthShort(yearStartMonth))
+                        Text(yearStartDay == 1 ? Strings.monthShort(yearStartMonth)
+                                               : Strings.monthShort(yearStartMonth) + " " + Strings.dayOfMonth(yearStartDay))
                             .font(.title3.bold())
                             .foregroundStyle(AppTheme.Colors.bonus)
                     }
@@ -703,6 +711,24 @@ struct SetupPage: View {
                             .voButton(Strings.monthShort(month))
                             .voSelected(yearStartMonth == month)
                         }
+                    }
+
+                    // 입사일 기준 회사만 — 안 건드리면 1일
+                    HStack {
+                        Text(Strings.yearStartDay)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Picker(Strings.yearStartDay, selection: $yearStartDay) {
+                            ForEach(1...YearStart.selectableDays(inMonth: yearStartMonth), id: \.self) { day in
+                                Text(Strings.dayOfMonth(day)).tag(day)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .tint(AppTheme.Colors.bonus)
+                    }
+                    .onChange(of: yearStartMonth) { _, month in
+                        yearStartDay = min(yearStartDay, YearStart.selectableDays(inMonth: month))
                     }
                 }
                 .padding(18)

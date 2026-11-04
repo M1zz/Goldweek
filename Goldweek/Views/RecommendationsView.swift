@@ -35,7 +35,7 @@ struct RecommendationsView: View {
 
     /// 지난해에서 넘어온 연차를 포함한 올해 현황
     private var usage: LeaveUsageCalculator.Summary {
-        LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords), startMonth: profile.yearStartMonth,
+        LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords), startMonth: profile.yearStart,
                                             annualGrant: profile.totalAnnualLeave)
     }
 

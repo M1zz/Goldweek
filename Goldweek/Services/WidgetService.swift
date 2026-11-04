@@ -34,12 +34,10 @@ class WidgetService {
         // 기본 연차 정보 (현재 회계연도 기준 — LeaveStatusCard/SettingsView와 동일 계산)
         let cal = Calendar.app
         let now = Date()
-        let currentMonth = cal.component(.month, from: now)
-        let currentYear = cal.component(.year, from: now)
-        let sm = profile.yearStartMonth
-        let startYear = currentMonth >= sm ? currentYear : currentYear - 1
-        let annualYearStart = cal.date(from: DateComponents(year: startYear, month: sm, day: 1)) ?? now
-        let annualYearEnd = cal.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
+        let sm = profile.yearStart
+        let startYear = LeaveUsageCalculator.fiscalYear(for: now, startMonth: sm, calendar: cal)
+        let annualYearStart = LeaveUsageCalculator.fiscalYearStart(year: startYear, startMonth: sm, calendar: cal)
+        let annualYearEnd = LeaveUsageCalculator.fiscalYearEnd(year: startYear, startMonth: sm, calendar: cal)
 
         // 지난해에서 넘어온 연차도 올해 총량에 든다 (이월 설정이 켜져 있을 때)
         let total = profile.totalAnnualLeave + LeaveUsageCalculator.carryOverUsable(
@@ -109,7 +107,7 @@ class WidgetService {
 
         // 연차 소진 속도 계산
         let burnRateData = calculateBurnRate(
-            yearStartMonth: profile.yearStartMonth,
+            yearStart: profile.yearStart,
             totalLeave: total,
             usedLeave: used
         )
@@ -119,6 +117,7 @@ class WidgetService {
         defaults.set(burnRateData.burnRate, forKey: "burnRate")
         defaults.set(burnRateData.remainingDays, forKey: "remainingDaysUntilReset")
         defaults.set(profile.yearStartMonth, forKey: "yearStartMonth")
+        defaults.set(profile.yearStartDay, forKey: "yearStartDay")
         logDebug("소진 속도 저장 - 경과: \(burnRateData.elapsedRatio), 실제: \(burnRateData.actualUsedRatio), 속도: \(burnRateData.burnRate)", category: .widget)
 
         // 즉시 디스크에 동기화
@@ -131,35 +130,17 @@ class WidgetService {
 
     /// 연차 소진 속도 계산
     private func calculateBurnRate(
-        yearStartMonth: Int,
+        yearStart: YearStart,
         totalLeave: Double,
         usedLeave: Double
     ) -> (elapsedRatio: Double, idealUsedRatio: Double, actualUsedRatio: Double, burnRate: Double, remainingDays: Int) {
         let calendar = Calendar.app
         let now = Date()
-        let currentYear = calendar.component(.year, from: now)
-        let currentMonth = calendar.component(.month, from: now)
 
-        // 연차 시작일 계산
-        var startComponents = DateComponents()
-        startComponents.day = 1
-        startComponents.month = yearStartMonth
-
-        // 현재 월이 시작월보다 이전이면 작년부터 시작
-        if currentMonth < yearStartMonth {
-            startComponents.year = currentYear - 1
-        } else {
-            startComponents.year = currentYear
-        }
-
-        guard let yearStartDate = calendar.date(from: startComponents) else {
-            return (0, 0, 0, 1.0, 0)
-        }
-
-        // 연차 종료일 (시작일 + 1년)
-        guard let yearEndDate = calendar.date(byAdding: .year, value: 1, to: yearStartDate) else {
-            return (0, 0, 0, 1.0, 0)
-        }
+        // 연차 시작일 · 다음 시작일 (기준일 — 월 중간일 수 있다)
+        let fiscalYear = LeaveUsageCalculator.fiscalYear(for: now, startMonth: yearStart, calendar: calendar)
+        let yearStartDate = LeaveUsageCalculator.fiscalYearStart(year: fiscalYear, startMonth: yearStart, calendar: calendar)
+        let yearEndDate = LeaveUsageCalculator.fiscalYearStart(year: fiscalYear + 1, startMonth: yearStart, calendar: calendar)
 
         // 전체 기간 (일)
         let totalDays = calendar.dateComponents([.day], from: yearStartDate, to: yearEndDate).day ?? 365

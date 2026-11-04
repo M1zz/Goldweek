@@ -624,17 +624,17 @@ final class LeaveCalculationTests: XCTestCase {
     // LeaveHistoryView.yearStats 로직 복제 — 모든 휴가 유형 포함 (연차 차감 여부 무관)
     /// 내역 화면이 카드에 띄우는 값 — 이제 홈과 같은 정의(연차 차감분)다.
     private func calcHistoryTotalUsed(records: [LeaveRecord], yearStartMonth: Int) -> Double {
-        LeaveUsageCalculator.currentSummary(records: records, startMonth: yearStartMonth)
+        LeaveUsageCalculator.currentSummary(records: records, startMonth: YearStart(month: yearStartMonth))
             .used(includingBonus: false)
     }
 
     private func calcHistoryTotalPlanned(records: [LeaveRecord], yearStartMonth: Int) -> Double {
-        LeaveUsageCalculator.currentSummary(records: records, startMonth: yearStartMonth).annualPlanned
+        LeaveUsageCalculator.currentSummary(records: records, startMonth: YearStart(month: yearStartMonth)).annualPlanned
     }
 
     /// "며칠 쉬었나"(출장·병가 포함) — 내역 카드가 아니라 별도 지표로만 쓰는 값.
     private func calcAllTypesUsed(records: [LeaveRecord], yearStartMonth: Int) -> Double {
-        LeaveUsageCalculator.currentSummary(records: records, startMonth: yearStartMonth).allTypesUsed
+        LeaveUsageCalculator.currentSummary(records: records, startMonth: YearStart(month: yearStartMonth)).allTypesUsed
     }
 
     // MARK: - 캘린더 날짜 하이라이트 로직 복제 (CalendarGrid.isLeave 수정 후 버전)
@@ -944,6 +944,37 @@ final class LeaveCalculationTests: XCTestCase {
                                                  asOf: makeDate(daysFromNow: 0))
         XCTAssertEqual(y2025.annualUsed, 1.0)
         XCTAssertEqual(y2026.annualUsed, 1.0)
+    }
+
+    /// 입사일 기준 — 기준일이 3월 21일이면 3월 20일은 지난해, 3월 21일부터 올해 (사용자 피드백).
+    func testFiscalYearBoundaryWithMidMonthStart() {
+        let cal = Calendar.app
+        let start = YearStart(month: 3, day: 21)
+        let mar20 = cal.date(from: DateComponents(year: 2026, month: 3, day: 20, hour: 23))!
+        let mar21 = cal.date(from: DateComponents(year: 2026, month: 3, day: 21))!
+
+        XCTAssertEqual(LeaveUsageCalculator.fiscalYear(for: mar20, startMonth: start, calendar: cal), 2025)
+        XCTAssertEqual(LeaveUsageCalculator.fiscalYear(for: mar21, startMonth: start, calendar: cal), 2026)
+        XCTAssertEqual(LeaveUsageCalculator.fiscalYearStart(year: 2026, startMonth: start, calendar: cal), mar21)
+        XCTAssertEqual(LeaveUsageCalculator.fiscalYearEnd(year: 2025, startMonth: start, calendar: cal),
+                       mar21.addingTimeInterval(-1))
+
+        let records = [
+            LeaveRecord(startDate: mar20, endDate: mar20, type: .annual, status: .used),
+            LeaveRecord(startDate: mar21, endDate: mar21, type: .annual, status: .used)
+        ]
+        XCTAssertEqual(LeaveUsageCalculator.records(records, inFiscalYear: 2025, startMonth: start, calendar: cal).count, 1)
+        XCTAssertEqual(LeaveUsageCalculator.records(records, inFiscalYear: 2026, startMonth: start, calendar: cal).count, 1)
+    }
+
+    /// 그 달에 없는 날은 마지막 날로 — 2월 30일 기준이면 평년 2/28, 윤년 2/29. 정수는 1일.
+    func testYearStartClampsToMonthLength() {
+        let cal = Calendar.app
+        let feb = YearStart(month: 2, day: 30)
+        XCTAssertEqual(feb.date(in: 2027, calendar: cal), cal.date(from: DateComponents(year: 2027, month: 2, day: 28)))
+        XCTAssertEqual(feb.date(in: 2028, calendar: cal), cal.date(from: DateComponents(year: 2028, month: 2, day: 29)))
+        let literal: YearStart = 4
+        XCTAssertEqual(literal, YearStart(month: 4, day: 1))
     }
 
     /// 지난 해 내역을 볼 때 올해 받은 보너스가 끼어들면 안 된다.

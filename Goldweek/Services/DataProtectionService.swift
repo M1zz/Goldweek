@@ -289,9 +289,12 @@ struct ProfileData: Codable {
     let preferConsecutive: Bool
     let avoidPeakSeason: Bool
     let priorityActivitiesRaw: String
+    /// 연차 기준일의 '일' — 1일이면 남기지 않는다 (예전 데이터와 같게)
+    var yearStartDay: Int? = nil
 
     init(from profile: UserProfile) {
         self.name = profile.name
+        self.yearStartDay = profile.yearStartDay == 1 ? nil : profile.yearStartDay
         self.yearStartMonth = profile.yearStartMonth
         self.totalAnnualLeave = profile.totalAnnualLeave
         self.usedLeave = profile.usedLeave
@@ -308,6 +311,7 @@ struct ProfileData: Codable {
     func apply(to profile: UserProfile) {
         profile.name = name
         profile.yearStartMonth = yearStartMonth
+        profile.yearStartDay = yearStartDay ?? 1
         profile.totalAnnualLeave = totalAnnualLeave
         profile.usedLeave = usedLeave
         profile.countryRaw = countryRaw
@@ -328,6 +332,7 @@ struct ProfileData: Codable {
             usedLeave: usedLeave,
             country: Country(rawValue: countryRaw) ?? .korea
         )
+        profile.yearStartDay = yearStartDay ?? 1
         profile.holidayRegionRaw = holidayRegionRaw ?? ""
         profile.preferredDurationRaw = preferredDurationRaw
         profile.preferredSeasonsRaw = preferredSeasonsRaw

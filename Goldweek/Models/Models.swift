@@ -435,6 +435,8 @@ final class UserProfile {
     var id: UUID
     var name: String
     var yearStartMonth: Int              // 연차 기준 시작월 (1-12)
+    /// 연차 기준일의 '일' (1-31) — 입사일 기준이라 3월 21일에 새로 생기는 회사. 기본 1일.
+    var yearStartDay: Int = 1
     var totalAnnualLeave: Double         // 총 연차 / 연간 목표 일수
     var usedLeave: Double                // 사용한 연차 (레거시 — records가 source of truth)
     var createdAt: Date
@@ -482,6 +484,9 @@ final class UserProfile {
     var remainingLeave: Double {
         totalAnnualLeave - usedLeave
     }
+
+    /// 연차가 새로 생기는 날 — 계산은 모두 이걸 쓴다 (월만 넘기면 일이 1일로 굳는다).
+    var yearStart: YearStart { YearStart(month: yearStartMonth, day: yearStartDay) }
 
     /// 화면에 보여줄 이름.
     ///

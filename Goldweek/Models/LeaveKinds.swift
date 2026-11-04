@@ -223,7 +223,7 @@ struct LeaveKindUsage: Equatable {
     var totalCount: Int { usedCount + plannedCount }
 
     /// 한 해, 종류별 사용량
-    static func byKind(records: [LeaveRecord], customTypes: [CustomLeaveType], year: Int, startMonth: Int,
+    static func byKind(records: [LeaveRecord], customTypes: [CustomLeaveType], year: Int, startMonth: YearStart,
                        asOf now: Date = Date(), calendar: Calendar = .app) -> [LeaveKindRef: LeaveKindUsage] {
         let existing = Set(customTypes.map(\.id))
         var result: [LeaveKindRef: LeaveKindUsage] = [:]
@@ -306,7 +306,7 @@ struct LeaveAllowanceCounter: Equatable {
     }
 
     /// 그해 한도 카운터 — 넘겨 쓰기를 켠 종류면 지난해까지 남은 양을 더한다
-    static func make(kind: CustomLeaveType, records: [LeaveRecord], year: Int, startMonth: Int,
+    static func make(kind: CustomLeaveType, records: [LeaveRecord], year: Int, startMonth: YearStart,
                      asOf now: Date = Date(), calendar: Calendar = .app) -> LeaveAllowanceCounter {
         let mine = records.filter { $0.customTypeId == kind.id }
         let usage = LeaveKindUsage.byKind(records: mine, customTypes: [kind], year: year, startMonth: startMonth,
@@ -318,7 +318,7 @@ struct LeaveAllowanceCounter: Equatable {
 
     /// 그해로 넘어온 양 (시간이면 분, 일이면 일).
     /// 시작한 해에는 처음 쌓여 있던 양, 그 뒤로는 해마다 (한도 + 넘어온 양 − 쓴 양)을 넘긴다 (모자라면 0).
-    static func carryIn(kind: CustomLeaveType, records: [LeaveRecord], year: Int, startMonth: Int,
+    static func carryIn(kind: CustomLeaveType, records: [LeaveRecord], year: Int, startMonth: YearStart,
                         asOf now: Date = Date(), calendar: Calendar = .app) -> Double {
         guard kind.allowanceCarriesOver, kind.hasAllowance else { return 0 }
         let unit = kind.allowanceIsHours ? 60.0 : 1.0

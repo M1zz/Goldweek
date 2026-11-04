@@ -63,7 +63,7 @@ struct HomeView: View {
     /// 계산은 `LeaveUsageCalculator` 한 곳에서 — 화면마다 세면 숫자가 어긋난다.
     var committedLeave: Double {
         LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
-                                            startMonth: profile.yearStartMonth).annualCommitted
+                                            startMonth: profile.yearStart).annualCommitted
     }
 
     // MARK: - Pro 배너 트리거
@@ -83,7 +83,7 @@ struct HomeView: View {
         let now = Date()
         let month = cal.component(.month, from: now)
         let year = cal.component(.year, from: now)
-        let remaining = LeaveUsageCalculator.currentSummary(records: Array(leaveRecords), startMonth: profile.yearStartMonth,
+        let remaining = LeaveUsageCalculator.currentSummary(records: Array(leaveRecords), startMonth: profile.yearStart,
                                                             annualGrant: profile.totalAnnualLeave)
             .remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)
         let hasPlanned = leaveRecords.contains { $0.status == .planned }
@@ -318,7 +318,7 @@ struct HomeView: View {
 
     /// 추천에 쓸 연차 — 현황 카드의 남음과 같은 계산
     private var firstPlanLeave: Double {
-        LeaveUsageCalculator.currentSummary(records: leaveRecords, startMonth: profile.yearStartMonth,
+        LeaveUsageCalculator.currentSummary(records: leaveRecords, startMonth: profile.yearStart,
                                             annualGrant: profile.totalAnnualLeave)
             .remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)
     }
@@ -416,8 +416,9 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showingHolidayManagement) {
                 HolidayManagementView(country: profile.country)
             }
-            .sheet(isPresented: $showingHistory) {
-                LeaveHistoryView(yearStartMonth: profile.yearStartMonth)
+            // 모달이 아니라 상세 페이지로 — 뒤로 가기로 돌아온다
+            .navigationDestination(isPresented: $showingHistory) {
+                LeaveHistoryView(yearStart: profile.yearStart)
             }
             .sheet(isPresented: $showingPastLeaveEntry) {
                 PastLeaveQuickEntrySheet(profile: profile)
@@ -1083,7 +1084,7 @@ struct LeaveStatusCard: View {
     var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: allLeaveRecords,
                                             bonuses: allBonusLeaves,
-                                            startMonth: profile.yearStartMonth,
+                                            startMonth: profile.yearStart,
                                             annualGrant: profile.totalAnnualLeave)
     }
 
@@ -1091,8 +1092,8 @@ struct LeaveStatusCard: View {
     var currentYearRecords: [LeaveRecord] {
         LeaveUsageCalculator.records(allLeaveRecords,
                                      inFiscalYear: LeaveUsageCalculator.fiscalYear(for: Date(),
-                                                                                   startMonth: profile.yearStartMonth),
-                                     startMonth: profile.yearStartMonth)
+                                                                                   startMonth: profile.yearStart),
+                                     startMonth: profile.yearStart)
     }
 
     /// 잔여 보너스 (미만료 기준) — 설정 화면과 같은 값을 쓰려고 계산기를 거친다
@@ -1768,8 +1769,11 @@ struct PastLeavePromptBanner: View {
     /// 이미 답했는지(`hasSeenPastLeavePrompt`)는 부르는 쪽이 본다.
     static func isDue(profile: UserProfile, hasRecords: Bool, now: Date = Date()) -> Bool {
         guard !hasRecords, profile.userType == .employee else { return false }
-        let month = Calendar.app.component(.month, from: now)
-        return (month - profile.yearStartMonth + 12) % 12 >= 1
+        let cal = Calendar.app
+        let year = LeaveUsageCalculator.fiscalYear(for: now, startMonth: profile.yearStart, calendar: cal)
+        let start = LeaveUsageCalculator.fiscalYearStart(year: year, startMonth: profile.yearStart, calendar: cal)
+        guard let monthLater = cal.date(byAdding: .month, value: 1, to: start) else { return false }
+        return now >= monthLater
     }
 
     var body: some View {
@@ -1995,8 +1999,8 @@ struct PastLeaveQuickEntrySheet: View {
 
     /// 지금 속한 연차 해의 시작일 (기준월이 지금 달보다 뒤면 작년)
     private var yearStartDate: Date {
-        let year = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: calendar)
-        return LeaveUsageCalculator.fiscalYearStart(year: year, startMonth: profile.yearStartMonth, calendar: calendar)
+        let year = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart, calendar: calendar)
+        return LeaveUsageCalculator.fiscalYearStart(year: year, startMonth: profile.yearStart, calendar: calendar)
     }
 
     private var yesterday: Date {
@@ -2007,7 +2011,7 @@ struct PastLeaveQuickEntrySheet: View {
     private var existingBulk: [LeaveRecord] {
         let start = yearStartDate
         let end = LeaveUsageCalculator.fiscalYearEnd(year: calendar.component(.year, from: start),
-                                                     startMonth: profile.yearStartMonth, calendar: calendar)
+                                                     startMonth: profile.yearStart, calendar: calendar)
         return allRecords.filter { $0.isBulkSummary && $0.startDate >= start && $0.startDate <= end }
     }
 
@@ -2018,7 +2022,7 @@ struct PastLeaveQuickEntrySheet: View {
         guard entersRemaining else { return enteredMinutes }
         let bulkIDs = Set(existingBulk.map(\.id))
         let available = LeaveUsageCalculator.availableAnnual(on: Date(), records: allRecords.filter { !bulkIDs.contains($0.id) },
-                                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStartMonth)
+                                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStart)
         let used = Int((available * Double(workday)).rounded()) - enteredMinutes
         return used >= 0 ? used : nil
     }
@@ -2216,16 +2220,14 @@ struct BurnoutPaceCard: View {
     private let cal = Calendar.app
 
     // MARK: 회계연도 범위
+    private var annualYear: Int {
+        LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart, calendar: cal)
+    }
     private var annualYearStart: Date {
-        let now = Date()
-        let year = cal.component(.year, from: now)
-        let month = cal.component(.month, from: now)
-        let sm = profile.yearStartMonth
-        let startYear = month >= sm ? year : year - 1
-        return cal.date(from: DateComponents(year: startYear, month: sm, day: 1)) ?? now
+        LeaveUsageCalculator.fiscalYearStart(year: annualYear, startMonth: profile.yearStart, calendar: cal)
     }
     private var annualYearEnd: Date {
-        cal.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
+        LeaveUsageCalculator.fiscalYearEnd(year: annualYear, startMonth: profile.yearStart, calendar: cal)
     }
 
     // MARK: 사용/예정 일수

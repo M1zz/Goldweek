@@ -89,6 +89,8 @@ struct ProfileBackup: Codable {
     let preferConsecutive: Bool
     let avoidPeakSeason: Bool
     let priorityActivitiesRaw: String
+    /// 연차 기준일의 '일' — 나중에 추가돼 예전 백업에는 없다 (없으면 1일)
+    var yearStartDay: Int? = nil
 }
 
 struct LeaveRecordBackup: Codable {
@@ -210,7 +212,8 @@ class BackupService {
             preferLongWeekend: profile.preferLongWeekend,
             preferConsecutive: profile.preferConsecutive,
             avoidPeakSeason: profile.avoidPeakSeason,
-            priorityActivitiesRaw: profile.priorityActivitiesRaw
+            priorityActivitiesRaw: profile.priorityActivitiesRaw,
+            yearStartDay: profile.yearStartDay
         )
 
         let leaveRecordBackups = leaveRecords.map { record in
@@ -426,6 +429,7 @@ class BackupService {
         if let profile = existingProfile {
             profile.name = backup.profile.name
             profile.yearStartMonth = backup.profile.yearStartMonth
+            profile.yearStartDay = backup.profile.yearStartDay ?? 1
             profile.totalAnnualLeave = backup.profile.totalAnnualLeave
             profile.usedLeave = backup.profile.usedLeave
             profile.preferredDurationRaw = backup.profile.preferredDurationRaw
@@ -441,6 +445,7 @@ class BackupService {
                 totalAnnualLeave: backup.profile.totalAnnualLeave,
                 usedLeave: backup.profile.usedLeave
             )
+            newProfile.yearStartDay = backup.profile.yearStartDay ?? 1
             newProfile.preferredDurationRaw = backup.profile.preferredDurationRaw
             newProfile.preferredSeasonsRaw = backup.profile.preferredSeasonsRaw
             newProfile.preferLongWeekend = backup.profile.preferLongWeekend

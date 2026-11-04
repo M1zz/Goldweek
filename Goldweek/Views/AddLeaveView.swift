@@ -24,12 +24,12 @@ struct AddLeaveView: View {
     /// 계산은 `LeaveUsageCalculator` 한 곳에서 (회계연도 기준도 여기서 맞춰진다)
     var committedLeave: Double {
         LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
-                                            startMonth: profile.yearStartMonth).annualCommitted
+                                            startMonth: profile.yearStart).annualCommitted
     }
 
     /// 올해 남은 연차 (지난해에서 넘어온 몫 포함)
     var remainingAnnualLeave: Double {
-        LeaveUsageCalculator.currentSummary(records: Array(leaveRecords), startMonth: profile.yearStartMonth,
+        LeaveUsageCalculator.currentSummary(records: Array(leaveRecords), startMonth: profile.yearStart,
                                             annualGrant: profile.totalAnnualLeave)
             .remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)
     }
@@ -321,7 +321,7 @@ struct LeaveRegistrationView: View {
 
     var committedLeave: Double {
         LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords),
-                                            startMonth: profile.yearStartMonth).annualCommitted
+                                            startMonth: profile.yearStart).annualCommitted
     }
 
     /// 만료되지 않은 보너스 연차
@@ -368,21 +368,21 @@ struct LeaveRegistrationView: View {
     /// 고른 시작일이 속한 해에 쓸 수 있는 연차 (넘어온 연차 포함)
     var availableForStartDate: Double {
         LeaveUsageCalculator.availableAnnual(on: startDate, records: Array(allLeaveRecords),
-                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStartMonth)
+                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStart)
     }
 
     /// 시작일이 올해가 아닌 해에 속하면 그 해 (예: 10월에 잡는 내년 1월 휴가)
     var futureFiscalYear: Int? {
         let cal = Calendar.app
-        let target = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: profile.yearStartMonth, calendar: cal)
-        let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStartMonth, calendar: cal)
+        let target = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: profile.yearStart, calendar: cal)
+        let now = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart, calendar: cal)
         return target > now ? target : nil
     }
 
     /// 고른 직접 만든 종류에 연간 한도가 있으면, 이번 휴가를 넣은 뒤 그 해에 남는 양
     var allowanceNote: (text: String, isOver: Bool)? {
         guard let kind = customType, kind.hasAllowance, selectedBonusLeave == nil else { return nil }
-        let startMonth = profile.yearStartMonth
+        let startMonth = profile.yearStart
         let year = LeaveUsageCalculator.fiscalYear(for: startDate, startMonth: startMonth)
         let counter = LeaveAllowanceCounter.make(kind: kind, records: Array(allLeaveRecords), year: year, startMonth: startMonth)
         let end = length == .full ? endDate : startDate
@@ -1737,7 +1737,7 @@ struct QuickAddLeaveSheet: View {
 
     private var available: Double {
         LeaveUsageCalculator.availableAnnual(on: start, records: Array(allLeaveRecords),
-                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStartMonth)
+                                             annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStart)
     }
 
     private var canSave: Bool {

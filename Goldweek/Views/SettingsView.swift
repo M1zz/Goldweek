@@ -145,26 +145,22 @@ struct SettingsView: View {
         leaveRecords.filter { $0.status == .planned }.count
     }
 
-    /// 현재 회계연도 시작일 (yearStartMonth 기준) — LeaveStatusCard와 동일 계산
+    /// 현재 회계연도 시작일 (연차 기준일) — LeaveStatusCard와 동일 계산
     var annualYearStart: Date {
-        let cal = Calendar.app
-        let now = Date()
-        let year = cal.component(.year, from: now)
-        let month = cal.component(.month, from: now)
-        let sm = profile.yearStartMonth
-        let startYear = month >= sm ? year : year - 1
-        return cal.date(from: DateComponents(year: startYear, month: sm, day: 1)) ?? now
+        let year = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart)
+        return LeaveUsageCalculator.fiscalYearStart(year: year, startMonth: profile.yearStart)
     }
 
     var annualYearEnd: Date {
-        Calendar.app.date(byAdding: DateComponents(year: 1, second: -1), to: annualYearStart) ?? annualYearStart
+        let year = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart)
+        return LeaveUsageCalculator.fiscalYearEnd(year: year, startMonth: profile.yearStart)
     }
 
     /// 이 화면이 쓰는 모든 숫자의 출처 — 홈 카드와 같은 계산기, 같은 입력.
     var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
                                             bonuses: Array(bonusLeaves),
-                                            startMonth: profile.yearStartMonth,
+                                            startMonth: profile.yearStart,
                                             annualGrant: profile.totalAnnualLeave)
     }
 
@@ -712,6 +708,15 @@ struct SettingsView: View {
                     Picker(isLeisure ? Strings.leisureYearStartMonth : Strings.yearStartMonth, selection: $profile.yearStartMonth) {
                         ForEach(1...12, id: \.self) { month in
                             Text(Strings.monthShort(month)).tag(month)
+                        }
+                    }
+
+                    // 입사일 기준 회사는 월 중간에 연차가 새로 생긴다 (예: 3월 21일)
+                    if !isLeisure {
+                        Picker(Strings.yearStartDay, selection: $profile.yearStartDay) {
+                            ForEach(1...YearStart.selectableDays(inMonth: profile.yearStartMonth), id: \.self) { day in
+                                Text(Strings.dayOfMonth(day)).tag(day)
+                            }
                         }
                     }
 
@@ -1325,7 +1330,12 @@ struct SettingsView: View {
             // 자동 저장은 "곧" 저장할 뿐 그 시점을 보장하지 않는다 — 총 연차처럼 잔여 계산의
             // 근거가 되는 값은 바뀐 즉시 디스크에 있어야 한다(강제 종료·크래시 대비).
             .onChange(of: profile.totalAnnualLeave) { _, _ in persistProfile() }
-            .onChange(of: profile.yearStartMonth) { _, _ in persistProfile() }
+            .onChange(of: profile.yearStartMonth) { _, month in
+                // 그 달에 없는 날이면 마지막 날로 (3월 31일 → 4월로 바꾸면 30일)
+                profile.yearStartDay = min(profile.yearStartDay, YearStart.selectableDays(inMonth: month))
+                persistProfile()
+            }
+            .onChange(of: profile.yearStartDay) { _, _ in persistProfile() }
             .onChange(of: profile.name) { _, _ in persistProfile() }
             .onChange(of: profile.userTypeRaw) { _, _ in persistProfile() }
             .onChange(of: profile.countryRaw) { _, _ in persistProfile() }

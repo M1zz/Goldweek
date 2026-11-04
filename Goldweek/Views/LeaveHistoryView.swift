@@ -10,7 +10,6 @@ import SwiftData
 
 struct LeaveHistoryView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
     @Query(sort: \LeaveRecord.startDate, order: .reverse) private var allRecords: [LeaveRecord]
     @Query private var profiles: [UserProfile]
     @Query private var allBonusLeaves: [BonusLeave]
@@ -20,46 +19,38 @@ struct LeaveHistoryView: View {
     @State private var selectedYear: Int
     @State private var selectedStatus: LeaveStatus?
     @State private var selectedType: LeaveType?
+    /// 상태 · 종류 필터를 펼쳤는지 — 기본은 접어서 기록이 먼저 보이게
+    @State private var showingFilters = false
     @State private var showingDeleteAlert = false
     @State private var recordToDelete: LeaveRecord?
     @State private var recordToEdit: LeaveRecord?
     @State private var showingDeleteError = false
 
     private let calendar = Calendar.app
-    private let initYearStartMonth: Int
+    private let initYearStart: YearStart
 
     private var profile: UserProfile? { profiles.first }
 
-    private var yearStartMonth: Int { profile?.yearStartMonth ?? initYearStartMonth }
+    private var yearStartMonth: YearStart { profile?.yearStart ?? initYearStart }
 
-    init(yearStartMonth: Int = 1) {
-        self.initYearStartMonth = yearStartMonth
-        let cal = Calendar.app
-        let now = Date()
-        let month = cal.component(.month, from: now)
-        let year = cal.component(.year, from: now)
-        let fiscalYear = month >= yearStartMonth ? year : year - 1
-        _selectedYear = State(initialValue: fiscalYear)
+    init(yearStart: YearStart = 1) {
+        self.initYearStart = yearStart
+        _selectedYear = State(initialValue: LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: yearStart))
     }
 
-    // 회계연도 시작일 (yearStartMonth 기준)
+    // 회계연도 시작일 (연차 기준일)
     private func fiscalYearStart(for year: Int) -> Date {
-        let sm = yearStartMonth
-        return calendar.date(from: DateComponents(year: year, month: sm, day: 1)) ?? Date()
+        LeaveUsageCalculator.fiscalYearStart(year: year, startMonth: yearStartMonth, calendar: calendar)
     }
 
     // 회계연도 종료일
     private func fiscalYearEnd(for year: Int) -> Date {
-        let start = fiscalYearStart(for: year)
-        return calendar.date(byAdding: DateComponents(year: 1, second: -1), to: start) ?? start
+        LeaveUsageCalculator.fiscalYearEnd(year: year, startMonth: yearStartMonth, calendar: calendar)
     }
 
     // 날짜가 속한 회계연도
     private func fiscalYear(for date: Date) -> Int {
-        let sm = yearStartMonth
-        let year = calendar.component(.year, from: date)
-        let month = calendar.component(.month, from: date)
-        return month >= sm ? year : year - 1
+        LeaveUsageCalculator.fiscalYear(for: date, startMonth: yearStartMonth, calendar: calendar)
     }
 
     // 필터링된 기록 (회계연도 기준)
@@ -114,140 +105,203 @@ struct LeaveHistoryView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // 연도 및 필터 선택
-                filterSection
+        // 현황의 NavigationStack 에 올라오는 상세 페이지 — 자체 스택 · 닫기 버튼 없음
+        VStack(spacing: 0) {
+            // 연도 및 필터 선택
+            filterSection
 
-                // 연간 통계 요약
-                statsSection
+            // 연간 통계 요약
+            statsSection
 
-                // 기록 리스트
-                if filteredRecords.isEmpty {
-                    emptyView
-                } else {
-                    recordsList
+            // 기록 리스트
+            if filteredRecords.isEmpty {
+                emptyView
+            } else {
+                recordsList
+            }
+        }
+        .navigationTitle(Strings.navTitleLeaveHistory)
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            // 진입 시 현재 회계연도에 기록이 없고 다른 연도엔 있으면 자동 전환
+            if filteredRecords.isEmpty && !allRecords.isEmpty {
+                if let mostRecentYearWithData = allRecords
+                    .map({ fiscalYear(for: $0.startDate) })
+                    .max(), mostRecentYearWithData != selectedYear {
+                    selectedYear = mostRecentYearWithData
                 }
             }
-            .navigationTitle(Strings.navTitleLeaveHistory)
-            .navigationBarTitleDisplayMode(.large)
-            .onAppear {
-                // 진입 시 현재 회계연도에 기록이 없고 다른 연도엔 있으면 자동 전환
-                if filteredRecords.isEmpty && !allRecords.isEmpty {
-                    if let mostRecentYearWithData = allRecords
-                        .map({ fiscalYear(for: $0.startDate) })
-                        .max(), mostRecentYearWithData != selectedYear {
-                        selectedYear = mostRecentYearWithData
-                    }
+        }
+        .alert(Strings.deleteLeave, isPresented: $showingDeleteAlert) {
+            Button(Strings.cancel, role: .cancel) { }
+            Button(Strings.delete, role: .destructive) {
+                if let record = recordToDelete {
+                    deleteRecord(record)
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(Strings.close) {
-                        dismiss()
-                    }
-                }
-            }
-            .alert(Strings.deleteLeave, isPresented: $showingDeleteAlert) {
-                Button(Strings.cancel, role: .cancel) { }
-                Button(Strings.delete, role: .destructive) {
-                    if let record = recordToDelete {
-                        deleteRecord(record)
-                    }
-                }
-            } message: {
-                Text(Strings.deleteLeaveConfirm)
-            }
-            .alert(Strings.alert, isPresented: $showingDeleteError) {
-                Button(Strings.confirm, role: .cancel) { }
-            } message: {
-                Text(Strings.deleteFailed)
-            }
-            .onAppear {
-                repairBonusLeaveUsage()
-            }
+        } message: {
+            Text(Strings.deleteLeaveConfirm)
+        }
+        .alert(Strings.alert, isPresented: $showingDeleteError) {
+            Button(Strings.confirm, role: .cancel) { }
+        } message: {
+            Text(Strings.deleteFailed)
+        }
+        .onAppear {
+            repairBonusLeaveUsage()
         }
     }
 
     // MARK: - 필터 섹션
+    /// 고른 상태 · 종류 필터 수
+    private var activeFilterCount: Int {
+        (selectedStatus == nil ? 0 : 1) + (selectedType == nil ? 0 : 1)
+    }
+
     private var filterSection: some View {
         VStack(spacing: 12) {
-            // 연도 선택
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(availableYears, id: \.self) { year in
-                        Button {
-                            withAnimation { selectedYear = year }
-                        } label: {
-                            Text(verbatim: Strings.yearLabel(year))
-                                .font(.body.weight(selectedYear == year ? .semibold : .regular))
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
-                                .background(selectedYear == year ? Color.blue : Color(.systemGray6))
-                                .foregroundStyle(selectedYear == year ? .white : .primary)
-                                .clipShape(Capsule())
+            HStack(spacing: 4) {
+                // 연도 선택
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(availableYears, id: \.self) { year in
+                            Button {
+                                withAnimation { selectedYear = year }
+                            } label: {
+                                Text(verbatim: Strings.yearLabel(year))
+                                    .font(.body.weight(selectedYear == year ? .semibold : .regular))
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                    .background(selectedYear == year ? Color.blue : Color(.systemGray6))
+                                    .foregroundStyle(selectedYear == year ? .white : .primary)
+                                    .clipShape(Capsule())
+                            }
+                            .voButton(Strings.yearLabel(year))
+                            .voSelected(selectedYear == year)
                         }
-                        .voButton(Strings.yearLabel(year))
-                        .voSelected(selectedYear == year)
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
+
+                // 상태 · 종류 필터 펼치기 — 고른 게 있으면 채운 아이콘에 개수
+                Button {
+                    withAnimation(.snappy) { showingFilters.toggle() }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: activeFilterCount > 0
+                              ? "line.3.horizontal.decrease.circle.fill"
+                              : "line.3.horizontal.decrease.circle")
+                        if activeFilterCount > 0 {
+                            Text(verbatim: "\(activeFilterCount)")
+                                .font(.body.weight(.semibold))
+                        }
+                        Image(systemName: "chevron.down")
+                            .font(.body.weight(.semibold))
+                            .rotationEffect(.degrees(showingFilters ? 180 : 0))
+                    }
+                    .font(.title3)
+                    .foregroundStyle(activeFilterCount > 0 ? Color.blue : .secondary)
+                    .padding(.vertical, 6)
+                    .padding(.trailing)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .voButton(Strings.historyFilter)
+                .accessibilityValue(Text(showingFilters ? Strings.historyFilterExpanded : Strings.historyFilterCollapsed))
             }
 
-            // 상태 필터
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    FilterChip(
-                        title: Strings.all,
-                        isSelected: selectedStatus == nil,
-                        color: .gray
-                    ) {
-                        withAnimation { selectedStatus = nil }
-                    }
-
-                    ForEach(LeaveStatus.allCases) { status in
+            if showingFilters {
+                // 상태 필터
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
                         FilterChip(
-                            title: Strings.leaveStatusName(status),
-                            isSelected: selectedStatus == status,
-                            color: statusColor(status)
+                            title: Strings.all,
+                            isSelected: selectedStatus == nil,
+                            color: .gray
                         ) {
-                            withAnimation {
-                                selectedStatus = selectedStatus == status ? nil : status
+                            withAnimation { selectedStatus = nil }
+                        }
+
+                        ForEach(LeaveStatus.allCases) { status in
+                            FilterChip(
+                                title: Strings.leaveStatusName(status),
+                                isSelected: selectedStatus == status,
+                                color: statusColor(status)
+                            ) {
+                                withAnimation {
+                                    selectedStatus = selectedStatus == status ? nil : status
+                                }
                             }
                         }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
-            }
 
-            // 유형 필터
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    FilterChip(
-                        title: Strings.allTypes,
-                        isSelected: selectedType == nil,
-                        color: .gray
-                    ) {
-                        withAnimation { selectedType = nil }
-                    }
-
-                    ForEach(LeaveType.allCases) { type in
+                // 유형 필터
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
                         FilterChip(
-                            title: Strings.leaveTypeName(type),
-                            isSelected: selectedType == type,
-                            color: typeColor(type)
+                            title: Strings.allTypes,
+                            isSelected: selectedType == nil,
+                            color: .gray
                         ) {
-                            withAnimation {
-                                selectedType = selectedType == type ? nil : type
+                            withAnimation { selectedType = nil }
+                        }
+
+                        ForEach(LeaveType.allCases) { type in
+                            FilterChip(
+                                title: Strings.leaveTypeName(type),
+                                isSelected: selectedType == type,
+                                color: typeColor(type)
+                            ) {
+                                withAnimation {
+                                    selectedType = selectedType == type ? nil : type
+                                }
                             }
                         }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
+            } else if activeFilterCount > 0 {
+                // 접혀 있을 땐 고른 것만 — 눌러서 풀기
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        if let status = selectedStatus {
+                            activeFilterChip(Strings.leaveStatusName(status), color: statusColor(status)) {
+                                withAnimation { selectedStatus = nil }
+                            }
+                        }
+                        if let type = selectedType {
+                            activeFilterChip(Strings.leaveTypeName(type), color: typeColor(type)) {
+                                withAnimation { selectedType = nil }
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
             }
         }
         .padding(.vertical, 12)
         .background(Color(.systemBackground))
+    }
+
+    /// 접힌 상태에서 보이는 고른 필터 — 누르면 푼다
+    private func activeFilterChip(_ title: String, color: Color, clear: @escaping () -> Void) -> some View {
+        Button(action: clear) {
+            HStack(spacing: 4) {
+                Text(title)
+                Image(systemName: "xmark")
+                    .voDecorative()
+            }
+            .font(.body.weight(.semibold))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(color.opacity(0.2))
+            .foregroundStyle(color)
+            .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .voButton(Strings.historyFilterClear(title))
     }
 
     // MARK: - 통계 섹션
@@ -693,7 +747,7 @@ struct EditLeaveSheet: View {
         guard let profile = profile else { return 0 }
         return LeaveUsageCalculator.availableAnnual(on: startDate, records: allLeaveRecords,
                                                     annualGrant: profile.totalAnnualLeave,
-                                                    startMonth: profile.yearStartMonth, excluding: record.id)
+                                                    startMonth: profile.yearStart, excluding: record.id)
     }
 
     var body: some View {
@@ -901,6 +955,6 @@ struct EditLeaveSheet: View {
 }
 
 #Preview {
-    LeaveHistoryView()
+    NavigationStack { LeaveHistoryView() }
         .modelContainer(for: [LeaveRecord.self, UserProfile.self], inMemory: true)
 }

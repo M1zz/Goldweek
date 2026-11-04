@@ -27,7 +27,7 @@ struct RemainingLeaveIntent: AppIntent {
         let records = (try? context.fetch(FetchDescriptor<LeaveRecord>())) ?? []
         // 홈 화면과 같은 계산 (HomeView)
         let remaining = LeaveUsageCalculator
-            .currentSummary(records: records, startMonth: profile.yearStartMonth, annualGrant: profile.totalAnnualLeave)
+            .currentSummary(records: records, startMonth: profile.yearStart, annualGrant: profile.totalAnnualLeave)
             .remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)
         let days = remaining.formatted(.number.precision(.fractionLength(0...1)))
         return .result(dialog: IntentDialog(LocalizedStringResource("올해 연차가 \(days)일 남았어요.", comment: "Siri: remaining leave. Argument is the number of days")))

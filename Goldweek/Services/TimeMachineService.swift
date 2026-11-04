@@ -372,9 +372,12 @@ struct TMProfileData: Codable {
     let preferConsecutive: Bool
     let avoidPeakSeason: Bool
     let priorityActivitiesRaw: String
+    /// 연차 기준일의 '일' — 1일이면 남기지 않는다 (예전 스냅샷과 체크섬이 그대로 맞게)
+    var yearStartDay: Int? = nil
 
     init(from profile: UserProfile) {
         self.id = profile.id
+        self.yearStartDay = profile.yearStartDay == 1 ? nil : profile.yearStartDay
         self.name = profile.name
         self.yearStartMonth = profile.yearStartMonth
         self.totalAnnualLeave = profile.totalAnnualLeave
@@ -397,6 +400,7 @@ struct TMProfileData: Codable {
         profile.id = id
         profile.name = name
         profile.yearStartMonth = yearStartMonth
+        profile.yearStartDay = yearStartDay ?? 1
         profile.totalAnnualLeave = totalAnnualLeave
         profile.usedLeave = usedLeave
         profile.createdAt = createdAt

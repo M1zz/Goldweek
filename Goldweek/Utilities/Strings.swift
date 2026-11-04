@@ -6832,6 +6832,50 @@ enum Strings {
         }
     }
 
+    /// 연차 기준일의 '일' — 입사일 기준이라 월 중간(3월 21일)에 새로 생기는 회사
+    static var yearStartDay: String {
+        switch lang {
+        case .korean: return "연차 기준일"
+        case .english: return "Reset Day"
+        case .swedish: return "Startdag"
+        case .norwegian: return "Startdag"
+        case .danish: return "Startdag"
+        case .finnish: return "Aloituspäivä"
+        case .polish: return "Dzień odnowienia"
+        case .czech: return "Den obnovení"
+        case .greek: return "Ημέρα ανανέωσης"
+        case .turkish: return "Yenilenme Günü"
+        case .russian: return "День обновления"
+        case .indonesian: return "Tanggal reset"
+        case .thai: return "วันที่เริ่มรอบใหม่"
+        case .vietnamese: return "Ngày làm mới"
+        case .dutch: return "Startdag"
+        case .japanese: return "基準日"
+        case .chinese: return "年假起始日"
+        case .german: return "Stichtag"
+        case .french: return "Jour de renouvellement"
+        case .spanish: return "Día de renovación"
+        case .italian: return "Giorno di rinnovo"
+        case .portuguese: return "Dia de renovação"
+        case .chineseTraditional: return "特休起算日"
+        }
+    }
+
+    /// 그 달의 몇째 날 — 기준일 고르기용
+    static func dayOfMonth(_ day: Int) -> String {
+        switch lang {
+        case .korean: return "\(day)일"
+        case .japanese, .chinese, .chineseTraditional: return "\(day)日"
+        case .english:
+            let f = NumberFormatter()
+            f.numberStyle = .ordinal
+            f.locale = Locale(identifier: "en")
+            return f.string(from: NSNumber(value: day)) ?? "\(day)"
+        case .german, .norwegian, .danish, .finnish, .polish, .czech, .turkish: return "\(day)."
+        default: return "\(day)"
+        }
+    }
+
     static var yearStartMonthLabel: String {
         switch lang {
         case .korean: return "연차 기준월"
@@ -11784,6 +11828,120 @@ enum Strings {
     }
 
     // MARK: - 휴가 사용 내역 (LeaveHistoryView)
+    // 휴가 사용 내역 — 상태 · 종류 필터 펼치기
+    static var historyFilter: String {
+        switch lang {
+        case .korean: return "필터"
+        case .english: return "Filters"
+        case .swedish: return "Filter"
+        case .norwegian: return "Filtre"
+        case .danish: return "Filtre"
+        case .finnish: return "Suodattimet"
+        case .polish: return "Filtry"
+        case .czech: return "Filtry"
+        case .greek: return "Φίλτρα"
+        case .turkish: return "Filtreler"
+        case .russian: return "Фильтры"
+        case .indonesian: return "Filter"
+        case .thai: return "ตัวกรอง"
+        case .vietnamese: return "Bộ lọc"
+        case .dutch: return "Filters"
+        case .japanese: return "フィルター"
+        case .chinese: return "筛选"
+        case .german: return "Filter"
+        case .french: return "Filtres"
+        case .spanish: return "Filtros"
+        case .italian: return "Filtri"
+        case .portuguese: return "Filtros"
+        case .chineseTraditional: return "篩選"
+        }
+    }
+
+    static var historyFilterExpanded: String {
+        switch lang {
+        case .korean: return "펼침"
+        case .english: return "Expanded"
+        case .swedish: return "Utfälld"
+        case .norwegian: return "Utvidet"
+        case .danish: return "Udvidet"
+        case .finnish: return "Laajennettu"
+        case .polish: return "Rozwinięte"
+        case .czech: return "Rozbaleno"
+        case .greek: return "Ανεπτυγμένο"
+        case .turkish: return "Genişletildi"
+        case .russian: return "Развёрнуто"
+        case .indonesian: return "Dibuka"
+        case .thai: return "ขยายอยู่"
+        case .vietnamese: return "Đang mở"
+        case .dutch: return "Uitgevouwen"
+        case .japanese: return "展開中"
+        case .chinese: return "已展开"
+        case .german: return "Ausgeklappt"
+        case .french: return "Développé"
+        case .spanish: return "Expandido"
+        case .italian: return "Espanso"
+        case .portuguese: return "Expandido"
+        case .chineseTraditional: return "已展開"
+        }
+    }
+
+    static var historyFilterCollapsed: String {
+        switch lang {
+        case .korean: return "접힘"
+        case .english: return "Collapsed"
+        case .swedish: return "Hopfälld"
+        case .norwegian: return "Skjult"
+        case .danish: return "Skjult"
+        case .finnish: return "Tiivistetty"
+        case .polish: return "Zwinięte"
+        case .czech: return "Sbaleno"
+        case .greek: return "Συμπτυγμένο"
+        case .turkish: return "Daraltıldı"
+        case .russian: return "Свёрнуто"
+        case .indonesian: return "Ditutup"
+        case .thai: return "ยุบอยู่"
+        case .vietnamese: return "Đang thu gọn"
+        case .dutch: return "Ingevouwen"
+        case .japanese: return "折りたたみ中"
+        case .chinese: return "已收起"
+        case .german: return "Eingeklappt"
+        case .french: return "Réduit"
+        case .spanish: return "Contraído"
+        case .italian: return "Compresso"
+        case .portuguese: return "Recolhido"
+        case .chineseTraditional: return "已收合"
+        }
+    }
+
+    /// 접힌 내역 필터 칩을 눌러 풀 때 (보이스오버)
+    static func historyFilterClear(_ t: String) -> String {
+        switch lang {
+        case .korean: return "\(t) 필터 해제"
+        case .english: return "Remove filter \(t)"
+        case .swedish: return "Ta bort filter \(t)"
+        case .norwegian: return "Fjern filter \(t)"
+        case .danish: return "Fjern filter \(t)"
+        case .finnish: return "Poista suodatin \(t)"
+        case .polish: return "Usuń filtr \(t)"
+        case .czech: return "Odebrat filtr \(t)"
+        case .greek: return "Αφαίρεση φίλτρου \(t)"
+        case .turkish: return "\(t) filtresini kaldır"
+        case .russian: return "Убрать фильтр «\(t)»"
+        case .indonesian: return "Hapus filter \(t)"
+        case .thai: return "ล้างตัวกรอง \(t)"
+        case .vietnamese: return "Bỏ bộ lọc \(t)"
+        case .dutch: return "Filter \(t) wissen"
+        case .japanese: return "\(t)のフィルターを解除"
+        case .chinese: return "取消筛选：\(t)"
+        case .german: return "Filter \(t) entfernen"
+        case .french: return "Retirer le filtre \(t)"
+        case .spanish: return "Quitar filtro \(t)"
+        case .italian: return "Rimuovi filtro \(t)"
+        case .portuguese: return "Remover filtro \(t)"
+        case .chineseTraditional: return "取消篩選：\(t)"
+        }
+    }
+
     static var navTitleLeaveHistory: String {
         switch lang {
         case .korean: return "휴가 사용 내역"

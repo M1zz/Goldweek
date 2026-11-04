@@ -44,19 +44,9 @@ class LeaveManager: ObservableObject {
     
     /// 연차 소진 예상일 계산
     static func calculateExpiryDate(profile: UserProfile) -> Date {
-        let calendar = Calendar.app
-        var components = calendar.dateComponents([.year, .month, .day], from: Date())
-        
-        // 다음 갱신월 계산
-        if let currentMonth = components.month {
-            if currentMonth >= profile.yearStartMonth {
-                components.year! += 1
-            }
-            components.month = profile.yearStartMonth
-            components.day = 1
-        }
-        
-        return calendar.date(from: components) ?? Date()
+        // 다음 갱신일 (연차 기준일)
+        let year = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart)
+        return LeaveUsageCalculator.fiscalYearStart(year: year + 1, startMonth: profile.yearStart)
     }
     
     /// 월별 연차 사용 통계

@@ -21,7 +21,7 @@ struct LeaveKindsView: View {
 
     private var orderedKinds: [LeaveKindRef] { store.orderedKinds(custom: customTypes) }
 
-    private var startMonth: Int { profiles.first?.yearStartMonth ?? 1 }
+    private var startMonth: YearStart { profiles.first?.yearStart ?? 1 }
     private var currentYear: Int { LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: startMonth) }
 
     /// 올해(연차 기준월부터) 종류별 사용량 — 한도 카운터용
@@ -183,7 +183,7 @@ struct LeaveKindEditor: View {
     @State private var didLoad = false
     @State private var showingPaywall = false
 
-    private var startMonth: Int { profiles.first?.yearStartMonth ?? 1 }
+    private var startMonth: YearStart { profiles.first?.yearStart ?? 1 }
     private var currentYear: Int { LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: startMonth) }
     /// 넘겨 쓰기를 셈하기 시작하는 해 — 이미 켜져 있던 종류는 그 해, 새로 켜면 올해
     private var carryStartYear: Int {
@@ -431,7 +431,7 @@ struct LeaveKindEditor: View {
 /// 한 해 동안 휴가 종류마다 쓴 양 — 사용 · 예정 · (한도가 있으면) 남음
 struct LeaveKindStatsView: View {
     let year: Int
-    let startMonth: Int
+    let startMonth: YearStart
 
     @Query(sort: \CustomLeaveType.createdAt) private var customTypes: [CustomLeaveType]
     @Query private var records: [LeaveRecord]

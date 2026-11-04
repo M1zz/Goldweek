@@ -125,13 +125,18 @@ struct LeaveWidgetData {
         let burnRate        = defaults.double(forKey: "burnRate")
         var remainingDays   = defaults.integer(forKey: "remainingDaysUntilReset")
         // 갱신까지 남은 날도 그 날 기준으로 — 연차 시작 월이 저장돼 있으면 다시 센다
+        // 기준일이 월 중간일 수 있다 (입사일 기준 — 3월 21일). 예전 앱은 일을 안 남겨 1일로 본다.
         let startMonth = defaults.integer(forKey: "yearStartMonth")
+        let startDay = max(1, defaults.integer(forKey: "yearStartDay"))
         if (1...12).contains(startMonth) {
+            func reset(in year: Int) -> Date? {
+                guard let first = cal.date(from: DateComponents(year: year, month: startMonth, day: 1)) else { return nil }
+                let length = cal.range(of: .day, in: .month, for: first)?.count ?? 28
+                return cal.date(byAdding: .day, value: min(startDay, length) - 1, to: first)
+            }
             let year = cal.component(.year, from: today)
-            let month = cal.component(.month, from: today)
-            let resetYear = month >= startMonth ? year + 1 : year
-            if let reset = cal.date(from: DateComponents(year: resetYear, month: startMonth, day: 1)) {
-                remainingDays = max(0, cal.dateComponents([.day], from: today, to: reset).day ?? remainingDays)
+            if let thisYear = reset(in: year), let next = today >= thisYear ? reset(in: year + 1) : thisYear {
+                remainingDays = max(0, cal.dateComponents([.day], from: today, to: next).day ?? remainingDays)
             }
         }
 

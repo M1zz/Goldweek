@@ -229,6 +229,7 @@ struct ContentView: View {
             hasher.combine(profile.totalAnnualLeave)
             hasher.combine(profile.usedLeave)
             hasher.combine(profile.yearStartMonth)
+            hasher.combine(profile.yearStartDay)
             hasher.combine(profile.countryRaw)
             hasher.combine(profile.holidayRegionRaw)
             hasher.combine(profile.userTypeRaw)
@@ -396,9 +397,9 @@ struct ContentView: View {
             .filter { !$0.isUsed && ($0.expirationDate == nil || $0.expirationDate! > Date()) }
             .reduce(0.0) { $0 + $1.remainingDays }
         // 지난해에서 넘어온 연차도 쓸 수 있는 양에 든다
-        let carry = LeaveUsageCalculator.carryOverUsable(year: LeaveUsageCalculator.fiscalYear(for: today, startMonth: profile.yearStartMonth),
+        let carry = LeaveUsageCalculator.carryOverUsable(year: LeaveUsageCalculator.fiscalYear(for: today, startMonth: profile.yearStart),
                                                          on: today, records: leaveRecords, annualGrant: profile.totalAnnualLeave,
-                                                         startMonth: profile.yearStartMonth)
+                                                         startMonth: profile.yearStart)
         let available = Int((max(0, profile.totalAnnualLeave + carry - committed) + bonus).rounded(.down))
         guard available >= 1 else { return nil }
 
