@@ -276,6 +276,7 @@ struct GoldweekApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modifier(OpenLeaveSheet())
         }
         .modelContainer(sharedModelContainer)
     }
