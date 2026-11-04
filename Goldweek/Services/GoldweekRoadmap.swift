@@ -362,7 +362,7 @@ extension GoldweekSpec {
                     id: "Berikan Goldweek Pro sebagai hadiah untuk teman atau rekan kerja.",
                     th: "ส่ง Goldweek Pro เป็นของขวัญให้เพื่อนหรือเพื่อนร่วมงาน",
                     vi: "Tặng Goldweek Pro cho bạn bè hoặc đồng nghiệp.").text),
-        .init(id: "shortcuts", status: .planned,
+        .init(id: "shortcuts", status: .shipped("2.4.2"),
               title: RoadmapL10n(
                     ko: "Siri와 단축어",
                     en: "Siri and Shortcuts",
