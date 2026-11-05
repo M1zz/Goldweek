@@ -1,5 +1,175 @@
 # Goldweek 릴리즈 노트
 
+## 2.4.3
+
+### 앱스토어 (한국어)
+
+설정을 누르면 앱이 닫히던 문제를 고쳤어요
+연차가 새로 생기는 날을 일까지 고를 수 있어요
+휴가 사용 내역을 한 화면에서 넓게 볼 수 있어요
+아이폰 검색에서 휴가 기록을 바로 열 수 있어요
+
+### App Store (English)
+
+Fixed the app closing when you open Settings
+Choose the exact day your leave resets
+See your leave history on its own full page
+Find your time off in iPhone Search
+
+### App Store (en-GB)
+
+Fixed the app closing when you open Settings
+Choose the exact day your leave resets
+See your leave history on its own full page
+Find your holidays in iPhone Search
+
+### 앱스토어 (일본어)
+
+設定を開くとアプリが閉じる問題を直しました
+休暇が付与される日を日付まで選べます
+休暇の利用履歴を専用の画面で見られます
+iPhoneの検索から休暇の記録を開けます
+
+### 앱스토어 (중국어 간체)
+
+修复了打开设置时应用闪退的问题
+年假重置日现在可以精确到某一天
+休假记录有了单独的完整页面
+在 iPhone 搜索中即可找到休假记录
+
+### 앱스토어 (독일어)
+
+Die App schließt sich beim Öffnen der Einstellungen nicht mehr
+Wähle den genauen Tag, an dem dein Urlaub neu startet
+Dein Urlaubsverlauf hat jetzt eine eigene Seite
+Finde deine Urlaubstage in der iPhone-Suche
+
+### 앱스토어 (프랑스어)
+
+L’app ne se ferme plus à l’ouverture des Réglages
+Choisissez le jour exact où vos congés repartent
+Votre historique de congés a sa propre page
+Retrouvez vos congés dans la recherche de l’iPhone
+
+### 앱스토어 (스페인어)
+
+La app ya no se cierra al abrir Ajustes
+Elige el día exacto en que se renuevan tus vacaciones
+Tu historial de vacaciones tiene su propia página
+Encuentra tus días libres en la búsqueda del iPhone
+
+### 앱스토어 (이탈리아어)
+
+L’app non si chiude più quando apri Impostazioni
+Scegli il giorno esatto in cui si rinnovano le ferie
+Lo storico delle ferie ha una pagina tutta sua
+Trova le tue ferie nella ricerca di iPhone
+
+### 앱스토어 (포르투갈어 브라질)
+
+O app não fecha mais ao abrir os Ajustes
+Escolha o dia exato em que suas férias renovam
+Seu histórico de folgas ganhou uma página própria
+Encontre suas folgas na busca do iPhone
+
+### 앱스토어 (중국어 번체)
+
+修正了打開設定時 App 會關閉的問題
+特休重新計算的日子現在能選到哪一天
+休假紀錄有了獨立的完整頁面
+在 iPhone 搜尋中就能找到休假紀錄
+
+### 앱스토어 (네덜란드어)
+
+De app sluit niet meer als je Instellingen opent
+Kies de precieze dag waarop je verlof opnieuw begint
+Je verlofgeschiedenis heeft nu een eigen pagina
+Vind je vrije dagen via zoeken op je iPhone
+
+### 앱스토어 (스웨덴어)
+
+Appen stängs inte längre när du öppnar Inställningar
+Välj exakt vilken dag din semester börjar om
+Din semesterhistorik har nu en egen sida
+Hitta dina lediga dagar i iPhones sökning
+
+### 앱스토어 (노르웨이어 보크말)
+
+Appen lukkes ikke lenger når du åpner Innstillinger
+Velg nøyaktig hvilken dag ferien din starter på nytt
+Ferieoversikten har nå sin egen side
+Finn fridagene dine i iPhone-søket
+
+### 앱스토어 (덴마크어)
+
+Appen lukker ikke længere, når du åbner Indstillinger
+Vælg den præcise dag, hvor din ferie starter forfra
+Din feriehistorik har nu sin egen side
+Find dine fridage i iPhones søgning
+
+### 앱스토어 (핀란드어)
+
+Sovellus ei enää sulkeudu, kun avaat asetukset
+Valitse tarkka päivä, jolloin lomasi alkavat alusta
+Lomahistoriallasi on nyt oma sivunsa
+Löydä lomasi iPhonen haulla
+
+### 앱스토어 (폴란드어)
+
+Aplikacja nie zamyka się już po otwarciu Ustawień
+Wybierz dokładny dzień, w którym odnawia się urlop
+Historia urlopów ma teraz osobną stronę
+Znajdziesz swoje urlopy w wyszukiwarce iPhone’a
+
+### 앱스토어 (체코어)
+
+Aplikace se už nezavírá při otevření Nastavení
+Vyberte přesný den, kdy se vám obnovuje dovolená
+Historie dovolené má teď vlastní stránku
+Dovolenou najdete i ve vyhledávání na iPhonu
+
+### 앱스토어 (그리스어)
+
+Η εφαρμογή δεν κλείνει πια όταν ανοίγετε τις Ρυθμίσεις
+Διαλέξτε την ακριβή μέρα που ανανεώνεται η άδειά σας
+Το ιστορικό αδειών έχει πλέον δική του σελίδα
+Βρείτε τις άδειές σας στην αναζήτηση του iPhone
+
+### 앱스토어 (튀르키예어)
+
+Ayarlar açılınca uygulamanın kapanması düzeltildi
+İzninizin yenilendiği günü tam olarak seçin
+İzin geçmişiniz artık kendi sayfasında
+İzinlerinizi iPhone aramasında bulun
+
+### 앱스토어 (러시아어)
+
+Приложение больше не закрывается при входе в настройки
+Выберите точный день, когда обновляется отпуск
+У истории отпусков теперь своя страница
+Находите свои отпуска через поиск на iPhone
+
+### 앱스토어 (인도네시아어)
+
+Aplikasi tidak lagi tertutup saat membuka Pengaturan
+Pilih tanggal pasti cuti Anda diperbarui
+Riwayat cuti kini punya halamannya sendiri
+Temukan cuti Anda lewat pencarian iPhone
+
+### 앱스토어 (태국어)
+
+แก้ปัญหาแอปปิดเองเมื่อเปิดหน้าตั้งค่า
+เลือกวันที่วันลาเริ่มนับใหม่ได้ถึงระดับวัน
+ประวัติการลามีหน้าของตัวเองแล้ว
+ค้นหาวันลาได้จากการค้นหาใน iPhone
+
+### 앱스토어 (베트남어)
+
+Đã sửa lỗi ứng dụng tự đóng khi mở Cài đặt
+Chọn đúng ngày phép năm của bạn được làm mới
+Lịch sử nghỉ phép giờ có trang riêng
+Tìm ngày nghỉ của bạn ngay trong tìm kiếm iPhone
+
 ## 2.4.2
 
 ### 앱스토어 (한국어)
