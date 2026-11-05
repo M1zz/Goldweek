@@ -274,16 +274,13 @@ enum LeaveUsageCalculator {
     /// 지난해에서 그 해로 넘어오는 연차 (기한과 상관없이 넘어온 양). 앞의 해를 몇 해까지 거슬러 계산한다.
     static func carryOverIn(year: Int, records: [LeaveRecord], annualGrant: Double, startMonth: YearStart,
                             depth: Int = 3, usesManual: Bool = true, calendar: Calendar = .app) -> Double {
-        // 기준 잔액을 적은 해는 넘어온 연차까지 그 잔액에 들어 있다
-        if accrualBaselineYear(startMonth: startMonth, calendar: calendar) == year { return 0 }
         if usesManual, let manual = carryOverManual(year: year) { return manual }
         let cap = carryOverMaxDays
-        let previousGrant = grant(year: year - 1, fallback: annualGrant, records: records, startMonth: startMonth, calendar: calendar)
+        let previousGrant = grant(year: year - 1, fallback: annualGrant, startMonth: startMonth, calendar: calendar)
         guard cap != 0, depth > 0, previousGrant > 0 else { return 0 }
         let previous = year - 1
-        // 기록이 하나도 없는 해부터는 이 앱을 안 쓴 해라 넘길 게 없다고 본다 (기준 잔액을 적은 해는 예외)
-        guard accrualBaselineYear(startMonth: startMonth, calendar: calendar) == previous
-                || !self.records(records, inFiscalYear: previous, startMonth: startMonth, calendar: calendar).isEmpty else { return 0 }
+        // 기록이 하나도 없는 해부터는 이 앱을 안 쓴 해라 넘길 게 없다고 본다
+        guard !self.records(records, inFiscalYear: previous, startMonth: startMonth, calendar: calendar).isEmpty else { return 0 }
         let prevCarry = carryOverIn(year: previous, records: records, annualGrant: annualGrant,
                                     startMonth: startMonth, depth: depth - 1, calendar: calendar)
         // 지난해 안에서 기한이 지나 사라진 몫은 빼고 남은 양
@@ -323,7 +320,7 @@ enum LeaveUsageCalculator {
             }
             // 쌓이는 연차: 그날까지 쌓인 만큼에서, 그날까지 시작한 휴가만 뺀다
             let nextDay = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: day)) ?? day
-            return accrued(year: year, through: day, records: others, startMonth: startMonth, calendar: calendar) + carry
+            return accrual.earned(year: year, startMonth: startMonth, through: day, calendar: calendar) + carry
                 - committed(others, year: year, startMonth: startMonth, before: nextDay, calendar: calendar)
         }
         guard accrual != nil else { return max(0, balance(on: date)) }
@@ -354,10 +351,6 @@ enum LeaveUsageCalculator {
         var period: Period
         /// 급여일 하나 — 매주·2주마다·매달은 이 날을 기준으로 돈다 (한 달에 두 번은 15일·말일 고정)
         var payDay: Date
-        /// 잔액 기준일 — 이날 남은 연차가 `startBalance`(단위는 `isHours` 를 따른다).
-        /// 이날까지 쌓이고 쓴 것은 그 잔액에 들어 있다고 보고, 다음 날부터 센다. 새로 입사했으면 입사일 + 0.
-        var startDate: Date? = nil
-        var startBalance: Double = 0
 
         /// 한 번에 쌓이는 양을 일로 — 시간이면 하루 근무 시간으로 나눈다
         var daysPerPeriod: Double {
@@ -395,16 +388,11 @@ enum LeaveUsageCalculator {
             return dates
         }
 
-        /// 그 회계연도 시작부터 `date` 까지 쌓인 연차 (일). 기준일이 그 해에 있으면 기준 잔액 + 그 뒤로 쌓인 양.
+        /// 그 회계연도 시작부터 `date` 까지 쌓인 연차 (일)
         func earned(year: Int, startMonth: YearStart, through date: Date, calendar: Calendar = .app) -> Double {
-            var start = fiscalYearStart(year: year, startMonth: startMonth, calendar: calendar)
+            let start = fiscalYearStart(year: year, startMonth: startMonth, calendar: calendar)
             let end = min(date, fiscalYearEnd(year: year, startMonth: startMonth, calendar: calendar))
-            var base = 0.0
-            if let startDate, fiscalYear(for: startDate, startMonth: startMonth, calendar: calendar) == year {
-                start = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: startDate)) ?? startDate
-                base = isHours ? startBalance * 60 / Double(max(1, LeaveLength.workdayMinutes)) : startBalance
-            }
-            return base + Double(payDates(from: start, through: end, calendar: calendar).count) * daysPerPeriod
+            return Double(payDates(from: start, through: end, calendar: calendar).count) * daysPerPeriod
         }
 
         /// 그 해 끝까지 쌓일 연차 (일)
@@ -422,11 +410,7 @@ enum LeaveUsageCalculator {
             return Accrual(amount: d.double(forKey: "accrualAmount"),
                            isHours: d.bool(forKey: "accrualIsHours"),
                            period: period,
-                           payDay: Date(timeIntervalSinceReferenceDate: d.double(forKey: "accrualPayDay")),
-                           // 0 = 기준일 없음 (해 시작부터 센다)
-                           startDate: d.double(forKey: "accrualStartDate") == 0 ? nil
-                               : Date(timeIntervalSinceReferenceDate: d.double(forKey: "accrualStartDate")),
-                           startBalance: d.double(forKey: "accrualStartBalance"))
+                           payDay: Date(timeIntervalSinceReferenceDate: d.double(forKey: "accrualPayDay")))
         }
         set {
             let d = UserDefaults.standard
@@ -435,45 +419,20 @@ enum LeaveUsageCalculator {
             d.set(newValue.amount, forKey: "accrualAmount")
             d.set(newValue.isHours, forKey: "accrualIsHours")
             d.set(newValue.payDay.timeIntervalSinceReferenceDate, forKey: "accrualPayDay")
-            d.set(newValue.startDate?.timeIntervalSinceReferenceDate ?? 0, forKey: "accrualStartDate")
-            d.set(newValue.startBalance, forKey: "accrualStartBalance")
         }
-    }
-
-    /// 잔액 기준일이 속한 회계연도. 기준일이 없거나 한 번에 받는 방식이면 nil.
-    static func accrualBaselineYear(startMonth: YearStart, calendar: Calendar = .app) -> Int? {
-        accrual?.startDate.map { fiscalYear(for: $0, startMonth: startMonth, calendar: calendar) }
-    }
-
-    /// 그 해 `date` 까지 쌓인 연차 — "총 연차 = 쓴 것 + 남은 것" 이 맞도록, 기준일까지 쓴 휴가도 더한다
-    /// (그 휴가는 기준 잔액에 이미 빠져 있는데, 화면의 "쓴 연차"에는 들어가기 때문).
-    static func accrued(year: Int, through date: Date, records: [LeaveRecord], startMonth: YearStart,
-                        calendar: Calendar = .app) -> Double {
-        guard let accrual else { return 0 }
-        var total = accrual.earned(year: year, startMonth: startMonth, through: date, calendar: calendar)
-        if let start = accrual.startDate, accrualBaselineYear(startMonth: startMonth, calendar: calendar) == year {
-            let nextDay = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: start)) ?? start
-            total += committed(records, year: year, startMonth: startMonth, before: nextDay, calendar: calendar)
-        }
-        return total
     }
 
     /// 그 해의 1년치 연차 — 쌓임이면 그 해 끝까지 쌓일 양, 아니면 `fallback`(총 연차)
-    static func grant(year: Int, fallback: Double, records: [LeaveRecord], startMonth: YearStart,
-                      calendar: Calendar = .app) -> Double {
-        guard accrual != nil else { return fallback }
-        return accrued(year: year, through: fiscalYearEnd(year: year, startMonth: startMonth, calendar: calendar),
-                       records: records, startMonth: startMonth, calendar: calendar)
+    static func grant(year: Int, fallback: Double, startMonth: YearStart, calendar: Calendar = .app) -> Double {
+        accrual?.yearTotal(year: year, startMonth: startMonth, calendar: calendar) ?? fallback
     }
 
     /// 쌓임이면 총 연차를 올해 끝까지 쌓일 양으로 맞춘다 — 총 연차를 읽는 화면·위젯이 따로 계산하지 않게.
     @discardableResult
-    static func syncAccrualTotal(_ profile: UserProfile, records: [LeaveRecord], now: Date = Date(),
-                                 calendar: Calendar = .app) -> Bool {
-        guard profile.userType == .employee, accrual != nil else { return false }
+    static func syncAccrualTotal(_ profile: UserProfile, now: Date = Date(), calendar: Calendar = .app) -> Bool {
+        guard profile.userType == .employee, let accrual else { return false }
         let year = fiscalYear(for: now, startMonth: profile.yearStart, calendar: calendar)
-        let total = (grant(year: year, fallback: 0, records: records, startMonth: profile.yearStart,
-                           calendar: calendar) * 100).rounded() / 100
+        let total = (accrual.yearTotal(year: year, startMonth: profile.yearStart, calendar: calendar) * 100).rounded() / 100
         guard abs(profile.totalAnnualLeave - total) > 0.001 else { return false }
         profile.totalAnnualLeave = total
         return true
