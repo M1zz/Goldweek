@@ -1292,13 +1292,13 @@ struct LeaveStatusCard: View {
             .voCard(VoiceOverLabel.leaveBalance(total: totalLeave, used: displayUsed, remaining: effectiveRemaining))
 
             // 쌓이는 연차: 위 숫자는 연말 기준이라, 오늘 실제로 쓸 수 있는 양을 따로 보여 준다
-            if !isLeisure, !accrualPeriodRaw.isEmpty, let accrual = LeaveUsageCalculator.accrual {
+            if !isLeisure, !accrualPeriodRaw.isEmpty, LeaveUsageCalculator.accrual != nil {
                 let now = Date()
                 let year = LeaveUsageCalculator.fiscalYear(for: now, startMonth: profile.yearStart)
                 let available = LeaveUsageCalculator.availableAnnual(on: now, records: allLeaveRecords,
                                                                      annualGrant: profile.totalAnnualLeave,
                                                                      startMonth: profile.yearStart)
-                let earned = accrual.earned(year: year, startMonth: profile.yearStart, through: now)
+                let earned = LeaveUsageCalculator.accrued(year: year, through: now, records: allLeaveRecords, startMonth: profile.yearStart)
                 Label(Strings.accrualHomeLine(available: Strings.dayCount(available), earned: Strings.dayCount(earned)),
                       systemImage: "chart.line.uptrend.xyaxis")
                     .font(.body)

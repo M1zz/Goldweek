@@ -107,7 +107,7 @@ struct ContentView: View {
                            leaveRecords.contains(where: { $0.length == .hours }) {
                             LeaveLength.usesHourlyLeave = true
                         }
-                        LeaveUsageCalculator.syncAccrualTotal(profile)
+                        LeaveUsageCalculator.syncAccrualTotal(profile, records: leaveRecords)
                         updateWidget()
                         ReviewManager.shared.recordLaunch()
                         // 사람이 앱을 실제로 연 순간 — 실행 횟수·활동일·설치 스냅샷이 여기서 나간다.
@@ -127,7 +127,7 @@ struct ContentView: View {
                         if newPhase == .active {
                             LeaveManager.updatePastLeaves(records: leaveRecords, modelContext: modelContext)
                             // 쌓이는 연차: 해가 바뀌면 총 연차(그 해 끝까지 쌓일 양)를 새 해에 맞춘다
-                            LeaveUsageCalculator.syncAccrualTotal(profile)
+                            LeaveUsageCalculator.syncAccrualTotal(profile, records: leaveRecords)
                             updateWidget()
                             UsageReportingService.reportForegroundOpen(context: modelContext)
                             reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
@@ -168,6 +168,8 @@ struct ContentView: View {
                         updateWidget()
                     }
                     .onChange(of: leaveRecords.count) { _, _ in
+                        // 잔액 기준일 전에 쓴 휴가가 늘면 총 연차도 같이 맞춘다
+                        LeaveUsageCalculator.syncAccrualTotal(profile, records: leaveRecords)
                         updateWidget()
                     }
                     .onChange(of: leaveSyncFingerprint) { _, _ in

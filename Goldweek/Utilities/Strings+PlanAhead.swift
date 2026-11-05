@@ -751,6 +751,122 @@ extension Strings {
         }
     }
 
+    /// 잔액 기준일 정하기 — 그날 남은 연차부터 계산
+    static var accrualBaselineToggle: String {
+        switch planLang {
+        case .korean: return "잔액 기준일 정하기"
+        case .english: return "Set a start date"
+        case .japanese: return "残高の基準日を設定"
+        case .chinese: return "设置起算日"
+        case .german: return "Stichtag festlegen"
+        case .french: return "Définir une date de départ"
+        case .spanish: return "Fijar fecha de inicio"
+        case .italian: return "Imposta data di partenza"
+        case .portuguese: return "Definir data de início"
+        case .chineseTraditional: return "設定起算日"
+        case .dutch: return "Startdatum instellen"
+        case .swedish: return "Ange startdatum"
+        case .norwegian: return "Angi startdato"
+        case .danish: return "Angiv startdato"
+        case .finnish: return "Aseta aloituspäivä"
+        case .polish: return "Ustaw datę początkową"
+        case .czech: return "Nastavit počáteční datum"
+        case .greek: return "Ορισμός ημερομηνίας έναρξης"
+        case .turkish: return "Başlangıç tarihi belirle"
+        case .russian: return "Указать дату отсчёта"
+        case .indonesian: return "Atur tanggal mulai"
+        case .thai: return "กำหนดวันเริ่มนับ"
+        case .vietnamese: return "Đặt ngày bắt đầu"
+        }
+    }
+
+    /// 잔액 기준일
+    static var accrualBaselineDate: String {
+        switch planLang {
+        case .korean: return "기준일"
+        case .english: return "Start date"
+        case .japanese: return "基準日"
+        case .chinese: return "起算日"
+        case .german: return "Stichtag"
+        case .french: return "Date de départ"
+        case .spanish: return "Fecha de inicio"
+        case .italian: return "Data di partenza"
+        case .portuguese: return "Data de início"
+        case .chineseTraditional: return "起算日"
+        case .dutch: return "Startdatum"
+        case .swedish: return "Startdatum"
+        case .norwegian: return "Startdato"
+        case .danish: return "Startdato"
+        case .finnish: return "Aloituspäivä"
+        case .polish: return "Data początkowa"
+        case .czech: return "Počáteční datum"
+        case .greek: return "Ημερομηνία έναρξης"
+        case .turkish: return "Başlangıç tarihi"
+        case .russian: return "Дата отсчёта"
+        case .indonesian: return "Tanggal mulai"
+        case .thai: return "วันเริ่มนับ"
+        case .vietnamese: return "Ngày bắt đầu"
+        }
+    }
+
+    /// 기준일에 남은 연차
+    static var accrualBaselineBalance: String {
+        switch planLang {
+        case .korean: return "그날 남은 연차"
+        case .english: return "Balance on that day"
+        case .japanese: return "その日の残り"
+        case .chinese: return "当天余额"
+        case .german: return "Stand an dem Tag"
+        case .french: return "Solde à cette date"
+        case .spanish: return "Saldo ese día"
+        case .italian: return "Saldo a quella data"
+        case .portuguese: return "Saldo nesse dia"
+        case .chineseTraditional: return "當天餘額"
+        case .dutch: return "Saldo op die dag"
+        case .swedish: return "Saldo den dagen"
+        case .norwegian: return "Saldo den dagen"
+        case .danish: return "Saldo den dag"
+        case .finnish: return "Saldo sinä päivänä"
+        case .polish: return "Saldo tego dnia"
+        case .czech: return "Zůstatek k tomu dni"
+        case .greek: return "Υπόλοιπο εκείνη τη μέρα"
+        case .turkish: return "O günkü bakiye"
+        case .russian: return "Остаток на эту дату"
+        case .indonesian: return "Saldo hari itu"
+        case .thai: return "คงเหลือ ณ วันนั้น"
+        case .vietnamese: return "Số dư ngày đó"
+        }
+    }
+
+    /// 잔액 기준일 설명
+    static var accrualBaselineFooter: String {
+        switch planLang {
+        case .korean: return "급여명세서나 회사 기록에 나온 남은 연차와 그 날짜를 적으세요. 그날까지 쌓이고 쓴 것은 이 잔액에 들어 있다고 보고, 다음 날부터 쌓이는 연차와 쓰는 휴가로 계산합니다. 새로 입사했다면 입사일과 0을 적으세요."
+        case .english: return "Enter the balance from your pay stub or HR portal and the date it’s from. Anything earned or used through that day counts as part of it, and tracking starts the next day. Just started? Enter your start date and 0."
+        case .japanese: return "給与明細や会社の記録にある残り日数と、その日付を入力してください。その日までにたまった分・使った分はこの残高に含まれるとみなし、翌日からの付与と休暇で計算します。入社したばかりなら入社日と0を入力してください。"
+        case .chinese: return "请填写工资单或公司系统中显示的年假余额及其日期。当天及之前累积和使用的都视为已包含在余额中，从第二天起按新累积和休假计算。刚入职的话，填写入职日期和 0。"
+        case .german: return "Trag den Stand von deiner Gehaltsabrechnung oder aus dem Personalportal und das Datum dazu ein. Alles, was bis zu diesem Tag angesammelt oder genommen wurde, gilt als enthalten – gezählt wird ab dem nächsten Tag. Gerade erst angefangen? Trag dein Eintrittsdatum und 0 ein."
+        case .french: return "Saisissez le solde indiqué sur votre bulletin de paie ou votre espace RH, et sa date. Tout ce qui a été acquis ou pris jusqu’à ce jour est considéré comme inclus ; le suivi commence le lendemain. Vous venez d’arriver ? Saisissez votre date d’embauche et 0."
+        case .spanish: return "Escribe el saldo que aparece en tu nómina o en el portal de RR. HH. y su fecha. Todo lo acumulado o usado hasta ese día se da por incluido, y el cálculo empieza al día siguiente. ¿Acabas de entrar? Pon tu fecha de ingreso y 0."
+        case .italian: return "Inserisci il saldo che trovi in busta paga o nel portale HR e la sua data. Tutto ciò che è stato maturato o usato fino a quel giorno si considera già compreso; il conteggio parte dal giorno dopo. Hai appena iniziato? Inserisci la data di assunzione e 0."
+        case .portuguese: return "Informe o saldo que aparece no holerite ou no sistema da empresa e a data dele. Tudo o que foi acumulado ou usado até esse dia já conta nele, e o cálculo começa no dia seguinte. Acabou de entrar? Informe a data de admissão e 0."
+        case .chineseTraditional: return "請填寫薪資單或公司系統上的特休餘額與日期。當天以前累積和使用的都算在這個餘額裡，從隔天起依新累積和請假計算。剛到職的話，填寫到職日和 0。"
+        case .dutch: return "Vul het saldo van je loonstrook of HR-portaal in en de datum ervan. Alles wat tot en met die dag is opgebouwd of opgenomen, zit daarin; vanaf de volgende dag wordt verder geteld. Net begonnen? Vul je startdatum en 0 in."
+        case .swedish: return "Ange saldot från lönebeskedet eller HR-portalen och datumet det gäller. Allt som tjänats in eller tagits ut till och med den dagen räknas som inräknat, och räkningen börjar dagen efter. Nyanställd? Ange startdatum och 0."
+        case .norwegian: return "Skriv inn saldoen fra lønnsslippen eller HR-portalen og datoen den gjelder. Alt som er opptjent eller brukt til og med den dagen regnes som inkludert, og tellingen starter dagen etter. Nettopp begynt? Skriv inn startdatoen og 0."
+        case .danish: return "Indtast saldoen fra lønsedlen eller HR-portalen og datoen for den. Alt optjent eller brugt til og med den dag regnes som med, og optællingen starter dagen efter. Lige startet? Indtast din startdato og 0."
+        case .finnish: return "Syötä palkkalaskelman tai HR-järjestelmän saldo ja sen päivämäärä. Kaikki siihen päivään mennessä kertynyt ja käytetty sisältyy siihen, ja laskenta alkaa seuraavasta päivästä. Juuri aloittanut? Syötä aloituspäiväsi ja 0."
+        case .polish: return "Wpisz saldo z paska wypłaty lub systemu kadrowego i datę, której dotyczy. Wszystko, co naliczono lub wykorzystano do tego dnia włącznie, jest w nim ujęte, a liczenie zaczyna się od następnego dnia. Dopiero zaczynasz? Wpisz datę rozpoczęcia pracy i 0."
+        case .czech: return "Zadejte zůstatek z výplatní pásky nebo personálního systému a datum, ke kterému platí. Vše naspořené a vybrané do toho dne včetně se počítá jako zahrnuté a počítání začíná dalším dnem. Právě jste nastoupili? Zadejte datum nástupu a 0."
+        case .greek: return "Συμπληρώστε το υπόλοιπο από την απόδειξη μισθοδοσίας ή το σύστημα HR και την ημερομηνία του. Ό,τι συσσωρεύτηκε ή χρησιμοποιήθηκε έως και εκείνη τη μέρα θεωρείται ότι περιλαμβάνεται, και ο υπολογισμός ξεκινά την επόμενη μέρα. Μόλις ξεκινήσατε; Βάλτε την ημερομηνία πρόσληψης και 0."
+        case .turkish: return "Maaş bordronuzdaki veya İK sistemindeki bakiyeyi ve tarihini girin. O güne kadar biriken ve kullanılanların bu bakiyeye dahil olduğu kabul edilir; hesap ertesi günden başlar. Yeni mi başladınız? İşe giriş tarihinizi ve 0 girin."
+        case .russian: return "Введите остаток из расчётного листка или кадровой системы и дату, на которую он указан. Всё начисленное и использованное по этот день включительно считается учтённым, а подсчёт начнётся со следующего дня. Только устроились? Укажите дату начала работы и 0."
+        case .indonesian: return "Masukkan saldo dari slip gaji atau sistem HR beserta tanggalnya. Semua yang terkumpul atau terpakai sampai hari itu dianggap sudah termasuk, dan perhitungan dimulai keesokan harinya. Baru mulai bekerja? Masukkan tanggal mulai dan 0."
+        case .thai: return "กรอกยอดวันลาคงเหลือจากสลิปเงินเดือนหรือระบบ HR พร้อมวันที่ของยอดนั้น ส่วนที่สะสมและใช้ไปจนถึงวันนั้นถือว่ารวมอยู่ในยอดแล้ว และจะเริ่มนับตั้งแต่วันถัดไป เพิ่งเริ่มงาน? กรอกวันเริ่มงานและ 0"
+        case .vietnamese: return "Nhập số dư trên phiếu lương hoặc hệ thống nhân sự và ngày của số dư đó. Mọi phần tích lũy và đã dùng đến hết ngày đó được xem là đã tính vào, việc tính bắt đầu từ ngày hôm sau. Mới vào làm? Nhập ngày bắt đầu làm và 0."
+        }
+    }
+
     /// 지금까지 쌓인 연차
     static var accrualEarnedSoFar: String {
         switch planLang {

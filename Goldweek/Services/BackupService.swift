@@ -54,6 +54,9 @@ struct LeaveKindSettingsBackup: Codable {
     var accrualAmount: Double?
     var accrualIsHours: Bool?
     var accrualPayDay: Date?
+    /// 잔액 기준일 · 그날 잔액 (예전 백업에는 없다)
+    var accrualStartDate: Date?
+    var accrualStartBalance: Double?
 
     static func current() -> LeaveKindSettingsBackup {
         let defaults = UserDefaults.standard
@@ -71,7 +74,9 @@ struct LeaveKindSettingsBackup: Codable {
             accrualPeriod: LeaveUsageCalculator.accrual?.period.rawValue,
             accrualAmount: LeaveUsageCalculator.accrual?.amount,
             accrualIsHours: LeaveUsageCalculator.accrual?.isHours,
-            accrualPayDay: LeaveUsageCalculator.accrual?.payDay
+            accrualPayDay: LeaveUsageCalculator.accrual?.payDay,
+            accrualStartDate: LeaveUsageCalculator.accrual?.startDate,
+            accrualStartBalance: LeaveUsageCalculator.accrual?.startBalance
         )
     }
 
@@ -86,7 +91,8 @@ struct LeaveKindSettingsBackup: Codable {
         if let usesHourlyLeave { LeaveLength.usesHourlyLeave = usesHourlyLeave }
         if let accrualPeriod, let period = LeaveUsageCalculator.Accrual.Period(rawValue: accrualPeriod) {
             LeaveUsageCalculator.accrual = .init(amount: accrualAmount ?? 0, isHours: accrualIsHours ?? false,
-                                                 period: period, payDay: accrualPayDay ?? Date())
+                                                 period: period, payDay: accrualPayDay ?? Date(),
+                                                 startDate: accrualStartDate, startBalance: accrualStartBalance ?? 0)
         }
     }
 }

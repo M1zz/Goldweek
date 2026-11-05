@@ -1943,11 +1943,54 @@ final class AccrualLeaveTests: XCTestCase {
     func testSyncTotalToYearEnd() {
         let profile = UserProfile(totalAnnualLeave: 10)
         LeaveUsageCalculator.accrual = Accrual(amount: 1.25, isHours: false, period: .monthly, payDay: d(2026, 1, 15))
-        XCTAssertTrue(LeaveUsageCalculator.syncAccrualTotal(profile, now: d(2026, 5, 1), calendar: cal))
+        XCTAssertTrue(LeaveUsageCalculator.syncAccrualTotal(profile, records: [], now: d(2026, 5, 1), calendar: cal))
         XCTAssertEqual(profile.totalAnnualLeave, 15)   // 1.25 × 12
         LeaveUsageCalculator.accrual = Accrual(amount: 2, isHours: false, period: .monthly, payDay: d(2026, 1, 15))
-        LeaveUsageCalculator.syncAccrualTotal(profile, now: d(2026, 5, 1), calendar: cal)
+        LeaveUsageCalculator.syncAccrualTotal(profile, records: [], now: d(2026, 5, 1), calendar: cal)
         XCTAssertEqual(profile.totalAnnualLeave, 24)
+    }
+
+    // 잔액 기준일 (미국 사용자 피드백): 6/30 에 4일 남음 — 그날까지 쌓이고 쓴 건 그 4일에 들어 있다
+    private func baselineAccrual(isHours: Bool = false, balance: Double = 4) -> Accrual {
+        Accrual(amount: isHours ? 8 : 1, isHours: isHours, period: .monthly, payDay: d(2026, 1, 15),
+                startDate: d(2026, 6, 30), startBalance: balance)
+    }
+
+    func testBaselineBalanceCountsFromNextDay() {
+        LeaveUsageCalculator.accrual = baselineAccrual()
+        let march = LeaveRecord(startDate: d(2026, 3, 2), endDate: d(2026, 3, 2), status: .used)       // 기준일 전 — 잔액에 이미 빠짐
+        let august = LeaveRecord(startDate: d(2026, 8, 3), endDate: d(2026, 8, 4), status: .planned)   // 기준일 뒤 — 2일
+        let records = [march, august]
+        // 7/1: 4일, 그런데 8/3 휴가 때 4 + 7/15 쌓임 1 − 2 = 3 이라 3까지만
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2026, 7, 1), records: records, annualGrant: 0, startMonth: 1), 3)
+        // 8/20: 4 + 7/15 · 8/15 두 번 − 2 = 4
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2026, 8, 20), records: records, annualGrant: 0, startMonth: 1), 4)
+        // 총 연차 = 쓴 것 + 남은 것: 남은 것은 4 + 7~12월 6번 − 8월 2일 = 8, 쓴 것은 3월 1일 + 8월 2일
+        let profile = UserProfile(totalAnnualLeave: 0)
+        LeaveUsageCalculator.syncAccrualTotal(profile, records: records, now: d(2026, 7, 1), calendar: cal)
+        XCTAssertEqual(profile.totalAnnualLeave, 11)
+        let summary = LeaveUsageCalculator.summary(records: records, year: 2026, startMonth: 1,
+                                                   annualGrant: profile.totalAnnualLeave, asOf: d(2026, 7, 1), calendar: cal)
+        XCTAssertEqual(summary.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false), 8)
+    }
+
+    func testBaselineYearIgnoresCarryOverAndFeedsNextYear() {
+        LeaveUsageCalculator.accrual = baselineAccrual()
+        LeaveUsageCalculator.carryOverMaxDays = -1
+        LeaveUsageCalculator.setCarryOverManual(5, year: 2026)
+        defer { LeaveUsageCalculator.setCarryOverManual(nil, year: 2026) }
+        // 기준일의 해는 넘어온 연차가 잔액에 들어 있다 — 직접 적은 값도 더하지 않는다
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2026, records: [], annualGrant: 0, startMonth: 1), 0)
+        // 기록이 없어도 다음 해로는 남은 4 + 6 = 10 이 넘어간다
+        XCTAssertEqual(LeaveUsageCalculator.carryOverIn(year: 2027, records: [], annualGrant: 0, startMonth: 1), 10)
+    }
+
+    func testBaselineBalanceInHours() {
+        LeaveUsageCalculator.accrual = baselineAccrual(isHours: true, balance: 16)   // 16시간 = 2일
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2026, 7, 1), records: [], annualGrant: 0, startMonth: 1), 2)
+        // 새로 입사: 기준일 + 0 이면 그 전 급여일은 세지 않는다
+        LeaveUsageCalculator.accrual = baselineAccrual(balance: 0)
+        XCTAssertEqual(LeaveUsageCalculator.availableAnnual(on: d(2026, 7, 20), records: [], annualGrant: 0, startMonth: 1), 1)
     }
 }
 
