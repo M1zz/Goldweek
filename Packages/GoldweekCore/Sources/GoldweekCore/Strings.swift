@@ -2256,62 +2256,7 @@ public enum Strings {
         }
     }
 
-    /// 이름 수정 버튼 VoiceOver 라벨
-    public static var editName: String {
-        switch lang {
-        case .korean: return "이름 수정"
-        case .english: return "Edit name"
-        case .swedish: return "Redigera namn"
-        case .norwegian: return "Rediger navn"
-        case .danish: return "Rediger navn"
-        case .finnish: return "Muokkaa nimeä"
-        case .polish: return "Edytuj imię"
-        case .czech: return "Upravit jméno"
-        case .greek: return "Επεξεργασία ονόματος"
-        case .turkish: return "Adı düzenle"
-        case .russian: return "Изменить имя"
-        case .indonesian: return "Ubah nama"
-        case .thai: return "แก้ไขชื่อ"
-        case .vietnamese: return "Sửa tên"
-        case .dutch: return "Naam bewerken"
-        case .japanese: return "名前を編集"
-        case .chinese: return "编辑姓名"
-        case .german: return "Name bearbeiten"
-        case .french: return "Modifier le nom"
-        case .spanish: return "Editar nombre"
-        case .italian: return "Modifica nome"
-        case .portuguese: return "Editar nome"
-        case .chineseTraditional: return "編輯姓名"
-        }
-    }
 
-    public static func joinDate(_ dateStr: String) -> String {
-        switch lang {
-        case .korean: return "가입일: \(dateStr)"
-        case .english: return "Joined: \(dateStr)"
-        case .swedish: return "Gick med: \(dateStr)"
-        case .norwegian: return "Ble med: \(dateStr)"
-        case .danish: return "Tilmeldt: \(dateStr)"
-        case .finnish: return "Liittynyt: \(dateStr)"
-        case .polish: return "Dołączono: \(dateStr)"
-        case .czech: return "Registrace: \(dateStr)"
-        case .greek: return "Εγγραφή: \(dateStr)"
-        case .turkish: return "Katılım: \(dateStr)"
-        case .russian: return "С нами с \(dateStr)"
-        case .indonesian: return "Bergabung: \(dateStr)"
-        case .thai: return "เริ่มใช้: \(dateStr)"
-        case .vietnamese: return "Bắt đầu dùng: \(dateStr)"
-        case .dutch: return "Lid sinds: \(dateStr)"
-        case .japanese: return "登録日: \(dateStr)"
-        case .chinese: return "注册日: \(dateStr)"
-        case .german: return "Dabei seit: \(dateStr)"
-        case .french: return "Inscrit le : \(dateStr)"
-        case .spanish: return "Miembro desde: \(dateStr)"
-        case .italian: return "Registrazione: \(dateStr)"
-        case .portuguese: return "Membro desde: \(dateStr)"
-        case .chineseTraditional: return "註冊日期：\(dateStr)"
-        }
-    }
 
     public static var countryAndLanguage: String {
         switch lang {

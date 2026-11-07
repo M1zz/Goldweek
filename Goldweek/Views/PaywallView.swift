@@ -43,12 +43,15 @@ struct PaywallView: View {
     /// App Store 오퍼 코드 입력 시트 (StoreKit 2). 받은 코드는 `Transaction.updates` 로 들어와 칸이 열린다.
     @State private var showingOfferCode = false
     private let initialTerm: Term
+    /// 설정에서 화면으로 넘어와 열렸다 — 내비게이션 · 닫기 단추는 바깥 것을 쓴다(클립키보드와 같다)
+    private let embedded: Bool
 
     /// 월 · 연 · 평생. 위에서 아래로 놓는 순서.
     enum Term: CaseIterable { case monthly, yearly, lifetime }
 
     /// - Parameter initialProductID: 처음 고를 칸과 길을 정하는 상품 (기본: 프로 연간). 스크린샷 모드에서도 쓴다.
-    init(initialProductID: String? = nil) {
+    init(initialProductID: String? = nil, embedded: Bool = false) {
+        self.embedded = embedded
         let id = initialProductID ?? ScreenshotMode.paywallProductID ?? ProManager.yearlyProductID
         let tier = ProManager.tier(of: id)
         _tier = State(initialValue: tier == .free ? .pro : tier)
@@ -57,28 +60,19 @@ struct PaywallView: View {
     }
 
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 24) {
-                    hero
-                    if purchasableTiers.count > 1 { tierSwitch }
-                    benefits
-                    if purchasableTiers.contains(tier) { options }
-                    comparison
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 8)
-                .padding(.bottom, 24)
-            }
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                if purchasableTiers.contains(tier) { purchaseBar }
-            }
-            .navigationTitle("")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(Strings.cancel) { dismiss() }
-                        .foregroundColor(.secondary)
+        Group {
+            if embedded {
+                // 아래 고정 구매 막대 · 약관 줄을 탭 막대가 가리지 않게
+                page.toolbar(.hidden, for: .tabBar)
+            } else {
+                NavigationView {
+                    page
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button(Strings.cancel) { dismiss() }
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                 }
             }
         }
@@ -98,6 +92,26 @@ struct PaywallView: View {
         } message: {
             Text(alertMessage)
         }
+    }
+
+    private var page: some View {
+            ScrollView {
+                VStack(spacing: 24) {
+                    hero
+                    if purchasableTiers.count > 1 { tierSwitch }
+                    benefits
+                    if purchasableTiers.contains(tier) { options }
+                    comparison
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .padding(.bottom, 24)
+            }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if purchasableTiers.contains(tier) { purchaseBar }
+            }
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
     }
 
     /// 화면에 놓는 칸, 낮은 것부터 (비교표 · '내 혜택' 이 쓴다)

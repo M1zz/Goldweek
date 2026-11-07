@@ -1024,6 +1024,16 @@ extension Strings {
     }
 
     /// 설정 — 선물 · 응원 섹션 머리
+    /// 설정: 요금제 · 응원 · 선물을 모은 칸의 제목 (클립키보드와 같다)
+    public static var planAndSupportSection: String {
+        pick([.korean: "요금제와 응원", .english: "Plan & Support", .japanese: "プランと応援", .chinese: "方案与支持", .german: "Tarif & Unterstützung", .french: "Forfait et soutien", .spanish: "Plan y apoyo", .italian: "Piano e sostegno", .portuguese: "Plano e apoio", .chineseTraditional: "方案與支持", .dutch: "Abonnement en steun", .swedish: "Plan och stöd", .norwegian: "Plan og støtte", .danish: "Plan og støtte", .finnish: "Tilaus ja tuki", .polish: "Plan i wsparcie", .czech: "Tarif a podpora", .greek: "Πρόγραμμα και στήριξη", .turkish: "Plan ve destek", .russian: "Тариф и поддержка", .indonesian: "Paket dan dukungan", .thai: "แผนและการสนับสนุน", .vietnamese: "Gói và ủng hộ"])
+    }
+
+    /// 설정: 선물 화면으로 들어가는 줄 · 그 화면 제목
+    public static var giftEntry: String {
+        pick([.korean: "선물하기", .english: "Send a Gift", .japanese: "ギフトを贈る", .chinese: "赠送礼物", .german: "Verschenken", .french: "Offrir", .spanish: "Regalar", .italian: "Regala", .portuguese: "Presentear", .chineseTraditional: "贈送禮物", .dutch: "Cadeau geven", .swedish: "Ge en gåva", .norwegian: "Gi en gave", .danish: "Giv en gave", .finnish: "Anna lahja", .polish: "Podaruj", .czech: "Darovat", .greek: "Κάνε δώρο", .turkish: "Hediye et", .russian: "Подарить", .indonesian: "Beri hadiah", .thai: "มอบของขวัญ", .vietnamese: "Tặng quà"])
+    }
+
     public static var giftAndTipSection: String {
         pick([.korean: "선물과 응원", .english: "Gifts & Support", .japanese: "ギフトと応援", .chinese: "礼物与支持", .german: "Geschenke & Unterstützung", .french: "Cadeaux et soutien", .spanish: "Regalos y apoyo", .italian: "Regali e sostegno", .portuguese: "Presentes e apoio", .chineseTraditional: "禮物與支持", .dutch: "Cadeaus en steun", .swedish: "Gåvor och stöd", .norwegian: "Gaver og støtte", .danish: "Gaver og støtte", .finnish: "Lahjat ja tuki", .polish: "Prezenty i wsparcie", .czech: "Dárky a podpora", .greek: "Δώρα και στήριξη", .turkish: "Hediyeler ve destek", .russian: "Подарки и поддержка", .indonesian: "Hadiah dan dukungan", .thai: "ของขวัญและการสนับสนุน", .vietnamese: "Quà tặng và ủng hộ"])
     }
