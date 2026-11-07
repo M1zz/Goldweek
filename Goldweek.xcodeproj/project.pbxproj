@@ -54,6 +54,7 @@
 		A1000032 /* ProManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000032 /* ProManager.swift */; };
 		A1000033 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000033 /* CalendarService.swift */; };
 		A1000034 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000034 /* PaywallView.swift */; };
+		A1000400 /* PaywallShowcaseArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000400 /* PaywallShowcaseArt.swift */; };
 		A1000035 /* HolidayManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000035 /* HolidayManagementView.swift */; };
 		A1000036 /* LeaveCalculationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000036 /* LeaveCalculationTests.swift */; };
 		A1000040 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A2000040 /* InfoPlist.xcstrings */; };
@@ -178,6 +179,7 @@
 		A2000032 /* ProManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProManager.swift; sourceTree = "<group>"; };
 		A2000033 /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
 		A2000034 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		A2000400 /* PaywallShowcaseArt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallShowcaseArt.swift; sourceTree = "<group>"; };
 		A2000035 /* HolidayManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayManagementView.swift; sourceTree = "<group>"; };
 		A2000036 /* LeaveCalculationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveCalculationTests.swift; sourceTree = "<group>"; };
 		A2000037 /* GoldweekTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GoldweekTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -376,6 +378,7 @@
 				A2000022 /* LeaveHistoryView.swift */,
 				A2000013 /* Components.swift */,
 				A2000034 /* PaywallView.swift */,
+				A2000400 /* PaywallShowcaseArt.swift */,
 				A2000035 /* HolidayManagementView.swift */,
 				FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */,
 				FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */,
@@ -705,6 +708,7 @@
 				A1000032 /* ProManager.swift in Sources */,
 				A1000033 /* CalendarService.swift in Sources */,
 				A1000034 /* PaywallView.swift in Sources */,
+				A1000400 /* PaywallShowcaseArt.swift in Sources */,
 				A1000035 /* HolidayManagementView.swift in Sources */,
 				FA11A0032F0C4D2E00A1B001 /* FamilyAnniversaryView.swift in Sources */,
 				FA11A0052F0C4D2E00A1B001 /* FamilyTogetherView.swift in Sources */,
@@ -1165,7 +1169,7 @@
 			repositoryURL = "https://github.com/M1zz/LeeoKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.38.1;
+				minimumVersion = 3.39.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

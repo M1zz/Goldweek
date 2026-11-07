@@ -1754,24 +1754,18 @@ struct GiftPageView: View {
 
     var body: some View {
         let _ = LanguageManager.shared.currentLanguage
-        List {
-            Section {
-                // 싼 것(Plus)부터. 설정 목록은 사다리 순서를 따른다.
-                ForEach(gifts.filter(GiftSendRow.isShown).reversed(), id: \.config.productID) { gift in
-                    GiftSendRow(gift: gift) { showingSupport = true }
-                }
-            }
-            if let gift = Self.redeemGift(gifts) {
-                Section {
-                    NavigationLink(destination: LeeoGiftRedeemView<GoldweekSpec>(gift: gift,
-                                                                                 onContactSupport: { showingSupport = true })) {
-                        Label(Strings.giftRedeemEntry, systemImage: "giftcard")
-                    }
-                }
+        let senders = gifts.filter(GiftSendRow.isShown)
+        Group {
+            if senders.isEmpty, let gift = Self.redeemGift(gifts) {
+                // 보낼 선물이 없으면 받기만
+                LeeoGiftRedeemView<GoldweekSpec>(gift: gift, onContactSupport: { showingSupport = true })
+            } else {
+                // "고마운 사람에게 이 좋은 경험을 선물하세요" — 보낼 등급을 고르고 선물하기 한 번(LeeoKit `LeeoGiftPickerView`).
+                // 줄은 싼 것(Plus)부터, 처음 골라 둔 것은 가장 높은 등급.
+                LeeoGiftPickerView<GoldweekSpec>(gifts: senders.reversed(), showsRedeemLink: Self.redeemGift(gifts) != nil,
+                                                 onContactSupport: { showingSupport = true })
             }
         }
-        .navigationTitle(Strings.giftEntry)
-        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingSupport) {
             NavigationStack {
                 // 결제 문제로 바로 — 결제 번호 · 코드를 붙여 개발자가 바로 찾게 한다
@@ -1782,23 +1776,13 @@ struct GiftPageView: View {
     }
 }
 
-/// 선물 보내기 한 줄. 상품마다 따로 지켜본다(상품 · 보낸 기록이 늦게 온다).
-/// ⚠️ 팔 수 없으면(`isAvailable` false: 판매를 닫았거나 상품이 없음) 줄을 세우지 않는다 — 눌러도 살 수 없다.
+/// 보낼 선물로 세울지.
+/// ⚠️ 팔 수 없으면(`isAvailable` false: 판매를 닫았거나 상품이 없음) 세우지 않는다 — 눌러도 살 수 없다.
 ///    다만 이미 보냈거나 결제만 되고 코드를 못 받은 선물이 있으면 남긴다(찾아갈 곳이 있어야 한다).
-private struct GiftSendRow: View {
-    @ObservedObject var gift: LeeoGiftStore
-    let onContactSupport: () -> Void
-
+@MainActor
+private enum GiftSendRow {
     static func isShown(_ gift: LeeoGiftStore) -> Bool {
         gift.isAvailable || gift.pendingCount > 0 || !gift.sentGifts.isEmpty
-    }
-
-    var body: some View {
-        NavigationLink(destination: LeeoGiftView<GoldweekSpec>(gift: gift, showsRedeemLink: false,
-                                                               onContactSupport: onContactSupport)) {
-            Label(gift.config.grantsProductID == ProManager.proProductID ? Strings.giftSendEntry : Strings.giftSendPlusEntry,
-                  systemImage: "gift.fill")
-        }
     }
 }
 

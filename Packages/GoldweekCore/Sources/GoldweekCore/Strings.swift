@@ -2228,33 +2228,6 @@ public enum Strings {
         }
     }
 
-    public static var name: String {
-        switch lang {
-        case .korean: return "이름"
-        case .english: return "Name"
-        case .swedish: return "Namn"
-        case .norwegian: return "Navn"
-        case .danish: return "Navn"
-        case .finnish: return "Nimi"
-        case .polish: return "Imię"
-        case .czech: return "Jméno"
-        case .greek: return "Όνομα"
-        case .turkish: return "Ad"
-        case .russian: return "Имя"
-        case .indonesian: return "Nama"
-        case .thai: return "ชื่อ"
-        case .vietnamese: return "Tên"
-        case .dutch: return "Naam"
-        case .japanese: return "名前"
-        case .chinese: return "姓名"
-        case .german: return "Name"
-        case .french: return "Nom"
-        case .spanish: return "Nombre"
-        case .italian: return "Nome"
-        case .portuguese: return "Nome"
-        case .chineseTraditional: return "姓名"
-        }
-    }
 
 
 
@@ -5717,33 +5690,6 @@ public enum Strings {
         }
     }
 
-    public static var onboardingNameOptional: String {
-        switch lang {
-        case .korean: return "선택"
-        case .english: return "Optional"
-        case .swedish: return "Valfritt"
-        case .norwegian: return "Valgfritt"
-        case .danish: return "Valgfri"
-        case .finnish: return "Vapaaehtoinen"
-        case .polish: return "Opcjonalnie"
-        case .czech: return "Volitelné"
-        case .greek: return "Προαιρετικό"
-        case .turkish: return "İsteğe bağlı"
-        case .russian: return "Необязательно"
-        case .indonesian: return "Opsional"
-        case .thai: return "ไม่บังคับ"
-        case .vietnamese: return "Không bắt buộc"
-        case .dutch: return "Optioneel"
-        case .japanese: return "任意"
-        case .chinese: return "选填"
-        case .german: return "Optional"
-        case .french: return "Facultatif"
-        case .spanish: return "Opcional"
-        case .italian: return "Facoltativo"
-        case .portuguese: return "Opcional"
-        case .chineseTraditional: return "選填"
-        }
-    }
 
     public static var onboardingHeroBadge: String {
         switch lang {
@@ -6081,33 +6027,6 @@ public enum Strings {
         }
     }
 
-    public static var enterName: String {
-        switch lang {
-        case .korean: return "이름을 알려주세요"
-        case .english: return "What's your name?"
-        case .swedish: return "Vad heter du?"
-        case .norwegian: return "Hva heter du?"
-        case .danish: return "Hvad hedder du?"
-        case .finnish: return "Mikä on nimesi?"
-        case .polish: return "Jak masz na imię?"
-        case .czech: return "Jak se jmenuješ?"
-        case .greek: return "Πώς σε λένε;"
-        case .turkish: return "Adın ne?"
-        case .russian: return "Как вас зовут?"
-        case .indonesian: return "Siapa namamu?"
-        case .thai: return "ชื่ออะไร"
-        case .vietnamese: return "Bạn tên là gì?"
-        case .dutch: return "Hoe heet je?"
-        case .japanese: return "お名前を教えてください"
-        case .chinese: return "请输入您的姓名"
-        case .german: return "Wie heißt du?"
-        case .french: return "Comment vous appelez-vous ?"
-        case .spanish: return "¿Cómo te llamas?"
-        case .italian: return "Come ti chiami?"
-        case .portuguese: return "Qual é o seu nome?"
-        case .chineseTraditional: return "你叫什麼名字？"
-        }
-    }
 
     public static var leaveSetup: String {
         switch lang {

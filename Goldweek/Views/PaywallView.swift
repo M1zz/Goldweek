@@ -2,17 +2,15 @@
 //  PaywallView.swift
 //  Goldweek
 //
-//  **요금제 페이월.** 클립키보드와 같은 틀(2026-11 개편):
+//  **요금제 페이월.** 그림으로 판다(LeeoKit `LeeoShowcasePaywall`, 2026-11 개편). 클립키보드와 같은 틀:
 //
-//    머리말            제목 한 줄 + 한 줄 설명
-//    플러스 | 프로      칸 고르기. 프로가 처음 골라져 있다(인기)
-//    혜택 네 줄        고른 칸의 것만
-//    월간 · 연간 · 평생  세로 목록. 줄마다 실제로 내는 값과 기간, 연간에는 "N% 절약"
-//    비교표            접어 둔다
-//    ─── 아래 고정 ───
+//    플러스 | 프로      칸 고르기. 머리말(앱 이름 · 미사여구)은 두지 않는다
+//    기능 그림          옆으로 넘긴다. 그 기능이 적용된 화면을 SwiftUI 로 줄여 그린다(PaywallShowcaseArt)
+//    월간 · 연간 · 평생  첫 화면에 다 들어온다. 줄마다 실제로 내는 값과 기간, 연간에는 "N% 절약"
+//    ─── 스크롤해야 보임 ───
+//    갱신 조건 · 복원 · 코드 · 약관 · 비교표
+//    ═══ 늘 떠 있음 ═══
 //    구매 단추         고른 칸 · 고른 길 그대로
-//    갱신 조건 한 줄    고른 길의 것만
-//    복원 · 코드 · 약관  한 줄
 //
 //  예전에는 무료 · 플러스 · 프로 카드 세 장에 카드마다 길 고르기와 구매 단추가 따로 있었다.
 //  고를 것은 한 번에 하나, 가격은 숨기지 않고, 구매 단추는 하나.
@@ -94,48 +92,48 @@ struct PaywallView: View {
         }
     }
 
+    /// 그림으로 파는 틀(LeeoKit `LeeoShowcasePaywall`): 칸 고르기 · 기능 그림 · 요금이 첫 화면에, 구매 단추는 늘 떠 있다.
+    /// 갱신 조건 · 복원 · 코드 · 약관 · 비교표는 스크롤한 아래에.
     private var page: some View {
-            ScrollView {
-                VStack(spacing: 24) {
-                    hero
-                    if purchasableTiers.count > 1 { tierSwitch }
-                    benefits
-                    if purchasableTiers.contains(tier) { options }
-                    comparison
+        LeeoShowcasePaywall(showcases: pageShowcases) {
+            if purchasableTiers.count > 1 { tierSwitch }
+        } plans: {
+            if purchasableTiers.contains(tier) {
+                options
+            } else {
+                // 맨 위 칸을 쓰는 사람('내 혜택'의 전체 보기) — 파는 말 대신 "모두 열려 있어요"
+                Text(Strings.benefitsAllUnlocked(.pro))
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+            }
+        } button: {
+            if purchasableTiers.contains(tier) { buyButton }
+        } details: {
+            VStack(spacing: 18) {
+                if purchasableTiers.contains(tier) {
+                    if let renewal = renewalTerms(product(term)) {
+                        Text(renewal)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    footerLinks
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 8)
-                .padding(.bottom, 24)
+                comparison
             }
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                if purchasableTiers.contains(tier) { purchaseBar }
-            }
-            .navigationTitle("")
-            .navigationBarTitleDisplayMode(.inline)
+        }
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    /// 넘겨 볼 장 — 고른 칸의 것. 다 가진 사람은 플러스 · 프로 모두.
+    private var pageShowcases: [LeeoShowcase] {
+        purchasableTiers.contains(tier) ? Self.showcases(of: tier) : Self.showcases(of: .plus) + Self.showcases(of: .pro)
     }
 
     /// 화면에 놓는 칸, 낮은 것부터 (비교표 · '내 혜택' 이 쓴다)
     static let ladder: [ProTier] = [.free, .plus, .pro]
-
-    // MARK: - 머리말
-
-    private var hero: some View {
-        VStack(spacing: 8) {
-            // 맨 위 칸을 쓰는 사람에게는 파는 말 대신 "모두 열려 있어요". '내 혜택'의 전체 보기도 이 화면이다.
-            Text(purchasableTiers.isEmpty ? Strings.benefitsAllUnlocked(.pro) : Strings.paywallLadderTitle)
-                .font(.title.weight(.bold))
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-            if !purchasableTiers.isEmpty {
-                Text(Strings.paywallLadderSubtitle)
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .padding(.top, 8)
-    }
 
     static func icon(of tier: ProTier) -> String {
         switch tier {
@@ -241,29 +239,6 @@ struct PaywallView: View {
         }
     }
 
-    /// 혜택은 네 줄만. 나머지는 접어 둔 비교표에 있다.
-    private var benefits: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(Strings.trimTagline(tier))
-                .font(.headline)
-                .fixedSize(horizontal: false, vertical: true)
-            ForEach(Self.features(of: tier).prefix(4), id: \.self) { feature in
-                Label {
-                    Text(feature.title)
-                        .fontWeight(feature.isSummary ? .semibold : .regular)
-                        .fixedSize(horizontal: false, vertical: true)
-                } icon: {
-                    Image(systemName: "checkmark")
-                        .font(.callout.weight(.bold))
-                        .foregroundStyle(Color.accentColor)
-                }
-                .font(.body)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .accessibilityElement(children: .combine)
-    }
-
     // MARK: - 길
 
     /// 이 칸 · 이 길로 결제하는 상품. 플러스 평생을 가진 사람에게 프로 평생은 올리기 상품이다.
@@ -298,7 +273,7 @@ struct PaywallView: View {
             priceStatus
         } else {
             // 연간 줄의 할인 배지가 줄 위로 올라오므로 간격과 위 여백을 둔다
-            VStack(spacing: 18) {
+            VStack(spacing: 14) {
                 ForEach(availableTerms, id: \.self) { optionRow($0) }
                 // 평생 가격이 오르기 전까지만 서는 한 줄
                 if term == .lifetime, LeeoLadderSchedule.showsLifetimeNotice() {
@@ -353,8 +328,8 @@ struct PaywallView: View {
             }
             .foregroundStyle(Color.primary)
             .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .frame(maxWidth: .infinity, minHeight: 60)
+            .padding(.vertical, 11)
+            .frame(maxWidth: .infinity, minHeight: 54)
             .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -531,40 +506,26 @@ struct PaywallView: View {
 
     // MARK: - 아래 고정
 
-    private var purchaseBar: some View {
+    /// 늘 떠 있는 구매 단추 하나. 갱신 조건 · 약관은 스크롤한 아래에 있다.
+    private var buyButton: some View {
         let item = product(term)
-        return VStack(spacing: 10) {
-            Button { purchase() } label: {
-                Group {
-                    if buying {
-                        ProgressView().tint(.white)
-                    } else {
-                        Text(ctaTitle).fontWeight(.bold)
-                    }
+        return Button { purchase() } label: {
+            Group {
+                if buying {
+                    ProgressView().tint(.white)
+                } else {
+                    Text(ctaTitle).fontWeight(.bold)
                 }
-                .font(.headline)
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity, minHeight: 54)
-                .background(item == nil || proManager.isLoading ? Color.gray : Color.accentColor,
-                            in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
-            // 상품을 못 읽었으면 누를 수 없다. 누른 뒤에 "상품 없음" 을 듣는 것보다 낫다.
-            .disabled(buying || item == nil || proManager.isLoading)
-            .accessibilityLabel(buying ? Strings.purchasing : ctaTitle)
-
-            if let renewal = renewalTerms(item) {
-                Text(renewal)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            footerLinks
+            .font(.headline)
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity, minHeight: 54)
+            .background(item == nil || proManager.isLoading ? Color.gray : Color.accentColor,
+                        in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 12)
-        .padding(.bottom, 8)
-        .background(.bar)
+        // 상품을 못 읽었으면 누를 수 없다. 누른 뒤에 "상품 없음" 을 듣는 것보다 낫다.
+        .disabled(buying || item == nil || proManager.isLoading)
+        .accessibilityLabel(buying ? Strings.purchasing : ctaTitle)
     }
 
     private var ctaTitle: String {

@@ -15,7 +15,6 @@ struct OnboardingView: View {
     @Binding var isOnboardingComplete: Bool
 
     @State private var currentPage = 0
-    @State private var userName = ""
     @State private var totalLeave: Double = 15
     @State private var yearStartMonth = 1
     /// 기준일의 '일' — 고르지 않으면 1일 (입사일 기준 회사만 바꾼다)
@@ -24,7 +23,6 @@ struct OnboardingView: View {
     @State private var country = Country.fromDeviceLocale()
     @State private var didLoadExisting = false
     @State private var showingSaveError = false
-    @FocusState private var isNameFieldFocused: Bool
 
     private let totalPages = 5
 
@@ -55,12 +53,10 @@ struct OnboardingView: View {
                         .tag(2)
 
                     SetupPage(
-                        userName: $userName,
                         totalLeave: $totalLeave,
                         yearStartMonth: $yearStartMonth,
                         yearStartDay: $yearStartDay,
-                        country: $country,
-                        isNameFocused: $isNameFieldFocused
+                        country: $country
                     )
                     .tag(3)
 
@@ -80,15 +76,9 @@ struct OnboardingView: View {
             // iPad·Mac 에서 버튼·카드가 창 끝까지 늘어나지 않게 — 가운데 폰 폭 정도로 모은다
             .frame(maxWidth: 600)
         }
-        .onTapGesture {
-            isNameFieldFocused = false
-        }
         .onAppear(perform: loadExistingProfile)
         .onChange(of: currentPage) { _, newPage in
             HapticFeedback.selection()
-            if newPage != 3 {
-                isNameFieldFocused = false
-            }
         }
         .alert(Strings.alert, isPresented: $showingSaveError) {
             Button(Strings.retry) { completeOnboarding() }
@@ -147,7 +137,6 @@ struct OnboardingView: View {
             }
 
             Button {
-                isNameFieldFocused = false
                 withAnimation { currentPage += 1 }
             } label: {
                 Text(currentPage == 0 ? Strings.getStarted : Strings.next)
@@ -191,7 +180,6 @@ struct OnboardingView: View {
         let existing = (try? modelContext.fetch(FetchDescriptor<UserProfile>()))?.first
         let profile: UserProfile
         if let existing {
-            existing.name = userName.isEmpty ? existing.name : userName
             existing.yearStartMonth = yearStartMonth
             existing.yearStartDay = yearStartDay
             existing.totalAnnualLeave = totalLeave
@@ -199,7 +187,7 @@ struct OnboardingView: View {
             profile = existing
         } else {
             profile = UserProfile(
-                name: userName.isEmpty ? Strings.defaultUser : userName,
+                name: Strings.defaultUser,
                 yearStartMonth: yearStartMonth,
                 totalAnnualLeave: totalLeave,
                 usedLeave: 0,
@@ -534,15 +522,13 @@ private struct FeatureCard: View {
     }
 }
 
-// MARK: - 페이지 4: 셋업 (이름 + 연차 + 기준월)
+// MARK: - 페이지 4: 셋업 (나라 + 연차 + 기준월)
 struct SetupPage: View {
     @State private var usesHourlyLeave = LeaveLength.usesHourlyLeave
-    @Binding var userName: String
     @Binding var totalLeave: Double
     @Binding var yearStartMonth: Int
     @Binding var yearStartDay: Int
     @Binding var country: Country
-    var isNameFocused: FocusState<Bool>.Binding
 
     var body: some View {
         ScrollView {
@@ -557,34 +543,6 @@ struct SetupPage: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 12)
-
-                // 이름 카드
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Label(Strings.enterName, systemImage: "person.crop.circle")
-                            .font(.headline)
-                        Spacer()
-                        Text(Strings.onboardingNameOptional)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Color(.systemGray6))
-                            .clipShape(Capsule())
-                    }
-
-                    TextField(Strings.name, text: $userName)
-                        .font(.body)
-                        .padding(12)
-                        .background(Color(.systemGray6))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .focused(isNameFocused)
-                        .submitLabel(.done)
-                        .onSubmit { isNameFocused.wrappedValue = false }
-                }
-                .padding(18)
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 18))
 
                 // 공휴일 기준 나라 카드 — 자동으로 골랐다는 걸 보여 주고 바로 바꿀 수 있게
                 VStack(alignment: .leading, spacing: 12) {
