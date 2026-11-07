@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import CryptoKit
+import GoldweekCore
 
 class DataProtectionService {
     static let shared = DataProtectionService()

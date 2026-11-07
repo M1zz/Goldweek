@@ -10,6 +10,7 @@
 
 import Foundation
 import CloudKit
+import GoldweekCore
 
 /// 공휴일 한 건 고침. CloudKit 기록 하나가 하나다.
 struct HolidayOverride: Codable, Equatable {

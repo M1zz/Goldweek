@@ -8,7 +8,7 @@
 import Foundation
 
 extension Strings {
-    static var familyAnniversariesTitle: String {
+    public static var familyAnniversariesTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "가족 기념일"
         case .english: return "Family Occasions"
@@ -36,7 +36,7 @@ extension Strings {
         }
     }
 
-    static var familyAnniversaryTag: String {
+    public static var familyAnniversaryTag: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "가족 기념일"
         case .english: return "Family occasion"
@@ -64,7 +64,7 @@ extension Strings {
         }
     }
 
-    static var familyAnniversariesSubtitle: String {
+    public static var familyAnniversariesSubtitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "생신·결혼기념일·기일을 챙기고 휴가 내기"
         case .english: return "Birthdays, anniversaries and remembrance days"
@@ -92,7 +92,7 @@ extension Strings {
         }
     }
 
-    static var familyAnniversariesFooter: String {
+    public static var familyAnniversariesFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "가족에게는 공휴일 같은 날이에요. 달력에 하트로 표시하고, 2주 전에 휴가를 챙기라고 알려 드려요. 그날이 든 연휴 추천도 앞세워요. 연차 계산은 그대로예요."
         case .english: return "These days are holidays for your family. They get a heart on the calendar, a reminder two weeks ahead to book time off, and suggested breaks that include them come first. Your leave balance doesn't change."
@@ -120,7 +120,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryEmpty: String {
+    public static var anniversaryEmpty: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "생신이나 결혼기념일을 넣어 보세요"
         case .english: return "Add a birthday or wedding anniversary"
@@ -148,7 +148,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryAddTitle: String {
+    public static var anniversaryAddTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "기념일 추가"
         case .english: return "Add Occasion"
@@ -176,7 +176,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryEditTitle: String {
+    public static var anniversaryEditTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "기념일 수정"
         case .english: return "Edit Occasion"
@@ -204,7 +204,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryDeleteTitle: String {
+    public static var anniversaryDeleteTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "이 기념일을 지울까요?"
         case .english: return "Delete this occasion?"
@@ -232,7 +232,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryKindSection: String {
+    public static var anniversaryKindSection: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "종류"
         case .english: return "Type"
@@ -260,7 +260,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryRelationSection: String {
+    public static var anniversaryRelationSection: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "누구의 날인가요"
         case .english: return "Whose day is it?"
@@ -288,7 +288,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryRelationPlaceholder: String {
+    public static var anniversaryRelationPlaceholder: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "관계 (예: 엄마)"
         case .english: return "Relationship (e.g. Mom)"
@@ -316,7 +316,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryLunarToggle: String {
+    public static var anniversaryLunarToggle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "음력"
         case .english: return "Lunar calendar"
@@ -344,7 +344,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryLunarFooter: String {
+    public static var anniversaryLunarFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "고른 날의 음력 날짜를 해마다 양력으로 옮겨 맞춰요. 음력 생신이나 제사에 쓰세요."
         case .english: return "Each year follows the lunar date of the day you picked. Use it for lunar birthdays and memorial rites."
@@ -372,7 +372,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryDateFooter: String {
+    public static var anniversaryDateFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "처음 날짜(태어난 해·결혼한 해)를 넣으면 몇 번째인지도 세어 드려요."
         case .english: return "Enter the original date, with the birth or wedding year, to see which anniversary it is."
@@ -400,7 +400,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryNamePlaceholder: String {
+    public static var anniversaryNamePlaceholder: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "비워 두면 관계와 종류로 보여요"
         case .english: return "Optional, shown as relationship and type"
@@ -428,7 +428,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryRemindToggle: String {
+    public static var anniversaryRemindToggle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "미리 알림"
         case .english: return "Reminders"
@@ -456,7 +456,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryRemindFooter: String {
+    public static var anniversaryRemindFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "2주 전에 휴가를 챙기라고, 당일 아침에는 오늘이라고 알려 드려요. 그날 휴가가 이미 있거나 원래 쉬는 날이면 2주 전 알림은 건너뛰어요."
         case .english: return "You get a reminder two weeks ahead to book time off, and another on the morning of the day. The two‑week reminder is skipped if you're already off that day."
@@ -484,7 +484,7 @@ extension Strings {
         }
     }
 
-    static var upcomingAnniversariesTitle: String {
+    public static var upcomingAnniversariesTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "다가오는 가족 기념일"
         case .english: return "Upcoming Family Occasions"
@@ -512,7 +512,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryLeaveReady: String {
+    public static var anniversaryLeaveReady: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "휴가 있음"
         case .english: return "Off booked"
@@ -540,7 +540,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryAlreadyOff: String {
+    public static var anniversaryAlreadyOff: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "쉬는 날"
         case .english: return "Day off"
@@ -568,7 +568,7 @@ extension Strings {
         }
     }
 
-    static var anniversaryTakeLeave: String {
+    public static var anniversaryTakeLeave: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "휴가 내기"
         case .english: return "Take Leave"
@@ -596,7 +596,7 @@ extension Strings {
         }
     }
 
-    static func anniversaryKindName(_ kind: AnniversaryKind) -> String {
+    public static func anniversaryKindName(_ kind: AnniversaryKind) -> String {
         let lang = LanguageManager.shared.currentLanguage
         switch kind {
         case .birthday:
@@ -706,7 +706,7 @@ extension Strings {
         }
     }
 
-    static func anniversaryOrdinal(_ kind: AnniversaryKind, _ n: Int) -> String {
+    public static func anniversaryOrdinal(_ kind: AnniversaryKind, _ n: Int) -> String {
         let i: Int
         switch kind { case .birthday: i = 0; case .wedding: i = 1; case .memorial: i = 2; case .other: i = 3 }
         let texts: [String]
@@ -738,7 +738,7 @@ extension Strings {
         return texts[i]
     }
 
-    static func anniversaryTodayBody(_ kind: AnniversaryKind, ordinal: Int?) -> String {
+    public static func anniversaryTodayBody(_ kind: AnniversaryKind, ordinal: Int?) -> String {
         let i: Int
         switch kind { case .birthday: i = 0; case .wedding: i = 1; case .memorial: i = 2; case .other: i = 3 }
         let texts: [String]
@@ -771,7 +771,7 @@ extension Strings {
         return "\(anniversaryOrdinal(kind, ordinal)) · \(texts[i])"
     }
 
-    static func lunarDateLabel(month: Int, day: Int, isLeap: Bool) -> String {
+    public static func lunarDateLabel(month: Int, day: Int, isLeap: Bool) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "음력 \(isLeap ? "윤" : "")\(month)월 \(day)일"
         case .english: return "Lunar \(month)/\(day)\(isLeap ? " (leap month)" : "")"
@@ -799,7 +799,7 @@ extension Strings {
         }
     }
 
-    static func anniversaryLeaveTitle(_ name: String) -> String {
+    public static func anniversaryLeaveTitle(_ name: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(name)에 함께 쉬기"
         case .english: return "Be there for \(name)"
@@ -827,7 +827,7 @@ extension Strings {
         }
     }
 
-    static func anniversaryLeaveDesc(_ name: String, leaveDays l: Int, totalDays t: Int) -> String {
+    public static func anniversaryLeaveDesc(_ name: String, leaveDays l: Int, totalDays t: Int) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "연차 \(l)일로 \(t)일 연휴를 만들어, \(name)에 가족과 함께할 수 있어요."
         case .english: return "Use \(l) leave day\(l == 1 ? "" : "s") for \(t) days off and spend \(name) with your family."
@@ -855,7 +855,7 @@ extension Strings {
         }
     }
 
-    static func anniversaryLeadTitle(_ title: String, days: Int) -> String {
+    public static func anniversaryLeadTitle(_ title: String, days: Int) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(title)까지 \(days)일 남았어요"
         case .english: return "\(days) days until \(title)"
@@ -883,7 +883,7 @@ extension Strings {
         }
     }
 
-    static func anniversaryLeadBody(_ date: String) -> String {
+    public static func anniversaryLeadBody(_ date: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(date)이에요. 지금 휴가를 내 두면 가족과 함께할 수 있어요."
         case .english: return "It's on \(date). Book time off now so you can be with your family."
@@ -911,7 +911,7 @@ extension Strings {
         }
     }
 
-    static func anniversaryTodayTitle(_ title: String) -> String {
+    public static func anniversaryTodayTitle(_ title: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "오늘은 \(title)"
         case .english: return "Today: \(title)"
@@ -940,7 +940,7 @@ extension Strings {
     }
 
     /// 관계 빠른 입력 — 그 언어권에서 흔히 부르는 말
-    static var anniversaryRelationPresets: [String] {
+    public static var anniversaryRelationPresets: [String] {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return ["엄마", "아빠", "배우자", "아이", "할머니", "할아버지", "장인어른", "장모님", "시아버지", "시어머니"]
         case .english: return ["Mom", "Dad", "Partner", "Child", "Grandma", "Grandpa"]

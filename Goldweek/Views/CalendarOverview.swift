@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import GoldweekCore
 
 /// 달력 보기 범위 (개월 수)
 enum CalendarSpan: Int, CaseIterable, Identifiable {

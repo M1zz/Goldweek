@@ -23,6 +23,7 @@
 //
 
 import Foundation
+import GoldweekCore
 
 /// 연차가 새로 생기는 날 (회계연도 시작). 입사일 기준 회사는 3월 21일처럼 월 중간이다.
 /// 정수 리터럴은 그 달 1일로 받는다 — `startMonth: 4` 는 4월 1일.

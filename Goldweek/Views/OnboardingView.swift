@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import StoreKit
+import GoldweekCore
 
 struct OnboardingView: View {
     @Environment(\.modelContext) private var modelContext

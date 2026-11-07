@@ -7,6 +7,7 @@
 
 import Foundation
 import LeeoKit
+import GoldweekCore
 
 /// 산 사람이 **지금 무엇을 얼마나 쓰고 있는가**를 센다.
 ///

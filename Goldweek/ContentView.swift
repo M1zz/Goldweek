@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import WidgetKit
 import LeeoKit
+import GoldweekCore
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -96,7 +97,7 @@ struct ContentView: View {
                     }
                     // 만족도 프롬프트 — "즐겁게 쓰고 계신가요?"를 묻고, 좋다면 App Store 리뷰로,
                     // 아쉽다면 피드백 화면으로 보낸다(불만은 별점 대신 피드백으로 흡수).
-                    // 앱을 열자마자가 아니라 만족한 순간(추천·플랜 등록, 휴가 복귀)에 띄운다 — ReviewMoments.
+                    // 앱을 열자마자가 아니라 효능감을 느낀 순간(추천·플랜 등록, 연차보다 길게 쉬게 됨, 휴가 복귀)에만 — ReviewMoments.
                     .leeoReviewGate(GoldweekSpec.self, isPresented: $reviewMoments.isPresented)
                     .onAppear {
                         syncDayOffCalendar(profile: profile)
@@ -109,7 +110,6 @@ struct ContentView: View {
                         }
                         LeaveUsageCalculator.syncAccrualTotal(profile)
                         updateWidget()
-                        ReviewManager.shared.recordLaunch()
                         // 사람이 앱을 실제로 연 순간 — 실행 횟수·활동일·설치 스냅샷이 여기서 나간다.
                         UsageReportingService.reportForegroundOpen(context: modelContext)
                         reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
@@ -133,6 +133,15 @@ struct ContentView: View {
                             reviewMoments.checkOnOpen(leaveRecords: leaveRecords)
                             refreshRestRadar(profile: profile)
                             syncSharedSchedules(profile: profile)
+                            // 기기 밖 안전망: 하루 한 번 iCloud 에 자동 백업 (3개 돌려 보관). 타임머신은 기기 안 스냅샷이다.
+                            // 1.1.0 부터 부르는 곳이 없어 꺼져 있었다(2026-11-07 다시 연결).
+                            if !ScreenshotMode.isActive, !LaunchSafety.isSafeMode {
+                                let records = Array(leaveRecords), bonuses = Array(bonusLeaves)
+                                Task { @MainActor in
+                                    await BackupService.shared.performAutoICloudBackup(
+                                        profile: profile, leaveRecords: records, bonusLeaves: bonuses)
+                                }
+                            }
                         } else if newPhase == .background {
                             // 앱을 떠나는 순간의 상태를 타임머신에 보존 (내용 같으면 스킵됨)
                             TimeMachineService.shared.captureNow(from: modelContext, reason: .background)

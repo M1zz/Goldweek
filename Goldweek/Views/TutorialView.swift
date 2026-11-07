@@ -12,6 +12,7 @@
 //
 
 import SwiftUI
+import GoldweekCore
 
 struct TutorialView: View {
     /// 페이지 그림 크기 — 글자 크기 설정을 따라 커진다

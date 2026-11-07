@@ -9,6 +9,7 @@
 import SwiftUI
 import SwiftData
 import PhotosUI
+import GoldweekCore
 
 struct PhotoImportSheet: View {
     /// 안내 그림 크기 — 글자 크기 설정을 따라 커진다

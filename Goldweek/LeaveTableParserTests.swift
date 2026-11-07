@@ -8,6 +8,7 @@
 import Foundation
 import XCTest
 @testable import Goldweek
+import GoldweekCore
 
 final class LeaveTableParserTests: XCTestCase {
 

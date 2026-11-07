@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftData
+import GoldweekCore
 
 // MARK: - Schema Version 1.0.5 (Current)
 

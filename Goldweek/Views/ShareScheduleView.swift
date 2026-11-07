@@ -10,6 +10,7 @@
 import SwiftUI
 import SwiftData
 import CloudKit
+import GoldweekCore
 
 // MARK: - CKShare 공유 시트용 Transferable
 struct ScheduleSharePayload: Transferable {

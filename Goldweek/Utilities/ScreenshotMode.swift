@@ -15,6 +15,7 @@
 
 import Foundation
 import SwiftData
+import GoldweekCore
 
 enum ScreenshotMode {
     #if DEBUG

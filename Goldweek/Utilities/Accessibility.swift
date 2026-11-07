@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GoldweekCore
 
 // MARK: - View Modifiers
 
@@ -172,37 +173,6 @@ enum VoiceOverLabel {
         case .italian: return d == "1" ? "Ferie bonus disponibili: 1 giorno" : "Ferie bonus disponibili: \(d) giorni"
         case .portuguese: return d == "1" ? "Folga bônus disponível: 1 dia" : "Folga bônus disponível: \(d) dias"
         case .chineseTraditional: return "可用獎勵特休 \(d) 天"
-        }
-    }
-
-    /// 다가오는 휴가 행: "11월 3일 월요일부터 5일까지, 연차 3일, 5일 남음"
-    static func upcomingLeave(dateRange: String, typeLabel: String, days: Double, dDay: Int) -> String {
-        let lang = LanguageManager.shared.currentLanguage
-        let d = formatDays(days)
-        switch lang {
-        case .korean: return "\(dateRange), \(typeLabel) \(d)일, \(dDay)일 남음"
-        case .english: return "\(dateRange), \(typeLabel) \(d) days, in \(dDay) days"
-        case .swedish: return "\(dateRange), \(typeLabel) \(d) dagar, om \(dDay) dagar"
-        case .norwegian: return "\(dateRange), \(typeLabel) \(d) dager, om \(dDay) dager"
-        case .danish: return "\(dateRange), \(typeLabel) \(d) dage, om \(dDay) dage"
-        case .finnish: return "\(dateRange), \(typeLabel) \(d) päivää, \(dDay) päivän päästä"
-        case .polish: return "\(dateRange), \(typeLabel): \(d) dni, za \(dDay) dni"
-        case .czech: return "\(dateRange), \(typeLabel), dní: \(d), za \(dDay) d"
-        case .greek: return "\(dateRange), \(typeLabel) \(d) ημέρες, σε \(dDay) ημέρες"
-        case .turkish: return "\(dateRange), \(typeLabel) \(d) gün, \(dDay) gün sonra"
-        case .russian: return "\(dateRange), \(typeLabel): \(d) \(ruPlural(days, "день", "дня", "дней")), через \(dDay) \(ruPlural(dDay, "день", "дня", "дней"))"
-        case .indonesian: return "\(dateRange), \(typeLabel) \(d) hari, \(dDay) hari lagi"
-        case .thai: return "\(dateRange), \(typeLabel) \(d) วัน, อีก \(dDay) วัน"
-        case .vietnamese: return "\(dateRange), \(typeLabel) \(d) ngày, còn \(dDay) ngày nữa"
-        case .dutch: return "\(dateRange), \(typeLabel) \(d) dagen, over \(dDay) dagen"
-        case .japanese: return "\(dateRange)、\(typeLabel)\(d)日、あと\(dDay)日"
-        case .chinese: return "\(dateRange)，\(typeLabel)\(d)天，还有\(dDay)天"
-        case .german: return "\(dateRange), \(typeLabel) \(d) Tage, in \(dDay) Tagen"
-        case .french: return "\(dateRange), \(typeLabel) \(d) jours, dans \(dDay) jours"
-        case .spanish: return "\(dateRange), \(typeLabel) \(d) \(d == "1" ? "día" : "días"), dentro de \(dDay) \(dDay == 1 ? "día" : "días")"
-        case .italian: return "\(dateRange), \(typeLabel) \(d) \(d == "1" ? "giorno" : "giorni"), tra \(dDay) \(dDay == 1 ? "giorno" : "giorni")"
-        case .portuguese: return "\(dateRange), \(typeLabel) \(d) \(d == "1" ? "dia" : "dias"), daqui a \(dDay) \(dDay == 1 ? "dia" : "dias")"
-        case .chineseTraditional: return "\(dateRange)，\(typeLabel) \(d) 天，\(dDay) 天後"
         }
     }
 
@@ -379,92 +349,6 @@ enum VoiceOverLabel {
         case .italian: return "\(name)\(ratingPart), \(priceText)"
         case .portuguese: return "\(name)\(ratingPart), \(priceText)"
         case .chineseTraditional: return "\(name)\(ratingPart)，\(priceText)"
-        }
-    }
-
-    /// D-Day 표시: "오늘", "5일 남음", "3일 지남"
-    static func dDay(_ daysRemaining: Int) -> String {
-        let lang = LanguageManager.shared.currentLanguage
-        if daysRemaining == 0 {
-            switch lang {
-            case .korean: return "오늘"
-            case .english: return "Today"
-            case .swedish: return "Idag"
-            case .norwegian: return "I dag"
-            case .danish: return "I dag"
-            case .finnish: return "Tänään"
-            case .polish: return "Dziś"
-            case .czech: return "Dnes"
-            case .greek: return "Σήμερα"
-            case .turkish: return "Bugün"
-            case .russian: return "Сегодня"
-            case .indonesian: return "Hari ini"
-            case .thai: return "วันนี้"
-            case .vietnamese: return "Hôm nay"
-            case .dutch: return "Vandaag"
-            case .japanese: return "今日"
-            case .chinese: return "今天"
-            case .german: return "Heute"
-            case .french: return "Aujourd’hui"
-            case .spanish: return "Hoy"
-            case .italian: return "Oggi"
-            case .portuguese: return "Hoje"
-            case .chineseTraditional: return "今天"
-            }
-        }
-        let n = abs(daysRemaining)
-        if daysRemaining > 0 {
-            switch lang {
-            case .korean: return "\(n)일 남음"
-            case .english: return "in \(n) days"
-            case .swedish: return "om \(n) dagar"
-            case .norwegian: return "om \(n) dager"
-            case .danish: return "om \(n) dage"
-            case .finnish: return "\(n) päivän päästä"
-            case .polish: return "za \(n) dni"
-            case .czech: return "za \(n) d"
-            case .greek: return "σε \(n) ημέρες"
-            case .turkish: return "\(n) gün sonra"
-            case .russian: return "через \(n) \(ruPlural(n, "день", "дня", "дней"))"
-            case .indonesian: return "\(n) hari lagi"
-            case .thai: return "อีก \(n) วัน"
-            case .vietnamese: return "\(n) ngày nữa"
-            case .dutch: return "over \(n) dagen"
-            case .japanese: return "あと\(n)日"
-            case .chinese: return "还有\(n)天"
-            case .german: return "in \(n) Tagen"
-            case .french: return "dans \(n) jours"
-            case .spanish: return n == 1 ? "dentro de 1 día" : "dentro de \(n) días"
-            case .italian: return n == 1 ? "tra 1 giorno" : "tra \(n) giorni"
-            case .portuguese: return n == 1 ? "daqui a 1 dia" : "daqui a \(n) dias"
-            case .chineseTraditional: return "\(n) 天後"
-            }
-        } else {
-            switch lang {
-            case .korean: return "\(n)일 지남"
-            case .english: return "\(n) days ago"
-            case .swedish: return "för \(n) dagar sedan"
-            case .norwegian: return "for \(n) dager siden"
-            case .danish: return "for \(n) dage siden"
-            case .finnish: return "\(n) päivää sitten"
-            case .polish: return "\(n) dni temu"
-            case .czech: return "před \(n) d"
-            case .greek: return "πριν από \(n) ημέρες"
-            case .turkish: return "\(n) gün önce"
-            case .russian: return "\(n) \(ruPlural(n, "день", "дня", "дней")) назад"
-            case .indonesian: return "\(n) hari lalu"
-            case .thai: return "\(n) วันที่แล้ว"
-            case .vietnamese: return "\(n) ngày trước"
-            case .dutch: return "\(n) dagen geleden"
-            case .japanese: return "\(n)日経過"
-            case .chinese: return "已过\(n)天"
-            case .german: return "vor \(n) Tagen"
-            case .french: return "il y a \(n) jours"
-            case .spanish: return n == 1 ? "hace 1 día" : "hace \(n) días"
-            case .italian: return n == 1 ? "1 giorno fa" : "\(n) giorni fa"
-            case .portuguese: return n == 1 ? "há 1 dia" : "há \(n) dias"
-            case .chineseTraditional: return "\(n) 天前"
-            }
         }
     }
 

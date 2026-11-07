@@ -10,6 +10,7 @@ import SwiftData
 import StoreKit
 import TipKit
 import LeeoKit
+import GoldweekCore
 
 struct SettingsView: View {
     @Bindable var profile: UserProfile
@@ -72,7 +73,6 @@ struct SettingsView: View {
     @State private var showingTutorial = false
     @State private var showingOnboardingReplay = false
     @State private var showingTipsResetNotice = false
-    @State private var showingOfferCode = false
     @State private var showingWhatsNew = false
     @AppStorage("autoDetectLeavesEnabled") private var autoDetectEnabled = true
     /// 캘린더 앱으로 휴가 보내기 — CalendarService.autoSyncKey
@@ -152,17 +152,6 @@ struct SettingsView: View {
         leaveRecords.filter { $0.status == .planned }.count
     }
 
-    /// 현재 회계연도 시작일 (연차 기준일) — LeaveStatusCard와 동일 계산
-    var annualYearStart: Date {
-        let year = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart)
-        return LeaveUsageCalculator.fiscalYearStart(year: year, startMonth: profile.yearStart)
-    }
-
-    var annualYearEnd: Date {
-        let year = LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart)
-        return LeaveUsageCalculator.fiscalYearEnd(year: year, startMonth: profile.yearStart)
-    }
-
     /// 이 화면이 쓰는 모든 숫자의 출처 — 홈 카드와 같은 계산기, 같은 입력.
     var usage: LeaveUsageCalculator.Summary {
         LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
@@ -191,12 +180,6 @@ struct SettingsView: View {
     var totalAvailableLeave: Double {
         usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: includeBonusInStatus)
     }
-
-    /// 부여된 보너스 전체 (사용률 분모용)
-    var grantedBonusLeave: Double { usage.grantedBonus }
-
-    /// 사용된 보너스 (사용률 분자용)
-    var usedBonusLeave: Double { usage.usedBonus }
 
     /// 사용률 — 토글 ON이면 보너스를 분모(부여량)와 분자(사용량)에 모두 반영.
     /// ⚠️ 분자는 확정치(사용 + 예정)다. 홈 카드의 "사용 완료"(예정 제외)와는 뜻이 다르므로
@@ -236,7 +219,6 @@ struct SettingsView: View {
             // .sheet · .alert · .onChange 가 이 값을 단계마다 스택에 한 벌씩 더 쌓아(약 740KB)
             // 아이폰 메인 스레드 스택(1MB)을 넘긴다 — 2.4.2 가 iOS 27.1 에서 설정을 열면 죽던 원인.
             AnyView(Form {
-                // 프로필 섹션
                 Section {
                     HStack(spacing: 16) {
                         ZStack {
@@ -351,18 +333,6 @@ struct SettingsView: View {
                                 .tint(AppTheme.Colors.bonus)
                                 .accessibilityInputLabels([Text(Strings.planUpgrade), Text("Pro")])
                         }
-                        // 받은 오퍼 코드를 바로 쓴다 (StoreKit 2 오퍼 코드 시트)
-                        Button {
-                            UsageReportingService.record(event: "offer_code_open:settings")
-                            showingOfferCode = true
-                        } label: {
-                            Label(Strings.redeemOfferCode, systemImage: "ticket")
-                        }
-                        .offerCodeRedemption(isPresented: $showingOfferCode) { result in
-                            if case .success = result {
-                                Task { await ProManager.shared.checkEntitlement() }
-                            }
-                        }
                     }
                     if case .yearly = ProManager.shared.activePlan {
                         Button(Strings.manageSubscription) { showingManageSubscription = true }
@@ -375,6 +345,35 @@ struct SettingsView: View {
                             showingPaywall = true
                         }
                     }
+                    // 구매 복원 — 누구에게나 선다. 플러스를 쓰는 사람도 다른 기기에서 산 프로 평생을 되살릴 수 있어야 한다
+                    Button {
+                        Task {
+                            let result = await ProManager.shared.restorePurchases()
+                            switch result {
+                            case .restored:
+                                restoreResultMessage = Strings.restorePurchasesSuccess
+                                HapticFeedback.success()
+                            case .nothingToRestore:
+                                restoreResultMessage = Strings.restorePurchasesNone
+                            case .failed(let reason):
+                                restoreResultMessage = Strings.restorePurchasesFailed(reason)
+                                HapticFeedback.error()
+                            }
+                            showingRestoreResult = true
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.clockwise.circle.fill")
+                                .foregroundStyle(.blue)
+                            Text(Strings.restorePurchase)
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            if ProManager.shared.isLoading {
+                                ProgressView()
+                            }
+                        }
+                    }
+                    .disabled(ProManager.shared.isLoading)
                 } header: {
                     Text(Strings.planStatusTitle)
                 } footer: {
@@ -383,512 +382,84 @@ struct SettingsView: View {
                     }
                 }
 
-                // 선물 · 응원 — 상품이 App Store 에 있을 때만 줄이 선다
-                if AppSurface.shared.shows(.everything), let gift = ProExtras.shared.gift, let tipJar = ProExtras.shared.tipJar {
-                    GiftAndTipSection(gift: gift, tipJar: tipJar)
+                // 요금제 바로 아래: 내 응원, 그 아래 선물하기.
+                // 간단히 보기에서도 둔다 — 응원 · 선물은 배울 기능이 아니라 한 줄이고, 무료 사용자도 낸다.
+                if let tipJar = ProExtras.shared.tipJar {
+                    TipSection(tipJar: tipJar)
                 }
+                GiftSection(gifts: ProExtras.shared.gifts)
 
-                // 국가 및 언어
+                // 설정은 묶음마다 한 줄 — 누르면 안쪽 화면에서 고친다
                 Section {
-                    // 대륙 → 나라 2단계로 찾는다 (나라가 늘어 한 줄 목록은 찾기 어렵다)
-                    NavigationLink {
-                        CountrySelectionView(selection: $selectedCountry)
-                    } label: {
-                        HStack {
-                            Text(Strings.country)
-                            Spacer()
-                            Text("\(selectedCountry.flag) \(selectedCountry.displayName)")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .onChange(of: selectedCountry) { _, newValue in
-                        profile.country = newValue
-                        selectedRegionCode = profile.holidayRegion?.code ?? ""
-                        syncHomeSelection()
-                        recommendationEngine.invalidateCache()
-                    }
-
-                    // 주·지역마다 공휴일이 다른 나라만
-                    if !selectedCountry.holidayRegions.isEmpty {
-                        Picker(Strings.holidayRegion, selection: $selectedRegionCode) {
-                            Text(Strings.holidayRegionNationwide).tag("")
-                            ForEach(selectedCountry.holidayRegions) { region in
-                                Text(region.displayName).tag(region.code)
-                            }
-                        }
-                        .onChange(of: selectedRegionCode) { _, newValue in
-                            profile.holidayRegion = HolidayRegion.find(newValue)
-                            syncHomeSelection()
-                            recommendationEngine.invalidateCache()
-                        }
-                    }
-
+                    settingsLink(Strings.countryAndLanguage, icon: "globe", color: .blue,
+                                 value: "\(selectedCountry.flag) \(selectedCountry.displayName)") { regionPage }
+                    settingsLink(isLeisure ? Strings.leisureVacationSettings : Strings.annualLeaveSettings,
+                                 icon: "calendar", color: .green) { leavePage }
                     if AppSurface.shared.shows(.everything) {
-                    // 함께 볼 공휴일 — 사는 곳이 다른 지역이거나(스페인 자치주), 회사 본사가 다른 나라일 때
-                    Picker(Strings.homeRegionSetting, selection: $selectedHomeCountryRaw) {
-                        Text(Strings.homeRegionNone).tag("")
-                        if !selectedCountry.holidayRegions.isEmpty {
-                            Text(Strings.homeSameCountryOtherRegion(selectedCountry)).tag(selectedCountry.rawValue)
-                        }
-                        ForEach(Country.allCases.filter { $0 != selectedCountry && $0 != .custom }) { country in
-                            Text("\(country.flag) \(country.displayName)").tag(country.rawValue)
-                        }
+                        settingsLink(Strings.vacationStyle, icon: "slider.horizontal.3", color: .orange) { stylePage }
                     }
-                    .pickerStyle(.navigationLink)
-                    .onChange(of: selectedHomeCountryRaw) { _, newValue in
-                        if newValue == selectedCountry.rawValue {
-                            // 같은 나라 다른 지역 — 지역이 있어야 의미가 있으니 일하는 곳이 아닌 첫 지역을 고른다
-                            profile.homeCountry = nil
-                            if profile.homeRegion == nil {
-                                profile.homeRegion = selectedCountry.holidayRegions.first { $0.code != selectedRegionCode }
-                            }
-                        } else {
-                            profile.homeCountry = Country(rawValue: newValue)
-                            profile.homeRegion = nil
-                        }
-                        syncHomeSelection()
-                        recommendationEngine.invalidateCache()
-                    }
-
-                    // 함께 보는 나라에 지역이 있으면 지역도 고른다 (다른 나라는 전국 공통도 된다)
-                    if let homeCountry = Country(rawValue: selectedHomeCountryRaw), !homeCountry.holidayRegions.isEmpty {
-                        let isSameCountry = homeCountry == selectedCountry
-                        Picker(Strings.holidayRegion, selection: $selectedHomeRegionCode) {
-                            if !isSameCountry {
-                                Text(Strings.holidayRegionNationwide).tag("")
-                            }
-                            ForEach(homeCountry.holidayRegions.filter { !isSameCountry || $0.code != selectedRegionCode }) { region in
-                                Text(region.displayName).tag(region.code)
-                            }
-                        }
-                        .onChange(of: selectedHomeRegionCode) { _, newValue in
-                            profile.homeRegion = HolidayRegion.find(newValue)
-                            recommendationEngine.invalidateCache()
-                        }
-                    }
-
-                    if !selectedHomeCountryRaw.isEmpty {
-                        Toggle(Strings.homeHolidaysDaysOff, isOn: $homeHolidaysDaysOff)
-                            .onChange(of: homeHolidaysDaysOff) { _, newValue in
-                                HolidayService.homeHolidaysAreDaysOff = newValue
-                                recommendationEngine.invalidateCache()
-                            }
-                    }
-
-                    }
-
-                    // 주말 — 나라마다 다르고(중동은 금·토), 주말에 일하는 사람도 있다. 비워 두면 나라 기본.
-                    Picker(Strings.weekendSetting, selection: $customWeekendDaysRaw) {
-                        Text(Strings.weekendCountryDefault(Self.weekendLabel(selectedCountry.standardWeekendDays))).tag("")
-                        ForEach(Self.weekendPresets, id: \.self) { raw in
-                            Text(Self.weekendLabel(HolidayService.parseWeekend(raw) ?? [])).tag(raw)
-                        }
-                        Text(Strings.weekendNone).tag("none")
-                    }
-                    .onChange(of: customWeekendDaysRaw) { _, _ in recommendationEngine.invalidateCache() }
-
-                    // 근무 형태 — 고정 / 파트타임 / 교대. 고른 형태의 설정만 보인다 (휴일 기록 방식이 사람마다 달라서)
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(Strings.workPatternTitle)
-                        WorkPatternChooser { recommendationEngine.invalidateCache() }
-                        Text(Strings.workPatternFooter)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.vertical, 4)
-
-                    switch WorkPattern(rawValue: workPatternRaw) ?? HolidayService.workPattern {
-                    case .fixed:
-                        EmptyView()
-                    case .partTime:
-                        // 파트타임 — 매주 일하지 않는 요일 (주말처럼 연차에서 빠지지 않는다)
-                        PartTimeDaysPicker(country: selectedCountry)
-                            .onChange(of: partTimeDaysOffRaw) { _, _ in recommendationEngine.invalidateCache() }
-                        Text(Strings.partTimeDaysFooter)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                    case .shift:
-                        // 교대 근무 — 한 주씩 날짜마다 근무·휴무
-                        NavigationLink {
-                            ShiftScheduleView(country: selectedCountry) { recommendationEngine.invalidateCache() }
-                        } label: {
-                            Label(Strings.shiftScheduleTitle, systemImage: "calendar.day.timeline.left")
-                        }
-                    }
-
-                    // 주 시작 요일 — 달력 첫 칸. 0 이면 나라 기본(스페인은 월, 미국은 일).
-                    Picker(Strings.firstWeekdaySetting, selection: $firstWeekdayRaw) {
-                        Text(Strings.weekendCountryDefault(Strings.weekdays[selectedCountry.standardFirstWeekday - 1])).tag(0)
-                        ForEach([2, 1, 7], id: \.self) { day in
-                            Text(Strings.weekdays[day - 1]).tag(day)
-                        }
-                    }
-
-                    Picker(Strings.language, selection: $selectedLanguage) {
-                        ForEach(AppLanguage.allCases) { lang in
-                            Text("\(lang.flag) \(lang.displayName)").tag(lang)
-                        }
-                    }
-                    .onChange(of: selectedLanguage) { _, newValue in
-                        AppLanguage.current = newValue
-                        recommendationEngine.invalidateCache()
-                    }
-                } header: {
-                    Text(Strings.countryAndLanguage)
-                } footer: {
-                    // 처음 쓰는 사람에게는 감춘 설정을 설명하지 않는다
-                    if !AppSurface.shared.shows(.everything) {
-                        Text(Strings.weekendSettingFooter)
-                    } else if !selectedCountry.holidayRegions.isEmpty {
-                        Text("\(Strings.holidayRegionFooter(selectedCountry))\n\(Strings.homeRegionFooter)")
-                    } else if selectedCountry == .custom {
-                        Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
-                    } else {
-                        Text("\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
-                    }
+                    settingsLink(Strings.dataManagement, icon: "externaldrive", color: .gray) { dataPage }
                 }
 
                 if AppSurface.shared.shows(.everything) {
-                Section {
-                    Picker(Strings.secondaryCalendarTitle, selection: $secondaryCalendarRaw) {
-                        Text(Strings.secondaryCalendarNone).tag("")
-                        ForEach(SecondaryCalendar.allCases) { calendar in
-                            Text(Strings.secondaryCalendarName(calendar)).tag(calendar.rawValue)
-                        }
-                    }
-                } footer: {
-                    Text(Strings.secondaryCalendarFooter)
-                }
-
-                // 공휴일 관리
-                Section {
-                    NavigationLink(destination: HolidayManagementView(country: profile.country)) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "calendar.badge.plus")
-                                .foregroundStyle(.orange)
-                                .frame(width: 28)
-                                .voDecorative()
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.holidayMgmtTitle)
-                                Text(Strings.holidayMgmtSubtitle)
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        .accessibilityElement(children: .combine)
-                    }
-
-                    // 가족 기념일 — 쉬는 날은 아니지만 가족에게는 공휴일 같은 날
-                    NavigationLink(destination: FamilyAnniversariesView()) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "heart.fill")
-                                .foregroundStyle(.pink)
-                                .frame(width: 28)
-                                .voDecorative()
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.familyAnniversariesTitle)
-                                Text(Strings.familyAnniversariesSubtitle)
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        .accessibilityElement(children: .combine)
-                    }
-
-                    // 현황에 보일 것 — 현황에서 '볼게요'로 고른 것을 여기서 켜고 끈다(`HomeLayout`)
-                    Toggle(Strings.upcomingLeaves, isOn: homeChoice($upcomingChoice))
-                        .tint(.orange)
-                    Toggle(isOn: homeChoice($holidaysChoice)) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(Strings.showHolidaysInUpcomingTitle)
-                            Text(Strings.showHolidaysInUpcomingDescription)
-                                .font(.body)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .tint(.orange)
-                    Toggle(isOn: $paceAlways) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(Strings.homePaceAlways)
-                            Text(Strings.homePaceAlwaysDescription)
-                                .font(.body)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .tint(.orange)
-                }
-
-                // 일정 공유 (가족·친구와 실시간 공유)
-                Section {
-                    NavigationLink(destination: ShareScheduleView(profile: profile)
-                        .onAppear { AppTips.familyShare.invalidate(reason: .actionPerformed) }
-                    ) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "person.2.fill")
-                                .foregroundStyle(.blue)
-                                .frame(width: 28)
-                                .voDecorative()
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.shareScheduleTitle)
-                                Text(Strings.shareScheduleSubtitle)
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        .accessibilityElement(children: .combine)
-                    }
-                }
-
-                // 사용자 유형
-                Section(Strings.userTypeSection) {
-                    Picker(Strings.userTypeMode, selection: $profile.userType) {
-                        ForEach(UserType.allCases) { type in
-                            Label(type.displayName, systemImage: type.icon).tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.vertical, 4)
-
-                    if profile.userType == .leisure {
-                        Text(Strings.userTypeLeisureDesc)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                }
-
-                // 연차/휴가 설정
-                let isLeisure = profile.userType == .leisure
-                Section(isLeisure ? Strings.leisureVacationSettings : Strings.annualLeaveSettings) {
-                    // 총 사용 가능 연차 표시 — 직장인 모드만
-                    if !isLeisure {
-                        HStack(alignment: .center) {
-                            Text(Strings.availableLeaveLabel)
-                                .font(.body)
-                            Spacer()
-                            VStack(alignment: .trailing, spacing: 2) {
-                                Text("\(Strings.dayCount(totalAvailableLeave))")
-                                    .font(.system(.largeTitle, weight: .bold))
-                                    .foregroundStyle(includeBonusInStatus && activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
-                                if includeBonusInStatus && activeBonusLeave > 0 {
-                                    Text(Strings.baseAndBonus(
-                                        base: formatLeave(usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)),
-                                        bonus: formatLeave(activeBonusLeave)
-                                    ))
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
+                    Section {
+                        NavigationLink(destination: HolidayManagementView(country: profile.country)) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "calendar.badge.plus")
+                                    .foregroundStyle(.orange)
+                                    .frame(width: 28)
+                                    .voDecorative()
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(Strings.holidayMgmtTitle)
+                                    Text(Strings.holidayMgmtSubtitle)
+                                        .font(.body)
+                                        .foregroundStyle(.secondary)
                                 }
                             }
+                            .accessibilityElement(children: .combine)
                         }
-                        .padding(.vertical, 4)
-                        .voCard("\(Strings.availableLeaveLabel) \(Strings.dayCount(totalAvailableLeave))")
-                    }
 
-                    // 연차 받는 방식 — 1년치를 한 번에, 또는 급여일마다 조금씩 쌓임 (미국 사용자 피드백)
-                    if !isLeisure {
-                        Picker(Strings.accrualSetting, selection: $accrualPeriodRaw) {
-                            Text(Strings.accrualLumpSum).tag("")
-                            ForEach(LeaveUsageCalculator.Accrual.Period.allCases) { period in
-                                Text(Strings.accrualPeriodName(period)).tag(period.rawValue)
-                            }
-                        }
-                    }
-
-                    if !isLeisure, let accrual = LeaveUsageCalculator.accrual {
-                        HStack {
-                            Text(Strings.accrualAmount)
-                            Spacer()
-                            TextField("0", value: $accrualAmount, format: .number.precision(.fractionLength(0...2)))
-                                .keyboardType(.decimalPad)
-                                .multilineTextAlignment(.trailing)
-                                .frame(maxWidth: 80)
-                            Picker("", selection: $accrualIsHours) {
-                                Text(Strings.accrualUnitDays).tag(false)
-                                Text(Strings.accrualUnitHours).tag(true)
-                            }
-                            .labelsHidden()
-                            .fixedSize()
-                        }
-                        if accrual.period != .semimonthly {
-                            DatePicker(Strings.accrualPayDay, selection: Binding(
-                                get: { Date(timeIntervalSinceReferenceDate: accrualPayDay) },
-                                set: { accrualPayDay = $0.timeIntervalSinceReferenceDate }
-                            ), displayedComponents: .date)
-                        }
-                        LabeledContent(Strings.accrualEarnedSoFar,
-                                       value: Strings.dayCount(accrual.earned(year: LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart),
-                                                                              startMonth: profile.yearStart, through: Date())))
-                        LabeledContent(Strings.accrualYearTotal, value: Strings.dayCount(profile.totalAnnualLeave))
-                        Text(Strings.accrualFooter)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                    } else {
-                    HStack {
-                        Text(isLeisure ? Strings.leisureAnnualGoal : Strings.totalLeave)
-                        Spacer()
-                        if isLeisure {
-                            Stepper(
-                                profile.totalAnnualLeave == 0
-                                    ? Strings.leisureUnlimited
-                                    : "\(Strings.dayCount(Double(profile.totalAnnualLeave)))",
-                                value: $profile.totalAnnualLeave,
-                                in: 0...365,
-                                step: 1
-                            )
-                        } else {
-                            Stepper(
-                                "\(Strings.dayCount(Double(profile.totalAnnualLeave)))",
-                                value: $profile.totalAnnualLeave,
-                                in: max(committedLeave, 1)...365,
-                                step: 1
-                            )
-                        }
-                    }
-                    }
-
-                    HStack {
-                        Text(isLeisure ? Strings.leisurePlannedLeave : Strings.usedLeave)
-                        Spacer()
-                        Text("\(Strings.dayCount(committedLeave))")
-                            .foregroundStyle(.secondary)
-                    }
-
-                    // 연도 중간에 앱을 시작했으면 그동안 쓴(또는 지금 남은) 연차를 일·시간으로 한 번에 — 홈 배너를 닫아도 여기서 다시
-                    if !isLeisure {
-                        Button {
-                            showingPastLeaveEntry = true
-                        } label: {
-                            Label(Strings.pastLeaveSheetTitle, systemImage: "clock.arrow.circlepath")
-                        }
-                        .sheet(isPresented: $showingPastLeaveEntry) {
-                            PastLeaveQuickEntrySheet(profile: profile)
-                        }
-                    }
-
-                    Picker(isLeisure ? Strings.leisureYearStartMonth : Strings.yearStartMonth, selection: $profile.yearStartMonth) {
-                        ForEach(1...12, id: \.self) { month in
-                            Text(Strings.monthShort(month)).tag(month)
-                        }
-                    }
-
-                    // 입사일 기준 회사는 월 중간에 연차가 새로 생긴다 (예: 3월 21일)
-                    if !isLeisure {
-                        Picker(Strings.yearStartDay, selection: $profile.yearStartDay) {
-                            ForEach(1...YearStart.selectableDays(inMonth: profile.yearStartMonth), id: \.self) { day in
-                                Text(Strings.dayOfMonth(day)).tag(day)
-                            }
-                        }
-                    }
-
-                    if AppSurface.shared.shows(.everything) {
-                    // 공휴일 앞뒤로 휴가를 못 내는 직장(공무원 등) — 추천·최적 플랜이 그 날을 피한다
-                    Picker(Strings.blackoutSetting, selection: $holidayBlackoutDays) {
-                        Text(Strings.blackoutOff).tag(0)
-                        ForEach([1, 2, 3, 5], id: \.self) { n in
-                            Text(Strings.blackoutDays(n)).tag(n)
-                        }
-                    }
-                    .onChange(of: holidayBlackoutDays) { _, _ in recommendationEngine.invalidateCache() }
-
-                    // 남은 연차 이월 — 회사가 허락하는 만큼 (네덜란드 피드백). 기한이 있으면 그 전에 쓴 만큼만 남는다.
-                    if !isLeisure {
-                        Picker(Strings.carryOverSetting, selection: $carryOverMaxDays) {
-                            Text(Strings.carryOverOff).tag(0)
-                            ForEach([1, 2, 3, 5, 10, 20], id: \.self) { n in
-                                Text(Strings.carryOverUpTo(Strings.dayCount(Double(n)))).tag(n)
-                            }
-                            Text(Strings.carryOverAll).tag(-1)
-                        }
-                        .onChange(of: carryOverMaxDays) { _, _ in recommendationEngine.invalidateCache() }
-                        if carryOverMaxDays != 0 {
-                            Picker(Strings.carryOverExpirySetting, selection: $carryOverExpiryMonths) {
-                                Text(Strings.carryOverNoExpiry).tag(0)
-                                ForEach([3, 4, 6, 12], id: \.self) { n in
-                                    Text(Strings.carryOverExpiryMonths(n)).tag(n)
+                        // 가족 기념일 — 쉬는 날은 아니지만 가족에게는 공휴일 같은 날
+                        NavigationLink(destination: FamilyAnniversariesView()) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "heart.fill")
+                                    .foregroundStyle(.pink)
+                                    .frame(width: 28)
+                                    .voDecorative()
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(Strings.familyAnniversariesTitle)
+                                    Text(Strings.familyAnniversariesSubtitle)
+                                        .font(.body)
+                                        .foregroundStyle(.secondary)
                                 }
                             }
-                            .onChange(of: carryOverExpiryMonths) { _, _ in recommendationEngine.invalidateCache() }
+                            .accessibilityElement(children: .combine)
                         }
-                        // 올해 넘어온 연차 — 지난해 기록이 없어 계산할 수 없으면 직접 적는다. 비우면 자동
-                        HStack {
-                            Text(Strings.carryOverManualLabel)
-                            Spacer()
-                            TextField(Strings.carryOverManualAuto(Strings.dayCount(autoCarryOver)),
-                                      value: $carryOverManual, format: .number.precision(.fractionLength(0...2)))
-                                .keyboardType(.decimalPad)
-                                .multilineTextAlignment(.trailing)
-                        }
-                        .onChange(of: carryOverManual) { _, v in
-                            LeaveUsageCalculator.setCarryOverManual(v, year: currentFiscalYear)
-                            recommendationEngine.invalidateCache()
-                        }
-                        Text(Strings.carryOverFooter)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                    }
 
-                    // 시간 단위 휴가 — 이탈리아 permessi·대만 특휴처럼 시간으로 쓰는 사람만 근무 시간 설정을 본다
-                    Toggle(isOn: $usesHourlyLeave) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(Strings.hourlyLeaveToggle)
-                            Text(Strings.hourlyLeaveDesc)
-                                .font(.body)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .onChange(of: usesHourlyLeave) { _, v in LeaveLength.usesHourlyLeave = v }
-
-                    if usesHourlyLeave {
-                        // 하루 근무 시간 — 시간·분 단위로 쓴 휴가를 일수로 바꾸는 기준 (이탈리아 permessi 등)
-                        Stepper(value: $workdayMinutes, in: 180...720, step: 15) {
-                            HStack {
-                                Text(Strings.workdayLengthSetting)
-                                Spacer()
-                                Text(Strings.durationText(minutes: workdayMinutes))
-                                    .monospacedDigit()
-                                    .foregroundStyle(.secondary)
+                        // 일정 공유 (가족·친구와 실시간 공유)
+                        NavigationLink(destination: ShareScheduleView(profile: profile)
+                            .onAppear { AppTips.familyShare.invalidate(reason: .actionPerformed) }
+                        ) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "person.2.fill")
+                                    .foregroundStyle(.blue)
+                                    .frame(width: 28)
+                                    .voDecorative()
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(Strings.shareScheduleTitle)
+                                    Text(Strings.shareScheduleSubtitle)
+                                        .font(.body)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
-                        }
-                        .onChange(of: workdayMinutes) { _, _ in recommendationEngine.invalidateCache() }
-
-                        // 요일마다 근무 시간이 다른 직장 (예: 월~목 7시간 30분, 금 7시간)
-                        NavigationLink {
-                            WorkdayHoursView(country: selectedCountry) { recommendationEngine.invalidateCache() }
-                        } label: {
-                            Text(Strings.workdayByWeekdayTitle)
+                            .accessibilityElement(children: .combine)
                         }
                     }
+                }
 
-                    // 휴가 종류 만들기·색 바꾸기 — 달력에서 종류별로 다른 색
-                    NavigationLink {
-                        LeaveKindsView()
-                    } label: {
-                        Label(Strings.leaveKindsTitle, systemImage: "paintpalette")
-                    }
-
-                    // 결산·성수기처럼 직장에서 휴가를 막는 기간 — 날짜를 직접 넣는다
-                    NavigationLink {
-                        BlackoutPeriodsView { recommendationEngine.invalidateCache() }
-                    } label: {
-                        HStack {
-                            Text(Strings.blackoutPeriodsTitle)
-                            Spacer()
-                            if blackoutPeriodCount > 0 {
-                                Text("\(blackoutPeriodCount)")
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                    }
-
-                    // 연차를 달력 일수로 세는지 근무일로 세는지 — 묻는 사람이 많다
-                    Text(Strings.leaveCountingFooter)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                    Text(Strings.blackoutFooter)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                    }
+                Section {
+                    settingsLink("\(Strings.helpSection) · \(Strings.supportSection)",
+                                 icon: "questionmark.circle", color: .purple) { supportPage }
                 }
 
                 if !AppSurface.shared.shows(.everything) {
@@ -897,507 +468,6 @@ struct SettingsView: View {
                     } footer: {
                         Text(Strings.showAllFeaturesFooter)
                     }
-                } else {
-                // 보너스 연차 관리 (Pro 전용, 직장인 모드만)
-                if !isLeisure { Section {
-                    // 홈 "연차 현황"에 보너스 합산 여부 (예전엔 홈 화면 토글이었음)
-                    Toggle(isOn: $includeBonusInStatus) {
-                        Text(Strings.includeBonus)
-                    }
-                    .tint(AppTheme.Colors.bonus)
-                    .accessibilityHint(Text(Strings.includeBonusHint))
-
-                    Button {
-                        if ProManager.shared.hasProTier {
-                            showingBonusLeaveSheet = true
-                        } else {
-                            paywallProductID = ProManager.yearlyProductID
-                            showingPaywall = true
-                        }
-                    } label: {
-                        HStack {
-                            Image(systemName: ProManager.shared.hasProTier ? "plus.circle.fill" : "crown.fill")
-                                .foregroundStyle(ProManager.shared.hasProTier ? AppTheme.Colors.bonus : .yellow)
-                                .voDecorative()
-                            Text(Strings.addBonusLeave)
-                                .foregroundStyle(ProManager.shared.hasProTier ? .primary : .secondary)
-                            Spacer()
-                            if ProManager.shared.hasProTier {
-                                Image(systemName: "chevron.right")
-                                    .foregroundStyle(.secondary)
-                                    .font(.body)
-                                    .voDecorative()
-                            } else {
-                                Text("Pro")
-                                    .font(.body)
-                                    .fontWeight(.semibold)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Color.yellow)
-                                    .foregroundColor(.black)
-                                    .cornerRadius(4)
-                            }
-                        }
-                        .accessibilityElement(children: .combine)
-                    }
-                    .popoverTip(AppTips.bonusLeave)
-
-                    // 활성 보너스 연차 목록
-                    ForEach(bonusLeaves.filter { !$0.isUsed }) { bonus in
-                        HStack {
-                            Image(systemName: bonus.type.icon)
-                                .foregroundStyle(AppTheme.Colors.bonus)
-                                .frame(width: 24)
-                                .voDecorative()
-
-                            VStack(alignment: .leading, spacing: 2) {
-                                HStack {
-                                    Text(Strings.bonusLeaveTypeName(bonus.type))
-                                        .font(.body)
-                                    // 홈 카드와 같은 뜻의 분수(사용/부여) — 화면마다 분모·분자가 다르면 헷갈린다.
-                                    // 문장형 "3일 중 1.5일 사용"은 아래 VoiceOver 라벨이 대신 읽어 준다.
-                                    Text(Strings.bonusUsedFraction(
-                                        used: formatLeave(bonus.usedDays),
-                                        granted: formatLeave(bonus.days)
-                                    ))
-                                    .font(.body)
-                                    .foregroundStyle(AppTheme.Colors.bonus)
-                                }
-                                if !bonus.reason.isEmpty {
-                                    Text(bonus.reason)
-                                        .font(.body)
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-
-                            Spacer()
-
-                            if let expiration = bonus.expirationDate {
-                                Text(expiration, format: .dateTime.month().day())
-                                    .font(.body)
-                                    .foregroundStyle(expiration < Date() ? .red : .secondary)
-                            }
-
-                            Image(systemName: "pencil.circle")
-                                .foregroundStyle(.secondary)
-                                .font(.body)
-                                .voDecorative()
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture { editingBonus = bonus }
-                        .voButton(bonusRowAccessibilityLabel(bonus), hint: Strings.editLeaveHint)
-                    }
-                    .onDelete(perform: deleteBonusLeave)
-                } header: {
-                    Text(Strings.bonusLeave)
-                } footer: {
-                    Text(Strings.bonusLeaveFooter)
-                }
-                } // end if !isLeisure
-
-                // 휴가 스타일
-                Section(Strings.vacationStyle) {
-                    Button(action: { showingPreferences = true }) {
-                        HStack {
-                            Image(systemName: "slider.horizontal.3")
-                                .foregroundStyle(.blue)
-                                .voDecorative()
-                            Text(Strings.preferencesSettings)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.secondary)
-                                .voDecorative()
-                        }
-                    }
-                    .foregroundStyle(.primary)
-
-                    // 현재 설정 요약
-                    VStack(alignment: .leading, spacing: 8) {
-                        PreferenceSummaryRow(
-                            icon: "clock",
-                            title: Strings.preferredDuration,
-                            value: Strings.durationName(profile.preferredDuration)
-                        )
-
-                        if !profile.preferredSeasons.isEmpty {
-                            PreferenceSummaryRow(
-                                icon: "leaf",
-                                title: Strings.preferredSeason,
-                                value: profile.preferredSeasons.map { $0.icon }.joined(separator: " "),
-                                accessibilityValue: profile.preferredSeasons.map { Strings.seasonName($0) }.joined(separator: ", ")
-                            )
-                        }
-
-                        if !profile.priorityActivities.isEmpty {
-                            PreferenceSummaryRow(
-                                icon: "star",
-                                title: Strings.preferredActivity,
-                                value: profile.priorityActivities.map { $0.icon }.joined(separator: " "),
-                                accessibilityValue: profile.priorityActivities.map { Strings.activityName($0) }.joined(separator: ", ")
-                            )
-                        }
-                    }
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                }
-
-                // 휴식 알림 (Rest Radar)
-                if !isLeisure {
-                    Section {
-                        Toggle(isOn: $restRadarEnabled) {
-                            Label(Strings.restRadarToggle, systemImage: "bell.badge")
-                        }
-                        .tint(AppTheme.Colors.brand)
-                        .onChange(of: restRadarEnabled) { _, enabled in
-                            if !enabled { NotificationService.cancelPending() }
-                        }
-                    } header: {
-                        Text(Strings.restRadarSection)
-                    } footer: {
-                        Text(Strings.restRadarFooter)
-                    }
-                }
-
-                // 통계
-                Section(Strings.usageStats) {
-                    StatRow(icon: "checkmark.circle.fill", iconColor: .green, title: Strings.completed, value: Strings.itemCount(usedLeaveCount))
-                    StatRow(icon: "calendar.badge.clock", iconColor: .blue, title: Strings.plannedLeave, value: Strings.itemCount(plannedLeaveCount))
-                    StatRow(icon: "chart.pie.fill", iconColor: .orange, title: Strings.leaveUsageRate, value: usageRateText)
-                }
-
-                }
-
-                // 데이터 관리
-                Section {
-                    if AppSurface.shared.shows(.everything) {
-                    // 사진에서 휴가 가져오기 (OCR)
-                    Button {
-                        showingPhotoImport = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "doc.text.viewfinder")
-                                .foregroundStyle(.blue)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.importFromPhoto)
-                                    .foregroundStyle(.primary)
-                                Text(Strings.importFromPhotoDescription)
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.secondary)
-                                .font(.body)
-                        }
-                        .accessibilityElement(children: .combine)
-                    }
-
-                    // 캘린더 앱으로 휴가 보내기 — 넣고·고치고·지우면 "Goldweek" 캘린더가 따라 바뀐다 (Pro)
-                    Toggle(isOn: Binding(get: { calendarAutoSync }, set: setCalendarAutoSync)) {
-                        HStack {
-                            Image(systemName: "calendar.badge.checkmark")
-                                .foregroundStyle(.green)
-                                .voDecorative()
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.calendarExportToggle)
-                                Text(calendarSyncError ?? Strings.calendarExportDesc)
-                                    .font(.body)
-                                    .foregroundStyle(calendarSyncError == nil ? Color.secondary : Color.red)
-                            }
-                        }
-                    }
-
-                    // 캘린더에서 휴가 가져오기 (제안 후 확인)
-                    Button {
-                        showingCalendarImport = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "calendar.badge.plus")
-                                .foregroundStyle(.green)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.importFromCalendar)
-                                    .foregroundStyle(.primary)
-                                Text(Strings.importFromCalendarDescription)
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.secondary)
-                                .font(.body)
-                        }
-                        .accessibilityElement(children: .combine)
-                    }
-
-                    // 캘린더 자동 감지 (Pro)
-                    if ProManager.shared.hasProTier {
-                        Toggle(isOn: $autoDetectEnabled) {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.autoDetectSettingTitle)
-                                Text(Strings.autoDetectSettingDescription)
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        .tint(.green)
-                    } else {
-                        Button {
-                            paywallProductID = ProManager.yearlyProductID
-                            showingPaywall = true
-                        } label: {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(Strings.autoDetectSettingTitle)
-                                        .foregroundStyle(.primary)
-                                    Text(Strings.autoDetectSettingDescription)
-                                        .font(.body)
-                                        .foregroundStyle(.secondary)
-                                }
-                                Spacer()
-                                Text("Pro")
-                                    .font(.body)
-                                    .fontWeight(.semibold)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Color.yellow)
-                                    .foregroundColor(.black)
-                                    .cornerRadius(4)
-                            }
-                            .accessibilityElement(children: .combine)
-                        }
-                    }
-
-                    // 타임머신 (시점별 스냅샷 복원)
-                    NavigationLink {
-                        TimeMachineView()
-                    } label: {
-                        HStack {
-                            Image(systemName: "clock.arrow.circlepath")
-                                .foregroundStyle(.purple)
-                            Text(Strings.timeMachine)
-                                .foregroundStyle(.primary)
-                        }
-                    }
-                    .popoverTip(AppTips.timeMachine)
-
-                    }
-
-                    // iCloud 백업
-                    Button {
-                        Task { await backupToICloud() }
-                    } label: {
-                        HStack {
-                            Image(systemName: "icloud.and.arrow.up")
-                                .foregroundStyle(.blue)
-                            Text(Strings.backupToICloud)
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            if isBackingUp {
-                                ProgressView()
-                            }
-                        }
-                    }
-                    .disabled(isBackingUp)
-
-                    // iCloud 복원
-                    Button {
-                        Task { await restoreFromICloud() }
-                    } label: {
-                        HStack {
-                            Image(systemName: "icloud.and.arrow.down")
-                                .foregroundStyle(.blue)
-                            Text(Strings.restoreFromICloud)
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            if isRestoring {
-                                ProgressView()
-                            }
-                        }
-                    }
-                    .disabled(isRestoring)
-
-                    // 초기화
-                    Button(role: .destructive, action: { showingResetAlert = true }) {
-                        HStack {
-                            Image(systemName: "arrow.counterclockwise")
-                            Text(Strings.resetData)
-                        }
-                    }
-                } header: {
-                    Text(Strings.dataManagement)
-                } footer: {
-                    if let lastBackup = lastBackupDate {
-                        Text(Strings.lastBackup(lastBackup.appFormatted(time: .short)))
-                    }
-                }
-
-                // 앱 정보
-                Section(Strings.appInfo) {
-                        // 구매 복원
-                    if !ProManager.shared.isPro {
-                        Button {
-                            Task {
-                                let result = await ProManager.shared.restorePurchases()
-                                switch result {
-                                case .restored:
-                                    restoreResultMessage = Strings.restorePurchasesSuccess
-                                    HapticFeedback.success()
-                                case .nothingToRestore:
-                                    restoreResultMessage = Strings.restorePurchasesNone
-                                case .failed(let reason):
-                                    restoreResultMessage = Strings.restorePurchasesFailed(reason)
-                                    HapticFeedback.error()
-                                }
-                                showingRestoreResult = true
-                            }
-                        } label: {
-                            HStack {
-                                Image(systemName: "arrow.clockwise.circle.fill")
-                                    .foregroundStyle(.blue)
-                                Text(Strings.restorePurchase)
-                                    .foregroundStyle(.primary)
-                                Spacer()
-                                if ProManager.shared.isLoading {
-                                    ProgressView()
-                                }
-                            }
-                        }
-                        .disabled(ProManager.shared.isLoading)
-                    }
-
-                    // 앱 공유하기
-                    ShareLink(
-                        item: URL(string: "https://apps.apple.com/app/id6755983135")!,
-                        subject: Text(Strings.shareSubject),
-                        message: Text(Strings.shareMessage)
-                    ) {
-                        HStack {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundStyle(.blue)
-                            Text(Strings.shareApp)
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.secondary)
-                                .font(.body)
-                        }
-                    }
-
-                    HStack {
-                        Text(Strings.developer)
-                        Spacer()
-                        Text("Goldweek Team")
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                // 도움말 — 안내를 언제든 다시 볼 수 있어야 한다.
-                // 한 번 지나가면 끝인 안내는 "그때 뭐라 했더라"로 남는다.
-                Section {
-                    Button {
-                        showingTutorial = true
-                    } label: {
-                        Label(Strings.helpTutorial, systemImage: "book")
-                    }
-
-                    Button {
-                        showingOnboardingReplay = true
-                    } label: {
-                        Label(Strings.helpOnboarding, systemImage: "sparkles.rectangle.stack")
-                    }
-
-                    // 업데이트 뒤 한 번 떴던 "새로운 기능" — 놓쳤거나 다시 보고 싶을 때
-                    Button {
-                        showingWhatsNew = true
-                    } label: {
-                        Label(Strings.whatsNewEntry, systemImage: "gift")
-                    }
-
-                    Button {
-                        AppTips.requestResetOnNextLaunch()
-                        showingTipsResetNotice = true
-                        HapticFeedback.success()
-                    } label: {
-                        Label(Strings.helpResetTips, systemImage: "lightbulb")
-                    }
-                } header: {
-                    Text(Strings.helpSection)
-                }
-
-                // 지원 — 피드백 보내기·리뷰 남기기·법적 링크·버전.
-                // 버전 행을 7번 탭하면 개발자 모드가 켜지고, 접수된 피드백·사용 통계·안정성이 보인다.
-                //
-                // ⚠️ LeeoKit의 `LeeoSupportSection`을 쓰지 않고 행을 직접 그린다 —
-                //    그쪽 문구는 **기기 언어**를 따라서, 기기가 한국어인 사용자가 앱만 영어로 바꾸면
-                //    이 섹션만 한국어로 남는다. 화면 안쪽(피드백 폼)은 LeeoKit 것을 그대로 쓰고,
-                //    번들 언어는 `AppLanguage.current` 설정이 함께 맞춰 준다(다음 실행부터).
-                Section {
-                    NavigationLink(destination: LeeoFeedbackView<GoldweekSpec>()) {
-                        Label(Strings.sendFeedback, systemImage: "envelope.badge")
-                    }
-
-                    // 앞으로 만들 기능 — 원본은 GoldweekRoadmap.swift
-                    NavigationLink(destination: RoadmapScreen()) {
-                        Label(RoadmapL10n.entry, systemImage: "map")
-                    }
-
-                    Button {
-                        if let id = GoldweekSpec.appStoreID {
-                            LeeoReviewRequest.openWriteReview(appStoreID: id)
-                        } else {
-                            LeeoReviewRequest.markRequested()
-                            requestReview()
-                        }
-                    } label: {
-                        Label(Strings.rateApp, systemImage: "star.bubble")
-                    }
-
-                    Link(destination: GoldweekSpec.legal.privacyURL) {
-                        Label(Strings.privacyPolicy, systemImage: "arrow.up.forward.square")
-                    }
-                    Link(destination: GoldweekSpec.legal.supportURL) {
-                        Label(Strings.supportPage, systemImage: "arrow.up.forward.square")
-                    }
-                    if let termsURL = GoldweekSpec.legal.termsURL {
-                        Link(destination: termsURL) {
-                            Label(Strings.termsOfService, systemImage: "arrow.up.forward.square")
-                        }
-                    }
-
-                    if masterModeEnabled {
-                        NavigationLink(destination: LeeoFeedbackInboxView<GoldweekSpec>()) {
-                            Label(Strings.devFeedbackInbox, systemImage: "tray.full")
-                        }
-                        NavigationLink(destination: UsageStatsView()) {
-                            Label(Strings.devUsageStats, systemImage: "chart.bar.xaxis")
-                        }
-                        NavigationLink(destination: CrashReportsView()) {
-                            Label(Strings.devCrashReports, systemImage: "ladybug")
-                        }
-                    }
-
-                    // 버전 — 7번 탭하면 개발자 모드 토글 (LeeoKit과 같은 키를 쓴다)
-                    HStack {
-                        Label(Strings.version, systemImage: "info.circle")
-                        Spacer()
-                        Text(appVersionText)
-                            .foregroundStyle(.secondary)
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture(count: 7) {
-                        masterModeEnabled.toggle()
-                        HapticFeedback.success()
-                    }
-                } header: {
-                    Text(Strings.supportSection)
-                }
-
-                // 개발자 문의
-                DeveloperContactSection()
-
-                // 같은 개발자가 만든 다른 앱 — 지금 쓰는 앱(Goldweek)은 목록에서 빠진다
-                Section {
-                    LeeoFamilySettingsRow<GoldweekSpec>()
                 }
             })
             // 프로필 값은 @Bindable 바인딩이라 SwiftData 자동 저장에 맡겨져 있었다.
@@ -1512,6 +582,964 @@ struct SettingsView: View {
             }
             .task {
                 await checkLastBackup()
+            }
+        }
+    }
+
+    // MARK: - 묶음 화면
+
+    private var isLeisure: Bool { profile.userType == .leisure }
+
+    /// 첫 화면의 한 줄 — 아이콘 · 이름 · (있으면) 지금 값
+    private func settingsLink<Destination: View>(_ title: String, icon: String, color: Color, value: String? = nil,
+                                                 @ViewBuilder destination: @escaping () -> Destination) -> some View {
+        NavigationLink {
+            destination()
+        } label: {
+            HStack {
+                Label {
+                    Text(title)
+                } icon: {
+                    Image(systemName: icon)
+                        .foregroundStyle(color)
+                }
+                Spacer()
+                if let value {
+                    Text(value)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+        }
+    }
+
+    /// 안쪽 화면 하나. AnyView 로 감싸 설정 화면의 타입이 깊어지지 않게 한다(2.4.2 스택 넘침과 같은 까닭).
+    private func settingsPage<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        AnyView(Form { content() }
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline))
+    }
+
+    private var regionPage: some View {
+        settingsPage(Strings.countryAndLanguage) {
+            // 국가 및 언어
+            Section {
+                // 대륙 → 나라 2단계로 찾는다 (나라가 늘어 한 줄 목록은 찾기 어렵다)
+                NavigationLink {
+                    CountrySelectionView(selection: $selectedCountry)
+                } label: {
+                    HStack {
+                        Text(Strings.country)
+                        Spacer()
+                        Text("\(selectedCountry.flag) \(selectedCountry.displayName)")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .onChange(of: selectedCountry) { _, newValue in
+                    profile.country = newValue
+                    selectedRegionCode = profile.holidayRegion?.code ?? ""
+                    syncHomeSelection()
+                    recommendationEngine.invalidateCache()
+                }
+
+                // 주·지역마다 공휴일이 다른 나라만
+                if !selectedCountry.holidayRegions.isEmpty {
+                    Picker(Strings.holidayRegion, selection: $selectedRegionCode) {
+                        Text(Strings.holidayRegionNationwide).tag("")
+                        ForEach(selectedCountry.holidayRegions) { region in
+                            Text(region.displayName).tag(region.code)
+                        }
+                    }
+                    .onChange(of: selectedRegionCode) { _, newValue in
+                        profile.holidayRegion = HolidayRegion.find(newValue)
+                        syncHomeSelection()
+                        recommendationEngine.invalidateCache()
+                    }
+                }
+
+                if AppSurface.shared.shows(.everything) {
+                // 함께 볼 공휴일 — 사는 곳이 다른 지역이거나(스페인 자치주), 회사 본사가 다른 나라일 때
+                Picker(Strings.homeRegionSetting, selection: $selectedHomeCountryRaw) {
+                    Text(Strings.homeRegionNone).tag("")
+                    if !selectedCountry.holidayRegions.isEmpty {
+                        Text(Strings.homeSameCountryOtherRegion(selectedCountry)).tag(selectedCountry.rawValue)
+                    }
+                    ForEach(Country.allCases.filter { $0 != selectedCountry && $0 != .custom }) { country in
+                        Text("\(country.flag) \(country.displayName)").tag(country.rawValue)
+                    }
+                }
+                .pickerStyle(.navigationLink)
+                .onChange(of: selectedHomeCountryRaw) { _, newValue in
+                    if newValue == selectedCountry.rawValue {
+                        // 같은 나라 다른 지역 — 지역이 있어야 의미가 있으니 일하는 곳이 아닌 첫 지역을 고른다
+                        profile.homeCountry = nil
+                        if profile.homeRegion == nil {
+                            profile.homeRegion = selectedCountry.holidayRegions.first { $0.code != selectedRegionCode }
+                        }
+                    } else {
+                        profile.homeCountry = Country(rawValue: newValue)
+                        profile.homeRegion = nil
+                    }
+                    syncHomeSelection()
+                    recommendationEngine.invalidateCache()
+                }
+
+                // 함께 보는 나라에 지역이 있으면 지역도 고른다 (다른 나라는 전국 공통도 된다)
+                if let homeCountry = Country(rawValue: selectedHomeCountryRaw), !homeCountry.holidayRegions.isEmpty {
+                    let isSameCountry = homeCountry == selectedCountry
+                    Picker(Strings.holidayRegion, selection: $selectedHomeRegionCode) {
+                        if !isSameCountry {
+                            Text(Strings.holidayRegionNationwide).tag("")
+                        }
+                        ForEach(homeCountry.holidayRegions.filter { !isSameCountry || $0.code != selectedRegionCode }) { region in
+                            Text(region.displayName).tag(region.code)
+                        }
+                    }
+                    .onChange(of: selectedHomeRegionCode) { _, newValue in
+                        profile.homeRegion = HolidayRegion.find(newValue)
+                        recommendationEngine.invalidateCache()
+                    }
+                }
+
+                if !selectedHomeCountryRaw.isEmpty {
+                    Toggle(Strings.homeHolidaysDaysOff, isOn: $homeHolidaysDaysOff)
+                        .onChange(of: homeHolidaysDaysOff) { _, newValue in
+                            HolidayService.homeHolidaysAreDaysOff = newValue
+                            recommendationEngine.invalidateCache()
+                        }
+                }
+
+                }
+
+                // 주말 — 나라마다 다르고(중동은 금·토), 주말에 일하는 사람도 있다. 비워 두면 나라 기본.
+                Picker(Strings.weekendSetting, selection: $customWeekendDaysRaw) {
+                    Text(Strings.weekendCountryDefault(Self.weekendLabel(selectedCountry.standardWeekendDays))).tag("")
+                    ForEach(Self.weekendPresets, id: \.self) { raw in
+                        Text(Self.weekendLabel(HolidayService.parseWeekend(raw) ?? [])).tag(raw)
+                    }
+                    Text(Strings.weekendNone).tag("none")
+                }
+                .onChange(of: customWeekendDaysRaw) { _, _ in recommendationEngine.invalidateCache() }
+
+                // 근무 형태 — 고정 / 파트타임 / 교대. 고른 형태의 설정만 보인다 (휴일 기록 방식이 사람마다 달라서)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(Strings.workPatternTitle)
+                    WorkPatternChooser { recommendationEngine.invalidateCache() }
+                    Text(Strings.workPatternFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.vertical, 4)
+
+                switch WorkPattern(rawValue: workPatternRaw) ?? HolidayService.workPattern {
+                case .fixed:
+                    EmptyView()
+                case .partTime:
+                    // 파트타임 — 매주 일하지 않는 요일 (주말처럼 연차에서 빠지지 않는다)
+                    PartTimeDaysPicker(country: selectedCountry)
+                        .onChange(of: partTimeDaysOffRaw) { _, _ in recommendationEngine.invalidateCache() }
+                    Text(Strings.partTimeDaysFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                case .shift:
+                    // 교대 근무 — 한 주씩 날짜마다 근무·휴무
+                    NavigationLink {
+                        ShiftScheduleView(country: selectedCountry) { recommendationEngine.invalidateCache() }
+                    } label: {
+                        Label(Strings.shiftScheduleTitle, systemImage: "calendar.day.timeline.left")
+                    }
+                }
+
+                // 주 시작 요일 — 달력 첫 칸. 0 이면 나라 기본(스페인은 월, 미국은 일).
+                Picker(Strings.firstWeekdaySetting, selection: $firstWeekdayRaw) {
+                    Text(Strings.weekendCountryDefault(Strings.weekdays[selectedCountry.standardFirstWeekday - 1])).tag(0)
+                    ForEach([2, 1, 7], id: \.self) { day in
+                        Text(Strings.weekdays[day - 1]).tag(day)
+                    }
+                }
+
+                Picker(Strings.language, selection: $selectedLanguage) {
+                    ForEach(AppLanguage.allCases) { lang in
+                        Text("\(lang.flag) \(lang.displayName)").tag(lang)
+                    }
+                }
+                .onChange(of: selectedLanguage) { _, newValue in
+                    AppLanguage.current = newValue
+                    recommendationEngine.invalidateCache()
+                }
+            } header: {
+                Text(Strings.countryAndLanguage)
+            } footer: {
+                // 처음 쓰는 사람에게는 감춘 설정을 설명하지 않는다
+                if !AppSurface.shared.shows(.everything) {
+                    Text(Strings.weekendSettingFooter)
+                } else if !selectedCountry.holidayRegions.isEmpty {
+                    Text("\(Strings.holidayRegionFooter(selectedCountry))\n\(Strings.homeRegionFooter)")
+                } else if selectedCountry == .custom {
+                    Text("\(Strings.customCountryBuiltInInfo)\n\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
+                } else {
+                    Text("\(Strings.homeRegionFooter)\n\(Strings.weekendSettingFooter)")
+                }
+            }
+
+            if AppSurface.shared.shows(.everything) {
+            Section {
+                Picker(Strings.secondaryCalendarTitle, selection: $secondaryCalendarRaw) {
+                    Text(Strings.secondaryCalendarNone).tag("")
+                    ForEach(SecondaryCalendar.allCases) { calendar in
+                        Text(Strings.secondaryCalendarName(calendar)).tag(calendar.rawValue)
+                    }
+                }
+            } footer: {
+                Text(Strings.secondaryCalendarFooter)
+            }
+            }
+        }
+    }
+
+    private var leavePage: some View {
+        settingsPage(isLeisure ? Strings.leisureVacationSettings : Strings.annualLeaveSettings) {
+            if AppSurface.shared.shows(.everything) {
+            // 사용자 유형
+            Section(Strings.userTypeSection) {
+                Picker(Strings.userTypeMode, selection: $profile.userType) {
+                    ForEach(UserType.allCases) { type in
+                        Label(type.displayName, systemImage: type.icon).tag(type)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.vertical, 4)
+
+                if profile.userType == .leisure {
+                    Text(Strings.userTypeLeisureDesc)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            }
+
+            Section(isLeisure ? Strings.leisureVacationSettings : Strings.annualLeaveSettings) {
+                // 총 사용 가능 연차 표시 — 직장인 모드만
+                if !isLeisure {
+                    HStack(alignment: .center) {
+                        Text(Strings.availableLeaveLabel)
+                            .font(.body)
+                        Spacer()
+                        VStack(alignment: .trailing, spacing: 2) {
+                            Text("\(Strings.dayCount(totalAvailableLeave))")
+                                .font(.system(.largeTitle, weight: .bold))
+                                .foregroundStyle(includeBonusInStatus && activeBonusLeave > 0 ? AppTheme.Colors.bonus : .green)
+                            if includeBonusInStatus && activeBonusLeave > 0 {
+                                Text(Strings.baseAndBonus(
+                                    base: formatLeave(usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: false)),
+                                    bonus: formatLeave(activeBonusLeave)
+                                ))
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    .voCard("\(Strings.availableLeaveLabel) \(Strings.dayCount(totalAvailableLeave))")
+                }
+
+                // 연차 받는 방식 — 1년치를 한 번에, 또는 급여일마다 조금씩 쌓임 (미국 사용자 피드백)
+                if !isLeisure {
+                    Picker(Strings.accrualSetting, selection: $accrualPeriodRaw) {
+                        Text(Strings.accrualLumpSum).tag("")
+                        ForEach(LeaveUsageCalculator.Accrual.Period.allCases) { period in
+                            Text(Strings.accrualPeriodName(period)).tag(period.rawValue)
+                        }
+                    }
+                }
+
+                if !isLeisure, let accrual = LeaveUsageCalculator.accrual {
+                    HStack {
+                        Text(Strings.accrualAmount)
+                        Spacer()
+                        TextField("0", value: $accrualAmount, format: .number.precision(.fractionLength(0...2)))
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                            .frame(maxWidth: 80)
+                        Picker("", selection: $accrualIsHours) {
+                            Text(Strings.accrualUnitDays).tag(false)
+                            Text(Strings.accrualUnitHours).tag(true)
+                        }
+                        .labelsHidden()
+                        .fixedSize()
+                    }
+                    if accrual.period != .semimonthly {
+                        DatePicker(Strings.accrualPayDay, selection: Binding(
+                            get: { Date(timeIntervalSinceReferenceDate: accrualPayDay) },
+                            set: { accrualPayDay = $0.timeIntervalSinceReferenceDate }
+                        ), displayedComponents: .date)
+                    }
+                    LabeledContent(Strings.accrualEarnedSoFar,
+                                   value: Strings.dayCount(accrual.earned(year: LeaveUsageCalculator.fiscalYear(for: Date(), startMonth: profile.yearStart),
+                                                                          startMonth: profile.yearStart, through: Date())))
+                    LabeledContent(Strings.accrualYearTotal, value: Strings.dayCount(profile.totalAnnualLeave))
+                    Text(Strings.accrualFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                } else {
+                HStack {
+                    Text(isLeisure ? Strings.leisureAnnualGoal : Strings.totalLeave)
+                    Spacer()
+                    if isLeisure {
+                        Stepper(
+                            profile.totalAnnualLeave == 0
+                                ? Strings.leisureUnlimited
+                                : "\(Strings.dayCount(Double(profile.totalAnnualLeave)))",
+                            value: $profile.totalAnnualLeave,
+                            in: 0...365,
+                            step: 1
+                        )
+                    } else {
+                        Stepper(
+                            "\(Strings.dayCount(Double(profile.totalAnnualLeave)))",
+                            value: $profile.totalAnnualLeave,
+                            in: min(max(committedLeave, 1), 365)...365,  // 기록이 겹쳐 365를 넘으면 뒤집힌 범위로 죽는다
+                            step: 1
+                        )
+                    }
+                }
+                }
+
+                HStack {
+                    Text(isLeisure ? Strings.leisurePlannedLeave : Strings.usedLeave)
+                    Spacer()
+                    Text("\(Strings.dayCount(committedLeave))")
+                        .foregroundStyle(.secondary)
+                }
+
+                // 연도 중간에 앱을 시작했으면 그동안 쓴(또는 지금 남은) 연차를 일·시간으로 한 번에 — 홈 배너를 닫아도 여기서 다시
+                if !isLeisure {
+                    Button {
+                        showingPastLeaveEntry = true
+                    } label: {
+                        Label(Strings.pastLeaveSheetTitle, systemImage: "clock.arrow.circlepath")
+                    }
+                    .sheet(isPresented: $showingPastLeaveEntry) {
+                        PastLeaveQuickEntrySheet(profile: profile)
+                    }
+                }
+
+                Picker(isLeisure ? Strings.leisureYearStartMonth : Strings.yearStartMonth, selection: $profile.yearStartMonth) {
+                    ForEach(1...12, id: \.self) { month in
+                        Text(Strings.monthShort(month)).tag(month)
+                    }
+                }
+
+                // 입사일 기준 회사는 월 중간에 연차가 새로 생긴다 (예: 3월 21일)
+                if !isLeisure {
+                    Picker(Strings.yearStartDay, selection: $profile.yearStartDay) {
+                        ForEach(1...YearStart.selectableDays(inMonth: profile.yearStartMonth), id: \.self) { day in
+                            Text(Strings.dayOfMonth(day)).tag(day)
+                        }
+                    }
+                }
+
+                if AppSurface.shared.shows(.everything) {
+                // 공휴일 앞뒤로 휴가를 못 내는 직장(공무원 등) — 추천·최적 플랜이 그 날을 피한다
+                Picker(Strings.blackoutSetting, selection: $holidayBlackoutDays) {
+                    Text(Strings.blackoutOff).tag(0)
+                    ForEach([1, 2, 3, 5], id: \.self) { n in
+                        Text(Strings.blackoutDays(n)).tag(n)
+                    }
+                }
+                .onChange(of: holidayBlackoutDays) { _, _ in recommendationEngine.invalidateCache() }
+
+                // 남은 연차 이월 — 회사가 허락하는 만큼 (네덜란드 피드백). 기한이 있으면 그 전에 쓴 만큼만 남는다.
+                if !isLeisure {
+                    Picker(Strings.carryOverSetting, selection: $carryOverMaxDays) {
+                        Text(Strings.carryOverOff).tag(0)
+                        ForEach([1, 2, 3, 5, 10, 20], id: \.self) { n in
+                            Text(Strings.carryOverUpTo(Strings.dayCount(Double(n)))).tag(n)
+                        }
+                        Text(Strings.carryOverAll).tag(-1)
+                    }
+                    .onChange(of: carryOverMaxDays) { _, _ in recommendationEngine.invalidateCache() }
+                    if carryOverMaxDays != 0 {
+                        Picker(Strings.carryOverExpirySetting, selection: $carryOverExpiryMonths) {
+                            Text(Strings.carryOverNoExpiry).tag(0)
+                            ForEach([3, 4, 6, 12], id: \.self) { n in
+                                Text(Strings.carryOverExpiryMonths(n)).tag(n)
+                            }
+                        }
+                        .onChange(of: carryOverExpiryMonths) { _, _ in recommendationEngine.invalidateCache() }
+                    }
+                    // 올해 넘어온 연차 — 지난해 기록이 없어 계산할 수 없으면 직접 적는다. 비우면 자동
+                    HStack {
+                        Text(Strings.carryOverManualLabel)
+                        Spacer()
+                        TextField(Strings.carryOverManualAuto(Strings.dayCount(autoCarryOver)),
+                                  value: $carryOverManual, format: .number.precision(.fractionLength(0...2)))
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    .onChange(of: carryOverManual) { _, v in
+                        LeaveUsageCalculator.setCarryOverManual(v, year: currentFiscalYear)
+                        recommendationEngine.invalidateCache()
+                    }
+                    Text(Strings.carryOverFooter)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                }
+
+                // 시간 단위 휴가 — 이탈리아 permessi·대만 특휴처럼 시간으로 쓰는 사람만 근무 시간 설정을 본다
+                Toggle(isOn: $usesHourlyLeave) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(Strings.hourlyLeaveToggle)
+                        Text(Strings.hourlyLeaveDesc)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .onChange(of: usesHourlyLeave) { _, v in LeaveLength.usesHourlyLeave = v }
+
+                if usesHourlyLeave {
+                    // 하루 근무 시간 — 시간·분 단위로 쓴 휴가를 일수로 바꾸는 기준 (이탈리아 permessi 등)
+                    Stepper(value: $workdayMinutes, in: 180...720, step: 15) {
+                        HStack {
+                            Text(Strings.workdayLengthSetting)
+                            Spacer()
+                            Text(Strings.durationText(minutes: workdayMinutes))
+                                .monospacedDigit()
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .onChange(of: workdayMinutes) { _, _ in recommendationEngine.invalidateCache() }
+
+                    // 요일마다 근무 시간이 다른 직장 (예: 월~목 7시간 30분, 금 7시간)
+                    NavigationLink {
+                        WorkdayHoursView(country: selectedCountry) { recommendationEngine.invalidateCache() }
+                    } label: {
+                        Text(Strings.workdayByWeekdayTitle)
+                    }
+                }
+
+                // 휴가 종류 만들기·색 바꾸기 — 달력에서 종류별로 다른 색
+                NavigationLink {
+                    LeaveKindsView()
+                } label: {
+                    Label(Strings.leaveKindsTitle, systemImage: "paintpalette")
+                }
+
+                // 결산·성수기처럼 직장에서 휴가를 막는 기간 — 날짜를 직접 넣는다
+                NavigationLink {
+                    BlackoutPeriodsView { recommendationEngine.invalidateCache() }
+                } label: {
+                    HStack {
+                        Text(Strings.blackoutPeriodsTitle)
+                        Spacer()
+                        if blackoutPeriodCount > 0 {
+                            Text("\(blackoutPeriodCount)")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+
+                // 연차를 달력 일수로 세는지 근무일로 세는지 — 묻는 사람이 많다
+                Text(Strings.leaveCountingFooter)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                Text(Strings.blackoutFooter)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                }
+            }
+
+            if AppSurface.shared.shows(.everything) {
+            // 보너스 연차 관리 (Pro 전용, 직장인 모드만)
+            if !isLeisure { Section {
+                // 홈 "연차 현황"에 보너스 합산 여부 (예전엔 홈 화면 토글이었음)
+                Toggle(isOn: $includeBonusInStatus) {
+                    Text(Strings.includeBonus)
+                }
+                .tint(AppTheme.Colors.bonus)
+                .accessibilityHint(Text(Strings.includeBonusHint))
+
+                Button {
+                    if ProManager.shared.hasProTier {
+                        showingBonusLeaveSheet = true
+                    } else {
+                        paywallProductID = ProManager.yearlyProductID
+                        showingPaywall = true
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: ProManager.shared.hasProTier ? "plus.circle.fill" : "crown.fill")
+                            .foregroundStyle(ProManager.shared.hasProTier ? AppTheme.Colors.bonus : .yellow)
+                            .voDecorative()
+                        Text(Strings.addBonusLeave)
+                            .foregroundStyle(ProManager.shared.hasProTier ? .primary : .secondary)
+                        Spacer()
+                        if ProManager.shared.hasProTier {
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.secondary)
+                                .font(.body)
+                                .voDecorative()
+                        } else {
+                            Text("Pro")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.yellow)
+                                .foregroundColor(.black)
+                                .cornerRadius(4)
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+                .popoverTip(AppTips.bonusLeave)
+
+                // 활성 보너스 연차 목록
+                ForEach(bonusLeaves.filter { !$0.isUsed }) { bonus in
+                    HStack {
+                        Image(systemName: bonus.type.icon)
+                            .foregroundStyle(AppTheme.Colors.bonus)
+                            .frame(width: 24)
+                            .voDecorative()
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack {
+                                Text(Strings.bonusLeaveTypeName(bonus.type))
+                                    .font(.body)
+                                // 홈 카드와 같은 뜻의 분수(사용/부여) — 화면마다 분모·분자가 다르면 헷갈린다.
+                                // 문장형 "3일 중 1.5일 사용"은 아래 VoiceOver 라벨이 대신 읽어 준다.
+                                Text(Strings.bonusUsedFraction(
+                                    used: formatLeave(bonus.usedDays),
+                                    granted: formatLeave(bonus.days)
+                                ))
+                                .font(.body)
+                                .foregroundStyle(AppTheme.Colors.bonus)
+                            }
+                            if !bonus.reason.isEmpty {
+                                Text(bonus.reason)
+                                    .font(.body)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+
+                        Spacer()
+
+                        if let expiration = bonus.expirationDate {
+                            Text(expiration, format: .dateTime.month().day())
+                                .font(.body)
+                                .foregroundStyle(expiration < Date() ? .red : .secondary)
+                        }
+
+                        Image(systemName: "pencil.circle")
+                            .foregroundStyle(.secondary)
+                            .font(.body)
+                            .voDecorative()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture { editingBonus = bonus }
+                    .voButton(bonusRowAccessibilityLabel(bonus), hint: Strings.editLeaveHint)
+                }
+                .onDelete(perform: deleteBonusLeave)
+            } header: {
+                Text(Strings.bonusLeave)
+            } footer: {
+                Text(Strings.bonusLeaveFooter)
+            }
+            } // end if !isLeisure
+
+            // 통계
+            Section(Strings.usageStats) {
+                StatRow(icon: "checkmark.circle.fill", iconColor: .green, title: Strings.completed, value: Strings.itemCount(usedLeaveCount))
+                StatRow(icon: "calendar.badge.clock", iconColor: .blue, title: Strings.plannedLeave, value: Strings.itemCount(plannedLeaveCount))
+                StatRow(icon: "chart.pie.fill", iconColor: .orange, title: Strings.leaveUsageRate, value: usageRateText)
+            }
+            }
+        }
+    }
+
+    private var stylePage: some View {
+        settingsPage(Strings.vacationStyle) {
+            // 휴가 스타일
+            Section(Strings.vacationStyle) {
+                Button(action: { showingPreferences = true }) {
+                    HStack {
+                        Image(systemName: "slider.horizontal.3")
+                            .foregroundStyle(.blue)
+                            .voDecorative()
+                        Text(Strings.preferencesSettings)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.secondary)
+                            .voDecorative()
+                    }
+                }
+                .foregroundStyle(.primary)
+
+                // 현재 설정 요약
+                VStack(alignment: .leading, spacing: 8) {
+                    PreferenceSummaryRow(
+                        icon: "clock",
+                        title: Strings.preferredDuration,
+                        value: Strings.durationName(profile.preferredDuration)
+                    )
+
+                    if !profile.preferredSeasons.isEmpty {
+                        PreferenceSummaryRow(
+                            icon: "leaf",
+                            title: Strings.preferredSeason,
+                            value: profile.preferredSeasons.map { $0.icon }.joined(separator: " "),
+                            accessibilityValue: profile.preferredSeasons.map { Strings.seasonName($0) }.joined(separator: ", ")
+                        )
+                    }
+
+                    if !profile.priorityActivities.isEmpty {
+                        PreferenceSummaryRow(
+                            icon: "star",
+                            title: Strings.preferredActivity,
+                            value: profile.priorityActivities.map { $0.icon }.joined(separator: " "),
+                            accessibilityValue: profile.priorityActivities.map { Strings.activityName($0) }.joined(separator: ", ")
+                        )
+                    }
+                }
+                .font(.body)
+                .foregroundStyle(.secondary)
+            }
+
+            // 휴식 알림 (Rest Radar)
+            if !isLeisure {
+                Section {
+                    Toggle(isOn: $restRadarEnabled) {
+                        Label(Strings.restRadarToggle, systemImage: "bell.badge")
+                    }
+                    .tint(AppTheme.Colors.brand)
+                    .onChange(of: restRadarEnabled) { _, enabled in
+                        if !enabled { NotificationService.cancelPending() }
+                    }
+                } header: {
+                    Text(Strings.restRadarSection)
+                } footer: {
+                    Text(Strings.restRadarFooter)
+                }
+            }
+
+            // 현황에 보일 것 — 현황에서 '볼게요'로 고른 것을 여기서 켜고 끈다(`HomeLayout`)
+            Section(Strings.tabHome) {
+            Toggle(Strings.upcomingLeaves, isOn: homeChoice($upcomingChoice))
+                .tint(.orange)
+            Toggle(isOn: homeChoice($holidaysChoice)) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(Strings.showHolidaysInUpcomingTitle)
+                    Text(Strings.showHolidaysInUpcomingDescription)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .tint(.orange)
+            Toggle(isOn: $paceAlways) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(Strings.homePaceAlways)
+                    Text(Strings.homePaceAlwaysDescription)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .tint(.orange)
+            }
+        }
+    }
+
+    private var dataPage: some View {
+        settingsPage(Strings.dataManagement) {
+            // 데이터 관리
+            Section {
+                if AppSurface.shared.shows(.everything) {
+                // 사진에서 휴가 가져오기 (OCR)
+                Button {
+                    showingPhotoImport = true
+                } label: {
+                    HStack {
+                        Image(systemName: "doc.text.viewfinder")
+                            .foregroundStyle(.blue)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.importFromPhoto)
+                                .foregroundStyle(.primary)
+                            Text(Strings.importFromPhotoDescription)
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.secondary)
+                            .font(.body)
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+
+                // 캘린더 앱으로 휴가 보내기 — 넣고·고치고·지우면 "Goldweek" 캘린더가 따라 바뀐다 (Pro)
+                Toggle(isOn: Binding(get: { calendarAutoSync }, set: setCalendarAutoSync)) {
+                    HStack {
+                        Image(systemName: "calendar.badge.checkmark")
+                            .foregroundStyle(.green)
+                            .voDecorative()
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.calendarExportToggle)
+                            Text(calendarSyncError ?? Strings.calendarExportDesc)
+                                .font(.body)
+                                .foregroundStyle(calendarSyncError == nil ? Color.secondary : Color.red)
+                        }
+                    }
+                }
+
+                // 캘린더에서 휴가 가져오기 (제안 후 확인)
+                Button {
+                    showingCalendarImport = true
+                } label: {
+                    HStack {
+                        Image(systemName: "calendar.badge.plus")
+                            .foregroundStyle(.green)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.importFromCalendar)
+                                .foregroundStyle(.primary)
+                            Text(Strings.importFromCalendarDescription)
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.secondary)
+                            .font(.body)
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+
+                // 캘린더 자동 감지 (Pro)
+                if ProManager.shared.hasProTier {
+                    Toggle(isOn: $autoDetectEnabled) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.autoDetectSettingTitle)
+                            Text(Strings.autoDetectSettingDescription)
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .tint(.green)
+                } else {
+                    Button {
+                        paywallProductID = ProManager.yearlyProductID
+                        showingPaywall = true
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(Strings.autoDetectSettingTitle)
+                                    .foregroundStyle(.primary)
+                                Text(Strings.autoDetectSettingDescription)
+                                    .font(.body)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Text("Pro")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.yellow)
+                                .foregroundColor(.black)
+                                .cornerRadius(4)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                }
+
+                // 타임머신 (시점별 스냅샷 복원)
+                NavigationLink {
+                    TimeMachineView()
+                } label: {
+                    HStack {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .foregroundStyle(.purple)
+                        Text(Strings.timeMachine)
+                            .foregroundStyle(.primary)
+                    }
+                }
+                .popoverTip(AppTips.timeMachine)
+
+                }
+
+                // iCloud 백업
+                Button {
+                    Task { await backupToICloud() }
+                } label: {
+                    HStack {
+                        Image(systemName: "icloud.and.arrow.up")
+                            .foregroundStyle(.blue)
+                        Text(Strings.backupToICloud)
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        if isBackingUp {
+                            ProgressView()
+                        }
+                    }
+                }
+                .disabled(isBackingUp)
+
+                // iCloud 복원
+                Button {
+                    Task { await restoreFromICloud() }
+                } label: {
+                    HStack {
+                        Image(systemName: "icloud.and.arrow.down")
+                            .foregroundStyle(.blue)
+                        Text(Strings.restoreFromICloud)
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        if isRestoring {
+                            ProgressView()
+                        }
+                    }
+                }
+                .disabled(isRestoring)
+
+                // 초기화
+                Button(role: .destructive, action: { showingResetAlert = true }) {
+                    HStack {
+                        Image(systemName: "arrow.counterclockwise")
+                        Text(Strings.resetData)
+                    }
+                }
+            } header: {
+                Text(Strings.dataManagement)
+            } footer: {
+                if let lastBackup = lastBackupDate {
+                    Text(Strings.lastBackup(lastBackup.appFormatted(time: .short)))
+                }
+            }
+        }
+    }
+
+    /// 도움말 · 지원 — 지원 페이지와 개발자 문의가 같은 일을 해서 '문의' 한 묶음으로 합쳤다.
+    /// 버전 행을 7번 탭하면 개발자 모드가 켜지고, 접수된 피드백·사용 통계·안정성이 보인다.
+    ///
+    /// ⚠️ LeeoKit의 `LeeoSupportSection`을 쓰지 않고 행을 직접 그린다 —
+    ///    그쪽 문구는 **기기 언어**를 따라서, 기기가 한국어인 사용자가 앱만 영어로 바꾸면
+    ///    이 섹션만 한국어로 남는다. 화면 안쪽(피드백 폼)은 LeeoKit 것을 그대로 쓴다.
+    private var supportPage: some View {
+        settingsPage("\(Strings.helpSection) · \(Strings.supportSection)") {
+            // 도움말 — 안내를 언제든 다시 볼 수 있어야 한다.
+            Section(Strings.helpSection) {
+            Button {
+                showingTutorial = true
+            } label: {
+                Label(Strings.helpTutorial, systemImage: "book")
+            }
+
+            Button {
+                showingOnboardingReplay = true
+            } label: {
+                Label(Strings.helpOnboarding, systemImage: "sparkles.rectangle.stack")
+            }
+
+            // 업데이트 뒤 한 번 떴던 "새로운 기능" — 놓쳤거나 다시 보고 싶을 때
+            Button {
+                showingWhatsNew = true
+            } label: {
+                Label(Strings.whatsNewEntry, systemImage: "gift")
+            }
+
+            Button {
+                AppTips.requestResetOnNextLaunch()
+                showingTipsResetNotice = true
+                HapticFeedback.success()
+            } label: {
+                Label(Strings.helpResetTips, systemImage: "lightbulb")
+            }
+            }
+
+            Section {
+            NavigationLink(destination: LeeoFeedbackView<GoldweekSpec>()) {
+                Label(Strings.sendFeedback, systemImage: "envelope.badge")
+            }
+                DeveloperContactRows()
+            } header: {
+                Text(Strings.contactDeveloperSection)
+            } footer: {
+                Text(Strings.contactDeveloperFooter)
+            }
+
+            Section {
+            // 앞으로 만들 기능 — 원본은 GoldweekRoadmap.swift
+            NavigationLink(destination: RoadmapScreen()) {
+                Label(RoadmapL10n.entry, systemImage: "map")
+            }
+
+            Button {
+                if let id = GoldweekSpec.appStoreID {
+                    LeeoReviewRequest.openWriteReview(appStoreID: id)
+                } else {
+                    LeeoReviewRequest.markRequested()
+                    requestReview()
+                }
+            } label: {
+                Label(Strings.rateApp, systemImage: "star.bubble")
+            }
+
+            // 앱 공유하기
+            ShareLink(
+                item: URL(string: "https://apps.apple.com/app/id6755983135")!,
+                subject: Text(Strings.shareSubject),
+                message: Text(Strings.shareMessage)
+            ) {
+                HStack {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundStyle(.blue)
+                    Text(Strings.shareApp)
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.secondary)
+                        .font(.body)
+                }
+            }
+            }
+
+            Section(Strings.appInfo) {
+            Link(destination: GoldweekSpec.legal.privacyURL) {
+                Label(Strings.privacyPolicy, systemImage: "arrow.up.forward.square")
+            }
+            if let termsURL = GoldweekSpec.legal.termsURL {
+                Link(destination: termsURL) {
+                    Label(Strings.termsOfService, systemImage: "arrow.up.forward.square")
+                }
+            }
+
+            if masterModeEnabled {
+                NavigationLink(destination: LeeoFeedbackInboxView<GoldweekSpec>()) {
+                    Label(Strings.devFeedbackInbox, systemImage: "tray.full")
+                }
+                NavigationLink(destination: UsageStatsView()) {
+                    Label(Strings.devUsageStats, systemImage: "chart.bar.xaxis")
+                }
+                NavigationLink(destination: CrashReportsView()) {
+                    Label(Strings.devCrashReports, systemImage: "ladybug")
+                }
+            }
+
+            // 버전 — 7번 탭하면 개발자 모드 토글 (LeeoKit과 같은 키를 쓴다)
+            HStack {
+                Label(Strings.version, systemImage: "info.circle")
+                Spacer()
+                Text(appVersionText)
+                    .foregroundStyle(.secondary)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture(count: 7) {
+                masterModeEnabled.toggle()
+                HapticFeedback.success()
+            }
+            }
+
+            // 같은 개발자가 만든 다른 앱 — 지금 쓰는 앱(Goldweek)은 목록에서 빠진다
+            Section {
+                LeeoFamilySettingsRow<GoldweekSpec>()
             }
         }
     }
@@ -1716,9 +1744,10 @@ struct SettingsView: View {
 }
 
 // MARK: - 개발자 문의
-struct DeveloperContactSection: View {
+/// 메일 · 인스타그램 — 도움말 · 지원 화면의 문의 묶음에 들어간다
+struct DeveloperContactRows: View {
     var body: some View {
-        Section {
+        Group {
             Link(destination: URL(string: "mailto:leeo@kakao.com")!) {
                 HStack {
                     Image(systemName: "envelope")
@@ -1749,71 +1778,100 @@ struct DeveloperContactSection: View {
                         .voDecorative()
                 }
             }
-        } header: {
-            Text(Strings.contactDeveloperSection)
-        } footer: {
-            Text(Strings.contactDeveloperFooter)
         }
     }
 }
 
 // MARK: - 선물 · 응원
 
-/// Pro 선물하기 · 선물 코드 입력 · 개발자 응원하기.
-///
-/// 화면 안쪽은 LeeoKit 것을 그대로 쓰고(`LeeoGiftView` · `LeeoGiftRedeemView` · `LeeoTipJarView`),
-/// 행 이름만 앱 언어를 따르게 앱 문구로 그린다(지원 섹션과 같은 까닭).
-/// ⚠️ 상품이 App Store Connect 에 없으면(`isAvailable` false) 줄을 세우지 않는다 — 눌러도 살 수 없는 줄이 된다.
-///    다만 이미 보냈거나 받은 선물, 결제는 됐는데 코드를 못 만든 선물이 있으면 선물 줄은 남긴다(찾아갈 곳이 있어야 한다).
-struct GiftAndTipSection: View {
-    @ObservedObject var gift: LeeoGiftStore
+/// 개발자 응원하기. 낸 사람에게는 설명 대신 내 응원 단계(후원자 배지)가 보인다 — 리이오의 어느 앱에서 냈든.
+/// 팁을 팔 수 없어도(상품 없음) 이미 낸 사람에게는 줄을 남긴다. 내 단계를 볼 곳이 있어야 한다.
+struct TipSection: View {
     @ObservedObject var tipJar: LeeoTipJar
-    @State private var showingGiftSupport = false
-
-    private var showsGift: Bool {
-        gift.isAvailable || gift.pendingCount > 0 || !gift.sentGifts.isEmpty || gift.redeemed != nil
-    }
 
     var body: some View {
-        if showsGift || tipJar.isAvailable {
+        if tipJar.isAvailable || tipJar.level != nil {
             Section {
-                if showsGift {
-                    NavigationLink(destination: LeeoGiftView<GoldweekSpec>(gift: gift, showsRedeemLink: false,
-                                                                           onContactSupport: { showingGiftSupport = true })) {
-                        Label(Strings.giftSendEntry, systemImage: "gift.fill")
-                    }
-                    // 이미 산 사람은 받을 것이 없다(코드를 다른 사람에게 넘긴다). 받은 사람은 받은 선물을 다시 본다.
-                    if !ProManager.shared.hasPurchasedProTier || gift.redeemed != nil {
-                        NavigationLink(destination: LeeoGiftRedeemView<GoldweekSpec>(gift: gift,
-                                                                                     onContactSupport: { showingGiftSupport = true })) {
-                            Label(Strings.giftRedeemEntry, systemImage: "giftcard")
-                        }
-                    }
-                }
-                if tipJar.isAvailable {
-                    NavigationLink(destination: LeeoTipJarView<GoldweekSpec>(tipJar: tipJar)) {
-                        Label {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(Strings.tipEntry)
+                NavigationLink(destination: LeeoTipJarView<GoldweekSpec>(tipJar: tipJar)) {
+                    Label {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(Strings.tipEntry)
+                            if tipJar.level != nil {
+                                LeeoSupporterBadge(tipJar: tipJar)
+                            } else {
                                 Text(Strings.tipEntrySubtitle)
                                     .font(.body)
                                     .foregroundStyle(.secondary)
                             }
-                        } icon: {
-                            Image(systemName: "heart")
                         }
+                    } icon: {
+                        Image(systemName: "heart")
+                    }
+                }
+            }
+            .task { await tipJar.syncSupporter(containerIdentifier: GoldweekSpec.feedback.containerIdentifier) }
+        }
+    }
+}
+
+/// 선물하기: Pro 선물 · Plus 선물 보내기, 선물 코드 받기.
+/// 화면 안쪽은 LeeoKit 것을 그대로 쓰고(`LeeoGiftView` · `LeeoGiftRedeemView`), 행 이름만 앱 언어를 따르게 앱 문구로 그린다.
+struct GiftSection: View {
+    /// Pro 선물이 먼저, 그다음 Plus 선물(`ProExtras.gifts`).
+    let gifts: [LeeoGiftStore]
+    @State private var showingGiftSupport = false
+    @State private var supportGift: LeeoGiftStore?
+
+    /// 받기는 하나로 — App Store 오퍼 코드 시트는 어느 등급의 코드든 받는다.
+    /// 이미 프로를 산 사람은 받을 것이 없고, 예전 방식으로 받은 사람은 받은 선물을 다시 본다.
+    private var redeemGift: LeeoGiftStore? {
+        guard let pro = gifts.first, pro.canRedeem else { return nil }
+        return (!ProManager.shared.hasPurchasedProTier || pro.redeemed != nil) ? pro : nil
+    }
+
+    var body: some View {
+        let sendable = gifts.filter(GiftSendRow.isShown)
+        if !sendable.isEmpty || redeemGift != nil {
+            Section {
+                ForEach(sendable, id: \.config.productID) { gift in
+                    GiftSendRow(gift: gift) { supportGift = gift; showingGiftSupport = true }
+                }
+                if let gift = redeemGift {
+                    NavigationLink(destination: LeeoGiftRedeemView<GoldweekSpec>(gift: gift,
+                                                                                 onContactSupport: { supportGift = gift; showingGiftSupport = true })) {
+                        Label(Strings.giftRedeemEntry, systemImage: "giftcard")
                     }
                 }
             } header: {
-                Text(Strings.giftAndTipSection)
+                Text(Strings.giftSection)
             }
             .sheet(isPresented: $showingGiftSupport) {
                 NavigationStack {
-                    // 결제 문제로 바로 — 결제 번호·코드를 붙여 개발자가 바로 찾게 한다
-                    LeeoFeedbackView<GoldweekSpec>(initialType: .bug, extraInfo: gift.supportLines,
+                    // 결제 문제로 바로 — 결제 번호 · 코드를 붙여 개발자가 바로 찾게 한다
+                    LeeoFeedbackView<GoldweekSpec>(initialType: .bug, extraInfo: supportGift?.supportLines ?? [],
                                                    initialCategory: .purchase)
                 }
             }
+        }
+    }
+}
+
+/// 선물 보내기 한 줄. 상품마다 따로 지켜본다(상품 · 보낸 기록이 늦게 온다).
+/// ⚠️ 팔 수 없으면(`isAvailable` false: 판매를 닫았거나 상품이 없음) 줄을 세우지 않는다 — 눌러도 살 수 없다.
+///    다만 이미 보냈거나 결제만 되고 코드를 못 받은 선물이 있으면 남긴다(찾아갈 곳이 있어야 한다).
+private struct GiftSendRow: View {
+    @ObservedObject var gift: LeeoGiftStore
+    let onContactSupport: () -> Void
+
+    static func isShown(_ gift: LeeoGiftStore) -> Bool {
+        gift.isAvailable || gift.pendingCount > 0 || !gift.sentGifts.isEmpty
+    }
+
+    var body: some View {
+        NavigationLink(destination: LeeoGiftView<GoldweekSpec>(gift: gift, showsRedeemLink: false,
+                                                               onContactSupport: onContactSupport)) {
+            Label(gift.config.grantsProductID == ProManager.proProductID ? Strings.giftSendEntry : Strings.giftSendPlusEntry,
+                  systemImage: "gift.fill")
         }
     }
 }

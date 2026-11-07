@@ -18,6 +18,7 @@ import Foundation
 
 #if canImport(UserNotifications)
 import UserNotifications
+import GoldweekCore
 #endif
 
 /// 단일문항 번아웃 체크인 (SIB, 0~10). 검증된 저마찰 측정 — docs/rest-radar-research.md 근거 E.

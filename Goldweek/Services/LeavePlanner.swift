@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import GoldweekCore
 
 // MARK: - 입출력 모델
 
@@ -43,18 +44,6 @@ struct OptimalLeavePlan {
     let breaks: [LeaveBreak]         // 시작일 오름차순
     let totalDaysOff: Int            // 모든 연휴 길이 합
     let leaveDaysUsed: Int           // 사용 연차 합 (≤ 가용)
-    let leaveDaysAvailable: Int      // 입력값 그대로
-    let year: Int
-
-    var efficiency: Double {
-        guard leaveDaysUsed > 0 else { return 0 }
-        return Double(totalDaysOff) / Double(leaveDaysUsed)
-    }
-
-    /// 선택된 모든 연차 날짜 (캘린더 시각화/일괄 등록용)
-    var allLeaveDates: [Date] {
-        breaks.flatMap { $0.leaveDates }.sorted()
-    }
 }
 
 // MARK: - 플래너
@@ -78,9 +67,7 @@ enum LeavePlanner {
     ) -> OptimalLeavePlan {
         guard availableLeaveDays > 0 else {
             return OptimalLeavePlan(breaks: [], totalDaysOff: 0,
-                                     leaveDaysUsed: 0,
-                                     leaveDaysAvailable: 0,
-                                     year: year)
+                                     leaveDaysUsed: 0)
         }
 
         // 1. 1년치 날짜 인덱싱
@@ -137,9 +124,7 @@ enum LeavePlanner {
         return OptimalLeavePlan(
             breaks: breaks,
             totalDaysOff: totalOff,
-            leaveDaysUsed: usedDays,
-            leaveDaysAvailable: availableLeaveDays,
-            year: year
+            leaveDaysUsed: usedDays
         )
     }
 }
@@ -152,9 +137,7 @@ private extension LeavePlanner {
 
     struct DayInfo {
         let date: Date
-        let dayIndex: Int   // 1월 1일 = 0
         let type: DayType
-        let holidayName: String?
     }
 
     /// 한 다리 후보 — workday 구간 [startIdx, endIdx]를 PTO로 채우면
@@ -207,7 +190,7 @@ private extension LeavePlanner {
                 if isExcluded { return .excluded }
                 return .workday
             }()
-            result.append(DayInfo(date: day, dayIndex: i, type: type, holidayName: nil))
+            result.append(DayInfo(date: day, type: type))
         }
         return result
     }

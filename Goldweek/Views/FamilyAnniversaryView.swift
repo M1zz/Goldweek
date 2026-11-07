@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftData
 #if canImport(UserNotifications)
 import UserNotifications
+import GoldweekCore
 #endif
 
 // MARK: - 표시

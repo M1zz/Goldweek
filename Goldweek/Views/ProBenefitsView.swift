@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import GoldweekCore
 
 /// **지금 누리고 있는 등급** — 무엇이 열려 있고, 그걸 얼마나 쓰고 있는가.
 ///
@@ -248,6 +249,3 @@ struct ProBenefitsView: View {
     }
 }
 
-extension ProTier: Identifiable {
-    var id: Int { rawValue }
-}

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import GoldweekCore
 
 struct FamilyView: View {
     @Bindable var profile: UserProfile

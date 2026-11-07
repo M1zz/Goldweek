@@ -93,8 +93,8 @@
           "locale": "en_US"
         },
         {
-          "description": "다른 사람의 Goldweek 프로(평생)를 여는 일회용 선물 코드",
-          "displayName": "Goldweek 프로 선물",
+          "description": "다른 사람에게 Goldweek 플러스(평생)를 선물합니다",
+          "displayName": "Goldweek 플러스 선물",
           "locale": "ko"
         }
       ],
@@ -160,6 +160,26 @@
       ],
       "productID": "com.Ysoup.LeaveWise.tip.large",
       "referenceName": "Tip large (consumable)",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "29.99",
+      "familyShareable": false,
+      "internalID": "3356701629",
+      "localizations": [
+        {
+          "description": "Give someone Goldweek Plus (lifetime).",
+          "displayName": "Gift Goldweek Plus",
+          "locale": "en_US"
+        },
+        {
+          "description": "다른 사람에게 Goldweek 플러스(평생)를 선물합니다",
+          "displayName": "Goldweek 플러스 선물",
+          "locale": "ko"
+        }
+      ],
+      "productID": "com.Ysoup.LeaveWise.gift.plus",
+      "referenceName": "Gift Plus",
       "type": "Consumable"
     }
   ],

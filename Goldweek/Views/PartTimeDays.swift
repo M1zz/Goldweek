@@ -10,6 +10,7 @@
 //
 
 import SwiftUI
+import GoldweekCore
 
 /// 설정 — 매주 쉬는 요일 고르기 (여러 개 가능)
 struct PartTimeDaysPicker: View {
@@ -102,7 +103,7 @@ struct PartTimeDayRow: View {
                 .tint(.indigo)
             }
             .sheet(isPresented: $showingMove) {
-                PartTimeMoveSheet(from: date, country: country, firstWeekday: HolidayService.firstWeekday(for: country, override: firstWeekdayRaw))
+                PartTimeMoveSheet(from: date, firstWeekday: HolidayService.firstWeekday(for: country, override: firstWeekdayRaw))
                     .presentationDetents([.medium])
             }
         }
@@ -126,7 +127,6 @@ struct PartTimeDayRow: View {
 /// 같은 주의 다른 근무일 중에서 대신 쉴 날을 고른다
 private struct PartTimeMoveSheet: View {
     let from: Date
-    let country: Country
     let firstWeekday: Int
     @Environment(\.dismiss) private var dismiss
     @AppStorage("partTimeSwaps") private var swapsRaw = ""

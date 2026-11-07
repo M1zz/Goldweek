@@ -5,10 +5,11 @@
 //  다국어 지원 헬퍼
 //
 
-import SwiftUI
+import Foundation
+import Observation
 
 // MARK: - 앱 언어
-enum AppLanguage: String, CaseIterable, Identifiable {
+public enum AppLanguage: String, CaseIterable, Identifiable {
     case korean = "ko"
     case english = "en"
     case japanese = "ja"
@@ -33,9 +34,9 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     case thai = "th"
     case vietnamese = "vi"
 
-    var id: String { rawValue }
+    public var id: String { rawValue }
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .korean: return "한국어"
         case .english: return "English"
@@ -63,7 +64,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
-    var flag: String {
+    public var flag: String {
         switch self {
         case .korean: return "🇰🇷"
         case .english: return "🇺🇸"
@@ -93,7 +94,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
     /// 번들 리소스(문자열 카탈로그·LeeoKit)를 고를 때 쓰는 코드.
     /// ⚠️ 중국어는 `zh`가 아니라 `zh-Hans`여야 카탈로그가 매칭된다.
-    var bundleLanguageCode: String {
+    public var bundleLanguageCode: String {
         switch self {
         case .korean: return "ko"
         case .english: return "en"
@@ -121,7 +122,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
-    static var current: AppLanguage {
+    public static var current: AppLanguage {
         get {
             if let raw = UserDefaults.standard.string(forKey: "appLanguage"),
                let lang = AppLanguage(rawValue: raw) {
@@ -146,7 +147,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     /// 디바이스 선호 언어 → 지원 언어. 미지원이면 영어.
     /// `Locale.preferredLanguages`는 사용자 우선순위 순서로 정렬되어 있어
     /// 첫 번째 일치 항목을 사용한다.
-    static func fromDeviceLocale() -> AppLanguage {
+    public static func fromDeviceLocale() -> AppLanguage {
         for code in Locale.preferredLanguages {
             let prefix = code.split(separator: "-").first.map(String.init) ?? code
             switch prefix {
@@ -185,7 +186,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 // MARK: - 러시아어 복수형
 
 /// 러시아어 수사 뒤 명사 꼴 — 1 день · 2 дня · 5 дней (11~14는 дней)
-func ruPlural(_ n: Int, _ one: String, _ few: String, _ many: String) -> String {
+public func ruPlural(_ n: Int, _ one: String, _ few: String, _ many: String) -> String {
     let n10 = abs(n) % 10, n100 = abs(n) % 100
     if n10 == 1 && n100 != 11 { return one }
     if (2...4).contains(n10) && !(12...14).contains(n100) { return few }
@@ -193,15 +194,15 @@ func ruPlural(_ n: Int, _ one: String, _ few: String, _ many: String) -> String 
 }
 
 /// 소수(0.5일 등)는 생격 단수 — 1,5 дня
-func ruPlural(_ n: Double, _ one: String, _ few: String, _ many: String) -> String {
+public func ruPlural(_ n: Double, _ one: String, _ few: String, _ many: String) -> String {
     n.rounded() == n ? ruPlural(Int(n), one, few, many) : few
 }
 
 // MARK: - 언어 변경 감지용 Observable
 @Observable
-class LanguageManager {
-    static let shared = LanguageManager()
-    var currentLanguage: AppLanguage
+public class LanguageManager {
+    public static let shared = LanguageManager()
+    public var currentLanguage: AppLanguage
 
     private init() {
         if let raw = UserDefaults.standard.string(forKey: "appLanguage"),
@@ -214,11 +215,11 @@ class LanguageManager {
 }
 
 // MARK: - 다국어 문자열
-enum Strings {
+public enum Strings {
     private static var lang: AppLanguage { LanguageManager.shared.currentLanguage }
 
     // MARK: - 탭 / 네비게이션
-    static var tabHome: String {
+    public static var tabHome: String {
         switch lang {
         case .korean: return "현황"
         case .english: return "Status"
@@ -246,7 +247,7 @@ enum Strings {
         }
     }
 
-    static var tabCalendar: String {
+    public static var tabCalendar: String {
         switch lang {
         case .korean: return "캘린더"
         case .english: return "Calendar"
@@ -274,7 +275,7 @@ enum Strings {
         }
     }
 
-    static var tabRecommendations: String {
+    public static var tabRecommendations: String {
         switch lang {
         case .korean: return "추천"
         case .english: return "Recommend"
@@ -302,35 +303,7 @@ enum Strings {
         }
     }
 
-    static var tabRegister: String {
-        switch lang {
-        case .korean: return "등록"
-        case .english: return "Register"
-        case .swedish: return "Registrera"
-        case .norwegian: return "Registrer"
-        case .danish: return "Registrer"
-        case .finnish: return "Kirjaa"
-        case .polish: return "Dodaj"
-        case .czech: return "Zapsat"
-        case .greek: return "Καταχώριση"
-        case .turkish: return "Kaydet"
-        case .russian: return "Добавить"
-        case .indonesian: return "Catat"
-        case .thai: return "บันทึก"
-        case .vietnamese: return "Ghi nghỉ"
-        case .dutch: return "Registreren"
-        case .japanese: return "登録"
-        case .chinese: return "登记"
-        case .german: return "Eintragen"
-        case .french: return "Ajouter"
-        case .spanish: return "Añadir"
-        case .italian: return "Aggiungi"
-        case .portuguese: return "Adicionar"
-        case .chineseTraditional: return "新增"
-        }
-    }
-
-    static var dateRangeFormat: String {
+    public static var dateRangeFormat: String {
         switch lang {
         case .korean: return "M/d(E)"
         case .english: return "M/d(EEE)"
@@ -358,7 +331,7 @@ enum Strings {
         }
     }
 
-    static var tabSettings: String {
+    public static var tabSettings: String {
         switch lang {
         case .korean: return "설정"
         case .english: return "Settings"
@@ -386,65 +359,8 @@ enum Strings {
         }
     }
 
-    // MARK: - 홈 화면
-    static var navTitleHome: String {
-        switch lang {
-        case .korean: return "휴가플래너"
-        case .english: return "Leave Planner"
-        case .swedish: return "Semesterplanerare"
-        case .norwegian: return "Ferieplanlegger"
-        case .danish: return "Ferieplanlægger"
-        case .finnish: return "Lomasuunnittelija"
-        case .polish: return "Planer urlopu"
-        case .czech: return "Plánovač dovolené"
-        case .greek: return "Πλάνο άδειας"
-        case .turkish: return "İzin Planlayıcı"
-        case .russian: return "Планировщик отпуска"
-        case .indonesian: return "Perencana Cuti"
-        case .thai: return "วางแผนวันลา"
-        case .vietnamese: return "Lập kế hoạch nghỉ phép"
-        case .dutch: return "Verlofplanner"
-        case .japanese: return "休暇プランナー"
-        case .chinese: return "休假规划"
-        case .german: return "Urlaubsplaner"
-        case .french: return "Planificateur de congés"
-        case .spanish: return "Planificador de vacaciones"
-        case .italian: return "Pianificatore ferie"
-        case .portuguese: return "Planejador de férias"
-        case .chineseTraditional: return "休假規劃"
-        }
-    }
-
-    static func annualLeaveStatus(year: Int) -> String {
-        switch lang {
-        case .korean: return "\(year)년 연차 현황"
-        case .english: return "\(year) Annual Leave"
-        case .swedish: return "Semester \(year)"
-        case .norwegian: return "Årlig ferie \(year)"
-        case .danish: return "Ferie \(year)"
-        case .finnish: return "Vuosiloma \(year)"
-        case .polish: return "Urlop \(year)"
-        case .czech: return "Dovolená \(year)"
-        case .greek: return "Ετήσια άδεια \(year)"
-        case .turkish: return "\(year) Yıllık İzin"
-        case .russian: return "Отпуск на \(year) год"
-        case .indonesian: return "Cuti \(year)"
-        case .thai: return "วันลาพักร้อนปี \(year)"
-        case .vietnamese: return "Phép năm \(year)"
-        case .dutch: return "Verlof \(year)"
-        case .japanese: return "\(year)年 有給休暇"
-        case .chinese: return "\(year)年 年假概况"
-        case .german: return "Urlaub \(year)"
-        case .french: return "Congés \(year)"
-        case .spanish: return "Vacaciones \(year)"
-        case .italian: return "Ferie \(year)"
-        case .portuguese: return "Férias \(year)"
-        case .chineseTraditional: return "\(year) 年特休"
-        }
-    }
-
     /// 연도 없는 연차 현황 제목
-    static var annualLeaveStatusTitle: String {
+    public static var annualLeaveStatusTitle: String {
         switch lang {
         case .korean: return "연차 현황"
         case .english: return "Annual Leave"
@@ -473,7 +389,7 @@ enum Strings {
     }
 
     /// 연도 없는 자유 계획 제목
-    static var leisureVacationPlanTitle: String {
+    public static var leisureVacationPlanTitle: String {
         switch lang {
         case .korean: return "휴가 계획"
         case .english: return "Vacation Plan"
@@ -501,35 +417,7 @@ enum Strings {
         }
     }
 
-    static var used: String {
-        switch lang {
-        case .korean: return "사용"
-        case .english: return "Used"
-        case .swedish: return "Använt"
-        case .norwegian: return "Brukt"
-        case .danish: return "Brugt"
-        case .finnish: return "Käytetty"
-        case .polish: return "Wykorzystane"
-        case .czech: return "Využito"
-        case .greek: return "Χρησιμοποιήθηκε"
-        case .turkish: return "Kullanılan"
-        case .russian: return "Использовано"
-        case .indonesian: return "Terpakai"
-        case .thai: return "ใช้แล้ว"
-        case .vietnamese: return "Đã dùng"
-        case .dutch: return "Gebruikt"
-        case .japanese: return "使用"
-        case .chinese: return "已用"
-        case .german: return "Genommen"
-        case .french: return "Pris"
-        case .spanish: return "Usados"
-        case .italian: return "Usati"
-        case .portuguese: return "Usados"
-        case .chineseTraditional: return "已用"
-        }
-    }
-
-    static var total: String {
+    public static var total: String {
         switch lang {
         case .korean: return "총"
         case .english: return "Total"
@@ -557,7 +445,7 @@ enum Strings {
         }
     }
 
-    static var remaining: String {
+    public static var remaining: String {
         switch lang {
         case .korean: return "남음"
         case .english: return "Left"
@@ -585,7 +473,7 @@ enum Strings {
         }
     }
 
-    static var upcomingLeaves: String {
+    public static var upcomingLeaves: String {
         switch lang {
         case .korean: return "다가오는 휴가"
         case .english: return "Upcoming Leaves"
@@ -613,7 +501,7 @@ enum Strings {
         }
     }
 
-    static var recommendedSchedule: String {
+    public static var recommendedSchedule: String {
         switch lang {
         case .korean: return "추천 휴가 일정"
         case .english: return "Recommended Schedule"
@@ -641,91 +529,7 @@ enum Strings {
         }
     }
 
-    static var generatingRecommendations: String {
-        switch lang {
-        case .korean: return "추천을 생성 중입니다..."
-        case .english: return "Generating recommendations..."
-        case .swedish: return "Skapar förslag..."
-        case .norwegian: return "Lager anbefalinger ..."
-        case .danish: return "Laver anbefalinger..."
-        case .finnish: return "Luodaan ehdotuksia..."
-        case .polish: return "Generowanie rekomendacji..."
-        case .czech: return "Vytvářím doporučení..."
-        case .greek: return "Δημιουργία προτάσεων..."
-        case .turkish: return "Öneriler hazırlanıyor..."
-        case .russian: return "Подбираем рекомендации..."
-        case .indonesian: return "Menyiapkan rekomendasi..."
-        case .thai: return "กำลังเตรียมคำแนะนำ..."
-        case .vietnamese: return "Đang chuẩn bị gợi ý..."
-        case .dutch: return "Aanbevelingen maken..."
-        case .japanese: return "おすすめを作成中..."
-        case .chinese: return "正在生成推荐..."
-        case .german: return "Empfehlungen werden erstellt..."
-        case .french: return "Création des recommandations..."
-        case .spanish: return "Generando recomendaciones..."
-        case .italian: return "Creazione dei suggerimenti..."
-        case .portuguese: return "Gerando sugestões..."
-        case .chineseTraditional: return "正在產生推薦..."
-        }
-    }
-
-    static var addToSchedule: String {
-        switch lang {
-        case .korean: return "일정 추가하기"
-        case .english: return "Add to Schedule"
-        case .swedish: return "Lägg till i schemat"
-        case .norwegian: return "Legg til i planen"
-        case .danish: return "Føj til planen"
-        case .finnish: return "Lisää aikatauluun"
-        case .polish: return "Dodaj do planu"
-        case .czech: return "Přidat do plánu"
-        case .greek: return "Προσθήκη στο πρόγραμμα"
-        case .turkish: return "Plana Ekle"
-        case .russian: return "Добавить в план"
-        case .indonesian: return "Tambah ke Jadwal"
-        case .thai: return "เพิ่มลงตาราง"
-        case .vietnamese: return "Thêm vào lịch"
-        case .dutch: return "Aan planning toevoegen"
-        case .japanese: return "予定に追加"
-        case .chinese: return "添加到日程"
-        case .german: return "Zum Plan hinzufügen"
-        case .french: return "Ajouter au planning"
-        case .spanish: return "Añadir a la agenda"
-        case .italian: return "Aggiungi all’agenda"
-        case .portuguese: return "Adicionar à agenda"
-        case .chineseTraditional: return "加入行程"
-        }
-    }
-
-    static var addedToSchedule: String {
-        switch lang {
-        case .korean: return "추가됨 ✓"
-        case .english: return "Added ✓"
-        case .swedish: return "Tillagd ✓"
-        case .norwegian: return "Lagt til ✓"
-        case .danish: return "Tilføjet ✓"
-        case .finnish: return "Lisätty ✓"
-        case .polish: return "Dodano ✓"
-        case .czech: return "Přidáno ✓"
-        case .greek: return "Προστέθηκε ✓"
-        case .turkish: return "Eklendi ✓"
-        case .russian: return "Добавлено ✓"
-        case .indonesian: return "Ditambahkan ✓"
-        case .thai: return "เพิ่มแล้ว ✓"
-        case .vietnamese: return "Đã thêm ✓"
-        case .dutch: return "Toegevoegd ✓"
-        case .japanese: return "追加済み ✓"
-        case .chinese: return "已添加 ✓"
-        case .german: return "Hinzugefügt ✓"
-        case .french: return "Ajouté ✓"
-        case .spanish: return "Añadido ✓"
-        case .italian: return "Aggiunto ✓"
-        case .portuguese: return "Adicionado ✓"
-        case .chineseTraditional: return "已加入 ✓"
-        }
-    }
-
-    static var efficiency: String {
+    public static var efficiency: String {
         switch lang {
         case .korean: return "효율"
         case .english: return "Efficiency"
@@ -753,7 +557,7 @@ enum Strings {
         }
     }
 
-    static var leaveHistory: String {
+    public static var leaveHistory: String {
         switch lang {
         case .korean: return "휴가 사용 내역"
         case .english: return "Leave History"
@@ -781,7 +585,7 @@ enum Strings {
         }
     }
 
-    static var checkPastRecords: String {
+    public static var checkPastRecords: String {
         switch lang {
         case .korean: return "지난 휴가 기록을 확인하세요"
         case .english: return "Check past leave records"
@@ -809,7 +613,7 @@ enum Strings {
         }
     }
 
-    static var vacation: String {
+    public static var vacation: String {
         switch lang {
         case .korean: return "휴가"
         case .english: return "Leave"
@@ -837,36 +641,7 @@ enum Strings {
         }
     }
 
-    // MARK: - 캘린더 화면
-    static var navTitleCalendar: String {
-        switch lang {
-        case .korean: return "캘린더"
-        case .english: return "Calendar"
-        case .swedish: return "Kalender"
-        case .norwegian: return "Kalender"
-        case .danish: return "Kalender"
-        case .finnish: return "Kalenteri"
-        case .polish: return "Kalendarz"
-        case .czech: return "Kalendář"
-        case .greek: return "Ημερολόγιο"
-        case .turkish: return "Takvim"
-        case .russian: return "Календарь"
-        case .indonesian: return "Kalender"
-        case .thai: return "ปฏิทิน"
-        case .vietnamese: return "Lịch"
-        case .dutch: return "Agenda"
-        case .japanese: return "カレンダー"
-        case .chinese: return "日历"
-        case .german: return "Kalender"
-        case .french: return "Calendrier"
-        case .spanish: return "Calendario"
-        case .italian: return "Calendario"
-        case .portuguese: return "Calendário"
-        case .chineseTraditional: return "行事曆"
-        }
-    }
-
-    static var holiday: String {
+    public static var holiday: String {
         switch lang {
         case .korean: return "공휴일"
         case .english: return "Holiday"
@@ -894,7 +669,7 @@ enum Strings {
         }
     }
 
-    static var annualLeave: String {
+    public static var annualLeave: String {
         switch lang {
         case .korean: return "연차"
         case .english: return "Annual Leave"
@@ -922,7 +697,7 @@ enum Strings {
         }
     }
 
-    static var weekend: String {
+    public static var weekend: String {
         switch lang {
         case .korean: return "주말"
         case .english: return "Weekend"
@@ -950,7 +725,7 @@ enum Strings {
         }
     }
 
-    static var noSchedule: String {
+    public static var noSchedule: String {
         switch lang {
         case .korean: return "일정 없음"
         case .english: return "No schedule"
@@ -978,7 +753,7 @@ enum Strings {
         }
     }
 
-    static var substituteHoliday: String {
+    public static var substituteHoliday: String {
         switch lang {
         case .korean: return "대체공휴일"
         case .english: return "Substitute Holiday"
@@ -1006,7 +781,7 @@ enum Strings {
         }
     }
 
-    static var deleteLeave: String {
+    public static var deleteLeave: String {
         switch lang {
         case .korean: return "휴가 삭제"
         case .english: return "Delete Leave"
@@ -1034,7 +809,7 @@ enum Strings {
         }
     }
 
-    static var deleteLeaveConfirm: String {
+    public static var deleteLeaveConfirm: String {
         switch lang {
         case .korean: return "이 휴가 기록을 삭제하시겠습니까?\n연차가 복원됩니다."
         case .english: return "Delete this leave record?\nAnnual leave will be restored."
@@ -1062,7 +837,7 @@ enum Strings {
         }
     }
 
-    static var cancel: String {
+    public static var cancel: String {
         switch lang {
         case .korean: return "취소"
         case .english: return "Cancel"
@@ -1090,7 +865,7 @@ enum Strings {
         }
     }
 
-    static var delete: String {
+    public static var delete: String {
         switch lang {
         case .korean: return "삭제"
         case .english: return "Delete"
@@ -1118,147 +893,7 @@ enum Strings {
         }
     }
 
-    static var myLeaveSchedule: String {
-        switch lang {
-        case .korean: return "나의 연차 일정"
-        case .english: return "My Leave Schedule"
-        case .swedish: return "Mitt ledighetsschema"
-        case .norwegian: return "Min feriekalender"
-        case .danish: return "Min ferieplan"
-        case .finnish: return "Lomakalenterini"
-        case .polish: return "Mój plan urlopów"
-        case .czech: return "Můj plán dovolené"
-        case .greek: return "Το πρόγραμμα αδειών μου"
-        case .turkish: return "İzin Planım"
-        case .russian: return "Мои отпуска"
-        case .indonesian: return "Jadwal Cutiku"
-        case .thai: return "ตารางวันลาของฉัน"
-        case .vietnamese: return "Lịch nghỉ của tôi"
-        case .dutch: return "Mijn verlofplanning"
-        case .japanese: return "休暇スケジュール"
-        case .chinese: return "我的年假日程"
-        case .german: return "Mein Urlaubsplan"
-        case .french: return "Mes congés"
-        case .spanish: return "Mis vacaciones"
-        case .italian: return "Le mie ferie"
-        case .portuguese: return "Minhas férias"
-        case .chineseTraditional: return "我的特休行程"
-        }
-    }
-
-    static var noLeaveRegistered: String {
-        switch lang {
-        case .korean: return "등록된 연차가 없습니다"
-        case .english: return "No leave registered"
-        case .swedish: return "Ingen ledighet registrerad"
-        case .norwegian: return "Ingen ferie registrert"
-        case .danish: return "Ingen ferie registreret"
-        case .finnish: return "Ei kirjattuja lomia"
-        case .polish: return "Brak zapisanych urlopów"
-        case .czech: return "Žádná dovolená"
-        case .greek: return "Καμία καταχωρισμένη άδεια"
-        case .turkish: return "Kayıtlı izin yok"
-        case .russian: return "Отпуск ещё не добавлен"
-        case .indonesian: return "Belum ada cuti tercatat"
-        case .thai: return "ยังไม่มีวันลาที่บันทึกไว้"
-        case .vietnamese: return "Chưa ghi ngày nghỉ nào"
-        case .dutch: return "Geen verlof geregistreerd"
-        case .japanese: return "登録された休暇がありません"
-        case .chinese: return "没有登记的年假"
-        case .german: return "Kein Urlaub eingetragen"
-        case .french: return "Aucun congé enregistré"
-        case .spanish: return "No hay vacaciones registradas"
-        case .italian: return "Nessun giorno di ferie registrato"
-        case .portuguese: return "Nenhum período de férias registrado"
-        case .chineseTraditional: return "尚未登記特休"
-        }
-    }
-
-    static var tapToEditSwipeToDelete: String {
-        switch lang {
-        case .korean: return "탭하여 수정 · 스와이프하여 삭제"
-        case .english: return "Tap to edit · Swipe to delete"
-        case .swedish: return "Tryck för att redigera · Svep för att ta bort"
-        case .norwegian: return "Trykk for å redigere · Sveip for å slette"
-        case .danish: return "Tryk for at redigere · Stryg for at slette"
-        case .finnish: return "Napauta muokataksesi · Pyyhkäise poistaaksesi"
-        case .polish: return "Stuknij, aby edytować · Przesuń, aby usunąć"
-        case .czech: return "Klepnutím uprav · Přejetím smaž"
-        case .greek: return "Πάτα για επεξεργασία · Σύρε για διαγραφή"
-        case .turkish: return "Düzenlemek için dokun · Silmek için kaydır"
-        case .russian: return "Нажмите, чтобы изменить · смахните, чтобы удалить"
-        case .indonesian: return "Ketuk untuk edit · Geser untuk hapus"
-        case .thai: return "แตะเพื่อแก้ไข · ปัดเพื่อลบ"
-        case .vietnamese: return "Chạm để sửa · Vuốt để xóa"
-        case .dutch: return "Tik om te bewerken · Veeg om te verwijderen"
-        case .japanese: return "タップで編集 · スワイプで削除"
-        case .chinese: return "点击编辑 · 滑动删除"
-        case .german: return "Tippen zum Bearbeiten · Wischen zum Löschen"
-        case .french: return "Touchez pour modifier · Balayez pour supprimer"
-        case .spanish: return "Toca para editar · Desliza para eliminar"
-        case .italian: return "Tocca per modificare · Scorri per eliminare"
-        case .portuguese: return "Toque para editar · Deslize para excluir"
-        case .chineseTraditional: return "點一下以編輯 · 滑動以刪除"
-        }
-    }
-
-    static var upcomingSchedule: String {
-        switch lang {
-        case .korean: return "예정된 일정"
-        case .english: return "Upcoming"
-        case .swedish: return "Kommande"
-        case .norwegian: return "Kommende"
-        case .danish: return "Kommende"
-        case .finnish: return "Tulevat"
-        case .polish: return "Nadchodzące"
-        case .czech: return "Nadcházející"
-        case .greek: return "Επερχόμενες"
-        case .turkish: return "Yaklaşan"
-        case .russian: return "Предстоящие"
-        case .indonesian: return "Mendatang"
-        case .thai: return "กำลังจะถึง"
-        case .vietnamese: return "Sắp tới"
-        case .dutch: return "Aankomend"
-        case .japanese: return "予定"
-        case .chinese: return "即将到来"
-        case .german: return "Anstehend"
-        case .french: return "À venir"
-        case .spanish: return "Próximos"
-        case .italian: return "In arrivo"
-        case .portuguese: return "Próximos"
-        case .chineseTraditional: return "即將到來"
-        }
-    }
-
-    static var pastSchedule: String {
-        switch lang {
-        case .korean: return "지난 일정"
-        case .english: return "Past"
-        case .swedish: return "Tidigare"
-        case .norwegian: return "Tidligere"
-        case .danish: return "Tidligere"
-        case .finnish: return "Menneet"
-        case .polish: return "Minione"
-        case .czech: return "Minulé"
-        case .greek: return "Παλιότερες"
-        case .turkish: return "Geçmiş"
-        case .russian: return "Прошедшие"
-        case .indonesian: return "Sudah Lewat"
-        case .thai: return "ที่ผ่านมา"
-        case .vietnamese: return "Đã qua"
-        case .dutch: return "Voorbij"
-        case .japanese: return "過去"
-        case .chinese: return "过去"
-        case .german: return "Vergangen"
-        case .french: return "Passés"
-        case .spanish: return "Pasados"
-        case .italian: return "Passati"
-        case .portuguese: return "Anteriores"
-        case .chineseTraditional: return "已過去"
-        }
-    }
-
-    static var today: String {
+    public static var today: String {
         switch lang {
         case .korean: return "오늘"
         case .english: return "Today"
@@ -1286,7 +921,7 @@ enum Strings {
         }
     }
 
-    static var previousMonth: String {
+    public static var previousMonth: String {
         switch lang {
         case .korean: return "이전 달"
         case .english: return "Previous month"
@@ -1314,7 +949,7 @@ enum Strings {
         }
     }
 
-    static var previousYear: String {
+    public static var previousYear: String {
         switch lang {
         case .korean: return "이전 연도"
         case .english: return "Previous year"
@@ -1342,7 +977,7 @@ enum Strings {
         }
     }
 
-    static var nextYear: String {
+    public static var nextYear: String {
         switch lang {
         case .korean: return "다음 연도"
         case .english: return "Next year"
@@ -1371,7 +1006,7 @@ enum Strings {
     }
 
     // MARK: - 휴가별 액티비티 추천 (EditLeaveSheet)
-    static var leaveActivityTitle: String {
+    public static var leaveActivityTitle: String {
         switch lang {
         case .korean: return "이 휴가에 어울리는 여행 추천"
         case .english: return "Trips that match this leave"
@@ -1399,7 +1034,7 @@ enum Strings {
         }
     }
 
-    static var leaveActivitySubtitle: String {
+    public static var leaveActivitySubtitle: String {
         switch lang {
         case .korean: return "기간·계절·출발 국가 기반 큐레이션"
         case .english: return "Curated by duration, season, and origin"
@@ -1427,7 +1062,7 @@ enum Strings {
         }
     }
 
-    static var leaveActivityLiveTitle: String {
+    public static var leaveActivityLiveTitle: String {
         switch lang {
         case .korean: return "이 날짜로 검색한 실시간 항공·숙박"
         case .english: return "Live flights & stays for these dates"
@@ -1455,7 +1090,7 @@ enum Strings {
         }
     }
 
-    static var leaveActivityLoading: String {
+    public static var leaveActivityLoading: String {
         switch lang {
         case .korean: return "추천 불러오는 중…"
         case .english: return "Loading recommendations…"
@@ -1484,7 +1119,7 @@ enum Strings {
     }
 
     // MARK: - Pro 가치 제안 (Paywall 비교표)
-    static var proFeatureAIAnnualPlanner: String {
+    public static var proFeatureAIAnnualPlanner: String {
         switch lang {
         case .korean: return "최적 연간 휴가 플래너"
         case .english: return "Optimal annual planner"
@@ -1513,7 +1148,7 @@ enum Strings {
     }
 
     // MARK: - 최적 연간 휴가 플래너
-    static var optimalPlannerTitle: String {
+    public static var optimalPlannerTitle: String {
         switch lang {
         case .korean: return "한 해 최적 휴가 플랜"
         case .english: return "Optimal year plan"
@@ -1541,7 +1176,7 @@ enum Strings {
         }
     }
 
-    static var optimalPlannerSubtitle: String {
+    public static var optimalPlannerSubtitle: String {
         switch lang {
         case .korean: return "공휴일·주말을 분석해 가장 긴 연휴 조합을 자동으로 계산"
         case .english: return "Computes the longest break combinations from holidays & weekends"
@@ -1569,7 +1204,7 @@ enum Strings {
         }
     }
 
-    static func optimalPlannerSummary(totalDays: Int, breaks: Int, leaveUsed: Int) -> String {
+    public static func optimalPlannerSummary(totalDays: Int, breaks: Int, leaveUsed: Int) -> String {
         switch lang {
         case .korean: return "연차 \(leaveUsed)일로 총 \(totalDays)일 휴식 (\(breaks)개의 연휴)"
         case .english: return "\(totalDays) days off with \(leaveUsed) PTO (\(breaks) breaks)"
@@ -1598,7 +1233,7 @@ enum Strings {
     }
 
     /// 접힘 상태에서 큰 숫자 옆 단위
-    static var optimalPlannerSummaryUnit: String {
+    public static var optimalPlannerSummaryUnit: String {
         switch lang {
         case .korean: return "일 휴식"
         case .english: return "days off"
@@ -1627,7 +1262,7 @@ enum Strings {
     }
 
     /// 접힘 상태에서 옆에 붙는 보조 정보: "연차 4일 · 5회 연휴"
-    static func optimalPlannerSummaryAside(leaveUsed: Int, breaks: Int) -> String {
+    public static func optimalPlannerSummaryAside(leaveUsed: Int, breaks: Int) -> String {
         switch lang {
         case .korean: return "연차 \(leaveUsed)일 · 연휴 \(breaks)회"
         case .english: return "\(leaveUsed) PTO · \(breaks) breaks"
@@ -1655,7 +1290,7 @@ enum Strings {
         }
     }
 
-    static var optimalPlannerExpandHint: String {
+    public static var optimalPlannerExpandHint: String {
         switch lang {
         case .korean: return "이중 탭하여 펼치기"
         case .english: return "Double-tap to expand"
@@ -1683,7 +1318,7 @@ enum Strings {
         }
     }
 
-    static var optimalPlannerCollapseHint: String {
+    public static var optimalPlannerCollapseHint: String {
         switch lang {
         case .korean: return "이중 탭하여 접기"
         case .english: return "Double-tap to collapse"
@@ -1711,7 +1346,7 @@ enum Strings {
         }
     }
 
-    static var optimalPlannerEmpty: String {
+    public static var optimalPlannerEmpty: String {
         switch lang {
         case .korean: return "추가 연차를 등록하면 더 긴 연휴를 만들 수 있어요"
         case .english: return "Register more PTO to unlock longer breaks"
@@ -1739,7 +1374,7 @@ enum Strings {
         }
     }
 
-    static var optimalPlannerProLockedTitle: String {
+    public static var optimalPlannerProLockedTitle: String {
         switch lang {
         case .korean: return "한 해 휴가를 한 번에 최적 배치"
         case .english: return "Plan your year in one tap"
@@ -1767,7 +1402,7 @@ enum Strings {
         }
     }
 
-    static var optimalPlannerProLockedDesc: String {
+    public static var optimalPlannerProLockedDesc: String {
         switch lang {
         case .korean: return "남은 연차를 모든 공휴일에 최적 배치해 최장 연휴 조합을 찾아드려요"
         case .english: return "Optimally place your remaining PTO around all public holidays for the longest possible breaks"
@@ -1795,7 +1430,7 @@ enum Strings {
         }
     }
 
-    static var optimalPlannerCTA: String {
+    public static var optimalPlannerCTA: String {
         switch lang {
         case .korean: return "Pro로 최적 플랜 보기"
         case .english: return "Unlock optimal plan with Pro"
@@ -1823,7 +1458,7 @@ enum Strings {
         }
     }
 
-    static var optimalPlannerApplyAll: String {
+    public static var optimalPlannerApplyAll: String {
         switch lang {
         case .korean: return "전부 캘린더에 추가"
         case .english: return "Add all to calendar"
@@ -1851,7 +1486,7 @@ enum Strings {
         }
     }
 
-    static func breakLabel(_ totalDays: Int, leaveUsed: Int) -> String {
+    public static func breakLabel(_ totalDays: Int, leaveUsed: Int) -> String {
         switch lang {
         case .korean: return "연차 \(leaveUsed)일 · \(totalDays)일 연휴"
         case .english: return "\(leaveUsed) PTO · \(totalDays)-day break"
@@ -1879,7 +1514,7 @@ enum Strings {
         }
     }
 
-    static var nextMonth: String {
+    public static var nextMonth: String {
         switch lang {
         case .korean: return "다음 달"
         case .english: return "Next month"
@@ -1907,7 +1542,7 @@ enum Strings {
         }
     }
 
-    static var weekdays: [String] {
+    public static var weekdays: [String] {
         switch lang {
         case .korean: return ["일", "월", "화", "수", "목", "금", "토"]
         case .english: return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -1935,177 +1570,182 @@ enum Strings {
         }
     }
 
-    static func monthYearFormat(year: Int, month: Int) -> String {
+    /// 1~12월을 표의 자리(0~11)로. 백업 · 동기화에서 0 · 13 같은 값이 와도 표 밖을 읽어 죽지 않게 감는다.
+    public static func monthIndex(_ month: Int) -> Int {
+        ((month - 1) % 12 + 12) % 12
+    }
+
+    public static func monthYearFormat(year: Int, month: Int) -> String {
         switch lang {
         case .korean: return "\(year)년 \(month)월"
         case .english:
             let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .swedish:
             let monthNames = ["jan", "feb", "mar", "apr", "maj", "jun",
                               "jul", "aug", "sep", "okt", "nov", "dec"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .norwegian:
             let monthNames = ["jan", "feb", "mar", "apr", "mai", "jun",
                               "jul", "aug", "sep", "okt", "nov", "des"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .danish:
             let monthNames = ["jan", "feb", "mar", "apr", "maj", "jun",
                               "jul", "aug", "sep", "okt", "nov", "dec"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .finnish:
             let monthNames = ["tammi", "helmi", "maalis", "huhti", "touko", "kesä",
                               "heinä", "elo", "syys", "loka", "marras", "joulu"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .polish:
             let monthNames = ["sty", "lut", "mar", "kwi", "maj", "cze",
                               "lip", "sie", "wrz", "paź", "lis", "gru"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .czech:
             let monthNames = ["led", "úno", "bře", "dub", "kvě", "čvn",
                               "čvc", "srp", "zář", "říj", "lis", "pro"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .greek:
             let monthNames = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ιούν",
                               "Ιούλ", "Αύγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .turkish:
             let monthNames = ["Oca", "Şub", "Mar", "Nis", "May", "Haz",
                               "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .russian:
             let monthNames = ["янв.", "февр.", "март", "апр.", "май", "июнь",
                               "июль", "авг.", "сент.", "окт.", "нояб.", "дек."]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .indonesian:
             let monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
                               "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .thai:
             let monthNames = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
                               "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .vietnamese:
             let monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
                               "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"]
-            return "\(monthNames[month - 1]), \(year)"
+            return "\(monthNames[monthIndex(month)]), \(year)"
         case .dutch:
             let monthNames = ["jan", "feb", "mrt", "apr", "mei", "jun",
                               "jul", "aug", "sep", "okt", "nov", "dec"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .japanese: return "\(year)年 \(month)月"
         case .chinese: return "\(year)年\(month)月"
         case .german:
             let monthNames = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
                               "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .french:
             let monthNames = ["janv.", "févr.", "mars", "avr.", "mai", "juin",
                               "juil.", "août", "sept.", "oct.", "nov.", "déc."]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .spanish:
             let monthNames = ["ene", "feb", "mar", "abr", "may", "jun",
                               "jul", "ago", "sept", "oct", "nov", "dic"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .italian:
             let monthNames = ["gen", "feb", "mar", "apr", "mag", "giu",
                               "lug", "ago", "set", "ott", "nov", "dic"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .portuguese:
             let monthNames = ["jan", "fev", "mar", "abr", "mai", "jun",
                               "jul", "ago", "set", "out", "nov", "dez"]
-            return "\(monthNames[month - 1]) \(year)"
+            return "\(monthNames[monthIndex(month)]) \(year)"
         case .chineseTraditional: return "\(year)年\(month)月"
         }
     }
 
-    static func monthShort(_ month: Int) -> String {
+    public static func monthShort(_ month: Int) -> String {
         switch lang {
         case .korean: return "\(month)월"
         case .english:
             let names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .swedish:
             let names = ["jan", "feb", "mar", "apr", "maj", "jun",
                          "jul", "aug", "sep", "okt", "nov", "dec"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .norwegian:
             let names = ["jan", "feb", "mar", "apr", "mai", "jun",
                          "jul", "aug", "sep", "okt", "nov", "des"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .danish:
             let names = ["jan", "feb", "mar", "apr", "maj", "jun",
                          "jul", "aug", "sep", "okt", "nov", "dec"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .finnish:
             let names = ["tammi", "helmi", "maalis", "huhti", "touko", "kesä",
                          "heinä", "elo", "syys", "loka", "marras", "joulu"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .polish:
             let names = ["sty", "lut", "mar", "kwi", "maj", "cze",
                          "lip", "sie", "wrz", "paź", "lis", "gru"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .czech:
             let names = ["led", "úno", "bře", "dub", "kvě", "čvn",
                          "čvc", "srp", "zář", "říj", "lis", "pro"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .greek:
             let names = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ιούν",
                          "Ιούλ", "Αύγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .turkish:
             let names = ["Oca", "Şub", "Mar", "Nis", "May", "Haz",
                          "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .russian:
             let names = ["янв.", "февр.", "март", "апр.", "май", "июнь",
                          "июль", "авг.", "сент.", "окт.", "нояб.", "дек."]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .indonesian:
             let names = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
                          "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .thai:
             let names = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
                          "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .vietnamese:
             let names = ["Th1", "Th2", "Th3", "Th4", "Th5", "Th6",
                          "Th7", "Th8", "Th9", "Th10", "Th11", "Th12"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .dutch:
             let names = ["jan", "feb", "mrt", "apr", "mei", "jun",
                          "jul", "aug", "sep", "okt", "nov", "dec"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .japanese: return "\(month)月"
         case .chinese: return "\(month)月"
         case .german:
             let names = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
                          "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .french:
             let names = ["janv.", "févr.", "mars", "avr.", "mai", "juin",
                          "juil.", "août", "sept.", "oct.", "nov.", "déc."]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .spanish:
             let names = ["ene", "feb", "mar", "abr", "may", "jun",
                          "jul", "ago", "sept", "oct", "nov", "dic"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .italian:
             let names = ["gen", "feb", "mar", "apr", "mag", "giu",
                          "lug", "ago", "set", "ott", "nov", "dic"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .portuguese:
             let names = ["jan", "fev", "mar", "abr", "mai", "jun",
                          "jul", "ago", "set", "out", "nov", "dez"]
-            return names[month - 1]
+            return names[monthIndex(month)]
         case .chineseTraditional: return "\(month)月"
         }
     }
 
-    static func dayUnit(_ days: Int) -> String {
+    public static func dayUnit(_ days: Int) -> String {
         switch lang {
         case .korean: return "\(days)일"
         case .english: return "\(days)d"
@@ -2133,7 +1773,7 @@ enum Strings {
         }
     }
 
-    static var dayUnitSuffix: String {
+    public static var dayUnitSuffix: String {
         switch lang {
         case .korean: return "일"
         case .english: return " days"
@@ -2164,7 +1804,7 @@ enum Strings {
     /// 일수 표기 — 영어의 "1 days"를 막는다.
     /// (`dayUnitSuffix`는 숫자에 그냥 붙이는 접미사라 단수를 구분하지 못한다)
     /// 아이폰 듀오를 펴고 추천을 골랐을 때 현황 카드 아래 한 줄. `daysText` 는 `dayCount` 결과.
-    static func foldAddPreview(_ daysText: String) -> String {
+    public static func foldAddPreview(_ daysText: String) -> String {
         switch lang {
         case .korean: return "추가하면 남은 연차 \(daysText)"
         case .english: return "If added: \(daysText) left"
@@ -2192,7 +1832,7 @@ enum Strings {
         }
     }
 
-    static func dayCount(_ value: Double) -> String {
+    public static func dayCount(_ value: Double) -> String {
         let text = formatLeave(value)
         switch lang {
         case .korean: return "\(text)일"
@@ -2222,7 +1862,7 @@ enum Strings {
     }
 
     // MARK: - 추천 화면
-    static var navTitleRecommendations: String {
+    public static var navTitleRecommendations: String {
         switch lang {
         case .korean: return "휴가 추천"
         case .english: return "Leave Recommendations"
@@ -2250,7 +1890,7 @@ enum Strings {
         }
     }
 
-    static func yearRecommendation(year: Int) -> String {
+    public static func yearRecommendation(year: Int) -> String {
         switch lang {
         case .korean: return "\(year)년 추천"
         case .english: return "\(year) Recommendations"
@@ -2278,7 +1918,7 @@ enum Strings {
         }
     }
 
-    static var availableLeave: String {
+    public static var availableLeave: String {
         switch lang {
         case .korean: return "사용 가능한 연차"
         case .english: return "Available Leave"
@@ -2306,7 +1946,7 @@ enum Strings {
         }
     }
 
-    static var analyzingSchedule: String {
+    public static var analyzingSchedule: String {
         switch lang {
         case .korean: return "추천 일정 분석 중..."
         case .english: return "Analyzing schedule..."
@@ -2334,7 +1974,7 @@ enum Strings {
         }
     }
 
-    static var noRecommendations: String {
+    public static var noRecommendations: String {
         switch lang {
         case .korean: return "추천 일정이 없습니다"
         case .english: return "No recommendations"
@@ -2362,7 +2002,7 @@ enum Strings {
         }
     }
 
-    static var noRecommendationsHint: String {
+    public static var noRecommendationsHint: String {
         switch lang {
         case .korean: return "선호도 설정을 확인하거나\n연차를 더 확보해보세요"
         case .english: return "Check your preferences or\nsecure more leave days"
@@ -2390,7 +2030,7 @@ enum Strings {
         }
     }
 
-    static var previewCalendar: String {
+    public static var previewCalendar: String {
         switch lang {
         case .korean: return "추천 일정 미리보기"
         case .english: return "Schedule Preview"
@@ -2418,7 +2058,7 @@ enum Strings {
         }
     }
 
-    static func leaveRequired(_ days: Int) -> String {
+    public static func leaveRequired(_ days: Int) -> String {
         switch lang {
         case .korean: return "\(days)일 연차"
         case .english: return "\(days)d leave"
@@ -2446,7 +2086,7 @@ enum Strings {
         }
     }
 
-    static func daysOff(_ days: Int) -> String {
+    public static func daysOff(_ days: Int) -> String {
         switch lang {
         case .korean: return "\(days)일 휴식"
         case .english: return "\(days)d off"
@@ -2474,7 +2114,7 @@ enum Strings {
         }
     }
 
-    static var addToScheduleAction: String {
+    public static var addToScheduleAction: String {
         switch lang {
         case .korean: return "일정에 추가하기"
         case .english: return "Add to Schedule"
@@ -2502,7 +2142,7 @@ enum Strings {
         }
     }
 
-    static var addedToScheduleAction: String {
+    public static var addedToScheduleAction: String {
         switch lang {
         case .korean: return "일정에 추가됨"
         case .english: return "Added to Schedule"
@@ -2531,7 +2171,7 @@ enum Strings {
     }
 
     // Date preview legend
-    static var workday: String {
+    public static var workday: String {
         switch lang {
         case .korean: return "평일"
         case .english: return "Workday"
@@ -2560,7 +2200,7 @@ enum Strings {
     }
 
     // MARK: - 설정 화면
-    static var navTitleSettings: String {
+    public static var navTitleSettings: String {
         switch lang {
         case .korean: return "설정"
         case .english: return "Settings"
@@ -2588,7 +2228,7 @@ enum Strings {
         }
     }
 
-    static var name: String {
+    public static var name: String {
         switch lang {
         case .korean: return "이름"
         case .english: return "Name"
@@ -2617,7 +2257,7 @@ enum Strings {
     }
 
     /// 이름 수정 버튼 VoiceOver 라벨
-    static var editName: String {
+    public static var editName: String {
         switch lang {
         case .korean: return "이름 수정"
         case .english: return "Edit name"
@@ -2645,7 +2285,7 @@ enum Strings {
         }
     }
 
-    static func joinDate(_ dateStr: String) -> String {
+    public static func joinDate(_ dateStr: String) -> String {
         switch lang {
         case .korean: return "가입일: \(dateStr)"
         case .english: return "Joined: \(dateStr)"
@@ -2673,7 +2313,7 @@ enum Strings {
         }
     }
 
-    static var countryAndLanguage: String {
+    public static var countryAndLanguage: String {
         switch lang {
         case .korean: return "국가 및 언어"
         case .english: return "Country & Language"
@@ -2701,7 +2341,7 @@ enum Strings {
         }
     }
 
-    static var country: String {
+    public static var country: String {
         switch lang {
         case .korean: return "국가"
         case .english: return "Country"
@@ -2729,7 +2369,7 @@ enum Strings {
         }
     }
 
-    static var language: String {
+    public static var language: String {
         switch lang {
         case .korean: return "언어"
         case .english: return "Language"
@@ -2757,7 +2397,7 @@ enum Strings {
         }
     }
 
-    static var annualLeaveSettings: String {
+    public static var annualLeaveSettings: String {
         switch lang {
         case .korean: return "연차 설정"
         case .english: return "Annual Leave Settings"
@@ -2785,7 +2425,7 @@ enum Strings {
         }
     }
 
-    static var availableLeaveLabel: String {
+    public static var availableLeaveLabel: String {
         switch lang {
         case .korean: return "사용 가능 연차"
         case .english: return "Available Leave"
@@ -2813,7 +2453,7 @@ enum Strings {
         }
     }
 
-    static func baseAndBonus(base: String, bonus: String) -> String {
+    public static func baseAndBonus(base: String, bonus: String) -> String {
         switch lang {
         case .korean: return "기본 \(base)일 + 보너스 \(bonus)일"
         case .english: return "Base \(base)d + Bonus \(bonus)d"
@@ -2841,7 +2481,7 @@ enum Strings {
         }
     }
 
-    static var totalLeave: String {
+    public static var totalLeave: String {
         switch lang {
         case .korean: return "총 연차"
         case .english: return "Total Leave"
@@ -2869,7 +2509,7 @@ enum Strings {
         }
     }
 
-    static var usedLeave: String {
+    public static var usedLeave: String {
         switch lang {
         case .korean: return "사용한 연차"
         case .english: return "Used Leave"
@@ -2897,7 +2537,7 @@ enum Strings {
         }
     }
 
-    static var yearStartMonth: String {
+    public static var yearStartMonth: String {
         switch lang {
         case .korean: return "연차 기준월"
         case .english: return "Year Start Month"
@@ -2925,7 +2565,7 @@ enum Strings {
         }
     }
 
-    static var bonusLeave: String {
+    public static var bonusLeave: String {
         switch lang {
         case .korean: return "보너스 연차"
         case .english: return "Bonus Leave"
@@ -2953,7 +2593,7 @@ enum Strings {
         }
     }
 
-    static var addBonusLeave: String {
+    public static var addBonusLeave: String {
         switch lang {
         case .korean: return "보너스 연차 추가"
         case .english: return "Add Bonus Leave"
@@ -2981,7 +2621,7 @@ enum Strings {
         }
     }
 
-    static var bonusLeaveFooter: String {
+    public static var bonusLeaveFooter: String {
         switch lang {
         case .korean: return "대체휴무, 포상휴가 등 추가로 받은 연차를 관리합니다."
         case .english: return "Manage additional leave from comp time, rewards, etc."
@@ -3009,7 +2649,7 @@ enum Strings {
         }
     }
 
-    static var vacationStyle: String {
+    public static var vacationStyle: String {
         switch lang {
         case .korean: return "휴가 스타일"
         case .english: return "Vacation Style"
@@ -3037,7 +2677,7 @@ enum Strings {
         }
     }
 
-    static var preferencesSettings: String {
+    public static var preferencesSettings: String {
         switch lang {
         case .korean: return "선호도 설정"
         case .english: return "Preferences"
@@ -3065,7 +2705,7 @@ enum Strings {
         }
     }
 
-    static var preferredDuration: String {
+    public static var preferredDuration: String {
         switch lang {
         case .korean: return "선호 기간"
         case .english: return "Duration"
@@ -3093,7 +2733,7 @@ enum Strings {
         }
     }
 
-    static var preferredSeason: String {
+    public static var preferredSeason: String {
         switch lang {
         case .korean: return "선호 계절"
         case .english: return "Season"
@@ -3121,7 +2761,7 @@ enum Strings {
         }
     }
 
-    static var preferredActivity: String {
+    public static var preferredActivity: String {
         switch lang {
         case .korean: return "선호 활동"
         case .english: return "Activity"
@@ -3149,7 +2789,7 @@ enum Strings {
         }
     }
 
-    static var usageStats: String {
+    public static var usageStats: String {
         switch lang {
         case .korean: return "사용 통계"
         case .english: return "Usage Stats"
@@ -3177,7 +2817,7 @@ enum Strings {
         }
     }
 
-    static var completed: String {
+    public static var completed: String {
         switch lang {
         case .korean: return "사용 완료"
         case .english: return "Completed"
@@ -3205,7 +2845,7 @@ enum Strings {
         }
     }
 
-    static var plannedLeave: String {
+    public static var plannedLeave: String {
         switch lang {
         case .korean: return "예정된 휴가"
         case .english: return "Planned Leave"
@@ -3233,7 +2873,7 @@ enum Strings {
         }
     }
 
-    static var leaveUsageRate: String {
+    public static var leaveUsageRate: String {
         switch lang {
         case .korean: return "연차 소진율"
         case .english: return "Usage Rate"
@@ -3261,7 +2901,7 @@ enum Strings {
         }
     }
 
-    static var dataManagement: String {
+    public static var dataManagement: String {
         switch lang {
         case .korean: return "데이터 관리"
         case .english: return "Data Management"
@@ -3289,7 +2929,7 @@ enum Strings {
         }
     }
 
-    static var backupToICloud: String {
+    public static var backupToICloud: String {
         switch lang {
         case .korean: return "iCloud에 백업"
         case .english: return "Backup to iCloud"
@@ -3317,7 +2957,7 @@ enum Strings {
         }
     }
 
-    static var restoreFromICloud: String {
+    public static var restoreFromICloud: String {
         switch lang {
         case .korean: return "iCloud에서 복원"
         case .english: return "Restore from iCloud"
@@ -3347,7 +2987,7 @@ enum Strings {
 
     // MARK: - 기능 팁 (TipKit)
 
-    static var tipPhotoImportTitle: String {
+    public static var tipPhotoImportTitle: String {
         switch lang {
         case .korean: return "사진으로 휴가 등록"
         case .english: return "Add Leaves from a Photo"
@@ -3375,7 +3015,7 @@ enum Strings {
         }
     }
 
-    static var tipPhotoImportMessage: String {
+    public static var tipPhotoImportMessage: String {
         switch lang {
         case .korean: return "회사 시스템의 휴가 신청 내역을 찍으면 자동으로 인식해서 등록해드려요."
         case .english: return "Snap your company's leave request history and it's recognized and added automatically."
@@ -3403,7 +3043,7 @@ enum Strings {
         }
     }
 
-    static var tipFamilyShareTitle: String {
+    public static var tipFamilyShareTitle: String {
         switch lang {
         case .korean: return "가족에게 일정을 공유해보세요"
         case .english: return "Share Your Schedule with Family"
@@ -3431,7 +3071,7 @@ enum Strings {
         }
     }
 
-    static var tipFamilyShareMessage: String {
+    public static var tipFamilyShareMessage: String {
         switch lang {
         case .korean: return "설정 → 일정 공유에서 초대 링크를 보내면, 가족의 휴가 일정을 가족 탭에서 함께 볼 수 있어요."
         case .english: return "Send an invite from Settings → Share Schedule to see each other's leaves in the Family tab."
@@ -3459,7 +3099,7 @@ enum Strings {
         }
     }
 
-    static var tipTimeMachineTitle: String {
+    public static var tipTimeMachineTitle: String {
         switch lang {
         case .korean: return "타임머신이 지켜드려요"
         case .english: return "Time Machine Has Your Back"
@@ -3487,7 +3127,7 @@ enum Strings {
         }
     }
 
-    static var tipTimeMachineMessage: String {
+    public static var tipTimeMachineMessage: String {
         switch lang {
         case .korean: return "데이터가 바뀔 때마다 자동으로 스냅샷이 저장돼요. 실수해도 원하는 시점으로 되돌릴 수 있어요."
         case .english: return "A snapshot is saved automatically whenever your data changes, so you can always roll back."
@@ -3515,7 +3155,7 @@ enum Strings {
         }
     }
 
-    static var tipCalendarTapTitle: String {
+    public static var tipCalendarTapTitle: String {
         switch lang {
         case .korean: return "날짜를 탭해서 바로 등록"
         case .english: return "Tap a Date to Register"
@@ -3543,7 +3183,7 @@ enum Strings {
         }
     }
 
-    static var tipCalendarTapMessage: String {
+    public static var tipCalendarTapMessage: String {
         switch lang {
         case .korean: return "캘린더에서 날짜를 선택하면 그 날짜로 휴가를 바로 등록할 수 있어요."
         case .english: return "Select any date on the calendar to register a leave for that day instantly."
@@ -3573,7 +3213,7 @@ enum Strings {
 
     // MARK: - 사진에서 가져오기
 
-    static var importFromPhoto: String {
+    public static var importFromPhoto: String {
         switch lang {
         case .korean: return "사진에서 가져오기"
         case .english: return "Import from Photo"
@@ -3601,7 +3241,7 @@ enum Strings {
         }
     }
 
-    static var importFromPhotoDescription: String {
+    public static var importFromPhotoDescription: String {
         switch lang {
         case .korean: return "휴가 신청 내역 화면을 찍으면 자동으로 인식해요"
         case .english: return "Snap your leave request history to import it automatically"
@@ -3629,35 +3269,7 @@ enum Strings {
         }
     }
 
-    static var photoImportGuide: String {
-        switch lang {
-        case .korean: return "회사 시스템의 휴가 신청 내역 화면을 촬영하거나 스크린샷을 선택하세요.\n날짜·유형·차감 일수를 자동으로 인식합니다."
-        case .english: return "Take a photo or choose a screenshot of your company's leave request history.\nDates, types, and deductions are recognized automatically."
-        case .swedish: return "Ta ett foto eller välj en skärmdump av företagets ledighetshistorik.\nDatum, typer och avdrag känns igen automatiskt."
-        case .norwegian: return "Ta et bilde eller velg et skjermbilde av bedriftens ferieoversikt.\nDatoer, typer og trekk gjenkjennes automatisk."
-        case .danish: return "Tag et foto eller vælg et skærmbillede af din virksomheds feriehistorik.\nDatoer, typer og fradrag genkendes automatisk."
-        case .finnish: return "Ota kuva tai valitse kuvakaappaus yrityksesi lomahakemushistoriasta.\nPäivät, tyypit ja vähennykset tunnistetaan automaattisesti."
-        case .polish: return "Zrób zdjęcie lub wybierz zrzut ekranu historii urlopów z firmy.\nDaty, typy i odliczenia zostaną rozpoznane automatycznie."
-        case .czech: return "Vyfoť historii žádostí o dovolenou ve firmě nebo vyber snímek obrazovky.\nData, typy i odečty se rozpoznají automaticky."
-        case .greek: return "Τράβηξε φωτογραφία ή επίλεξε στιγμιότυπο οθόνης του ιστορικού αδειών της εταιρείας σου.\nΟι ημερομηνίες, οι τύποι και οι αφαιρέσεις αναγνωρίζονται αυτόματα."
-        case .turkish: return "Şirketinin izin talep geçmişinin fotoğrafını çek veya ekran görüntüsü seç.\nTarihler, türler ve düşülen günler otomatik olarak tanınır."
-        case .russian: return "Сделайте фото или выберите скриншот истории заявок на отпуск из рабочей системы.\nДаты, типы и списанные дни распознаются автоматически."
-        case .indonesian: return "Ambil foto atau pilih screenshot riwayat pengajuan cuti di kantormu.\nTanggal, jenis, dan potongan cuti dikenali otomatis."
-        case .thai: return "ถ่ายรูปหรือเลือกภาพหน้าจอประวัติการขอลาของบริษัท\nแอปจะอ่านวันที่ ประเภท และจำนวนวันที่หักให้อัตโนมัติ"
-        case .vietnamese: return "Chụp ảnh hoặc chọn ảnh màn hình lịch sử đơn xin nghỉ ở công ty.\nNgày, loại nghỉ và số ngày bị trừ được nhận diện tự động."
-        case .dutch: return "Maak een foto of kies een schermafbeelding van de verlofaanvragen van je bedrijf.\nData, soorten en aftrek worden automatisch herkend."
-        case .japanese: return "会社システムの休暇申請履歴画面を撮影するか、スクリーンショットを選択してください。\n日付・種類・控除日数を自動で認識します。"
-        case .chinese: return "拍摄或选择公司系统的休假申请记录截图。\n将自动识别日期、类型和扣除天数。"
-        case .german: return "Fotografiere die Urlaubsübersicht deiner Firma oder wähle einen Screenshot.\nDaten, Arten und abgezogene Tage werden automatisch erkannt."
-        case .french: return "Prenez en photo l'historique de congés de votre entreprise ou choisissez une capture d'écran.\nLes dates, types et jours déduits sont reconnus automatiquement."
-        case .spanish: return "Haz una foto o elige una captura del historial de solicitudes de vacaciones de tu empresa.\nSe reconocen automáticamente las fechas, los tipos y los días descontados."
-        case .italian: return "Scatta una foto o scegli uno screenshot dello storico delle richieste di ferie della tua azienda.\nDate, tipi e giorni scalati vengono riconosciuti automaticamente."
-        case .portuguese: return "Tire uma foto ou escolha uma captura de tela do histórico de solicitações de férias da sua empresa.\nDatas, tipos e dias descontados são reconhecidos automaticamente."
-        case .chineseTraditional: return "拍攝公司系統的休假申請紀錄畫面，或選擇螢幕截圖。\n會自動辨識日期、假別與扣除天數。"
-        }
-    }
-
-    static var takePhoto: String {
+    public static var takePhoto: String {
         switch lang {
         case .korean: return "카메라로 촬영"
         case .english: return "Take Photo"
@@ -3685,7 +3297,7 @@ enum Strings {
         }
     }
 
-    static var choosePhoto: String {
+    public static var choosePhoto: String {
         switch lang {
         case .korean: return "사진 보관함에서 선택"
         case .english: return "Choose from Library"
@@ -3713,7 +3325,7 @@ enum Strings {
         }
     }
 
-    static var chooseAnotherPhoto: String {
+    public static var chooseAnotherPhoto: String {
         switch lang {
         case .korean: return "다른 사진 선택"
         case .english: return "Choose Another Photo"
@@ -3741,7 +3353,7 @@ enum Strings {
         }
     }
 
-    static var scanningPhoto: String {
+    public static var scanningPhoto: String {
         switch lang {
         case .korean: return "사진에서 휴가 내역을 인식하는 중..."
         case .english: return "Recognizing leave records in photo..."
@@ -3769,7 +3381,7 @@ enum Strings {
         }
     }
 
-    static var noLeaveFoundInPhoto: String {
+    public static var noLeaveFoundInPhoto: String {
         switch lang {
         case .korean: return "사진에서 휴가 내역을 찾지 못했습니다.\n표가 선명하게 나오도록 다시 촬영해 주세요."
         case .english: return "No leave records found in the photo.\nPlease retake it so the table is clearly visible."
@@ -3797,7 +3409,7 @@ enum Strings {
         }
     }
 
-    static func photoImportAllDuplicates(_ count: Int) -> String {
+    public static func photoImportAllDuplicates(_ count: Int) -> String {
         switch lang {
         case .korean: return "인식된 \(count)건이 모두 이미 등록되어 있어요."
         case .english: return "All \(count) recognized records are already registered."
@@ -3825,7 +3437,7 @@ enum Strings {
         }
     }
 
-    static func duplicatesExcluded(_ count: Int) -> String {
+    public static func duplicatesExcluded(_ count: Int) -> String {
         switch lang {
         case .korean: return "이미 등록된 \(count)건은 제외했습니다."
         case .english: return "\(count) already-registered records were excluded."
@@ -3853,7 +3465,7 @@ enum Strings {
         }
     }
 
-    static var photoImportFooter: String {
+    public static var photoImportFooter: String {
         switch lang {
         case .korean: return "실공제수가 없는 대체휴가·자녀돌봄 등은 연차 차감 없이 등록됩니다."
         case .english: return "Records without a deduction (compensatory leave, family care, etc.) are added without reducing your annual leave."
@@ -3881,7 +3493,7 @@ enum Strings {
         }
     }
 
-    static var noDeduction: String {
+    public static var noDeduction: String {
         switch lang {
         case .korean: return "연차 차감 없음"
         case .english: return "No deduction"
@@ -3909,7 +3521,7 @@ enum Strings {
         }
     }
 
-    static var photoImportInvalidImage: String {
+    public static var photoImportInvalidImage: String {
         switch lang {
         case .korean: return "사진을 불러올 수 없습니다."
         case .english: return "Unable to load the photo."
@@ -3939,7 +3551,7 @@ enum Strings {
 
     // MARK: - 타임머신
 
-    static var timeMachine: String {
+    public static var timeMachine: String {
         switch lang {
         case .korean: return "타임머신"
         case .english: return "Time Machine"
@@ -3967,7 +3579,7 @@ enum Strings {
         }
     }
 
-    static var timeMachineFooter: String {
+    public static var timeMachineFooter: String {
         switch lang {
         case .korean: return "데이터가 바뀔 때마다 자동으로 스냅샷이 저장됩니다. 원하는 시점을 선택하면 그때의 데이터로 되돌릴 수 있습니다."
         case .english: return "A snapshot is saved automatically whenever your data changes. Select a point in time to restore your data to that moment."
@@ -3995,7 +3607,7 @@ enum Strings {
         }
     }
 
-    static var snapshotNow: String {
+    public static var snapshotNow: String {
         switch lang {
         case .korean: return "지금 스냅샷 만들기"
         case .english: return "Create Snapshot Now"
@@ -4023,7 +3635,7 @@ enum Strings {
         }
     }
 
-    static var snapshotList: String {
+    public static var snapshotList: String {
         switch lang {
         case .korean: return "저장된 시점"
         case .english: return "Saved Points"
@@ -4051,7 +3663,7 @@ enum Strings {
         }
     }
 
-    static var noSnapshots: String {
+    public static var noSnapshots: String {
         switch lang {
         case .korean: return "저장된 스냅샷이 없습니다"
         case .english: return "No snapshots saved yet"
@@ -4079,7 +3691,7 @@ enum Strings {
         }
     }
 
-    static var restoreSnapshotTitle: String {
+    public static var restoreSnapshotTitle: String {
         switch lang {
         case .korean: return "이 시점으로 복원"
         case .english: return "Restore This Point"
@@ -4107,7 +3719,7 @@ enum Strings {
         }
     }
 
-    static func restoreSnapshotMessage(_ date: String) -> String {
+    public static func restoreSnapshotMessage(_ date: String) -> String {
         switch lang {
         case .korean: return "\(date) 시점의 데이터로 되돌립니다. 복원 직전 상태도 자동으로 저장되므로 언제든 다시 되돌릴 수 있습니다."
         case .english: return "Your data will be restored to \(date). The current state is saved automatically before restoring, so you can always go back."
@@ -4135,7 +3747,7 @@ enum Strings {
         }
     }
 
-    static func snapshotSummary(leaves: Int, bonuses: Int) -> String {
+    public static func snapshotSummary(leaves: Int, bonuses: Int) -> String {
         switch lang {
         case .korean: return "연차 \(leaves)건 · 보너스 \(bonuses)건"
         case .english: return "\(leaves) leaves · \(bonuses) bonuses"
@@ -4163,7 +3775,7 @@ enum Strings {
         }
     }
 
-    static var snapshotCreated: String {
+    public static var snapshotCreated: String {
         switch lang {
         case .korean: return "스냅샷이 저장되었습니다."
         case .english: return "Snapshot saved."
@@ -4191,7 +3803,7 @@ enum Strings {
         }
     }
 
-    static var snapshotFailed: String {
+    public static var snapshotFailed: String {
         switch lang {
         case .korean: return "스냅샷 저장에 실패했습니다."
         case .english: return "Failed to save snapshot."
@@ -4219,7 +3831,7 @@ enum Strings {
         }
     }
 
-    static var snapshotChecksumMismatch: String {
+    public static var snapshotChecksumMismatch: String {
         switch lang {
         case .korean: return "스냅샷 데이터 무결성 검증에 실패했습니다."
         case .english: return "Snapshot integrity check failed."
@@ -4247,7 +3859,7 @@ enum Strings {
         }
     }
 
-    static var snapshotReasonAuto: String {
+    public static var snapshotReasonAuto: String {
         switch lang {
         case .korean: return "자동"
         case .english: return "Auto"
@@ -4275,7 +3887,7 @@ enum Strings {
         }
     }
 
-    static var snapshotReasonBackground: String {
+    public static var snapshotReasonBackground: String {
         switch lang {
         case .korean: return "앱 전환"
         case .english: return "App switch"
@@ -4303,7 +3915,7 @@ enum Strings {
         }
     }
 
-    static var snapshotReasonManual: String {
+    public static var snapshotReasonManual: String {
         switch lang {
         case .korean: return "수동"
         case .english: return "Manual"
@@ -4331,7 +3943,7 @@ enum Strings {
         }
     }
 
-    static var snapshotReasonPreRestore: String {
+    public static var snapshotReasonPreRestore: String {
         switch lang {
         case .korean: return "복원 전 저장"
         case .english: return "Pre-restore"
@@ -4359,7 +3971,7 @@ enum Strings {
         }
     }
 
-    static var resetData: String {
+    public static var resetData: String {
         switch lang {
         case .korean: return "연차 데이터 초기화"
         case .english: return "Reset Leave Data"
@@ -4387,7 +3999,7 @@ enum Strings {
         }
     }
 
-    static var resetDataTitle: String {
+    public static var resetDataTitle: String {
         switch lang {
         case .korean: return "연차 데이터 초기화"
         case .english: return "Reset Leave Data"
@@ -4415,7 +4027,7 @@ enum Strings {
         }
     }
 
-    static var resetDataMessage: String {
+    public static var resetDataMessage: String {
         switch lang {
         case .korean: return "모든 연차 기록이 삭제되고 사용한 연차가 0으로 초기화됩니다. 이 작업은 되돌릴 수 없습니다."
         case .english: return "All leave records will be deleted and used leave will be reset to 0. This cannot be undone."
@@ -4443,7 +4055,7 @@ enum Strings {
         }
     }
 
-    static var reset: String {
+    public static var reset: String {
         switch lang {
         case .korean: return "초기화"
         case .english: return "Reset"
@@ -4474,7 +4086,7 @@ enum Strings {
     // MARK: - 사용법 튜토리얼 · 도움말
 
     /// 설정 > 도움말 · 온보딩 직후 1회 노출되는 사용법 시트
-    static var tutorialTitle: String {
+    public static var tutorialTitle: String {
         switch lang {
         case .korean: return "골드위크 사용법"
         case .english: return "How to Use Goldweek"
@@ -4502,7 +4114,7 @@ enum Strings {
         }
     }
 
-    static var tutorialDone: String {
+    public static var tutorialDone: String {
         switch lang {
         case .korean: return "시작하기"
         case .english: return "Get Started"
@@ -4530,7 +4142,7 @@ enum Strings {
         }
     }
 
-    static var tutorialSkip: String {
+    public static var tutorialSkip: String {
         switch lang {
         case .korean: return "건너뛰기"
         case .english: return "Skip"
@@ -4558,7 +4170,7 @@ enum Strings {
         }
     }
 
-    static var tutorialAddTitle: String {
+    public static var tutorialAddTitle: String {
         switch lang {
         case .korean: return "휴가는 이렇게 등록해요"
         case .english: return "Adding a Leave"
@@ -4586,7 +4198,7 @@ enum Strings {
         }
     }
 
-    static var tutorialAddMessage: String {
+    public static var tutorialAddMessage: String {
         switch lang {
         case .korean: return "홈의 + 버튼이나 캘린더에서 날짜를 눌러 등록하세요. 반차·반반차는 길이만 골라 주면 돼요."
         case .english: return "Tap + on the home card, or pick a date on the calendar. For half days, just choose the length."
@@ -4614,7 +4226,7 @@ enum Strings {
         }
     }
 
-    static var tutorialPhotoTitle: String {
+    public static var tutorialPhotoTitle: String {
         switch lang {
         case .korean: return "사진 한 장이면 끝"
         case .english: return "One Photo Is Enough"
@@ -4642,7 +4254,7 @@ enum Strings {
         }
     }
 
-    static var tutorialPhotoMessage: String {
+    public static var tutorialPhotoMessage: String {
         switch lang {
         case .korean: return "회사 시스템의 휴가 내역을 찍으면 날짜와 종류를 알아서 읽어 등록해요."
         case .english: return "Snap your company's leave history and the dates and types are read for you."
@@ -4670,7 +4282,7 @@ enum Strings {
         }
     }
 
-    static var tutorialRecommendTitle: String {
+    public static var tutorialRecommendTitle: String {
         switch lang {
         case .korean: return "연차 1일로 며칠 쉴까"
         case .english: return "Stretch One Day Off"
@@ -4698,7 +4310,7 @@ enum Strings {
         }
     }
 
-    static var tutorialRecommendMessage: String {
+    public static var tutorialRecommendMessage: String {
         switch lang {
         case .korean: return "캘린더의 노란 표시는 공휴일에 연차를 붙여 만든 연휴예요. 눌러서 그대로 등록하세요."
         case .english: return "Yellow marks on the calendar are breaks built by attaching leave to holidays. Tap to add one."
@@ -4726,7 +4338,7 @@ enum Strings {
         }
     }
 
-    static var tutorialBonusTitle: String {
+    public static var tutorialBonusTitle: String {
         switch lang {
         case .korean: return "대체휴무는 따로 관리"
         case .english: return "Bonus Leave Stays Separate"
@@ -4754,7 +4366,7 @@ enum Strings {
         }
     }
 
-    static var tutorialBonusMessage: String {
+    public static var tutorialBonusMessage: String {
         switch lang {
         case .korean: return "보너스 연차로 등록하면 연차를 깎지 않고 따로 세요. 만료일도 함께 챙겨 줘요."
         case .english: return "Logged as bonus leave, it never eats into your annual days — and expiry dates are tracked."
@@ -4782,7 +4394,7 @@ enum Strings {
         }
     }
 
-    static var tutorialShareTitle: String {
+    public static var tutorialShareTitle: String {
         switch lang {
         case .korean: return "가족과 일정 맞추기"
         case .english: return "Line Up with Family"
@@ -4810,7 +4422,7 @@ enum Strings {
         }
     }
 
-    static var tutorialShareMessage: String {
+    public static var tutorialShareMessage: String {
         switch lang {
         case .korean: return "일정을 공유하면 가족 탭에서 서로의 휴가를 한눈에 볼 수 있어요."
         case .english: return "Share your schedule and see each other's time off in the Family tab."
@@ -4838,7 +4450,7 @@ enum Strings {
         }
     }
 
-    static var tutorialWidgetTitle: String {
+    public static var tutorialWidgetTitle: String {
         switch lang {
         case .korean: return "홈 화면에서 바로 확인"
         case .english: return "Right on Your Home Screen"
@@ -4866,7 +4478,7 @@ enum Strings {
         }
     }
 
-    static var tutorialWidgetMessage: String {
+    public static var tutorialWidgetMessage: String {
         switch lang {
         case .korean: return "위젯을 추가하면 남은 연차와 다음 휴가가 잠금화면에서도 보여요. 기록은 iCloud로 백업돼요."
         case .english: return "Add a widget to see remaining leave and your next break, even on the Lock Screen. Records back up to iCloud."
@@ -4894,7 +4506,7 @@ enum Strings {
         }
     }
 
-    static var helpSection: String {
+    public static var helpSection: String {
         switch lang {
         case .korean: return "도움말"
         case .english: return "Help"
@@ -4922,7 +4534,7 @@ enum Strings {
         }
     }
 
-    static var helpTutorial: String {
+    public static var helpTutorial: String {
         switch lang {
         case .korean: return "사용법 다시 보기"
         case .english: return "How to Use Goldweek"
@@ -4950,7 +4562,7 @@ enum Strings {
         }
     }
 
-    static var helpOnboarding: String {
+    public static var helpOnboarding: String {
         switch lang {
         case .korean: return "처음 안내 다시 보기"
         case .english: return "Replay Intro"
@@ -4978,7 +4590,7 @@ enum Strings {
         }
     }
 
-    static var helpResetTips: String {
+    public static var helpResetTips: String {
         switch lang {
         case .korean: return "기능 팁 다시 보기"
         case .english: return "Show Feature Tips Again"
@@ -5006,7 +4618,7 @@ enum Strings {
         }
     }
 
-    static var helpResetTipsDone: String {
+    public static var helpResetTipsDone: String {
         switch lang {
         case .korean: return "앱을 다시 실행하면 기능 팁이 처음부터 다시 나타나요."
         case .english: return "Feature tips will appear again the next time you open the app."
@@ -5034,7 +4646,7 @@ enum Strings {
         }
     }
 
-    static var tipRecommendTitle: String {
+    public static var tipRecommendTitle: String {
         switch lang {
         case .korean: return "추천 연휴를 눌러 보세요"
         case .english: return "Tap a Suggested Break"
@@ -5062,7 +4674,7 @@ enum Strings {
         }
     }
 
-    static var tipRecommendMessage: String {
+    public static var tipRecommendMessage: String {
         switch lang {
         case .korean: return "노란 표시는 연차를 조금 써서 만든 연휴예요. 눌러 바로 등록할 수 있어요."
         case .english: return "Yellow marks are breaks made with just a day or two of leave. Tap to add one."
@@ -5090,63 +4702,7 @@ enum Strings {
         }
     }
 
-    static var tipSharePlanTitle: String {
-        switch lang {
-        case .korean: return "연차 현황을 이미지로"
-        case .english: return "Share Your Leave Status"
-        case .swedish: return "Dela din semesterstatus"
-        case .norwegian: return "Del feriestatusen din"
-        case .danish: return "Del din feriestatus"
-        case .finnish: return "Jaa lomatilanteesi"
-        case .polish: return "Udostępnij stan urlopu"
-        case .czech: return "Sdílej stav dovolené"
-        case .greek: return "Μοιράσου την κατάσταση της άδειάς σου"
-        case .turkish: return "İzin Durumunu Paylaş"
-        case .russian: return "Поделитесь своим отпуском"
-        case .indonesian: return "Bagikan Status Cutimu"
-        case .thai: return "แชร์สถานะวันลา"
-        case .vietnamese: return "Chia sẻ tình trạng nghỉ phép"
-        case .dutch: return "Deel je verlofstatus"
-        case .japanese: return "有給の状況を画像で"
-        case .chinese: return "把年假状况变成图片"
-        case .german: return "Urlaubsstand teilen"
-        case .french: return "Partager votre situation de congés"
-        case .spanish: return "Comparte tus vacaciones"
-        case .italian: return "Condividi le tue ferie"
-        case .portuguese: return "Compartilhe suas férias"
-        case .chineseTraditional: return "把特休狀況做成圖片"
-        }
-    }
-
-    static var tipSharePlanMessage: String {
-        switch lang {
-        case .korean: return "공유 버튼을 누르면 카드 이미지를 만들어 친구·가족에게 보낼 수 있어요."
-        case .english: return "Tap share to turn your status into a card you can send to family or friends."
-        case .swedish: return "Tryck på dela för att göra din status till ett kort du kan skicka till familj eller vänner."
-        case .norwegian: return "Trykk på del for å gjøre statusen din til et kort du kan sende til familie eller venner."
-        case .danish: return "Tryk på del for at gøre din status til et kort, du kan sende til familie eller venner."
-        case .finnish: return "Napauta jakamista, niin tilanteestasi tulee kortti, jonka voit lähettää perheelle tai ystäville."
-        case .polish: return "Stuknij udostępnij, aby zamienić swój stan w kartę, którą wyślesz rodzinie lub znajomym."
-        case .czech: return "Klepnutím na sdílet změníš stav na kartu, kterou pošleš rodině či přátelům."
-        case .greek: return "Πάτα κοινοποίηση για να μετατρέψεις την κατάστασή σου σε κάρτα που μπορείς να στείλεις σε οικογένεια ή φίλους."
-        case .turkish: return "Durumunu aile veya arkadaşlarına gönderebileceğin bir karta dönüştürmek için paylaş'a dokun."
-        case .russian: return "Нажмите «Поделиться», чтобы превратить обзор в карточку для семьи или друзей."
-        case .indonesian: return "Ketuk bagikan untuk mengubah statusmu jadi kartu yang bisa dikirim ke keluarga atau teman."
-        case .thai: return "แตะแชร์เพื่อเปลี่ยนสถานะของคุณเป็นการ์ดส่งให้ครอบครัวหรือเพื่อน"
-        case .vietnamese: return "Chạm chia sẻ để biến tình trạng của bạn thành thẻ gửi cho gia đình hoặc bạn bè."
-        case .dutch: return "Tik op delen om je status om te zetten in een kaart die je naar familie of vrienden kunt sturen."
-        case .japanese: return "共有ボタンでカード画像を作り、家族や友人に送れます。"
-        case .chinese: return "点击分享，即可生成卡片图片发给家人或朋友。"
-        case .german: return "Tippe auf Teilen, um aus deinem Stand eine Karte für Familie oder Freunde zu erstellen."
-        case .french: return "Touchez Partager pour créer une carte de votre situation à envoyer à votre famille ou vos amis."
-        case .spanish: return "Toca Compartir para crear una tarjeta con tu resumen y enviarla a familia o amigos."
-        case .italian: return "Tocca Condividi per creare una scheda con il tuo riepilogo da inviare a familiari o amici."
-        case .portuguese: return "Toque em Compartilhar para criar um cartão com seu resumo e enviar para família ou amigos."
-        case .chineseTraditional: return "點分享按鈕就能產生卡片圖片，傳給朋友或家人。"
-        }
-    }
-
-    static var tipBonusLeaveTitle: String {
+    public static var tipBonusLeaveTitle: String {
         switch lang {
         case .korean: return "대체휴무·포상휴가는 여기"
         case .english: return "Bonus Leave Goes Here"
@@ -5174,7 +4730,7 @@ enum Strings {
         }
     }
 
-    static var tipBonusLeaveMessage: String {
+    public static var tipBonusLeaveMessage: String {
         switch lang {
         case .korean: return "보너스 연차로 등록하면 연차와 따로 관리되고 만료일도 챙겨 줘요."
         case .english: return "Add it as bonus leave — it's tracked separately from annual days, expiry included."
@@ -5202,7 +4758,7 @@ enum Strings {
         }
     }
 
-    static var tipLeaveHistoryTitle: String {
+    public static var tipLeaveHistoryTitle: String {
         switch lang {
         case .korean: return "지난 휴가 돌아보기"
         case .english: return "Look Back at Your Leave"
@@ -5230,7 +4786,7 @@ enum Strings {
         }
     }
 
-    static var tipLeaveHistoryMessage: String {
+    public static var tipLeaveHistoryMessage: String {
         switch lang {
         case .korean: return "연도별로 얼마나 썼는지, 어떤 휴가를 썼는지 한 번에 볼 수 있어요."
         case .english: return "See how much you used each year, and which kinds of leave they were."
@@ -5258,7 +4814,7 @@ enum Strings {
         }
     }
 
-    static var appInfo: String {
+    public static var appInfo: String {
         switch lang {
         case .korean: return "앱 정보"
         case .english: return "App Info"
@@ -5287,7 +4843,7 @@ enum Strings {
     }
 
     /// 설정 > 지원 섹션 (피드백·리뷰·법적 링크·버전).
-    static var supportSection: String {
+    public static var supportSection: String {
         switch lang {
         case .korean: return "지원"
         case .english: return "Support"
@@ -5315,7 +4871,7 @@ enum Strings {
         }
     }
 
-    static var sendFeedback: String {
+    public static var sendFeedback: String {
         switch lang {
         case .korean: return "피드백 보내기"
         case .english: return "Send Feedback"
@@ -5343,38 +4899,10 @@ enum Strings {
         }
     }
 
-    static var supportPage: String {
-        switch lang {
-        case .korean: return "지원 페이지"
-        case .english: return "Support Page"
-        case .swedish: return "Supportsida"
-        case .norwegian: return "Støtteside"
-        case .danish: return "Supportside"
-        case .finnish: return "Tukisivu"
-        case .polish: return "Strona wsparcia"
-        case .czech: return "Stránka podpory"
-        case .greek: return "Σελίδα υποστήριξης"
-        case .turkish: return "Destek Sayfası"
-        case .russian: return "Страница поддержки"
-        case .indonesian: return "Halaman Dukungan"
-        case .thai: return "หน้าช่วยเหลือ"
-        case .vietnamese: return "Trang hỗ trợ"
-        case .dutch: return "Ondersteuningspagina"
-        case .japanese: return "サポートページ"
-        case .chinese: return "支持页面"
-        case .german: return "Support-Seite"
-        case .french: return "Page d'assistance"
-        case .spanish: return "Página de soporte"
-        case .italian: return "Pagina di assistenza"
-        case .portuguese: return "Página de suporte"
-        case .chineseTraditional: return "支援頁面"
-        }
-    }
-
     /// 마스터 모드에서만 보이는 개발자 행들.
     /// 화면 안쪽은 개발자용이라 번역하지 않지만, **설정 목록에 한국어가 섞여 보이면 안 되므로**
     /// 행 이름은 다른 행들과 같은 언어를 따른다.
-    static var devFeedbackInbox: String {
+    public static var devFeedbackInbox: String {
         switch lang {
         case .korean: return "접수된 피드백 (개발자)"
         case .english: return "Feedback Inbox (Developer)"
@@ -5402,7 +4930,7 @@ enum Strings {
         }
     }
 
-    static var devUsageStats: String {
+    public static var devUsageStats: String {
         switch lang {
         case .korean: return "사용 통계 (개발자)"
         case .english: return "Usage Stats (Developer)"
@@ -5430,7 +4958,7 @@ enum Strings {
         }
     }
 
-    static var devCrashReports: String {
+    public static var devCrashReports: String {
         switch lang {
         case .korean: return "안정성 (개발자)"
         case .english: return "Stability (Developer)"
@@ -5458,7 +4986,7 @@ enum Strings {
         }
     }
 
-    static var version: String {
+    public static var version: String {
         switch lang {
         case .korean: return "버전"
         case .english: return "Version"
@@ -5486,35 +5014,7 @@ enum Strings {
         }
     }
 
-    static var developer: String {
-        switch lang {
-        case .korean: return "개발"
-        case .english: return "Developer"
-        case .swedish: return "Utvecklare"
-        case .norwegian: return "Utvikler"
-        case .danish: return "Udvikler"
-        case .finnish: return "Kehittäjä"
-        case .polish: return "Deweloper"
-        case .czech: return "Vývojář"
-        case .greek: return "Προγραμματιστής"
-        case .turkish: return "Geliştirici"
-        case .russian: return "Разработчик"
-        case .indonesian: return "Developer"
-        case .thai: return "นักพัฒนา"
-        case .vietnamese: return "Nhà phát triển"
-        case .dutch: return "Ontwikkelaar"
-        case .japanese: return "開発"
-        case .chinese: return "开发者"
-        case .german: return "Entwicklung"
-        case .french: return "Développeur"
-        case .spanish: return "Desarrollador"
-        case .italian: return "Sviluppatore"
-        case .portuguese: return "Desenvolvedor"
-        case .chineseTraditional: return "開發者"
-        }
-    }
-
-    static var rateApp: String {
+    public static var rateApp: String {
         switch lang {
         case .korean: return "앱 평가하기"
         case .english: return "Rate This App"
@@ -5542,7 +5042,7 @@ enum Strings {
         }
     }
 
-    static var contactDeveloperSection: String {
+    public static var contactDeveloperSection: String {
         switch lang {
         case .korean: return "개발자에게 문의"
         case .english: return "Contact the Developer"
@@ -5570,7 +5070,7 @@ enum Strings {
         }
     }
 
-    static var contactByEmail: String {
+    public static var contactByEmail: String {
         switch lang {
         case .korean: return "이메일로 문의하기"
         case .english: return "Contact via Email"
@@ -5598,7 +5098,7 @@ enum Strings {
         }
     }
 
-    static var contactByInstagram: String {
+    public static var contactByInstagram: String {
         switch lang {
         case .korean: return "인스타그램 DM (@lee25_ios)"
         case .english: return "Instagram DM (@lee25_ios)"
@@ -5626,7 +5126,7 @@ enum Strings {
         }
     }
 
-    static var contactDeveloperFooter: String {
+    public static var contactDeveloperFooter: String {
         switch lang {
         case .korean: return "버그 제보와 기능 제안을 환영합니다."
         case .english: return "Bug reports and feature suggestions are welcome."
@@ -5654,7 +5154,7 @@ enum Strings {
         }
     }
 
-    static var confirm: String {
+    public static var confirm: String {
         switch lang {
         case .korean: return "확인"
         case .english: return "OK"
@@ -5682,7 +5182,7 @@ enum Strings {
         }
     }
 
-    static var backup: String {
+    public static var backup: String {
         switch lang {
         case .korean: return "백업"
         case .english: return "Backup"
@@ -5710,7 +5210,7 @@ enum Strings {
         }
     }
 
-    static var restoreConfirmTitle: String {
+    public static var restoreConfirmTitle: String {
         switch lang {
         case .korean: return "복원 확인"
         case .english: return "Confirm Restore"
@@ -5738,7 +5238,7 @@ enum Strings {
         }
     }
 
-    static var restore: String {
+    public static var restore: String {
         switch lang {
         case .korean: return "복원"
         case .english: return "Restore"
@@ -5766,7 +5266,7 @@ enum Strings {
         }
     }
 
-    static var restoreConfirmMessage: String {
+    public static var restoreConfirmMessage: String {
         switch lang {
         case .korean: return "iCloud 백업에서 데이터를 복원합니다. 현재 데이터는 모두 삭제됩니다."
         case .english: return "Restore data from iCloud backup. All current data will be deleted."
@@ -5794,7 +5294,7 @@ enum Strings {
         }
     }
 
-    static func lastBackup(_ dateStr: String) -> String {
+    public static func lastBackup(_ dateStr: String) -> String {
         switch lang {
         case .korean: return "마지막 백업: \(dateStr)"
         case .english: return "Last backup: \(dateStr)"
@@ -5823,7 +5323,7 @@ enum Strings {
     }
 
     // MARK: - 선호도 설정
-    static var navTitlePreferences: String {
+    public static var navTitlePreferences: String {
         switch lang {
         case .korean: return "나의 휴가 스타일"
         case .english: return "My Vacation Style"
@@ -5851,7 +5351,7 @@ enum Strings {
         }
     }
 
-    static var preferredDurationSection: String {
+    public static var preferredDurationSection: String {
         switch lang {
         case .korean: return "선호하는 휴가 길이"
         case .english: return "Preferred Duration"
@@ -5879,7 +5379,7 @@ enum Strings {
         }
     }
 
-    static var preferredSeasonSection: String {
+    public static var preferredSeasonSection: String {
         switch lang {
         case .korean: return "선호하는 계절 (복수 선택)"
         case .english: return "Preferred Season (Multiple)"
@@ -5907,7 +5407,7 @@ enum Strings {
         }
     }
 
-    static var vacationStyleSection: String {
+    public static var vacationStyleSection: String {
         switch lang {
         case .korean: return "휴가 스타일"
         case .english: return "Vacation Style"
@@ -5935,7 +5435,7 @@ enum Strings {
         }
     }
 
-    static var useBridgeDays: String {
+    public static var useBridgeDays: String {
         switch lang {
         case .korean: return "징검다리 휴일 활용"
         case .english: return "Use Bridge Days"
@@ -5963,7 +5463,7 @@ enum Strings {
         }
     }
 
-    static var preferConsecutive: String {
+    public static var preferConsecutive: String {
         switch lang {
         case .korean: return "연속 휴가 선호"
         case .english: return "Prefer Consecutive"
@@ -5991,7 +5491,7 @@ enum Strings {
         }
     }
 
-    static var avoidPeakSeason: String {
+    public static var avoidPeakSeason: String {
         switch lang {
         case .korean: return "성수기 회피"
         case .english: return "Avoid Peak Season"
@@ -6019,7 +5519,7 @@ enum Strings {
         }
     }
 
-    static var preferredActivitySection: String {
+    public static var preferredActivitySection: String {
         switch lang {
         case .korean: return "주로 하고 싶은 활동"
         case .english: return "Preferred Activities"
@@ -6047,7 +5547,7 @@ enum Strings {
         }
     }
 
-    static var save: String {
+    public static var save: String {
         switch lang {
         case .korean: return "저장"
         case .english: return "Save"
@@ -6076,7 +5576,7 @@ enum Strings {
     }
 
     // MARK: - 온보딩
-    static var appName: String {
+    public static var appName: String {
         switch lang {
         case .korean: return "골드위크"
         case .english: return "Goldweek"
@@ -6104,7 +5604,7 @@ enum Strings {
         }
     }
 
-    static var onboardingSubtitle: String {
+    public static var onboardingSubtitle: String {
         switch lang {
         case .korean: return "최소 연차로 최대 연휴를\n공휴일을 활용한 황금연휴 플랜"
         case .english: return "Maximum days off with minimum PTO\nAI plans your perfect long weekend"
@@ -6132,7 +5632,7 @@ enum Strings {
         }
     }
 
-    static var onboardingValueTitle: String {
+    public static var onboardingValueTitle: String {
         switch lang {
         case .korean: return "3일 연차로\n9일 연휴"
         case .english: return "3 PTO days\n9 days off"
@@ -6160,7 +5660,7 @@ enum Strings {
         }
     }
 
-    static var onboardingValueDesc: String {
+    public static var onboardingValueDesc: String {
         switch lang {
         case .korean: return "공휴일과 주말 사이 징검다리를 자동으로 찾아드려요"
         case .english: return "We automatically find the bridge days between holidays and weekends"
@@ -6188,7 +5688,7 @@ enum Strings {
         }
     }
 
-    static var onboardingValueLegendLeave: String {
+    public static var onboardingValueLegendLeave: String {
         switch lang {
         case .korean: return "연차"
         case .english: return "PTO"
@@ -6216,7 +5716,7 @@ enum Strings {
         }
     }
 
-    static var onboardingValueLegendHoliday: String {
+    public static var onboardingValueLegendHoliday: String {
         switch lang {
         case .korean: return "공휴일"
         case .english: return "Holiday"
@@ -6244,7 +5744,7 @@ enum Strings {
         }
     }
 
-    static var onboardingValueLegendWeekend: String {
+    public static var onboardingValueLegendWeekend: String {
         switch lang {
         case .korean: return "주말"
         case .english: return "Weekend"
@@ -6272,7 +5772,7 @@ enum Strings {
         }
     }
 
-    static var onboardingNameOptional: String {
+    public static var onboardingNameOptional: String {
         switch lang {
         case .korean: return "선택"
         case .english: return "Optional"
@@ -6300,7 +5800,7 @@ enum Strings {
         }
     }
 
-    static var onboardingHeroBadge: String {
+    public static var onboardingHeroBadge: String {
         switch lang {
         case .korean: return "황금연휴 플래너"
         case .english: return "Long weekend planner"
@@ -6328,7 +5828,7 @@ enum Strings {
         }
     }
 
-    static var getStarted: String {
+    public static var getStarted: String {
         switch lang {
         case .korean: return "시작하기"
         case .english: return "Get Started"
@@ -6356,7 +5856,7 @@ enum Strings {
         }
     }
 
-    static var next: String {
+    public static var next: String {
         switch lang {
         case .korean: return "다음"
         case .english: return "Next"
@@ -6384,7 +5884,7 @@ enum Strings {
         }
     }
 
-    static var mainFeatures: String {
+    public static var mainFeatures: String {
         switch lang {
         case .korean: return "주요 기능"
         case .english: return "Key Features"
@@ -6412,7 +5912,7 @@ enum Strings {
         }
     }
 
-    static var featureLeaveManagement: String {
+    public static var featureLeaveManagement: String {
         switch lang {
         case .korean: return "연차 관리"
         case .english: return "Leave Management"
@@ -6440,7 +5940,7 @@ enum Strings {
         }
     }
 
-    static var featureLeaveManagementDesc: String {
+    public static var featureLeaveManagementDesc: String {
         switch lang {
         case .korean: return "연차, 반차, 대체휴무 등\n다양한 휴가를 기록하세요"
         case .english: return "Track annual, half-day, and\ncompensatory leave"
@@ -6468,7 +5968,7 @@ enum Strings {
         }
     }
 
-    static var featureAIRecommend: String {
+    public static var featureAIRecommend: String {
         switch lang {
         case .korean: return "AI 추천"
         case .english: return "AI Recommend"
@@ -6496,7 +5996,7 @@ enum Strings {
         }
     }
 
-    static var featureAIRecommendDesc: String {
+    public static var featureAIRecommendDesc: String {
         switch lang {
         case .korean: return "공휴일과 주말을 활용한\n최적의 휴가 조합을 추천"
         case .english: return "Optimal leave combos using\nholidays and weekends"
@@ -6524,7 +6024,7 @@ enum Strings {
         }
     }
 
-    static var featureBonusLeave: String {
+    public static var featureBonusLeave: String {
         switch lang {
         case .korean: return "보너스 연차"
         case .english: return "Bonus Leave"
@@ -6552,7 +6052,7 @@ enum Strings {
         }
     }
 
-    static var featureBonusLeaveDesc: String {
+    public static var featureBonusLeaveDesc: String {
         switch lang {
         case .korean: return "대체휴무, 포상휴가 등\n추가 연차도 관리"
         case .english: return "Manage comp time, rewards\nand extra leave"
@@ -6580,7 +6080,7 @@ enum Strings {
         }
     }
 
-    static var featureWidget: String {
+    public static var featureWidget: String {
         switch lang {
         case .korean: return "위젯"
         case .english: return "Widget"
@@ -6608,7 +6108,7 @@ enum Strings {
         }
     }
 
-    static var featureWidgetDesc: String {
+    public static var featureWidgetDesc: String {
         switch lang {
         case .korean: return "홈 화면에서 바로\n남은 연차 확인"
         case .english: return "Check remaining leave\nright from home screen"
@@ -6636,63 +6136,7 @@ enum Strings {
         }
     }
 
-    static var selectCountry: String {
-        switch lang {
-        case .korean: return "국가를 선택하세요"
-        case .english: return "Select your country"
-        case .swedish: return "Välj ditt land"
-        case .norwegian: return "Velg land"
-        case .danish: return "Vælg dit land"
-        case .finnish: return "Valitse maasi"
-        case .polish: return "Wybierz swój kraj"
-        case .czech: return "Vyber svou zemi"
-        case .greek: return "Επίλεξε τη χώρα σου"
-        case .turkish: return "Ülkeni seç"
-        case .russian: return "Выберите страну"
-        case .indonesian: return "Pilih negaramu"
-        case .thai: return "เลือกประเทศของคุณ"
-        case .vietnamese: return "Chọn quốc gia của bạn"
-        case .dutch: return "Kies je land"
-        case .japanese: return "国を選んでください"
-        case .chinese: return "选择您的国家"
-        case .german: return "Wähle dein Land"
-        case .french: return "Choisissez votre pays"
-        case .spanish: return "Elige tu país"
-        case .italian: return "Scegli il tuo paese"
-        case .portuguese: return "Escolha seu país"
-        case .chineseTraditional: return "請選擇國家"
-        }
-    }
-
-    static var selectCountryDesc: String {
-        switch lang {
-        case .korean: return "공휴일 데이터가 국가에 맞게 설정됩니다"
-        case .english: return "Holiday data will be set for your country"
-        case .swedish: return "Helgdagar anpassas efter ditt land"
-        case .norwegian: return "Helligdagene settes opp for landet ditt"
-        case .danish: return "Helligdagene tilpasses dit land"
-        case .finnish: return "Pyhäpäivätiedot asetetaan maasi mukaan"
-        case .polish: return "Dane o świętach zostaną ustawione dla Twojego kraju"
-        case .czech: return "Svátky se nastaví podle tvé země"
-        case .greek: return "Τα δεδομένα αργιών θα οριστούν για τη χώρα σου"
-        case .turkish: return "Resmî tatil verileri ülkene göre ayarlanacak"
-        case .russian: return "Праздники будут настроены для вашей страны"
-        case .indonesian: return "Data hari libur akan disesuaikan dengan negaramu"
-        case .thai: return "ระบบจะตั้งค่าวันหยุดตามประเทศของคุณ"
-        case .vietnamese: return "Ngày lễ sẽ được thiết lập theo quốc gia của bạn"
-        case .dutch: return "De feestdagen worden ingesteld voor jouw land"
-        case .japanese: return "祝日データが国に合わせて設定されます"
-        case .chinese: return "节假日数据将根据您的国家设置"
-        case .german: return "Die Feiertage werden an dein Land angepasst"
-        case .french: return "Les jours fériés seront adaptés à votre pays"
-        case .spanish: return "Los festivos se ajustarán a tu país"
-        case .italian: return "Le festività saranno adattate al tuo paese"
-        case .portuguese: return "Os feriados serão ajustados ao seu país"
-        case .chineseTraditional: return "國定假日資料將依國家設定"
-        }
-    }
-
-    static var enterName: String {
+    public static var enterName: String {
         switch lang {
         case .korean: return "이름을 알려주세요"
         case .english: return "What's your name?"
@@ -6720,35 +6164,7 @@ enum Strings {
         }
     }
 
-    static var enterNameDesc: String {
-        switch lang {
-        case .korean: return "앱에서 사용할 이름을 입력해주세요"
-        case .english: return "Enter the name to use in the app"
-        case .swedish: return "Ange namnet som ska användas i appen"
-        case .norwegian: return "Skriv inn navnet som skal brukes i appen"
-        case .danish: return "Skriv det navn, der skal bruges i appen"
-        case .finnish: return "Anna sovelluksessa käytettävä nimi"
-        case .polish: return "Wpisz imię używane w aplikacji"
-        case .czech: return "Zadej jméno, které se použije v aplikaci"
-        case .greek: return "Γράψε το όνομα που θα χρησιμοποιείται στην εφαρμογή"
-        case .turkish: return "Uygulamada kullanılacak adı gir"
-        case .russian: return "Введите имя для приложения"
-        case .indonesian: return "Masukkan nama yang mau dipakai di aplikasi"
-        case .thai: return "ใส่ชื่อที่จะใช้ในแอป"
-        case .vietnamese: return "Nhập tên bạn muốn dùng trong ứng dụng"
-        case .dutch: return "Vul de naam in die je in de app wilt gebruiken"
-        case .japanese: return "アプリで使う名前を入力してください"
-        case .chinese: return "请输入在应用中使用的姓名"
-        case .german: return "Gib den Namen ein, der in der App verwendet wird"
-        case .french: return "Saisissez le nom à utiliser dans l'app"
-        case .spanish: return "Escribe el nombre que usarás en la app"
-        case .italian: return "Inserisci il nome da usare nell’app"
-        case .portuguese: return "Digite o nome que será usado no app"
-        case .chineseTraditional: return "輸入要在 App 中使用的名稱"
-        }
-    }
-
-    static var leaveSetup: String {
+    public static var leaveSetup: String {
         switch lang {
         case .korean: return "연차 정보 설정"
         case .english: return "Leave Setup"
@@ -6776,7 +6192,7 @@ enum Strings {
         }
     }
 
-    static var leaveSetupDesc: String {
+    public static var leaveSetupDesc: String {
         switch lang {
         case .korean: return "나중에 설정에서 변경할 수 있어요"
         case .english: return "You can change this later in settings"
@@ -6804,7 +6220,7 @@ enum Strings {
         }
     }
 
-    static var totalAnnualLeave: String {
+    public static var totalAnnualLeave: String {
         switch lang {
         case .korean: return "올해 총 연차"
         case .english: return "Total Annual Leave"
@@ -6833,7 +6249,7 @@ enum Strings {
     }
 
     /// 연차 기준일의 '일' — 입사일 기준이라 월 중간(3월 21일)에 새로 생기는 회사
-    static var yearStartDay: String {
+    public static var yearStartDay: String {
         switch lang {
         case .korean: return "연차 기준일"
         case .english: return "Reset Day"
@@ -6862,7 +6278,7 @@ enum Strings {
     }
 
     /// 그 달의 몇째 날 — 기준일 고르기용
-    static func dayOfMonth(_ day: Int) -> String {
+    public static func dayOfMonth(_ day: Int) -> String {
         switch lang {
         case .korean: return "\(day)일"
         case .japanese, .chinese, .chineseTraditional: return "\(day)日"
@@ -6876,7 +6292,7 @@ enum Strings {
         }
     }
 
-    static var yearStartMonthLabel: String {
+    public static var yearStartMonthLabel: String {
         switch lang {
         case .korean: return "연차 기준월"
         case .english: return "Year Start Month"
@@ -6904,7 +6320,7 @@ enum Strings {
         }
     }
 
-    static var yearStartMonthDesc: String {
+    public static var yearStartMonthDesc: String {
         switch lang {
         case .korean: return "연차가 갱신되는 시작 월"
         case .english: return "Month when annual leave renews"
@@ -6932,7 +6348,7 @@ enum Strings {
         }
     }
 
-    static var defaultUser: String {
+    public static var defaultUser: String {
         switch lang {
         case .korean: return "사용자"
         case .english: return "User"
@@ -6963,12 +6379,12 @@ enum Strings {
     /// 모든 언어의 기본 이름 — "이 이름을 아직 안 바꿨다"를 알아보는 데 쓴다.
     /// 기본 이름은 프로필을 만든 시점의 언어로 저장돼 굳기 때문에, 나중에 언어를 바꾸면
     /// 영어 화면에 "사용자"만 혼자 한국어로 남는다.
-    static let defaultUserNames: Set<String> = ["사용자", "User", "ユーザー", "用户"]
+    public static let defaultUserNames: Set<String> = ["사용자", "User", "ユーザー", "用户"]
 
     // MARK: - 열거형 표시 이름
 
     // PreferredDuration
-    static func durationName(_ duration: PreferredDuration) -> String {
+    public static func durationName(_ duration: PreferredDuration) -> String {
         switch lang {
         case .korean:
             switch duration {
@@ -7135,7 +6551,7 @@ enum Strings {
     }
 
     // Season
-    static func seasonName(_ season: Season) -> String {
+    public static func seasonName(_ season: Season) -> String {
         switch lang {
         case .korean:
             switch season {
@@ -7302,7 +6718,7 @@ enum Strings {
     }
 
     // ActivityType
-    static func activityName(_ activity: ActivityType) -> String {
+    public static func activityName(_ activity: ActivityType) -> String {
         switch lang {
         case .korean:
             switch activity {
@@ -7492,7 +6908,7 @@ enum Strings {
     }
 
     // LeaveType
-    static func leaveTypeName(_ type: LeaveType) -> String {
+    public static func leaveTypeName(_ type: LeaveType) -> String {
         switch lang {
         case .korean:
             switch type {
@@ -7751,7 +7167,7 @@ enum Strings {
     }
 
     // LeaveStatus
-    static func leaveStatusName(_ status: LeaveStatus) -> String {
+    public static func leaveStatusName(_ status: LeaveStatus) -> String {
         switch lang {
         case .korean:
             switch status {
@@ -7895,7 +7311,7 @@ enum Strings {
     }
 
     // BonusLeaveType
-    static func bonusLeaveTypeName(_ type: BonusLeaveType) -> String {
+    public static func bonusLeaveTypeName(_ type: BonusLeaveType) -> String {
         switch lang {
         case .korean: return type.rawValue
         case .english:
@@ -8188,7 +7604,7 @@ enum Strings {
     }
 
     // MARK: - 추천 엔진 문자열
-    static var goldenWeek: String {
+    public static var goldenWeek: String {
         switch lang {
         case .korean: return "황금연휴"
         case .english: return "Golden Week"
@@ -8216,7 +7632,7 @@ enum Strings {
         }
     }
 
-    static var noLeaveRequired: String {
+    public static var noLeaveRequired: String {
         switch lang {
         case .korean: return "연차없음"
         case .english: return "No Leave"
@@ -8244,7 +7660,7 @@ enum Strings {
         }
     }
 
-    static var bridgeDay: String {
+    public static var bridgeDay: String {
         switch lang {
         case .korean: return "징검다리"
         case .english: return "Bridge Day"
@@ -8272,7 +7688,7 @@ enum Strings {
         }
     }
 
-    static var topEfficiency: String {
+    public static var topEfficiency: String {
         switch lang {
         case .korean: return "효율최고"
         case .english: return "Best Value"
@@ -8300,7 +7716,7 @@ enum Strings {
         }
     }
 
-    static var consecutiveLeave: String {
+    public static var consecutiveLeave: String {
         switch lang {
         case .korean: return "연속휴가"
         case .english: return "Extended Leave"
@@ -8328,7 +7744,7 @@ enum Strings {
         }
     }
 
-    static var efficient: String {
+    public static var efficient: String {
         switch lang {
         case .korean: return "효율적"
         case .english: return "Efficient"
@@ -8356,7 +7772,7 @@ enum Strings {
         }
     }
 
-    static var weekendHoliday: String {
+    public static var weekendHoliday: String {
         switch lang {
         case .korean: return "주말 연휴"
         case .english: return "Weekend Holiday"
@@ -8384,7 +7800,7 @@ enum Strings {
         }
     }
 
-    static var familyTrip: String {
+    public static var familyTrip: String {
         switch lang {
         case .korean: return "가족여행"
         case .english: return "Family Trip"
@@ -8412,7 +7828,7 @@ enum Strings {
         }
     }
 
-    static var family: String {
+    public static var family: String {
         switch lang {
         case .korean: return "가족"
         case .english: return "Family"
@@ -8440,7 +7856,7 @@ enum Strings {
         }
     }
 
-    static var majorHoliday: String {
+    public static var majorHoliday: String {
         switch lang {
         case .korean: return "명절연휴"
         case .english: return "Major Holiday"
@@ -8468,7 +7884,7 @@ enum Strings {
         }
     }
 
-    static func seasonTag(for month: Int) -> String {
+    public static func seasonTag(for month: Int) -> String {
         switch month {
         case 3, 4, 5: return seasonName(.spring)
         case 6, 7, 8: return seasonName(.summer)
@@ -8477,7 +7893,7 @@ enum Strings {
         }
     }
 
-    static func seasonalAdvice(month: Int) -> String {
+    public static func seasonalAdvice(month: Int) -> String {
         switch lang {
         case .korean:
             switch month {
@@ -8666,7 +8082,7 @@ enum Strings {
         }
     }
 
-    static func daysHoliday(_ days: Int) -> String {
+    public static func daysHoliday(_ days: Int) -> String {
         switch lang {
         case .korean: return "\(days)일 연휴"
         case .english: return "\(days)-day break"
@@ -8694,7 +8110,7 @@ enum Strings {
         }
     }
 
-    static func goldenWeekTitle(holidayName: String) -> String {
+    public static func goldenWeekTitle(holidayName: String) -> String {
         switch lang {
         case .korean: return "\(holidayName) 황금연휴"
         case .english: return "\(holidayName) Golden Week"
@@ -8722,7 +8138,7 @@ enum Strings {
         }
     }
 
-    static func holidayBreak(name: String) -> String {
+    public static func holidayBreak(name: String) -> String {
         switch lang {
         case .korean: return "\(name) 연휴"
         case .english: return "\(name) Break"
@@ -8750,7 +8166,7 @@ enum Strings {
         }
     }
 
-    static func noLeaveDaysOff(weekdayStart: String, weekdayEnd: String, holidayDesc: String, totalDays: Int) -> String {
+    public static func noLeaveDaysOff(weekdayStart: String, weekdayEnd: String, holidayDesc: String, totalDays: Int) -> String {
         switch lang {
         case .korean:
             return "\(weekdayStart)~\(weekdayEnd) \(holidayDesc)로 연차 없이 \(totalDays)일 연휴!"
@@ -8795,7 +8211,7 @@ enum Strings {
         }
     }
 
-    static func bridgeDayTitle(holidayName: String) -> String {
+    public static func bridgeDayTitle(holidayName: String) -> String {
         switch lang {
         case .korean: return "\(holidayName) 징검다리 연휴"
         case .english: return "\(holidayName) Bridge Holiday"
@@ -8823,7 +8239,7 @@ enum Strings {
         }
     }
 
-    static func bridgeDayDescMonday(holidayName: String) -> String {
+    public static func bridgeDayDescMonday(holidayName: String) -> String {
         switch lang {
         case .korean: return "월요일 연차 1일로 4일 연휴! \(holidayName) 앞 월요일을 활용하세요."
         case .english: return "1 day leave on Monday for 4-day weekend! Use Monday before \(holidayName)."
@@ -8851,7 +8267,7 @@ enum Strings {
         }
     }
 
-    static func bridgeDayDescFriday(holidayName: String) -> String {
+    public static func bridgeDayDescFriday(holidayName: String) -> String {
         switch lang {
         case .korean: return "금요일 연차 1일로 4일 연휴! \(holidayName) 다음 금요일을 활용하세요."
         case .english: return "1 day leave on Friday for 4-day weekend! Use Friday after \(holidayName)."
@@ -8879,7 +8295,7 @@ enum Strings {
         }
     }
 
-    static func connectedLeaveTitle(holidayName: String) -> String {
+    public static func connectedLeaveTitle(holidayName: String) -> String {
         switch lang {
         case .korean: return "\(holidayName) 연계 휴가"
         case .english: return "\(holidayName) Extended Leave"
@@ -8907,7 +8323,7 @@ enum Strings {
         }
     }
 
-    static func connectedLeaveDesc(holidayName: String, leaveDays: Int, totalDays: Int) -> String {
+    public static func connectedLeaveDesc(holidayName: String, leaveDays: Int, totalDays: Int) -> String {
         switch lang {
         case .korean: return "\(holidayName.hasSuffix("연휴") ? holidayName : "\(holidayName) 연휴")를 활용하여 연차 \(leaveDays)일로 \(totalDays)일 연휴를 만들 수 있어요."
         case .english: return "Use \(leaveDays) leave days around \(holidayName) for \(totalDays) days off."
@@ -8935,7 +8351,7 @@ enum Strings {
         }
     }
 
-    static func weeklyLeaveTitle(holidayName: String) -> String {
+    public static func weeklyLeaveTitle(holidayName: String) -> String {
         switch lang {
         case .korean: return "\(holidayName) 연계 주간휴가"
         case .english: return "\(holidayName) Week Off"
@@ -8963,7 +8379,7 @@ enum Strings {
         }
     }
 
-    static func weeklyLeaveDesc(holidayName: String, leaveDays: Int) -> String {
+    public static func weeklyLeaveDesc(holidayName: String, leaveDays: Int) -> String {
         switch lang {
         case .korean: return "\(holidayName)이 있는 주를 활용! 연차 \(leaveDays)일로 9일 연휴."
         case .english: return "Take the week with \(holidayName)! \(leaveDays) leave days for 9 days off."
@@ -8991,7 +8407,7 @@ enum Strings {
         }
     }
 
-    static func mayGoldenWeekDesc(leaveDays: Int, totalDays: Int) -> String {
+    public static func mayGoldenWeekDesc(leaveDays: Int, totalDays: Int) -> String {
         switch lang {
         case .korean: return "어린이날과 근로자의 날을 활용한 황금연휴! 연차 \(leaveDays)일로 \(totalDays)일 연휴를 만들 수 있어요."
         case .english: return "Golden week around Children's Day! \(leaveDays) leave days for \(totalDays) days off."
@@ -9019,7 +8435,7 @@ enum Strings {
         }
     }
 
-    static var mayGoldenWeekTitle: String {
+    public static var mayGoldenWeekTitle: String {
         switch lang {
         case .korean: return "5월 황금연휴"
         case .english: return "May Golden Week"
@@ -9048,7 +8464,7 @@ enum Strings {
     }
 
     // MARK: - 날짜 로케일
-    static var localeIdentifier: String {
+    public static var localeIdentifier: String {
         switch lang {
         case .korean: return "ko_KR"
         case .english: return "en_US"
@@ -9076,7 +8492,7 @@ enum Strings {
         }
     }
 
-    static func dateFormat(style: String) -> String {
+    public static func dateFormat(style: String) -> String {
         switch style {
         case "monthDay":
             switch lang {
@@ -9162,7 +8578,7 @@ enum Strings {
     }
 
     // Legend labels for recommendation calendar preview
-    static var goldenWeekLegend: String {
+    public static var goldenWeekLegend: String {
         switch lang {
         case .korean: return "황금연휴"
         case .english: return "Golden Week"
@@ -9190,7 +8606,7 @@ enum Strings {
         }
     }
 
-    static var bridgeDayLegend: String {
+    public static var bridgeDayLegend: String {
         switch lang {
         case .korean: return "징검다리"
         case .english: return "Bridge"
@@ -9218,7 +8634,7 @@ enum Strings {
         }
     }
 
-    static var consecutiveLeaveLegend: String {
+    public static var consecutiveLeaveLegend: String {
         switch lang {
         case .korean: return "연속휴가"
         case .english: return "Extended"
@@ -9246,37 +8662,8 @@ enum Strings {
         }
     }
 
-    // Extra items count
-    static func moreItems(_ count: Int) -> String {
-        switch lang {
-        case .korean: return "외 \(count)건"
-        case .english: return "+\(count) more"
-        case .swedish: return "+\(count) till"
-        case .norwegian: return "+\(count) til"
-        case .danish: return "+\(count) mere"
-        case .finnish: return "+\(count) lisää"
-        case .polish: return "+\(count) więcej"
-        case .czech: return "+\(count) dalších"
-        case .greek: return "+\(count) ακόμη"
-        case .turkish: return "+\(count) daha"
-        case .russian: return "ещё \(count)"
-        case .indonesian: return "+\(count) lagi"
-        case .thai: return "+อีก \(count)"
-        case .vietnamese: return "+\(count) nữa"
-        case .dutch: return "+\(count) meer"
-        case .japanese: return "他\(count)件"
-        case .chinese: return "另外\(count)项"
-        case .german: return "+\(count) weitere"
-        case .french: return "+\(count) autres"
-        case .spanish: return "+\(count) más"
-        case .italian: return "+\(count) altri"
-        case .portuguese: return "+\(count) mais"
-        case .chineseTraditional: return "還有\(count)筆"
-        }
-    }
-
     // Items count
-    static func itemCount(_ count: Int) -> String {
+    public static func itemCount(_ count: Int) -> String {
         switch lang {
         case .korean: return "\(count)건"
         case .english: return "\(count)"
@@ -9304,7 +8691,7 @@ enum Strings {
         }
     }
 
-    static func itemCountUnit(_ count: Int) -> String {
+    public static func itemCountUnit(_ count: Int) -> String {
         switch lang {
         case .korean: return "\(count)개"
         case .english: return "\(count)"
@@ -9333,11 +8720,11 @@ enum Strings {
     }
 
     // Accessibility
-    static func accessibilityDayLabel(day: Int, isToday: Bool, isHoliday: Bool, isLeave: Bool, isSelected: Bool) -> String {
+    public static func accessibilityDayLabel(day: Int, isToday: Bool, isHoliday: Bool, isLeave: Bool, leaveCount: Int = 0, isSelected: Bool) -> String {
         var parts: [String] = ["\(day)\(dayUnitSuffix)"]
         if isToday { parts.append(today) }
         if isHoliday { parts.append(holiday) }
-        if isLeave { parts.append(annualLeave) }
+        if leaveCount > 1 { parts.append(leaveEntryCount(leaveCount)) } else if isLeave { parts.append(annualLeave) }
         if isSelected {
             switch lang {
             case .korean: parts.append("선택됨")
@@ -9368,7 +8755,36 @@ enum Strings {
         return parts.joined(separator: ", ")
     }
 
-    static var legendAccessibility: String {
+    /// 같은 날 휴가가 여럿일 때 VoiceOver 가 읽는 말 ("휴가 2개")
+    public static func leaveEntryCount(_ n: Int) -> String {
+        switch lang {
+        case .korean: return "휴가 \(n)개"
+        case .english: return "\(n) time-off entries"
+        case .swedish: return "\(n) ledigheter"
+        case .norwegian: return "\(n) fraværsregistreringer"
+        case .danish: return "\(n) fraværsregistreringer"
+        case .finnish: return "\(n) poissaoloa"
+        case .polish: return "Nieobecności: \(n)"
+        case .czech: return "Volna: \(n)"
+        case .greek: return "Άδειες: \(n)"
+        case .turkish: return "\(n) izin kaydı"
+        case .russian: return "Отсутствий: \(n)"
+        case .indonesian: return "\(n) cuti"
+        case .thai: return "การลา \(n) รายการ"
+        case .vietnamese: return "\(n) lượt nghỉ"
+        case .dutch: return "\(n) keer verlof"
+        case .japanese: return "休暇\(n)件"
+        case .chinese: return "\(n)项休假"
+        case .german: return "\(n) Abwesenheiten"
+        case .french: return "\(n) absences"
+        case .spanish: return "\(n) ausencias"
+        case .italian: return "\(n) assenze"
+        case .portuguese: return "\(n) ausências"
+        case .chineseTraditional: return "\(n)項休假"
+        }
+    }
+
+    public static var legendAccessibility: String {
         switch lang {
         case .korean: return "범례: 빨간색 공휴일, 초록색 연차, 파란색 주말"
         case .english: return "Legend: Red for holidays, Green for leave, Blue for weekends"
@@ -9398,7 +8814,7 @@ enum Strings {
 
     // DayType labels (for recommendation date preview)
     // MARK: - 연차 관리 (AddLeaveView)
-    static var navTitleLeaveManagement: String {
+    public static var navTitleLeaveManagement: String {
         switch lang {
         case .korean: return "연차 관리"
         case .english: return "Leave Management"
@@ -9426,7 +8842,7 @@ enum Strings {
         }
     }
 
-    static var basicLeave: String {
+    public static var basicLeave: String {
         switch lang {
         case .korean: return "기본 연차"
         case .english: return "Base Leave"
@@ -9454,7 +8870,7 @@ enum Strings {
         }
     }
 
-    static var bonus: String {
+    public static var bonus: String {
         switch lang {
         case .korean: return "보너스"
         case .english: return "Bonus"
@@ -9482,7 +8898,7 @@ enum Strings {
         }
     }
 
-    static var totalAvailable: String {
+    public static var totalAvailable: String {
         switch lang {
         case .korean: return "총 사용 가능"
         case .english: return "Total Available"
@@ -9510,7 +8926,7 @@ enum Strings {
         }
     }
 
-    static var managementType: String {
+    public static var managementType: String {
         switch lang {
         case .korean: return "관리 유형"
         case .english: return "Type"
@@ -9538,7 +8954,7 @@ enum Strings {
         }
     }
 
-    static var registerLeave: String {
+    public static var registerLeave: String {
         switch lang {
         case .korean: return "휴가 등록"
         case .english: return "Register Leave"
@@ -9566,7 +8982,7 @@ enum Strings {
         }
     }
 
-    static var addLeave: String {
+    public static var addLeave: String {
         switch lang {
         case .korean: return "연차 추가"
         case .english: return "Add Leave"
@@ -9594,7 +9010,7 @@ enum Strings {
         }
     }
 
-    static var leaveTypeSection: String {
+    public static var leaveTypeSection: String {
         switch lang {
         case .korean: return "휴가 유형"
         case .english: return "Leave Type"
@@ -9622,7 +9038,7 @@ enum Strings {
         }
     }
 
-    static func noDeductionInfo(_ typeName: String) -> String {
+    public static func noDeductionInfo(_ typeName: String) -> String {
         switch lang {
         case .korean: return "\(typeName)은(는) 연차에서 차감되지 않습니다."
         case .english: return "\(typeName) does not deduct from annual leave."
@@ -9650,7 +9066,7 @@ enum Strings {
         }
     }
 
-    static var dateSelection: String {
+    public static var dateSelection: String {
         switch lang {
         case .korean: return "날짜 선택"
         case .english: return "Select Dates"
@@ -9678,7 +9094,7 @@ enum Strings {
         }
     }
 
-    static var startDate: String {
+    public static var startDate: String {
         switch lang {
         case .korean: return "시작일"
         case .english: return "Start Date"
@@ -9706,7 +9122,7 @@ enum Strings {
         }
     }
 
-    static var endDate: String {
+    public static var endDate: String {
         switch lang {
         case .korean: return "종료일"
         case .english: return "End Date"
@@ -9734,7 +9150,7 @@ enum Strings {
         }
     }
 
-    static var daysUsed: String {
+    public static var daysUsed: String {
         switch lang {
         case .korean: return "사용일수"
         case .english: return "Days Used"
@@ -9762,7 +9178,7 @@ enum Strings {
         }
     }
 
-    static var memoOptional: String {
+    public static var memoOptional: String {
         switch lang {
         case .korean: return "메모 (선택)"
         case .english: return "Note (Optional)"
@@ -9790,7 +9206,7 @@ enum Strings {
         }
     }
 
-    static var memoPlaceholder: String {
+    public static var memoPlaceholder: String {
         switch lang {
         case .korean: return "휴가 목적을 입력하세요"
         case .english: return "Enter leave purpose"
@@ -9818,37 +9234,9 @@ enum Strings {
         }
     }
 
-    static var registerLeaveButton: String {
-        switch lang {
-        case .korean: return "휴가 등록하기"
-        case .english: return "Register Leave"
-        case .swedish: return "Registrera ledighet"
-        case .norwegian: return "Registrer ferie"
-        case .danish: return "Registrer ferie"
-        case .finnish: return "Kirjaa loma"
-        case .polish: return "Dodaj urlop"
-        case .czech: return "Zapsat dovolenou"
-        case .greek: return "Καταχώριση άδειας"
-        case .turkish: return "İzin Kaydet"
-        case .russian: return "Добавить отпуск"
-        case .indonesian: return "Catat cuti"
-        case .thai: return "บันทึกวันลา"
-        case .vietnamese: return "Ghi ngày nghỉ"
-        case .dutch: return "Verlof registreren"
-        case .japanese: return "休暇を登録"
-        case .chinese: return "登记休假"
-        case .german: return "Urlaub eintragen"
-        case .french: return "Enregistrer le congé"
-        case .spanish: return "Registrar ausencia"
-        case .italian: return "Registra assenza"
-        case .portuguese: return "Registrar ausência"
-        case .chineseTraditional: return "登記休假"
-        }
-    }
-
     /// 선택한 휴가 유형을 포함한 동적 등록 버튼 라벨
     /// 예) leaveType=출장 → "출장 등록하기"
-    static func registerLeaveButtonWith(typeName: String) -> String {
+    public static func registerLeaveButtonWith(typeName: String) -> String {
         switch lang {
         case .korean: return "\(typeName) 등록하기"
         case .english: return "Register \(typeName)"
@@ -9876,7 +9264,7 @@ enum Strings {
         }
     }
 
-    static var recentRecords: String {
+    public static var recentRecords: String {
         switch lang {
         case .korean: return "최근 등록 내역"
         case .english: return "Recent Records"
@@ -9904,7 +9292,7 @@ enum Strings {
         }
     }
 
-    static var alert: String {
+    public static var alert: String {
         switch lang {
         case .korean: return "알림"
         case .english: return "Alert"
@@ -9932,7 +9320,7 @@ enum Strings {
         }
     }
 
-    static var insufficientLeave: String {
+    public static var insufficientLeave: String {
         switch lang {
         case .korean: return "연차가 부족합니다."
         case .english: return "Insufficient leave days."
@@ -9960,7 +9348,7 @@ enum Strings {
         }
     }
 
-    static func leaveRegistered(_ typeName: String) -> String {
+    public static func leaveRegistered(_ typeName: String) -> String {
         switch lang {
         case .korean: return "\(typeName)이(가) 등록되었습니다!"
         case .english: return "\(typeName) has been registered!"
@@ -9988,7 +9376,7 @@ enum Strings {
         }
     }
 
-    static var saveFailed: String {
+    public static var saveFailed: String {
         switch lang {
         case .korean: return "저장에 실패했습니다. 다시 시도해주세요."
         case .english: return "Save failed. Please try again."
@@ -10017,7 +9405,7 @@ enum Strings {
     }
 
     // MARK: - 백업 / 복원 / 데이터 알림
-    static var backupSuccessMessage: String {
+    public static var backupSuccessMessage: String {
         switch lang {
         case .korean: return "iCloud에 백업되었습니다."
         case .english: return "Backed up to iCloud."
@@ -10045,7 +9433,7 @@ enum Strings {
         }
     }
 
-    static var restoreSuccessMessage: String {
+    public static var restoreSuccessMessage: String {
         switch lang {
         case .korean: return "복원이 완료되었습니다."
         case .english: return "Restore completed."
@@ -10073,7 +9461,7 @@ enum Strings {
         }
     }
 
-    static func saveFailedWithReason(_ reason: String) -> String {
+    public static func saveFailedWithReason(_ reason: String) -> String {
         switch lang {
         case .korean: return "저장에 실패했습니다: \(reason)"
         case .english: return "Save failed: \(reason)"
@@ -10101,7 +9489,7 @@ enum Strings {
         }
     }
 
-    static func resetFailedWithReason(_ reason: String) -> String {
+    public static func resetFailedWithReason(_ reason: String) -> String {
         switch lang {
         case .korean: return "초기화에 실패했습니다: \(reason)"
         case .english: return "Reset failed: \(reason)"
@@ -10129,7 +9517,7 @@ enum Strings {
         }
     }
 
-    static var deleteFailed: String {
+    public static var deleteFailed: String {
         switch lang {
         case .korean: return "삭제에 실패했습니다. 다시 시도해주세요."
         case .english: return "Delete failed. Please try again."
@@ -10157,7 +9545,7 @@ enum Strings {
         }
     }
 
-    static var deleteBonusLeaveTitle: String {
+    public static var deleteBonusLeaveTitle: String {
         switch lang {
         case .korean: return "보너스 연차 삭제"
         case .english: return "Delete Bonus Leave"
@@ -10185,7 +9573,7 @@ enum Strings {
         }
     }
 
-    static var deleteBonusLeaveConfirm: String {
+    public static var deleteBonusLeaveConfirm: String {
         switch lang {
         case .korean: return "이 보너스 연차를 삭제하시겠습니까?"
         case .english: return "Delete this bonus leave?"
@@ -10213,7 +9601,7 @@ enum Strings {
         }
     }
 
-    static var retry: String {
+    public static var retry: String {
         switch lang {
         case .korean: return "다시 시도"
         case .english: return "Retry"
@@ -10242,7 +9630,7 @@ enum Strings {
     }
 
     // MARK: - 캘린더 → 등록 연동
-    static var addLeaveOnThisDate: String {
+    public static var addLeaveOnThisDate: String {
         switch lang {
         case .korean: return "이 날짜로 휴가 등록"
         case .english: return "Add leave on this date"
@@ -10271,7 +9659,7 @@ enum Strings {
     }
 
     // MARK: - 홈 빈 상태
-    static var emptyHomeTitle: String {
+    public static var emptyHomeTitle: String {
         switch lang {
         case .korean: return "첫 휴가를 계획해보세요"
         case .english: return "Plan your first leave"
@@ -10299,7 +9687,7 @@ enum Strings {
         }
     }
 
-    static var emptyHomeMessage: String {
+    public static var emptyHomeMessage: String {
         switch lang {
         case .korean: return "휴가를 등록하면 잔여 연차와 다가오는 일정을 한눈에 볼 수 있어요."
         case .english: return "Register a leave to see your remaining days and upcoming plans at a glance."
@@ -10327,7 +9715,7 @@ enum Strings {
         }
     }
 
-    static var emptyHomeCTA: String {
+    public static var emptyHomeCTA: String {
         switch lang {
         case .korean: return "휴가 등록하기"
         case .english: return "Add Leave"
@@ -10356,7 +9744,7 @@ enum Strings {
     }
 
     // MARK: - 공휴일 데이터 만료 안내
-    static func holidayDataMayBeInaccurate(_ year: Int) -> String {
+    public static func holidayDataMayBeInaccurate(_ year: Int) -> String {
         switch lang {
         case .korean: return "\(year)년 공휴일 정보는 정확하지 않을 수 있어요. 앱을 최신 버전으로 업데이트해주세요."
         case .english: return "Holiday data for \(year) may be inaccurate. Please update the app to the latest version."
@@ -10385,7 +9773,7 @@ enum Strings {
     }
 
     // MARK: - 구매 복원 결과
-    static var restorePurchasesSuccess: String {
+    public static var restorePurchasesSuccess: String {
         switch lang {
         case .korean: return "구매가 복원되었습니다."
         case .english: return "Purchases restored."
@@ -10413,7 +9801,7 @@ enum Strings {
         }
     }
 
-    static var restorePurchasesNone: String {
+    public static var restorePurchasesNone: String {
         switch lang {
         case .korean: return "복원할 구매 내역이 없습니다."
         case .english: return "No purchases to restore."
@@ -10441,7 +9829,7 @@ enum Strings {
         }
     }
 
-    static func restorePurchasesFailed(_ reason: String) -> String {
+    public static func restorePurchasesFailed(_ reason: String) -> String {
         switch lang {
         case .korean: return "구매 복원에 실패했습니다: \(reason)"
         case .english: return "Restore failed: \(reason)"
@@ -10469,7 +9857,7 @@ enum Strings {
         }
     }
 
-    static var priceLoadFailed: String {
+    public static var priceLoadFailed: String {
         switch lang {
         case .korean: return "가격 정보를 불러오지 못했어요. 네트워크 연결을 확인해주세요."
         case .english: return "Couldn't load price info. Please check your network connection."
@@ -10497,7 +9885,7 @@ enum Strings {
         }
     }
 
-    static var termsOfService: String {
+    public static var termsOfService: String {
         switch lang {
         case .korean: return "이용약관"
         case .english: return "Terms of Service"
@@ -10525,7 +9913,7 @@ enum Strings {
         }
     }
 
-    static var privacyPolicy: String {
+    public static var privacyPolicy: String {
         switch lang {
         case .korean: return "개인정보처리방침"
         case .english: return "Privacy Policy"
@@ -10554,7 +9942,7 @@ enum Strings {
     }
 
     // MARK: - 캘린더 휴가 가져오기
-    static var importFromCalendar: String {
+    public static var importFromCalendar: String {
         switch lang {
         case .korean: return "캘린더에서 휴가 가져오기"
         case .english: return "Import Leaves from Calendar"
@@ -10582,7 +9970,7 @@ enum Strings {
         }
     }
 
-    static var importFromCalendarDescription: String {
+    public static var importFromCalendarDescription: String {
         switch lang {
         case .korean: return "캘린더에서 휴가로 보이는 일정을 찾아 추가할 수 있어요."
         case .english: return "Find calendar events that look like leaves and add them."
@@ -10610,7 +9998,7 @@ enum Strings {
         }
     }
 
-    static var detectedLeaveCandidates: String {
+    public static var detectedLeaveCandidates: String {
         switch lang {
         case .korean: return "휴가로 보이는 일정"
         case .english: return "Events that look like leaves"
@@ -10638,7 +10026,7 @@ enum Strings {
         }
     }
 
-    static var noLeaveCandidatesFound: String {
+    public static var noLeaveCandidatesFound: String {
         switch lang {
         case .korean: return "휴가로 보이는 일정을 찾지 못했어요.\n(이미 등록된 휴가는 제외돼요)"
         case .english: return "No leave-like events found.\n(Already-registered leaves are excluded)"
@@ -10666,7 +10054,7 @@ enum Strings {
         }
     }
 
-    static func importSelectedLeaves(_ count: Int) -> String {
+    public static func importSelectedLeaves(_ count: Int) -> String {
         switch lang {
         case .korean: return "\(count)건 추가"
         case .english: return "Add \(count)"
@@ -10694,7 +10082,7 @@ enum Strings {
         }
     }
 
-    static func leavesImported(_ count: Int) -> String {
+    public static func leavesImported(_ count: Int) -> String {
         switch lang {
         case .korean: return "휴가 \(count)건을 추가했어요."
         case .english: return "Added \(count) leave(s)."
@@ -10723,7 +10111,7 @@ enum Strings {
     }
 
     // MARK: - 캘린더 자동 감지 (Pro)
-    static var autoDetectBannerTitle: String {
+    public static var autoDetectBannerTitle: String {
         switch lang {
         case .korean: return "캘린더에서 휴가 발견"
         case .english: return "Leaves found in your calendar"
@@ -10751,7 +10139,7 @@ enum Strings {
         }
     }
 
-    static func autoDetectBannerMessage(_ count: Int) -> String {
+    public static func autoDetectBannerMessage(_ count: Int) -> String {
         switch lang {
         case .korean: return "휴가로 보이는 일정 \(count)건을 찾았어요. 확인 후 한 번에 추가할 수 있어요."
         case .english: return "Found \(count) event(s) that look like leaves. Review and add them in one tap."
@@ -10779,7 +10167,7 @@ enum Strings {
         }
     }
 
-    static var autoDetectReview: String {
+    public static var autoDetectReview: String {
         switch lang {
         case .korean: return "확인하기"
         case .english: return "Review"
@@ -10807,7 +10195,7 @@ enum Strings {
         }
     }
 
-    static var autoDetectSettingTitle: String {
+    public static var autoDetectSettingTitle: String {
         switch lang {
         case .korean: return "캘린더 자동 감지"
         case .english: return "Auto-Detect from Calendar"
@@ -10835,7 +10223,7 @@ enum Strings {
         }
     }
 
-    static var autoDetectSettingDescription: String {
+    public static var autoDetectSettingDescription: String {
         switch lang {
         case .korean: return "앱을 열 때 캘린더에서 새 휴가 일정을 자동으로 찾아 알려드려요."
         case .english: return "Automatically finds new leave events in your calendar when you open the app."
@@ -10863,7 +10251,7 @@ enum Strings {
         }
     }
 
-    static var proBannerAutoDetect: String {
+    public static var proBannerAutoDetect: String {
         switch lang {
         case .korean: return "캘린더 속 휴가 일정, Pro가 자동으로 찾아드려요"
         case .english: return "Pro automatically finds leave events in your calendar"
@@ -10892,7 +10280,7 @@ enum Strings {
     }
 
     // MARK: - 연차 플랜 공유
-    static var sharePlan: String {
+    public static var sharePlan: String {
         switch lang {
         case .korean: return "연차 플랜 공유"
         case .english: return "Share Leave Plan"
@@ -10921,7 +10309,7 @@ enum Strings {
     }
 
     /// 공유 미리보기 시트
-    static var sharePreviewTitle: String {
+    public static var sharePreviewTitle: String {
         switch lang {
         case .korean: return "공유 미리보기"
         case .english: return "Share Preview"
@@ -10949,7 +10337,7 @@ enum Strings {
         }
     }
 
-    static var sharePreviewHint: String {
+    public static var sharePreviewHint: String {
         switch lang {
         case .korean: return "이 이미지가 공유돼요"
         case .english: return "This image will be shared"
@@ -10977,7 +10365,7 @@ enum Strings {
         }
     }
 
-    static var shareNow: String {
+    public static var shareNow: String {
         switch lang {
         case .korean: return "공유하기"
         case .english: return "Share"
@@ -11005,7 +10393,7 @@ enum Strings {
         }
     }
 
-    static var shareCardTitle: String {
+    public static var shareCardTitle: String {
         switch lang {
         case .korean: return "나의 연차 현황"
         case .english: return "My Leave Status"
@@ -11033,7 +10421,7 @@ enum Strings {
         }
     }
 
-    static var shareCardFooter: String {
+    public static var shareCardFooter: String {
         switch lang {
         case .korean: return "Goldweek — 연차를 황금연휴로"
         case .english: return "Goldweek — Turn your leaves into golden weeks"
@@ -11061,7 +10449,7 @@ enum Strings {
         }
     }
 
-    static var openSettings: String {
+    public static var openSettings: String {
         switch lang {
         case .korean: return "설정 열기"
         case .english: return "Open Settings"
@@ -11089,7 +10477,7 @@ enum Strings {
         }
     }
 
-    static var scanningCalendar: String {
+    public static var scanningCalendar: String {
         switch lang {
         case .korean: return "캘린더를 확인하는 중..."
         case .english: return "Scanning calendar..."
@@ -11118,7 +10506,7 @@ enum Strings {
     }
 
     // MARK: - 등록 불가 사유
-    static var reasonEndBeforeStart: String {
+    public static var reasonEndBeforeStart: String {
         switch lang {
         case .korean: return "종료일이 시작일보다 빠릅니다."
         case .english: return "End date is before start date."
@@ -11146,35 +10534,7 @@ enum Strings {
         }
     }
 
-    static var reasonOverlappingLeave: String {
-        switch lang {
-        case .korean: return "이미 등록된 연차와 겹치는 기간입니다."
-        case .english: return "This period overlaps with an existing leave."
-        case .swedish: return "Perioden överlappar en befintlig ledighet."
-        case .norwegian: return "Denne perioden overlapper med en eksisterende ferie."
-        case .danish: return "Perioden overlapper med en eksisterende ferie."
-        case .finnish: return "Tämä ajanjakso menee päällekkäin olemassa olevan loman kanssa."
-        case .polish: return "Ten okres nakłada się na istniejący urlop."
-        case .czech: return "Toto období se překrývá s existující dovolenou."
-        case .greek: return "Αυτή η περίοδος επικαλύπτεται με υπάρχουσα άδεια."
-        case .turkish: return "Bu dönem mevcut bir izinle çakışıyor."
-        case .russian: return "Этот период пересекается с уже добавленным отпуском."
-        case .indonesian: return "Periode ini bentrok dengan cuti yang sudah ada."
-        case .thai: return "ช่วงนี้ซ้อนกับวันลาที่มีอยู่แล้ว"
-        case .vietnamese: return "Khoảng thời gian này trùng với ngày nghỉ đã có."
-        case .dutch: return "Deze periode overlapt met bestaand verlof."
-        case .japanese: return "登録済みの休暇と期間が重なっています。"
-        case .chinese: return "该时间段与已登记的休假重叠。"
-        case .german: return "Dieser Zeitraum überschneidet sich mit bereits eingetragenem Urlaub."
-        case .french: return "Cette période chevauche un congé existant."
-        case .spanish: return "Este periodo se solapa con unas vacaciones ya registradas."
-        case .italian: return "Questo periodo si sovrappone a ferie già registrate."
-        case .portuguese: return "Este período se sobrepõe a férias já registradas."
-        case .chineseTraditional: return "此期間與已登記的特休重疊。"
-        }
-    }
-
-    static var shareSubject: String {
+    public static var shareSubject: String {
         switch lang {
         case .korean: return "Goldweek - 연차 관리 앱"
         case .english: return "Goldweek - Annual Leave Management"
@@ -11205,7 +10565,7 @@ enum Strings {
     // MARK: - 통화 / 가격 표기
     /// 정수 금액을 현재 언어 로케일에 맞게 통화 표기로 변환.
     /// 마이리얼트립 API가 KRW를 반환하므로, 한국어가 아닌 경우에도 KRW로 표기.
-    static func currency(_ amount: Int64) -> String {
+    public static func currency(_ amount: Int64) -> String {
         let nf = NumberFormatter()
         nf.numberStyle = .decimal
         nf.locale = Locale(identifier: localeIdentifier)
@@ -11238,7 +10598,7 @@ enum Strings {
     }
 
     // MARK: - MRT API 에러
-    static var mrtErrorNotConfigured: String {
+    public static var mrtErrorNotConfigured: String {
         switch lang {
         case .korean: return "마이리얼트립 API가 설정되지 않았습니다."
         case .english: return "MyRealTrip API is not configured."
@@ -11266,7 +10626,7 @@ enum Strings {
         }
     }
 
-    static var mrtErrorInvalidURL: String {
+    public static var mrtErrorInvalidURL: String {
         switch lang {
         case .korean: return "잘못된 URL입니다."
         case .english: return "Invalid URL."
@@ -11294,7 +10654,7 @@ enum Strings {
         }
     }
 
-    static var mrtErrorBadRequest: String {
+    public static var mrtErrorBadRequest: String {
         switch lang {
         case .korean: return "잘못된 요청입니다."
         case .english: return "Bad request."
@@ -11322,7 +10682,7 @@ enum Strings {
         }
     }
 
-    static var mrtErrorUnauthorized: String {
+    public static var mrtErrorUnauthorized: String {
         switch lang {
         case .korean: return "API 키가 유효하지 않습니다."
         case .english: return "Invalid API key."
@@ -11350,7 +10710,7 @@ enum Strings {
         }
     }
 
-    static var mrtErrorForbidden: String {
+    public static var mrtErrorForbidden: String {
         switch lang {
         case .korean: return "이 API에 대한 접근 권한이 없습니다."
         case .english: return "Access denied to this API."
@@ -11378,7 +10738,7 @@ enum Strings {
         }
     }
 
-    static var mrtErrorNotFound: String {
+    public static var mrtErrorNotFound: String {
         switch lang {
         case .korean: return "엔드포인트를 찾을 수 없습니다."
         case .english: return "Endpoint not found."
@@ -11406,7 +10766,7 @@ enum Strings {
         }
     }
 
-    static var mrtErrorRateLimited: String {
+    public static var mrtErrorRateLimited: String {
         switch lang {
         case .korean: return "요청 한도를 초과했습니다."
         case .english: return "Request rate limit exceeded."
@@ -11434,7 +10794,7 @@ enum Strings {
         }
     }
 
-    static func mrtErrorServerError(_ code: Int) -> String {
+    public static func mrtErrorServerError(_ code: Int) -> String {
         switch lang {
         case .korean: return "서버 오류 (\(code))"
         case .english: return "Server error (\(code))"
@@ -11462,7 +10822,7 @@ enum Strings {
         }
     }
 
-    static var mrtErrorDecoding: String {
+    public static var mrtErrorDecoding: String {
         switch lang {
         case .korean: return "응답 형식 오류"
         case .english: return "Invalid response format"
@@ -11490,7 +10850,7 @@ enum Strings {
         }
     }
 
-    static var mrtErrorMaxRetries: String {
+    public static var mrtErrorMaxRetries: String {
         switch lang {
         case .korean: return "재시도 한도를 초과했습니다."
         case .english: return "Max retries exceeded."
@@ -11519,7 +10879,7 @@ enum Strings {
     }
 
     // MARK: - 보너스 연차 (BonusLeaveView)
-    static var available: String {
+    public static var available: String {
         switch lang {
         case .korean: return "사용 가능"
         case .english: return "Available"
@@ -11547,7 +10907,7 @@ enum Strings {
         }
     }
 
-    static var usedComplete: String {
+    public static var usedComplete: String {
         switch lang {
         case .korean: return "사용 완료"
         case .english: return "Used"
@@ -11575,7 +10935,7 @@ enum Strings {
         }
     }
 
-    static var noBonusLeave: String {
+    public static var noBonusLeave: String {
         switch lang {
         case .korean: return "등록된 보너스 연차가 없습니다"
         case .english: return "No bonus leave registered"
@@ -11603,7 +10963,7 @@ enum Strings {
         }
     }
 
-    static var leaveDaysSection: String {
+    public static var leaveDaysSection: String {
         switch lang {
         case .korean: return "연차 일수"
         case .english: return "Leave Days"
@@ -11631,7 +10991,7 @@ enum Strings {
         }
     }
 
-    static var daysToAdd: String {
+    public static var daysToAdd: String {
         switch lang {
         case .korean: return "추가할 일수"
         case .english: return "Days to Add"
@@ -11659,7 +11019,7 @@ enum Strings {
         }
     }
 
-    static var typeSection: String {
+    public static var typeSection: String {
         switch lang {
         case .korean: return "유형"
         case .english: return "Type"
@@ -11687,7 +11047,7 @@ enum Strings {
         }
     }
 
-    static var reasonSection: String {
+    public static var reasonSection: String {
         switch lang {
         case .korean: return "사유"
         case .english: return "Reason"
@@ -11715,7 +11075,7 @@ enum Strings {
         }
     }
 
-    static var reasonPlaceholder: String {
+    public static var reasonPlaceholder: String {
         switch lang {
         case .korean: return "예: 휴일근무 대체, 프로젝트 포상 등"
         case .english: return "e.g. Holiday work comp, Project reward"
@@ -11743,7 +11103,7 @@ enum Strings {
         }
     }
 
-    static var setExpiration: String {
+    public static var setExpiration: String {
         switch lang {
         case .korean: return "만료일 설정"
         case .english: return "Set Expiration"
@@ -11771,7 +11131,7 @@ enum Strings {
         }
     }
 
-    static var expirationDate: String {
+    public static var expirationDate: String {
         switch lang {
         case .korean: return "만료일"
         case .english: return "Expiration"
@@ -11799,7 +11159,7 @@ enum Strings {
         }
     }
 
-    static var expirationFooter: String {
+    public static var expirationFooter: String {
         switch lang {
         case .korean: return "만료일을 설정하지 않으면 연말까지 사용 가능합니다."
         case .english: return "If no expiration is set, it can be used until year-end."
@@ -11829,7 +11189,7 @@ enum Strings {
 
     // MARK: - 휴가 사용 내역 (LeaveHistoryView)
     // 휴가 사용 내역 — 상태 · 종류 필터 펼치기
-    static var historyFilter: String {
+    public static var historyFilter: String {
         switch lang {
         case .korean: return "필터"
         case .english: return "Filters"
@@ -11857,7 +11217,7 @@ enum Strings {
         }
     }
 
-    static var historyFilterExpanded: String {
+    public static var historyFilterExpanded: String {
         switch lang {
         case .korean: return "펼침"
         case .english: return "Expanded"
@@ -11885,7 +11245,7 @@ enum Strings {
         }
     }
 
-    static var historyFilterCollapsed: String {
+    public static var historyFilterCollapsed: String {
         switch lang {
         case .korean: return "접힘"
         case .english: return "Collapsed"
@@ -11914,7 +11274,7 @@ enum Strings {
     }
 
     /// 접힌 내역 필터 칩을 눌러 풀 때 (보이스오버)
-    static func historyFilterClear(_ t: String) -> String {
+    public static func historyFilterClear(_ t: String) -> String {
         switch lang {
         case .korean: return "\(t) 필터 해제"
         case .english: return "Remove filter \(t)"
@@ -11942,7 +11302,7 @@ enum Strings {
         }
     }
 
-    static var navTitleLeaveHistory: String {
+    public static var navTitleLeaveHistory: String {
         switch lang {
         case .korean: return "휴가 사용 내역"
         case .english: return "Leave History"
@@ -11970,7 +11330,7 @@ enum Strings {
         }
     }
 
-    static var close: String {
+    public static var close: String {
         switch lang {
         case .korean: return "닫기"
         case .english: return "Close"
@@ -11998,7 +11358,7 @@ enum Strings {
         }
     }
 
-    static var all: String {
+    public static var all: String {
         switch lang {
         case .korean: return "전체"
         case .english: return "All"
@@ -12026,7 +11386,7 @@ enum Strings {
         }
     }
 
-    static var allTypes: String {
+    public static var allTypes: String {
         switch lang {
         case .korean: return "전체 유형"
         case .english: return "All Types"
@@ -12054,7 +11414,7 @@ enum Strings {
         }
     }
 
-    static var statUsed: String {
+    public static var statUsed: String {
         switch lang {
         case .korean: return "사용 완료"
         case .english: return "Used"
@@ -12082,7 +11442,7 @@ enum Strings {
         }
     }
 
-    static var statPlanned: String {
+    public static var statPlanned: String {
         switch lang {
         case .korean: return "예정"
         case .english: return "Planned"
@@ -12110,7 +11470,7 @@ enum Strings {
         }
     }
 
-    static var statCancelled: String {
+    public static var statCancelled: String {
         switch lang {
         case .korean: return "취소"
         case .english: return "Cancelled"
@@ -12138,7 +11498,7 @@ enum Strings {
         }
     }
 
-    static func casesCount(_ count: Int) -> String {
+    public static func casesCount(_ count: Int) -> String {
         switch lang {
         case .korean: return "\(count)건"
         case .english: return "\(count)"
@@ -12166,7 +11526,7 @@ enum Strings {
         }
     }
 
-    static var noLeaveRecords: String {
+    public static var noLeaveRecords: String {
         switch lang {
         case .korean: return "휴가 기록이 없습니다"
         case .english: return "No leave records"
@@ -12194,7 +11554,7 @@ enum Strings {
         }
     }
 
-    static func noLeaveForYear(_ year: Int) -> String {
+    public static func noLeaveForYear(_ year: Int) -> String {
         switch lang {
         case .korean: return "\(year)년에 등록된 휴가가 없습니다.\n새로운 휴가를 등록해보세요."
         case .english: return "No leave registered for \(year).\nTry registering a new leave."
@@ -12222,7 +11582,7 @@ enum Strings {
         }
     }
 
-    static func yearLabel(_ year: Int) -> String {
+    public static func yearLabel(_ year: Int) -> String {
         switch lang {
         case .korean: return "\(year)년"
         case .english: return "\(year)"
@@ -12250,123 +11610,95 @@ enum Strings {
         }
     }
 
-    static func monthLabel(_ month: Int) -> String {
+    public static func monthLabel(_ month: Int) -> String {
         switch lang {
         case .korean: return "\(month)월"
         case .english:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "en_US")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .swedish:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "sv_SE")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .norwegian:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "nb_NO")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .danish:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "da_DK")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .finnish:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "fi_FI")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .polish:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "pl_PL")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .czech:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "cs_CZ")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .greek:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "el_GR")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .turkish:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "tr_TR")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .russian:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "ru_RU")
-            return formatter.shortStandaloneMonthSymbols[month - 1]
+            return formatter.shortStandaloneMonthSymbols[monthIndex(month)]
         case .indonesian:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "id_ID")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .thai:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "th_TH@calendar=gregorian")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .vietnamese:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "vi_VN")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .dutch:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "nl_NL")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .japanese: return "\(month)月"
         case .chinese: return "\(month)月"
         case .german:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "de_DE")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .french:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "fr_FR")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .spanish:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "es_ES")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .italian:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "it_IT")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .portuguese:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "pt_BR")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         case .chineseTraditional:
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "zh_Hant_TW")
-            return formatter.shortMonthSymbols[month - 1]
+            return formatter.shortMonthSymbols[monthIndex(month)]
         }
     }
 
-    static func daysCountLabel(_ count: Int) -> String {
-        switch lang {
-        case .korean: return "(\(count)일)"
-        case .english: return "(\(count) days)"
-        case .swedish: return "(\(count) dagar)"
-        case .norwegian: return "(\(count) dager)"
-        case .danish: return "(\(count) dage)"
-        case .finnish: return "(\(count) päivää)"
-        case .polish: return "(dni: \(count))"
-        case .czech: return "(dní: \(count))"
-        case .greek: return "(\(count) ημέρες)"
-        case .turkish: return "(\(count) gün)"
-        case .russian: return "(\(count) \(ruPlural(count, "день", "дня", "дней")))"
-        case .indonesian: return "(\(count) hari)"
-        case .thai: return "(\(count) วัน)"
-        case .vietnamese: return "(\(count) ngày)"
-        case .dutch: return "(\(count) dagen)"
-        case .japanese: return "(\(count)日)"
-        case .chinese: return "(\(count)天)"
-        case .german: return "(\(count) Tage)"
-        case .french: return "(\(count) jours)"
-        case .spanish: return "(\(count) días)"
-        case .italian: return "(\(count) giorni)"
-        case .portuguese: return "(\(count) dias)"
-        case .chineseTraditional: return "（\(count) 天）"
-        }
-    }
-
-    static var edit: String {
+    public static var edit: String {
         switch lang {
         case .korean: return "수정"
         case .english: return "Edit"
@@ -12395,7 +11727,7 @@ enum Strings {
     }
 
     // MARK: - 휴가 수정 (EditLeaveSheet)
-    static var navTitleEditLeave: String {
+    public static var navTitleEditLeave: String {
         switch lang {
         case .korean: return "휴가 수정"
         case .english: return "Edit Leave"
@@ -12423,7 +11755,7 @@ enum Strings {
         }
     }
 
-    static var statusSection: String {
+    public static var statusSection: String {
         switch lang {
         case .korean: return "상태"
         case .english: return "Status"
@@ -12451,7 +11783,7 @@ enum Strings {
         }
     }
 
-    static var dateSection: String {
+    public static var dateSection: String {
         switch lang {
         case .korean: return "날짜"
         case .english: return "Dates"
@@ -12479,7 +11811,7 @@ enum Strings {
         }
     }
 
-    static func additionalLeaveUsed(_ days: String) -> String {
+    public static func additionalLeaveUsed(_ days: String) -> String {
         switch lang {
         case .korean: return "연차 \(days)일 추가 사용"
         case .english: return "\(days) more leave days used"
@@ -12507,7 +11839,7 @@ enum Strings {
         }
     }
 
-    static func leaveRestored(_ days: String) -> String {
+    public static func leaveRestored(_ days: String) -> String {
         switch lang {
         case .korean: return "연차 \(days)일 복원"
         case .english: return "\(days) leave days restored"
@@ -12535,7 +11867,7 @@ enum Strings {
         }
     }
 
-    static var memo: String {
+    public static var memo: String {
         switch lang {
         case .korean: return "메모"
         case .english: return "Note"
@@ -12563,7 +11895,7 @@ enum Strings {
         }
     }
 
-    static var leavePurpose: String {
+    public static var leavePurpose: String {
         switch lang {
         case .korean: return "휴가 목적"
         case .english: return "Leave purpose"
@@ -12591,7 +11923,7 @@ enum Strings {
         }
     }
 
-    static var schedulePreview: String {
+    public static var schedulePreview: String {
         switch lang {
         case .korean: return "일정 미리보기"
         case .english: return "Schedule Preview"
@@ -12619,93 +11951,8 @@ enum Strings {
         }
     }
 
-    static func dayTypeLabel(_ type: DayType) -> String {
-        switch type {
-        case .leave: return annualLeave
-        case .saturday:
-            switch lang {
-            case .korean: return "토"
-            case .english: return "Sat"
-            case .swedish: return "lör"
-            case .norwegian: return "lør"
-            case .danish: return "lør"
-            case .finnish: return "la"
-            case .polish: return "sob"
-            case .czech: return "so"
-            case .greek: return "Σάβ"
-            case .turkish: return "Cmt"
-            case .russian: return "Сб"
-            case .indonesian: return "Sab"
-            case .thai: return "ส."
-            case .vietnamese: return "T7"
-            case .dutch: return "za"
-            case .japanese: return "土"
-            case .chinese: return "六"
-            case .german: return "Sa"
-            case .french: return "Sam"
-            case .spanish: return "Sáb"
-            case .italian: return "Sab"
-            case .portuguese: return "Sáb"
-            case .chineseTraditional: return "六"
-            }
-        case .sunday:
-            switch lang {
-            case .korean: return "일"
-            case .english: return "Sun"
-            case .swedish: return "sön"
-            case .norwegian: return "søn"
-            case .danish: return "søn"
-            case .finnish: return "su"
-            case .polish: return "nd"
-            case .czech: return "ne"
-            case .greek: return "Κυρ"
-            case .turkish: return "Paz"
-            case .russian: return "Вс"
-            case .indonesian: return "Min"
-            case .thai: return "อา."
-            case .vietnamese: return "CN"
-            case .dutch: return "zo"
-            case .japanese: return "日"
-            case .chinese: return "日"
-            case .german: return "So"
-            case .french: return "Dim"
-            case .spanish: return "Dom"
-            case .italian: return "Dom"
-            case .portuguese: return "Dom"
-            case .chineseTraditional: return "日"
-            }
-        case .holiday:
-            switch lang {
-            case .korean: return "휴일"
-            case .english: return "Holiday"
-            case .swedish: return "Helgdag"
-            case .norwegian: return "Helligdag"
-            case .danish: return "Helligdag"
-            case .finnish: return "Pyhäpäivä"
-            case .polish: return "Święto"
-            case .czech: return "Svátek"
-            case .greek: return "Αργία"
-            case .turkish: return "Tatil"
-            case .russian: return "Праздник"
-            case .indonesian: return "Libur"
-            case .thai: return "วันหยุด"
-            case .vietnamese: return "Ngày lễ"
-            case .dutch: return "Feestdag"
-            case .japanese: return "祝日"
-            case .chinese: return "节日"
-            case .german: return "Feiertag"
-            case .french: return "Férié"
-            case .spanish: return "Festivo"
-            case .italian: return "Festivo"
-            case .portuguese: return "Feriado"
-            case .chineseTraditional: return "假日"
-            }
-        case .workday: return workday
-        }
-    }
-    
     // MARK: - Pro / Paywall
-    static var upgradeToPro: String {
+    public static var upgradeToPro: String {
         switch lang {
         case .korean: return "Pro로 업그레이드"
         case .english: return "Upgrade to Pro"
@@ -12733,7 +11980,7 @@ enum Strings {
         }
     }
     
-    static var goldweekPro: String {
+    public static var goldweekPro: String {
         switch lang {
         case .korean: return "골드위크 Pro"
         case .english: return "Goldweek Pro"
@@ -12761,119 +12008,7 @@ enum Strings {
         }
     }
     
-    static var unlockAllFeatures: String {
-        switch lang {
-        case .korean: return "모든 기능을 잠금해제하세요"
-        case .english: return "Unlock all features"
-        case .swedish: return "Lås upp alla funktioner"
-        case .norwegian: return "Lås opp alle funksjoner"
-        case .danish: return "Lås op for alle funktioner"
-        case .finnish: return "Avaa kaikki ominaisuudet"
-        case .polish: return "Odblokuj wszystkie funkcje"
-        case .czech: return "Odemkni všechny funkce"
-        case .greek: return "Ξεκλείδωσε όλες τις λειτουργίες"
-        case .turkish: return "Tüm özelliklerin kilidini aç"
-        case .russian: return "Откройте все возможности"
-        case .indonesian: return "Buka semua fitur"
-        case .thai: return "ปลดล็อกทุกฟีเจอร์"
-        case .vietnamese: return "Mở khóa mọi tính năng"
-        case .dutch: return "Ontgrendel alle functies"
-        case .japanese: return "すべての機能をアンロック"
-        case .chinese: return "解锁所有功能"
-        case .german: return "Schalte alle Funktionen frei"
-        case .french: return "Débloquez toutes les fonctionnalités"
-        case .spanish: return "Desbloquea todas las funciones"
-        case .italian: return "Sblocca tutte le funzioni"
-        case .portuguese: return "Desbloqueie todos os recursos"
-        case .chineseTraditional: return "解鎖所有功能"
-        }
-    }
-    
-    static var freeVersion: String {
-        switch lang {
-        case .korean: return "무료 버전"
-        case .english: return "Free"
-        case .swedish: return "Gratis"
-        case .norwegian: return "Gratis"
-        case .danish: return "Gratis"
-        case .finnish: return "Ilmainen"
-        case .polish: return "Darmowa"
-        case .czech: return "Zdarma"
-        case .greek: return "Δωρεάν"
-        case .turkish: return "Ücretsiz"
-        case .russian: return "Бесплатно"
-        case .indonesian: return "Gratis"
-        case .thai: return "ฟรี"
-        case .vietnamese: return "Miễn phí"
-        case .dutch: return "Gratis"
-        case .japanese: return "無料版"
-        case .chinese: return "免费版"
-        case .german: return "Kostenlos"
-        case .french: return "Gratuit"
-        case .spanish: return "Gratis"
-        case .italian: return "Gratis"
-        case .portuguese: return "Grátis"
-        case .chineseTraditional: return "免費版"
-        }
-    }
-    
-    static var proVersion: String {
-        switch lang {
-        case .korean: return "Pro 버전"
-        case .english: return "Pro"
-        case .swedish: return "Pro"
-        case .norwegian: return "Pro"
-        case .danish: return "Pro"
-        case .finnish: return "Pro"
-        case .polish: return "Pro"
-        case .czech: return "Pro"
-        case .greek: return "Pro"
-        case .turkish: return "Pro"
-        case .russian: return "Pro"
-        case .indonesian: return "Pro"
-        case .thai: return "Pro"
-        case .vietnamese: return "Pro"
-        case .dutch: return "Pro"
-        case .japanese: return "Pro版"
-        case .chinese: return "Pro版"
-        case .german: return "Pro"
-        case .french: return "Pro"
-        case .spanish: return "Pro"
-        case .italian: return "Pro"
-        case .portuguese: return "Pro"
-        case .chineseTraditional: return "Pro 版"
-        }
-    }
-    
-    static var purchase: String {
-        switch lang {
-        case .korean: return "구매하기"
-        case .english: return "Purchase"
-        case .swedish: return "Köp"
-        case .norwegian: return "Kjøp"
-        case .danish: return "Køb"
-        case .finnish: return "Osta"
-        case .polish: return "Kup"
-        case .czech: return "Koupit"
-        case .greek: return "Αγορά"
-        case .turkish: return "Satın Al"
-        case .russian: return "Купить"
-        case .indonesian: return "Beli"
-        case .thai: return "ซื้อ"
-        case .vietnamese: return "Mua"
-        case .dutch: return "Kopen"
-        case .japanese: return "購入"
-        case .chinese: return "购买"
-        case .german: return "Kaufen"
-        case .french: return "Acheter"
-        case .spanish: return "Comprar"
-        case .italian: return "Acquista"
-        case .portuguese: return "Comprar"
-        case .chineseTraditional: return "購買"
-        }
-    }
-    
-    static var restorePurchase: String {
+    public static var restorePurchase: String {
         switch lang {
         case .korean: return "구매 복원"
         case .english: return "Restore Purchase"
@@ -12901,175 +12036,7 @@ enum Strings {
         }
     }
     
-    static var featureComparison: String {
-        switch lang {
-        case .korean: return "기능 비교"
-        case .english: return "Feature Comparison"
-        case .swedish: return "Funktionsjämförelse"
-        case .norwegian: return "Funksjonssammenligning"
-        case .danish: return "Funktionssammenligning"
-        case .finnish: return "Ominaisuusvertailu"
-        case .polish: return "Porównanie funkcji"
-        case .czech: return "Porovnání funkcí"
-        case .greek: return "Σύγκριση λειτουργιών"
-        case .turkish: return "Özellik Karşılaştırması"
-        case .russian: return "Сравнение возможностей"
-        case .indonesian: return "Perbandingan fitur"
-        case .thai: return "เปรียบเทียบฟีเจอร์"
-        case .vietnamese: return "So sánh tính năng"
-        case .dutch: return "Functievergelijking"
-        case .japanese: return "機能比較"
-        case .chinese: return "功能对比"
-        case .german: return "Funktionsvergleich"
-        case .french: return "Comparatif des fonctions"
-        case .spanish: return "Comparativa de funciones"
-        case .italian: return "Confronto funzioni"
-        case .portuguese: return "Comparação de recursos"
-        case .chineseTraditional: return "功能比較"
-        }
-    }
-    
-    static var basicLeaveManagement: String {
-        switch lang {
-        case .korean: return "기본 연차 관리"
-        case .english: return "Basic Leave Management"
-        case .swedish: return "Grundläggande ledighetshantering"
-        case .norwegian: return "Grunnleggende feriehåndtering"
-        case .danish: return "Grundlæggende ferieadministration"
-        case .finnish: return "Lomien perushallinta"
-        case .polish: return "Podstawowe zarządzanie urlopem"
-        case .czech: return "Základní správa dovolené"
-        case .greek: return "Βασική διαχείριση αδειών"
-        case .turkish: return "Temel İzin Yönetimi"
-        case .russian: return "Базовый учёт отпусков"
-        case .indonesian: return "Kelola cuti dasar"
-        case .thai: return "จัดการวันลาพื้นฐาน"
-        case .vietnamese: return "Quản lý phép cơ bản"
-        case .dutch: return "Basis verlofbeheer"
-        case .japanese: return "基本的な有給管理"
-        case .chinese: return "基本年假管理"
-        case .german: return "Urlaubsverwaltung (Basis)"
-        case .french: return "Gestion des congés de base"
-        case .spanish: return "Gestión básica de vacaciones"
-        case .italian: return "Gestione base delle ferie"
-        case .portuguese: return "Gestão básica de férias"
-        case .chineseTraditional: return "基本特休管理"
-        }
-    }
-    
-    static var leaveRecommendations: String {
-        switch lang {
-        case .korean: return "연차 추천"
-        case .english: return "Leave Recommendations"
-        case .swedish: return "Semesterförslag"
-        case .norwegian: return "Ferieanbefalinger"
-        case .danish: return "Ferieanbefalinger"
-        case .finnish: return "Lomaehdotukset"
-        case .polish: return "Rekomendacje urlopu"
-        case .czech: return "Doporučení dovolené"
-        case .greek: return "Προτάσεις άδειας"
-        case .turkish: return "İzin Önerileri"
-        case .russian: return "Подбор отпуска"
-        case .indonesian: return "Rekomendasi cuti"
-        case .thai: return "คำแนะนำวันลา"
-        case .vietnamese: return "Gợi ý nghỉ phép"
-        case .dutch: return "Verlofsuggesties"
-        case .japanese: return "有給おすすめ"
-        case .chinese: return "年假推荐"
-        case .german: return "Urlaubsempfehlungen"
-        case .french: return "Recommandations de congés"
-        case .spanish: return "Recomendaciones de vacaciones"
-        case .italian: return "Suggerimenti di ferie"
-        case .portuguese: return "Sugestões de férias"
-        case .chineseTraditional: return "特休推薦"
-        }
-    }
-    
-    static var limitedRecommendations: String {
-        switch lang {
-        case .korean: return "3개 추천만 표시"
-        case .english: return "3 recommendations only"
-        case .swedish: return "Bara 3 förslag"
-        case .norwegian: return "Kun 3 anbefalinger"
-        case .danish: return "Kun 3 anbefalinger"
-        case .finnish: return "Vain 3 ehdotusta"
-        case .polish: return "Tylko 3 rekomendacje"
-        case .czech: return "Jen 3 doporučení"
-        case .greek: return "Μόνο 3 προτάσεις"
-        case .turkish: return "Yalnızca 3 öneri"
-        case .russian: return "Только 3 рекомендации"
-        case .indonesian: return "Hanya 3 rekomendasi"
-        case .thai: return "แนะนำได้ 3 รายการ"
-        case .vietnamese: return "Chỉ 3 gợi ý"
-        case .dutch: return "Slechts 3 suggesties"
-        case .japanese: return "3つの推奨のみ"
-        case .chinese: return "仅显示3个推荐"
-        case .german: return "Nur 3 Empfehlungen"
-        case .french: return "3 recommandations seulement"
-        case .spanish: return "Solo 3 recomendaciones"
-        case .italian: return "Solo 3 suggerimenti"
-        case .portuguese: return "Apenas 3 sugestões"
-        case .chineseTraditional: return "僅顯示 3 個推薦"
-        }
-    }
-    
-    static var unlimitedRecommendations: String {
-        switch lang {
-        case .korean: return "모든 추천 표시"
-        case .english: return "All recommendations"
-        case .swedish: return "Alla förslag"
-        case .norwegian: return "Alle anbefalinger"
-        case .danish: return "Alle anbefalinger"
-        case .finnish: return "Kaikki ehdotukset"
-        case .polish: return "Wszystkie rekomendacje"
-        case .czech: return "Všechna doporučení"
-        case .greek: return "Όλες οι προτάσεις"
-        case .turkish: return "Tüm öneriler"
-        case .russian: return "Все рекомендации"
-        case .indonesian: return "Semua rekomendasi"
-        case .thai: return "คำแนะนำทั้งหมด"
-        case .vietnamese: return "Tất cả gợi ý"
-        case .dutch: return "Alle suggesties"
-        case .japanese: return "すべての推奨"
-        case .chinese: return "显示所有推荐"
-        case .german: return "Alle Empfehlungen"
-        case .french: return "Toutes les recommandations"
-        case .spanish: return "Todas las recomendaciones"
-        case .italian: return "Tutti i suggerimenti"
-        case .portuguese: return "Todas as sugestões"
-        case .chineseTraditional: return "顯示所有推薦"
-        }
-    }
-    
-    static var yearSelector: String {
-        switch lang {
-        case .korean: return "연도 선택"
-        case .english: return "Year Selection"
-        case .swedish: return "Val av år"
-        case .norwegian: return "Valg av år"
-        case .danish: return "Valg af år"
-        case .finnish: return "Vuoden valinta"
-        case .polish: return "Wybór roku"
-        case .czech: return "Výběr roku"
-        case .greek: return "Επιλογή έτους"
-        case .turkish: return "Yıl Seçimi"
-        case .russian: return "Выбор года"
-        case .indonesian: return "Pilih tahun"
-        case .thai: return "เลือกปี"
-        case .vietnamese: return "Chọn năm"
-        case .dutch: return "Jaarkeuze"
-        case .japanese: return "年選択"
-        case .chinese: return "年份选择"
-        case .german: return "Jahresauswahl"
-        case .french: return "Choix de l'année"
-        case .spanish: return "Selección de año"
-        case .italian: return "Scelta dell’anno"
-        case .portuguese: return "Seleção de ano"
-        case .chineseTraditional: return "選擇年份"
-        }
-    }
-    
-    static var currentYearOnly: String {
+    public static var currentYearOnly: String {
         switch lang {
         case .korean: return "올해만"
         case .english: return "Current year only"
@@ -13097,91 +12064,7 @@ enum Strings {
         }
     }
     
-    static var allYears: String {
-        switch lang {
-        case .korean: return "모든 년도"
-        case .english: return "All years"
-        case .swedish: return "Alla år"
-        case .norwegian: return "Alle år"
-        case .danish: return "Alle år"
-        case .finnish: return "Kaikki vuodet"
-        case .polish: return "Wszystkie lata"
-        case .czech: return "Všechny roky"
-        case .greek: return "Όλα τα έτη"
-        case .turkish: return "Tüm yıllar"
-        case .russian: return "Все годы"
-        case .indonesian: return "Semua tahun"
-        case .thai: return "ทุกปี"
-        case .vietnamese: return "Mọi năm"
-        case .dutch: return "Alle jaren"
-        case .japanese: return "すべての年"
-        case .chinese: return "所有年份"
-        case .german: return "Alle Jahre"
-        case .french: return "Toutes les années"
-        case .spanish: return "Todos los años"
-        case .italian: return "Tutti gli anni"
-        case .portuguese: return "Todos os anos"
-        case .chineseTraditional: return "所有年份"
-        }
-    }
-    
-    static var systemCalendarSync: String {
-        switch lang {
-        case .korean: return "시스템 캘린더 연동"
-        case .english: return "System Calendar Sync"
-        case .swedish: return "Synk med systemkalendern"
-        case .norwegian: return "Synkronisering med systemkalender"
-        case .danish: return "Synkronisering med systemkalender"
-        case .finnish: return "Järjestelmäkalenterin synkronointi"
-        case .polish: return "Synchronizacja z kalendarzem systemowym"
-        case .czech: return "Synchronizace s kalendářem"
-        case .greek: return "Συγχρονισμός ημερολογίου συστήματος"
-        case .turkish: return "Sistem Takvimi Senkronizasyonu"
-        case .russian: return "Синхронизация с календарём"
-        case .indonesian: return "Sinkron Kalender sistem"
-        case .thai: return "ซิงค์กับปฏิทินของระบบ"
-        case .vietnamese: return "Đồng bộ Lịch hệ thống"
-        case .dutch: return "Synchronisatie met systeemagenda"
-        case .japanese: return "システムカレンダー連携"
-        case .chinese: return "系统日历同步"
-        case .german: return "Kalender-Synchronisierung"
-        case .french: return "Synchronisation du calendrier"
-        case .spanish: return "Sincronización con el calendario"
-        case .italian: return "Sincronizzazione calendario"
-        case .portuguese: return "Sincronização com o calendário"
-        case .chineseTraditional: return "系統行事曆同步"
-        }
-    }
-    
-    static var notAvailable: String {
-        switch lang {
-        case .korean: return "사용 불가"
-        case .english: return "Not available"
-        case .swedish: return "Inte tillgängligt"
-        case .norwegian: return "Ikke tilgjengelig"
-        case .danish: return "Ikke tilgængelig"
-        case .finnish: return "Ei saatavilla"
-        case .polish: return "Niedostępne"
-        case .czech: return "Nedostupné"
-        case .greek: return "Μη διαθέσιμο"
-        case .turkish: return "Kullanılamaz"
-        case .russian: return "Недоступно"
-        case .indonesian: return "Tidak tersedia"
-        case .thai: return "ใช้ไม่ได้"
-        case .vietnamese: return "Không có"
-        case .dutch: return "Niet beschikbaar"
-        case .japanese: return "利用不可"
-        case .chinese: return "不可用"
-        case .german: return "Nicht verfügbar"
-        case .french: return "Non disponible"
-        case .spanish: return "No disponible"
-        case .italian: return "Non disponibile"
-        case .portuguese: return "Indisponível"
-        case .chineseTraditional: return "無法使用"
-        }
-    }
-    
-    static var bonusLeaveManagement: String {
+    public static var bonusLeaveManagement: String {
         switch lang {
         case .korean: return "보너스 연차 관리"
         case .english: return "Bonus Leave Management"
@@ -13209,35 +12092,7 @@ enum Strings {
         }
     }
     
-    static var iCloudBackup: String {
-        switch lang {
-        case .korean: return "iCloud 백업"
-        case .english: return "iCloud Backup"
-        case .swedish: return "iCloud-säkerhetskopia"
-        case .norwegian: return "iCloud-sikkerhetskopi"
-        case .danish: return "iCloud-sikkerhedskopi"
-        case .finnish: return "iCloud-varmuuskopio"
-        case .polish: return "Kopia zapasowa w iCloud"
-        case .czech: return "Záloha na iCloud"
-        case .greek: return "Αντίγραφο iCloud"
-        case .turkish: return "iCloud Yedekleme"
-        case .russian: return "Резервная копия в iCloud"
-        case .indonesian: return "Backup iCloud"
-        case .thai: return "สำรองข้อมูล iCloud"
-        case .vietnamese: return "Sao lưu iCloud"
-        case .dutch: return "iCloud-back-up"
-        case .japanese: return "iCloudバックアップ"
-        case .chinese: return "iCloud备份"
-        case .german: return "iCloud-Backup"
-        case .french: return "Sauvegarde iCloud"
-        case .spanish: return "Copia de seguridad en iCloud"
-        case .italian: return "Backup su iCloud"
-        case .portuguese: return "Backup no iCloud"
-        case .chineseTraditional: return "iCloud 備份"
-        }
-    }
-    
-    static var oneTimePurchase: String {
+    public static var oneTimePurchase: String {
         switch lang {
         case .korean: return "1회 구매, 평생 사용"
         case .english: return "One-time purchase, lifetime access"
@@ -13265,35 +12120,7 @@ enum Strings {
         }
     }
     
-    static var noSubscription: String {
-        switch lang {
-        case .korean: return "구독 없음"
-        case .english: return "No subscription"
-        case .swedish: return "Ingen prenumeration"
-        case .norwegian: return "Ikke abonnement"
-        case .danish: return "Intet abonnement"
-        case .finnish: return "Ei tilausta"
-        case .polish: return "Bez subskrypcji"
-        case .czech: return "Bez předplatného"
-        case .greek: return "Χωρίς συνδρομή"
-        case .turkish: return "Abonelik yok"
-        case .russian: return "Без подписки"
-        case .indonesian: return "Tanpa langganan"
-        case .thai: return "ไม่มีค่าสมาชิกรายเดือน"
-        case .vietnamese: return "Không đăng ký định kỳ"
-        case .dutch: return "Geen abonnement"
-        case .japanese: return "サブスクなし"
-        case .chinese: return "无订阅"
-        case .german: return "Kein Abo"
-        case .french: return "Sans abonnement"
-        case .spanish: return "Sin suscripción"
-        case .italian: return "Nessun abbonamento"
-        case .portuguese: return "Sem assinatura"
-        case .chineseTraditional: return "無需訂閱"
-        }
-    }
-    
-    static var purchasing: String {
+    public static var purchasing: String {
         switch lang {
         case .korean: return "구매 중..."
         case .english: return "Purchasing..."
@@ -13321,7 +12148,7 @@ enum Strings {
         }
     }
     
-    static var purchaseSuccess: String {
+    public static var purchaseSuccess: String {
         switch lang {
         case .korean: return "구매 완료!"
         case .english: return "Purchase successful!"
@@ -13349,7 +12176,7 @@ enum Strings {
         }
     }
     
-    static var purchaseError: String {
+    public static var purchaseError: String {
         switch lang {
         case .korean: return "구매 실패"
         case .english: return "Purchase failed"
@@ -13377,7 +12204,7 @@ enum Strings {
         }
     }
     
-    static var restoreSuccess: String {
+    public static var restoreSuccess: String {
         switch lang {
         case .korean: return "복원 완료!"
         case .english: return "Restore successful!"
@@ -13405,7 +12232,7 @@ enum Strings {
         }
     }
     
-    static var youArePro: String {
+    public static var youArePro: String {
         switch lang {
         case .korean: return "Pro 사용자입니다!"
         case .english: return "You are a Pro user!"
@@ -13433,7 +12260,7 @@ enum Strings {
         }
     }
     
-    static var proFeaturesBanner: String {
+    public static var proFeaturesBanner: String {
         switch lang {
         case .korean: return "더 많은 기능을 원하시나요? Pro로 업그레이드하세요"
         case .english: return "Want more features? Upgrade to Pro"
@@ -13462,7 +12289,7 @@ enum Strings {
     }
     
     // MARK: - 앱 공유
-    static var shareApp: String {
+    public static var shareApp: String {
         switch lang {
         case .korean: return "앱 공유하기"
         case .english: return "Share App"
@@ -13490,7 +12317,7 @@ enum Strings {
         }
     }
     
-    static var shareMessage: String {
+    public static var shareMessage: String {
         switch lang {
         case .korean: return "연차 수당 받지 말고 진짜로 쉬세요. 알고리즘이 최장 연휴 조합 자동 계산 🏖️"
         case .english: return "Don't take the cash — take the days. Algorithm finds your longest possible breaks 🏖️"
@@ -13518,64 +12345,7 @@ enum Strings {
         }
     }
 
-    // MARK: - Pro 온보딩 페이지
-    static var proOnboardingSubtitle: String {
-        switch lang {
-        case .korean: return "한 번 결제로 모든 기능을 영구적으로 사용하세요"
-        case .english: return "One purchase. All features. Forever."
-        case .swedish: return "Ett köp. Alla funktioner. För alltid."
-        case .norwegian: return "Ett kjøp. Alle funksjoner. For alltid."
-        case .danish: return "Ét køb. Alle funktioner. For evigt."
-        case .finnish: return "Yksi osto. Kaikki ominaisuudet. Ikuisesti."
-        case .polish: return "Jeden zakup. Wszystkie funkcje. Na zawsze."
-        case .czech: return "Jeden nákup. Všechny funkce. Navždy."
-        case .greek: return "Μία αγορά. Όλες οι λειτουργίες. Για πάντα."
-        case .turkish: return "Tek satın alma. Tüm özellikler. Sonsuza dek."
-        case .russian: return "Одна покупка. Все функции. Навсегда."
-        case .indonesian: return "Sekali bayar. Semua fitur. Selamanya."
-        case .thai: return "จ่ายครั้งเดียว ได้ทุกฟีเจอร์ ตลอดไป"
-        case .vietnamese: return "Mua một lần. Đủ mọi tính năng. Mãi mãi."
-        case .dutch: return "Eén aankoop. Alle functies. Voor altijd."
-        case .japanese: return "一度の購入ですべての機能を永続利用"
-        case .chinese: return "一次购买，永久使用全部功能"
-        case .german: return "Einmal zahlen. Alle Funktionen. Für immer."
-        case .french: return "Un seul paiement. Toutes les fonctions. Pour toujours."
-        case .spanish: return "Un solo pago. Todas las funciones. Para siempre."
-        case .italian: return "Un solo pagamento. Tutte le funzioni. Per sempre."
-        case .portuguese: return "Um só pagamento. Todos os recursos. Para sempre."
-        case .chineseTraditional: return "一次付費，永久使用所有功能"
-        }
-    }
-
-    static var proOnboardingSkip: String {
-        switch lang {
-        case .korean: return "나중에 알아볼게요"
-        case .english: return "Maybe later"
-        case .swedish: return "Kanske senare"
-        case .norwegian: return "Kanskje senere"
-        case .danish: return "Måske senere"
-        case .finnish: return "Ehkä myöhemmin"
-        case .polish: return "Może później"
-        case .czech: return "Možná později"
-        case .greek: return "Ίσως αργότερα"
-        case .turkish: return "Belki sonra"
-        case .russian: return "Не сейчас"
-        case .indonesian: return "Nanti saja"
-        case .thai: return "ไว้ทีหลัง"
-        case .vietnamese: return "Để sau"
-        case .dutch: return "Misschien later"
-        case .japanese: return "あとで確認する"
-        case .chinese: return "稍后了解"
-        case .german: return "Vielleicht später"
-        case .french: return "Peut-être plus tard"
-        case .spanish: return "Quizás más tarde"
-        case .italian: return "Forse più tardi"
-        case .portuguese: return "Talvez depois"
-        case .chineseTraditional: return "以後再說"
-        }
-    }
-
-    static var proFeatureRecommendTitle: String {
+    public static var proFeatureRecommendTitle: String {
         switch lang {
         case .korean: return "무제한 AI 추천"
         case .english: return "Unlimited AI plans"
@@ -13603,7 +12373,7 @@ enum Strings {
         }
     }
 
-    static var proFeatureRecommendDesc: String {
+    public static var proFeatureRecommendDesc: String {
         switch lang {
         case .korean: return "무료는 3개까지"
         case .english: return "Free is limited to 3"
@@ -13631,7 +12401,7 @@ enum Strings {
         }
     }
 
-    static var proFeatureBonusTitle: String {
+    public static var proFeatureBonusTitle: String {
         switch lang {
         case .korean: return "보너스 연차 관리"
         case .english: return "Bonus leave tracking"
@@ -13659,7 +12429,7 @@ enum Strings {
         }
     }
 
-    static var proFeatureBonusDesc: String {
+    public static var proFeatureBonusDesc: String {
         switch lang {
         case .korean: return "보상 휴가, 특별 휴가, 병가"
         case .english: return "Comp days, special leave, sick"
@@ -13687,7 +12457,7 @@ enum Strings {
         }
     }
 
-    static var proFeatureMultiYearTitle: String {
+    public static var proFeatureMultiYearTitle: String {
         switch lang {
         case .korean: return "멀티 연도 플래닝"
         case .english: return "Multi-year planning"
@@ -13715,7 +12485,7 @@ enum Strings {
         }
     }
 
-    static var proFeatureMultiYearDesc: String {
+    public static var proFeatureMultiYearDesc: String {
         switch lang {
         case .korean: return "지난해와 내년까지 한눈에"
         case .english: return "Last year and next year at a glance"
@@ -13743,7 +12513,7 @@ enum Strings {
         }
     }
 
-    static var proFeatureCalendarTitle: String {
+    public static var proFeatureCalendarTitle: String {
         switch lang {
         case .korean: return "캘린더 연동"
         case .english: return "Calendar sync"
@@ -13771,7 +12541,7 @@ enum Strings {
         }
     }
 
-    static var proFeatureCalendarDesc: String {
+    public static var proFeatureCalendarDesc: String {
         switch lang {
         case .korean: return "iOS 캘린더에 자동 동기화"
         case .english: return "Auto-sync with iOS Calendar"
@@ -13800,7 +12570,7 @@ enum Strings {
     }
 
     // MARK: - 휴가 페이스 (번아웃 & 소진 속도)
-    static var paceCardTitle: String {
+    public static var paceCardTitle: String {
         switch lang {
         case .korean: return "휴가 페이스"
         case .english: return "Vacation Pace"
@@ -13828,7 +12598,7 @@ enum Strings {
         }
     }
 
-    static var paceYearProgressLabel: String {
+    public static var paceYearProgressLabel: String {
         switch lang {
         case .korean: return "올해 진행"
         case .english: return "Year progress"
@@ -13856,7 +12626,7 @@ enum Strings {
         }
     }
 
-    static var paceUsageLabel: String {
+    public static var paceUsageLabel: String {
         switch lang {
         case .korean: return "연차 사용"
         case .english: return "Leave used"
@@ -13884,232 +12654,8 @@ enum Strings {
         }
     }
 
-    static var paceLabelSlow: String {
-        switch lang {
-        case .korean: return "여유"
-        case .english: return "Relaxed"
-        case .swedish: return "Avslappnad"
-        case .norwegian: return "Rolig"
-        case .danish: return "Afslappet"
-        case .finnish: return "Rauhallinen"
-        case .polish: return "Spokojne"
-        case .czech: return "Pomalé"
-        case .greek: return "Χαλαρός"
-        case .turkish: return "Rahat"
-        case .russian: return "Спокойно"
-        case .indonesian: return "Santai"
-        case .thai: return "สบายๆ"
-        case .vietnamese: return "Thong thả"
-        case .dutch: return "Rustig"
-        case .japanese: return "ゆとり"
-        case .chinese: return "宽松"
-        case .german: return "Entspannt"
-        case .french: return "Serein"
-        case .spanish: return "Tranquilo"
-        case .italian: return "Tranquillo"
-        case .portuguese: return "Tranquilo"
-        case .chineseTraditional: return "從容"
-        }
-    }
-
-    static var paceLabelHealthy: String {
-        switch lang {
-        case .korean: return "적정"
-        case .english: return "Balanced"
-        case .swedish: return "Balanserad"
-        case .norwegian: return "Balansert"
-        case .danish: return "Afbalanceret"
-        case .finnish: return "Tasapainoinen"
-        case .polish: return "Zrównoważone"
-        case .czech: return "Vyrovnané"
-        case .greek: return "Ισορροπημένος"
-        case .turkish: return "Dengeli"
-        case .russian: return "В норме"
-        case .indonesian: return "Seimbang"
-        case .thai: return "สมดุล"
-        case .vietnamese: return "Cân bằng"
-        case .dutch: return "Evenwichtig"
-        case .japanese: return "適正"
-        case .chinese: return "均衡"
-        case .german: return "Ausgewogen"
-        case .french: return "Équilibré"
-        case .spanish: return "Equilibrado"
-        case .italian: return "Equilibrato"
-        case .portuguese: return "Equilibrado"
-        case .chineseTraditional: return "適中"
-        }
-    }
-
-    static var paceLabelFast: String {
-        switch lang {
-        case .korean: return "빠름"
-        case .english: return "Fast"
-        case .swedish: return "Snabb"
-        case .norwegian: return "Raskt"
-        case .danish: return "Hurtigt"
-        case .finnish: return "Nopea"
-        case .polish: return "Szybkie"
-        case .czech: return "Rychlé"
-        case .greek: return "Γρήγορος"
-        case .turkish: return "Hızlı"
-        case .russian: return "Быстро"
-        case .indonesian: return "Cepat"
-        case .thai: return "เร็ว"
-        case .vietnamese: return "Nhanh"
-        case .dutch: return "Snel"
-        case .japanese: return "速い"
-        case .chinese: return "偏快"
-        case .german: return "Schnell"
-        case .french: return "Rapide"
-        case .spanish: return "Rápido"
-        case .italian: return "Veloce"
-        case .portuguese: return "Rápido"
-        case .chineseTraditional: return "偏快"
-        }
-    }
-
-    static var paceLabelVeryFast: String {
-        switch lang {
-        case .korean: return "매우 빠름"
-        case .english: return "Very fast"
-        case .swedish: return "Mycket snabb"
-        case .norwegian: return "Veldig raskt"
-        case .danish: return "Meget hurtigt"
-        case .finnish: return "Hyvin nopea"
-        case .polish: return "Bardzo szybkie"
-        case .czech: return "Velmi rychlé"
-        case .greek: return "Πολύ γρήγορος"
-        case .turkish: return "Çok hızlı"
-        case .russian: return "Очень быстро"
-        case .indonesian: return "Sangat cepat"
-        case .thai: return "เร็วมาก"
-        case .vietnamese: return "Rất nhanh"
-        case .dutch: return "Zeer snel"
-        case .japanese: return "非常に速い"
-        case .chinese: return "很快"
-        case .german: return "Sehr schnell"
-        case .french: return "Très rapide"
-        case .spanish: return "Muy rápido"
-        case .italian: return "Molto veloce"
-        case .portuguese: return "Muito rápido"
-        case .chineseTraditional: return "非常快"
-        }
-    }
-
-    static var paceMessageSlow: String {
-        switch lang {
-        case .korean: return "여유롭게 사용 중이에요. 다음 휴가를 미리 계획해 보세요."
-        case .english: return "You're pacing slowly. Try planning ahead so days don't pile up."
-        case .swedish: return "Du tar ut semester i lugn takt. Planera i god tid så att dagarna inte hopar sig."
-        case .norwegian: return "Du bruker ferie i sakte tempo. Prøv å planlegge i god tid så dagene ikke hoper seg opp."
-        case .danish: return "Du bruger ferien langsomt. Prøv at planlægge i god tid, så dagene ikke hober sig op."
-        case .finnish: return "Käytät lomaa hitaasti. Suunnittele etukäteen, ettei päiviä kerry kasaan."
-        case .polish: return "Urlop wykorzystujesz wolno. Zaplanuj go z wyprzedzeniem, by dni się nie nagromadziły."
-        case .czech: return "Čerpáš pomalu. Zkus plánovat dopředu, ať se dny nehromadí."
-        case .greek: return "Ο ρυθμός σου είναι αργός. Δοκίμασε να σχεδιάσεις νωρίτερα για να μην μαζεύονται οι ημέρες."
-        case .turkish: return "Yavaş ilerliyorsun. Günler birikmesin diye önceden planlamayı dene."
-        case .russian: return "Вы расходуете отпуск неспешно. Спланируйте следующий заранее, чтобы дни не копились."
-        case .indonesian: return "Pemakaian cutimu masih santai. Coba rencanakan liburan berikutnya dari sekarang."
-        case .thai: return "คุณยังใช้วันลาน้อยอยู่ ลองวางแผนวันหยุดครั้งถัดไปไว้ตั้งแต่ตอนนี้"
-        case .vietnamese: return "Bạn đang dùng phép khá ít. Hãy lên kế hoạch cho kỳ nghỉ tới ngay từ bây giờ."
-        case .dutch: return "Je gaat rustig aan. Plan vooruit zodat dagen zich niet opstapelen."
-        case .japanese: return "ゆったり使っています。次の休暇を計画してみましょう。"
-        case .chinese: return "使用节奏宽松。可以提前规划下一次休假。"
-        case .german: return "Du nutzt deinen Urlaub gemächlich. Plane vorausschauend, damit sich keine Tage anhäufen."
-        case .french: return "Vous prenez vos congés tranquillement. Planifiez à l'avance pour ne pas accumuler de jours."
-        case .spanish: return "Vas con calma. Planifica tu próximo descanso con antelación para no acumular días."
-        case .italian: return "Stai usando le ferie con calma. Pianifica in anticipo per non accumulare giorni."
-        case .portuguese: return "Você está usando as férias com calma. Planeje a próxima folga com antecedência para não acumular dias."
-        case .chineseTraditional: return "你目前休得很從容，試著提前規劃下一次休假吧。"
-        }
-    }
-
-    static var paceMessageHealthy: String {
-        switch lang {
-        case .korean: return "건강한 페이스로 휴가를 사용하고 있어요."
-        case .english: return "Healthy pace. You're using leave at the right rate."
-        case .swedish: return "Sund takt. Du tar ut semester i lagom takt."
-        case .norwegian: return "Sunt tempo. Du bruker ferie i riktig takt."
-        case .danish: return "Sundt tempo. Du bruger ferien i et passende tempo."
-        case .finnish: return "Terve tahti. Käytät lomaa sopivaa tahtia."
-        case .polish: return "Zdrowe tempo. Urlop wykorzystujesz w dobrym rytmie."
-        case .czech: return "Zdravé tempo. Dovolenou čerpáš ve správném poměru."
-        case .greek: return "Υγιής ρυθμός. Χρησιμοποιείς την άδεια με τον σωστό ρυθμό."
-        case .turkish: return "Sağlıklı tempo. İznini doğru hızda kullanıyorsun."
-        case .russian: return "Здоровый темп: вы расходуете отпуск в самый раз."
-        case .indonesian: return "Ritme sehat. Kamu memakai cuti dengan pas."
-        case .thai: return "จังหวะดี คุณใช้วันลาได้พอเหมาะ"
-        case .vietnamese: return "Nhịp độ tốt. Bạn đang dùng phép vừa phải."
-        case .dutch: return "Gezond tempo. Je neemt verlof in een goed ritme op."
-        case .japanese: return "健康的なペースで休暇を取れています。"
-        case .chinese: return "节奏健康,休假分配合理。"
-        case .german: return "Gesundes Tempo. Du nutzt deinen Urlaub im richtigen Maß."
-        case .french: return "Rythme sain. Vous utilisez vos congés au bon rythme."
-        case .spanish: return "Ritmo saludable. Estás usando tus vacaciones al ritmo adecuado."
-        case .italian: return "Ritmo sano. Stai usando le ferie al ritmo giusto."
-        case .portuguese: return "Ritmo saudável. Você está usando as férias no ritmo certo."
-        case .chineseTraditional: return "你正以健康的步調使用休假。"
-        }
-    }
-
-    static var paceMessageFast: String {
-        switch lang {
-        case .korean: return "최근 사용이 많네요. 남은 기간을 잘 안배해 보세요."
-        case .english: return "You're using leave faster than average. Pace yourself for the rest of the year."
-        case .swedish: return "Du tar ut semester snabbare än genomsnittet. Fördela dagarna över resten av året."
-        case .norwegian: return "Du bruker ferie raskere enn gjennomsnittet. Fordel resten utover året."
-        case .danish: return "Du bruger ferie hurtigere end gennemsnittet. Tag den med ro resten af året."
-        case .finnish: return "Käytät lomaa keskimääräistä nopeammin. Jaksota loput vuodesta."
-        case .polish: return "Urlop wykorzystujesz szybciej niż przeciętnie. Rozłóż siły na resztę roku."
-        case .czech: return "Čerpáš dovolenou rychleji než průměr. Rozlož si síly na zbytek roku."
-        case .greek: return "Χρησιμοποιείς την άδεια πιο γρήγορα από τον μέσο όρο. Πρόσεχε τον ρυθμό για το υπόλοιπο του έτους."
-        case .turkish: return "İznini ortalamadan hızlı kullanıyorsun. Yılın kalanı için temponu ayarla."
-        case .russian: return "Вы расходуете отпуск быстрее обычного. Распределите остаток до конца года."
-        case .indonesian: return "Belakangan kamu banyak ambil cuti. Atur sisanya untuk sisa tahun ini."
-        case .thai: return "ช่วงนี้คุณลาบ่อย ลองแบ่งวันลาที่เหลือไว้ใช้ตลอดปี"
-        case .vietnamese: return "Gần đây bạn nghỉ khá nhiều. Hãy chia số phép còn lại cho phần còn lại của năm."
-        case .dutch: return "Je neemt sneller verlof op dan gemiddeld. Verdeel je dagen over de rest van het jaar."
-        case .japanese: return "やや早めの消化です。残りの期間を見ながら配分しましょう。"
-        case .chinese: return "使用较快。请合理分配剩余时间。"
-        case .german: return "Du nimmst Urlaub schneller als der Durchschnitt. Teile dir den Rest des Jahres gut ein."
-        case .french: return "Vous posez vos congés plus vite que la moyenne. Répartissez bien le reste de l'année."
-        case .spanish: return "Últimamente usas muchas vacaciones. Repártelas bien el resto del año."
-        case .italian: return "Ultimamente usi molte ferie. Distribuisci bene il resto dell’anno."
-        case .portuguese: return "Você tem usado bastante férias ultimamente. Distribua bem o resto do ano."
-        case .chineseTraditional: return "最近休得比較多，好好分配剩下的時間吧。"
-        }
-    }
-
-    static var paceMessageVeryFast: String {
-        switch lang {
-        case .korean: return "연차 소진이 매우 빨라요. 남은 일수가 부족할 수 있어요."
-        case .english: return "Your leave is depleting very quickly. You might run short."
-        case .swedish: return "Din semester tar slut mycket snabbt. Du kan komma att ha för lite kvar."
-        case .norwegian: return "Ferien din tar slutt veldig raskt. Du kan gå tom."
-        case .danish: return "Din ferie bliver brugt meget hurtigt. Du risikerer at løbe tør."
-        case .finnish: return "Lomasi kuluu hyvin nopeasti. Päiviä voi loppua kesken."
-        case .polish: return "Urlop topnieje bardzo szybko. Może Ci zabraknąć."
-        case .czech: return "Dovolená ti ubývá velmi rychle. Může ti dojít."
-        case .greek: return "Η άδειά σου εξαντλείται πολύ γρήγορα. Μπορεί να σου λείψει."
-        case .turkish: return "İznin çok hızlı tükeniyor. Yetmeyebilir."
-        case .russian: return "Отпуск тает очень быстро. Дней может не хватить."
-        case .indonesian: return "Cutimu cepat sekali habis. Sisanya bisa tidak cukup."
-        case .thai: return "วันลาของคุณลดลงเร็วมาก อาจไม่พอใช้"
-        case .vietnamese: return "Phép của bạn đang hết rất nhanh. Có thể sẽ không đủ dùng."
-        case .dutch: return "Je verlof raakt razendsnel op. Je kunt tekortkomen."
-        case .japanese: return "有給の消化が非常に速いです。残日数が不足するかもしれません。"
-        case .chinese: return "年假消耗非常快,剩余天数可能不足。"
-        case .german: return "Dein Urlaub schwindet sehr schnell. Am Ende könnten Tage fehlen."
-        case .french: return "Vos congés fondent très vite. Il pourrait vous manquer des jours."
-        case .spanish: return "Tus vacaciones se agotan muy rápido. Podrían faltarte días."
-        case .italian: return "Le tue ferie si stanno esaurendo molto in fretta. Potrebbero mancarti giorni."
-        case .portuguese: return "Suas férias estão acabando muito rápido. Podem faltar dias."
-        case .chineseTraditional: return "特休消耗得非常快，剩餘天數可能不夠用。"
-        }
-    }
-
     // 번아웃 신호 섹션
-    static var burnoutSectionTitle: String {
+    public static var burnoutSectionTitle: String {
         switch lang {
         case .korean: return "쉬어가는 흐름"
         case .english: return "Rest rhythm"
@@ -14137,7 +12683,7 @@ enum Strings {
         }
     }
 
-    static var burnoutLast: String {
+    public static var burnoutLast: String {
         switch lang {
         case .korean: return "지난 휴식"
         case .english: return "Last break"
@@ -14165,7 +12711,7 @@ enum Strings {
         }
     }
 
-    static var burnoutToday: String {
+    public static var burnoutToday: String {
         switch lang {
         case .korean: return "오늘"
         case .english: return "Today"
@@ -14193,7 +12739,7 @@ enum Strings {
         }
     }
 
-    static var burnoutNext: String {
+    public static var burnoutNext: String {
         switch lang {
         case .korean: return "다음 휴식"
         case .english: return "Next break"
@@ -14221,7 +12767,7 @@ enum Strings {
         }
     }
 
-    static func burnoutDaysAgo(_ days: Int) -> String {
+    public static func burnoutDaysAgo(_ days: Int) -> String {
         switch lang {
         case .korean: return "\(days)일 전"
         case .english: return days == 1 ? "1 day ago" : "\(days) days ago"
@@ -14249,7 +12795,7 @@ enum Strings {
         }
     }
 
-    static func burnoutDaysAhead(_ days: Int) -> String {
+    public static func burnoutDaysAhead(_ days: Int) -> String {
         switch lang {
         case .korean: return "\(days)일 후"
         case .english: return days == 1 ? "in 1 day" : "in \(days) days"
@@ -14277,7 +12823,7 @@ enum Strings {
         }
     }
 
-    static var burnoutNoLast: String {
+    public static var burnoutNoLast: String {
         switch lang {
         case .korean: return "기록 없음"
         case .english: return "No record"
@@ -14305,7 +12851,7 @@ enum Strings {
         }
     }
 
-    static var burnoutNoNext: String {
+    public static var burnoutNoNext: String {
         switch lang {
         case .korean: return "계획 없음"
         case .english: return "Not planned"
@@ -14333,35 +12879,7 @@ enum Strings {
         }
     }
 
-    static var burnoutMsgHealthy: String {
-        switch lang {
-        case .korean: return "휴가 간격이 건강해요. 지금 흐름을 유지하세요."
-        case .english: return "Healthy gap between breaks. Keep this rhythm."
-        case .swedish: return "Lagom avstånd mellan pauserna. Behåll den här rytmen."
-        case .norwegian: return "Sunt mellomrom mellom pausene. Behold denne rytmen."
-        case .danish: return "Sund afstand mellem pauserne. Hold fast i den rytme."
-        case .finnish: return "Taukojen väli on terve. Jatka samaan malliin."
-        case .polish: return "Zdrowy odstęp między przerwami. Utrzymaj ten rytm."
-        case .czech: return "Zdravé rozestupy mezi pauzami. Drž tento rytmus."
-        case .greek: return "Υγιές διάστημα ανάμεσα στα διαλείμματα. Κράτα αυτόν τον ρυθμό."
-        case .turkish: return "Molalar arasında sağlıklı bir aralık var. Bu ritmi koru."
-        case .russian: return "Здоровые перерывы между отпусками. Сохраняйте этот ритм."
-        case .indonesian: return "Jarak antarliburmu sehat. Pertahankan ritme ini."
-        case .thai: return "ระยะห่างระหว่างการพักกำลังดี รักษาจังหวะนี้ไว้"
-        case .vietnamese: return "Khoảng cách giữa các lần nghỉ đang hợp lý. Hãy giữ nhịp này."
-        case .dutch: return "Gezonde tussenpozen tussen vakanties. Houd dit ritme vast."
-        case .japanese: return "休暇の間隔が健康的です。今のリズムを維持しましょう。"
-        case .chinese: return "休假间隔健康,继续保持这个节奏。"
-        case .german: return "Gesunder Abstand zwischen den Auszeiten. Behalte diesen Rhythmus bei."
-        case .french: return "Bon écart entre vos pauses. Gardez ce rythme."
-        case .spanish: return "Buen intervalo entre descansos. Mantén este ritmo."
-        case .italian: return "Buona distanza tra le pause. Mantieni questo ritmo."
-        case .portuguese: return "Bom intervalo entre as folgas. Mantenha esse ritmo."
-        case .chineseTraditional: return "休假間隔很健康，保持現在的節奏吧。"
-        }
-    }
-
-    static var burnoutMsgWarning: String {
+    public static var burnoutMsgWarning: String {
         switch lang {
         case .korean: return "쉬어간 지 좀 됐어요. 짧게라도 휴식을 계획해 보세요."
         case .english: return "It's been a while. Consider planning even a short break."
@@ -14389,7 +12907,7 @@ enum Strings {
         }
     }
 
-    static var burnoutMsgRisky: String {
+    public static var burnoutMsgRisky: String {
         switch lang {
         case .korean: return "오랫동안 쉬지 못했어요. 번아웃 전에 휴가를 잡으세요."
         case .english: return "You haven't rested in a long time. Schedule a break before burnout sets in."
@@ -14417,38 +12935,10 @@ enum Strings {
         }
     }
 
-    static var burnoutMsgPlannedAhead: String {
-        switch lang {
-        case .korean: return "다음 휴가가 곧이에요. 조금만 더 힘내세요."
-        case .english: return "Your next break is coming up soon. Hang in there."
-        case .swedish: return "Din nästa paus närmar sig. Håll ut."
-        case .norwegian: return "Neste pause nærmer seg. Hold ut."
-        case .danish: return "Din næste pause nærmer sig. Hold ud."
-        case .finnish: return "Seuraava taukosi on pian. Jaksa vielä."
-        case .polish: return "Twoja następna przerwa jest już blisko. Wytrzymaj jeszcze trochę."
-        case .czech: return "Další pauza je brzy. Vydrž."
-        case .greek: return "Το επόμενο διάλειμμά σου πλησιάζει. Κάνε λίγη υπομονή."
-        case .turkish: return "Bir sonraki molan yakında. Biraz daha dayan."
-        case .russian: return "Следующий отпуск уже скоро. Осталось немного!"
-        case .indonesian: return "Liburmu sebentar lagi. Semangat, tinggal sedikit lagi!"
-        case .thai: return "อีกไม่นานก็ได้หยุดแล้ว สู้ๆ อีกนิด"
-        case .vietnamese: return "Sắp được nghỉ rồi. Cố lên một chút nữa!"
-        case .dutch: return "Je volgende vakantie komt eraan. Houd vol."
-        case .japanese: return "次の休暇はすぐです。もう少しがんばりましょう。"
-        case .chinese: return "下次休假就快到了,再坚持一下。"
-        case .german: return "Deine nächste Auszeit steht bald an. Halte noch ein bisschen durch."
-        case .french: return "Votre prochaine pause approche. Tenez bon encore un peu."
-        case .spanish: return "Tu próximo descanso está cerca. Aguanta un poco más."
-        case .italian: return "La prossima pausa è vicina. Resisti ancora un po’."
-        case .portuguese: return "Sua próxima folga está chegando. Aguente só mais um pouco."
-        case .chineseTraditional: return "下次休假就快到了，再撐一下吧。"
-        }
-    }
-
     // MARK: - 회복 잔량 / 번아웃 예측 (Rest Radar)
 
     /// 내 평소 휴식 주기 — 개인화됐을 때
-    static func personalCycleLabel(_ days: Int) -> String {
+    public static func personalCycleLabel(_ days: Int) -> String {
         switch lang {
         case .korean: return "평소 주기 \(days)일"
         case .english: return "Your usual cycle: \(days) days"
@@ -14477,7 +12967,7 @@ enum Strings {
     }
 
     /// 캘린더 범례 — 번아웃 주의 구간
-    static var burnoutWarningLegend: String {
+    public static var burnoutWarningLegend: String {
         switch lang {
         case .korean: return "번아웃 주의"
         case .english: return "Burnout risk"
@@ -14507,7 +12997,7 @@ enum Strings {
 
     // MARK: - 피로 체크인 (단일문항 SIB)
 
-    static var fatigueCheckInTitle: String {
+    public static var fatigueCheckInTitle: String {
         switch lang {
         case .korean: return "요즘 얼마나 지치셨나요?"
         case .english: return "How drained do you feel lately?"
@@ -14535,7 +13025,7 @@ enum Strings {
         }
     }
 
-    static var fatigueCheckInSubtitle: String {
+    public static var fatigueCheckInSubtitle: String {
         switch lang {
         case .korean: return "한 번의 답이 휴식 추천을 더 정확하게 만들어요."
         case .english: return "One quick answer sharpens your rest suggestions."
@@ -14563,7 +13053,7 @@ enum Strings {
         }
     }
 
-    static var fatigueLow: String {
+    public static var fatigueLow: String {
         switch lang {
         case .korean: return "괜찮아요"
         case .english: return "Fine"
@@ -14591,7 +13081,7 @@ enum Strings {
         }
     }
 
-    static var fatigueHigh: String {
+    public static var fatigueHigh: String {
         switch lang {
         case .korean: return "완전 지침"
         case .english: return "Exhausted"
@@ -14619,7 +13109,7 @@ enum Strings {
         }
     }
 
-    static var fatigueSubmit: String {
+    public static var fatigueSubmit: String {
         switch lang {
         case .korean: return "기록하기"
         case .english: return "Submit"
@@ -14647,7 +13137,7 @@ enum Strings {
         }
     }
 
-    static var fatigueSkip: String {
+    public static var fatigueSkip: String {
         switch lang {
         case .korean: return "나중에"
         case .english: return "Later"
@@ -14677,7 +13167,7 @@ enum Strings {
 
     // MARK: - 휴식 알림 설정 (Rest Radar)
 
-    static var restRadarSection: String {
+    public static var restRadarSection: String {
         switch lang {
         case .korean: return "휴식 알림"
         case .english: return "Rest reminders"
@@ -14705,7 +13195,7 @@ enum Strings {
         }
     }
 
-    static var restRadarToggle: String {
+    public static var restRadarToggle: String {
         switch lang {
         case .korean: return "휴식 레이더"
         case .english: return "Rest Radar"
@@ -14733,7 +13223,7 @@ enum Strings {
         }
     }
 
-    static var restRadarFooter: String {
+    public static var restRadarFooter: String {
         switch lang {
         case .korean: return "오래 쉬지 못했을 때, 가까운 저비용 연휴와 함께 쉬어갈 때를 알려드려요."
         case .english: return "When you've gone too long without a break, we'll nudge you with a nearby low-cost getaway."
@@ -14762,7 +13252,7 @@ enum Strings {
     }
 
     /// 알림 내 스누즈 액션 버튼
-    static var restRadarSnoozeAction: String {
+    public static var restRadarSnoozeAction: String {
         switch lang {
         case .korean: return "2주 뒤에 다시"
         case .english: return "Remind in 2 weeks"
@@ -14791,7 +13281,7 @@ enum Strings {
     }
 
     // MARK: - 홈 카드 라벨 (LeaveStatusCard)
-    static var includeBonus: String {
+    public static var includeBonus: String {
         switch lang {
         case .korean: return "보너스 포함"
         case .english: return "Include bonus"
@@ -14820,7 +13310,7 @@ enum Strings {
     }
 
     /// 보너스 포함 토글 VoiceOver 힌트
-    static var includeBonusHint: String {
+    public static var includeBonusHint: String {
         switch lang {
         case .korean: return "켜면 보너스 연차가 잔여 일수에 합산됩니다"
         case .english: return "When on, bonus leave is added to your remaining days"
@@ -14848,7 +13338,7 @@ enum Strings {
         }
     }
 
-    static var statRemainingGoal: String {
+    public static var statRemainingGoal: String {
         switch lang {
         case .korean: return "남은 목표"
         case .english: return "Goal left"
@@ -14876,35 +13366,7 @@ enum Strings {
         }
     }
 
-    static var usable: String {
-        switch lang {
-        case .korean: return "사용 가능"
-        case .english: return "Available"
-        case .swedish: return "Tillgänglig"
-        case .norwegian: return "Tilgjengelig"
-        case .danish: return "Tilgængelig"
-        case .finnish: return "Käytettävissä"
-        case .polish: return "Dostępne"
-        case .czech: return "K dispozici"
-        case .greek: return "Διαθέσιμο"
-        case .turkish: return "Kullanılabilir"
-        case .russian: return "Доступно"
-        case .indonesian: return "Tersedia"
-        case .thai: return "ใช้ได้"
-        case .vietnamese: return "Còn dùng được"
-        case .dutch: return "Beschikbaar"
-        case .japanese: return "利用可能"
-        case .chinese: return "可用"
-        case .german: return "Verfügbar"
-        case .french: return "Disponible"
-        case .spanish: return "Disponible"
-        case .italian: return "Disponibile"
-        case .portuguese: return "Disponível"
-        case .chineseTraditional: return "可使用"
-        }
-    }
-
-    static var goalNotSetDesc: String {
+    public static var goalNotSetDesc: String {
         switch lang {
         case .korean: return "목표 일수 없음 · 설정에서 연간 목표를 설정할 수 있어요"
         case .english: return "No goal set · You can set a yearly goal in Settings"
@@ -14932,7 +13394,7 @@ enum Strings {
         }
     }
 
-    static var pastLeaveSheetFooter: String {
+    public static var pastLeaveSheetFooter: String {
         switch lang {
         case .korean: return "날짜별로 개별 입력하려면 + 탭을 이용하세요"
         case .english: return "Use the + tab to add leave by date"
@@ -14961,7 +13423,7 @@ enum Strings {
     }
 
     // MARK: - Pro 배너 메시지
-    static func proBannerHolidayUpcoming(_ holidayName: String, days: Int) -> String {
+    public static func proBannerHolidayUpcoming(_ holidayName: String, days: Int) -> String {
         switch lang {
         case .korean: return "\(holidayName) D-\(days) · 연차 붙여 긴 휴가 만들어 보세요"
         case .english: return "\(holidayName) in \(days)d · Add PTO for a longer break"
@@ -14989,7 +13451,7 @@ enum Strings {
         }
     }
 
-    static func proBannerYearEndExpiry(_ daysText: String) -> String {
+    public static func proBannerYearEndExpiry(_ daysText: String) -> String {
         switch lang {
         case .korean: return "연말까지 \(daysText)일 남았어요 · 소멸 전에 계획하세요"
         case .english: return "\(daysText) days left this year · Plan before they expire"
@@ -15017,7 +13479,7 @@ enum Strings {
         }
     }
 
-    static var goldenSeasonName: String {
+    public static var goldenSeasonName: String {
         switch lang {
         case .korean: return "황금연휴"
         case .english: return "Golden Week"
@@ -15045,7 +13507,7 @@ enum Strings {
         }
     }
 
-    static var chuseokSeasonName: String {
+    public static var chuseokSeasonName: String {
         switch lang {
         case .korean: return "추석 연휴"
         case .english: return "Autumn Holiday"
@@ -15073,7 +13535,7 @@ enum Strings {
         }
     }
 
-    static func proBannerSeasonOpportunity(_ seasonName: String) -> String {
+    public static func proBannerSeasonOpportunity(_ seasonName: String) -> String {
         switch lang {
         case .korean: return "\(seasonName) 시즌 · AI 추천으로 최적의 일정 만들어 보세요"
         case .english: return "\(seasonName) season · Try AI recommendations for the best plan"
@@ -15101,7 +13563,7 @@ enum Strings {
         }
     }
 
-    static func proBannerLowRemaining(_ daysText: String) -> String {
+    public static func proBannerLowRemaining(_ daysText: String) -> String {
         switch lang {
         case .korean: return "남은 연차 \(daysText)일 · 효율적으로 배치해 보세요"
         case .english: return "\(daysText) days of leave left · Place them wisely"
@@ -15129,7 +13591,7 @@ enum Strings {
         }
     }
 
-    static func proBannerEmptyPlan(_ daysText: String) -> String {
+    public static func proBannerEmptyPlan(_ daysText: String) -> String {
         switch lang {
         case .korean: return "\(daysText)일 연차가 비어 있어요 · AI 추천 받아보세요"
         case .english: return "\(daysText) days of leave unplanned · Get AI recommendations"
@@ -15158,7 +13620,7 @@ enum Strings {
     }
 
     // MARK: - AddLeaveView 라벨
-    static var leisureGoalRemaining: String {
+    public static var leisureGoalRemaining: String {
         switch lang {
         case .korean: return "목표까지 남은 일수"
         case .english: return "Days to goal"
@@ -15186,7 +13648,7 @@ enum Strings {
         }
     }
 
-    static var leisureTotalPlan: String {
+    public static var leisureTotalPlan: String {
         switch lang {
         case .korean: return "총 계획"
         case .english: return "Total planned"
@@ -15214,7 +13676,7 @@ enum Strings {
         }
     }
 
-    static var bonusUseSectionHeader: String {
+    public static var bonusUseSectionHeader: String {
         switch lang {
         case .korean: return "보너스 연차 사용"
         case .english: return "Use bonus leave"
@@ -15242,7 +13704,7 @@ enum Strings {
         }
     }
 
-    static var bonusUseFooterSelected: String {
+    public static var bonusUseFooterSelected: String {
         switch lang {
         case .korean: return "보너스 연차를 사용합니다. 연차에서 차감되지 않습니다."
         case .english: return "Bonus leave will be used. It won't be deducted from your annual leave."
@@ -15270,7 +13732,7 @@ enum Strings {
         }
     }
 
-    static var bonusUseFooterUnselected: String {
+    public static var bonusUseFooterUnselected: String {
         switch lang {
         case .korean: return "탭하여 보너스 연차를 선택하면 연차 대신 사용할 수 있습니다."
         case .english: return "Tap to select bonus leave and use it instead of annual leave."
@@ -15298,462 +13760,8 @@ enum Strings {
         }
     }
 
-    static var unitSectionTitleBonus: String {
-        switch lang {
-        case .korean: return "보너스 연차 사용 단위"
-        case .english: return "Bonus leave unit"
-        case .swedish: return "Enhet för bonusledighet"
-        case .norwegian: return "Enhet for bonusferie"
-        case .danish: return "Enhed for bonusferie"
-        case .finnish: return "Bonusloman yksikkö"
-        case .polish: return "Jednostka urlopu bonusowego"
-        case .czech: return "Jednotka bonusové dovolené"
-        case .greek: return "Μονάδα μπόνους άδειας"
-        case .turkish: return "Bonus izin birimi"
-        case .russian: return "Шаг бонусных дней"
-        case .indonesian: return "Satuan cuti bonus"
-        case .thai: return "หน่วยวันลาโบนัส"
-        case .vietnamese: return "Đơn vị phép thưởng"
-        case .dutch: return "Eenheid bonusverlof"
-        case .japanese: return "ボーナス休暇の単位"
-        case .chinese: return "奖励年假单位"
-        case .german: return "Einheit für Bonusurlaub"
-        case .french: return "Unité des congés bonus"
-        case .spanish: return "Unidad de días extra"
-        case .italian: return "Unità ferie bonus"
-        case .portuguese: return "Unidade das folgas bônus"
-        case .chineseTraditional: return "獎勵特休使用單位"
-        }
-    }
-
-    static var unitSectionTitleLeisure: String {
-        switch lang {
-        case .korean: return "휴가 기간"
-        case .english: return "Vacation length"
-        case .swedish: return "Ledighetens längd"
-        case .norwegian: return "Feriens lengde"
-        case .danish: return "Feriens længde"
-        case .finnish: return "Loman pituus"
-        case .polish: return "Długość wakacji"
-        case .czech: return "Délka dovolené"
-        case .greek: return "Διάρκεια διακοπών"
-        case .turkish: return "Tatil süresi"
-        case .russian: return "Длительность отпуска"
-        case .indonesian: return "Lama liburan"
-        case .thai: return "ระยะเวลาวันหยุด"
-        case .vietnamese: return "Độ dài kỳ nghỉ"
-        case .dutch: return "Vakantieduur"
-        case .japanese: return "休暇の長さ"
-        case .chinese: return "休假时长"
-        case .german: return "Urlaubsdauer"
-        case .french: return "Durée des vacances"
-        case .spanish: return "Duración de las vacaciones"
-        case .italian: return "Durata delle ferie"
-        case .portuguese: return "Duração das férias"
-        case .chineseTraditional: return "休假期間"
-        }
-    }
-
-    static var unitSectionTitleEmployee: String {
-        switch lang {
-        case .korean: return "연차 차감 단위"
-        case .english: return "Deduction unit"
-        case .swedish: return "Avdragsenhet"
-        case .norwegian: return "Trekkenhet"
-        case .danish: return "Fradragsenhed"
-        case .finnish: return "Vähennysyksikkö"
-        case .polish: return "Jednostka odliczenia"
-        case .czech: return "Jednotka odečtu"
-        case .greek: return "Μονάδα αφαίρεσης"
-        case .turkish: return "Düşülecek birim"
-        case .russian: return "Шаг списания"
-        case .indonesian: return "Satuan potongan"
-        case .thai: return "หน่วยที่หัก"
-        case .vietnamese: return "Đơn vị trừ"
-        case .dutch: return "Aftrekeenheid"
-        case .japanese: return "有給控除の単位"
-        case .chinese: return "扣除单位"
-        case .german: return "Abzugseinheit"
-        case .french: return "Unité de déduction"
-        case .spanish: return "Unidad de descuento"
-        case .italian: return "Unità di detrazione"
-        case .portuguese: return "Unidade de desconto"
-        case .chineseTraditional: return "特休扣除單位"
-        }
-    }
-
-    static func unitLabel(_ type: LeaveType, isLeisure: Bool) -> String {
-        switch lang {
-        case .korean:
-            if isLeisure {
-                switch type {
-                case .quarter, .half: return "반나절"
-                case .annual: return "휴가"
-                default: return "휴가"
-                }
-            } else {
-                switch type {
-                case .quarter: return "반반차"
-                case .half: return "반차"
-                case .annual: return "연차"
-                default: return "연차"
-                }
-            }
-        case .english:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Quarter"
-                case .half: return "Half"
-                case .annual: return "Day off"
-                default: return "Day off"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Quarter PTO"
-                case .half: return "Half PTO"
-                case .annual: return "PTO"
-                default: return "PTO"
-                }
-            }
-        case .swedish:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Kvart"
-                case .half: return "Halv"
-                case .annual: return "Ledig dag"
-                default: return "Ledig dag"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Kvarts semesterdag"
-                case .half: return "Halv semesterdag"
-                case .annual: return "Semester"
-                default: return "Semester"
-                }
-            }
-        case .norwegian:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Kvart"
-                case .half: return "Halv"
-                case .annual: return "Fridag"
-                default: return "Fridag"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Kvart feriedag"
-                case .half: return "Halv feriedag"
-                case .annual: return "Ferie"
-                default: return "Ferie"
-                }
-            }
-        case .danish:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Kvart"
-                case .half: return "Halv"
-                case .annual: return "Fridag"
-                default: return "Fridag"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Kvart feriedag"
-                case .half: return "Halv feriedag"
-                case .annual: return "Ferie"
-                default: return "Ferie"
-                }
-            }
-        case .finnish:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Neljännes"
-                case .half: return "Puolikas"
-                case .annual: return "Vapaapäivä"
-                default: return "Vapaapäivä"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Neljännes lomaa"
-                case .half: return "Puoli lomaa"
-                case .annual: return "Loma"
-                default: return "Loma"
-                }
-            }
-        case .polish:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Ćwierć"
-                case .half: return "Pół"
-                case .annual: return "Dzień wolny"
-                default: return "Dzień wolny"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Ćwierć dnia urlopu"
-                case .half: return "Pół dnia urlopu"
-                case .annual: return "Urlop"
-                default: return "Urlop"
-                }
-            }
-        case .czech:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Čtvrt"
-                case .half: return "Půl"
-                case .annual: return "Volno"
-                default: return "Volno"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Čtvrt dovolené"
-                case .half: return "Půl dovolené"
-                case .annual: return "Dovolená"
-                default: return "Dovolená"
-                }
-            }
-        case .greek:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Τέταρτο"
-                case .half: return "Μισή"
-                case .annual: return "Ρεπό"
-                default: return "Ρεπό"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Τέταρτο άδειας"
-                case .half: return "Μισή άδεια"
-                case .annual: return "Άδεια"
-                default: return "Άδεια"
-                }
-            }
-        case .turkish:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Çeyrek"
-                case .half: return "Yarım"
-                case .annual: return "Tatil günü"
-                default: return "Day off"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Çeyrek izin"
-                case .half: return "Yarım izin"
-                case .annual: return "PTO"
-                default: return "PTO"
-                }
-            }
-        case .russian:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Четверть дня"
-                case .half: return "Полдня"
-                case .annual: return "Отдых"
-                default: return "Отдых"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Отпуск ¼ дня"
-                case .half: return "Отпуск ½ дня"
-                case .annual: return "Отпуск"
-                default: return "Отпуск"
-                }
-            }
-        case .indonesian:
-            if isLeisure {
-                switch type {
-                case .quarter: return "¼ hari"
-                case .half: return "½ hari"
-                case .annual: return "Libur"
-                default: return "Libur"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Cuti ¼ hari"
-                case .half: return "Cuti ½ hari"
-                case .annual: return "Cuti"
-                default: return "Cuti"
-                }
-            }
-        case .thai:
-            if isLeisure {
-                switch type {
-                case .quarter: return "¼ วัน"
-                case .half: return "½ วัน"
-                case .annual: return "หยุด"
-                default: return "หยุด"
-                }
-            } else {
-                switch type {
-                case .quarter: return "ลา ¼ วัน"
-                case .half: return "ลา ½ วัน"
-                case .annual: return "ลา"
-                default: return "ลา"
-                }
-            }
-        case .vietnamese:
-            if isLeisure {
-                switch type {
-                case .quarter: return "¼ ngày"
-                case .half: return "½ ngày"
-                case .annual: return "Nghỉ"
-                default: return "Nghỉ"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Phép ¼ ngày"
-                case .half: return "Phép ½ ngày"
-                case .annual: return "Phép"
-                default: return "Phép"
-                }
-            }
-        case .dutch:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Kwart"
-                case .half: return "Half"
-                case .annual: return "Vrije dag"
-                default: return "Vrije dag"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Kwart verlof"
-                case .half: return "Half verlof"
-                case .annual: return "Verlof"
-                default: return "Verlof"
-                }
-            }
-        case .japanese:
-            if isLeisure {
-                switch type {
-                case .quarter, .half: return "半日"
-                case .annual: return "休み"
-                default: return "休み"
-                }
-            } else {
-                switch type {
-                case .quarter: return "四半休"
-                case .half: return "半休"
-                case .annual: return "有給"
-                default: return "有給"
-                }
-            }
-        case .chinese:
-            if isLeisure {
-                switch type {
-                case .quarter, .half: return "半天"
-                case .annual: return "休假"
-                default: return "休假"
-                }
-            } else {
-                switch type {
-                case .quarter: return "四分一休"
-                case .half: return "半休"
-                case .annual: return "年假"
-                default: return "年假"
-                }
-            }
-        case .german:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Viertel"
-                case .half: return "Halb"
-                case .annual: return "Freier Tag"
-                default: return "Freier Tag"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Viertel Urlaubstag"
-                case .half: return "Halber Urlaubstag"
-                case .annual: return "Urlaubstag"
-                default: return "Urlaubstag"
-                }
-            }
-        case .french:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Quart"
-                case .half: return "Demi"
-                case .annual: return "Jour off"
-                default: return "Jour off"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Quart de congé"
-                case .half: return "Demi-congé"
-                case .annual: return "Congé"
-                default: return "Congé"
-                }
-            }
-        case .spanish:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Cuarto"
-                case .half: return "Medio"
-                case .annual: return "Día libre"
-                default: return "Día libre"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Cuarto de jornada"
-                case .half: return "Media jornada"
-                case .annual: return "Vacaciones"
-                default: return "Vacaciones"
-                }
-            }
-        case .italian:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Quarto"
-                case .half: return "Mezza"
-                case .annual: return "Giorno libero"
-                default: return "Giorno libero"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Quarto di giornata"
-                case .half: return "Mezza giornata"
-                case .annual: return "Ferie"
-                default: return "Ferie"
-                }
-            }
-        case .portuguese:
-            if isLeisure {
-                switch type {
-                case .quarter: return "Quarto"
-                case .half: return "Meio"
-                case .annual: return "Folga"
-                default: return "Folga"
-                }
-            } else {
-                switch type {
-                case .quarter: return "Quarto de dia"
-                case .half: return "Meio período"
-                case .annual: return "Férias"
-                default: return "Férias"
-                }
-            }
-        case .chineseTraditional:
-            if isLeisure {
-                switch type {
-                case .quarter: return "四分之一天"
-                case .half: return "半天"
-                case .annual: return "休假"
-                default: return "休假"
-                }
-            } else {
-                switch type {
-                case .quarter: return "四分之一特休"
-                case .half: return "半天特休"
-                case .annual: return "特休"
-                default: return "特休"
-                }
-            }
-        }
-    }
-
     /// 길이(종일/반차/반반차) 이름
-    static func leaveLengthName(_ length: LeaveLength) -> String {
+    public static func leaveLengthName(_ length: LeaveLength) -> String {
         switch lang {
         case .korean:
             switch length {
@@ -15920,7 +13928,7 @@ enum Strings {
     }
 
     /// "휴가 종류" 섹션 헤더
-    static var leaveCategorySectionHeader: String {
+    public static var leaveCategorySectionHeader: String {
         switch lang {
         case .korean: return "휴가 종류"
         case .english: return "Leave type"
@@ -15949,7 +13957,7 @@ enum Strings {
     }
 
     /// "사용 길이" 섹션 헤더
-    static var leaveLengthSectionHeader: String {
+    public static var leaveLengthSectionHeader: String {
         switch lang {
         case .korean: return "사용 길이"
         case .english: return "Length"
@@ -15977,35 +13985,7 @@ enum Strings {
         }
     }
 
-    static var otherTypesSectionHeader: String {
-        switch lang {
-        case .korean: return "기타 (연차 미차감)"
-        case .english: return "Other (no deduction)"
-        case .swedish: return "Övrigt (inget avdrag)"
-        case .norwegian: return "Annet (uten trekk)"
-        case .danish: return "Andet (intet fradrag)"
-        case .finnish: return "Muu (ei vähennystä)"
-        case .polish: return "Inny (bez odliczenia)"
-        case .czech: return "Jiné (bez odečtu)"
-        case .greek: return "Άλλο (χωρίς αφαίρεση)"
-        case .turkish: return "Diğer (düşülmez)"
-        case .russian: return "Другое (без списания)"
-        case .indonesian: return "Lainnya (tidak memotong cuti)"
-        case .thai: return "อื่นๆ (ไม่หักวันลา)"
-        case .vietnamese: return "Khác (không trừ phép)"
-        case .dutch: return "Overig (geen aftrek)"
-        case .japanese: return "その他 (有給控除なし)"
-        case .chinese: return "其他 (不扣除年假)"
-        case .german: return "Sonstige (ohne Abzug)"
-        case .french: return "Autres (sans déduction)"
-        case .spanish: return "Otros (sin descontar)"
-        case .italian: return "Altro (senza detrazione)"
-        case .portuguese: return "Outros (sem desconto)"
-        case .chineseTraditional: return "其他（不扣特休）"
-        }
-    }
-
-    static var bonusLeaveFooterFree: String {
+    public static var bonusLeaveFooterFree: String {
         switch lang {
         case .korean: return "보너스 연차 추가는 Pro 기능입니다. 이미 추가된 항목은 수정 가능합니다."
         case .english: return "Adding bonus leave is a Pro feature. You can still edit existing items."
@@ -16036,7 +14016,7 @@ enum Strings {
     /// 부여 일수 대비 사용량을 짧게 (예: "1.5/3일").
     /// 화면에는 이걸 쓰고, 문장형(`bonusUsedOfGranted`)은 VoiceOver 낭독에만 쓴다 —
     /// 눈으로는 분수가 빠르고, 귀로는 문장이 알아듣기 쉽다.
-    static func bonusUsedFraction(used: String, granted: String) -> String {
+    public static func bonusUsedFraction(used: String, granted: String) -> String {
         switch lang {
         case .korean: return "\(used)/\(granted)일"
         case .english: return "\(used)/\(granted) days"
@@ -16065,7 +14045,7 @@ enum Strings {
     }
 
     /// 부여 일수 중 사용량 표시 (예: "3일 중 1일 사용")
-    static func bonusUsedOfGranted(used: String, granted: String) -> String {
+    public static func bonusUsedOfGranted(used: String, granted: String) -> String {
         switch lang {
         case .korean: return "\(granted)\(dayUnitSuffix) 중 \(used)\(dayUnitSuffix) 사용"
         case .english: return "\(used) of \(granted) days used"
@@ -16093,7 +14073,7 @@ enum Strings {
         }
     }
 
-    static func bonusEditUsedRemaining(used: String, remaining: String) -> String {
+    public static func bonusEditUsedRemaining(used: String, remaining: String) -> String {
         switch lang {
         case .korean: return "이미 \(used)일 사용됨 · 잔여 \(remaining)일"
         case .english: return "\(used) days used · \(remaining) days remaining"
@@ -16121,7 +14101,7 @@ enum Strings {
         }
     }
 
-    static var bonusEditTitle: String {
+    public static var bonusEditTitle: String {
         switch lang {
         case .korean: return "보너스 연차 수정"
         case .english: return "Edit bonus leave"
@@ -16149,92 +14129,7 @@ enum Strings {
         }
     }
 
-    // MARK: - 마이리얼트립 연계 프로모션
-    static var mrtPromoBadge: String {
-        switch lang {
-        case .korean: return "여행 추천"
-        case .english: return "Travel"
-        case .swedish: return "Resa"
-        case .norwegian: return "Reise"
-        case .danish: return "Rejse"
-        case .finnish: return "Matkailu"
-        case .polish: return "Podróż"
-        case .czech: return "Cestování"
-        case .greek: return "Ταξίδι"
-        case .turkish: return "Seyahat"
-        case .russian: return "Путешествия"
-        case .indonesian: return "Wisata"
-        case .thai: return "ท่องเที่ยว"
-        case .vietnamese: return "Du lịch"
-        case .dutch: return "Reizen"
-        case .japanese: return "旅行"
-        case .chinese: return "旅行推荐"
-        case .german: return "Reisen"
-        case .french: return "Voyage"
-        case .spanish: return "Viajes"
-        case .italian: return "Viaggi"
-        case .portuguese: return "Viagens"
-        case .chineseTraditional: return "旅遊推薦"
-        }
-    }
-
-    static var mrtPromoTitle: String {
-        switch lang {
-        case .korean: return "이 연휴, 떠나볼까요?"
-        case .english: return "Make the most of this break"
-        case .swedish: return "Få ut det mesta av den här ledigheten"
-        case .norwegian: return "Få mest mulig ut av denne pausen"
-        case .danish: return "Få mest muligt ud af denne pause"
-        case .finnish: return "Ota tauosta kaikki irti"
-        case .polish: return "Wykorzystaj tę przerwę w pełni"
-        case .czech: return "Využij tohle volno naplno"
-        case .greek: return "Αξιοποίησε στο έπακρο αυτό το διάλειμμα"
-        case .turkish: return "Bu molanın tadını çıkar"
-        case .russian: return "Куда поехать на эти выходные?"
-        case .indonesian: return "Manfaatkan libur ini sebaik-baiknya"
-        case .thai: return "ใช้วันหยุดนี้ให้คุ้มที่สุด"
-        case .vietnamese: return "Tận dụng trọn vẹn kỳ nghỉ này"
-        case .dutch: return "Haal het meeste uit deze vrije periode"
-        case .japanese: return "この連休、出かけませんか?"
-        case .chinese: return "这个假期,出发吧?"
-        case .german: return "Mach das Beste aus dieser Auszeit"
-        case .french: return "Profitez au mieux de cette pause"
-        case .spanish: return "¿Te vas de viaje este puente?"
-        case .italian: return "Che ne dici di partire per questo ponte?"
-        case .portuguese: return "Que tal viajar neste feriadão?"
-        case .chineseTraditional: return "這個連假，出去走走吧？"
-        }
-    }
-
-    static var mrtPromoSubtitle: String {
-        switch lang {
-        case .korean: return "마이리얼트립에서 항공·숙박·투어를 한 번에 확인해보세요"
-        case .english: return "Check flights, hotels, and tours together on MyRealTrip"
-        case .swedish: return "Jämför flyg, hotell och turer på MyRealTrip"
-        case .norwegian: return "Sjekk flyreiser, hoteller og turer samlet på MyRealTrip"
-        case .danish: return "Se fly, hoteller og ture samlet hos MyRealTrip"
-        case .finnish: return "Tarkista lennot, hotellit ja retket yhdessä MyRealTripissä"
-        case .polish: return "Sprawdź loty, hotele i wycieczki razem w MyRealTrip"
-        case .czech: return "Lety, hotely i výlety najdeš společně na MyRealTrip"
-        case .greek: return "Δες πτήσεις, ξενοδοχεία και εκδρομές μαζί στο MyRealTrip"
-        case .turkish: return "Uçuş, otel ve turları MyRealTrip'te birlikte karşılaştır"
-        case .russian: return "Авиабилеты, отели и туры — всё сразу на MyRealTrip"
-        case .indonesian: return "Cek tiket pesawat, hotel, dan tur sekaligus di MyRealTrip"
-        case .thai: return "ดูตั๋วเครื่องบิน โรงแรม และทัวร์พร้อมกันใน MyRealTrip"
-        case .vietnamese: return "Xem vé máy bay, khách sạn và tour cùng lúc trên MyRealTrip"
-        case .dutch: return "Bekijk vluchten, hotels en tours samen op MyRealTrip"
-        case .japanese: return "マイリアルトリップで航空券・ホテル・ツアーをまとめてチェック"
-        case .chinese: return "在MyRealTrip上一站查看机票、酒店和旅游产品"
-        case .german: return "Vergleiche Flüge, Hotels und Touren gemeinsam bei MyRealTrip"
-        case .french: return "Comparez vols, hôtels et visites en un seul endroit sur MyRealTrip"
-        case .spanish: return "Consulta vuelos, hoteles y tours a la vez en MyRealTrip"
-        case .italian: return "Scopri voli, hotel e tour in un unico posto su MyRealTrip"
-        case .portuguese: return "Veja voos, hotéis e passeios de uma vez no MyRealTrip"
-        case .chineseTraditional: return "在 MyRealTrip 一次查看機票、住宿和行程"
-        }
-    }
-
-    static var mrtPromoCTA: String {
+    public static var mrtPromoCTA: String {
         switch lang {
         case .korean: return "마이리얼트립에서 보기"
         case .english: return "Open MyRealTrip"
@@ -16262,64 +14157,7 @@ enum Strings {
         }
     }
 
-    // MARK: - 추천 opt-in
-    static var mrtOptInTitle: String {
-        switch lang {
-        case .korean: return "이 연휴에 해보면 좋을 액티비티들이 있는데\n추천해드릴까요?"
-        case .english: return "We've found some activities for this break.\nShow recommendations?"
-        case .swedish: return "Vi har hittat några aktiviteter för den här ledigheten.\nVisa förslag?"
-        case .norwegian: return "Vi har funnet noen aktiviteter for denne pausen.\nVil du se anbefalingene?"
-        case .danish: return "Vi har fundet nogle aktiviteter til denne pause.\nVil du se anbefalingerne?"
-        case .finnish: return "Löysimme tälle tauolle tekemistä.\nNäytetäänkö ehdotukset?"
-        case .polish: return "Znaleźliśmy pomysły na tę przerwę.\nPokazać rekomendacje?"
-        case .czech: return "Našli jsme tipy na aktivity pro toto volno.\nZobrazit doporučení?"
-        case .greek: return "Βρήκαμε μερικές δραστηριότητες για αυτό το διάλειμμα.\nΝα εμφανιστούν οι προτάσεις;"
-        case .turkish: return "Bu mola için bazı aktiviteler bulduk.\nÖneriler gösterilsin mi?"
-        case .russian: return "Для этих выходных есть интересные занятия.\nПоказать рекомендации?"
-        case .indonesian: return "Ada beberapa aktivitas seru untuk libur ini.\nMau lihat rekomendasinya?"
-        case .thai: return "เราเจอกิจกรรมน่าสนใจสำหรับวันหยุดนี้\nอยากดูคำแนะนำไหม"
-        case .vietnamese: return "Có vài hoạt động thú vị cho kỳ nghỉ này.\nXem gợi ý nhé?"
-        case .dutch: return "We hebben activiteiten gevonden voor deze vrije periode.\nAanbevelingen tonen?"
-        case .japanese: return "この連休にぴったりのアクティビティがあります。\nおすすめを表示しますか?"
-        case .chinese: return "我们为这个假期找到了一些活动。\n要查看推荐吗?"
-        case .german: return "Wir haben Aktivitäten für diese Auszeit gefunden.\nEmpfehlungen anzeigen?"
-        case .french: return "Nous avons trouvé des activités pour cette pause.\nAfficher les recommandations ?"
-        case .spanish: return "Hay actividades ideales para este puente.\n¿Quieres ver recomendaciones?"
-        case .italian: return "Abbiamo trovato delle attività per questo ponte.\nVuoi vedere i suggerimenti?"
-        case .portuguese: return "Encontramos atividades para este feriadão.\nQuer ver as sugestões?"
-        case .chineseTraditional: return "這個連假有一些很適合的活動，\n要推薦給你嗎？"
-        }
-    }
-
-    static var mrtOptInSubtitle: String {
-        switch lang {
-        case .korean: return "마이리얼트립에서 항공·숙박·투어를 함께 살펴봅니다"
-        case .english: return "Flights, stays, and tours from MyRealTrip"
-        case .swedish: return "Flyg, boende och turer från MyRealTrip"
-        case .norwegian: return "Flyreiser, opphold og turer fra MyRealTrip"
-        case .danish: return "Fly, ophold og ture fra MyRealTrip"
-        case .finnish: return "Lennot, majoitukset ja retket MyRealTripistä"
-        case .polish: return "Loty, noclegi i wycieczki z MyRealTrip"
-        case .czech: return "Lety, ubytování a výlety z MyRealTrip"
-        case .greek: return "Πτήσεις, διαμονή και εκδρομές από το MyRealTrip"
-        case .turkish: return "MyRealTrip'ten uçuş, konaklama ve turlar"
-        case .russian: return "Авиабилеты, жильё и туры от MyRealTrip"
-        case .indonesian: return "Tiket pesawat, penginapan, dan tur dari MyRealTrip"
-        case .thai: return "ตั๋วเครื่องบิน ที่พัก และทัวร์จาก MyRealTrip"
-        case .vietnamese: return "Vé máy bay, chỗ ở và tour từ MyRealTrip"
-        case .dutch: return "Vluchten, verblijven en tours van MyRealTrip"
-        case .japanese: return "マイリアルトリップで航空券・ホテル・ツアーをまとめて確認"
-        case .chinese: return "MyRealTrip上的机票、住宿和旅游产品"
-        case .german: return "Flüge, Unterkünfte und Touren von MyRealTrip"
-        case .french: return "Vols, hébergements et visites sur MyRealTrip"
-        case .spanish: return "Vuelos, alojamiento y tours en MyRealTrip"
-        case .italian: return "Voli, alloggi e tour su MyRealTrip"
-        case .portuguese: return "Voos, hospedagens e passeios no MyRealTrip"
-        case .chineseTraditional: return "在 MyRealTrip 一起看看機票、住宿和行程"
-        }
-    }
-
-    static var mrtOptInShow: String {
+    public static var mrtOptInShow: String {
         switch lang {
         case .korean: return "추천 받기"
         case .english: return "Show me"
@@ -16347,36 +14185,8 @@ enum Strings {
         }
     }
 
-    static var mrtOptInDismiss: String {
-        switch lang {
-        case .korean: return "괜찮아요"
-        case .english: return "No thanks"
-        case .swedish: return "Nej tack"
-        case .norwegian: return "Nei takk"
-        case .danish: return "Nej tak"
-        case .finnish: return "Ei kiitos"
-        case .polish: return "Nie, dzięki"
-        case .czech: return "Ne, díky"
-        case .greek: return "Όχι, ευχαριστώ"
-        case .turkish: return "Hayır, teşekkürler"
-        case .russian: return "Нет, спасибо"
-        case .indonesian: return "Nggak, makasih"
-        case .thai: return "ไม่เป็นไร"
-        case .vietnamese: return "Không, cảm ơn"
-        case .dutch: return "Nee, bedankt"
-        case .japanese: return "結構です"
-        case .chinese: return "不用了"
-        case .german: return "Nein danke"
-        case .french: return "Non merci"
-        case .spanish: return "No, gracias"
-        case .italian: return "No, grazie"
-        case .portuguese: return "Agora não"
-        case .chineseTraditional: return "不用了"
-        }
-    }
-
     // MARK: - 추천 이유
-    static func mrtCityReason(city: String, season: String, days: Int) -> String {
+    public static func mrtCityReason(city: String, season: String, days: Int) -> String {
         switch lang {
         case .korean: return "\(days)일 연휴엔 \(city) — \(season)"
         case .english: return "\(city) for a \(days)-day break — \(season)"
@@ -16404,7 +14214,7 @@ enum Strings {
         }
     }
 
-    static var mrtFlightReasonCheapest: String {
+    public static var mrtFlightReasonCheapest: String {
         switch lang {
         case .korean: return "가장 저렴"
         case .english: return "Cheapest"
@@ -16432,7 +14242,7 @@ enum Strings {
         }
     }
 
-    static var mrtFlightReasonDirect: String {
+    public static var mrtFlightReasonDirect: String {
         switch lang {
         case .korean: return "직항"
         case .english: return "Direct"
@@ -16460,7 +14270,7 @@ enum Strings {
         }
     }
 
-    static var mrtAccomReasonTopRated: String {
+    public static var mrtAccomReasonTopRated: String {
         switch lang {
         case .korean: return "베스트 평점"
         case .english: return "Top rated"
@@ -16488,7 +14298,7 @@ enum Strings {
         }
     }
 
-    static var mrtTourReasonBestseller: String {
+    public static var mrtTourReasonBestseller: String {
         switch lang {
         case .korean: return "베스트셀러"
         case .english: return "Bestseller"
@@ -16516,64 +14326,8 @@ enum Strings {
         }
     }
 
-    static var mrtPackageHeader: String {
-        switch lang {
-        case .korean: return "추천 패키지"
-        case .english: return "Suggested package"
-        case .swedish: return "Föreslaget paket"
-        case .norwegian: return "Foreslått pakke"
-        case .danish: return "Foreslået pakke"
-        case .finnish: return "Ehdotettu paketti"
-        case .polish: return "Proponowany pakiet"
-        case .czech: return "Navržený balíček"
-        case .greek: return "Προτεινόμενο πακέτο"
-        case .turkish: return "Önerilen paket"
-        case .russian: return "Рекомендуемый пакет"
-        case .indonesian: return "Paket pilihan"
-        case .thai: return "แพ็กเกจที่แนะนำ"
-        case .vietnamese: return "Gói gợi ý"
-        case .dutch: return "Voorgesteld pakket"
-        case .japanese: return "おすすめパッケージ"
-        case .chinese: return "推荐套餐"
-        case .german: return "Paketvorschlag"
-        case .french: return "Forfait suggéré"
-        case .spanish: return "Paquete sugerido"
-        case .italian: return "Pacchetto consigliato"
-        case .portuguese: return "Pacote sugerido"
-        case .chineseTraditional: return "推薦套裝行程"
-        }
-    }
-
-    static var mrtChangePreference: String {
-        switch lang {
-        case .korean: return "다음부터 자동으로 안 볼래요"
-        case .english: return "Don't show automatically"
-        case .swedish: return "Visa inte automatiskt"
-        case .norwegian: return "Ikke vis automatisk"
-        case .danish: return "Vis ikke automatisk"
-        case .finnish: return "Älä näytä automaattisesti"
-        case .polish: return "Nie pokazuj automatycznie"
-        case .czech: return "Nezobrazovat automaticky"
-        case .greek: return "Να μην εμφανίζεται αυτόματα"
-        case .turkish: return "Otomatik gösterme"
-        case .russian: return "Больше не показывать автоматически"
-        case .indonesian: return "Jangan tampilkan otomatis"
-        case .thai: return "ไม่ต้องแสดงอัตโนมัติ"
-        case .vietnamese: return "Không tự động hiển thị"
-        case .dutch: return "Niet automatisch tonen"
-        case .japanese: return "次回から自動表示しない"
-        case .chinese: return "不再自动显示"
-        case .german: return "Nicht mehr automatisch zeigen"
-        case .french: return "Ne plus afficher automatiquement"
-        case .spanish: return "No mostrar automáticamente"
-        case .italian: return "Non mostrare automaticamente"
-        case .portuguese: return "Não mostrar automaticamente"
-        case .chineseTraditional: return "之後不再自動顯示"
-        }
-    }
-
     // MARK: - 사용자 유형
-    static var userTypeEmployee: String {
+    public static var userTypeEmployee: String {
         switch lang {
         case .korean: return "직장인"
         case .english: return "Employee"
@@ -16601,7 +14355,7 @@ enum Strings {
         }
     }
 
-    static var userTypeLeisure: String {
+    public static var userTypeLeisure: String {
         switch lang {
         case .korean: return "자유 계획"
         case .english: return "Free Plan"
@@ -16629,7 +14383,7 @@ enum Strings {
         }
     }
 
-    static var userTypeSection: String {
+    public static var userTypeSection: String {
         switch lang {
         case .korean: return "사용자 유형"
         case .english: return "User Type"
@@ -16657,7 +14411,7 @@ enum Strings {
         }
     }
 
-    static var userTypeMode: String {
+    public static var userTypeMode: String {
         switch lang {
         case .korean: return "모드"
         case .english: return "Mode"
@@ -16685,7 +14439,7 @@ enum Strings {
         }
     }
 
-    static var userTypeLeisureDesc: String {
+    public static var userTypeLeisureDesc: String {
         switch lang {
         case .korean: return "연차 제한 없이 자유롭게 휴가를 계획하고 싶은 분을 위한 모드입니다."
         case .english: return "A mode for those who want to plan vacations freely without leave-day limits."
@@ -16713,7 +14467,7 @@ enum Strings {
         }
     }
 
-    static var leisureVacationSettings: String {
+    public static var leisureVacationSettings: String {
         switch lang {
         case .korean: return "휴가 설정"
         case .english: return "Vacation Settings"
@@ -16741,7 +14495,7 @@ enum Strings {
         }
     }
 
-    static var leisureAnnualGoal: String {
+    public static var leisureAnnualGoal: String {
         switch lang {
         case .korean: return "연간 목표 일수"
         case .english: return "Annual Goal Days"
@@ -16769,7 +14523,7 @@ enum Strings {
         }
     }
 
-    static var leisureUnlimited: String {
+    public static var leisureUnlimited: String {
         switch lang {
         case .korean: return "무제한"
         case .english: return "Unlimited"
@@ -16797,7 +14551,7 @@ enum Strings {
         }
     }
 
-    static var leisurePlannedLeave: String {
+    public static var leisurePlannedLeave: String {
         switch lang {
         case .korean: return "계획된 휴가"
         case .english: return "Planned Leave"
@@ -16825,7 +14579,7 @@ enum Strings {
         }
     }
 
-    static var leisureYearStartMonth: String {
+    public static var leisureYearStartMonth: String {
         switch lang {
         case .korean: return "기준 연도 시작월"
         case .english: return "Year Start Month"
@@ -16856,7 +14610,7 @@ enum Strings {
     // MARK: - 공휴일 관리
     // MARK: - 방학
 
-    static var childBreakTag: String {
+    public static var childBreakTag: String {
         switch lang {
         case .korean: return "자녀 방학"
         case .english: return "Kids' break"
@@ -16885,7 +14639,7 @@ enum Strings {
     }
 
     /// 중국 调休 보충 근무일 — 달력 칸 구석의 한 글자 표시
-    static var makeupWorkdayMark: String {
+    public static var makeupWorkdayMark: String {
         switch lang {
         case .korean: return "근무"
         case .english: return "Work"
@@ -16914,7 +14668,7 @@ enum Strings {
     }
 
     /// 중국 调休 보충 근무일 — 날짜를 골랐을 때의 설명
-    static var makeupWorkday: String {
+    public static var makeupWorkday: String {
         switch lang {
         case .korean: return "보충 근무일 (주말이지만 출근하는 날)"
         case .english: return "Make-up workday (a weekend you work)"
@@ -16942,7 +14696,7 @@ enum Strings {
         }
     }
 
-    static var myBreakLabel: String {
+    public static var myBreakLabel: String {
         switch lang {
         case .korean: return "내 방학"
         case .english: return "My break"
@@ -16970,7 +14724,7 @@ enum Strings {
         }
     }
 
-    static var breakSectionTitle: String {
+    public static var breakSectionTitle: String {
         switch lang {
         case .korean: return "방학"
         case .english: return "School Breaks"
@@ -16998,7 +14752,7 @@ enum Strings {
         }
     }
 
-    static var breakSectionFooter: String {
+    public static var breakSectionFooter: String {
         switch lang {
         case .korean: return "자녀 방학은 달력에 표시하고, 그 기간에 쉴 수 있는 추천을 먼저 보여줘요. 내 방학은 공휴일처럼 쉬는 날로 쳐서 연차에서 빠지지 않아요."
         case .english: return "Kids' breaks are shown on the calendar, and suggestions during them come first. My break counts as days off like holidays, so no leave is deducted."
@@ -17026,7 +14780,7 @@ enum Strings {
         }
     }
 
-    static var breakEmpty: String {
+    public static var breakEmpty: String {
         switch lang {
         case .korean: return "추가한 방학이 없어요"
         case .english: return "No breaks added yet"
@@ -17054,7 +14808,7 @@ enum Strings {
         }
     }
 
-    static var breakAddTitle: String {
+    public static var breakAddTitle: String {
         switch lang {
         case .korean: return "방학 추가"
         case .english: return "Add Break"
@@ -17082,7 +14836,7 @@ enum Strings {
         }
     }
 
-    static var breakEditTitle: String {
+    public static var breakEditTitle: String {
         switch lang {
         case .korean: return "방학 수정"
         case .english: return "Edit Break"
@@ -17110,7 +14864,7 @@ enum Strings {
         }
     }
 
-    static var breakKindSection: String {
+    public static var breakKindSection: String {
         switch lang {
         case .korean: return "누구의 방학인가요?"
         case .english: return "Whose break is it?"
@@ -17138,7 +14892,7 @@ enum Strings {
         }
     }
 
-    static var breakKindChildDesc: String {
+    public static var breakKindChildDesc: String {
         switch lang {
         case .korean: return "달력에 표시하고 이 기간의 추천을 앞세워요. 내 연차는 그대로 계산해요."
         case .english: return "Shown on the calendar; suggestions in this period come first. Your leave is counted as usual."
@@ -17166,7 +14920,7 @@ enum Strings {
         }
     }
 
-    static var breakKindMineDesc: String {
+    public static var breakKindMineDesc: String {
         switch lang {
         case .korean: return "교사·학생처럼 나도 쉬는 기간이에요. 연차에서 빠지지 않고, 쉰 기간으로 계산해요."
         case .english: return "For teachers and students: you're off too. No leave is deducted and it counts as rest."
@@ -17194,7 +14948,7 @@ enum Strings {
         }
     }
 
-    static var breakPeriodSection: String {
+    public static var breakPeriodSection: String {
         switch lang {
         case .korean: return "기간"
         case .english: return "Period"
@@ -17222,7 +14976,7 @@ enum Strings {
         }
     }
 
-    static var breakNameSection: String {
+    public static var breakNameSection: String {
         switch lang {
         case .korean: return "이름"
         case .english: return "Name"
@@ -17250,7 +15004,7 @@ enum Strings {
         }
     }
 
-    static var breakNamePlaceholder: String {
+    public static var breakNamePlaceholder: String {
         switch lang {
         case .korean: return "예: 여름방학"
         case .english: return "e.g. Summer break"
@@ -17278,7 +15032,7 @@ enum Strings {
         }
     }
 
-    static var breakDeleteAlertTitle: String {
+    public static var breakDeleteAlertTitle: String {
         switch lang {
         case .korean: return "방학을 삭제할까요?"
         case .english: return "Delete this break?"
@@ -17306,7 +15060,7 @@ enum Strings {
         }
     }
 
-    static var breakInvalidRange: String {
+    public static var breakInvalidRange: String {
         switch lang {
         case .korean: return "종료일이 시작일보다 빨라요"
         case .english: return "End date is before start date"
@@ -17334,7 +15088,7 @@ enum Strings {
         }
     }
 
-    static func breakDays(_ n: Int) -> String {
+    public static func breakDays(_ n: Int) -> String {
         switch lang {
         case .korean: return "\(n)일"
         case .english: return n == 1 ? "1 day" : "\(n) days"
@@ -17362,7 +15116,7 @@ enum Strings {
         }
     }
 
-    static var holidayMgmtTitle: String {
+    public static var holidayMgmtTitle: String {
         switch lang {
         case .korean: return "공휴일·방학 관리"
         case .english: return "Holidays & Breaks"
@@ -17390,7 +15144,7 @@ enum Strings {
         }
     }
 
-    static var holidayMgmtSubtitle: String {
+    public static var holidayMgmtSubtitle: String {
         switch lang {
         case .korean: return "공휴일 추가·숨기기, 방학 추가"
         case .english: return "Add or hide holidays, add school breaks"
@@ -17419,7 +15173,7 @@ enum Strings {
     }
 
     /// 설정 > 공휴일 — 홈의 "다가오는 휴가" 카드에 공휴일을 함께 보여줄지
-    static var showHolidaysInUpcomingTitle: String {
+    public static var showHolidaysInUpcomingTitle: String {
         switch lang {
         case .korean: return "다가오는 휴가에 공휴일 표시"
         case .english: return "Show Holidays in Upcoming"
@@ -17447,7 +15201,7 @@ enum Strings {
         }
     }
 
-    static var showHolidaysInUpcomingDescription: String {
+    public static var showHolidaysInUpcomingDescription: String {
         switch lang {
         case .korean: return "홈 화면 카드에 다가오는 공휴일도 함께 보여줘요"
         case .english: return "Also list upcoming public holidays on the home card"
@@ -17475,7 +15229,7 @@ enum Strings {
         }
     }
 
-    static var holidayMgmtRestoreAll: String {
+    public static var holidayMgmtRestoreAll: String {
         switch lang {
         case .korean: return "기본 공휴일 모두 복원"
         case .english: return "Restore all default holidays"
@@ -17503,7 +15257,7 @@ enum Strings {
         }
     }
 
-    static var holidayDeleteAlertTitle: String {
+    public static var holidayDeleteAlertTitle: String {
         switch lang {
         case .korean: return "공휴일 삭제"
         case .english: return "Delete Holiday"
@@ -17531,7 +15285,7 @@ enum Strings {
         }
     }
 
-    static var holidayDeleteAlertMessage: String {
+    public static var holidayDeleteAlertMessage: String {
         switch lang {
         case .korean: return "이 공휴일을 삭제할까요?"
         case .english: return "Delete this holiday?"
@@ -17559,7 +15313,7 @@ enum Strings {
         }
     }
 
-    static var commonDelete: String {
+    public static var commonDelete: String {
         switch lang {
         case .korean: return "삭제"
         case .english: return "Delete"
@@ -17587,7 +15341,7 @@ enum Strings {
         }
     }
 
-    static var commonAdd: String {
+    public static var commonAdd: String {
         switch lang {
         case .korean: return "추가"
         case .english: return "Add"
@@ -17615,7 +15369,7 @@ enum Strings {
         }
     }
 
-    static var holidayDefaultSection: String {
+    public static var holidayDefaultSection: String {
         switch lang {
         case .korean: return "기본 공휴일"
         case .english: return "Default Holidays"
@@ -17643,7 +15397,7 @@ enum Strings {
         }
     }
 
-    static var holidayDefaultFooter: String {
+    public static var holidayDefaultFooter: String {
         switch lang {
         case .korean: return "토글을 끄면 캘린더와 추천에서 해당 공휴일이 숨겨집니다."
         case .english: return "Turn off the toggle to hide the holiday from the calendar and recommendations."
@@ -17671,7 +15425,7 @@ enum Strings {
         }
     }
 
-    static var holidayCustomSection: String {
+    public static var holidayCustomSection: String {
         switch lang {
         case .korean: return "내 공휴일"
         case .english: return "My Holidays"
@@ -17699,7 +15453,7 @@ enum Strings {
         }
     }
 
-    static var holidayCustomEmpty: String {
+    public static var holidayCustomEmpty: String {
         switch lang {
         case .korean: return "직접 추가한 공휴일이 없습니다"
         case .english: return "No custom holidays added"
@@ -17727,7 +15481,7 @@ enum Strings {
         }
     }
 
-    static var holidayCustomFooter: String {
+    public static var holidayCustomFooter: String {
         switch lang {
         case .korean: return "직접 추가한 공휴일은 캘린더와 추천에 반영됩니다."
         case .english: return "Custom holidays will appear in the calendar and recommendations."
@@ -17755,7 +15509,7 @@ enum Strings {
         }
     }
 
-    static var holidaySubstitute: String {
+    public static var holidaySubstitute: String {
         switch lang {
         case .korean: return "대체공휴일"
         case .english: return "Substitute Holiday"
@@ -17783,7 +15537,7 @@ enum Strings {
         }
     }
 
-    static var holidayAddedByMe: String {
+    public static var holidayAddedByMe: String {
         switch lang {
         case .korean: return "내가 추가"
         case .english: return "Added by me"
@@ -17811,65 +15565,8 @@ enum Strings {
         }
     }
 
-    /// 펼침/접힘 상태 (VoiceOver accessibilityValue)
-    static var a11yExpanded: String {
-        switch lang {
-        case .korean: return "펼침"
-        case .english: return "Expanded"
-        case .swedish: return "Utfälld"
-        case .norwegian: return "Utvidet"
-        case .danish: return "Foldet ud"
-        case .finnish: return "Laajennettu"
-        case .polish: return "Rozwinięte"
-        case .czech: return "Rozbaleno"
-        case .greek: return "Ανεπτυγμένο"
-        case .turkish: return "Genişletildi"
-        case .russian: return "Развёрнуто"
-        case .indonesian: return "Terbuka"
-        case .thai: return "ขยายอยู่"
-        case .vietnamese: return "Đang mở rộng"
-        case .dutch: return "Uitgeklapt"
-        case .japanese: return "展開"
-        case .chinese: return "已展开"
-        case .german: return "Ausgeklappt"
-        case .french: return "Développé"
-        case .spanish: return "Desplegado"
-        case .italian: return "Espanso"
-        case .portuguese: return "Expandido"
-        case .chineseTraditional: return "已展開"
-        }
-    }
-
-    static var a11yCollapsed: String {
-        switch lang {
-        case .korean: return "접힘"
-        case .english: return "Collapsed"
-        case .swedish: return "Hopfälld"
-        case .norwegian: return "Skjult"
-        case .danish: return "Foldet sammen"
-        case .finnish: return "Tiivistetty"
-        case .polish: return "Zwinięte"
-        case .czech: return "Sbaleno"
-        case .greek: return "Συμπτυγμένο"
-        case .turkish: return "Daraltıldı"
-        case .russian: return "Свёрнуто"
-        case .indonesian: return "Tertutup"
-        case .thai: return "ย่ออยู่"
-        case .vietnamese: return "Đang thu gọn"
-        case .dutch: return "Ingeklapt"
-        case .japanese: return "折りたたみ"
-        case .chinese: return "已折叠"
-        case .german: return "Eingeklappt"
-        case .french: return "Réduit"
-        case .spanish: return "Contraído"
-        case .italian: return "Compresso"
-        case .portuguese: return "Recolhido"
-        case .chineseTraditional: return "已收合"
-        }
-    }
-
     /// 휴가 기록 행 VoiceOver 힌트
-    static var editLeaveHint: String {
+    public static var editLeaveHint: String {
         switch lang {
         case .korean: return "이중 탭하여 수정"
         case .english: return "Double tap to edit"
@@ -17898,7 +15595,7 @@ enum Strings {
     }
 
     /// 추천 황금연휴로 등록된 휴가 표식 (VoiceOver)
-    static var recommendedMark: String {
+    public static var recommendedMark: String {
         switch lang {
         case .korean: return "추천 황금연휴"
         case .english: return "Recommended holiday"
@@ -17927,7 +15624,7 @@ enum Strings {
     }
 
     /// 공휴일 표시 토글 VoiceOver 힌트
-    static var holidayVisibilityHint: String {
+    public static var holidayVisibilityHint: String {
         switch lang {
         case .korean: return "끄면 달력에서 숨겨집니다"
         case .english: return "Turn off to hide it from the calendar"
@@ -17955,7 +15652,7 @@ enum Strings {
         }
     }
 
-    static var holidayDateSection: String {
+    public static var holidayDateSection: String {
         switch lang {
         case .korean: return "날짜"
         case .english: return "Date"
@@ -17983,7 +15680,7 @@ enum Strings {
         }
     }
 
-    static var holidayDatePickerLabel: String {
+    public static var holidayDatePickerLabel: String {
         switch lang {
         case .korean: return "날짜 선택"
         case .english: return "Select Date"
@@ -18011,7 +15708,7 @@ enum Strings {
         }
     }
 
-    static var holidayNameSection: String {
+    public static var holidayNameSection: String {
         switch lang {
         case .korean: return "이름"
         case .english: return "Name"
@@ -18039,7 +15736,7 @@ enum Strings {
         }
     }
 
-    static var holidayNamePlaceholder: String {
+    public static var holidayNamePlaceholder: String {
         switch lang {
         case .korean: return "공휴일 이름 (예: 창립기념일)"
         case .english: return "Holiday name (e.g. Founding Day)"
@@ -18067,7 +15764,7 @@ enum Strings {
         }
     }
 
-    static var holidayAddTitle: String {
+    public static var holidayAddTitle: String {
         switch lang {
         case .korean: return "공휴일 추가"
         case .english: return "Add Holiday"
@@ -18096,7 +15793,7 @@ enum Strings {
     }
 
     // MARK: - Register / Bonus 등
-    static func availableDays(_ daysText: String) -> String {
+    public static func availableDays(_ daysText: String) -> String {
         switch lang {
         case .korean: return "\(daysText)\(dayUnitSuffix) 사용 가능"
         case .english: return "\(daysText) days available"
@@ -18124,7 +15821,7 @@ enum Strings {
         }
     }
 
-    static func expiresBy(_ dateText: String) -> String {
+    public static func expiresBy(_ dateText: String) -> String {
         switch lang {
         case .korean: return "~\(dateText) 만료"
         case .english: return "Until \(dateText)"
@@ -18152,7 +15849,7 @@ enum Strings {
         }
     }
 
-    static var bonusDeductNone: String {
+    public static var bonusDeductNone: String {
         switch lang {
         case .korean: return "보너스 차감 안 함"
         case .english: return "No bonus deduction"
@@ -18180,7 +15877,7 @@ enum Strings {
         }
     }
 
-    static func bonusDeductionSummary(name: String, daysText: String) -> String {
+    public static func bonusDeductionSummary(name: String, daysText: String) -> String {
         switch lang {
         case .korean: return "\(name)에서 \(daysText)\(dayUnitSuffix) 차감"
         case .english: return "Deduct \(daysText)\(dayUnitSuffix) from \(name)"
@@ -18208,7 +15905,7 @@ enum Strings {
         }
     }
 
-    static func insufficientBonus(_ name: String) -> String {
+    public static func insufficientBonus(_ name: String) -> String {
         switch lang {
         case .korean: return "'\(name)' 보너스의 잔여 일수가 부족합니다."
         case .english: return "Not enough remaining days in '\(name)' bonus."
@@ -18237,7 +15934,7 @@ enum Strings {
     }
 
     // MARK: - 섹션 헤더 (마이리얼트립)
-    static var sectionFlight: String {
+    public static var sectionFlight: String {
         switch lang {
         case .korean: return "항공권"
         case .english: return "Flights"
@@ -18265,7 +15962,7 @@ enum Strings {
         }
     }
 
-    static var sectionAccommodation: String {
+    public static var sectionAccommodation: String {
         switch lang {
         case .korean: return "숙박"
         case .english: return "Stays"
@@ -18293,7 +15990,7 @@ enum Strings {
         }
     }
 
-    static var sectionTour: String {
+    public static var sectionTour: String {
         switch lang {
         case .korean: return "투어·티켓"
         case .english: return "Tours & Tickets"
@@ -18321,37 +16018,8 @@ enum Strings {
         }
     }
 
-    // MARK: - 자유 계획 헤더
-    static func leisureYearVacationPlan(year: Int) -> String {
-        switch lang {
-        case .korean: return "\(year)년 휴가 계획"
-        case .english: return "\(year) Vacation Plan"
-        case .swedish: return "Semesterplan \(year)"
-        case .norwegian: return "Ferieplan \(year)"
-        case .danish: return "Ferieplan \(year)"
-        case .finnish: return "Lomasuunnitelma \(year)"
-        case .polish: return "Plan wakacji \(year)"
-        case .czech: return "Plán dovolené \(year)"
-        case .greek: return "Πλάνο διακοπών \(year)"
-        case .turkish: return "\(year) Tatil Planı"
-        case .russian: return "План отпусков на \(year) год"
-        case .indonesian: return "Rencana Liburan \(year)"
-        case .thai: return "แผนเที่ยวปี \(year)"
-        case .vietnamese: return "Kế hoạch du lịch \(year)"
-        case .dutch: return "Vakantieplan \(year)"
-        case .japanese: return "\(year)年の休暇計画"
-        case .chinese: return "\(year)年休假计划"
-        case .german: return "Urlaubsplan \(year)"
-        case .french: return "Plan de congés \(year)"
-        case .spanish: return "Plan de vacaciones \(year)"
-        case .italian: return "Piano ferie \(year)"
-        case .portuguese: return "Plano de férias \(year)"
-        case .chineseTraditional: return "\(year) 年休假計畫"
-        }
-    }
-
     // MARK: - 페이월
-    static var paywallNoPurchaseFound: String {
+    public static var paywallNoPurchaseFound: String {
         switch lang {
         case .korean: return "구매 기록을 찾을 수 없습니다."
         case .english: return "No purchase records found."
@@ -18379,36 +16047,8 @@ enum Strings {
         }
     }
 
-    static var paywallFeaturesHeader: String {
-        switch lang {
-        case .korean: return "기능"
-        case .english: return "Features"
-        case .swedish: return "Funktioner"
-        case .norwegian: return "Funksjoner"
-        case .danish: return "Funktioner"
-        case .finnish: return "Ominaisuudet"
-        case .polish: return "Funkcje"
-        case .czech: return "Funkce"
-        case .greek: return "Λειτουργίες"
-        case .turkish: return "Özellikler"
-        case .russian: return "Возможности"
-        case .indonesian: return "Fitur"
-        case .thai: return "ฟีเจอร์"
-        case .vietnamese: return "Tính năng"
-        case .dutch: return "Functies"
-        case .japanese: return "機能"
-        case .chinese: return "功能"
-        case .german: return "Funktionen"
-        case .french: return "Fonctionnalités"
-        case .spanish: return "Funciones"
-        case .italian: return "Funzionalità"
-        case .portuguese: return "Recursos"
-        case .chineseTraditional: return "功能"
-        }
-    }
-
     // MARK: - 런치 스크린
-    static var launchTitle: String {
+    public static var launchTitle: String {
         switch lang {
         case .korean: return "골드위크"
         case .english: return "Goldweek"
@@ -18436,7 +16076,7 @@ enum Strings {
         }
     }
 
-    static var launchSubtitle: String {
+    public static var launchSubtitle: String {
         switch lang {
         case .korean: return "똑똑한 연차 관리"
         case .english: return "Smart leave management"
@@ -18467,7 +16107,7 @@ enum Strings {
     // MARK: - 국가명 (Settings 노출용)
     // MARK: - 공휴일 지역 (주·자치주)
 
-    static var holidayRegion: String {
+    public static var holidayRegion: String {
         switch lang {
         case .korean: return "지역"
         case .english: return "Region"
@@ -18495,7 +16135,7 @@ enum Strings {
         }
     }
 
-    static var holidayRegionNationwide: String {
+    public static var holidayRegionNationwide: String {
         switch lang {
         case .korean: return "전국 공통"
         case .english: return "Nationwide"
@@ -18524,7 +16164,7 @@ enum Strings {
     }
 
     /// 설정의 지역 선택 아래 설명 — 나라마다 주의점이 다르다
-    static func holidayRegionFooter(_ country: Country) -> String {
+    public static func holidayRegionFooter(_ country: Country) -> String {
         let base: String
         switch lang {
         case .korean: base = "지역마다 공휴일이 달라요. 사는 곳을 고르면 그 지역 공휴일이 더해져요."
@@ -18611,7 +16251,7 @@ enum Strings {
         return [base, extra].compactMap { $0 }.joined(separator: " ")
     }
 
-    static var chooseRegionTitle: String {
+    public static var chooseRegionTitle: String {
         switch lang {
         case .korean: return "일하는 지역을 골라 주세요"
         case .english: return "Choose your region"
@@ -18639,7 +16279,7 @@ enum Strings {
         }
     }
 
-    static func chooseRegionMessage(_ country: String) -> String {
+    public static func chooseRegionMessage(_ country: String) -> String {
         switch lang {
         case .korean: return "\(country)은(는) 지역마다 공휴일이 달라요. 지역을 고르면 그 지역 공휴일까지 반영해 추천해 드려요."
         case .english: return "In \(country), holidays differ by region. Pick yours and recommendations will include local holidays."
@@ -18667,7 +16307,7 @@ enum Strings {
         }
     }
 
-    static var chooseRegion: String {
+    public static var chooseRegion: String {
         switch lang {
         case .korean: return "지역 선택"
         case .english: return "Choose Region"
@@ -18695,7 +16335,7 @@ enum Strings {
         }
     }
 
-    static var unsupportedCountryTitle: String {
+    public static var unsupportedCountryTitle: String {
         switch lang {
         case .korean: return "아직 지원하지 않는 국가예요"
         case .english: return "Your country isn't supported yet"
@@ -18723,7 +16363,7 @@ enum Strings {
         }
     }
 
-    static var changeCountry: String {
+    public static var changeCountry: String {
         switch lang {
         case .korean: return "국가 바꾸기"
         case .english: return "Change Country"
@@ -18752,7 +16392,7 @@ enum Strings {
     }
 
     /// 지원하지 않는 나라 안내 카드 — 나라를 '직접 입력'으로 바꾸고 공휴일 관리로 간다
-    static var customHolidayModeButton: String {
+    public static var customHolidayModeButton: String {
         switch lang {
         case .korean: return "공휴일 직접 입력하기"
         case .english: return "Enter My Own Holidays"
@@ -18781,7 +16421,7 @@ enum Strings {
     }
 
     /// 직접 입력 모드인데 공휴일이 하나도 없을 때
-    static var customHolidayNoticeTitle: String {
+    public static var customHolidayNoticeTitle: String {
         switch lang {
         case .korean: return "공휴일을 추가해 주세요"
         case .english: return "Add Your Holidays"
@@ -18810,7 +16450,7 @@ enum Strings {
     }
 
     /// 직접 입력 모드 안내 본문
-    static var customHolidayNoticeMessage: String {
+    public static var customHolidayNoticeMessage: String {
         switch lang {
         case .korean: return "직접 입력 모드에는 기본 공휴일이 없어요. 공휴일을 추가하면 달력, 연차 계산, 추천에 반영돼요."
         case .english: return "Custom mode has no built-in holidays. Holidays you add are used in the calendar, leave counts and recommendations."
@@ -18839,7 +16479,7 @@ enum Strings {
     }
 
     /// 직접 입력 안내 카드 버튼
-    static var customHolidayNoticeButton: String {
+    public static var customHolidayNoticeButton: String {
         switch lang {
         case .korean: return "공휴일 추가하기"
         case .english: return "Add Holidays"
@@ -18868,7 +16508,7 @@ enum Strings {
     }
 
     /// 공휴일 관리 — 직접 입력 모드에서 기본 공휴일 자리
-    static var customCountryBuiltInInfo: String {
+    public static var customCountryBuiltInInfo: String {
         switch lang {
         case .korean: return "직접 입력 모드라 기본 공휴일이 없어요. 아래 내 공휴일에 공휴일을 추가해 주세요."
         case .english: return "You're in custom mode, so there are no built-in holidays. Add your holidays under My Holidays below."
@@ -18897,7 +16537,7 @@ enum Strings {
     }
 
     /// 공휴일 추가 — 매년 반복 토글
-    static var holidayRepeatYearly: String {
+    public static var holidayRepeatYearly: String {
         switch lang {
         case .korean: return "매년 반복"
         case .english: return "Repeat Every Year"
@@ -18926,7 +16566,7 @@ enum Strings {
     }
 
     /// 공휴일 추가 — 매년 반복 설명
-    static var holidayRepeatYearlyFooter: String {
+    public static var holidayRepeatYearlyFooter: String {
         switch lang {
         case .korean: return "날짜가 고정된 공휴일은 켜 두면 해마다 다시 넣지 않아도 돼요. 부활절처럼 날짜가 바뀌는 공휴일은 끄고 해마다 넣어 주세요."
         case .english: return "Turn this on for holidays on a fixed date so you don't have to add them every year. For holidays that move, like Easter, leave it off and add them each year."
@@ -18955,7 +16595,7 @@ enum Strings {
     }
 
     /// 내 공휴일 행 — 매년 반복 표시
-    static var holidayEveryYear: String {
+    public static var holidayEveryYear: String {
         switch lang {
         case .korean: return "매년"
         case .english: return "Every year"
@@ -18986,7 +16626,7 @@ enum Strings {
     // MARK: - 이용 중인 버전 · 연차 계산 기준 · 주말
 
     /// 설정 — 무료/Pro 상태 섹션 제목
-    static var planStatusTitle: String {
+    public static var planStatusTitle: String {
         switch lang {
         case .korean: return "이용 중인 버전"
         case .english: return "Your Plan"
@@ -19015,7 +16655,7 @@ enum Strings {
     }
 
     /// 무료 버전 이름
-    static var planFree: String {
+    public static var planFree: String {
         switch lang {
         case .korean: return "무료 버전"
         case .english: return "Free Version"
@@ -19044,7 +16684,7 @@ enum Strings {
     }
 
     /// Pro 상태 배지
-    static var planActive: String {
+    public static var planActive: String {
         switch lang {
         case .korean: return "이용 중"
         case .english: return "Active"
@@ -19073,7 +16713,7 @@ enum Strings {
     }
 
     /// 무료 버전 행의 업그레이드 버튼
-    static var planUpgrade: String {
+    public static var planUpgrade: String {
         switch lang {
         case .korean: return "업그레이드"
         case .english: return "Upgrade"
@@ -19102,7 +16742,7 @@ enum Strings {
     }
 
     /// Pro 사용자에게 — 온보딩·페이월·설정
-    static var proActiveMessage: String {
+    public static var proActiveMessage: String {
         switch lang {
         case .korean: return "Pro가 활성화되어 있어요. 모든 기능을 쓸 수 있어요."
         case .english: return "Pro is active. All features are unlocked."
@@ -19130,37 +16770,8 @@ enum Strings {
         }
     }
 
-    /// 온보딩 Pro 구매 버튼 — 눌러야 결제가 시작된다
-    static func unlockProWithPrice(_ price: String) -> String {
-        switch lang {
-        case .korean: return "Pro 잠금 해제 · \(price)"
-        case .english: return "Unlock Pro · \(price)"
-        case .swedish: return "Lås upp Pro · \(price)"
-        case .norwegian: return "Lås opp Pro · \(price)"
-        case .danish: return "Lås op for Pro · \(price)"
-        case .finnish: return "Avaa Pro · \(price)"
-        case .polish: return "Odblokuj Pro · \(price)"
-        case .czech: return "Odemknout Pro · \(price)"
-        case .greek: return "Ξεκλείδωμα Pro · \(price)"
-        case .turkish: return "Pro'nun Kilidini Aç · \(price)"
-        case .russian: return "Открыть Pro · \(price)"
-        case .indonesian: return "Buka Pro · \(price)"
-        case .thai: return "ปลดล็อก Pro · \(price)"
-        case .vietnamese: return "Mở khóa Pro · \(price)"
-        case .dutch: return "Pro ontgrendelen · \(price)"
-        case .japanese: return "Proを解除 · \(price)"
-        case .chinese: return "解锁 Pro · \(price)"
-        case .german: return "Pro freischalten · \(price)"
-        case .french: return "Débloquer Pro · \(price)"
-        case .spanish: return "Desbloquear Pro · \(price)"
-        case .italian: return "Sblocca Pro · \(price)"
-        case .portuguese: return "Desbloquear Pro · \(price)"
-        case .chineseTraditional: return "解鎖 Pro · \(price)"
-        }
-    }
-
     /// 온보딩 — 결제 없이 시작
-    static var continueWithFree: String {
+    public static var continueWithFree: String {
         switch lang {
         case .korean: return "무료 버전으로 계속"
         case .english: return "Continue with Free Version"
@@ -19189,7 +16800,7 @@ enum Strings {
     }
 
     /// 연차 계산 기준 — 설정·온보딩
-    static var leaveCountingFooter: String {
+    public static var leaveCountingFooter: String {
         switch lang {
         case .korean: return "연차는 근무일 기준으로 셉니다. 휴가 기간에 낀 주말과 공휴일은 차감하지 않아요."
         case .english: return "Leave is counted in working days. Weekends and public holidays inside your time off are not deducted."
@@ -19218,7 +16829,7 @@ enum Strings {
     }
 
     /// 휴가 등록 — 달력 일수와 실제 차감 일수가 다를 때
-    static func leaveCountingDetail(calendarDays: Int, deducted: String) -> String {
+    public static func leaveCountingDetail(calendarDays: Int, deducted: String) -> String {
         switch lang {
         case .korean: return "달력으로 \(calendarDays)일 중 주말·공휴일을 빼고 \(deducted) 차감"
         case .english: return "\(calendarDays) calendar days, \(deducted) deducted (weekends and holidays excluded)"
@@ -19247,7 +16858,7 @@ enum Strings {
     }
 
     /// 설정 — 주말 요일
-    static var weekendSetting: String {
+    public static var weekendSetting: String {
         switch lang {
         case .korean: return "주말"
         case .english: return "Weekend"
@@ -19276,7 +16887,7 @@ enum Strings {
     }
 
     /// 설정 — 직접 입력 국가 주말 설명
-    static var weekendSettingFooter: String {
+    public static var weekendSettingFooter: String {
         switch lang {
         case .korean: return "쉬는 요일을 고르세요. 이 요일은 연차에서 빼고 셉니다."
         case .english: return "Choose the days you normally don't work. They're never deducted from your leave."
@@ -19305,7 +16916,7 @@ enum Strings {
     }
 
     /// 공휴일 관리 — 걸프 국가 이슬람 명절 안내
-    static var moonSightingNote: String {
+    public static var moonSightingNote: String {
         switch lang {
         case .korean: return "이슬람 명절은 움 알쿠라 달력으로 계산했어요. 공식 발표(달 관측)에 따라 하루쯤 달라질 수 있으니, 다르면 숨기고 내 공휴일로 추가해 주세요."
         case .english: return "Islamic holidays are calculated with the Umm al-Qura calendar and may shift by a day after the official moon sighting. If a date differs, hide it and add the correct one under My Holidays."
@@ -19334,7 +16945,7 @@ enum Strings {
     }
 
     /// 온보딩 — 공휴일 나라 카드 제목
-    static var onboardingHolidayCountry: String {
+    public static var onboardingHolidayCountry: String {
         switch lang {
         case .korean: return "공휴일 기준 나라"
         case .english: return "Holiday Country"
@@ -19363,7 +16974,7 @@ enum Strings {
     }
 
     /// 온보딩 — 기기 지역으로 나라를 골랐을 때
-    static var onboardingCountryByRegion: String {
+    public static var onboardingCountryByRegion: String {
         switch lang {
         case .korean: return "휴대폰 지역 설정으로 골랐어요. 다르면 바꿔 주세요. 설정에서도 바꿀 수 있어요."
         case .english: return "Picked from your phone's region. Change it if it's wrong; you can also change it later in Settings."
@@ -19392,7 +17003,7 @@ enum Strings {
     }
 
     /// 대륙 이름 — 국가 선택 대분류
-    static func continentName(_ continent: Continent) -> String {
+    public static func continentName(_ continent: Continent) -> String {
         let names: [Continent: [AppLanguage: String]] = [
             .asia: [.korean: "아시아", .english: "Asia", .japanese: "アジア", .chinese: "亚洲", .german: "Asien", .french: "Asie",
                     .spanish: "Asia", .italian: "Asia", .portuguese: "Ásia", .chineseTraditional: "亞洲", .dutch: "Azië", .swedish: "Asien", .norwegian: "Asia", .danish: "Asien", .finnish: "Aasia", .polish: "Azja", .czech: "Asie", .greek: "Ασία", .turkish: "Asya", .russian: "Азия", .indonesian: "Asia", .thai: "เอเชีย", .vietnamese: "Châu Á"],
@@ -19413,7 +17024,7 @@ enum Strings {
     }
 
     /// 국가 선택 — 검색창 안내
-    static var countrySearchPrompt: String {
+    public static var countrySearchPrompt: String {
         switch lang {
         case .korean: return "나라 검색"
         case .english: return "Search countries"
@@ -19442,7 +17053,7 @@ enum Strings {
     }
 
     /// 주말 설정 — 나라 기본값 (예: "나라 기본 (토 · 일)")
-    static func weekendCountryDefault(_ days: String) -> String {
+    public static func weekendCountryDefault(_ days: String) -> String {
         switch lang {
         case .korean: return "나라 기본 (\(days))"
         case .english: return "Country default (\(days))"
@@ -19472,7 +17083,7 @@ enum Strings {
 
     /// 주말 설정 — 주말에도 일한다
     /// 설정 — 달력 첫 요일
-    static var firstWeekdaySetting: String {
+    public static var firstWeekdaySetting: String {
         switch lang {
         case .korean: return "주 시작 요일"
         case .english: return "Week starts on"
@@ -19500,7 +17111,7 @@ enum Strings {
         }
     }
 
-    static var weekendNone: String {
+    public static var weekendNone: String {
         switch lang {
         case .korean: return "주말 없음 (매일 근무)"
         case .english: return "No weekend (I work every day)"
@@ -19529,7 +17140,7 @@ enum Strings {
     }
 
     /// 설정 — 함께 볼 공휴일 (사는 곳·회사 본사 나라)
-    static var homeRegionSetting: String {
+    public static var homeRegionSetting: String {
         switch lang {
         case .korean: return "함께 볼 공휴일"
         case .english: return "Also Show Holidays Of"
@@ -19558,7 +17169,7 @@ enum Strings {
     }
 
     /// 설정 — 함께 볼 공휴일 없음
-    static var homeRegionNone: String {
+    public static var homeRegionNone: String {
         switch lang {
         case .korean: return "없음"
         case .english: return "None"
@@ -19587,7 +17198,7 @@ enum Strings {
     }
 
     /// 설정 — 함께 볼 공휴일: 일하는 나라 안의 다른 지역
-    static func homeSameCountryOtherRegion(_ country: Country) -> String {
+    public static func homeSameCountryOtherRegion(_ country: Country) -> String {
         let name = country.displayName
         switch lang {
         case .korean: return "\(name) 안의 다른 지역"
@@ -19617,7 +17228,7 @@ enum Strings {
     }
 
     /// 설정 — 함께 보는 공휴일도 쉬는 날로
-    static var homeHolidaysDaysOff: String {
+    public static var homeHolidaysDaysOff: String {
         switch lang {
         case .korean: return "이 공휴일에도 쉬어요"
         case .english: return "I get these holidays off too"
@@ -19646,7 +17257,7 @@ enum Strings {
     }
 
     /// 설정 — 일하는 곳 / 함께 볼 공휴일 설명
-    static var homeRegionFooter: String {
+    public static var homeRegionFooter: String {
         switch lang {
         case .korean: return "위 나라·지역은 일하는 곳이에요. 연차는 이곳 공휴일로 계산해요. 사는 곳이 다르거나 회사 본사가 다른 나라에 있으면 '함께 볼 공휴일'에서 고르세요. 그곳에만 있는 공휴일이 달력에 따로 표시되고, 그날도 쉬면 스위치를 켜면 돼요."
         case .english: return "The country and region above are where you work, and your leave is counted with their holidays. If you live somewhere else or your company is based in another country, pick it under 'Also Show Holidays Of'. Holidays that only apply there are marked on the calendar, and if you get them off too, turn on the switch."
@@ -19675,7 +17286,7 @@ enum Strings {
     }
 
     /// 설정 — 공휴일 앞뒤 휴가 제한
-    static var blackoutSetting: String {
+    public static var blackoutSetting: String {
         switch lang {
         case .korean: return "공휴일 앞뒤 휴가 제한"
         case .english: return "No leave near holidays"
@@ -19704,7 +17315,7 @@ enum Strings {
     }
 
     /// 설정 — 제한 없음
-    static var blackoutOff: String {
+    public static var blackoutOff: String {
         switch lang {
         case .korean: return "제한 없음"
         case .english: return "Off"
@@ -19733,7 +17344,7 @@ enum Strings {
     }
 
     /// 설정 — 휴가 제한 설명
-    static var blackoutFooter: String {
+    public static var blackoutFooter: String {
         switch lang {
         case .korean: return "직장 규정상 공휴일 앞뒤로 휴가를 낼 수 없다면 켜세요. 추천과 최적 연차 플랜이 그 날을 피하고, 휴가를 등록할 때 알려 드려요."
         case .english: return "Turn this on if your workplace doesn't allow leave right before or after public holidays. Suggestions and the optimal plan will avoid those days, and you'll get a warning when adding leave."
@@ -19762,7 +17373,7 @@ enum Strings {
     }
 
     /// 휴가 등록 — 제한일 포함 경고
-    static var blackoutWarning: String {
+    public static var blackoutWarning: String {
         switch lang {
         case .korean: return "공휴일 앞뒤 휴가 제한일이 들어 있어요"
         case .english: return "This includes days when leave isn't allowed near a holiday"
@@ -19791,7 +17402,7 @@ enum Strings {
     }
 
     /// 날짜 상세 — 휴가 제한일
-    static var blackoutDayLabel: String {
+    public static var blackoutDayLabel: String {
         switch lang {
         case .korean: return "공휴일 앞뒤 휴가 제한일"
         case .english: return "No leave allowed (near a holiday)"
@@ -19820,7 +17431,7 @@ enum Strings {
     }
 
     /// 설정·화면 제목 — 휴가 불가 기간
-    static var blackoutPeriodsTitle: String {
+    public static var blackoutPeriodsTitle: String {
         switch lang {
         case .korean: return "휴가 불가 기간"
         case .english: return "Blackout dates"
@@ -19849,7 +17460,7 @@ enum Strings {
     }
 
     /// 휴가 불가 기간 설명
-    static var blackoutPeriodsFooter: String {
+    public static var blackoutPeriodsFooter: String {
         switch lang {
         case .korean: return "결산·성수기처럼 직장 규정상 휴가를 낼 수 없는 기간을 넣어 두세요. 추천과 최적 연차 플랜이 그 기간을 피하고, 휴가를 등록할 때 알려 드려요."
         case .english: return "Add periods when your workplace doesn't allow time off, like closing or peak season. Suggestions and the optimal plan will avoid them, and you'll get a warning when adding leave."
@@ -19878,7 +17489,7 @@ enum Strings {
     }
 
     /// 휴가 불가 기간 — 비어 있음
-    static var blackoutPeriodsEmpty: String {
+    public static var blackoutPeriodsEmpty: String {
         switch lang {
         case .korean: return "아직 넣은 기간이 없어요"
         case .english: return "No blackout dates yet"
@@ -19907,7 +17518,7 @@ enum Strings {
     }
 
     /// 휴가 불가 기간 추가
-    static var blackoutPeriodAddTitle: String {
+    public static var blackoutPeriodAddTitle: String {
         switch lang {
         case .korean: return "휴가 불가 기간 추가"
         case .english: return "Add Blackout Dates"
@@ -19936,7 +17547,7 @@ enum Strings {
     }
 
     /// 휴가 불가 기간 수정
-    static var blackoutPeriodEditTitle: String {
+    public static var blackoutPeriodEditTitle: String {
         switch lang {
         case .korean: return "휴가 불가 기간 수정"
         case .english: return "Edit Blackout Dates"
@@ -19965,7 +17576,7 @@ enum Strings {
     }
 
     /// 휴가 불가 기간 이름 예시
-    static var blackoutPeriodNamePlaceholder: String {
+    public static var blackoutPeriodNamePlaceholder: String {
         switch lang {
         case .korean: return "예: 분기 결산"
         case .english: return "e.g. Quarter-end close"
@@ -19994,7 +17605,7 @@ enum Strings {
     }
 
     /// 휴가 불가 기간 삭제 확인
-    static var blackoutPeriodDeleteTitle: String {
+    public static var blackoutPeriodDeleteTitle: String {
         switch lang {
         case .korean: return "이 기간을 삭제할까요?"
         case .english: return "Delete these blackout dates?"
@@ -20023,7 +17634,7 @@ enum Strings {
     }
 
     /// 휴가 등록 — 휴가 불가 기간 포함 경고
-    static func blackoutPeriodWarning(_ name: String) -> String {
+    public static func blackoutPeriodWarning(_ name: String) -> String {
         switch lang {
         case .korean: return "휴가 불가 기간이 들어 있어요 (\(name))"
         case .english: return "This includes blackout dates (\(name))"
@@ -20052,7 +17663,7 @@ enum Strings {
     }
 
     /// 날짜 상세 — 휴가 불가 기간
-    static func blackoutPeriodDayLabel(_ name: String) -> String {
+    public static func blackoutPeriodDayLabel(_ name: String) -> String {
         switch lang {
         case .korean: return "휴가 불가 기간 · \(name)"
         case .english: return "Blackout date · \(name)"
@@ -20081,7 +17692,7 @@ enum Strings {
     }
 
     /// 설정 — 공휴일 앞뒤 제한 근무일 수
-    static func blackoutDays(_ n: Int) -> String {
+    public static func blackoutDays(_ n: Int) -> String {
         switch lang {
         case .korean: return n == 1 ? "앞뒤 \(n) 근무일" : "앞뒤 \(n) 근무일"
         case .english: return n == 1 ? "1 working day before and after" : "\(n) working days before and after"
@@ -20110,7 +17721,7 @@ enum Strings {
     }
 
     /// 나라 이름 — 표의 순서는 `Country.allCases` 순서와 같다
-    static func countryDisplayName(_ country: Country) -> String {
+    public static func countryDisplayName(_ country: Country) -> String {
         let names: [String]
         switch lang {
         case .korean:
@@ -20165,7 +17776,7 @@ enum Strings {
     }
 
     // MARK: - 여행 큐레이션 섹션
-    static var travelSuggestionsHeader: String {
+    public static var travelSuggestionsHeader: String {
         switch lang {
         case .korean: return "이 연휴에 어울리는 여행"
         case .english: return "Trips that fit this break"
@@ -20193,35 +17804,7 @@ enum Strings {
         }
     }
 
-    static var travelSuggestionsSubtitle: String {
-        switch lang {
-        case .korean: return "연휴 길이와 시즌에 맞춰 골랐어요. 탭하면 마이리얼트립에서 상품을 확인할 수 있어요."
-        case .english: return "Picked for this break's length and season. Tap to see options on MyRealTrip."
-        case .swedish: return "Utvalt efter ledighetens längd och säsong. Tryck för att se alternativ på MyRealTrip."
-        case .norwegian: return "Valgt ut fra pausens lengde og sesong. Trykk for å se alternativer på MyRealTrip."
-        case .danish: return "Valgt ud fra denne pauses længde og sæson. Tryk for at se muligheder hos MyRealTrip."
-        case .finnish: return "Valittu tämän tauon pituuden ja vuodenajan mukaan. Näet vaihtoehdot napauttamalla MyRealTripissä."
-        case .polish: return "Dobrane do długości i pory roku tej przerwy. Stuknij, aby zobaczyć opcje w MyRealTrip."
-        case .czech: return "Vybráno podle délky a období tohoto volna. Klepnutím zobrazíš nabídku na MyRealTrip."
-        case .greek: return "Επιλεγμένα με βάση τη διάρκεια και την εποχή του διαλείμματος. Πάτα για να δεις επιλογές στο MyRealTrip."
-        case .turkish: return "Bu molanın süresi ve mevsimine göre seçildi. Seçenekler için MyRealTrip'te dokun."
-        case .russian: return "Подобрано по длине выходных и сезону. Нажмите, чтобы посмотреть варианты на MyRealTrip."
-        case .indonesian: return "Dipilih sesuai lama libur dan musimnya. Ketuk untuk melihat pilihan di MyRealTrip."
-        case .thai: return "คัดตามความยาวและฤดูของวันหยุดนี้ แตะเพื่อดูตัวเลือกใน MyRealTrip"
-        case .vietnamese: return "Chọn theo độ dài và mùa của kỳ nghỉ. Chạm để xem các lựa chọn trên MyRealTrip."
-        case .dutch: return "Gekozen op basis van de lengte en het seizoen van deze vrije periode. Tik om opties te zien op MyRealTrip."
-        case .japanese: return "連休の長さと季節に合わせて選びました。タップでマイリアルトリップの商品を確認。"
-        case .chinese: return "根据假期长度和季节精选。点击可在MyRealTrip中查看商品。"
-        case .german: return "Passend zu Länge und Jahreszeit dieser freien Tage ausgewählt. Tippe, um Angebote bei MyRealTrip zu sehen."
-        case .french: return "Sélection selon la durée et la saison. Touchez pour voir les offres sur MyRealTrip."
-        case .spanish: return "Elegidos según la duración y la temporada. Toca para ver ofertas en MyRealTrip."
-        case .italian: return "Scelti in base alla durata e alla stagione. Tocca per vedere le offerte su MyRealTrip."
-        case .portuguese: return "Escolhidos pela duração e pela época. Toque para ver as ofertas na MyRealTrip."
-        case .chineseTraditional: return "依連假長度和季節挑選。點一下即可在 MyRealTrip 查看商品。"
-        }
-    }
-
-    static func cityName(_ key: String) -> String {
+    public static func cityName(_ key: String) -> String {
         switch lang {
         case .korean:
             switch key {
@@ -20686,7 +18269,7 @@ enum Strings {
         }
     }
 
-    static func travelThemeName(_ key: String) -> String {
+    public static func travelThemeName(_ key: String) -> String {
         switch lang {
         case .korean:
             switch key {
@@ -20967,7 +18550,7 @@ enum Strings {
         }
     }
 
-    static func travelReasonLabel(_ key: String) -> String {
+    public static func travelReasonLabel(_ key: String) -> String {
         switch lang {
         case .korean:
             switch key {
@@ -21294,7 +18877,7 @@ enum Strings {
         }
     }
 
-    static func priceTierLabel(_ key: String) -> String {
+    public static func priceTierLabel(_ key: String) -> String {
         switch lang {
         case .korean:
             switch key {
@@ -21461,7 +19044,7 @@ enum Strings {
     }
 
     // MARK: - 이전 연차 빠른 입력
-    static var pastLeavePromptTitle: String {
+    public static var pastLeavePromptTitle: String {
         switch lang {
         case .korean: return "올해 사용한 연차가 있나요?"
         case .english: return "Did you take any leave this year?"
@@ -21489,7 +19072,7 @@ enum Strings {
         }
     }
 
-    static var pastLeavePromptDesc: String {
+    public static var pastLeavePromptDesc: String {
         switch lang {
         case .korean: return "지금까지 사용한 연차를 입력하면 남은 연차를 정확히 파악할 수 있어요"
         case .english: return "Log your past leave to see your accurate remaining balance"
@@ -21517,7 +19100,7 @@ enum Strings {
         }
     }
 
-    static var pastLeaveQuickAdd: String {
+    public static var pastLeaveQuickAdd: String {
         switch lang {
         case .korean: return "빠른 입력"
         case .english: return "Quick Entry"
@@ -21545,7 +19128,7 @@ enum Strings {
         }
     }
 
-    static var pastLeaveTotalUsed: String {
+    public static var pastLeaveTotalUsed: String {
         switch lang {
         case .korean: return "사용한 연차"
         case .english: return "Leave days used"
@@ -21573,7 +19156,7 @@ enum Strings {
         }
     }
 
-    static var pastLeaveSheetTitle: String {
+    public static var pastLeaveSheetTitle: String {
         switch lang {
         case .korean: return "이전 연차 입력"
         case .english: return "Add Past Leave"
@@ -21601,7 +19184,7 @@ enum Strings {
         }
     }
 
-    static var pastLeaveSheetDesc: String {
+    public static var pastLeaveSheetDesc: String {
         switch lang {
         case .korean: return "올해 이미 사용한 연차 일수를 입력하세요.\n정확한 날짜는 + 탭에서 개별 입력할 수 있어요."
         case .english: return "Enter the total leave days already used this year.\nFor exact dates, add them individually in the + tab."
@@ -21629,7 +19212,7 @@ enum Strings {
         }
     }
 
-    static var pastLeaveConfirm: String {
+    public static var pastLeaveConfirm: String {
         switch lang {
         case .korean: return "반영하기"
         case .english: return "Confirm"
@@ -21657,7 +19240,7 @@ enum Strings {
         }
     }
 
-    static var pastLeaveSummaryNote: String {
+    public static var pastLeaveSummaryNote: String {
         switch lang {
         case .korean: return "이전 사용 연차 (일괄 입력)"
         case .english: return "Prior leave (bulk entry)"
@@ -21685,7 +19268,7 @@ enum Strings {
         }
     }
 
-    static var pastLeaveAutoUsed: String {
+    public static var pastLeaveAutoUsed: String {
         switch lang {
         case .korean: return "과거 날짜 선택 시 자동으로 '사용 완료' 처리됩니다"
         case .english: return "Past dates are automatically marked as 'Used'"
@@ -21714,7 +19297,7 @@ enum Strings {
     }
 
     // MARK: - 연휴 알림 섹션
-    static var upcomingHolidaysSection: String {
+    public static var upcomingHolidaysSection: String {
         switch lang {
         case .korean: return "연차 없이 쉬는 날"
         case .english: return "Free Days Off"
@@ -21743,7 +19326,7 @@ enum Strings {
     }
 
     /// 한 해 전체 황금연휴 보기 토글
-    static var showAllYearToggle: String {
+    public static var showAllYearToggle: String {
         switch lang {
         case .korean: return "한 해 전체 보기 (지난 휴가 포함)"
         case .english: return "Show whole year (include past)"
@@ -21771,7 +19354,7 @@ enum Strings {
         }
     }
 
-    static var upcomingHolidaysSectionSubtitle: String {
+    public static var upcomingHolidaysSectionSubtitle: String {
         switch lang {
         case .korean: return "이미 연휴가 있어요. 연차를 추가하면 더 길게 쉴 수 있어요."
         case .english: return "Holidays are already here. Add leave to extend them."
@@ -21799,7 +19382,7 @@ enum Strings {
         }
     }
 
-    static var addWithPro: String {
+    public static var addWithPro: String {
         switch lang {
         case .korean: return "Pro로 일정 추가"
         case .english: return "Add with Pro"
@@ -21827,7 +19410,7 @@ enum Strings {
         }
     }
 
-    static var proUnlockHint: String {
+    public static var proUnlockHint: String {
         switch lang {
         case .korean: return "Pro로 업그레이드하면 모든 추천을 일정에 추가할 수 있어요"
         case .english: return "Upgrade to Pro to add all recommendations to your schedule"
@@ -21856,7 +19439,7 @@ enum Strings {
     }
 
     // MARK: - 일정 공유 (CloudKit CKShare)
-    static var shareScheduleTitle: String {
+    public static var shareScheduleTitle: String {
         switch lang {
         case .korean: return "일정 공유"
         case .english: return "Schedule Sharing"
@@ -21884,7 +19467,7 @@ enum Strings {
         }
     }
 
-    static var shareScheduleSubtitle: String {
+    public static var shareScheduleSubtitle: String {
         switch lang {
         case .korean: return "가족·친구와 휴가 일정을 실시간으로 공유"
         case .english: return "Share your leave schedule with family & friends in real time"
@@ -21912,7 +19495,7 @@ enum Strings {
         }
     }
 
-    static var shareMySection: String {
+    public static var shareMySection: String {
         switch lang {
         case .korean: return "내 일정 공유"
         case .english: return "Share My Schedule"
@@ -21940,7 +19523,7 @@ enum Strings {
         }
     }
 
-    static var shareStartButton: String {
+    public static var shareStartButton: String {
         switch lang {
         case .korean: return "공유 시작하기"
         case .english: return "Start Sharing"
@@ -21968,7 +19551,7 @@ enum Strings {
         }
     }
 
-    static var shareInviteLink: String {
+    public static var shareInviteLink: String {
         switch lang {
         case .korean: return "초대 링크 보내기"
         case .english: return "Send Invite Link"
@@ -21996,7 +19579,7 @@ enum Strings {
         }
     }
 
-    static var shareStatusActive: String {
+    public static var shareStatusActive: String {
         switch lang {
         case .korean: return "공유 중"
         case .english: return "Sharing Active"
@@ -22024,7 +19607,7 @@ enum Strings {
         }
     }
 
-    static func shareParticipants(_ count: Int) -> String {
+    public static func shareParticipants(_ count: Int) -> String {
         switch lang {
         case .korean: return "참여자 \(count)명"
         case .english: return count == 1 ? "1 participant" : "\(count) participants"
@@ -22052,7 +19635,7 @@ enum Strings {
         }
     }
 
-    static var shareNoParticipants: String {
+    public static var shareNoParticipants: String {
         switch lang {
         case .korean: return "아직 참여자가 없어요. 초대 링크를 보내보세요."
         case .english: return "No participants yet. Send an invite link."
@@ -22080,7 +19663,7 @@ enum Strings {
         }
     }
 
-    static var shareSyncNow: String {
+    public static var shareSyncNow: String {
         switch lang {
         case .korean: return "지금 동기화"
         case .english: return "Sync Now"
@@ -22108,7 +19691,7 @@ enum Strings {
         }
     }
 
-    static func shareLastSync(_ date: String) -> String {
+    public static func shareLastSync(_ date: String) -> String {
         switch lang {
         case .korean: return "마지막 동기화: \(date)"
         case .english: return "Last synced: \(date)"
@@ -22136,7 +19719,7 @@ enum Strings {
         }
     }
 
-    static var shareStop: String {
+    public static var shareStop: String {
         switch lang {
         case .korean: return "공유 중지"
         case .english: return "Stop Sharing"
@@ -22164,7 +19747,7 @@ enum Strings {
         }
     }
 
-    static var shareStopConfirmTitle: String {
+    public static var shareStopConfirmTitle: String {
         switch lang {
         case .korean: return "공유를 중지할까요?"
         case .english: return "Stop sharing?"
@@ -22192,7 +19775,7 @@ enum Strings {
         }
     }
 
-    static var shareStopConfirmMessage: String {
+    public static var shareStopConfirmMessage: String {
         switch lang {
         case .korean: return "공유된 일정이 모든 참여자의 기기에서 제거됩니다. 내 기기의 데이터는 그대로 유지됩니다."
         case .english: return "Your shared schedule will be removed from all participants' devices. Data on your device stays intact."
@@ -22220,7 +19803,7 @@ enum Strings {
         }
     }
 
-    static var shareReceivedSection: String {
+    public static var shareReceivedSection: String {
         switch lang {
         case .korean: return "공유받은 일정"
         case .english: return "Shared With Me"
@@ -22248,7 +19831,7 @@ enum Strings {
         }
     }
 
-    static var shareReceivedEmpty: String {
+    public static var shareReceivedEmpty: String {
         switch lang {
         case .korean: return "아직 공유받은 일정이 없어요.\n가족이나 친구가 보낸 초대 링크를 열면 여기에 표시됩니다."
         case .english: return "No shared schedules yet.\nOpen an invite link from family or friends and it will appear here."
@@ -22276,7 +19859,7 @@ enum Strings {
         }
     }
 
-    static var shareLeaveButton: String {
+    public static var shareLeaveButton: String {
         switch lang {
         case .korean: return "공유 나가기"
         case .english: return "Leave Share"
@@ -22304,7 +19887,7 @@ enum Strings {
         }
     }
 
-    static func shareLeaveConfirmMessage(_ name: String) -> String {
+    public static func shareLeaveConfirmMessage(_ name: String) -> String {
         switch lang {
         case .korean: return "\(name)님의 일정 공유에서 나갑니다. 다시 보려면 새 초대 링크가 필요합니다."
         case .english: return "You will leave \(name)'s shared schedule. You'll need a new invite link to see it again."
@@ -22332,7 +19915,7 @@ enum Strings {
         }
     }
 
-    static var shareICloudRequired: String {
+    public static var shareICloudRequired: String {
         switch lang {
         case .korean: return "iCloud 로그인이 필요합니다. 설정 앱에서 iCloud에 로그인해주세요."
         case .english: return "iCloud sign-in required. Please sign in to iCloud in the Settings app."
@@ -22360,7 +19943,7 @@ enum Strings {
         }
     }
 
-    static func shareCKTitle(_ name: String) -> String {
+    public static func shareCKTitle(_ name: String) -> String {
         switch lang {
         case .korean: return "\(name)님의 휴가 일정"
         case .english: return "\(name)'s Leave Schedule"
@@ -22388,7 +19971,7 @@ enum Strings {
         }
     }
 
-    static var shareOwnerFallback: String {
+    public static var shareOwnerFallback: String {
         switch lang {
         case .korean: return "이름 없는 사용자"
         case .english: return "Unknown User"
@@ -22416,7 +19999,7 @@ enum Strings {
         }
     }
 
-    static var shareNoUpcoming: String {
+    public static var shareNoUpcoming: String {
         switch lang {
         case .korean: return "예정된 휴가가 없어요"
         case .english: return "No upcoming leaves"
@@ -22444,7 +20027,7 @@ enum Strings {
         }
     }
 
-    static func shareUpcomingCount(_ count: Int) -> String {
+    public static func shareUpcomingCount(_ count: Int) -> String {
         switch lang {
         case .korean: return "다가오는 휴가 \(count)건"
         case .english: return count == 1 ? "1 upcoming leave" : "\(count) upcoming leaves"
@@ -22472,7 +20055,7 @@ enum Strings {
         }
     }
 
-    static var shareErrorTitle: String {
+    public static var shareErrorTitle: String {
         switch lang {
         case .korean: return "공유 오류"
         case .english: return "Sharing Error"
@@ -22500,7 +20083,7 @@ enum Strings {
         }
     }
 
-    static func shareErrorGeneric(_ message: String) -> String {
+    public static func shareErrorGeneric(_ message: String) -> String {
         switch lang {
         case .korean: return "공유 작업에 실패했습니다: \(message)"
         case .english: return "Sharing operation failed: \(message)"
@@ -22528,7 +20111,7 @@ enum Strings {
         }
     }
 
-    static var shareFooterPrivacy: String {
+    public static var shareFooterPrivacy: String {
         switch lang {
         case .korean: return "휴가 날짜와 종류만 공유되며, 메모는 공유되지 않습니다."
         case .english: return "Only leave dates and types are shared. Notes are never shared."
@@ -22557,7 +20140,7 @@ enum Strings {
     }
 
     // MARK: - 가족 탭
-    static var tabFamily: String {
+    public static var tabFamily: String {
         switch lang {
         case .korean: return "가족"
         case .english: return "Family"
@@ -22585,7 +20168,7 @@ enum Strings {
         }
     }
 
-    static var familyNavTitle: String {
+    public static var familyNavTitle: String {
         switch lang {
         case .korean: return "가족 일정"
         case .english: return "Family Schedules"
@@ -22613,7 +20196,7 @@ enum Strings {
         }
     }
 
-    static var familyOnLeave: String {
+    public static var familyOnLeave: String {
         switch lang {
         case .korean: return "휴가 중"
         case .english: return "On Leave"
@@ -22641,7 +20224,7 @@ enum Strings {
         }
     }
 
-    static func familyDday(_ days: Int) -> String {
+    public static func familyDday(_ days: Int) -> String {
         switch lang {
         case .korean: return "D-\(days)"
         case .english: return days == 1 ? "in 1 day" : "in \(days) days"
@@ -22674,7 +20257,7 @@ enum Strings {
 
 extension Strings {
     /// 기기 캘린더 앱에 새로 만드는 Goldweek 전용 캘린더 이름
-    static var goldweekCalendarTitle: String {
+    public static var goldweekCalendarTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "Goldweek 연차"
         case .english: return "Goldweek Leave"

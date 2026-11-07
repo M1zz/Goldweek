@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import LeeoKit
+import GoldweekCore
 
 struct RecommendationsView: View {
     @Bindable var profile: UserProfile
@@ -826,10 +827,6 @@ enum DayType {
         case .holiday: return .red.opacity(0.7)
         case .workday: return .gray.opacity(0.5)
         }
-    }
-
-    var label: String {
-        Strings.dayTypeLabel(self)
     }
 }
 
@@ -2874,18 +2871,6 @@ struct MRTTnaItem: Codable, Identifiable, Hashable {
     let tags: [String]?
 }
 
-/// TNA 카테고리
-struct MRTTnaCategoriesData: Codable {
-    let categories: [MRTTnaCategory]
-    let totalCount: Int
-}
-
-struct MRTTnaCategory: Codable, Identifiable, Hashable {
-    var id: String { value }
-    let name: String
-    let value: String
-}
-
 // MARK: - API 클라이언트
 
 actor MyRealTripAPIClient {
@@ -3071,17 +3056,6 @@ actor MyRealTripAPIClient {
         return data
     }
 
-    /// 도시별 카테고리 목록
-    /// docs: POST /v1/products/tna/categories
-    func getTnaCategories(city: String) async throws -> MRTTnaCategoriesData {
-        let response: MRTAPIResponse<MRTTnaCategoriesData> = try await postJSON(
-            path: "/v1/products/tna/categories",
-            body: ["city": city]
-        )
-        guard let data = response.data else { throw APIError.decodingError(URLError(.cannotParseResponse)) }
-        return data
-    }
-
     // MARK: - 숙소
 
     /// 숙소 검색
@@ -3147,25 +3121,6 @@ actor MyRealTripAPIClient {
         ]
         let response: MRTAPIResponse<[MRTFlightItem]> = try await postJSON(
             path: "/v1/products/flight/calendar",
-            body: body
-        )
-        return response.data ?? []
-    }
-
-    /// 다중 목적지 최저가
-    /// docs: POST /v1/products/flight/calendar/lowest
-    func searchFlightLowestForDestinations(
-        depCityCd: String,
-        arrCityCds: [String],
-        period: Int
-    ) async throws -> [MRTFlightItem] {
-        let body: [String: Any] = [
-            "depCityCd": depCityCd,
-            "arrCityCds": arrCityCds,
-            "period": period
-        ]
-        let response: MRTAPIResponse<[MRTFlightItem]> = try await postJSON(
-            path: "/v1/products/flight/calendar/lowest",
             body: body
         )
         return response.data ?? []

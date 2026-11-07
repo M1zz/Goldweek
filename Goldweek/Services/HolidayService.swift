@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GoldweekCore
 
 class HolidayService {
 
@@ -1209,20 +1210,6 @@ class HolidayService {
         return holidays.contains { calendar.isDate($0.date, inSameDayAs: date) }
     }
 
-    /// 특정 날짜의 공휴일 정보 반환
-    func getHoliday(for date: Date, in year: Int, country: Country = .korea) -> Holiday? {
-        let holidays = getHolidays(for: year, country: country)
-        return holidays.first { calendar.isDate($0.date, inSameDayAs: date) }
-    }
-
-    /// 특정 월의 공휴일 목록
-    func getHolidays(for month: Int, year: Int, country: Country = .korea) -> [Holiday] {
-        let allHolidays = getHolidays(for: year, country: country)
-        return allHolidays.filter {
-            calendar.component(.month, from: $0.date) == month
-        }
-    }
-
     // MARK: - 날짜 계산 헬퍼
 
     /// n번째 특정 요일 찾기 (weekday: 1=Sun, 2=Mon, ...)
@@ -1277,26 +1264,6 @@ class HolidayService {
 
 // MARK: - 근무 형태 · 교대 근무
 
-/// 근무 형태 — 온보딩·설정에서 고른다. 형태에 맞는 기능만 보이고 쉬는 날 계산에 쓰인다.
-/// 다른 형태로 바꿔도 파트타임 요일·교대 휴무 기록은 지우지 않는다 (다시 바꾸면 그대로 돌아온다).
-enum WorkPattern: String, CaseIterable, Identifiable {
-    /// 매주 같은 요일 근무 (주말만 쉼)
-    case fixed
-    /// 매주 쉬는 요일이 정해져 있고 가끔 그 주만 옮긴다 (네덜란드 피드백)
-    case partTime
-    /// 쉬는 날이 주마다 바뀐다 — 날짜마다 휴무·근무를 정한다 (교대 근무 피드백)
-    case shift
-
-    var id: String { rawValue }
-
-    var icon: String {
-        switch self {
-        case .fixed: return "calendar"
-        case .partTime: return "calendar.badge.minus"
-        case .shift: return "arrow.triangle.2.circlepath"
-        }
-    }
-}
 
 extension HolidayService {
     static let workPatternKey = "workPattern"

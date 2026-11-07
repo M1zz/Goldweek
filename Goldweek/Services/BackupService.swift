@@ -9,6 +9,7 @@ import Foundation
 import SwiftData
 import CryptoKit
 import Security
+import GoldweekCore
 
 // MARK: - 백업 데이터 구조
 struct BackupData: Codable {
@@ -145,7 +146,6 @@ class BackupService {
     private let backupPrefix = "LeaveWiseICloud_"
     private let maxICloudBackups = 3
     private let autoBackupIntervalKey = "lastAutoICloudBackupDate"
-    private let dailyBackupHour = 2  // 새벽 2시에 자동 백업
     private let backupChecksumKey = "icloudBackupChecksum"
 
     // 레거시 암호화 키 (v1 — 앱 전체 고정 키, 기존 백업 복호화 폴백 전용)
@@ -168,11 +168,6 @@ class BackupService {
     private var iCloudContainerURL: URL? {
         fileManager.url(forUbiquityContainerIdentifier: nil)?
             .appendingPathComponent("Documents")
-    }
-
-    private var localBackupURL: URL? {
-        fileManager.urls(for: .documentDirectory, in: .userDomainMask).first?
-            .appendingPathComponent(backupFileName)
     }
 
     private var iCloudBackupURL: URL? {
@@ -292,54 +287,12 @@ class BackupService {
         logInfo("iCloud 백업 시작", category: .backup)
         let signpost = AppSignpost.signposter.beginInterval("iCloudBackup", id: AppSignpost.signposter.makeSignpostID())
         defer { AppSignpost.signposter.endInterval("iCloudBackup", signpost) }
-        logDebug("iCloud 사용 가능 여부: \(isICloudAvailable)", category: .iCloud)
-
-        guard let url = iCloudBackupURL else {
-            logError("iCloud 컨테이너 URL을 찾을 수 없음", category: .iCloud)
-            throw BackupError.iCloudNotAvailable
-        }
-
-        logDebug("iCloud 백업 URL: \(url.path)", category: .iCloud)
-
-        // iCloud Documents 디렉토리 생성
-        if let containerURL = iCloudContainerURL {
-            logDebug("iCloud Documents 디렉토리 생성 시도: \(containerURL.path)", category: .iCloud)
-            try? fileManager.createDirectory(at: containerURL, withIntermediateDirectories: true)
-        }
-
-        logDebug("백업 데이터 생성 중 - 프로필: \(profile.name), 연차기록: \(leaveRecords.count)건, 보너스: \(bonusLeaves.count)건", category: .backup)
-        let jsonData = try createBackup(profile: profile, leaveRecords: leaveRecords, bonusLeaves: bonusLeaves)
-        logDebug("JSON 데이터 크기: \(jsonData.count) bytes", category: .backup)
-
-        // 암호화하여 저장
-        logDebug("데이터 암호화 중...", category: .backup)
-        let encryptedData = try encrypt(jsonData)
-        logDebug("암호화된 데이터 크기: \(encryptedData.count) bytes", category: .backup)
-
-        try encryptedData.write(to: url, options: .atomic)
-        logInfo("iCloud 백업 완료: \(url.lastPathComponent)", category: .backup)
-
-        // 기존 평문 백업 파일 삭제 (보안)
-        if let legacyURL = legacyICloudBackupURL, fileManager.fileExists(atPath: legacyURL.path) {
-            logWarning("레거시 평문 백업 파일 발견, 삭제 중...", category: .backup)
-            try? fileManager.removeItem(at: legacyURL)
-            logInfo("레거시 백업 파일 삭제 완료", category: .backup)
-        }
-    }
-
-    // MARK: - 로컬에 백업
-    func backupToLocal(
-        profile: UserProfile,
-        leaveRecords: [LeaveRecord],
-        bonusLeaves: [BonusLeave]
-    ) throws -> URL {
-        guard let url = localBackupURL else {
-            throw BackupError.localPathNotAvailable
-        }
-
-        let data = try createBackup(profile: profile, leaveRecords: leaveRecords, bonusLeaves: bonusLeaves)
-        try data.write(to: url, options: .atomic)
-        return url
+        // 직접 백업도 자동 백업과 같은 순번 파일(최대 3개)로 남긴다.
+        // 예전처럼 단일 파일에 쓰면 다음 자동 백업이 그 파일을 지우고, 복원은 더 오래된 순번 파일을 먼저 집었다.
+        try await backupToICloudWithRotation(profile: profile, leaveRecords: leaveRecords, bonusLeaves: bonusLeaves)
+        // 방금 백업했으니 오늘의 자동 백업은 건너뛴다
+        UserDefaults.standard.set(Date(), forKey: autoBackupIntervalKey)
+        logInfo("iCloud 백업 완료", category: .backup)
     }
 
     // MARK: - 복원
@@ -414,24 +367,6 @@ class BackupService {
         throw BackupError.backupNotFound
     }
 
-    func restoreFromLocal() throws -> BackupData {
-        guard let url = localBackupURL else {
-            throw BackupError.localPathNotAvailable
-        }
-
-        guard fileManager.fileExists(atPath: url.path) else {
-            throw BackupError.backupNotFound
-        }
-
-        let data = try Data(contentsOf: url)
-        return try parseBackup(from: data)
-    }
-
-    func restoreFromURL(_ url: URL) throws -> BackupData {
-        let data = try Data(contentsOf: url)
-        return try parseBackup(from: data)
-    }
-
     // MARK: - 데이터 적용
     func applyBackup(
         _ backup: BackupData,
@@ -441,7 +376,8 @@ class BackupService {
         // 프로필 업데이트 또는 생성
         if let profile = existingProfile {
             profile.name = backup.profile.name
-            profile.yearStartMonth = backup.profile.yearStartMonth
+            // 백업 파일은 밖에서 온 값 — 달 밖의 값이면 1월로
+            profile.yearStartMonth = (1...12).contains(backup.profile.yearStartMonth) ? backup.profile.yearStartMonth : 1
             profile.yearStartDay = backup.profile.yearStartDay ?? 1
             profile.totalAnnualLeave = backup.profile.totalAnnualLeave
             profile.usedLeave = backup.profile.usedLeave
@@ -609,6 +545,11 @@ class BackupService {
             try? fileManager.removeItem(at: legacyURL)
             logDebug("기존 단일 백업 파일 정리 완료", category: .backup)
         }
+        // 예전 평문 백업 파일 삭제 (보안)
+        if let plainURL = legacyICloudBackupURL, fileManager.fileExists(atPath: plainURL.path) {
+            try? fileManager.removeItem(at: plainURL)
+            logDebug("예전 평문 백업 파일 삭제", category: .backup)
+        }
     }
     
     /// iCloud 백업 로테이션 (최대 3개 유지)
@@ -757,21 +698,6 @@ class BackupService {
         } catch {
             return (true, nil)
         }
-    }
-    
-    /// 모든 iCloud 백업 정보 가져오기 (관리용)
-    func getAllICloudBackups() async -> [(url: URL, date: Date?, verified: Bool)] {
-        let backups = getTimestampedICloudBackups()
-        var result: [(url: URL, date: Date?, verified: Bool)] = []
-        
-        for backup in backups {
-            let attributes = try? fileManager.attributesOfItem(atPath: backup.path)
-            let date = attributes?[.modificationDate] as? Date
-            let verified = await verifyICloudBackupIntegrity(backup)
-            result.append((backup, date, verified))
-        }
-        
-        return result.sorted { $0.date ?? Date.distantPast > $1.date ?? Date.distantPast }
     }
 }
 

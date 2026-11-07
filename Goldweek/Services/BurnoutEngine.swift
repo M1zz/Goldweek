@@ -20,6 +20,7 @@
 //
 
 import Foundation
+import GoldweekCore
 
 // MARK: - 입력
 

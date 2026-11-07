@@ -6,10 +6,10 @@
 //
 
 import Foundation
+import GoldweekCore
 
 class RecommendationEngine {
 
-    private let holidayService = HolidayService()
     private let calendar = Calendar.app
 
     // 캐싱

@@ -11,7 +11,7 @@ extension Strings {
     private static var partTimeLang: AppLanguage { LanguageManager.shared.currentLanguage }
 
     /// 설정 — 매주 쉬는 요일 (파트타임)
-    static var partTimeDaysSetting: String {
+    public static var partTimeDaysSetting: String {
         switch partTimeLang {
         case .korean: return "매주 쉬는 요일"
         case .english: return "Regular Days Off"
@@ -40,7 +40,7 @@ extension Strings {
     }
 
     /// 설정 — 매주 쉬는 요일 설명
-    static var partTimeDaysFooter: String {
+    public static var partTimeDaysFooter: String {
         switch partTimeLang {
         case .korean: return "파트타임처럼 매주 일하지 않는 요일을 고르세요. 그날은 주말처럼 연차에서 빠지지 않아요. 어느 주에 동료와 바꾸면 달력에서 그 날을 눌러 이번 주만 옮길 수 있어요."
         case .english: return "Pick the weekdays you don't work, like a part-time day. They're never taken from your leave, just like weekends. If you trade days with a colleague, tap that day on the calendar to move it for just that week."
@@ -69,7 +69,7 @@ extension Strings {
     }
 
     /// 날짜 상세 — 고정 쉬는 날
-    static var partTimeRegularDayOff: String {
+    public static var partTimeRegularDayOff: String {
         switch partTimeLang {
         case .korean: return "고정 쉬는 날"
         case .english: return "Regular day off"
@@ -98,7 +98,7 @@ extension Strings {
     }
 
     /// 날짜 상세 — 이번 주만 옮기기 버튼
-    static var partTimeMoveThisWeek: String {
+    public static var partTimeMoveThisWeek: String {
         switch partTimeLang {
         case .korean: return "이번 주만 다른 날로 옮기기"
         case .english: return "Move it this week only"
@@ -127,7 +127,7 @@ extension Strings {
     }
 
     /// 옮길 날 고르기 시트 제목
-    static var partTimeMoveTitle: String {
+    public static var partTimeMoveTitle: String {
         switch partTimeLang {
         case .korean: return "어느 날 대신 쉬나요?"
         case .english: return "Which day do you take off instead?"
@@ -156,7 +156,7 @@ extension Strings {
     }
 
     /// 날짜 상세 — 옮겨 와서 쉬는 날
-    static var partTimeMovedOff: String {
+    public static var partTimeMovedOff: String {
         switch partTimeLang {
         case .korean: return "쉬는 날 (옮겨 옴)"
         case .english: return "Day off (moved here)"
@@ -185,7 +185,7 @@ extension Strings {
     }
 
     /// 날짜 상세 — 원래 쉬는 날인데 이번 주는 일함
-    static var partTimeMovedWork: String {
+    public static var partTimeMovedWork: String {
         switch partTimeLang {
         case .korean: return "이번 주는 일하는 날 (쉬는 날 옮김)"
         case .english: return "Working this week (day off moved)"
@@ -214,7 +214,7 @@ extension Strings {
     }
 
     /// 옮긴 것 되돌리기
-    static var partTimeUndoMove: String {
+    public static var partTimeUndoMove: String {
         switch partTimeLang {
         case .korean: return "원래대로"
         case .english: return "Undo move"
@@ -247,7 +247,7 @@ extension Strings {
 
 extension Strings {
     /// 근무 형태
-    static var workPatternTitle: String {
+    public static var workPatternTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "근무 형태"
         case .english: return "Work schedule"
@@ -276,7 +276,7 @@ extension Strings {
     }
 
     /// 근무 형태 — 고정
-    static var workPatternFixed: String {
+    public static var workPatternFixed: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "고정 근무"
         case .english: return "Fixed schedule"
@@ -305,7 +305,7 @@ extension Strings {
     }
 
     /// 고정 근무 설명
-    static var workPatternFixedDesc: String {
+    public static var workPatternFixedDesc: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "매주 같은 요일에 일하고 주말에 쉬어요"
         case .english: return "Same days every week, weekends off"
@@ -334,7 +334,7 @@ extension Strings {
     }
 
     /// 근무 형태 — 파트타임
-    static var workPatternPartTime: String {
+    public static var workPatternPartTime: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "파트타임"
         case .english: return "Part-time"
@@ -363,7 +363,7 @@ extension Strings {
     }
 
     /// 파트타임 설명
-    static var workPatternPartTimeDesc: String {
+    public static var workPatternPartTimeDesc: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "매주 정해진 요일에도 쉬어요"
         case .english: return "A set weekday off every week"
@@ -392,7 +392,7 @@ extension Strings {
     }
 
     /// 근무 형태 — 교대
-    static var workPatternShift: String {
+    public static var workPatternShift: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "교대 근무"
         case .english: return "Shift work"
@@ -421,7 +421,7 @@ extension Strings {
     }
 
     /// 교대 근무 설명
-    static var workPatternShiftDesc: String {
+    public static var workPatternShiftDesc: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "쉬는 날이 주마다 바뀌어요"
         case .english: return "Days off change from week to week"
@@ -450,7 +450,7 @@ extension Strings {
     }
 
     /// 근무 형태 설정 설명
-    static var workPatternFooter: String {
+    public static var workPatternFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "고른 형태에 맞는 설정만 보여요. 형태를 바꿔도 전에 넣은 쉬는 날은 남아 있어요."
         case .english: return "Only the settings for your schedule are shown. Days off you entered are kept if you switch."
@@ -479,7 +479,7 @@ extension Strings {
     }
 
     /// 시간 단위 휴가 켜기
-    static var hourlyLeaveToggle: String {
+    public static var hourlyLeaveToggle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "시간 단위로도 휴가를 써요"
         case .english: return "I take leave by the hour"
@@ -508,7 +508,7 @@ extension Strings {
     }
 
     /// 시간 단위 휴가 설명
-    static var hourlyLeaveDesc: String {
+    public static var hourlyLeaveDesc: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "켜면 휴가를 시·분으로 넣고, 하루·요일별 근무 시간과 시간 한도를 정할 수 있어요."
         case .english: return "Turn on to enter leave in hours and minutes and set daily hours and hour allowances."
@@ -537,7 +537,7 @@ extension Strings {
     }
 
     /// 교대 근무 일정 화면
-    static var shiftScheduleTitle: String {
+    public static var shiftScheduleTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "교대 근무 일정"
         case .english: return "Shift schedule"
@@ -566,7 +566,7 @@ extension Strings {
     }
 
     /// 교대 근무 일정 설명
-    static var shiftScheduleFooter: String {
+    public static var shiftScheduleFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "날짜를 눌러 근무와 휴무를 바꾸세요. 휴무인 날은 연차에서 빠지지 않고, 추천도 쉬는 날로 봐요."
         case .english: return "Tap a day to switch between work and off. Days off aren't taken from your leave, and suggestions treat them as rest days."
@@ -595,7 +595,7 @@ extension Strings {
     }
 
     /// 근무
-    static var shiftWork: String {
+    public static var shiftWork: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "근무"
         case .english: return "Work"
@@ -624,7 +624,7 @@ extension Strings {
     }
 
     /// 휴무
-    static var shiftOff: String {
+    public static var shiftOff: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "휴무"
         case .english: return "Off"
@@ -653,7 +653,7 @@ extension Strings {
     }
 
     /// 이 날 휴무로
-    static var shiftMarkOff: String {
+    public static var shiftMarkOff: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "이 날 쉬어요"
         case .english: return "Mark as day off"
@@ -682,7 +682,7 @@ extension Strings {
     }
 
     /// 이 날 근무로
-    static var shiftMarkWork: String {
+    public static var shiftMarkWork: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "이 날 일해요"
         case .english: return "Mark as workday"
@@ -711,7 +711,7 @@ extension Strings {
     }
 
     /// 교대 휴무 표시
-    static var shiftMarkedOff: String {
+    public static var shiftMarkedOff: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "교대 휴무"
         case .english: return "Shift day off"
@@ -740,7 +740,7 @@ extension Strings {
     }
 
     /// 교대 근무 표시
-    static var shiftMarkedWork: String {
+    public static var shiftMarkedWork: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "교대 근무일"
         case .english: return "Shift workday"
@@ -769,7 +769,7 @@ extension Strings {
     }
 
     /// 교대 표시 되돌리기
-    static var shiftUndo: String {
+    public static var shiftUndo: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "원래대로"
         case .english: return "Reset"
@@ -798,7 +798,7 @@ extension Strings {
     }
 
     /// 지난주
-    static var shiftPrevWeek: String {
+    public static var shiftPrevWeek: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "지난주"
         case .english: return "Previous week"
@@ -827,7 +827,7 @@ extension Strings {
     }
 
     /// 다음 주
-    static var shiftNextWeek: String {
+    public static var shiftNextWeek: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "다음 주"
         case .english: return "Next week"
@@ -856,7 +856,7 @@ extension Strings {
     }
 
     /// 이번 주
-    static var shiftThisWeek: String {
+    public static var shiftThisWeek: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "이번 주"
         case .english: return "This week"
@@ -884,7 +884,7 @@ extension Strings {
         }
     }
 
-    static func workPatternName(_ p: WorkPattern) -> String {
+    public static func workPatternName(_ p: WorkPattern) -> String {
         switch p {
         case .fixed: return workPatternFixed
         case .partTime: return workPatternPartTime
@@ -892,7 +892,7 @@ extension Strings {
         }
     }
 
-    static func workPatternDesc(_ p: WorkPattern) -> String {
+    public static func workPatternDesc(_ p: WorkPattern) -> String {
         switch p {
         case .fixed: return workPatternFixedDesc
         case .partTime: return workPatternPartTimeDesc
@@ -905,7 +905,7 @@ extension Strings {
 
 extension Strings {
     /// 캘린더 앱으로 휴가 보내기
-    static var calendarExportToggle: String {
+    public static var calendarExportToggle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "캘린더 앱에 휴가 보내기"
         case .english: return "Send leave to Calendar"
@@ -934,7 +934,7 @@ extension Strings {
     }
 
     /// 캘린더 앱으로 보내기 설명
-    static var calendarExportDesc: String {
+    public static var calendarExportDesc: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\"Goldweek 연차\" 캘린더에 휴가가 저절로 들어가고, 고치거나 지우면 함께 바뀌어요. iCloud 캘린더면 Mac·iPad 같은 다른 기기와 캘린더 앱에서도 보여요. 끄면 이 캘린더를 지워요."
         case .english: return "Your leave goes into a \"Goldweek\" calendar automatically and updates when you edit or delete it. It lives in iCloud, so it shows on Mac, iPad and other calendar apps. Turning this off removes that calendar."
@@ -963,7 +963,7 @@ extension Strings {
     }
 
     /// 캘린더 접근 거부
-    static var calendarAccessDenied: String {
+    public static var calendarAccessDenied: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "캘린더 접근이 꺼져 있어요. 설정 앱 > Goldweek > 캘린더에서 전체 접근을 허용해 주세요."
         case .english: return "Calendar access is off. Allow Full Access in Settings > Goldweek > Calendars."

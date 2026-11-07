@@ -15,6 +15,7 @@
 import Foundation
 import SwiftData
 import CryptoKit
+import GoldweekCore
 
 @MainActor
 final class TimeMachineService {
@@ -144,10 +145,8 @@ final class TimeMachineService {
         let url: URL
         let createdAt: Date
         let reason: SnapshotReason
-        let profileName: String
         let leaveCount: Int
         let bonusCount: Int
-        let holidayCount: Int
 
         var id: URL { url }
     }
@@ -164,10 +163,8 @@ final class TimeMachineService {
                 url: url,
                 createdAt: snapshot.createdAt,
                 reason: SnapshotReason(rawValue: snapshot.reasonRaw) ?? .unknown,
-                profileName: snapshot.profiles.first?.name ?? "",
                 leaveCount: snapshot.leaveRecords.count,
-                bonusCount: snapshot.bonusLeaves.count,
-                holidayCount: snapshot.customHolidays.count
+                bonusCount: snapshot.bonusLeaves.count
             ))
         }
         return infos.sorted { $0.createdAt > $1.createdAt }

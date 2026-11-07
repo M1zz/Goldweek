@@ -10,6 +10,7 @@ import XCTest
 import SwiftData
 import CloudKit
 @testable import Goldweek
+import GoldweekCore
 
 final class LeaveCalculationTests: XCTestCase {
 

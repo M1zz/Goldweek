@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		02C3DC49A66860B13B6126FF /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 54AFE1A202355C31964C529E /* AppShortcuts.xcstrings */; };
-		10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */; };
-		13C98A5D19B0235F1B8C04E8 /* Strings+Maturity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD901DC2F5444B40010EE450 /* Strings+Maturity.swift */; };
 		1F30894D9E1BC580DD2EC7F1 /* FoldPanes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BD92084C0B9068BED80207 /* FoldPanes.swift */; };
 		236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */; };
 		29CFA424077E4FC938B27794 /* GoldweekRoadmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7E7019BF358938CD858EB3 /* GoldweekRoadmap.swift */; };
@@ -18,10 +16,8 @@
 		3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F973B8901CC9124460DC0A /* PartTimeDays.swift */; };
 		4A9A7B42ACEB11E2088E3326 /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC8937F7C1DA7BA2C27AC0 /* WhatsNewView.swift */; };
 		5CDAC8A0B908A3183B17E747 /* LeaveKinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79243653112DBACB8C8953B /* LeaveKinds.swift */; };
-		66A2BBF0A63A4632A187F5D2 /* Strings+Monetization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */; };
 		75040D99ADBCBD0CCCA466AB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F206B195E40D49B741CBFB68 /* PrivacyInfo.xcprivacy */; };
 		7742C50334E3AD7E821C6C62 /* LaunchSafety.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894561BA0757CA4397D4F482 /* LaunchSafety.swift */; };
-		7BC4167236E5FF0979D0BFFC /* Strings+PartTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */; };
 		7CE684CE43F66CEBB9E32BA0 /* ProBenefitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5188D6069DFBC27D689B2866 /* ProBenefitsView.swift */; };
 		822C36ACF4633F97AA71D066 /* GoldweekIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B652F693B74D9614C6A46C4 /* GoldweekIntents.swift */; };
 		9C2035682F29933E00AF1279 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9C2035672F29933E00AF1279 /* Localizable.xcstrings */; };
@@ -52,7 +48,7 @@
 		A1000020 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000020 /* AppTheme.swift */; };
 		A1000021 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000021 /* Logger.swift */; };
 		A1000022 /* LeaveHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000022 /* LeaveHistoryView.swift */; };
-		A1000023 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000023 /* Strings.swift */; };
+		A1000023 /* Strings+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000023 /* Strings+App.swift */; };
 		A1000030 /* SchemaVersioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* SchemaVersioning.swift */; };
 		A1000031 /* DataProtectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000031 /* DataProtectionService.swift */; };
 		A1000032 /* ProManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000032 /* ProManager.swift */; };
@@ -88,13 +84,11 @@
 		B1000005 /* UsageInsightsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000005 /* UsageInsightsTests.swift */; };
 		B1000006 /* CrashReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000006 /* CrashReportsView.swift */; };
 		B1000010 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B1000011 /* LeeoKit */; };
+		C1000010 /* GoldweekCore in Frameworks */ = {isa = PBXBuildFile; productRef = C1000011 /* GoldweekCore */; };
 		B1000020 /* LeaveUsageCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000020 /* LeaveUsageCalculator.swift */; };
 		B1000021 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000021 /* TutorialView.swift */; };
 		BF28326CF828E830D60A580A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F0004AF8483A83DDDF01B5 /* Foundation.framework */; };
 		C1D0A11E5E1D4A7B9F000001 /* HolidayOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D0A11E5E1D4A7B9F000002 /* HolidayOverrides.swift */; };
-		EFCC106F139C9439F277D6BF /* Strings+LeaveCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */; };
-		F0AB849B5E6EB9CF20DDE9A3 /* Strings+PlanAhead.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */; };
-		FA11A0012F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */; };
 		FA11A0032F0C4D2E00A1B001 /* FamilyAnniversaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */; };
 		FA11A0052F0C4D2E00A1B001 /* FamilyTogetherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */; };
 /* End PBXBuildFile section */
@@ -138,21 +132,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+PlanAhead.swift"; sourceTree = "<group>"; };
 		09F973B8901CC9124460DC0A /* PartTimeDays.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PartTimeDays.swift; sourceTree = "<group>"; };
-		0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+LeaveCustomization.swift"; sourceTree = "<group>"; };
-		3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+PartTime.swift"; sourceTree = "<group>"; };
 		47F0004AF8483A83DDDF01B5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		4B652F693B74D9614C6A46C4 /* GoldweekIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoldweekIntents.swift; sourceTree = "<group>"; };
 		4CCC8937F7C1DA7BA2C27AC0 /* WhatsNewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
-		4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+CountryRequest.swift"; sourceTree = "<group>"; };
 		5188D6069DFBC27D689B2866 /* ProBenefitsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProBenefitsView.swift; sourceTree = "<group>"; };
 		54AFE1A202355C31964C529E /* AppShortcuts.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = AppShortcuts.xcstrings; sourceTree = "<group>"; };
 		584ABA642F211E0C008AD1DB /* Goldweek.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Goldweek.entitlements; sourceTree = "<group>"; };
 		584ABA652F211E1E008AD1DB /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
 		5905F2D583D5738917370D03 /* MaturityFeatureTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MaturityFeatureTests.swift; sourceTree = "<group>"; };
 		5E9D82AEBA902FD3CECB22C6 /* ProBenefits.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProBenefits.swift; sourceTree = "<group>"; };
-		80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+Monetization.swift"; sourceTree = "<group>"; };
 		894561BA0757CA4397D4F482 /* LaunchSafety.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LaunchSafety.swift; sourceTree = "<group>"; };
 		8E9BD27D3793DB137E69D54C /* GoldweekUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GoldweekUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C2035672F29933E00AF1279 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -183,7 +172,7 @@
 		A2000020 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		A2000021 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		A2000022 /* LeaveHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveHistoryView.swift; sourceTree = "<group>"; };
-		A2000023 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		A2000023 /* Strings+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strings+App.swift"; sourceTree = "<group>"; };
 		A2000030 /* SchemaVersioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaVersioning.swift; sourceTree = "<group>"; };
 		A2000031 /* DataProtectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProtectionService.swift; sourceTree = "<group>"; };
 		A2000032 /* ProManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProManager.swift; sourceTree = "<group>"; };
@@ -212,7 +201,6 @@
 		A2000098 /* DayOffCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOffCalendar.swift; sourceTree = "<group>"; };
 		A2000099 /* ScreenshotMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotMode.swift; sourceTree = "<group>"; };
 		A20000W1 /* WorldHolidays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldHolidays.swift; sourceTree = "<group>"; };
-		AD901DC2F5444B40010EE450 /* Strings+Maturity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+Maturity.swift"; sourceTree = "<group>"; };
 		B2000001 /* GoldweekSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldweekSpec.swift; sourceTree = "<group>"; };
 		B2000002 /* UsageReportingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageReportingService.swift; sourceTree = "<group>"; };
 		B2000003 /* UsageInsights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageInsights.swift; sourceTree = "<group>"; };
@@ -229,7 +217,6 @@
 		E7C71484ED28E6076A53EB73 /* CalendarOverview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarOverview.swift; sourceTree = "<group>"; };
 		E9D35DB33D18EC67F75F03AC /* GoldweekUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoldweekUITests.swift; sourceTree = "<group>"; };
 		F206B195E40D49B741CBFB68 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Strings+FamilyAnniversary.swift"; sourceTree = "<group>"; };
 		FA11A0042F0C4D2E00A1B001 /* FamilyAnniversaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyAnniversaryView.swift; sourceTree = "<group>"; };
 		FA11A0062F0C4D2E00A1B001 /* FamilyTogetherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyTogetherView.swift; sourceTree = "<group>"; };
 		FC7E7019BF358938CD858EB3 /* GoldweekRoadmap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoldweekRoadmap.swift; sourceTree = "<group>"; };
@@ -283,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1000010 /* LeeoKit in Frameworks */,
+				C1000010 /* GoldweekCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,16 +436,9 @@
 			children = (
 				A2000014 /* Extensions.swift */,
 				A2000099 /* ScreenshotMode.swift */,
-				A2000023 /* Strings.swift */,
+				A2000023 /* Strings+App.swift */,
 				A2000050 /* Accessibility.swift */,
 				A2000064 /* AppTips.swift */,
-				0E253BB30D9F2AF3ADA869F6 /* Strings+LeaveCustomization.swift */,
-				FA11A0022F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift */,
-				3D1DCD766B487B5FCC2BF462 /* Strings+PartTime.swift */,
-				017D7A7A370DAE86385EE032 /* Strings+PlanAhead.swift */,
-				80FC7058EF484433933EA9F4 /* Strings+Monetization.swift */,
-				4D517D2606CEC2E4233A2EDD /* Strings+CountryRequest.swift */,
-				AD901DC2F5444B40010EE450 /* Strings+Maturity.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -613,6 +594,7 @@
 			mainGroup = A4000000;
 			packageReferences = (
 				B1000012 /* XCRemoteSwiftPackageReference "LeeoKit" */,
+				C1000012 /* XCLocalSwiftPackageReference "Packages/GoldweekCore" */,
 			);
 			productRefGroup = A4000002 /* Products */;
 			projectDirPath = "";
@@ -717,7 +699,7 @@
 				A1000020 /* AppTheme.swift in Sources */,
 				A1000021 /* Logger.swift in Sources */,
 				A1000022 /* LeaveHistoryView.swift in Sources */,
-				A1000023 /* Strings.swift in Sources */,
+				A1000023 /* Strings+App.swift in Sources */,
 				A1000030 /* SchemaVersioning.swift in Sources */,
 				A1000031 /* DataProtectionService.swift in Sources */,
 				A1000032 /* ProManager.swift in Sources */,
@@ -739,22 +721,15 @@
 				A1000050 /* Accessibility.swift in Sources */,
 				A1000051 /* LeavePlanner.swift in Sources */,
 				5CDAC8A0B908A3183B17E747 /* LeaveKinds.swift in Sources */,
-				EFCC106F139C9439F277D6BF /* Strings+LeaveCustomization.swift in Sources */,
-				FA11A0012F0C4D2E00A1B001 /* Strings+FamilyAnniversary.swift in Sources */,
 				9CA11B8BA50188BC875C430D /* LeaveKindsView.swift in Sources */,
 				236557DFFCE68D77994EA2C5 /* CalendarOverview.swift in Sources */,
 				3F6C89DBB59DCD88E818C610 /* PartTimeDays.swift in Sources */,
-				7BC4167236E5FF0979D0BFFC /* Strings+PartTime.swift in Sources */,
-				F0AB849B5E6EB9CF20DDE9A3 /* Strings+PlanAhead.swift in Sources */,
-				66A2BBF0A63A4632A187F5D2 /* Strings+Monetization.swift in Sources */,
-				10159F96DCD426464310B183 /* Strings+CountryRequest.swift in Sources */,
 				1F30894D9E1BC580DD2EC7F1 /* FoldPanes.swift in Sources */,
 				29CFA424077E4FC938B27794 /* GoldweekRoadmap.swift in Sources */,
 				35D9534563A1F8ED09CFFA9F /* ProBenefits.swift in Sources */,
 				7742C50334E3AD7E821C6C62 /* LaunchSafety.swift in Sources */,
 				7CE684CE43F66CEBB9E32BA0 /* ProBenefitsView.swift in Sources */,
 				4A9A7B42ACEB11E2088E3326 /* WhatsNewView.swift in Sources */,
-				13C98A5D19B0235F1B8C04E8 /* Strings+Maturity.swift in Sources */,
 				822C36ACF4633F97AA71D066 /* GoldweekIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1177,13 +1152,20 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		C1000012 /* XCLocalSwiftPackageReference "Packages/GoldweekCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/GoldweekCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		B1000012 /* XCRemoteSwiftPackageReference "LeeoKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/M1zz/LeeoKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.29.0;
+				minimumVersion = 3.35.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1193,6 +1175,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B1000012 /* XCRemoteSwiftPackageReference "LeeoKit" */;
 			productName = LeeoKit;
+		};
+		C1000011 /* GoldweekCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GoldweekCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

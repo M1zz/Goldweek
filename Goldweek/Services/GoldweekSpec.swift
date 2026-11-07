@@ -12,6 +12,7 @@
 
 import Foundation
 import LeeoKit
+import GoldweekCore
 
 enum GoldweekSpec: LeeoAppSpec {
     static let appName = "Goldweek"
@@ -57,6 +58,15 @@ enum GoldweekSpec: LeeoAppSpec {
                 grantsProductID: ProManager.proProductID,
                 containerIdentifier: "iCloud.com.Ysoup.FeedbackHub"
             ),
+            // Plus 선물. 받은 사람에게 플러스 평생을 App Store 오퍼 코드로 연다. 묶음은 등급마다 따로다(poolKey).
+            // ⚠️ 두 선물 모두 sellsGifts 는 닫혀 있다 — FeedbackHub 에서 오퍼 코드 묶음을 채운 뒤에 연다.
+            moreGifts: [LeeoGiftConfig(
+                productID: ProManager.plusGiftProductID,
+                grantsProductID: ProManager.plusLifetimeProductID,
+                containerIdentifier: "iCloud.com.Ysoup.FeedbackHub",
+                tierName: "Plus",
+                poolKey: "com.Ysoup.LeaveWise#\(ProManager.plusLifetimeProductID)"
+            )],
             // 팁(응원). 이미 다 가진 사람이 더 내고 싶을 때. 아무것도 열지 않는 소모성 상품이다.
             // ⚠️ 이것도 productIDs · entitlementIDs 에 넣지 않는다(사전 점검 `tip.sellsPro`).
             tipJar: LeeoTipJarConfig(productIDs: ProManager.tipProductIDs,

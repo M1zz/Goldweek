@@ -11,6 +11,7 @@
 import Foundation
 import CloudKit
 import SwiftUI
+import GoldweekCore
 
 // MARK: - 스냅샷 (SwiftData 모델을 async 경계 너머로 넘기지 않기 위한 값 타입)
 struct ProfileSnapshot {

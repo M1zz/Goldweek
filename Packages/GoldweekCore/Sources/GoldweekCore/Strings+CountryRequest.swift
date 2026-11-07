@@ -11,7 +11,7 @@ extension Strings {
     private static var requestLang: AppLanguage { LanguageManager.shared.currentLanguage }
 
     /// 지원하지 않는 나라 안내 — {r} 지역 이름
-    static func unsupportedCountryRequest(region r: String) -> String {
+    public static func unsupportedCountryRequest(region r: String) -> String {
         switch requestLang {
         case .korean: return "아직 \(r) 공휴일은 지원하지 않아요. 피드백으로 나라 지원을 요청해 주세요."
         case .english: return "\(r) isn't supported yet. Send us feedback to request it."
@@ -40,7 +40,7 @@ extension Strings {
     }
 
     /// 나라 지원 요청 버튼
-    static var requestCountrySupport: String {
+    public static var requestCountrySupport: String {
         switch requestLang {
         case .korean: return "나라 지원 요청하기"
         case .english: return "Request This Country"

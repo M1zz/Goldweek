@@ -7,6 +7,7 @@
 import SwiftUI
 import SwiftData
 import PhotosUI
+import GoldweekCore
 
 struct HolidayManagementView: View {
     let country: Country
@@ -209,7 +210,8 @@ struct HolidayManagementView: View {
         guard item.modelContext != nil else { return }
         let startYear = calendar.component(.year, from: item.startDate)
         let endYear = calendar.component(.year, from: item.endDate)
-        if !(startYear...endYear).contains(selectedYear) { selectedYear = startYear }
+        // 끝이 시작보다 앞인 기록(가져오기 · 백업)이어도 범위가 뒤집혀 죽지 않게
+        if !(min(startYear, endYear)...max(startYear, endYear)).contains(selectedYear) { selectedYear = startYear }
     }
 
     /// 다른 해에도 항목이 있을 때 목록 아래에 붙는 줄 — 모든 해를 모은 화면으로 간다

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import GoldweekCore
 
 struct PreferencesView: View {
     @Bindable var profile: UserProfile

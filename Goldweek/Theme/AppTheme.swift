@@ -6,13 +6,10 @@
 //
 
 import SwiftUI
+import GoldweekCore
 
 // MARK: - 앱 컬러 테마
 struct AppTheme {
-    // MARK: - Primary Colors
-    static let primary = Color("PrimaryColor", bundle: nil)
-    static let secondary = Color("SecondaryColor", bundle: nil)
-
     // MARK: - Semantic Colors (다크모드 자동 대응)
     struct Colors {
         // 브랜드 컬러
@@ -61,11 +58,6 @@ struct AppTheme {
         static var success: Color {
             Color(light: Color(red: 0.15, green: 0.68, blue: 0.38),
                   dark: Color(red: 0.3, green: 0.8, blue: 0.5))
-        }
-
-        static var warning: Color {
-            Color(light: Color(red: 0.95, green: 0.6, blue: 0.0),
-                  dark: Color(red: 1.0, green: 0.7, blue: 0.2))
         }
 
         static var error: Color {
@@ -206,29 +198,9 @@ extension LeaveStatus {
 
 // MARK: - Haptic Feedback Helper
 struct HapticFeedback {
-    static func light() {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
-    }
-
-    static func medium() {
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
-    }
-
-    static func heavy() {
-        let generator = UIImpactFeedbackGenerator(style: .heavy)
-        generator.impactOccurred()
-    }
-
     static func success() {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
-    }
-
-    static func warning() {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.warning)
     }
 
     static func error() {

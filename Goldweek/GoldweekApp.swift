@@ -12,6 +12,7 @@ import CloudKit
 import UIKit
 import TipKit
 import LeeoKit
+import GoldweekCore
 
 @main
 struct GoldweekApp: App {

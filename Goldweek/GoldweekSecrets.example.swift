@@ -1,3 +1,4 @@
+import GoldweekCore
 //
 //  GoldweekSecrets.example.swift
 //  Goldweek

@@ -21,6 +21,7 @@ import Foundation
 import CloudKit
 import SwiftData
 import LeeoKit
+import GoldweekCore
 
 enum UsageReportingService {
 
@@ -182,8 +183,6 @@ enum UsageReportingService {
         let count: Int
         /// 그 이벤트를 남긴 서로 다른 설치 수.
         let installs: Int
-        /// 가장 최근 발생 시각.
-        let lastAt: Date?
         var id: String { name }
     }
 
@@ -233,16 +232,15 @@ enum UsageReportingService {
 
     /// 표본 → 이름별 집계 (화면 계산용, 네트워크 없음).
     static func eventStats(from samples: [EventSample]) -> [EventStat] {
-        var counts: [String: (count: Int, installs: Set<String>, lastAt: Date?)] = [:]
+        var counts: [String: (count: Int, installs: Set<String>)] = [:]
         for sample in samples {
-            var entry = counts[sample.name] ?? (0, [], nil)
+            var entry = counts[sample.name] ?? (0, [])
             entry.count += 1
             if let install = sample.installID { entry.installs.insert(install) }
-            if (entry.lastAt ?? .distantPast) < sample.date { entry.lastAt = sample.date }
             counts[sample.name] = entry
         }
         return counts
-            .map { EventStat(name: $0.key, count: $0.value.count, installs: $0.value.installs.count, lastAt: $0.value.lastAt) }
+            .map { EventStat(name: $0.key, count: $0.value.count, installs: $0.value.installs.count) }
             .sorted { $0.count > $1.count }
     }
 

@@ -10,20 +10,8 @@ import StoreKit
 import SwiftUI
 import Combine
 import LeeoKit
+import GoldweekCore
 
-/// 유료 칸. 위 칸은 아래 칸 기능을 모두 포함한다. 무엇을 왜 어느 칸에 두는지는 docs/MONETIZATION.md.
-/// - 플러스: 최적 플래너·추천 무제한·다른 해 추천·캘린더 앱으로 보내기 (`isPro`로 본다)
-/// - 프로: + 보너스 연차·캘린더 자동 감지·종류별 한도·학교 달력·함께 쉬기·가족 기념일 (`hasProTier`·`has(_:)`)
-///
-/// 2.4.2 전에는 프로 위에 패밀리(rawValue 3)가 있었다. 패밀리는 프로에 합쳤다.
-/// 기기에 남은 3 은 프로로 읽는다(`init`).
-enum ProTier: Int, Comparable, CaseIterable {
-    case free
-    case plus
-    case pro
-
-    static func < (a: ProTier, b: ProTier) -> Bool { a.rawValue < b.rawValue }
-}
 
 /// 프로 트림 기능 중 **2.4.0에서 새로 유료가 된 것** — 그 전에 설치한 사람에게는 계속 무료다.
 /// 원래부터 유료였던 기능은 여기 넣지 않고 `isPro`·`hasProTier`로 본다.
@@ -86,6 +74,10 @@ class ProManager {
     /// ⚠️ `allProductIDs` 에 넣지 않는다 — 넣으면 선물을 산 사람이 Pro 가 되고, 결제가 코드 없이 끝난다.
     /// App Store Connect 에 소모성 상품으로 만들어야 뜬다. 없으면 설정의 선물 행이 숨는다.
     static let giftProductID = "com.Ysoup.LeaveWise.gift.pro"
+    /// Plus 선물 (소모성). 받은 사람에게 플러스 평생(`plusLifetimeProductID`)을 연다 — App Store 오퍼 코드로.
+    /// ⚠️ `giftProductID` 와 같이 `allProductIDs` 에 넣지 않는다.
+    static let plusGiftProductID = "com.Ysoup.LeaveWise.gift.plus"
+    static let giftProductIDs: Set<String> = [giftProductID, plusGiftProductID]
     /// 팁(응원), 작은 것부터. 소모성이고 아무것도 열지 않는다(`LeeoTipJar`).
     /// ⚠️ 이것도 `allProductIDs` 에 넣지 않는다. 없으면 설정의 응원 행이 숨는다.
     static let tipProductIDs = [
@@ -200,7 +192,6 @@ class ProManager {
         case notPurchased
         case purchased
         case pending
-        case failed(String)
     }
 
     enum ActivePlan: Equatable {
@@ -469,7 +460,7 @@ class ProManager {
                 if case .verified(let transaction) = result {
                     // 선물은 코드를 올린 뒤에 끝내야 한다 — 여기서 끝내면 돈만 받고 코드가 없다.
                     // 팁은 권한이 아니다. 둘 다 LeeoKit 엔진이 세고 끝낸다(`ProExtras`).
-                    if transaction.productID == Self.giftProductID || Self.tipProductIDs.contains(transaction.productID) {
+                    if Self.giftProductIDs.contains(transaction.productID) || Self.tipProductIDs.contains(transaction.productID) {
                         await ProExtras.shared.resumePending()
                         continue
                     }
@@ -493,15 +484,6 @@ class ProManager {
 
     // MARK: - Formatted Price
 
-    /// 평생 상품 가격
-    var proPrice: String {
-        lifetimeProduct?.displayPrice ?? ""
-    }
-
-    /// 연간 구독 가격
-    var yearlyPrice: String {
-        yearlyProduct?.displayPrice ?? ""
-    }
 
     /// 상품을 하나라도 불러왔는가 — 구매 버튼을 켤지
     var hasAnyPrice: Bool { !products.isEmpty }
@@ -563,8 +545,11 @@ final class ProExtras: ObservableObject {
 
     /// 팁(응원). 판매 중인 팁이 없으면 `isAvailable` 이 false — 설정 행과 부탁 카드가 숨는다.
     let tipJar: LeeoTipJar?
-    /// Pro 선물. 받은 선물은 `ProManager.checkEntitlement()` 가 평생 Pro 로 친다.
-    let gift: LeeoGiftStore?
+    /// 파는 선물 전부, Pro 가 먼저(`GoldweekSpec` 의 gift + moreGifts). 판매는 오퍼 코드 묶음을 채운 뒤에 연다(`sellsGifts`).
+    let gifts: [LeeoGiftStore]
+    /// Pro 선물. 예전 방식(LeeoKit 코드)으로 받은 선물은 `ProManager.checkEntitlement()` 가 평생 Pro 로 친다.
+    /// 오퍼 코드로 받은 선물은 App Store 결제로 들어와 따로 셀 것이 없다.
+    var gift: LeeoGiftStore? { gifts.first }
     /// 언제나 평생 패스(LeeoKit). 열려 있으면 `ProManager.checkEntitlement()` 가 프로로 친다.
     /// ⚠️ 패스 상품(`<번들>.forever` …)은 `ProManager.allProductIDs` 에 넣지 않는다. 판정은 패스가 따로 한다.
     let pass = LeeoForeverPass(containerIdentifier: "iCloud.com.Ysoup.FeedbackHub")
@@ -574,9 +559,9 @@ final class ProExtras: ObservableObject {
     private init() {
         let config = GoldweekSpec.paywall
         tipJar = config?.tipJar.map { LeeoTipJar(config: $0) }
-        gift = config?.gift.map { LeeoGiftStore(config: $0) }
+        gifts = (config?.gifts ?? []).map { LeeoGiftStore(config: $0) }
 
-        if let gift {
+        for gift in gifts {
             // 이미 산 사람은 선물을 받지 않는다(코드를 다른 사람에게 넘기게 둔다). TestFlight 의 Pro 는 산 것이 아니다.
             gift.alreadyEntitled = { ProManager.shared.hasPurchasedProTier }
             // 받거나(선물 코드 입력) 잃으면(환불 · 다른 사람이 먼저 씀) 트림을 다시 센다.
@@ -600,10 +585,10 @@ final class ProExtras: ObservableObject {
         // 시험 실행은 서명 없이 돈다 — entitlements 없는 CloudKit 컨테이너를 만들면 그 자리에서 죽는다
         // (사용 통계와 같은 까닭, `UsageReportingService.isRunningTests`).
         guard !UsageReportingService.isRunningTests else { return }
-        await gift?.loadProduct()
+        for gift in gifts { await gift.loadProduct() }   // 선물 상품을 모두 먼저 — 뒤 선물 줄이 늦게 서지 않게
         await resumePending()           // 결제는 됐는데 코드를 못 만든 선물 · 세지 못한 팁
         await tipJar?.loadProducts()    // 설정의 '응원하기' 줄은 상품이 있어야 선다
-        await gift?.refresh()           // 받은 선물이 아직 내 것인지(환불 · 서명)
+        for gift in gifts { await gift.refresh() }   // 받은 선물이 아직 내 것인지(환불 · 서명)
         await pass.refresh()            // 이 앱이나 다른 앱에서 산 언제나 평생 패스
     }
 
@@ -615,7 +600,7 @@ final class ProExtras: ObservableObject {
 
     /// 끝나지 않은 선물 · 팁 거래를 마저 처리한다. `Transaction.updates` 로 들어온 것(승인 대기 뒤 결제)도 이리 온다.
     func resumePending() async {
-        await gift?.resumePending()
+        for gift in gifts { await gift.resumePending() }
         await tipJar?.resumePending()
     }
 }

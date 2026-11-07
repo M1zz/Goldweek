@@ -9,6 +9,7 @@
 import SwiftUI
 import SwiftData
 import LeeoKit
+import GoldweekCore
 
 /// 사용자가 만든 휴가 종류 (예: "ROL", "Permesso studio") — 이름·색·연차 차감 여부
 @Model

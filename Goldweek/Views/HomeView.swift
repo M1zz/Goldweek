@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import TipKit
 import LeeoKit
+import GoldweekCore
 
 struct HomeView: View {
     @Bindable var profile: UserProfile
@@ -58,12 +59,6 @@ struct HomeView: View {
 
     private var hiddenDates: Set<String> {
         Set(hiddenHolidayDatesRaw.split(separator: ",").map(String.init).filter { !$0.isEmpty })
-    }
-
-    /// 계산은 `LeaveUsageCalculator` 한 곳에서 — 화면마다 세면 숫자가 어긋난다.
-    var committedLeave: Double {
-        LeaveUsageCalculator.currentSummary(records: Array(leaveRecords),
-                                            startMonth: profile.yearStart).annualCommitted
     }
 
     // MARK: - Pro 배너 트리거
@@ -1069,8 +1064,6 @@ struct LeaveStatusCard: View {
     private var remainingNumberColor: Color {
         colorScheme == .dark ? .green : Color(red: 0.10, green: 0.48, blue: 0.20)
     }
-    @Query(filter: #Predicate<BonusLeave> { $0.isUsed == false })
-    private var activeBonusLeaves: [BonusLeave]
     @Query private var allBonusLeaves: [BonusLeave]
     @Query private var allLeaveRecords: [LeaveRecord]
     @Environment(\.modelContext) private var modelContext
@@ -1090,14 +1083,6 @@ struct LeaveStatusCard: View {
                                             annualGrant: profile.totalAnnualLeave)
     }
 
-    /// 현재 연차 연도에 해당하는 레코드만 필터
-    var currentYearRecords: [LeaveRecord] {
-        LeaveUsageCalculator.records(allLeaveRecords,
-                                     inFiscalYear: LeaveUsageCalculator.fiscalYear(for: Date(),
-                                                                                   startMonth: profile.yearStart),
-                                     startMonth: profile.yearStart)
-    }
-
     /// 잔여 보너스 (미만료 기준) — 설정 화면과 같은 값을 쓰려고 계산기를 거친다
     var remainingBonusLeave: Double { usage.remainingBonus }
 
@@ -1113,9 +1098,6 @@ struct LeaveStatusCard: View {
     /// 예정 연차
     var plannedLeave: Double { usage.annualPlanned }
 
-    /// 확정 연차 총합 (used + planned) — 잔여 계산용
-    var committedLeave: Double { usage.annualCommitted }
-
     /// "총" — 보너스 포함 시 부여량 기준
     var totalLeave: Double {
         usage.total(annualGrant: profile.totalAnnualLeave, includingBonus: includeBonusInStatus)
@@ -1129,11 +1111,6 @@ struct LeaveStatusCard: View {
     /// "남은" — 남은 annual + 잔여 보너스
     var effectiveRemaining: Double {
         usage.remaining(annualGrant: profile.totalAnnualLeave, includingBonus: includeBonusInStatus)
-    }
-
-    var remainingPercentage: Double {
-        guard totalLeave > 0 else { return 0 }
-        return effectiveRemaining / totalLeave
     }
 
     private var isLeisure: Bool { profile.userType == .leisure }
@@ -1377,7 +1354,9 @@ struct LeaveStatusCard: View {
             if changed { try? modelContext.save() }
         }
         .sheet(isPresented: $showingAddLeave) {
-            AddLeaveView(profile: profile)
+            // 다른 '휴가 추가'와 같은 화면 — 위에서 '앞으로 쉴 날 · 지난 휴가'를 고른다. 반차 · 메모는 '더 많은 옵션'
+            QuickAddLeaveSheet(profile: profile,
+                               initialDate: Calendar.app.date(byAdding: .day, value: 1, to: Calendar.app.startOfDay(for: Date())) ?? Date())
         }
         .sheet(isPresented: $showingPhotoImport) {
             PhotoImportSheet()
@@ -1577,17 +1556,6 @@ struct ShareableLeavePlanView: View {
         .frame(width: 360)
         .background(cardBackground)
     }
-}
-
-// MARK: - UIActivityViewController 래퍼
-struct ActivityShareSheet: UIViewControllerRepresentable {
-    let items: [Any]
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: items, applicationActivities: nil)
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - 다가오는 일정 (내 휴가 + 공휴일)
@@ -2292,14 +2260,6 @@ struct BurnoutPaceCard: View {
         if pace <= 1.3 { return .healthy }
         if pace <= 1.7 { return .fast }
         return .veryFast
-    }
-    private var paceLabel: String {
-        switch paceCategory {
-        case .slow: return Strings.paceLabelSlow
-        case .healthy: return Strings.paceLabelHealthy
-        case .fast: return Strings.paceLabelFast
-        case .veryFast: return Strings.paceLabelVeryFast
-        }
     }
     private var paceColor: Color {
         switch paceCategory {

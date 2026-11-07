@@ -11,7 +11,7 @@ extension Strings {
     /// 언어별 문구 표에서 지금 언어를 고른다.
     /// ⚠️ 표에 언어가 빠지면 DEBUG 에서 바로 멈춘다(`StringsMaturityTests` 가 23개 언어를 모두 불러 본다).
     ///    출시 빌드에서는 영어로 떨어진다 — 빈칸보다 낫다.
-    static func pick(_ rows: [AppLanguage: String]) -> String {
+    public static func pick(_ rows: [AppLanguage: String]) -> String {
         let lang = LanguageManager.shared.currentLanguage
         if let text = rows[lang] { return text }
         assertionFailure("번역 빠짐: \(lang.rawValue)")
@@ -20,24 +20,24 @@ extension Strings {
 
     // MARK: - 처음 쓰는 사람의 화면
 
-    static var showAllFeatures: String {
+    public static var showAllFeatures: String {
         pick([.korean: "모든 기능 보기", .english: "Show All Features", .japanese: "すべての機能を表示", .chinese: "显示全部功能", .german: "Alle Funktionen anzeigen", .french: "Afficher toutes les fonctions", .spanish: "Mostrar todas las funciones", .italian: "Mostra tutte le funzioni", .portuguese: "Mostrar todos os recursos", .chineseTraditional: "顯示所有功能", .dutch: "Alle functies tonen", .swedish: "Visa alla funktioner", .norwegian: "Vis alle funksjoner", .danish: "Vis alle funktioner", .finnish: "Näytä kaikki toiminnot", .polish: "Pokaż wszystkie funkcje", .czech: "Zobrazit všechny funkce", .greek: "Εμφάνιση όλων των λειτουργιών", .turkish: "Tüm özellikleri göster", .russian: "Показать все функции", .indonesian: "Tampilkan semua fitur", .thai: "แสดงฟีเจอร์ทั้งหมด", .vietnamese: "Hiện tất cả tính năng"])
     }
 
-    static var showAllFeaturesFooter: String {
+    public static var showAllFeaturesFooter: String {
         pick([.korean: "지금은 꼭 필요한 것만 보여요. 필요해지는 순간에 하나씩 알려 드려요.", .english: "You’re seeing just the essentials for now. We’ll introduce the rest one at a time, when you need it.", .japanese: "今は必要なものだけを表示しています。必要になったときに、ひとつずつお知らせします。", .chinese: "现在只显示最需要的功能。需要时，我们会逐一介绍其他功能。", .german: "Vorerst siehst du nur das Wichtigste. Den Rest stellen wir dir einzeln vor, wenn du ihn brauchst.", .french: "Pour l’instant, seul l’essentiel est affiché. Le reste vous sera présenté petit à petit, au bon moment.", .spanish: "Por ahora solo ves lo esencial. Te presentaremos el resto poco a poco, cuando lo necesites.", .italian: "Per ora vedi solo l’essenziale. Il resto te lo presentiamo un po’ alla volta, quando ti serve.", .portuguese: "Por enquanto, você vê só o essencial. Vamos apresentar o resto aos poucos, quando precisar.", .chineseTraditional: "現在只顯示最需要的功能。需要時，我們會逐一介紹其他功能。", .dutch: "Je ziet nu alleen het belangrijkste. De rest stellen we één voor één voor, zodra je het nodig hebt.", .swedish: "Just nu ser du bara det viktigaste. Resten presenterar vi en i taget, när du behöver det.", .norwegian: "Foreløpig ser du bare det viktigste. Resten presenterer vi én om gangen, når du trenger det.", .danish: "Lige nu ser du kun det vigtigste. Resten præsenterer vi én ad gangen, når du får brug for det.", .finnish: "Näet nyt vain tärkeimmät. Esittelemme loput yksi kerrallaan, kun tarvitset niitä.", .polish: "Na razie widzisz tylko to, co najważniejsze. Resztę przedstawimy po kolei, gdy będzie potrzebna.", .czech: "Zatím vidíš jen to nejdůležitější. Zbytek ti představíme postupně, až ho budeš potřebovat.", .greek: "Προς το παρόν βλέπεις μόνο τα βασικά. Τα υπόλοιπα θα τα γνωρίσεις ένα ένα, όταν τα χρειαστείς.", .turkish: "Şimdilik yalnızca temel özellikleri görüyorsun. Diğerlerini gerektiğinde tek tek tanıtacağız.", .russian: "Пока показано только самое нужное. Остальное мы покажем по одному, когда понадобится.", .indonesian: "Untuk sekarang hanya yang penting yang ditampilkan. Sisanya kami kenalkan satu per satu saat kamu butuh.", .thai: "ตอนนี้แสดงเฉพาะสิ่งที่จำเป็น ส่วนที่เหลือจะแนะนำทีละอย่างเมื่อคุณต้องใช้", .vietnamese: "Hiện chỉ hiển thị những gì cần thiết. Phần còn lại sẽ được giới thiệu từng thứ một khi bạn cần."])
     }
 
     /// "올해 사용한 연차가 있나요?" 에 대한 답
-    static var pastLeaveNoneYet: String {
+    public static var pastLeaveNoneYet: String {
         pick([.korean: "아직 없어요", .english: "None yet", .japanese: "まだありません", .chinese: "还没有", .german: "Noch keinen", .french: "Pas encore", .spanish: "Todavía no", .italian: "Non ancora", .portuguese: "Ainda não", .chineseTraditional: "還沒有", .dutch: "Nog niet", .swedish: "Inte än", .norwegian: "Ikke ennå", .danish: "Ikke endnu", .finnish: "Ei vielä", .polish: "Jeszcze nie", .czech: "Zatím ne", .greek: "Όχι ακόμα", .turkish: "Henüz yok", .russian: "Пока нет", .indonesian: "Belum ada", .thai: "ยังไม่มี", .vietnamese: "Chưa có"])
     }
 
-    static var surfaceUnlockHeader: String {
+    public static var surfaceUnlockHeader: String {
         pick([.korean: "새로 열렸어요", .english: "Now available", .japanese: "新しく使えます", .chinese: "新功能已开放", .german: "Jetzt verfügbar", .french: "Maintenant disponible", .spanish: "Ya disponible", .italian: "Ora disponibile", .portuguese: "Já disponível", .chineseTraditional: "新功能已開放", .dutch: "Nu beschikbaar", .swedish: "Nu tillgängligt", .norwegian: "Nå tilgjengelig", .danish: "Nu tilgængelig", .finnish: "Nyt käytettävissä", .polish: "Już dostępne", .czech: "Nyní k dispozici", .greek: "Τώρα διαθέσιμο", .turkish: "Artık kullanılabilir", .russian: "Теперь доступно", .indonesian: "Kini tersedia", .thai: "ใช้งานได้แล้ว", .vietnamese: "Đã có thể dùng"])
     }
 
-    static func surfaceFeatureTitle(_ feature: SurfaceFeature) -> String {
+    public static func surfaceFeatureTitle(_ feature: SurfaceFeature) -> String {
         switch feature {
         case .statusFirst:
             return pick([.korean: "이제 현황부터 열려요", .english: "The app now opens to Status", .japanese: "これからは状況から開きます", .chinese: "现在会先打开概览", .german: "Die App öffnet jetzt mit Status", .french: "L’app s’ouvre désormais sur Aperçu", .spanish: "La app ahora se abre en Resumen", .italian: "L’app ora si apre su Panoramica", .portuguese: "O app agora abre em Resumo", .chineseTraditional: "現在會先開啟概況", .dutch: "De app opent nu met Status", .swedish: "Appen öppnas nu med Status", .norwegian: "Appen åpnes nå med Status", .danish: "Appen åbner nu med Status", .finnish: "Sovellus avautuu nyt Tila-näkymään", .polish: "Aplikacja otwiera się teraz na ekranie Stan", .czech: "Aplikace se teď otevírá na přehledu Stav", .greek: "Η εφαρμογή ανοίγει πλέον στην Κατάσταση", .turkish: "Uygulama artık Durum ekranıyla açılıyor", .russian: "Теперь приложение открывается с обзора", .indonesian: "Aplikasi kini dibuka di Ringkasan", .thai: "ตอนนี้แอปจะเปิดที่หน้าภาพรวมก่อน", .vietnamese: "Giờ ứng dụng sẽ mở ở Tổng quan"])
@@ -56,7 +56,7 @@ extension Strings {
         }
     }
 
-    static func surfaceFeatureDetail(_ feature: SurfaceFeature) -> String {
+    public static func surfaceFeatureDetail(_ feature: SurfaceFeature) -> String {
         switch feature {
         case .statusFirst:
             return pick([.korean: "휴가를 잡아 두셨네요. 이제 앱을 열면 남은 연차와 다가오는 휴가부터 보여 드려요. 달력은 캘린더 탭에 그대로 있어요.", .english: "You’ve planned some leave. From now on the app opens with your remaining days and upcoming leave. The calendar is still in the Calendar tab.", .japanese: "休暇の予定が入りました。これからはアプリを開くと、残りの年休と近づく休暇から表示します。カレンダーはカレンダータブにそのままあります。", .chinese: "你已经安排了假期。之后打开应用时，会先显示剩余年假和即将到来的假期。日历仍在“日历”标签中。", .german: "Du hast Urlaub eingeplant. Ab jetzt zeigt die App beim Öffnen zuerst deine Resttage und den nächsten Urlaub. Der Kalender bleibt im Tab „Kalender“.", .french: "Vous avez prévu des congés. Désormais, l’app s’ouvre sur vos jours restants et vos prochains congés. Le calendrier reste dans l’onglet Calendrier.", .spanish: "Ya tienes días planificados. A partir de ahora, la app se abre con tus días restantes y tus próximas ausencias. El calendario sigue en la pestaña Calendario.", .italian: "Hai pianificato delle ferie. D’ora in poi l’app si apre con i giorni rimasti e le prossime ferie. Il calendario resta nella scheda Calendario.", .portuguese: "Você já planejou uma folga. Agora o app abre mostrando os dias restantes e as próximas folgas. O calendário continua na aba Calendário.", .chineseTraditional: "你已經安排了假期。之後打開 App 時，會先顯示剩餘特休和即將到來的假期。行事曆仍在「行事曆」分頁中。", .dutch: "Je hebt verlof gepland. Voortaan opent de app met je resterende dagen en je volgende verlof. De kalender staat nog steeds onder Agenda.", .swedish: "Du har planerat ledighet. Nu öppnas appen med dina återstående dagar och din nästa ledighet. Kalendern finns kvar under Kalender.", .norwegian: "Du har planlagt fri. Nå åpnes appen med dagene du har igjen og neste fri. Kalenderen ligger fortsatt under Kalender.", .danish: "Du har planlagt fri. Nu åbner appen med dine resterende dage og din næste fri. Kalenderen ligger stadig under Kalender.", .finnish: "Olet suunnitellut lomaa. Nyt sovellus avautuu jäljellä oleviin päiviin ja seuraavaan lomaan. Kalenteri löytyy edelleen Kalenteri-välilehdeltä.", .polish: "Masz już zaplanowany urlop. Teraz aplikacja otwiera się na pozostałych dniach i najbliższym urlopie. Kalendarz nadal jest w karcie Kalendarz.", .czech: "Máte naplánovanou dovolenou. Aplikace se teď otevře na zbývajících dnech a nejbližší dovolené. Kalendář najdete dál na kartě Kalendář.", .greek: "Έχετε προγραμματίσει άδεια. Από τώρα η εφαρμογή ανοίγει με τις υπόλοιπες μέρες και την επόμενη άδειά σας. Το ημερολόγιο παραμένει στην καρτέλα Ημερολόγιο.", .turkish: "İzin planladınız. Artık uygulama kalan günlerinizi ve yaklaşan izninizi göstererek açılıyor. Takvim, Takvim sekmesinde duruyor.", .russian: "Вы запланировали отпуск. Теперь приложение сначала показывает оставшиеся дни и ближайший отпуск. Календарь по-прежнему во вкладке «Календарь».", .indonesian: "Anda sudah merencanakan cuti. Mulai sekarang aplikasi dibuka dengan sisa cuti dan cuti terdekat. Kalender tetap ada di tab Kalender.", .thai: "คุณวางแผนวันลาไว้แล้ว จากนี้แอปจะเปิดด้วยวันลาที่เหลือและวันลาที่ใกล้จะถึงก่อน ปฏิทินยังอยู่ในแท็บปฏิทินเหมือนเดิม", .vietnamese: "Bạn đã lên lịch nghỉ. Từ giờ ứng dụng sẽ mở với số ngày phép còn lại và kỳ nghỉ sắp tới. Lịch vẫn nằm ở thẻ Lịch."])
@@ -77,19 +77,19 @@ extension Strings {
 
     // MARK: - 보조 달력
 
-    static var secondaryCalendarTitle: String {
+    public static var secondaryCalendarTitle: String {
         pick([.korean: "보조 달력", .english: "Alternate Calendar", .japanese: "併記する暦", .chinese: "其他历法", .german: "Alternativer Kalender", .french: "Autre calendrier", .spanish: "Calendario alternativo", .italian: "Calendario alternativo", .portuguese: "Calendário alternativo", .chineseTraditional: "其他曆法", .dutch: "Alternatieve kalender", .swedish: "Alternativ kalender", .norwegian: "Alternativ kalender", .danish: "Alternativ kalender", .finnish: "Vaihtoehtoinen kalenteri", .polish: "Kalendarz dodatkowy", .czech: "Alternativní kalendář", .greek: "Εναλλακτικό ημερολόγιο", .turkish: "Alternatif takvim", .russian: "Дополнительный календарь", .indonesian: "Kalender alternatif", .thai: "ปฏิทินเสริม", .vietnamese: "Lịch phụ"])
     }
 
-    static var secondaryCalendarNone: String {
+    public static var secondaryCalendarNone: String {
         pick([.korean: "없음", .english: "None", .japanese: "なし", .chinese: "无", .german: "Keiner", .french: "Aucun", .spanish: "Ninguno", .italian: "Nessuno", .portuguese: "Nenhum", .chineseTraditional: "無", .dutch: "Geen", .swedish: "Ingen", .norwegian: "Ingen", .danish: "Ingen", .finnish: "Ei mitään", .polish: "Brak", .czech: "Žádný", .greek: "Κανένα", .turkish: "Yok", .russian: "Нет", .indonesian: "Tidak ada", .thai: "ไม่มี", .vietnamese: "Không có"])
     }
 
-    static var secondaryCalendarFooter: String {
+    public static var secondaryCalendarFooter: String {
         pick([.korean: "달력에 그 날짜를 함께 보여 줘요. 휴가 계산과 공휴일은 그대로예요.", .english: "Shows those dates alongside your calendar. Leave counts and public holidays don’t change.", .japanese: "カレンダーにその暦の日付も表示します。休暇の計算と祝日は変わりません。", .chinese: "在日历上同时显示该历法的日期。假期计算和公共假日不变。", .german: "Zeigt diese Daten zusätzlich im Kalender an. Urlaubsberechnung und Feiertage bleiben gleich.", .french: "Affiche aussi ces dates dans le calendrier. Le calcul des congés et les jours fériés ne changent pas.", .spanish: "Muestra también esas fechas en el calendario. El cálculo de vacaciones y los festivos no cambian.", .italian: "Mostra anche queste date nel calendario. Il calcolo dei permessi e le festività non cambiano.", .portuguese: "Mostra também essas datas no calendário. O cálculo das folgas e os feriados não mudam.", .chineseTraditional: "在月曆上同時顯示該曆法的日期。假期計算和國定假日不變。", .dutch: "Toont deze datums ook in de kalender. De berekening van je verlof en de feestdagen veranderen niet.", .swedish: "Visar även dessa datum i kalendern. Beräkningen av ledighet och helgdagarna ändras inte.", .norwegian: "Viser også disse datoene i kalenderen. Beregningen av ferie og helligdagene endres ikke.", .danish: "Viser også disse datoer i kalenderen. Beregningen af ferie og helligdagene ændres ikke.", .finnish: "Näyttää myös nämä päivämäärät kalenterissa. Lomien laskenta ja pyhäpäivät eivät muutu.", .polish: "Pokazuje także te daty w kalendarzu. Liczenie urlopu i święta się nie zmieniają.", .czech: "Zobrazí v kalendáři i tato data. Výpočet dovolené a svátky se nemění.", .greek: "Δείχνει και αυτές τις ημερομηνίες στο ημερολόγιο. Ο υπολογισμός της άδειας και οι αργίες δεν αλλάζουν.", .turkish: "Bu tarihleri takvimde de gösterir. İzin hesabı ve resmî tatiller değişmez.", .russian: "Эти даты тоже появятся в календаре. Подсчёт отпуска и праздники не меняются.", .indonesian: "Menampilkan juga tanggal tersebut di kalender. Perhitungan cuti dan hari libur tidak berubah.", .thai: "แสดงวันที่เหล่านี้ในปฏิทินด้วย การนับวันลาและวันหยุดนักขัตฤกษ์ไม่เปลี่ยนแปลง", .vietnamese: "Hiển thị thêm các ngày này trên lịch. Cách tính ngày nghỉ và ngày lễ không thay đổi."])
     }
 
-    static func secondaryCalendarName(_ calendar: SecondaryCalendar) -> String {
+    public static func secondaryCalendarName(_ calendar: SecondaryCalendar) -> String {
         switch calendar {
         case .chinese:
             return pick([.korean: "음력", .english: "Chinese Lunar", .japanese: "旧暦", .chinese: "农历", .german: "Chinesischer Mondkalender", .french: "Calendrier lunaire chinois", .spanish: "Calendario lunar chino", .italian: "Calendario lunare cinese", .portuguese: "Calendário lunar chinês", .chineseTraditional: "農曆", .dutch: "Chinese maankalender", .swedish: "Kinesisk månkalender", .norwegian: "Kinesisk månekalender", .danish: "Kinesisk månekalender", .finnish: "Kiinalainen kuukalenteri", .polish: "Chiński kalendarz księżycowy", .czech: "Čínský lunární kalendář", .greek: "Κινεζικό σεληνιακό ημερολόγιο", .turkish: "Çin ay takvimi", .russian: "Китайский лунный", .indonesian: "Kalender lunar Tionghoa", .thai: "จันทรคติจีน", .vietnamese: "Âm lịch"])
@@ -108,161 +108,161 @@ extension Strings {
 
     // MARK: - 새로운 기능 (What's New)
 
-    static var whatsNewTitle: String {
+    public static var whatsNewTitle: String {
         pick([.korean: "새로워진 Goldweek", .english: "What’s New in Goldweek", .japanese: "Goldweek の新機能", .chinese: "Goldweek 新功能", .german: "Neu in Goldweek", .french: "Nouveautés de Goldweek", .spanish: "Novedades de Goldweek", .italian: "Novità di Goldweek", .portuguese: "Novidades do Goldweek", .chineseTraditional: "Goldweek 新功能", .dutch: "Nieuw in Goldweek", .swedish: "Nytt i Goldweek", .norwegian: "Nytt i Goldweek", .danish: "Nyt i Goldweek", .finnish: "Uutta Goldweekissä", .polish: "Nowości w Goldweek", .czech: "Novinky v Goldweeku", .greek: "Τι νέο υπάρχει στο Goldweek", .turkish: "Goldweek’te yenilikler", .russian: "Что нового в Goldweek", .indonesian: "Yang baru di Goldweek", .thai: "มีอะไรใหม่ใน Goldweek", .vietnamese: "Có gì mới trong Goldweek"])
     }
 
-    static var whatsNewSubtitle: String {
+    public static var whatsNewSubtitle: String {
         pick([.korean: "이번 업데이트에서 달라진 점이에요", .english: "Here’s what changed in this update", .japanese: "今回のアップデートで変わったところです", .chinese: "这次更新带来的变化", .german: "Das hat sich mit diesem Update geändert", .french: "Voici ce qui change avec cette mise à jour", .spanish: "Esto es lo que cambia en esta actualización", .italian: "Ecco cosa cambia con questo aggiornamento", .portuguese: "Veja o que mudou nesta atualização", .chineseTraditional: "這次更新帶來的變化", .dutch: "Dit is er veranderd in deze update", .swedish: "Det här är nytt i uppdateringen", .norwegian: "Dette er nytt i oppdateringen", .danish: "Det her er nyt i opdateringen", .finnish: "Tämä päivitys toi nämä muutokset", .polish: "Oto co zmieniło się w tej aktualizacji", .czech: "Tohle se v aktualizaci změnilo", .greek: "Δες τι άλλαξε σε αυτή την ενημέρωση", .turkish: "Bu güncellemede değişenler", .russian: "Вот что изменилось в этом обновлении", .indonesian: "Inilah yang berubah di pembaruan ini", .thai: "สิ่งที่เปลี่ยนไปในการอัปเดตนี้", .vietnamese: "Những thay đổi trong bản cập nhật này"])
     }
 
-    static var whatsNewBenefitsTitle: String {
+    public static var whatsNewBenefitsTitle: String {
         pick([.korean: "내 혜택을 한눈에", .english: "Your benefits at a glance", .japanese: "自分の特典がひと目でわかる", .chinese: "一眼看清你的权益", .german: "Deine Vorteile auf einen Blick", .french: "Vos avantages en un coup d’œil", .spanish: "Tus ventajas de un vistazo", .italian: "I tuoi vantaggi a colpo d’occhio", .portuguese: "Seus benefícios num relance", .chineseTraditional: "一眼看清你的權益", .dutch: "Je voordelen in één oogopslag", .swedish: "Dina förmåner i en överblick", .norwegian: "Fordelene dine på ett blikk", .danish: "Dine fordele på et øjeblik", .finnish: "Etusi yhdellä silmäyksellä", .polish: "Twoje korzyści w jednym miejscu", .czech: "Tvoje výhody na první pohled", .greek: "Τα οφέλη σου με μια ματιά", .turkish: "Avantajların tek bakışta", .russian: "Ваши преимущества с первого взгляда", .indonesian: "Keuntunganmu dalam sekilas", .thai: "ดูสิทธิประโยชน์ของคุณได้ในที่เดียว", .vietnamese: "Xem quyền lợi của bạn trong nháy mắt"])
     }
 
-    static var whatsNewBenefitsDetail: String {
+    public static var whatsNewBenefitsDetail: String {
         pick([.korean: "설정에서 이용 중인 등급을 누르면 무엇이 열려 있고 얼마나 쓰고 있는지 보여요.", .english: "Tap your plan in Settings to see what’s unlocked and how much you use it.", .japanese: "設定でご利用中のプランをタップすると、使える機能と使っている量がわかります。", .chinese: "在设置中点按你的方案，就能看到已解锁的功能和使用情况。", .german: "Tippe in den Einstellungen auf dein Abo und sieh, was freigeschaltet ist und wie viel du davon nutzt.", .french: "Touchez votre formule dans Réglages pour voir ce qui est débloqué et ce que vous en faites.", .spanish: "Toca tu plan en Ajustes para ver qué tienes desbloqueado y cuánto lo usas.", .italian: "Tocca il tuo piano in Impostazioni per vedere cosa è sbloccato e quanto lo usi.", .portuguese: "Toque no seu plano em Ajustes para ver o que está liberado e quanto você usa.", .chineseTraditional: "在設定中點一下你的方案，就能看到已解鎖的功能和使用情形。", .dutch: "Tik in Instellingen op je abonnement om te zien wat er vrij is en hoeveel je het gebruikt.", .swedish: "Tryck på din plan i Inställningar för att se vad som är upplåst och hur mycket du använder det.", .norwegian: "Trykk på planen din i Innstillinger for å se hva som er låst opp og hvor mye du bruker det.", .danish: "Tryk på dit abonnement i Indstillinger for at se, hvad der er låst op, og hvor meget du bruger det.", .finnish: "Napauta tilaustasi asetuksissa, niin näet mitä on avattu ja kuinka paljon käytät sitä.", .polish: "Stuknij swój plan w Ustawieniach, aby zobaczyć, co masz odblokowane i ile z tego korzystasz.", .czech: "Klepni v Nastavení na svůj tarif a uvidíš, co máš odemčené a jak moc to využíváš.", .greek: "Πάτησε το πρόγραμμά σου στις Ρυθμίσεις για να δεις τι έχει ξεκλειδωθεί και πόσο το χρησιμοποιείς.", .turkish: "Ayarlar’da planına dokun; nelerin açık olduğunu ve ne kadar kullandığını gör.", .russian: "Нажмите на свой тариф в настройках, чтобы увидеть, что открыто и как вы этим пользуетесь.", .indonesian: "Ketuk paketmu di Pengaturan untuk melihat apa yang terbuka dan seberapa banyak kamu memakainya.", .thai: "แตะแผนของคุณในการตั้งค่าเพื่อดูว่าปลดล็อกอะไรไว้และใช้ไปมากแค่ไหน", .vietnamese: "Chạm vào gói của bạn trong Cài đặt để xem tính năng đã mở và mức bạn đang dùng."])
     }
 
-    static var whatsNewCodeTitle: String {
+    public static var whatsNewCodeTitle: String {
         pick([.korean: "오퍼 코드를 앱에서 바로", .english: "Redeem offer codes in the app", .japanese: "オファーコードをアプリで直接", .chinese: "在应用内直接兑换优惠码", .german: "Angebotscodes direkt in der App", .french: "Codes promo directement dans l’app", .spanish: "Canjea códigos de oferta en la app", .italian: "Riscatta i codici offerta nell’app", .portuguese: "Resgate códigos de oferta no app", .chineseTraditional: "在 App 內直接兌換優惠代碼", .dutch: "Aanbiedingscodes direct in de app", .swedish: "Lös in erbjudandekoder i appen", .norwegian: "Løs inn tilbudskoder i appen", .danish: "Indløs tilbudskoder i appen", .finnish: "Lunasta tarjouskoodit sovelluksessa", .polish: "Kody promocyjne prosto w aplikacji", .czech: "Uplatni nabídkové kódy přímo v aplikaci", .greek: "Εξαργύρωσε κωδικούς προσφοράς στην εφαρμογή", .turkish: "Teklif kodlarını uygulamada kullan", .russian: "Промокоды прямо в приложении", .indonesian: "Tukarkan kode penawaran di aplikasi", .thai: "ใช้โค้ดข้อเสนอในแอปได้เลย", .vietnamese: "Đổi mã ưu đãi ngay trong ứng dụng"])
     }
 
-    static var whatsNewCodeDetail: String {
+    public static var whatsNewCodeDetail: String {
         pick([.korean: "받은 코드는 요금제 화면이나 설정에서 바로 쓸 수 있어요.", .english: "Use a code you received from the plans screen or Settings.", .japanese: "受け取ったコードはプラン画面や設定からすぐに使えます。", .chinese: "收到的代码可以在方案页面或设置中直接使用。", .german: "Nutze einen erhaltenen Code direkt im Abo-Bildschirm oder in den Einstellungen.", .french: "Utilisez un code reçu depuis l’écran des formules ou les Réglages.", .spanish: "Usa el código que recibiste desde la pantalla de planes o Ajustes.", .italian: "Usa il codice ricevuto dalla schermata dei piani o da Impostazioni.", .portuguese: "Use o código recebido na tela de planos ou em Ajustes.", .chineseTraditional: "收到的代碼可以在方案頁面或設定中直接使用。", .dutch: "Gebruik een ontvangen code via het abonnementsscherm of Instellingen.", .swedish: "Använd en kod du fått från planvyn eller Inställningar.", .norwegian: "Bruk en kode du har fått fra planskjermen eller Innstillinger.", .danish: "Brug en kode, du har fået, fra abonnementsskærmen eller Indstillinger.", .finnish: "Käytä saamasi koodi tilausnäkymästä tai asetuksista.", .polish: "Użyj otrzymanego kodu na ekranie planów lub w Ustawieniach.", .czech: "Získaný kód použiješ na obrazovce tarifů nebo v Nastavení.", .greek: "Χρησιμοποίησε τον κωδικό σου από την οθόνη προγραμμάτων ή τις Ρυθμίσεις.", .turkish: "Aldığın kodu plan ekranından veya Ayarlar’dan kullan.", .russian: "Полученный код можно ввести на экране тарифов или в настройках.", .indonesian: "Pakai kode yang kamu terima dari layar paket atau Pengaturan.", .thai: "ใช้โค้ดที่ได้รับจากหน้าแผนหรือการตั้งค่าได้ทันที", .vietnamese: "Dùng mã bạn nhận được từ màn hình gói hoặc Cài đặt."])
     }
 
-    static var whatsNewRoadmapTitle: String {
+    public static var whatsNewRoadmapTitle: String {
         pick([.korean: "앞으로 만들 기능", .english: "What’s coming next", .japanese: "これから作る機能", .chinese: "即将推出的功能", .german: "Was als Nächstes kommt", .french: "Les prochaines fonctions", .spanish: "Lo que viene", .italian: "Cosa arriverà", .portuguese: "O que vem por aí", .chineseTraditional: "即將推出的功能", .dutch: "Wat er nog komt", .swedish: "Det här kommer härnäst", .norwegian: "Dette kommer snart", .danish: "Det kommer snart", .finnish: "Tulossa seuraavaksi", .polish: "Co będzie dalej", .czech: "Co chystáme dál", .greek: "Τι έρχεται στη συνέχεια", .turkish: "Sırada ne var", .russian: "Что будет дальше", .indonesian: "Yang akan datang", .thai: "ฟีเจอร์ที่กำลังจะมา", .vietnamese: "Tính năng sắp ra mắt"])
     }
 
-    static var whatsNewRoadmapDetail: String {
+    public static var whatsNewRoadmapDetail: String {
         pick([.korean: "설정에서 다음에 만들 기능을 보고 의견을 보낼 수 있어요.", .english: "See what we’re building next in Settings and tell us what you think.", .japanese: "設定で次に作る機能を見て、意見を送れます。", .chinese: "在设置中查看接下来要做的功能，并告诉我们你的想法。", .german: "Sieh in den Einstellungen, woran wir arbeiten, und sag uns deine Meinung.", .french: "Découvrez dans Réglages ce que nous préparons et donnez votre avis.", .spanish: "Mira en Ajustes en qué estamos trabajando y cuéntanos qué opinas.", .italian: "Scopri in Impostazioni cosa stiamo preparando e dicci la tua.", .portuguese: "Veja em Ajustes o que estamos preparando e diga o que acha.", .chineseTraditional: "在設定中查看接下來要做的功能，並告訴我們你的想法。", .dutch: "Bekijk in Instellingen waar we aan werken en laat ons weten wat je ervan vindt.", .swedish: "Se vad vi bygger härnäst i Inställningar och säg vad du tycker.", .norwegian: "Se hva vi lager videre i Innstillinger, og si hva du synes.", .danish: "Se, hvad vi bygger næste gang, i Indstillinger, og sig din mening.", .finnish: "Katso asetuksista, mitä teemme seuraavaksi, ja kerro mielipiteesi.", .polish: "Zobacz w Ustawieniach, nad czym pracujemy, i daj znać, co myślisz.", .czech: "V Nastavení uvidíš, na čem pracujeme, a můžeš nám napsat názor.", .greek: "Δες στις Ρυθμίσεις τι ετοιμάζουμε και πες μας τη γνώμη σου.", .turkish: "Ayarlar’da sırada ne olduğunu gör ve fikrini bize ilet.", .russian: "В настройках можно посмотреть, что мы готовим, и поделиться мнением.", .indonesian: "Lihat di Pengaturan apa yang sedang kami buat dan beri tahu pendapatmu.", .thai: "ดูในการตั้งค่าว่าเรากำลังทำอะไรต่อ แล้วบอกความเห็นของคุณได้", .vietnamese: "Xem trong Cài đặt những gì chúng tôi sắp làm và gửi ý kiến của bạn."])
     }
 
-    static var whatsNewA11yTitle: String {
+    public static var whatsNewA11yTitle: String {
         pick([.korean: "누구나 더 편하게", .english: "Easier for everyone", .japanese: "誰でももっと使いやすく", .chinese: "人人都更好用", .german: "Einfacher für alle", .french: "Plus simple pour tous", .spanish: "Más fácil para todos", .italian: "Più semplice per tutti", .portuguese: "Mais fácil para todos", .chineseTraditional: "人人都更好用", .dutch: "Makkelijker voor iedereen", .swedish: "Enklare för alla", .norwegian: "Enklere for alle", .danish: "Nemmere for alle", .finnish: "Helpompaa kaikille", .polish: "Łatwiej dla wszystkich", .czech: "Snazší pro každého", .greek: "Πιο εύκολο για όλους", .turkish: "Herkes için daha kolay", .russian: "Удобнее для всех", .indonesian: "Lebih mudah untuk semua", .thai: "ใช้งานง่ายขึ้นสำหรับทุกคน", .vietnamese: "Dễ dùng hơn cho mọi người"])
     }
 
-    static var whatsNewA11yDetail: String {
+    public static var whatsNewA11yDetail: String {
         pick([.korean: "큰 글씨, 음성 제어, 색 없이 구별, 동작 줄이기, 투명도 줄이기를 더 잘 따라가요.", .english: "Better with larger text, Voice Control, Differentiate Without Color, Reduce Motion and Reduce Transparency.", .japanese: "文字を大きく、音声コントロール、カラー以外で区別、視差効果を減らす、透明度を下げるにもっと対応しました。", .chinese: "更好地支持更大字体、语音控制、不用颜色区分、减弱动态效果和降低透明度。", .german: "Besser mit größerer Schrift, Sprachsteuerung, „Ohne Farben unterscheiden“, „Bewegung reduzieren“ und „Transparenz reduzieren“.", .french: "Mieux adapté au texte plus grand, au Contrôle vocal, à « Différencier sans couleur », à « Réduire les animations » et à « Réduire la transparence ».", .spanish: "Mejor con texto más grande, Control por voz, Diferenciar sin color, Reducir movimiento y Reducir transparencia.", .italian: "Funziona meglio con testo più grande, Controllo vocale, Differenzia senza colori, Riduci movimento e Riduci trasparenza.", .portuguese: "Melhor com texto maior, Controle por Voz, Diferenciar sem Cor, Reduzir Movimento e Reduzir Transparência.", .chineseTraditional: "更好地支援放大文字、語音控制、不以顏色區分、減少動態效果和降低透明度。", .dutch: "Beter met grotere tekst, Stembediening, Onderscheid zonder kleur, Verminder beweging en Verminder transparantie.", .swedish: "Bättre med större text, Röststyrning, Särskilj utan färg, Minska rörelse och Minska genomskinlighet.", .norwegian: "Bedre med større tekst, Talekontroll, Skill uten farge, Reduser bevegelse og Reduser gjennomsiktighet.", .danish: "Bedre med større tekst, Stemmestyring, Adskil uden farve, Reducer bevægelse og Reducer gennemsigtighed.", .finnish: "Toimii paremmin suuremman tekstin, äänikomentojen, Erottele ilman värejä-, Vähennä liikettä- ja Vähennä läpinäkyvyyttä -asetusten kanssa.", .polish: "Lepiej działa z większym tekstem, sterowaniem głosowym, rozróżnianiem bez kolorów, ograniczeniem ruchu i przezroczystości.", .czech: "Lépe funguje s větším písmem, Ovládáním hlasem, Rozlišením bez barev, Omezením pohybu a Snížením průhlednosti.", .greek: "Καλύτερα με μεγαλύτερο κείμενο, Φωνητικό έλεγχο, Διαφοροποίηση χωρίς χρώμα, Μείωση κίνησης και Μείωση διαφάνειας.", .turkish: "Daha büyük metin, Sesle Denetim, Renksiz Ayırt Et, Hareketi Azalt ve Saydamlığı Azalt ile daha uyumlu.", .russian: "Лучше работает с крупным текстом, Управлением голосом, «Без цвета», «Уменьшение движения» и «Понижение прозрачности».", .indonesian: "Lebih baik dengan teks lebih besar, Kontrol Suara, Bedakan Tanpa Warna, Kurangi Gerakan, dan Kurangi Transparansi.", .thai: "รองรับตัวอักษรขนาดใหญ่ การควบคุมด้วยเสียง แยกความแตกต่างโดยไม่ใช้สี ลดการเคลื่อนไหว และลดความโปร่งใสได้ดีขึ้น", .vietnamese: "Hỗ trợ tốt hơn chữ lớn, Khẩu lệnh, Phân biệt không cần màu, Giảm chuyển động và Giảm độ trong suốt."])
     }
 
-    static var whatsNewContinue: String {
+    public static var whatsNewContinue: String {
         pick([.korean: "계속", .english: "Continue", .japanese: "続ける", .chinese: "继续", .german: "Weiter", .french: "Continuer", .spanish: "Continuar", .italian: "Continua", .portuguese: "Continuar", .chineseTraditional: "繼續", .dutch: "Doorgaan", .swedish: "Fortsätt", .norwegian: "Fortsett", .danish: "Fortsæt", .finnish: "Jatka", .polish: "Dalej", .czech: "Pokračovat", .greek: "Συνέχεια", .turkish: "Devam", .russian: "Продолжить", .indonesian: "Lanjut", .thai: "ดำเนินการต่อ", .vietnamese: "Tiếp tục"])
     }
 
     /// 설정 > 도움말 — 새로운 기능 다시 보기
-    static var whatsNewEntry: String {
+    public static var whatsNewEntry: String {
         pick([.korean: "새로운 기능", .english: "What’s New", .japanese: "新機能", .chinese: "新功能", .german: "Neuigkeiten", .french: "Nouveautés", .spanish: "Novedades", .italian: "Novità", .portuguese: "Novidades", .chineseTraditional: "新功能", .dutch: "Nieuw", .swedish: "Nyheter", .norwegian: "Nyheter", .danish: "Nyheder", .finnish: "Uutta", .polish: "Nowości", .czech: "Novinky", .greek: "Τι νέο υπάρχει", .turkish: "Yenilikler", .russian: "Что нового", .indonesian: "Yang baru", .thai: "มีอะไรใหม่", .vietnamese: "Có gì mới"])
     }
 
     // MARK: - 오퍼 코드
 
-    static var redeemOfferCode: String {
+    public static var redeemOfferCode: String {
         pick([.korean: "오퍼 코드 사용", .english: "Redeem Offer Code", .japanese: "オファーコードを使う", .chinese: "兑换优惠码", .german: "Angebotscode einlösen", .french: "Utiliser un code promo", .spanish: "Canjear código de oferta", .italian: "Riscatta codice offerta", .portuguese: "Resgatar código de oferta", .chineseTraditional: "兌換優惠代碼", .dutch: "Aanbiedingscode inwisselen", .swedish: "Lös in erbjudandekod", .norwegian: "Løs inn tilbudskode", .danish: "Indløs tilbudskode", .finnish: "Lunasta tarjouskoodi", .polish: "Wykorzystaj kod promocyjny", .czech: "Uplatnit nabídkový kód", .greek: "Εξαργύρωση κωδικού προσφοράς", .turkish: "Teklif kodu kullan", .russian: "Ввести промокод", .indonesian: "Tukarkan kode penawaran", .thai: "ใช้โค้ดข้อเสนอ", .vietnamese: "Đổi mã ưu đãi"])
     }
 
     // MARK: - 상태 값
 
-    static var stateOn: String {
+    public static var stateOn: String {
         pick([.korean: "켜짐", .english: "On", .japanese: "オン", .chinese: "开", .german: "Ein", .french: "Activé", .spanish: "Activado", .italian: "Attivo", .portuguese: "Ativado", .chineseTraditional: "開啟", .dutch: "Aan", .swedish: "På", .norwegian: "På", .danish: "Til", .finnish: "Päällä", .polish: "Włączone", .czech: "Zapnuto", .greek: "Ενεργό", .turkish: "Açık", .russian: "Вкл.", .indonesian: "Aktif", .thai: "เปิด", .vietnamese: "Bật"])
     }
 
-    static var stateOff: String {
+    public static var stateOff: String {
         pick([.korean: "꺼짐", .english: "Off", .japanese: "オフ", .chinese: "关", .german: "Aus", .french: "Désactivé", .spanish: "Desactivado", .italian: "Non attivo", .portuguese: "Desativado", .chineseTraditional: "關閉", .dutch: "Uit", .swedish: "Av", .norwegian: "Av", .danish: "Fra", .finnish: "Pois", .polish: "Wyłączone", .czech: "Vypnuto", .greek: "Ανενεργό", .turkish: "Kapalı", .russian: "Выкл.", .indonesian: "Nonaktif", .thai: "ปิด", .vietnamese: "Tắt"])
     }
 
-    static var stateAvailable: String {
+    public static var stateAvailable: String {
         pick([.korean: "쓸 수 있어요", .english: "Available", .japanese: "利用できます", .chinese: "可使用", .german: "Verfügbar", .french: "Disponible", .spanish: "Disponible", .italian: "Disponibile", .portuguese: "Disponível", .chineseTraditional: "可使用", .dutch: "Beschikbaar", .swedish: "Tillgänglig", .norwegian: "Tilgjengelig", .danish: "Tilgængelig", .finnish: "Käytettävissä", .polish: "Dostępne", .czech: "K dispozici", .greek: "Διαθέσιμο", .turkish: "Kullanılabilir", .russian: "Доступно", .indonesian: "Tersedia", .thai: "ใช้ได้", .vietnamese: "Có thể dùng"])
     }
 
-    static func peopleCount(_ n: Int) -> String {
+    public static func peopleCount(_ n: Int) -> String {
         pick([.korean: "\(n)명", .english: n == 1 ? "1 person" : "\(n) people", .japanese: "\(n)人", .chinese: "\(n)人", .german: n == 1 ? "1 Person" : "\(n) Personen", .french: n <= 1 ? "\(n) personne" : "\(n) personnes", .spanish: n == 1 ? "1 persona" : "\(n) personas", .italian: n == 1 ? "1 persona" : "\(n) persone", .portuguese: n == 1 ? "1 pessoa" : "\(n) pessoas", .chineseTraditional: "\(n)人", .dutch: n == 1 ? "1 persoon" : "\(n) personen", .swedish: n == 1 ? "1 person" : "\(n) personer", .norwegian: n == 1 ? "1 person" : "\(n) personer", .danish: n == 1 ? "1 person" : "\(n) personer", .finnish: n == 1 ? "1 henkilö" : "\(n) henkilöä", .polish: "\(n) os.", .czech: "\(n) os.", .greek: n == 1 ? "1 άτομο" : "\(n) άτομα", .turkish: "\(n) kişi", .russian: "\(n) \(ruPlural(n, "человек", "человека", "человек"))", .indonesian: "\(n) orang", .thai: "\(n) คน", .vietnamese: "\(n) người"])
     }
 
     // MARK: - 내 혜택
 
-    static var benefitsTitle: String {
+    public static var benefitsTitle: String {
         pick([.korean: "내 혜택", .english: "My Benefits", .japanese: "自分の特典", .chinese: "我的权益", .german: "Meine Vorteile", .french: "Mes avantages", .spanish: "Mis ventajas", .italian: "I miei vantaggi", .portuguese: "Meus benefícios", .chineseTraditional: "我的權益", .dutch: "Mijn voordelen", .swedish: "Mina förmåner", .norwegian: "Mine fordeler", .danish: "Mine fordele", .finnish: "Omat etuni", .polish: "Moje korzyści", .czech: "Moje výhody", .greek: "Τα οφέλη μου", .turkish: "Avantajlarım", .russian: "Мои преимущества", .indonesian: "Keuntunganku", .thai: "สิทธิประโยชน์ของฉัน", .vietnamese: "Quyền lợi của tôi"])
     }
 
     /// 무료 한도를 넘어 쓰는 추천 일정 수
-    static func benefitsSummaryExtra(_ n: Int) -> String {
+    public static func benefitsSummaryExtra(_ n: Int) -> String {
         pick([.korean: "무료 한도를 넘어 추천 일정 \(n)개를 더 쓰고 있어요", .english: n == 1 ? "You’re using 1 more recommended plan than Free allows" : "You’re using \(n) more recommended plans than Free allows", .japanese: "無料の上限を超えておすすめ日程を\(n)件多く使っています", .chinese: "你比免费版多用了 \(n) 个推荐行程", .german: "Du nutzt \(n) Vorschläge mehr, als kostenlos möglich wäre", .french: n == 1 ? "Vous utilisez 1 suggestion de plus que la version gratuite" : "Vous utilisez \(n) suggestions de plus que la version gratuite", .spanish: n == 1 ? "Usas 1 plan recomendado más de lo que permite la versión gratis" : "Usas \(n) planes recomendados más de lo que permite la versión gratis", .italian: "Stai usando \(n) piani consigliati in più rispetto alla versione gratuita", .portuguese: n == 1 ? "Você usa 1 plano sugerido a mais do que o grátis permite" : "Você usa \(n) planos sugeridos a mais do que o grátis permite", .chineseTraditional: "你比免費版多用了 \(n) 個推薦行程", .dutch: "Je gebruikt \(n) voorgestelde plannen meer dan gratis kan", .swedish: "Du använder \(n) fler förslag än gratisversionen tillåter", .norwegian: "Du bruker \(n) flere forslag enn gratisversjonen tillater", .danish: "Du bruger \(n) flere forslag, end gratisversionen tillader", .finnish: "Käytät \(n) ehdotusta enemmän kuin ilmaisversio sallii", .polish: "Korzystasz z \(n) propozycji więcej, niż pozwala wersja darmowa", .czech: "Využíváš o \(n) návrhů víc, než dovoluje verze zdarma", .greek: "Χρησιμοποιείς \(n) προτάσεις παραπάνω από όσες επιτρέπει η δωρεάν έκδοση", .turkish: "Ücretsiz sürümün izin verdiğinden \(n) öneri fazla kullanıyorsun", .russian: "Вы используете на \(n) \(ruPlural(n, "рекомендацию", "рекомендации", "рекомендаций")) больше, чем в бесплатной версии", .indonesian: "Kamu memakai \(n) rencana rekomendasi lebih banyak dari batas gratis", .thai: "คุณใช้แผนแนะนำเกินขีดจำกัดของรุ่นฟรีอยู่ \(n) รายการ", .vietnamese: "Bạn đang dùng nhiều hơn bản miễn phí \(n) lịch gợi ý"])
     }
 
     /// "프로 기능이 모두 열려 있어요" — 내 혜택 요약 · 산 등급의 페이월 머리말
-    static func benefitsAllUnlocked(_ tier: ProTier) -> String {
+    public static func benefitsAllUnlocked(_ tier: ProTier) -> String {
         let t = trimName(tier)
         return pick([.korean: "\(t) 기능이 모두 열려 있어요", .english: "Everything in \(t) is unlocked", .japanese: "\(t)の機能がすべて使えます", .chinese: "\(t) 的功能已全部解锁", .german: "Alles aus \(t) ist freigeschaltet", .french: "Tout \(t) est débloqué", .spanish: "Todo lo de \(t) está desbloqueado", .italian: "Tutto \(t) è sbloccato", .portuguese: "Tudo do \(t) está liberado", .chineseTraditional: "\(t) 的功能已全部解鎖", .dutch: "Alles van \(t) is ontgrendeld", .swedish: "Allt i \(t) är upplåst", .norwegian: "Alt i \(t) er låst opp", .danish: "Alt i \(t) er låst op", .finnish: "Kaikki \(t)-ominaisuudet ovat auki", .polish: "Wszystko z planu \(t) jest odblokowane", .czech: "Vše z tarifu \(t) je odemčené", .greek: "Όλα όσα έχει το \(t) είναι ξεκλείδωτα", .turkish: "\(t) özelliklerinin hepsi açık", .russian: "Всё из тарифа \(t) открыто", .indonesian: "Semua fitur \(t) sudah terbuka", .thai: "ปลดล็อกทุกอย่างใน \(t) แล้ว", .vietnamese: "Đã mở mọi tính năng của \(t)"])
     }
 
-    static var benefitsLimitsHeader: String {
+    public static var benefitsLimitsHeader: String {
         pick([.korean: "무료 한도와 비교", .english: "Compared with Free", .japanese: "無料版との比較", .chinese: "与免费版对比", .german: "Im Vergleich zur Gratisversion", .french: "Par rapport à la version gratuite", .spanish: "Comparado con la versión gratis", .italian: "Rispetto alla versione gratuita", .portuguese: "Comparado com o grátis", .chineseTraditional: "與免費版比較", .dutch: "Vergeleken met gratis", .swedish: "Jämfört med gratis", .norwegian: "Sammenlignet med gratis", .danish: "Sammenlignet med gratis", .finnish: "Verrattuna ilmaisversioon", .polish: "W porównaniu z wersją darmową", .czech: "Ve srovnání s verzí zdarma", .greek: "Σε σύγκριση με τη δωρεάν έκδοση", .turkish: "Ücretsiz sürümle karşılaştırma", .russian: "По сравнению с бесплатной версией", .indonesian: "Dibandingkan versi gratis", .thai: "เทียบกับรุ่นฟรี", .vietnamese: "So với bản miễn phí"])
     }
 
     /// 올해 등록한 추천 일정 — 무료는 추천 목록 앞 3개까지 등록할 수 있다
-    static var benefitsRecommendationsRow: String {
+    public static var benefitsRecommendationsRow: String {
         pick([.korean: "올해 등록한 추천 일정", .english: "Recommended plans added this year", .japanese: "今年登録したおすすめ日程", .chinese: "今年添加的推荐行程", .german: "Dieses Jahr übernommene Vorschläge", .french: "Suggestions ajoutées cette année", .spanish: "Planes recomendados añadidos este año", .italian: "Piani consigliati aggiunti quest’anno", .portuguese: "Planos sugeridos adicionados este ano", .chineseTraditional: "今年加入的推薦行程", .dutch: "Dit jaar toegevoegde voorstellen", .swedish: "Förslag som lagts till i år", .norwegian: "Forslag lagt til i år", .danish: "Forslag tilføjet i år", .finnish: "Tänä vuonna lisätyt ehdotukset", .polish: "Propozycje dodane w tym roku", .czech: "Návrhy přidané letos", .greek: "Προτάσεις που πρόσθεσες φέτος", .turkish: "Bu yıl eklenen öneriler", .russian: "Рекомендации, добавленные в этом году", .indonesian: "Rencana rekomendasi yang ditambahkan tahun ini", .thai: "แผนแนะนำที่เพิ่มในปีนี้", .vietnamese: "Lịch gợi ý đã thêm năm nay"])
     }
 
     /// "무료 3개 · 지금 5개"
-    static func benefitsFreeVsNow(free f: Int, now n: Int) -> String {
+    public static func benefitsFreeVsNow(free f: Int, now n: Int) -> String {
         pick([.korean: "무료 \(f)개 · 지금 \(n)개", .english: "Free \(f) · Now \(n)", .japanese: "無料 \(f)件 · 現在 \(n)件", .chinese: "免费 \(f) 个 · 现在 \(n) 个", .german: "Gratis \(f) · Jetzt \(n)", .french: "Gratuit \(f) · Actuel \(n)", .spanish: "Gratis \(f) · Ahora \(n)", .italian: "Gratis \(f) · Ora \(n)", .portuguese: "Grátis \(f) · Agora \(n)", .chineseTraditional: "免費 \(f) 個 · 目前 \(n) 個", .dutch: "Gratis \(f) · Nu \(n)", .swedish: "Gratis \(f) · Nu \(n)", .norwegian: "Gratis \(f) · Nå \(n)", .danish: "Gratis \(f) · Nu \(n)", .finnish: "Ilmainen \(f) · Nyt \(n)", .polish: "Za darmo \(f) · Teraz \(n)", .czech: "Zdarma \(f) · Teď \(n)", .greek: "Δωρεάν \(f) · Τώρα \(n)", .turkish: "Ücretsiz \(f) · Şu an \(n)", .russian: "Бесплатно \(f) · Сейчас \(n)", .indonesian: "Gratis \(f) · Sekarang \(n)", .thai: "ฟรี \(f) · ตอนนี้ \(n)", .vietnamese: "Miễn phí \(f) · Hiện tại \(n)"])
     }
 
     /// "+2" 를 읽을 때 — 무료 한도를 넘은 만큼
-    static func benefitsBeyondFree(_ n: Int) -> String {
+    public static func benefitsBeyondFree(_ n: Int) -> String {
         pick([.korean: "무료보다 \(n)개 더", .english: "\(n) more than Free", .japanese: "無料より\(n)件多い", .chinese: "比免费版多 \(n) 个", .german: "\(n) mehr als gratis", .french: "\(n) de plus que la version gratuite", .spanish: "\(n) más que gratis", .italian: "\(n) in più rispetto a gratis", .portuguese: "\(n) a mais que o grátis", .chineseTraditional: "比免費版多 \(n) 個", .dutch: "\(n) meer dan gratis", .swedish: "\(n) fler än gratis", .norwegian: "\(n) flere enn gratis", .danish: "\(n) flere end gratis", .finnish: "\(n) enemmän kuin ilmaiseksi", .polish: "\(n) więcej niż za darmo", .czech: "o \(n) víc než zdarma", .greek: "\(n) παραπάνω από τη δωρεάν", .turkish: "Ücretsizden \(n) fazla", .russian: "на \(n) больше, чем бесплатно", .indonesian: "\(n) lebih banyak dari gratis", .thai: "มากกว่ารุ่นฟรี \(n)", .vietnamese: "Nhiều hơn bản miễn phí \(n)"])
     }
 
-    static func benefitsUnlockedHeader(_ tier: ProTier) -> String {
+    public static func benefitsUnlockedHeader(_ tier: ProTier) -> String {
         let t = trimName(tier)
         return pick([.korean: "\(t)로 열린 기능", .english: "Unlocked with \(t)", .japanese: "\(t)で使える機能", .chinese: "\(t) 解锁的功能", .german: "Mit \(t) freigeschaltet", .french: "Débloqué avec \(t)", .spanish: "Desbloqueado con \(t)", .italian: "Sbloccato con \(t)", .portuguese: "Liberado com \(t)", .chineseTraditional: "\(t) 解鎖的功能", .dutch: "Ontgrendeld met \(t)", .swedish: "Upplåst med \(t)", .norwegian: "Låst opp med \(t)", .danish: "Låst op med \(t)", .finnish: "Avattu tilauksella \(t)", .polish: "Odblokowane w planie \(t)", .czech: "Odemčeno s tarifem \(t)", .greek: "Ξεκλειδώθηκε με το \(t)", .turkish: "\(t) ile açılanlar", .russian: "Открыто с тарифом \(t)", .indonesian: "Terbuka dengan \(t)", .thai: "ปลดล็อกด้วย \(t)", .vietnamese: "Mở khóa với \(t)"])
     }
 
     /// 패밀리 — 일정을 함께 보는 가족 수
-    static var benefitsFamilyMembers: String {
+    public static var benefitsFamilyMembers: String {
         pick([.korean: "일정을 함께 보는 가족", .english: "Family sharing schedules", .japanese: "予定を共有している家族", .chinese: "共享日程的家人", .german: "Familie mit geteilten Plänen", .french: "Famille qui partage ses plannings", .spanish: "Familia que comparte su calendario", .italian: "Familiari che condividono i piani", .portuguese: "Família compartilhando agendas", .chineseTraditional: "共享行程的家人", .dutch: "Gezinsleden die planningen delen", .swedish: "Familj som delar scheman", .norwegian: "Familie som deler planer", .danish: "Familie, der deler planer", .finnish: "Aikataulut jakava perhe", .polish: "Rodzina udostępniająca plany", .czech: "Rodina se sdíleným plánem", .greek: "Οικογένεια που μοιράζεται προγράμματα", .turkish: "Planını paylaşan aile", .russian: "Семья с общим расписанием", .indonesian: "Keluarga yang berbagi jadwal", .thai: "ครอบครัวที่แชร์ตารางกัน", .vietnamese: "Gia đình chia sẻ lịch"])
     }
 
     /// 낮은 등급 — 위 등급에서 더 열리는 것
-    static func benefitsMoreHeader(_ tier: ProTier) -> String {
+    public static func benefitsMoreHeader(_ tier: ProTier) -> String {
         let t = trimName(tier)
         return pick([.korean: "\(t)에서 더 열리는 것", .english: "More with \(t)", .japanese: "\(t)でさらに使える機能", .chinese: "\(t) 还能解锁", .german: "Mehr mit \(t)", .french: "En plus avec \(t)", .spanish: "Más con \(t)", .italian: "In più con \(t)", .portuguese: "Mais com \(t)", .chineseTraditional: "\(t) 還能解鎖", .dutch: "Meer met \(t)", .swedish: "Mer med \(t)", .norwegian: "Mer med \(t)", .danish: "Mere med \(t)", .finnish: "Lisää tilauksella \(t)", .polish: "Więcej w planie \(t)", .czech: "Navíc s tarifem \(t)", .greek: "Περισσότερα με το \(t)", .turkish: "\(t) ile daha fazlası", .russian: "Больше с тарифом \(t)", .indonesian: "Lebih banyak dengan \(t)", .thai: "เพิ่มเติมใน \(t)", .vietnamese: "Thêm với \(t)"])
     }
 
-    static func benefitsExplore(_ tier: ProTier) -> String {
+    public static func benefitsExplore(_ tier: ProTier) -> String {
         let t = trimName(tier)
         return pick([.korean: "\(t) 살펴보기", .english: "Explore \(t)", .japanese: "\(t)を見る", .chinese: "了解 \(t)", .german: "\(t) ansehen", .french: "Découvrir \(t)", .spanish: "Ver \(t)", .italian: "Scopri \(t)", .portuguese: "Conhecer \(t)", .chineseTraditional: "了解 \(t)", .dutch: "\(t) bekijken", .swedish: "Utforska \(t)", .norwegian: "Utforsk \(t)", .danish: "Udforsk \(t)", .finnish: "Tutustu: \(t)", .polish: "Poznaj \(t)", .czech: "Prozkoumat \(t)", .greek: "Δες το \(t)", .turkish: "\(t)’yi incele", .russian: "Узнать о \(t)", .indonesian: "Lihat \(t)", .thai: "ดู \(t)", .vietnamese: "Khám phá \(t)"])
     }
 
-    static var benefitsSeeAll: String {
+    public static var benefitsSeeAll: String {
         pick([.korean: "등급별 기능 전체 보기", .english: "See All Plan Features", .japanese: "プラン別の機能をすべて見る", .chinese: "查看各方案全部功能", .german: "Alle Funktionen je Abo ansehen", .french: "Voir toutes les fonctions par formule", .spanish: "Ver todas las funciones por plan", .italian: "Vedi tutte le funzioni per piano", .portuguese: "Ver todos os recursos por plano", .chineseTraditional: "查看各方案全部功能", .dutch: "Alle functies per abonnement", .swedish: "Se alla funktioner per plan", .norwegian: "Se alle funksjoner per plan", .danish: "Se alle funktioner pr. abonnement", .finnish: "Näytä kaikki ominaisuudet tilauksittain", .polish: "Zobacz wszystkie funkcje planów", .czech: "Zobrazit všechny funkce tarifů", .greek: "Δες όλες τις δυνατότητες ανά πρόγραμμα", .turkish: "Planlara göre tüm özellikler", .russian: "Все возможности тарифов", .indonesian: "Lihat semua fitur per paket", .thai: "ดูฟีเจอร์ทั้งหมดของแต่ละแผน", .vietnamese: "Xem mọi tính năng theo gói"])
     }
 
-    static var benefitsRowHint: String {
+    public static var benefitsRowHint: String {
         pick([.korean: "열린 기능과 쓰고 있는 양을 봅니다", .english: "Shows what’s unlocked and how much you use it", .japanese: "使える機能と利用状況を表示します", .chinese: "查看已解锁的功能和使用情况", .german: "Zeigt, was freigeschaltet ist und wie viel du nutzt", .french: "Affiche ce qui est débloqué et votre utilisation", .spanish: "Muestra lo desbloqueado y cuánto lo usas", .italian: "Mostra cosa è sbloccato e quanto lo usi", .portuguese: "Mostra o que está liberado e quanto você usa", .chineseTraditional: "查看已解鎖的功能和使用情形", .dutch: "Toont wat er vrij is en hoeveel je het gebruikt", .swedish: "Visar vad som är upplåst och hur mycket du använder det", .norwegian: "Viser hva som er låst opp og hvor mye du bruker det", .danish: "Viser, hvad der er låst op, og hvor meget du bruger det", .finnish: "Näyttää, mitä on avattu ja paljonko käytät sitä", .polish: "Pokazuje, co jest odblokowane i ile z tego korzystasz", .czech: "Ukáže, co je odemčené a jak to využíváš", .greek: "Δείχνει τι έχει ξεκλειδωθεί και πόσο το χρησιμοποιείς", .turkish: "Nelerin açık olduğunu ve ne kadar kullandığını gösterir", .russian: "Показывает, что открыто и как вы этим пользуетесь", .indonesian: "Menampilkan fitur yang terbuka dan pemakaianmu", .thai: "แสดงสิ่งที่ปลดล็อกและการใช้งานของคุณ", .vietnamese: "Hiện tính năng đã mở và mức bạn đang dùng"])
     }
 
     // MARK: - 접근성 알림 (VoiceOver 가 화면 밖 변화를 읽는다)
 
-    static var a11yLeaveDeleted: String {
+    public static var a11yLeaveDeleted: String {
         pick([.korean: "휴가를 삭제했어요", .english: "Time off deleted", .japanese: "休暇を削除しました", .chinese: "已删除休假", .german: "Urlaub gelöscht", .french: "Congé supprimé", .spanish: "Vacaciones eliminadas", .italian: "Ferie eliminate", .portuguese: "Folga excluída", .chineseTraditional: "已刪除休假", .dutch: "Verlof verwijderd", .swedish: "Ledigheten har raderats", .norwegian: "Fridagen er slettet", .danish: "Fridagen er slettet", .finnish: "Loma poistettu", .polish: "Urlop usunięty", .czech: "Volno bylo smazáno", .greek: "Η άδεια διαγράφηκε", .turkish: "İzin silindi", .russian: "Отпуск удалён", .indonesian: "Cuti dihapus", .thai: "ลบวันลาแล้ว", .vietnamese: "Đã xóa ngày nghỉ"])
     }
 
-    static func a11yRecommendationAdded(_ title: String) -> String {
+    public static func a11yRecommendationAdded(_ title: String) -> String {
         pick([.korean: "\(title) 추천 일정을 등록했어요", .english: "Added the recommended plan: \(title)", .japanese: "おすすめ日程「\(title)」を登録しました", .chinese: "已添加推荐行程：\(title)", .german: "Vorschlag übernommen: \(title)", .french: "Suggestion ajoutée : \(title)", .spanish: "Plan recomendado añadido: \(title)", .italian: "Piano consigliato aggiunto: \(title)", .portuguese: "Plano sugerido adicionado: \(title)", .chineseTraditional: "已加入推薦行程：\(title)", .dutch: "Voorstel toegevoegd: \(title)", .swedish: "Förslaget har lagts till: \(title)", .norwegian: "Forslaget er lagt til: \(title)", .danish: "Forslaget er tilføjet: \(title)", .finnish: "Ehdotus lisätty: \(title)", .polish: "Dodano propozycję: \(title)", .czech: "Návrh přidán: \(title)", .greek: "Η πρόταση προστέθηκε: \(title)", .turkish: "Öneri eklendi: \(title)", .russian: "Рекомендация добавлена: \(title)", .indonesian: "Rencana rekomendasi ditambahkan: \(title)", .thai: "เพิ่มแผนแนะนำแล้ว: \(title)", .vietnamese: "Đã thêm lịch gợi ý: \(title)"])
     }
 
     // MARK: - 아이콘만 있는 단추 이름 (VoiceOver · 음성 제어)
 
-    static var a11yCollapse: String {
+    public static var a11yCollapse: String {
         pick([.korean: "접기", .english: "Collapse", .japanese: "閉じる", .chinese: "收起", .german: "Einklappen", .french: "Réduire", .spanish: "Contraer", .italian: "Comprimi", .portuguese: "Recolher", .chineseTraditional: "收合", .dutch: "Inklappen", .swedish: "Fäll ihop", .norwegian: "Skjul", .danish: "Skjul", .finnish: "Pienennä", .polish: "Zwiń", .czech: "Sbalit", .greek: "Σύμπτυξη", .turkish: "Daralt", .russian: "Свернуть", .indonesian: "Ciutkan", .thai: "ย่อ", .vietnamese: "Thu gọn"])
     }
 
-    static var a11yBack: String {
+    public static var a11yBack: String {
         pick([.korean: "이전", .english: "Back", .japanese: "戻る", .chinese: "返回", .german: "Zurück", .french: "Retour", .spanish: "Atrás", .italian: "Indietro", .portuguese: "Voltar", .chineseTraditional: "返回", .dutch: "Terug", .swedish: "Tillbaka", .norwegian: "Tilbake", .danish: "Tilbage", .finnish: "Takaisin", .polish: "Wstecz", .czech: "Zpět", .greek: "Πίσω", .turkish: "Geri", .russian: "Назад", .indonesian: "Kembali", .thai: "ย้อนกลับ", .vietnamese: "Quay lại"])
     }
 }

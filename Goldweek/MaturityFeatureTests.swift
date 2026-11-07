@@ -10,6 +10,7 @@ import Foundation
 import XCTest
 import LeeoKit
 @testable import Goldweek
+import GoldweekCore
 
 final class MaturityFeatureTests: XCTestCase {
 
@@ -209,6 +210,23 @@ final class MaturityFeatureTests: XCTestCase {
         XCTAssertTrue(RecommendationGate.policy.hasAnyGate)
     }
 
+    // MARK: - 페이월 값
+
+    /// 연간 배지는 월간 열두 달보다 10% 넘게 쌀 때만, 평생은 연간 두 해치 이상일 때만 말한다.
+    func testPaywallPricing() {
+        // 프로: 월 6.49 × 12 = 77.88, 연 19.99 → 74% 절약
+        let saving = try? XCTUnwrap(PaywallPricing.yearlySaving(monthly: 6.49, yearly: 19.99))
+        XCTAssertEqual(Int(((saving ?? 0) * 100).rounded()), 74)
+        XCTAssertNil(PaywallPricing.yearlySaving(monthly: 10, yearly: 115))   // 4% 만 싸다
+        XCTAssertNil(PaywallPricing.yearlySaving(monthly: nil, yearly: 19.99))
+        XCTAssertNil(PaywallPricing.yearlySaving(monthly: 0, yearly: 19.99))
+        // 평생 59.99 ÷ 연 19.99 = 3.0 → 3년, 29.99 ÷ 9.99 = 3.0 → 3년, 19.99 ÷ 9.99 = 2.0 → 2년
+        XCTAssertEqual(PaywallPricing.lifetimeYears(yearly: 19.99, lifetime: 59.99), 3)
+        XCTAssertEqual(PaywallPricing.lifetimeYears(yearly: 9.99, lifetime: 19.99), 2)
+        XCTAssertNil(PaywallPricing.lifetimeYears(yearly: 19.99, lifetime: 29.99))   // 1.5년
+        XCTAssertNil(PaywallPricing.lifetimeYears(yearly: 0, lifetime: 29.99))
+    }
+
     // MARK: - 선물 · 팁
 
     /// 선물 · 팁 상품이 Pro 를 열면 작은 결제가 평생 Pro 가 된다(되돌릴 수 없다).
@@ -218,7 +236,18 @@ final class MaturityFeatureTests: XCTestCase {
         let tips = try XCTUnwrap(paywall.tipJar)
         XCTAssertEqual(gift.productID, ProManager.giftProductID)
         XCTAssertEqual(tips.productIDs, ProManager.tipProductIDs)
-        for id in [gift.productID] + tips.productIDs {
+        // Plus 선물은 플러스 평생을 연다. 묶음 열쇠가 Pro 선물(번들 ID)과 겹치면 두 등급의 코드가 섞인다.
+        let plusGift = try XCTUnwrap(paywall.moreGifts.first)
+        XCTAssertEqual(paywall.moreGifts.count, 1)
+        XCTAssertEqual(plusGift.productID, ProManager.plusGiftProductID)
+        XCTAssertEqual(plusGift.grantsProductID, ProManager.plusLifetimeProductID)
+        XCTAssertEqual(ProManager.tier(of: plusGift.grantsProductID), .plus)
+        XCTAssertNotEqual(plusGift.poolKey, gift.poolKey)
+        XCTAssertEqual(Set(paywall.gifts.map(\.productID)), ProManager.giftProductIDs)
+        // 오퍼 코드 묶음을 채우기 전에는 팔지 않는다
+        XCTAssertFalse(gift.sellsGifts)
+        XCTAssertFalse(plusGift.sellsGifts)
+        for id in [gift.productID, plusGift.productID] + tips.productIDs {
             XCTAssertFalse(paywall.productIDs.contains(id), id)
             XCTAssertFalse(paywall.entitlementIDs.contains(id), id)
             XCTAssertEqual(ProManager.tier(of: id), .free, id)

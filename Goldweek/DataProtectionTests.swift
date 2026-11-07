@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import XCTest
+import GoldweekCore
 
 final class DataProtectionTests: XCTestCase {
     

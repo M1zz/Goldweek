@@ -7,14 +7,13 @@
 
 import SwiftUI
 import SwiftData
-import StoreKit   // @Environment(\.requestReview) 의 RequestReviewAction
+import GoldweekCore
 
 struct AddLeaveView: View {
     @Bindable var profile: UserProfile
     var initialDate: Date? = nil
     /// 빠른 넣기에서 고른 끝나는 날 — "반차 · 종류 · 메모"로 넘어올 때 기간을 그대로 잇는다
     var initialEndDate: Date? = nil
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \LeaveRecord.startDate, order: .reverse) private var leaveRecords: [LeaveRecord]
     @Query(sort: \BonusLeave.grantedDate, order: .reverse) private var bonusLeaves: [BonusLeave]
@@ -80,7 +79,6 @@ struct AddLeaveView: View {
                 if selectedTab == 0 || isLeisure {
                     LeaveRegistrationView(
                         profile: profile,
-                        totalAvailableLeave: totalAvailableLeave,
                         leaveRecords: Array(leaveRecords.prefix(5)),
                         initialDate: initialDate,
                         initialEndDate: initialEndDate
@@ -286,13 +284,11 @@ struct LeaveStatusHeader: View {
 // MARK: - 휴가 등록 뷰
 struct LeaveRegistrationView: View {
     @Bindable var profile: UserProfile
-    let totalAvailableLeave: Double
     let leaveRecords: [LeaveRecord]
     var initialDate: Date? = nil
     var initialEndDate: Date? = nil
 
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.requestReview) private var requestReview
     /// 처음 열 때 시작일을 바꾸면 아래 onChange 가 끝나는 날을 길이만큼 옮긴다 — 그때 받은 끝나는 날을 쓴다
     @State private var pendingInitialEnd: Date?
 
@@ -318,11 +314,6 @@ struct LeaveRegistrationView: View {
     @State private var isSaving = false
     @State private var selectedBonusLeave: BonusLeave?
     @FocusState private var isNoteFocused: Bool
-
-    var committedLeave: Double {
-        LeaveUsageCalculator.currentSummary(records: Array(allLeaveRecords),
-                                            startMonth: profile.yearStart).annualCommitted
-    }
 
     /// 만료되지 않은 보너스 연차
     var availableBonusLeaves: [BonusLeave] {
@@ -942,7 +933,6 @@ struct LeaveRegistrationView: View {
             HapticFeedback.success()
             UsageReportingService.record(event: "leave_added:\(customType == nil ? category.rawValue : "custom")")
             if length == .hours { UsageReportingService.record(event: "leave_added_hours") }
-            ReviewManager.shared.recordLeaveRegistration()
         } catch {
             alertMessage = Strings.saveFailed
             isSuccess = false
@@ -957,64 +947,6 @@ struct LeaveRegistrationView: View {
 
         isSaving = false
         showingAlert = true
-    }
-}
-
-// MARK: - 휴가 유형 선택기
-struct LeaveTypePicker: View {
-    @Binding var selectedType: LeaveType
-
-    let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
-
-    var body: some View {
-        LazyVGrid(columns: columns, spacing: 12) {
-            ForEach(LeaveType.allCases) { type in
-                LeaveTypeButton(
-                    type: type,
-                    isSelected: selectedType == type
-                ) {
-                    selectedType = type
-                }
-            }
-        }
-        .padding(.vertical, 8)
-    }
-}
-
-struct LeaveTypeButton: View {
-    let type: LeaveType
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button {
-            HapticFeedback.selection()
-            action()
-        } label: {
-            VStack(spacing: 4) {
-                Image(systemName: type.icon)
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                Text(Strings.leaveTypeName(type))
-                    .font(.body)
-                    .fontWeight(.semibold)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
-            .background(isSelected ? type.themeColor : Color(.systemGray5))
-            .foregroundStyle(isSelected ? .white : .primary)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(isSelected ? type.themeColor : Color(.systemGray4), lineWidth: isSelected ? 0 : 1)
-            )
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 
@@ -1365,7 +1297,7 @@ struct EditBonusLeaveSheet: View {
                         Text("\(String(format: editedDays == Double(Int(editedDays)) ? "%.0f" : "%.2g", editedDays))\(Strings.dayUnitSuffix)")
                             .fontWeight(.semibold)
                             .foregroundStyle(.blue)
-                        Stepper(value: $editedDays, in: max(bonus.usedDays, 0.25)...365, step: 0.25) {
+                        Stepper(value: $editedDays, in: min(max(bonus.usedDays, 0.25), 365)...365, step: 0.25) {
                             Text(Strings.daysToAdd)
                         }
                         .labelsHidden()
@@ -1671,6 +1603,9 @@ struct LeaveRecordRow: View {
 // 시트 양식 대신 달력 하나로 — 시작일과 끝나는 날을 누르면 "연차 2일 → 5일 쉼"이 바로 보이고,
 // 하루만 더 쓰면 연휴가 이어질 때만 한 번 제안한다. 반차 · 종류 · 메모는 원래 양식(`AddLeaveView`)으로 넘긴다.
 // 레퍼런스: Airbnb 날짜 고르기(두 번 눌러 기간), Google Flights 날짜 색(효율), 항공권 앱의 "하루 일찍" 넛지.
+//
+// 위의 '앞으로 쉴 날 · 지난 휴가'로 나눈다. 지난 휴가는 기간이 아니라 쉬었던 날을 여러 달에 걸쳐 콕콕 고르고
+// 한 번에 저장한다 — 지나간 휴가를 하나씩 넣으려면 열고 · 달 넘기고 · 저장하고 · 닫기를 휴가마다 되풀이해야 했다.
 
 struct QuickAddLeaveSheet: View {
     @Bindable var profile: UserProfile
@@ -1692,8 +1627,14 @@ struct QuickAddLeaveSheet: View {
     @State private var showingFullForm = false
     @State private var recordCountBeforeFullForm = 0
     @State private var showingSaveError = false
+    @State private var mode: Mode = .upcoming
+    /// 지난 휴가로 고른 날 (그 날 0시)
+    @State private var pastDays: Set<Date> = []
+
+    enum Mode: Hashable { case upcoming, past }
 
     private let calendar = Calendar.app
+    private var today: Date { calendar.startOfDay(for: Date()) }
     private var dayOff: DayOffCalendar { .shared }
     private var isLeisure: Bool { profile.userType == .leisure }
 
@@ -1702,6 +1643,7 @@ struct QuickAddLeaveSheet: View {
         let rest: Int
         let leave: Double
         let remainingAfter: Double
+        var isPast = false
     }
 
     struct Block { let start: Date; let end: Date; var days: Int }
@@ -1792,7 +1734,15 @@ struct QuickAddLeaveSheet: View {
                     savedView(saved)
                         .transition(.opacity.combined(with: .scale(scale: 0.96)))
                 } else {
-                    pickView
+                    VStack(spacing: 0) {
+                        Picker("", selection: $mode.animation(.snappy)) {
+                            Text(Strings.quickAddModeUpcoming).tag(Mode.upcoming)
+                            Text(Strings.quickAddModePast).tag(Mode.past)
+                        }
+                        .pickerStyle(.segmented)
+                        .padding([.horizontal, .top])
+                        if mode == .past { pastPickView } else { pickView }
+                    }
                 }
             }
             .background(Color(.systemGroupedBackground))
@@ -1813,6 +1763,23 @@ struct QuickAddLeaveSheet: View {
             let d = calendar.startOfDay(for: initialDate)
             start = d; end = d
             month = calendar.date(from: calendar.dateComponents([.year, .month], from: d)) ?? d
+            // 지난 날을 눌러 열었으면 지난 휴가로 — 그 날을 골라 둔다
+            if d < today {
+                mode = .past
+                if canPickPast(d) { pastDays = [d] }
+            }
+        }
+        .onDisappear {
+            // 쓴 연차보다 이틀 이상 더 쉬게 됐다 — 시트가 닫힌 뒤에 묻는다(시트 위에선 프롬프트가 못 뜬다)
+            if let saved, !saved.isPast, Double(saved.rest) >= saved.leave + 2 {
+                ReviewMoments.shared.trigger(.longerRestSaved, delay: 0.8)
+            }
+        }
+        .onChange(of: mode) { _, newMode in
+            // 지난 휴가로 바꿨는데 보던 달이 앞날이면 이번 달로
+            if newMode == .past, month > today {
+                month = calendar.date(from: calendar.dateComponents([.year, .month], from: today)) ?? today
+            }
         }
         .sheet(isPresented: $showingFullForm, onDismiss: {
             // 원래 양식에서 넣었으면 이 화면도 닫는다 — 그냥 닫았으면 고르던 그대로 둔다
@@ -1915,9 +1882,74 @@ struct QuickAddLeaveSheet: View {
         .animation(.snappy, value: mag?.day)
     }
 
+    /// 지난 휴가로 고를 수 있는 날 — 오늘까지의 근무일, 이미 넣은 종일 휴가는 빼고
+    /// `leave` 는 이미 넣은 종일 휴가 날 — 달력 칸마다 다시 세지 않게 미리 만든 것을 받는다
+    private func canPickPast(_ d: Date, leave: Set<Date>? = nil) -> Bool {
+        let d = calendar.startOfDay(for: d)
+        return d <= today && !dayOff.isDayOff(d) && !(leave ?? existingLeaveDays).contains(d)
+    }
+
+    private var pastPickView: some View {
+        let leave = existingLeaveDays
+        return VStack(alignment: .leading, spacing: 16) {
+            Text(pastDays.isEmpty ? Strings.quickAddPastEmpty : Strings.quickAddPastSummary(pastDays.count))
+                .font(.title2.bold())
+                .contentTransition(.numericText())
+                .fixedSize(horizontal: false, vertical: true)
+                .animation(.snappy, value: pastDays.count)
+
+            QuickAddMonthGrid(
+                month: $month,
+                start: start, end: end,
+                restBlock: (start, end),
+                ghost: nil,
+                showsHeat: false,
+                firstWeekday: HolidayService.firstWeekday(for: dayOff.country, override: firstWeekdayRaw),
+                isOff: { isOff($0, leave: leave) },
+                heatDays: { _ in 0 },
+                onTap: togglePast,
+                pickedDays: pastDays,
+                isEnabled: { canPickPast($0, leave: leave) }
+            )
+            .padding()
+            .cardSurface()
+
+            Text(Strings.quickAddPastHint)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding()
+    }
+
+    private func togglePast(_ d: Date) {
+        let d = calendar.startOfDay(for: d)
+        guard canPickPast(d) else { return }
+        withAnimation(.snappy) {
+            if pastDays.contains(d) { pastDays.remove(d) } else { pastDays.insert(d) }
+        }
+        HapticFeedback.selection()
+    }
+
+    /// 고른 날을 휴가 기록으로 묶는다 — 사이가 주말 · 공휴일뿐이면 하나로 (금 · 월을 고르면 금~월 하나)
+    private func pastRuns() -> [(start: Date, end: Date)] {
+        var runs: [(start: Date, end: Date)] = []
+        for d in pastDays.sorted() {
+            if let last = runs.last {
+                var gap = day(last.end, 1)
+                while gap < d && dayOff.isDayOff(gap) { gap = day(gap, 1) }
+                if gap == d { runs[runs.count - 1].end = d; continue }
+            }
+            runs.append((d, d))
+        }
+        return runs
+    }
+
     private var saveBar: some View {
         HStack(spacing: 12) {
             Button {
+                // 지난 휴가를 고르던 중이면 첫 날로 원래 양식을 연다 (반차 · 종류 · 메모)
+                if mode == .past, let first = pastDays.min() { start = first; end = first }
                 recordCountBeforeFullForm = allLeaveRecords.count
                 showingFullForm = true
             } label: {
@@ -1928,13 +1960,13 @@ struct QuickAddLeaveSheet: View {
             }
             .buttonStyle(.bordered)
 
-            Button(action: save) {
+            Button(action: mode == .past ? savePast : save) {
                 Text(Strings.save)
                     .font(.body.bold())
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .disabled(!canSave)
+            .disabled(mode == .past ? pastDays.isEmpty : !canSave)
         }
         .controlSize(.large)
         .padding()
@@ -1955,11 +1987,17 @@ struct QuickAddLeaveSheet: View {
                     .font(.system(.largeTitle, design: .rounded, weight: .black))
                     .foregroundStyle(AppTheme.Colors.gold)
             }
-            Text(Strings.quickAddRestDays(s.rest))
-                .font(.title2.bold())
-            Text(verbatim: s.start.appFormatted(date: .full))
-                .font(.body)
-                .foregroundStyle(.secondary)
+            if s.isPast {
+                Text(Strings.quickAddPastSaved(Int(s.leave)))
+                    .font(.title2.bold())
+                    .multilineTextAlignment(.center)
+            } else {
+                Text(Strings.quickAddRestDays(s.rest))
+                    .font(.title2.bold())
+                Text(verbatim: s.start.appFormatted(date: .full))
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+            }
             if !isLeisure {
                 Text(Strings.quickAddRemaining(shownRemaining))
                     .font(.title3.bold())
@@ -1984,6 +2022,46 @@ struct QuickAddLeaveSheet: View {
     }
 
     // MARK: 동작
+
+    /// 지난 휴가를 한 번에 — 고른 날을 묶어 '사용함' 기록으로 넣는다. 하나라도 실패하면 모두 되돌린다
+    private func savePast() {
+        let runs = pastRuns()
+        guard !runs.isEmpty else { return }
+        let before = LeaveUsageCalculator.availableAnnual(on: today, records: Array(allLeaveRecords),
+                                                          annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStart)
+        let records = runs.map {
+            LeaveRecord(startDate: $0.start, endDate: $0.end, type: .annual, status: .used, length: .full)
+        }
+        records.forEach { modelContext.insert($0) }
+        do {
+            try modelContext.save()
+            let ids = Set(records.map(\.id))
+            let all = allLeaveRecords.filter { !ids.contains($0.id) } + records
+            if BonusLeaveReconciler.reconcile(records: all, bonuses: unusedBonusLeaves) {
+                try? modelContext.save()
+            }
+        } catch {
+            records.forEach { modelContext.delete($0) }
+            HapticFeedback.error()
+            showingSaveError = true
+            return
+        }
+        HapticFeedback.success()
+        for _ in records { UsageReportingService.record(event: "leave_added:\(LeaveType.annual.rawValue)") }
+        UsageReportingService.record(event: "leave_added_past_batch")
+
+        let after = LeaveUsageCalculator.availableAnnual(on: today, records: allLeaveRecords.filter { r in !records.contains { $0.id == r.id } } + records,
+                                                         annualGrant: profile.totalAnnualLeave, startMonth: profile.yearStart)
+        shownRemaining = before
+        withAnimation(.snappy) {
+            saved = Saved(start: runs[0].start, rest: 0, leave: Double(pastDays.count),
+                          remainingAfter: after, isPast: true)
+        }
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(350))
+            withAnimation(.smooth(duration: 0.6)) { shownRemaining = after }
+        }
+    }
 
     /// 하루만 골라 둔 상태에서 뒤의 날을 누르면 기간, 그 밖에는 그 날 하루로 새로 고른다
     private func pick(_ d: Date) {
@@ -2028,7 +2106,6 @@ struct QuickAddLeaveSheet: View {
         HapticFeedback.success()
         UsageReportingService.record(event: "leave_added:\(LeaveType.annual.rawValue)")
         UsageReportingService.record(event: "leave_added_quick")
-        ReviewManager.shared.recordLeaveRegistration()
 
         // 남은 연차가 굴러가며 줄어든다
         shownRemaining = before
@@ -2055,6 +2132,10 @@ private struct QuickAddMonthGrid: View {
     let isOff: (Date) -> Bool
     let heatDays: (Date) -> Int
     let onTap: (Date) -> Void
+    /// 지난 휴가 — 기간 대신 하루씩 고른 날. nil 이면 기간으로 고른다
+    var pickedDays: Set<Date>? = nil
+    /// 누를 수 있는 날 (지난 휴가에서는 오늘까지의 근무일만)
+    var isEnabled: (Date) -> Bool = { _ in true }
 
     private let calendar = Calendar.app
     @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
@@ -2125,9 +2206,11 @@ private struct QuickAddMonthGrid: View {
     @ViewBuilder
     private func cell(_ date: Date) -> some View {
         let off = isOff(date)
-        let selected = within(date, (start, end))
+        let picking = pickedDays != nil
+        let selected = pickedDays.map { $0.contains(calendar.startOfDay(for: date)) } ?? within(date, (start, end))
         let isLeave = selected && !off
-        let inRest = within(date, restBlock)
+        let inRest = !picking && within(date, restBlock)
+        let enabled = isEnabled(date)
         let inGhost = ghost.map { within(date, $0) && !inRest } ?? false
         let heat = (showsHeat && !off && !selected) ? heatDays(date) : 0
         let weekday = calendar.component(.weekday, from: date)
@@ -2164,8 +2247,10 @@ private struct QuickAddMonthGrid: View {
             .frame(height: 44)
             .frame(maxWidth: .infinity)
             .contentShape(Rectangle())
+            .opacity(enabled || selected ? 1 : 0.3)
         }
         .buttonStyle(.plain)
+        .disabled(!enabled)
         .accessibilityLabel(Text(verbatim: date.appFormatted(date: .full)))
         .accessibilityAddTraits(selected ? .isSelected : [])
     }

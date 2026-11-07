@@ -8,6 +8,7 @@
 import Foundation
 import WidgetKit
 import SwiftData
+import GoldweekCore
 
 class WidgetService {
     static let shared = WidgetService()
@@ -169,30 +170,5 @@ class WidgetService {
         }
 
         return (elapsedRatio, idealUsedRatio, actualUsedRatio, burnRate, remainingDays)
-    }
-
-    /// 모든 위젯 데이터 초기화
-    func clearWidgetData() {
-        logInfo("위젯 데이터 초기화 시작", category: .widget)
-
-        guard let defaults = UserDefaults(suiteName: suiteName) else {
-            logError("App Group UserDefaults 접근 실패: \(suiteName)", category: .widget)
-            return
-        }
-
-        defaults.removeObject(forKey: "remainingLeave")
-        defaults.removeObject(forKey: "totalLeave")
-        defaults.removeObject(forKey: "usedLeave")
-        defaults.removeObject(forKey: "bonusLeave")
-        defaults.removeObject(forKey: "nextLeaveDate")
-        defaults.removeObject(forKey: "nextLeaveType")
-        defaults.removeObject(forKey: "nextLeaveNote")
-        defaults.removeObject(forKey: "userName")
-        defaults.removeObject(forKey: "upcomingLeaves")
-        defaults.set(-1, forKey: "daysUntilNextLeave")
-        defaults.set(0, forKey: "nextLeaveDuration")
-
-        WidgetCenter.shared.reloadAllTimelines()
-        logInfo("위젯 데이터 초기화 완료", category: .widget)
     }
 }

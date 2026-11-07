@@ -8,6 +8,7 @@
 import Foundation
 import os
 import LeeoKit
+import GoldweekCore
 
 /// 켤 때마다 같은 자리에서 죽으면 다음 실행은 **세이프 모드**로 연다.
 ///
@@ -55,11 +56,5 @@ enum AppSignpost {
         let state = signposter.beginInterval(name, id: signposter.makeSignpostID())
         defer { signposter.endInterval(name, state) }
         return try body()
-    }
-
-    static func measure<T>(_ name: StaticString, _ body: () async throws -> T) async rethrows -> T {
-        let state = signposter.beginInterval(name, id: signposter.makeSignpostID())
-        defer { signposter.endInterval(name, state) }
-        return try await body()
     }
 }

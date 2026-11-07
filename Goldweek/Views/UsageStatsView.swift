@@ -17,6 +17,7 @@
 import SwiftUI
 import Charts
 import LeeoKit
+import GoldweekCore
 
 struct UsageStatsView: View {
     @State private var snapshots: [UsageReportingService.Snapshot] = []

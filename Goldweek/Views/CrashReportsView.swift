@@ -17,6 +17,7 @@
 import SwiftUI
 import CloudKit
 import LeeoKit
+import GoldweekCore
 
 struct CrashReportsView: View {
     @State private var reports: [LeeoCrashReport] = []

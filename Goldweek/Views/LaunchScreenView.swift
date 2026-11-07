@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GoldweekCore
 
 struct LaunchScreenView: View {
     /// 움직임 줄이기 — 튀어 오르거나 밀려 들어오지 않고 그 자리에서 서서히 나타난다

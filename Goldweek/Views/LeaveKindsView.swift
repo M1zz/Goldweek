@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import GoldweekCore
 
 struct LeaveKindsView: View {
     @Environment(\.modelContext) private var modelContext

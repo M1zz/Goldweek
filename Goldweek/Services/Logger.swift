@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GoldweekCore
 import os.log
 
 // MARK: - 로그 카테고리
@@ -26,15 +27,6 @@ enum LogLevel: String {
     case info = "INFO"
     case warning = "WARNING"
     case error = "ERROR"
-
-    var osLogType: OSLogType {
-        switch self {
-        case .debug: return .debug
-        case .info: return .info
-        case .warning: return .default
-        case .error: return .error
-        }
-    }
 
     var emoji: String {
         switch self {
@@ -101,12 +93,6 @@ final class AppLogger {
     func error(_ message: String, category: LogCategory = .app, file: String = #file, function: String = #function, line: Int = #line) {
         log(message, level: .error, category: category, file: file, function: function, line: line)
     }
-
-    // MARK: - 에러 로깅
-    func logError(_ error: Error, message: String? = nil, category: LogCategory = .app, file: String = #file, function: String = #function, line: Int = #line) {
-        let errorMessage = message ?? "Error occurred"
-        log("\(errorMessage): \(error.localizedDescription)", level: .error, category: category, file: file, function: function, line: line)
-    }
 }
 
 // MARK: - 전역 로깅 함수
@@ -124,8 +110,4 @@ func logWarning(_ message: String, category: LogCategory = .app, file: String = 
 
 func logError(_ message: String, category: LogCategory = .app, file: String = #file, function: String = #function, line: Int = #line) {
     AppLogger.shared.error(message, category: category, file: file, function: function, line: line)
-}
-
-func logError(_ error: Error, message: String? = nil, category: LogCategory = .app, file: String = #file, function: String = #function, line: Int = #line) {
-    AppLogger.shared.logError(error, message: message, category: category, file: file, function: function, line: line)
 }

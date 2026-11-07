@@ -15,6 +15,7 @@
 
 import SwiftUI
 import LeeoKit
+import GoldweekCore
 
 extension GoldweekSpec {
     static var roadmap: [LeeoRoadmapItem] {[

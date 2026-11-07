@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import GoldweekCore
 
 struct TimeMachineView: View {
     @Environment(\.modelContext) private var modelContext

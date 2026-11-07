@@ -67,6 +67,7 @@ Pro는 "없어도 되지만 있으면 시간과 머리를 아껴 주는 것"에 
 | 구독 졸업 (구독자만 사는 프로 평생) | `com.Ysoup.LeaveWise.pro.graduate` | 41.99 USD | 69,000원 | 새로 |
 | 패밀리 연 구독 | `com.Ysoup.LeaveWise.family.yearly` | 19.99 USD | 33,000원 | **판매 중지** (2.4.2), 구독 중인 사람의 갱신가를 프로 연과 같게 내림 |
 | 선물 | `.gift.pro` | 59.99 USD | 99,000원 | 올림 (프로 평생과 같게, 2026-11-17) |
+| Plus 선물 | `.gift.plus` | 29.99 USD (11-17 까지 19.99) | 52,000원 (11-17 까지 33,000원) | 새로 (플러스 평생과 같게) |
 | 팁 | `.tip.small/medium/large` | | | 그대로 |
 
 - **처음 보는 사람에게 연 구독 첫 해 반값.** App Store 의 첫 구독 할인(선결제 1년, 가격 절반)이고 상품은 같은 연 구독이다.
@@ -75,7 +76,8 @@ Pro는 "없어도 되지만 있으면 시간과 머리를 아껴 주는 것"에 
   떠난 구독자에게 프로 연 첫 해 9.99 복귀 할인(App Store 복귀 할인, 12월 말~1월). 프로 평생은 가족 공유로 6명까지(`isFamilyShareable` 일 때만 표시).
   11-17 뒤 평생 할인은 하지 않는다. 오른다고 알린 말이 거짓 마감이 되고 서둘러 산 사람이 손해를 본다.
 - 평생은 연 구독의 3배 언저리다. 평생 가격은 2026-11-17 에 올린다. 그날 전까지 페이월에 `LeeoLifetimePriceNotice` 한 줄이 선다.
-- **주 · 월 구독은 연 구독 아래에 펼쳐서 판다**(월 = 연 ÷ 3, 주 = 월 × 0.4, 포트폴리오 규칙). 졸업가 대상이 아니다.
+- **페이월은 한 틀**(2026-11, 클립키보드와 같다): 플러스 | 프로 전환, 혜택 네 줄, **월간 · 연간 · 평생** 세로 목록, 구매 단추 하나. 비교표는 접어 둔다.
+  주간 구독은 페이월에서 팔지 않는다(상품은 남기고, 구독 중인 사람의 권한은 그대로). 월 = 연 ÷ 3, 주 = 월 × 0.4 (포트폴리오 규칙). 졸업가 대상이 아니다.
   한 주 값 + 졸업가로 평생이 싸지기 때문이다. 이들이 평생으로 옮길 때는 페이월에서 정가로 산다.
   위험: 연차 계획은 연초에 몰리니 1월에 한 달만 내고 해지할 수 있다. 배포 뒤 연 구독 비율을 본다.
 - 구독 그룹 "Goldweek" 하나에 프로 연이 위 레벨, 플러스 연이 아래 레벨. 올리면 즉시 바뀌고 남은 기간은 애플이 정산한다.
@@ -143,8 +145,12 @@ Pro는 "없어도 되지만 있으면 시간과 머리를 아껴 주는 것"에 
   설정 "선물과 응원" 에 행이 서고, 홈에 부탁 카드(`LeeoTipAskCard`)가 선다.
   부탁은 **프로 트림 이상**에게만, 올해 추천으로 세운 계획 수(3 · 5 · 10)나 휴가 기록 수(30 · 100)를 넘어섰을 때만(`TipAskMoments`).
   얼마나 드물게는 LeeoKit 규칙(물으면 60일, 낸 사람은 180일, '다음에' 세 번이면 끝).
-- **선물**: `com.Ysoup.LeaveWise.gift.pro` (소모성). 받은 사람에게 평생 프로(`com.Ysoup.LeaveWise.pro`)를 산 것과 같은 권한을 연다.
-  기록은 `iCloud.com.Ysoup.FeedbackHub` 공개 DB(`LeeoGift` · `LeeoGiftRedemption`)와 받은 사람 비공개 DB(`LeeoGiftClaims`).
+- **선물**: `com.Ysoup.LeaveWise.gift.pro` → 프로 평생, `com.Ysoup.LeaveWise.gift.plus` → 플러스 평생 (둘 다 소모성, 값은 받는 평생 상품과 같다).
+  구독은 선물하지 않는다 — 선물은 그 등급의 평생이다.
+  2.4.4 부터(LeeoKit 3.36) 산 사람은 **App Store 오퍼 코드 링크**를 건넨다(자체 코드로 여는 것은 심사 3.1.1 거절 사유).
+  오퍼 코드: 프로 평생 "LeeoKit Gift", 플러스 평생 "LeeoKit Gift Plus"(무료, 일회용 500장, 2027-05-01 만료). 묶음은 FeedbackHub 에서 등급마다 채운다.
+  판매(`sellsGifts`)는 묶음을 채우고 실기기에서 링크를 확인한 뒤에 연다. 그 전에는 받기(오퍼 코드 시트)만 선다.
+  예전 방식(LeeoKit 코드)으로 받은 프로 선물의 기록은 `iCloud.com.Ysoup.FeedbackHub` 공개 DB(`LeeoGift` · `LeeoGiftRedemption`)와 받은 사람 비공개 DB(`LeeoGiftClaims`).
   이미 프로 이상을 **산** 사람은 받지 않는다(코드를 다른 사람에게 넘긴다).
 - ⚠️ 팁 · 선물 상품은 `ProManager.allProductIDs`(= Spec 의 productIDs · entitlementIDs)에 넣지 않는다.
   넣으면 작은 결제가 Pro 를 연다. `MaturityFeatureTests.testGiftAndTipsNeverUnlockPro` 가 지킨다.
@@ -168,4 +174,4 @@ Pro는 "없어도 되지만 있으면 시간과 머리를 아껴 주는 것"에 
 1. 위 질문으로 무료인지 Pro인지 정한다.
 2. 무료였던 기능을 Pro로 옮긴다면 `ProFeature`에 케이스를 넣고 `has(_:)`로 막는다. 기존 사용자를 보호하기 위해서다.
    처음부터 Pro인 새 기능은 `isPro`로 막는다.
-3. 페이월 칸 카드(`PaywallView.features(of:)`)와 온보딩 Pro 목록(`ProShowcasePage.proFeatures`)을 실제 동작과 맞춘다.
+3. 페이월 혜택 목록(`PaywallView.features(of:)`)와 온보딩 Pro 목록(`ProShowcasePage.proFeatures`)을 실제 동작과 맞춘다.

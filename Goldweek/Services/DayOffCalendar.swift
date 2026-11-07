@@ -15,6 +15,7 @@
 
 import Foundation
 import Observation
+import GoldweekCore
 
 @Observable
 final class DayOffCalendar {

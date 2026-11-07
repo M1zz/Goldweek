@@ -10,6 +10,7 @@ import Foundation
 import Vision
 import UIKit
 import PDFKit
+import GoldweekCore
 
 final class PhotoImportService {
     static let shared = PhotoImportService()

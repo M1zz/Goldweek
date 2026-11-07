@@ -13,6 +13,7 @@ import CoreSpotlight
 import Foundation
 import SwiftData
 import SwiftUI
+import GoldweekCore
 
 // MARK: - 앱 화면으로 넘기는 요청
 

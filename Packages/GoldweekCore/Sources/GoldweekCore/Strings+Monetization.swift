@@ -13,7 +13,7 @@ extension Strings {
     private static var moneyLang: AppLanguage { LanguageManager.shared.currentLanguage }
 
     /// 요금제 카드 — 연간 구독
-    static var planYearly: String {
+    public static var planYearly: String {
         switch moneyLang {
         case .korean: return "연간"
         case .english: return "Yearly"
@@ -42,7 +42,7 @@ extension Strings {
     }
 
     /// 요금제 카드 — 평생 구매
-    static var planLifetime: String {
+    public static var planLifetime: String {
         switch moneyLang {
         case .korean: return "평생"
         case .english: return "Lifetime"
@@ -71,7 +71,7 @@ extension Strings {
     }
 
     /// 연간 가격 — "연 ₩X"
-    static func yearlyPriceLabel(_ price: String) -> String {
+    public static func yearlyPriceLabel(_ price: String) -> String {
         switch moneyLang {
         case .korean: return "연 \(price)"
         case .english: return "\(price)/year"
@@ -100,7 +100,7 @@ extension Strings {
     }
 
     /// 연간 가격을 달로 나눈 값 — "한 달 ₩X꼴"
-    static func perMonthHint(_ price: String) -> String {
+    public static func perMonthHint(_ price: String) -> String {
         switch moneyLang {
         case .korean: return "한 달 \(price)꼴"
         case .english: return "Just \(price) a month"
@@ -129,7 +129,7 @@ extension Strings {
     }
 
     /// 구매 버튼
-    static var startPro: String {
+    public static var startPro: String {
         switch moneyLang {
         case .korean: return "Pro 시작하기"
         case .english: return "Start Pro"
@@ -158,7 +158,7 @@ extension Strings {
     }
 
     /// 자동 갱신 구독 고지 — App Store 심사 필수 문구. 구매 버튼 바로 아래에 둔다.
-    static var subscriptionDisclosure: String {
+    public static var subscriptionDisclosure: String {
         switch moneyLang {
         case .korean: return "연간 구독은 기간이 끝나기 24시간 전까지 끄지 않으면 같은 가격으로 자동 갱신돼요. 결제는 Apple 계정으로 청구되고, 설정 > Apple 계정 > 구독에서 언제든 끌 수 있어요. 평생 구매는 한 번만 결제해요."
         case .english: return "The yearly plan renews automatically at the same price unless you turn it off at least 24 hours before the period ends. Payment is charged to your Apple Account. Manage or cancel anytime in Settings > Apple Account > Subscriptions. Lifetime is a single payment."
@@ -187,7 +187,7 @@ extension Strings {
     }
 
     /// 설정 — 구독 관리 버튼
-    static var manageSubscription: String {
+    public static var manageSubscription: String {
         switch moneyLang {
         case .korean: return "구독 관리"
         case .english: return "Manage Subscription"
@@ -216,7 +216,7 @@ extension Strings {
     }
 
     /// 설정 — 연간 구독 중 (date는 이미 현지 형식으로 만든 날짜)
-    static func yearlyPlanUntil(_ date: String) -> String {
+    public static func yearlyPlanUntil(_ date: String) -> String {
         switch moneyLang {
         case .korean: return "연간 구독 · \(date)까지"
         case .english: return "Yearly plan · through \(date)"
@@ -245,7 +245,7 @@ extension Strings {
     }
 
     /// 온보딩 Pro 화면 부제 — 예전 "한 번 결제로 영구히"는 구독이 생겨 맞지 않는다
-    static var proOnboardingPitch: String {
+    public static var proOnboardingPitch: String {
         switch moneyLang {
         case .korean: return "남은 연차로 가장 길게 쉬는 방법을 앱이 찾아 드려요"
         case .english: return "Let the app find the longest breaks your days off can buy"
@@ -274,7 +274,7 @@ extension Strings {
     }
 
     /// Pro 기능 — 내 규칙대로 (연간 한도·넘겨 쓰기·학교 달력)
-    static var proFeatureRulesTitle: String {
+    public static var proFeatureRulesTitle: String {
         switch moneyLang {
         case .korean: return "내 회사·학교 규칙 그대로"
         case .english: return "Your workplace rules, built in"
@@ -302,7 +302,7 @@ extension Strings {
         }
     }
 
-    static var proFeatureRulesDesc: String {
+    public static var proFeatureRulesDesc: String {
         switch moneyLang {
         case .korean: return "휴가 종류별 연간 한도와 넘겨 쓰기, 학교 달력 사진으로 방학 한 번에 넣기"
         case .english: return "Yearly allowances and carry-over per leave type, plus school calendars from a photo"
@@ -331,7 +331,7 @@ extension Strings {
     }
 
     /// 페이월 비교표 — 휴가 종류별 연간 한도
-    static var paywallAllowanceFeature: String {
+    public static var paywallAllowanceFeature: String {
         switch moneyLang {
         case .korean: return "종류별 연간 한도·넘겨 쓰기"
         case .english: return "Allowances & carry-over"
@@ -360,7 +360,7 @@ extension Strings {
     }
 
     /// 휴가 종류 편집 — 무료 사용자에게 한도 토글 아래 안내
-    static var allowanceProFooter: String {
+    public static var allowanceProFooter: String {
         switch moneyLang {
         case .korean: return "연간 한도와 넘겨 쓰기는 Pro에서 쓸 수 있어요. 종류를 만들고 기록하는 건 무료예요."
         case .english: return "Yearly allowances and carry-over are part of Pro. Creating and logging leave types stays free."
@@ -389,7 +389,7 @@ extension Strings {
     }
 
     /// 2.4.0 전에 설치한 무료 사용자 — 새로 Pro가 된 기능을 계속 쓴다는 안내
-    static var legacyFeaturesNote: String {
+    public static var legacyFeaturesNote: String {
         switch moneyLang {
         case .korean: return "먼저 써 주셔서 고마워요. 학교 달력 가져오기와 종류별 연간 한도는 계속 무료로 쓸 수 있어요."
         case .english: return "Thanks for being an early user. School calendar import and yearly allowances stay free for you."
@@ -422,7 +422,7 @@ extension Strings {
 
 extension Strings {
     /// 칸 이름
-    static func trimName(_ tier: ProTier) -> String {
+    public static func trimName(_ tier: ProTier) -> String {
         switch tier {
         case .free: return pick([.korean: "무료", .english: "Free", .japanese: "無料", .chinese: "免费版", .german: "Gratis", .french: "Gratuit", .spanish: "Gratis", .italian: "Gratis", .portuguese: "Grátis", .chineseTraditional: "免費版", .dutch: "Gratis", .swedish: "Gratis", .norwegian: "Gratis", .danish: "Gratis", .finnish: "Ilmainen", .polish: "Darmowy", .czech: "Zdarma", .greek: "Δωρεάν", .turkish: "Ücretsiz", .russian: "Бесплатно", .indonesian: "Gratis", .thai: "ฟรี", .vietnamese: "Miễn phí"])
         case .plus: return pick([.korean: "플러스", .english: "Plus", .japanese: "プラス", .chinese: "Plus", .german: "Plus", .french: "Plus", .spanish: "Plus", .italian: "Plus", .portuguese: "Plus", .chineseTraditional: "Plus", .dutch: "Plus", .swedish: "Plus", .norwegian: "Plus", .danish: "Plus", .finnish: "Plus", .polish: "Plus", .czech: "Plus", .greek: "Plus", .turkish: "Plus", .russian: "Plus", .indonesian: "Plus", .thai: "Plus", .vietnamese: "Plus"])
@@ -431,7 +431,7 @@ extension Strings {
     }
 
     /// 칸 한 줄 설명
-    static func trimTagline(_ tier: ProTier) -> String {
+    public static func trimTagline(_ tier: ProTier) -> String {
         switch tier {
         case .free: return pick([.korean: "연차를 놓치지 않고, 올해 가장 긴 연휴를 찾아보세요.", .english: "Never lose a leave day, and find this year’s longest breaks.", .japanese: "休暇を無駄にせず、今年いちばん長い連休を見つけましょう。", .chinese: "不错过任何年假，找到今年最长的假期。", .german: "Verliere keinen Urlaubstag und finde die längsten Pausen des Jahres.", .french: "Ne perdez aucun jour de congé et trouvez les plus longues pauses de l’année.", .spanish: "No pierdas ningún día de permiso y encuentra los descansos más largos del año.", .italian: "Non perdere giorni di ferie e trova le pause più lunghe dell’anno.", .portuguese: "Não perca nenhum dia de folga e encontre as pausas mais longas do ano.", .chineseTraditional: "不錯過任何年假，找到今年最長的假期。", .dutch: "Verlies geen vrije dag en vind de langste pauzes van dit jaar.", .swedish: "Missa ingen ledig dag och hitta årets längsta ledigheter.", .norwegian: "Ikke mist en eneste feriedag, og finn årets lengste ferier.", .danish: "Mist ikke en eneste feriedag, og find årets længste ferier.", .finnish: "Älä menetä yhtään vapaapäivää ja löydä vuoden pisimmät lomat.", .polish: "Nie trać dni urlopu i znajdź najdłuższe przerwy w tym roku.", .czech: "Nepřijdeš o žádný den volna a najdeš nejdelší volno v roce.", .greek: "Μη χάνεις καμία μέρα άδειας και βρες τα μεγαλύτερα διαλείμματα της χρονιάς.", .turkish: "İzin günlerini kaçırma, bu yılın en uzun tatillerini bul.", .russian: "Не теряйте дни отпуска и находите самые длинные перерывы года.", .indonesian: "Jangan lewatkan hari cuti dan temukan libur terpanjang tahun ini.", .thai: "ไม่พลาดวันลา และค้นหาวันหยุดยาวที่สุดของปีนี้", .vietnamese: "Không bỏ lỡ ngày phép nào và tìm kỳ nghỉ dài nhất năm nay."])
         case .plus: return pick([.korean: "추천을 마음껏 넣고, 작년과 내년까지 짜 보세요.", .english: "Add every suggestion you like and plan last year and next year too.", .japanese: "おすすめを好きなだけ追加して、去年と来年の分も計画しましょう。", .chinese: "随意添加推荐，还能查看去年并规划明年。", .german: "Füge beliebig viele Vorschläge hinzu und plane auch letztes und nächstes Jahr.", .french: "Ajoutez autant de suggestions que vous voulez, pour l’an dernier et l’an prochain aussi.", .spanish: "Añade todas las sugerencias que quieras y planifica también el año pasado y el próximo.", .italian: "Aggiungi tutti i suggerimenti che vuoi e pianifica anche l’anno scorso e il prossimo.", .portuguese: "Adicione quantas sugestões quiser e planeje também o ano passado e o próximo.", .chineseTraditional: "隨意加入推薦，還能查看去年並規劃明年。", .dutch: "Voeg zoveel suggesties toe als je wilt en plan ook vorig en volgend jaar.", .swedish: "Lägg till alla förslag du vill och planera även förra och nästa år.", .norwegian: "Legg til alle forslagene du vil, og planlegg også i fjor og neste år.", .danish: "Tilføj alle de forslag, du vil, og planlæg også sidste og næste år.", .finnish: "Lisää ehdotuksia vapaasti ja suunnittele myös viime ja ensi vuosi.", .polish: "Dodawaj dowolnie sugestie i planuj także zeszły i przyszły rok.", .czech: "Přidávej návrhy podle libosti a plánuj i minulý a příští rok.", .greek: "Πρόσθεσε όσες προτάσεις θέλεις και σχεδίασε και την περσινή και την επόμενη χρονιά.", .turkish: "İstediğin kadar öneri ekle, geçen ve gelecek yılı da planla.", .russian: "Добавляйте сколько угодно рекомендаций и планируйте также прошлый и следующий год.", .indonesian: "Tambahkan saran sesukamu dan rencanakan juga tahun lalu dan tahun depan.", .thai: "เพิ่มคำแนะนำได้ตามใจ และวางแผนทั้งปีที่แล้วและปีหน้า", .vietnamese: "Thêm gợi ý tùy thích và lên kế hoạch cả năm ngoái lẫn năm sau."])
@@ -440,7 +440,7 @@ extension Strings {
     }
 
     /// 주력 트림 표시
-    static var trimPopular: String {
+    public static var trimPopular: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "인기"
         case .english: return "Popular"
@@ -469,7 +469,7 @@ extension Strings {
     }
 
     /// 아래 트림 전부 포함
-    static func trimEverythingIn(_ name: String) -> String {
+    public static func trimEverythingIn(_ name: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(name)의 모든 기능"
         case .english: return "Everything in \(name)"
@@ -498,7 +498,7 @@ extension Strings {
     }
 
     /// 트림 기능 — 추천 무제한 등록
-    static var featUnlimitedRecs: String {
+    public static var featUnlimitedRecs: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "추천 휴가 무제한 등록"
         case .english: return "Add unlimited suggestions"
@@ -527,7 +527,7 @@ extension Strings {
     }
 
     /// 트림 기능 — 지난해·다음 해 추천
-    static var featOtherYears: String {
+    public static var featOtherYears: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "지난해·다음 해 추천"
         case .english: return "Suggestions for last and next year"
@@ -558,7 +558,7 @@ extension Strings {
 
 
     /// 구매 버튼 — 무료 체험
-    static func startTrial(_ days: Int) -> String {
+    public static func startTrial(_ days: Int) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(days)일 무료로 시작"
         case .english: return "Start \(days)-day free trial"
@@ -587,7 +587,7 @@ extension Strings {
     }
 
     /// 구매 버튼
-    static func startTrim(_ name: String) -> String {
+    public static func startTrim(_ name: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(name) 시작하기"
         case .english: return "Get \(name)"
@@ -617,7 +617,7 @@ extension Strings {
 
 
     /// 이미 쓰고 있는 트림 이하
-    static var trimIncluded: String {
+    public static var trimIncluded: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "지금 쓰는 요금제에 들어 있어요"
         case .english: return "Included in your plan"
@@ -651,7 +651,7 @@ extension Strings {
 
 extension Strings {
     /// 함께 쉬기 이름
-    static var togetherTitle: String {
+    public static var togetherTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "함께 쉬기"
         case .english: return "Time Off Together"
@@ -680,7 +680,7 @@ extension Strings {
     }
 
     /// 가족 탭 입구 설명
-    static var togetherSubtitle: String {
+    public static var togetherSubtitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "가족 모두 쉬는 날과 한 사람만 연차 내면 되는 날"
         case .english: return "Days everyone's off, and days one leave away"
@@ -709,12 +709,12 @@ extension Strings {
     }
 
     /// 잠겼을 때
-    static var togetherLocked: String {
+    public static var togetherLocked: String {
         pick([.korean: "프로에서 쓸 수 있어요", .english: "Available with Pro", .japanese: "プロで使えます", .chinese: "Pro 可用", .german: "Mit Pro verfügbar", .french: "Disponible avec Pro", .spanish: "Disponible con Pro", .italian: "Disponibile con Pro", .portuguese: "Disponível no Pro", .chineseTraditional: "Pro 可用", .dutch: "Beschikbaar met Pro", .swedish: "Ingår i Pro", .norwegian: "Tilgjengelig med Pro", .danish: "Tilgængelig med Pro", .finnish: "Kuuluu Pro-versioon", .polish: "Dostępne w Pro", .czech: "K dispozici v Pro", .greek: "Διαθέσιμο με Pro", .turkish: "Pro ile kullanılabilir", .russian: "Доступно в Pro", .indonesian: "Tersedia di Pro", .thai: "ใช้ได้กับ Pro", .vietnamese: "Có trong gói Pro"])
     }
 
     /// 나
-    static var togetherMe: String {
+    public static var togetherMe: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "나"
         case .english: return "Me"
@@ -743,7 +743,7 @@ extension Strings {
     }
 
     /// 섹션 — 다 같이 쉬는 날
-    static var togetherAllOffSection: String {
+    public static var togetherAllOffSection: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "다 같이 쉬는 날"
         case .english: return "Everyone's off"
@@ -772,7 +772,7 @@ extension Strings {
     }
 
     /// 섹션 — 한 사람만 연차
-    static var togetherOneLeaveSection: String {
+    public static var togetherOneLeaveSection: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "한 사람만 연차 내면 다 같이 쉬어요"
         case .english: return "One person's leave away"
@@ -801,7 +801,7 @@ extension Strings {
     }
 
     /// 모두 쉰다
-    static var togetherEveryoneOff: String {
+    public static var togetherEveryoneOff: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "모두 쉬어요"
         case .english: return "Everyone's off"
@@ -830,7 +830,7 @@ extension Strings {
     }
 
     /// 찾은 게 없음
-    static var togetherNothingFound: String {
+    public static var togetherNothingFound: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "앞으로 1년 안에는 없어요"
         case .english: return "None in the next 12 months"
@@ -859,7 +859,7 @@ extension Strings {
     }
 
     /// 연속 일수
-    static func togetherDaysInRow(_ n: Int) -> String {
+    public static func togetherDaysInRow(_ n: Int) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(n)일"
         case .english: return "\(n) days"
@@ -888,7 +888,7 @@ extension Strings {
     }
 
     /// 한 사람만 연차 — 설명
-    static func togetherLeaveNeeded(_ name: String, _ leave: Int, _ days: Int) -> String {
+    public static func togetherLeaveNeeded(_ name: String, _ leave: Int, _ days: Int) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(name) 연차 \(leave)일이면 다 같이 \(days)일"
         case .english: return "\(name): \(leave) leave → \(days) days together"
@@ -917,7 +917,7 @@ extension Strings {
     }
 
     /// 기념일 — 일하는 사람
-    static func togetherWorking(_ names: String) -> String {
+    public static func togetherWorking(_ names: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "출근: \(names)"
         case .english: return "Working: \(names)"
@@ -946,7 +946,7 @@ extension Strings {
     }
 
     /// 기념일 — 공유한 사람
-    static func togetherSharedBy(_ name: String) -> String {
+    public static func togetherSharedBy(_ name: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(name)님이 공유"
         case .english: return "Shared by \(name)"
@@ -975,7 +975,7 @@ extension Strings {
     }
 
     /// 계산 기준
-    static var togetherFooter: String {
+    public static var togetherFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "주말, 각자 나라의 공휴일, 공유한 휴가로 계산해요. 반차는 쉬는 날로 치지 않아요. 가족이 일정 공유를 켜야 보여요."
         case .english: return "Based on weekends, each person's public holidays and shared leave. Half days don't count as days off. Family members need to share their schedule."
@@ -1009,22 +1009,22 @@ extension Strings {
 
 extension Strings {
     /// 추천 목록 위 — 무료로 넣을 수 있는 칸이 거의 끝났다(`RecommendationGate`). `n` 은 지금 남은 무료 칸 수.
-    static func freeRecommendationNotice(remaining n: Int) -> String {
+    public static func freeRecommendationNotice(remaining n: Int) -> String {
         pick([.korean: "무료로 넣을 수 있는 추천이 \(n)개 남았어요", .english: "Free suggestions left to add: \(n)", .japanese: "無料で追加できるおすすめは残り\(n)件です", .chinese: "还可免费添加的推荐：\(n)", .german: "Noch kostenlos hinzufügbare Vorschläge: \(n)", .french: "Suggestions gratuites restantes : \(n)", .spanish: "Sugerencias gratis restantes: \(n)", .italian: "Suggerimenti gratuiti rimasti: \(n)", .portuguese: "Sugestões grátis restantes: \(n)", .chineseTraditional: "還可免費加入的推薦：\(n)", .dutch: "Gratis suggesties over: \(n)", .swedish: "Gratisförslag kvar: \(n)", .norwegian: "Gratis forslag igjen: \(n)", .danish: "Gratis forslag tilbage: \(n)", .finnish: "Ilmaisia ehdotuksia jäljellä: \(n)", .polish: "Pozostałe darmowe sugestie: \(n)", .czech: "Zbývající návrhy zdarma: \(n)", .greek: "Δωρεάν προτάσεις που απομένουν: \(n)", .turkish: "Kalan ücretsiz öneri: \(n)", .russian: "Осталось бесплатных рекомендаций: \(n)", .indonesian: "Sisa saran gratis: \(n)", .thai: "คำแนะนำฟรีที่เหลือ: \(n)", .vietnamese: "Gợi ý miễn phí còn lại: \(n)"])
     }
 
     /// 팁 부탁 카드의 숫자 한 줄 — 올해 추천으로 세운 휴가 계획 수(`ProBenefits.recommendedPlanCount`)
-    static func tipAskPlans(_ n: Int) -> String {
+    public static func tipAskPlans(_ n: Int) -> String {
         pick([.korean: "올해 Goldweek 추천으로 휴가 계획을 \(n)개 세웠어요", .english: "You’ve planned \(n) breaks with Goldweek’s recommendations this year", .japanese: "今年はGoldweekのおすすめで休みを\(n)回計画しました", .chinese: "今年你已用 Goldweek 的推荐规划了 \(n) 次休假", .german: "Du hast dieses Jahr \(n) Auszeiten mit Goldweek-Empfehlungen geplant", .french: "Cette année, vous avez planifié \(n) congés grâce aux recommandations de Goldweek", .spanish: "Este año has planificado \(n) descansos con las recomendaciones de Goldweek", .italian: "Quest’anno hai pianificato \(n) pause con i suggerimenti di Goldweek", .portuguese: "Este ano você planejou \(n) folgas com as sugestões do Goldweek", .chineseTraditional: "今年你已用 Goldweek 的推薦規劃了 \(n) 次休假", .dutch: "Je hebt dit jaar \(n) keer vrij gepland met aanbevelingen van Goldweek", .swedish: "Du har planerat \(n) ledigheter med Goldweeks förslag i år", .norwegian: "Du har planlagt fri \(n) ganger med Goldweeks anbefalinger i år", .danish: "Du har planlagt fri \(n) gange med Goldweeks anbefalinger i år", .finnish: "Olet suunnitellut tänä vuonna \(n) lomaa Goldweekin ehdotuksilla", .polish: "Urlopy zaplanowane w tym roku z rekomendacji Goldweek: \(n)", .czech: "Volna naplánovaná letos podle doporučení Goldweeku: \(n)", .greek: "Άδειες που οργάνωσες φέτος με τις προτάσεις του Goldweek: \(n)", .turkish: "Bu yıl Goldweek önerileriyle \(n) izin planladın", .russian: "Отпусков по рекомендациям Goldweek в этом году: \(n)", .indonesian: "Tahun ini kamu sudah merencanakan \(n) cuti dari rekomendasi Goldweek", .thai: "ปีนี้คุณวางแผนวันหยุดจากคำแนะนำของ Goldweek ไปแล้ว \(n) ครั้ง", .vietnamese: "Năm nay bạn đã lên \(n) kỳ nghỉ nhờ gợi ý của Goldweek"])
     }
 
     /// 팁 부탁 카드의 숫자 한 줄 — 지금까지 적어 둔 휴가 기록 수
-    static func tipAskLeaves(_ n: Int) -> String {
+    public static func tipAskLeaves(_ n: Int) -> String {
         pick([.korean: "Goldweek로 휴가를 \(n)번 챙겼어요", .english: "You’ve tracked \(n) time-off entries in Goldweek", .japanese: "Goldweekで休みを\(n)件記録しました", .chinese: "你已在 Goldweek 记录了 \(n) 次休假", .german: "Du hast \(n) Urlaube in Goldweek festgehalten", .french: "Vous avez noté \(n) congés dans Goldweek", .spanish: "Has anotado \(n) vacaciones en Goldweek", .italian: "Hai registrato \(n) periodi di ferie in Goldweek", .portuguese: "Você já registrou \(n) folgas no Goldweek", .chineseTraditional: "你已在 Goldweek 記錄了 \(n) 次休假", .dutch: "Je hebt \(n) keer verlof bijgehouden in Goldweek", .swedish: "Du har fört in \(n) ledigheter i Goldweek", .norwegian: "Du har registrert fri \(n) ganger i Goldweek", .danish: "Du har registreret fri \(n) gange i Goldweek", .finnish: "Olet kirjannut Goldweekiin \(n) lomaa", .polish: "Urlopy zapisane w Goldweek: \(n)", .czech: "Volna zapsaná v Goldweeku: \(n)", .greek: "Άδειες που κατέγραψες στο Goldweek: \(n)", .turkish: "Goldweek’e \(n) izin kaydettin", .russian: "Отпусков записано в Goldweek: \(n)", .indonesian: "Kamu sudah mencatat \(n) cuti di Goldweek", .thai: "คุณบันทึกวันลาใน Goldweek ไปแล้ว \(n) ครั้ง", .vietnamese: "Bạn đã ghi \(n) lần nghỉ phép trong Goldweek"])
     }
 
     /// 설정 — 선물 · 응원 섹션 머리
-    static var giftAndTipSection: String {
+    public static var giftAndTipSection: String {
         pick([.korean: "선물과 응원", .english: "Gifts & Support", .japanese: "ギフトと応援", .chinese: "礼物与支持", .german: "Geschenke & Unterstützung", .french: "Cadeaux et soutien", .spanish: "Regalos y apoyo", .italian: "Regali e sostegno", .portuguese: "Presentes e apoio", .chineseTraditional: "禮物與支持", .dutch: "Cadeaus en steun", .swedish: "Gåvor och stöd", .norwegian: "Gaver og støtte", .danish: "Gaver og støtte", .finnish: "Lahjat ja tuki", .polish: "Prezenty i wsparcie", .czech: "Dárky a podpora", .greek: "Δώρα και στήριξη", .turkish: "Hediyeler ve destek", .russian: "Подарки и поддержка", .indonesian: "Hadiah dan dukungan", .thai: "ของขวัญและการสนับสนุน", .vietnamese: "Quà tặng và ủng hộ"])
     }
 
@@ -1032,22 +1032,26 @@ extension Strings {
     //    LeeoKit 문구는 **기기 언어**를 따라서, 앱 언어만 바꾼 사람에게 설정 행이 다른 말로 남는다(지원 섹션 주석 참고).
 
     /// 설정 — 팁 화면으로 (`LeeoTipText.entry`)
-    static var tipEntry: String {
+    public static var tipEntry: String {
         pick([.korean: "개발자 응원하기", .english: "Support the Developer", .japanese: "開発者を応援する", .chinese: "支持开发者", .german: "Entwickler unterstützen", .french: "Soutenir le développeur", .spanish: "Apoya al desarrollador", .italian: "Sostieni lo sviluppatore", .portuguese: "Apoie o desenvolvedor", .chineseTraditional: "支持開發者", .dutch: "Steun de ontwikkelaar", .swedish: "Stöd utvecklaren", .norwegian: "Støtt utvikleren", .danish: "Støt udvikleren", .finnish: "Tue kehittäjää", .polish: "Wesprzyj twórcę", .czech: "Podpořit vývojáře", .greek: "Στήριξε τον δημιουργό", .turkish: "Geliştiriciyi Destekleyin", .russian: "Поддержать разработчика", .indonesian: "Dukung Pengembang", .thai: "สนับสนุนผู้พัฒนา", .vietnamese: "Ủng hộ nhà phát triển"])
     }
 
     /// 설정 — 팁 행 아래 한 줄 (`LeeoTipText.entrySubtitle`)
-    static var tipEntrySubtitle: String {
+    public static var tipEntrySubtitle: String {
         pick([.korean: "기능은 그대로, 앱을 더 다듬는 데 쓰여요", .english: "Nothing changes in the app, it helps polish it further", .japanese: "機能はそのまま、アプリをさらに磨くために使われます", .chinese: "功能不变，用来把 App 做得更好", .german: "Die App bleibt gleich, es hilft beim Weiterentwickeln", .french: "Rien ne change dans l'app, cela aide à la peaufiner", .spanish: "No cambia nada en la app, ayuda a pulirla más", .italian: "L'app non cambia, aiuta a migliorarla ancora", .portuguese: "Nada muda no app, ajuda a deixá-lo ainda melhor", .chineseTraditional: "功能不變，用來把 App 做得更好", .dutch: "Er verandert niets in de app, het helpt om hem verder te verbeteren", .swedish: "Inget ändras i appen, det hjälper till att förbättra den", .norwegian: "Ingenting endres i appen, det hjelper til å gjøre den bedre", .danish: "Intet ændres i appen, det hjælper med at gøre den bedre", .finnish: "Sovellus pysyy samana, tuki auttaa hiomaan sitä", .polish: "Funkcje się nie zmieniają, to pomaga dalej dopracowywać aplikację", .czech: "V aplikaci se nic nemění, pomůže to ji dál vylepšovat", .greek: "Τίποτα δεν αλλάζει στην εφαρμογή, βοηθά να γίνει ακόμα καλύτερη", .turkish: "Uygulamada hiçbir şey değişmez, daha da iyileştirmeye yarar", .russian: "Функции не меняются, деньги идут на доработку приложения", .indonesian: "Fitur tetap sama, dipakai untuk menyempurnakan app", .thai: "ฟีเจอร์เหมือนเดิม ใช้เพื่อปรับแอปให้ดียิ่งขึ้น", .vietnamese: "Tính năng giữ nguyên, dùng để hoàn thiện ứng dụng hơn"])
     }
 
     /// 설정 — 선물 보내기 (`LeeoGiftText.sendEntry`)
-    static var giftSendEntry: String {
+    public static var giftSendEntry: String {
         pick([.korean: "Pro 선물하기", .english: "Gift Pro", .japanese: "Proをプレゼント", .chinese: "赠送 Pro", .german: "Pro verschenken", .french: "Offrir Pro", .spanish: "Regalar Pro", .italian: "Regala Pro", .portuguese: "Presentear Pro", .chineseTraditional: "贈送 Pro", .dutch: "Pro cadeau geven", .swedish: "Ge bort Pro", .norwegian: "Gi bort Pro", .danish: "Giv Pro i gave", .finnish: "Anna Pro lahjaksi", .polish: "Podaruj Pro", .czech: "Darovat Pro", .greek: "Δώρο Pro", .turkish: "Pro hediye et", .russian: "Подарить Pro", .indonesian: "Hadiahkan Pro", .thai: "มอบ Pro เป็นของขวัญ", .vietnamese: "Tặng Pro"])
+    }
+    /// Plus 선물 보내기 줄. 등급 이름은 고유명사라 그대로.
+    public static var giftSendPlusEntry: String {
+        pick([.korean: "Plus 선물하기", .english: "Gift Plus", .japanese: "Plusをプレゼント", .chinese: "赠送 Plus", .german: "Plus verschenken", .french: "Offrir Plus", .spanish: "Regalar Plus", .italian: "Regala Plus", .portuguese: "Presentear Plus", .chineseTraditional: "贈送 Plus", .dutch: "Plus cadeau geven", .swedish: "Ge bort Plus", .norwegian: "Gi bort Plus", .danish: "Giv Plus i gave", .finnish: "Anna Plus lahjaksi", .polish: "Podaruj Plus", .czech: "Darovat Plus", .greek: "Δώρο Plus", .turkish: "Plus hediye et", .russian: "Подарить Plus", .indonesian: "Hadiahkan Plus", .thai: "มอบ Plus เป็นของขวัญ", .vietnamese: "Tặng Plus"])
     }
 
     /// 설정 — 받은 선물 코드 넣기 (`LeeoGiftText.redeemEntry`)
-    static var giftRedeemEntry: String {
+    public static var giftRedeemEntry: String {
         pick([.korean: "선물 코드 입력", .english: "Redeem Gift Code", .japanese: "ギフトコードを入力", .chinese: "输入礼品码", .german: "Geschenkcode eingeben", .french: "Saisir un code cadeau", .spanish: "Canjear código de regalo", .italian: "Riscatta codice regalo", .portuguese: "Resgatar código de presente", .chineseTraditional: "輸入禮物碼", .dutch: "Cadeaucode invoeren", .swedish: "Lös in presentkod", .norwegian: "Løs inn gavekode", .danish: "Indløs gavekode", .finnish: "Lunasta lahjakoodi", .polish: "Wpisz kod prezentu", .czech: "Zadat dárkový kód", .greek: "Εξαργύρωση κωδικού δώρου", .turkish: "Hediye kodu gir", .russian: "Ввести код подарка", .indonesian: "Tukarkan Kode Hadiah", .thai: "ใส่รหัสของขวัญ", .vietnamese: "Nhập mã quà tặng"])
     }
 }
@@ -1056,61 +1060,112 @@ extension Strings {
 
 extension Strings {
     /// 페이월 머리말
-    static var paywallLadderTitle: String {
+    public static var paywallLadderTitle: String {
         "Goldweek \(trimName(.plus)) · \(trimName(.pro))"
     }
 
     /// 페이월 머리말 아래 한 줄. 유료 칸마다 연 구독과 평생이 있다.
-    static var paywallLadderSubtitle: String {
+    public static var paywallLadderSubtitle: String {
         pick([.korean: "쉬는 습관은 무료. 계획과 자동화는 연 구독이나 평생으로", .english: "Resting well is free. Planning and automation, yearly or for life.", .japanese: "休む習慣は無料。計画と自動化は年額か買い切りで", .chinese: "好好休息免费。规划与自动化可按年订阅或终身购买", .german: "Gute Pausen sind kostenlos. Planung und Automatik jährlich oder für immer.", .french: "Bien se reposer est gratuit. Planification et automatisation à l’année ou à vie.", .spanish: "Descansar bien es gratis. Planificación y automatización, al año o para siempre.", .italian: "Riposare bene è gratis. Pianificazione e automazione, all’anno o per sempre.", .portuguese: "Descansar bem é grátis. Planejamento e automação, por ano ou para sempre.", .chineseTraditional: "好好休息免費。規劃與自動化可按年訂閱或終身購買", .dutch: "Goed rusten is gratis. Plannen en automatiseren per jaar of voor altijd.", .swedish: "Bra vila är gratis. Planering och automatik per år eller för alltid.", .norwegian: "God hvile er gratis. Planlegging og automatikk per år eller for alltid.", .danish: "God hvile er gratis. Planlægning og automatik pr. år eller for altid.", .finnish: "Hyvä lepo on ilmaista. Suunnittelu ja automaatio vuosittain tai ikuisesti.", .polish: "Dobry odpoczynek jest za darmo. Planowanie i automatyzacja na rok lub na zawsze.", .czech: "Dobrý odpočinek je zdarma. Plánování a automatizace na rok nebo navždy.", .greek: "Η καλή ξεκούραση είναι δωρεάν. Σχεδιασμός και αυτοματισμός ετήσια ή για πάντα.", .turkish: "İyi dinlenmek ücretsiz. Planlama ve otomasyon yıllık ya da ömür boyu.", .russian: "Хороший отдых бесплатно. Планирование и автоматизация на год или навсегда.", .indonesian: "Istirahat yang baik itu gratis. Perencanaan dan otomatisasi per tahun atau selamanya.", .thai: "การพักผ่อนที่ดีใช้ได้ฟรี การวางแผนและระบบอัตโนมัติเลือกแบบรายปีหรือตลอดชีพ", .vietnamese: "Nghỉ ngơi tốt là miễn phí. Lập kế hoạch và tự động hóa theo năm hoặc trọn đời."])
     }
 
     /// 무료 칸: 휴가 기록과 남은 연차
-    static var freeFeatTracking: String {
+    public static var freeFeatTracking: String {
         pick([.korean: "휴가 기록과 남은 연차", .english: "Log time off and see what’s left", .japanese: "休暇の記録と残りの有給", .chinese: "记录休假，查看剩余年假", .german: "Urlaub eintragen, Resturlaub sehen", .french: "Notez vos congés et voyez le solde", .spanish: "Registra tus días libres y lo que te queda", .italian: "Registra le ferie e vedi quelle rimaste", .portuguese: "Registre folgas e veja o saldo", .chineseTraditional: "記錄休假，查看剩餘特休", .dutch: "Verlof bijhouden en je saldo zien", .swedish: "Logga ledighet och se vad som är kvar", .norwegian: "Før fridager og se hva som er igjen", .danish: "Registrér fridage og se, hvad der er tilbage", .finnish: "Kirjaa lomat ja näe, paljonko on jäljellä", .polish: "Zapisuj urlop i sprawdzaj, ile zostało", .czech: "Zapisuj dovolenou a sleduj, kolik zbývá", .greek: "Κατέγραψε άδειες και δες το υπόλοιπο", .turkish: "İzinlerini kaydet, kalanı gör", .russian: "Учёт отпусков и оставшихся дней", .indonesian: "Catat cuti dan lihat sisanya", .thai: "บันทึกวันลาและดูวันลาที่เหลือ", .vietnamese: "Ghi ngày nghỉ và xem số ngày còn lại"])
     }
 
     /// 무료 칸: 나라별 공휴일, 내 공휴일과 방학
-    static var freeFeatHolidays: String {
+    public static var freeFeatHolidays: String {
         pick([.korean: "나라별 공휴일, 내 공휴일과 방학", .english: "Public holidays, your own days off and school breaks", .japanese: "国ごとの祝日、自分の休日や長期休み", .chinese: "各国公共假日，以及自定义假日和假期", .german: "Feiertage deines Landes, eigene freie Tage und Ferien", .french: "Jours fériés du pays, vos propres jours et vacances", .spanish: "Festivos de tu país, tus propios días y vacaciones escolares", .italian: "Festività del paese, giorni personali e vacanze", .portuguese: "Feriados do país, seus próprios dias e férias escolares", .chineseTraditional: "各國國定假日，以及自訂假日和假期", .dutch: "Feestdagen per land, eigen vrije dagen en vakanties", .swedish: "Helgdagar i ditt land, egna lediga dagar och lov", .norwegian: "Helligdager i landet ditt, egne fridager og ferier", .danish: "Helligdage i dit land, egne fridage og ferier", .finnish: "Maasi pyhäpäivät, omat vapaapäivät ja lomat", .polish: "Święta w twoim kraju, własne dni wolne i ferie", .czech: "Svátky tvé země, vlastní volna a prázdniny", .greek: "Αργίες της χώρας σου, δικές σου μέρες και διακοπές", .turkish: "Ülkenin resmi tatilleri, kendi izin günlerin ve okul tatilleri", .russian: "Праздники вашей страны, свои выходные и каникулы", .indonesian: "Hari libur nasional, hari libur sendiri, dan libur sekolah", .thai: "วันหยุดของแต่ละประเทศ วันหยุดของคุณเองและปิดเทอม", .vietnamese: "Ngày lễ theo quốc gia, ngày nghỉ riêng và kỳ nghỉ học"])
     }
 
     // MARK: - 페이월 비교표 · 주 / 월 구독
 
-    static var compareTitle: String { pick([.korean: "칸별로 비교하기", .english: "Compare plans", .japanese: "プランを比較", .chinese: "比较方案", .german: "Pläne vergleichen", .french: "Comparer les offres", .spanish: "Comparar planes", .italian: "Confronta i piani", .portuguese: "Comparar planos", .chineseTraditional: "比較方案", .dutch: "Abonnementen vergelijken", .swedish: "Jämför planer", .norwegian: "Sammenlign planer", .danish: "Sammenlign planer", .finnish: "Vertaile tasoja", .polish: "Porównaj plany", .czech: "Porovnat plány", .greek: "Σύγκριση προγραμμάτων", .turkish: "Planları karşılaştır", .russian: "Сравнить планы", .indonesian: "Bandingkan paket", .thai: "เปรียบเทียบแผน", .vietnamese: "So sánh các gói"]) }
-    static var compareRecommendations: String { pick([.korean: "올해 추천 일정에 넣기", .english: "Add this year’s suggestions", .japanese: "今年のおすすめを追加", .chinese: "添加今年的推荐", .german: "Vorschläge dieses Jahres hinzufügen", .french: "Ajouter les suggestions de l’année", .spanish: "Añadir sugerencias de este año", .italian: "Aggiungi i suggerimenti dell’anno", .portuguese: "Adicionar sugestões deste ano", .chineseTraditional: "加入今年的推薦", .dutch: "Suggesties van dit jaar toevoegen", .swedish: "Lägg till årets förslag", .norwegian: "Legg til årets forslag", .danish: "Tilføj årets forslag", .finnish: "Lisää tämän vuoden ehdotukset", .polish: "Dodaj sugestie na ten rok", .czech: "Přidat letošní návrhy", .greek: "Προσθήκη προτάσεων της χρονιάς", .turkish: "Bu yılın önerilerini ekle", .russian: "Добавить рекомендации этого года", .indonesian: "Tambahkan saran tahun ini", .thai: "เพิ่มคำแนะนำของปีนี้", .vietnamese: "Thêm gợi ý năm nay"]) }
-    static var compareUnlimited: String { pick([.korean: "무제한", .english: "Unlimited", .japanese: "無制限", .chinese: "无限", .german: "Unbegrenzt", .french: "Illimité", .spanish: "Sin límite", .italian: "Illimitati", .portuguese: "Ilimitado", .chineseTraditional: "無限", .dutch: "Onbeperkt", .swedish: "Obegränsat", .norwegian: "Ubegrenset", .danish: "Ubegrænset", .finnish: "Rajaton", .polish: "Bez limitu", .czech: "Neomezeně", .greek: "Απεριόριστα", .turkish: "Sınırsız", .russian: "Без лимита", .indonesian: "Tanpa batas", .thai: "ไม่จำกัด", .vietnamese: "Không giới hạn"]) }
-    static var shortPlansTitle: String { pick([.korean: "주간 · 월간으로 보기", .english: "See weekly and monthly", .japanese: "週額・月額を見る", .chinese: "查看按周和按月", .german: "Wöchentlich und monatlich ansehen", .french: "Voir à la semaine et au mois", .spanish: "Ver semanal y mensual", .italian: "Vedi settimanale e mensile", .portuguese: "Ver semanal e mensal", .chineseTraditional: "查看按週和按月", .dutch: "Bekijk per week en per maand", .swedish: "Visa vecko- och månadsvis", .norwegian: "Se ukentlig og månedlig", .danish: "Se ugentligt og månedligt", .finnish: "Näytä viikoittain ja kuukausittain", .polish: "Zobacz tygodniowo i miesięcznie", .czech: "Zobrazit týdně a měsíčně", .greek: "Δες εβδομαδιαία και μηνιαία", .turkish: "Haftalık ve aylık gör", .russian: "Смотреть на неделю и месяц", .indonesian: "Lihat mingguan dan bulanan", .thai: "ดูแบบรายสัปดาห์และรายเดือน", .vietnamese: "Xem theo tuần và theo tháng"]) }
-    static func shortPlanWeekly(_ price: String) -> String { pick([.korean: "주간 \(price)", .english: "Weekly \(price)", .japanese: "週額 \(price)", .chinese: "按周 \(price)", .german: "Wöchentlich \(price)", .french: "À la semaine \(price)", .spanish: "Semanal \(price)", .italian: "Settimanale \(price)", .portuguese: "Semanal \(price)", .chineseTraditional: "按週 \(price)", .dutch: "Per week \(price)", .swedish: "Veckovis \(price)", .norwegian: "Ukentlig \(price)", .danish: "Ugentligt \(price)", .finnish: "Viikoittain \(price)", .polish: "Tygodniowo \(price)", .czech: "Týdně \(price)", .greek: "Εβδομαδιαία \(price)", .turkish: "Haftalık \(price)", .russian: "На неделю \(price)", .indonesian: "Mingguan \(price)", .thai: "รายสัปดาห์ \(price)", .vietnamese: "Theo tuần \(price)"]) }
-    static func shortPlanMonthly(_ price: String) -> String { pick([.korean: "월간 \(price)", .english: "Monthly \(price)", .japanese: "月額 \(price)", .chinese: "按月 \(price)", .german: "Monatlich \(price)", .french: "Au mois \(price)", .spanish: "Mensual \(price)", .italian: "Mensile \(price)", .portuguese: "Mensal \(price)", .chineseTraditional: "按月 \(price)", .dutch: "Per maand \(price)", .swedish: "Månadsvis \(price)", .norwegian: "Månedlig \(price)", .danish: "Månedligt \(price)", .finnish: "Kuukausittain \(price)", .polish: "Miesięcznie \(price)", .czech: "Měsíčně \(price)", .greek: "Μηνιαία \(price)", .turkish: "Aylık \(price)", .russian: "На месяц \(price)", .indonesian: "Bulanan \(price)", .thai: "รายเดือน \(price)", .vietnamese: "Theo tháng \(price)"]) }
-    static var shortPlansDisclosure: String { pick([.korean: "주간 · 월간 구독도 기간이 끝나기 24시간 전까지 끄지 않으면 같은 가격으로 자동 갱신돼요.", .english: "Weekly and monthly plans also renew automatically at the same price unless turned off at least 24 hours before the period ends.", .japanese: "週額・月額も、期間終了の24時間前までに解約しない限り同じ価格で自動更新されます。", .chinese: "按周和按月订阅同样会以相同价格自动续订，除非在周期结束前至少24小时关闭。", .german: "Wöchentliche und monatliche Abos verlängern sich ebenfalls automatisch zum selben Preis, sofern sie nicht mindestens 24 Stunden vor Ablauf beendet werden.", .french: "Les formules à la semaine et au mois se renouvellent aussi automatiquement au même prix, sauf résiliation au moins 24 heures avant la fin de la période.", .spanish: "Los planes semanales y mensuales también se renuevan automáticamente al mismo precio si no los cancelas al menos 24 horas antes de que termine el periodo.", .italian: "Anche i piani settimanali e mensili si rinnovano automaticamente allo stesso prezzo se non li disattivi almeno 24 ore prima della scadenza.", .portuguese: "Os planos semanais e mensais também renovam automaticamente pelo mesmo preço, a menos que sejam desativados pelo menos 24 horas antes do fim do período.", .chineseTraditional: "按週和按月訂閱同樣會以相同價格自動續訂，除非在週期結束前至少24小時關閉。", .dutch: "Week- en maandabonnementen worden ook automatisch tegen dezelfde prijs verlengd, tenzij je ze minstens 24 uur voor het einde van de periode stopzet.", .swedish: "Vecko- och månadsplaner förnyas också automatiskt till samma pris om du inte stänger av dem minst 24 timmar innan perioden tar slut.", .norwegian: "Ukes- og månedsplaner fornyes også automatisk til samme pris med mindre du slår dem av minst 24 timer før perioden er over.", .danish: "Uge- og månedsplaner fornyes også automatisk til samme pris, medmindre du slår dem fra mindst 24 timer før periodens udløb.", .finnish: "Viikko- ja kuukausitilaukset uusiutuvat myös automaattisesti samaan hintaan, ellei niitä peruta vähintään 24 tuntia ennen jakson loppua.", .polish: "Plany tygodniowe i miesięczne także odnawiają się automatycznie w tej samej cenie, chyba że wyłączysz je co najmniej 24 godziny przed końcem okresu.", .czech: "Týdenní a měsíční plány se také automaticky obnovují za stejnou cenu, pokud je nevypneš alespoň 24 hodin před koncem období.", .greek: "Τα εβδομαδιαία και μηνιαία προγράμματα ανανεώνονται επίσης αυτόματα στην ίδια τιμή, εκτός αν τα απενεργοποιήσεις τουλάχιστον 24 ώρες πριν από τη λήξη.", .turkish: "Haftalık ve aylık planlar da dönem bitmeden en az 24 saat önce kapatılmazsa aynı fiyattan otomatik yenilenir.", .russian: "Недельные и месячные планы также продлеваются автоматически по той же цене, если не отключить их минимум за 24 часа до конца периода.", .indonesian: "Paket mingguan dan bulanan juga diperpanjang otomatis dengan harga yang sama kecuali dimatikan setidaknya 24 jam sebelum periode berakhir.", .thai: "แผนรายสัปดาห์และรายเดือนจะต่ออายุอัตโนมัติในราคาเดิมเช่นกัน เว้นแต่จะปิดอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดรอบ", .vietnamese: "Gói theo tuần và theo tháng cũng tự động gia hạn với cùng mức giá trừ khi tắt ít nhất 24 giờ trước khi hết kỳ."]) }
+    public static var compareTitle: String { pick([.korean: "칸별로 비교하기", .english: "Compare plans", .japanese: "プランを比較", .chinese: "比较方案", .german: "Pläne vergleichen", .french: "Comparer les offres", .spanish: "Comparar planes", .italian: "Confronta i piani", .portuguese: "Comparar planos", .chineseTraditional: "比較方案", .dutch: "Abonnementen vergelijken", .swedish: "Jämför planer", .norwegian: "Sammenlign planer", .danish: "Sammenlign planer", .finnish: "Vertaile tasoja", .polish: "Porównaj plany", .czech: "Porovnat plány", .greek: "Σύγκριση προγραμμάτων", .turkish: "Planları karşılaştır", .russian: "Сравнить планы", .indonesian: "Bandingkan paket", .thai: "เปรียบเทียบแผน", .vietnamese: "So sánh các gói"]) }
+    public static var compareRecommendations: String { pick([.korean: "올해 추천 일정에 넣기", .english: "Add this year’s suggestions", .japanese: "今年のおすすめを追加", .chinese: "添加今年的推荐", .german: "Vorschläge dieses Jahres hinzufügen", .french: "Ajouter les suggestions de l’année", .spanish: "Añadir sugerencias de este año", .italian: "Aggiungi i suggerimenti dell’anno", .portuguese: "Adicionar sugestões deste ano", .chineseTraditional: "加入今年的推薦", .dutch: "Suggesties van dit jaar toevoegen", .swedish: "Lägg till årets förslag", .norwegian: "Legg til årets forslag", .danish: "Tilføj årets forslag", .finnish: "Lisää tämän vuoden ehdotukset", .polish: "Dodaj sugestie na ten rok", .czech: "Přidat letošní návrhy", .greek: "Προσθήκη προτάσεων της χρονιάς", .turkish: "Bu yılın önerilerini ekle", .russian: "Добавить рекомендации этого года", .indonesian: "Tambahkan saran tahun ini", .thai: "เพิ่มคำแนะนำของปีนี้", .vietnamese: "Thêm gợi ý năm nay"]) }
+    public static var compareUnlimited: String { pick([.korean: "무제한", .english: "Unlimited", .japanese: "無制限", .chinese: "无限", .german: "Unbegrenzt", .french: "Illimité", .spanish: "Sin límite", .italian: "Illimitati", .portuguese: "Ilimitado", .chineseTraditional: "無限", .dutch: "Onbeperkt", .swedish: "Obegränsat", .norwegian: "Ubegrenset", .danish: "Ubegrænset", .finnish: "Rajaton", .polish: "Bez limitu", .czech: "Neomezeně", .greek: "Απεριόριστα", .turkish: "Sınırsız", .russian: "Без лимита", .indonesian: "Tanpa batas", .thai: "ไม่จำกัด", .vietnamese: "Không giới hạn"]) }
+    public static var shortPlansTitle: String { pick([.korean: "주간 · 월간으로 보기", .english: "See weekly and monthly", .japanese: "週額・月額を見る", .chinese: "查看按周和按月", .german: "Wöchentlich und monatlich ansehen", .french: "Voir à la semaine et au mois", .spanish: "Ver semanal y mensual", .italian: "Vedi settimanale e mensile", .portuguese: "Ver semanal e mensal", .chineseTraditional: "查看按週和按月", .dutch: "Bekijk per week en per maand", .swedish: "Visa vecko- och månadsvis", .norwegian: "Se ukentlig og månedlig", .danish: "Se ugentligt og månedligt", .finnish: "Näytä viikoittain ja kuukausittain", .polish: "Zobacz tygodniowo i miesięcznie", .czech: "Zobrazit týdně a měsíčně", .greek: "Δες εβδομαδιαία και μηνιαία", .turkish: "Haftalık ve aylık gör", .russian: "Смотреть на неделю и месяц", .indonesian: "Lihat mingguan dan bulanan", .thai: "ดูแบบรายสัปดาห์และรายเดือน", .vietnamese: "Xem theo tuần và theo tháng"]) }
+    public static func shortPlanWeekly(_ price: String) -> String { pick([.korean: "주간 \(price)", .english: "Weekly \(price)", .japanese: "週額 \(price)", .chinese: "按周 \(price)", .german: "Wöchentlich \(price)", .french: "À la semaine \(price)", .spanish: "Semanal \(price)", .italian: "Settimanale \(price)", .portuguese: "Semanal \(price)", .chineseTraditional: "按週 \(price)", .dutch: "Per week \(price)", .swedish: "Veckovis \(price)", .norwegian: "Ukentlig \(price)", .danish: "Ugentligt \(price)", .finnish: "Viikoittain \(price)", .polish: "Tygodniowo \(price)", .czech: "Týdně \(price)", .greek: "Εβδομαδιαία \(price)", .turkish: "Haftalık \(price)", .russian: "На неделю \(price)", .indonesian: "Mingguan \(price)", .thai: "รายสัปดาห์ \(price)", .vietnamese: "Theo tuần \(price)"]) }
+    public static func shortPlanMonthly(_ price: String) -> String { pick([.korean: "월간 \(price)", .english: "Monthly \(price)", .japanese: "月額 \(price)", .chinese: "按月 \(price)", .german: "Monatlich \(price)", .french: "Au mois \(price)", .spanish: "Mensual \(price)", .italian: "Mensile \(price)", .portuguese: "Mensal \(price)", .chineseTraditional: "按月 \(price)", .dutch: "Per maand \(price)", .swedish: "Månadsvis \(price)", .norwegian: "Månedlig \(price)", .danish: "Månedligt \(price)", .finnish: "Kuukausittain \(price)", .polish: "Miesięcznie \(price)", .czech: "Měsíčně \(price)", .greek: "Μηνιαία \(price)", .turkish: "Aylık \(price)", .russian: "На месяц \(price)", .indonesian: "Bulanan \(price)", .thai: "รายเดือน \(price)", .vietnamese: "Theo tháng \(price)"]) }
+    public static var shortPlansDisclosure: String { pick([.korean: "주간 · 월간 구독도 기간이 끝나기 24시간 전까지 끄지 않으면 같은 가격으로 자동 갱신돼요.", .english: "Weekly and monthly plans also renew automatically at the same price unless turned off at least 24 hours before the period ends.", .japanese: "週額・月額も、期間終了の24時間前までに解約しない限り同じ価格で自動更新されます。", .chinese: "按周和按月订阅同样会以相同价格自动续订，除非在周期结束前至少24小时关闭。", .german: "Wöchentliche und monatliche Abos verlängern sich ebenfalls automatisch zum selben Preis, sofern sie nicht mindestens 24 Stunden vor Ablauf beendet werden.", .french: "Les formules à la semaine et au mois se renouvellent aussi automatiquement au même prix, sauf résiliation au moins 24 heures avant la fin de la période.", .spanish: "Los planes semanales y mensuales también se renuevan automáticamente al mismo precio si no los cancelas al menos 24 horas antes de que termine el periodo.", .italian: "Anche i piani settimanali e mensili si rinnovano automaticamente allo stesso prezzo se non li disattivi almeno 24 ore prima della scadenza.", .portuguese: "Os planos semanais e mensais também renovam automaticamente pelo mesmo preço, a menos que sejam desativados pelo menos 24 horas antes do fim do período.", .chineseTraditional: "按週和按月訂閱同樣會以相同價格自動續訂，除非在週期結束前至少24小時關閉。", .dutch: "Week- en maandabonnementen worden ook automatisch tegen dezelfde prijs verlengd, tenzij je ze minstens 24 uur voor het einde van de periode stopzet.", .swedish: "Vecko- och månadsplaner förnyas också automatiskt till samma pris om du inte stänger av dem minst 24 timmar innan perioden tar slut.", .norwegian: "Ukes- og månedsplaner fornyes også automatisk til samme pris med mindre du slår dem av minst 24 timer før perioden er over.", .danish: "Uge- og månedsplaner fornyes også automatisk til samme pris, medmindre du slår dem fra mindst 24 timer før periodens udløb.", .finnish: "Viikko- ja kuukausitilaukset uusiutuvat myös automaattisesti samaan hintaan, ellei niitä peruta vähintään 24 tuntia ennen jakson loppua.", .polish: "Plany tygodniowe i miesięczne także odnawiają się automatycznie w tej samej cenie, chyba że wyłączysz je co najmniej 24 godziny przed końcem okresu.", .czech: "Týdenní a měsíční plány se také automaticky obnovují za stejnou cenu, pokud je nevypneš alespoň 24 hodin před koncem období.", .greek: "Τα εβδομαδιαία και μηνιαία προγράμματα ανανεώνονται επίσης αυτόματα στην ίδια τιμή, εκτός αν τα απενεργοποιήσεις τουλάχιστον 24 ώρες πριν από τη λήξη.", .turkish: "Haftalık ve aylık planlar da dönem bitmeden en az 24 saat önce kapatılmazsa aynı fiyattan otomatik yenilenir.", .russian: "Недельные и месячные планы также продлеваются автоматически по той же цене, если не отключить их минимум за 24 часа до конца периода.", .indonesian: "Paket mingguan dan bulanan juga diperpanjang otomatis dengan harga yang sama kecuali dimatikan setidaknya 24 jam sebelum periode berakhir.", .thai: "แผนรายสัปดาห์และรายเดือนจะต่ออายุอัตโนมัติในราคาเดิมเช่นกัน เว้นแต่จะปิดอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดรอบ", .vietnamese: "Gói theo tuần và theo tháng cũng tự động gia hạn với cùng mức giá trừ khi tắt ít nhất 24 giờ trước khi hết kỳ."]) }
 
     /// 평생 가격이 오르기 전까지 페이월에 서는 한 줄 (`LeeoLadderSchedule`). 가격은 App Store 값이 칸에 보이니 적지 않는다.
-    static func lifetimeDealNotice(_ date: String) -> String {
+    public static func lifetimeDealNotice(_ date: String) -> String {
         pick([.korean: "\(date)부터 평생 가격이 올라요. 지금 사면 이 가격으로 평생이에요.", .english: "Lifetime prices go up on \(date). Buy now and keep this price for life.", .japanese: "\(date)から買い切り価格が上がります。今なら、この価格でずっと使えます。", .chinese: "永久版将于 \(date) 涨价。现在购买，以此价格永久使用。", .german: "Am \(date) steigen die Preise für Lebenslang. Jetzt kaufen und für immer zu diesem Preis nutzen.", .french: "Les prix à vie augmentent le \(date). Achetez maintenant à ce prix, pour toujours.", .spanish: "Los precios de por vida suben el \(date). Compra ahora y quédate con este precio para siempre.", .italian: "I prezzi a vita aumentano il \(date). Acquista ora a questo prezzo, per sempre.", .portuguese: "Os preços vitalícios sobem em \(date). Compre agora por este preço, para sempre.", .chineseTraditional: "永久版將於 \(date) 漲價。現在購買，以此價格永久使用。", .dutch: "Op \(date) gaan de levenslange prijzen omhoog. Koop nu en houd deze prijs voor altijd.", .swedish: "Livstidspriserna höjs den \(date). Köp nu till det här priset, för alltid.", .norwegian: "Livstidsprisene øker \(date). Kjøp nå til denne prisen, for alltid.", .danish: "Livstidspriserne stiger den \(date). Køb nu til denne pris, for altid.", .finnish: "Elinikäiset hinnat nousevat \(date). Osta nyt tällä hinnalla, lopullisesti.", .polish: "Ceny dożywotnie rosną \(date). Kup teraz w tej cenie, na zawsze.", .czech: "Doživotní ceny se zvýší \(date). Kup teď za tuto cenu, navždy.", .greek: "Οι τιμές εφ’ όρου ζωής αυξάνονται στις \(date). Αγόρασε τώρα σε αυτή την τιμή, για πάντα.", .turkish: "Ömür boyu fiyatlar \(date) tarihinde artıyor. Şimdi al, bu fiyatla sonsuza dek kullan.", .russian: "Цены на покупку навсегда вырастут \(date). Купите сейчас по этой цене — навсегда.", .indonesian: "Harga seumur hidup naik pada \(date). Beli sekarang dengan harga ini, selamanya.", .thai: "ราคาตลอดชีพจะขึ้นวันที่ \(date) ซื้อตอนนี้ในราคานี้ ใช้ได้ตลอดไป", .vietnamese: "Giá trọn đời sẽ tăng vào \(date). Mua ngay với giá này, dùng mãi mãi."])
     }
 
     /// 프로 칸: App Store 에서 프로 평생에 가족 공유가 켜져 있을 때만 선다.
-    static var proLifetimeFamilySharing: String { pick([.korean: "프로 평생은 한 번 사면 가족 공유로 6명까지 함께 써요.", .english: "Buy Pro Lifetime once and share it with up to 6 people through Family Sharing.", .japanese: "プロ買い切りは一度の購入で、ファミリー共有により最大6人で使えます。", .chinese: "专业永久版只需购买一次，可通过家人共享最多 6 人使用。", .german: "Pro Lebenslang einmal kaufen und per Familienfreigabe mit bis zu 6 Personen nutzen.", .french: "Achetez Pro à vie une fois et partagez-le jusqu’à 6 personnes avec le partage familial.", .spanish: "Compra Pro de por vida una vez y compártelo con hasta 6 personas en En familia.", .italian: "Acquista Pro a vita una volta e usalo in fino a 6 persone con In famiglia.", .portuguese: "Compre o Pro vitalício uma vez e use com até 6 pessoas pelo Compartilhamento Familiar.", .chineseTraditional: "專業永久版只需購買一次，可透過家人共享最多 6 人使用。", .dutch: "Koop Pro levenslang één keer en deel het met maximaal 6 personen via Delen met gezin.", .swedish: "Köp Pro livstid en gång och dela med upp till 6 personer via Familjedelning.", .norwegian: "Kjøp Pro livstid én gang og del med opptil 6 personer via Familiedeling.", .danish: "Køb Pro livstid én gang, og del med op til 6 personer via Familiedeling.", .finnish: "Osta Pro elinikäinen kerran ja jaa se enintään 6 henkilölle perhejaolla.", .polish: "Kup Pro dożywotnio raz i korzystaj w maksymalnie 6 osób dzięki Chmurze rodzinnej.", .czech: "Kup Pro navždy jednou a sdílej ho až s 6 lidmi přes Rodinné sdílení.", .greek: "Αγόρασε το Pro εφ’ όρου ζωής μία φορά και μοιράσου το με έως 6 άτομα μέσω της Οικογενειακής κοινής χρήσης.", .turkish: "Pro ömür boyunu bir kez al, Aile Paylaşımı ile en fazla 6 kişi kullansın.", .russian: "Купите Pro навсегда один раз и пользуйтесь вшестером через Семейный доступ.", .indonesian: "Beli Pro Seumur Hidup sekali dan gunakan hingga 6 orang lewat Berbagi Keluarga.", .thai: "ซื้อโปรตลอดชีพครั้งเดียว ใช้ร่วมกันได้สูงสุด 6 คนผ่านการแชร์กันในครอบครัว", .vietnamese: "Mua Pro trọn đời một lần, dùng chung tối đa 6 người qua Chia sẻ trong gia đình."]) }
+    public static var proLifetimeFamilySharing: String { pick([.korean: "프로 평생은 한 번 사면 가족 공유로 6명까지 함께 써요.", .english: "Buy Pro Lifetime once and share it with up to 6 people through Family Sharing.", .japanese: "プロ買い切りは一度の購入で、ファミリー共有により最大6人で使えます。", .chinese: "专业永久版只需购买一次，可通过家人共享最多 6 人使用。", .german: "Pro Lebenslang einmal kaufen und per Familienfreigabe mit bis zu 6 Personen nutzen.", .french: "Achetez Pro à vie une fois et partagez-le jusqu’à 6 personnes avec le partage familial.", .spanish: "Compra Pro de por vida una vez y compártelo con hasta 6 personas en En familia.", .italian: "Acquista Pro a vita una volta e usalo in fino a 6 persone con In famiglia.", .portuguese: "Compre o Pro vitalício uma vez e use com até 6 pessoas pelo Compartilhamento Familiar.", .chineseTraditional: "專業永久版只需購買一次，可透過家人共享最多 6 人使用。", .dutch: "Koop Pro levenslang één keer en deel het met maximaal 6 personen via Delen met gezin.", .swedish: "Köp Pro livstid en gång och dela med upp till 6 personer via Familjedelning.", .norwegian: "Kjøp Pro livstid én gang og del med opptil 6 personer via Familiedeling.", .danish: "Køb Pro livstid én gang, og del med op til 6 personer via Familiedeling.", .finnish: "Osta Pro elinikäinen kerran ja jaa se enintään 6 henkilölle perhejaolla.", .polish: "Kup Pro dożywotnio raz i korzystaj w maksymalnie 6 osób dzięki Chmurze rodzinnej.", .czech: "Kup Pro navždy jednou a sdílej ho až s 6 lidmi přes Rodinné sdílení.", .greek: "Αγόρασε το Pro εφ’ όρου ζωής μία φορά και μοιράσου το με έως 6 άτομα μέσω της Οικογενειακής κοινής χρήσης.", .turkish: "Pro ömür boyunu bir kez al, Aile Paylaşımı ile en fazla 6 kişi kullansın.", .russian: "Купите Pro навсегда один раз и пользуйтесь вшестером через Семейный доступ.", .indonesian: "Beli Pro Seumur Hidup sekali dan gunakan hingga 6 orang lewat Berbagi Keluarga.", .thai: "ซื้อโปรตลอดชีพครั้งเดียว ใช้ร่วมกันได้สูงสุด 6 คนผ่านการแชร์กันในครอบครัว", .vietnamese: "Mua Pro trọn đời một lần, dùng chung tối đa 6 người qua Chia sẻ trong gia đình."]) }
 
     /// 무료 칸: 올해 추천 전부 보기, n개까지 넣기 (`ProManager.freeRecommendationAddLimit`)
-    static func freeFeatRecommendations(_ n: Int) -> String {
+    public static func freeFeatRecommendations(_ n: Int) -> String {
         pick([.korean: "올해 추천 전부 보기, \(n)개까지 넣기", .english: "See all of this year’s suggestions, add up to \(n)", .japanese: "今年のおすすめをすべて表示、\(n)件まで登録", .chinese: "查看今年全部推荐，最多添加 \(n) 个", .german: "Alle Vorschläge für dieses Jahr, bis zu \(n) übernehmen", .french: "Toutes les suggestions de l’année, jusqu’à \(n) à ajouter", .spanish: "Todas las sugerencias del año, añade hasta \(n)", .italian: "Tutti i suggerimenti dell’anno, aggiungine fino a \(n)", .portuguese: "Todas as sugestões do ano, adicione até \(n)", .chineseTraditional: "查看今年全部推薦，最多新增 \(n) 個", .dutch: "Alle voorstellen van dit jaar, tot \(n) toevoegen", .swedish: "Alla förslag för i år, lägg till upp till \(n)", .norwegian: "Alle forslag for i år, legg til opptil \(n)", .danish: "Alle forslag for i år, tilføj op til \(n)", .finnish: "Kaikki tämän vuoden ehdotukset, lisää enintään \(n)", .polish: "Wszystkie propozycje na ten rok, dodaj do \(n)", .czech: "Všechny letošní návrhy, přidej až \(n)", .greek: "Όλες οι φετινές προτάσεις, πρόσθεσε έως \(n)", .turkish: "Bu yılın tüm önerileri, en fazla \(n) tane ekle", .russian: "Все рекомендации на этот год, добавить можно до \(n)", .indonesian: "Semua saran tahun ini, tambahkan hingga \(n)", .thai: "ดูคำแนะนำทั้งหมดของปีนี้ เพิ่มได้สูงสุด \(n) รายการ", .vietnamese: "Xem mọi gợi ý năm nay, thêm tối đa \(n)"])
     }
 
     /// 무료 칸: 쉬는 간격 안내, 알림, 위젯
-    static var freeFeatRest: String {
+    public static var freeFeatRest: String {
         pick([.korean: "쉬는 간격 안내, 알림, 위젯", .english: "Rest reminders, alerts and widgets", .japanese: "休むタイミングの案内、通知、ウィジェット", .chinese: "休息间隔提醒、通知和小组件", .german: "Pausenhinweise, Mitteilungen und Widgets", .french: "Rappels de repos, notifications et widgets", .spanish: "Avisos de descanso, notificaciones y widgets", .italian: "Promemoria di riposo, notifiche e widget", .portuguese: "Lembretes de descanso, notificações e widgets", .chineseTraditional: "休息間隔提醒、通知和小工具", .dutch: "Rusttips, meldingen en widgets", .swedish: "Vilopåminnelser, notiser och widgetar", .norwegian: "Påminnelser om hvile, varsler og widgeter", .danish: "Påmindelser om pauser, notifikationer og widgets", .finnish: "Lepomuistutukset, ilmoitukset ja widgetit", .polish: "Przypomnienia o odpoczynku, powiadomienia i widżety", .czech: "Připomínky odpočinku, oznámení a widgety", .greek: "Υπενθυμίσεις ξεκούρασης, ειδοποιήσεις και widget", .turkish: "Dinlenme hatırlatmaları, bildirimler ve widget’lar", .russian: "Напоминания об отдыхе, уведомления и виджеты", .indonesian: "Pengingat istirahat, notifikasi, dan widget", .thai: "เตือนให้พัก การแจ้งเตือน และวิดเจ็ต", .vietnamese: "Nhắc nghỉ ngơi, thông báo và tiện ích"])
     }
 
     /// 무료 칸: iCloud 백업, 가족과 일정 보기 공유 (같이 계획하기는 프로)
-    static var freeFeatBackupShare: String {
+    public static var freeFeatBackupShare: String {
         pick([.korean: "iCloud 백업, 가족과 일정 공유", .english: "iCloud backup and sharing schedules with family", .japanese: "iCloudバックアップ、家族と予定を共有", .chinese: "iCloud 备份，与家人共享日程", .german: "iCloud-Backup und Pläne mit der Familie teilen", .french: "Sauvegarde iCloud et planning partagé en famille", .spanish: "Copia en iCloud y calendario compartido con la familia", .italian: "Backup su iCloud e programmi condivisi in famiglia", .portuguese: "Backup no iCloud e agenda compartilhada com a família", .chineseTraditional: "iCloud 備份，與家人共享行程", .dutch: "iCloud-back-up en planning delen met je gezin", .swedish: "iCloud-säkerhetskopia och delat schema med familjen", .norwegian: "iCloud-sikkerhetskopi og delt timeplan med familien", .danish: "iCloud-backup og delt plan med familien", .finnish: "iCloud-varmuuskopio ja aikataulun jakaminen perheelle", .polish: "Kopia w iCloud i plan udostępniany rodzinie", .czech: "Záloha na iCloud a sdílení plánu s rodinou", .greek: "Αντίγραφο στο iCloud και κοινό πρόγραμμα με την οικογένεια", .turkish: "iCloud yedeği ve aileyle takvim paylaşımı", .russian: "Резервная копия в iCloud и общий график с семьёй", .indonesian: "Cadangan iCloud dan berbagi jadwal dengan keluarga", .thai: "สำรองข้อมูล iCloud และแชร์ตารางกับครอบครัว", .vietnamese: "Sao lưu iCloud và chia sẻ lịch với gia đình"])
     }
 
     /// 설정: 구독 중일 때만 서는 줄. 누르면 구독 졸업(프로 평생) 화면이 뜬다.
     /// `LeeoLadderText.switchToLifetimeEntry` 의 번역을 그대로 옮겼다. LeeoKit 문구는 기기 언어를 따르므로 앱 언어로 다시 적는다.
-    static var switchToLifetimeEntry: String {
+    public static var switchToLifetimeEntry: String {
         pick([.korean: "평생으로 바꾸기", .english: "Switch to Lifetime", .japanese: "買い切りに切り替える", .chinese: "改为永久版", .german: "Zu Lebenslang wechseln", .french: "Passer à l’achat à vie", .spanish: "Cambiar a la versión de por vida", .italian: "Passa alla versione a vita", .portuguese: "Mudar para o vitalício", .chineseTraditional: "改為永久版", .dutch: "Overstappen op levenslang", .swedish: "Byt till livstid", .norwegian: "Bytt til livstid", .danish: "Skift til livstid", .finnish: "Vaihda elinikäiseen", .polish: "Przejdź na dostęp dożywotni", .czech: "Přejít na doživotní verzi", .greek: "Μετάβαση σε εφ’ όρου ζωής", .turkish: "Ömür boyu sürüme geç", .russian: "Перейти на покупку навсегда", .indonesian: "Beralih ke Seumur Hidup", .thai: "เปลี่ยนเป็นตลอดชีพ", .vietnamese: "Chuyển sang trọn đời"])
+    }
+}
+
+// MARK: - 페이월 템플릿 (2026-11, 클립키보드와 같은 틀)
+
+extension Strings {
+    /// 설정의 선물 칸 머리. 응원은 따로 칸을 둔다(요금제 바로 아래).
+    public static var giftSection: String {
+        pick([.korean: "선물하기", .english: "Gifts", .japanese: "プレゼント", .chinese: "赠送", .german: "Verschenken", .french: "Offrir", .spanish: "Regalar", .italian: "Regala", .portuguese: "Presentear", .chineseTraditional: "贈送", .dutch: "Cadeau geven", .swedish: "Ge bort", .norwegian: "Gi bort", .danish: "Giv i gave", .finnish: "Lahjoita", .polish: "Podaruj", .czech: "Darovat", .greek: "Δώρα", .turkish: "Hediye et", .russian: "Подарить", .indonesian: "Hadiahkan", .thai: "มอบเป็นของขวัญ", .vietnamese: "Tặng quà"])
+    }
+
+    /// 월 · 연 · 평생 목록의 월 줄 이름. `planYearly` · `planLifetime` 과 짝.
+    public static var planMonthly: String {
+        pick([.korean: "월간", .english: "Monthly", .japanese: "月額", .chinese: "按月", .german: "Monatlich", .french: "Mensuel", .spanish: "Mensual", .italian: "Mensile", .portuguese: "Mensal", .chineseTraditional: "按月", .dutch: "Maandelijks", .swedish: "Månadsvis", .norwegian: "Månedlig", .danish: "Månedlig", .finnish: "Kuukausittain", .polish: "Miesięcznie", .czech: "Měsíčně", .greek: "Μηνιαία", .turkish: "Aylık", .russian: "Ежемесячно", .indonesian: "Bulanan", .thai: "รายเดือน", .vietnamese: "Hàng tháng"])
+    }
+
+    /// 월 줄 오른쪽의 값. `yearlyPriceLabel` 과 같은 모양.
+    public static func monthlyPriceLabel(_ p: String) -> String {
+        pick([.korean: "월 \(p)", .english: "\(p)/month", .japanese: "\(p)/月", .chinese: "\(p)/月", .german: "\(p)/Monat", .french: "\(p)/mois", .spanish: "\(p)/mes", .italian: "\(p)/mese", .portuguese: "\(p)/mês", .chineseTraditional: "\(p)/月", .dutch: "\(p)/maand", .swedish: "\(p)/mån", .norwegian: "\(p)/mnd", .danish: "\(p)/md.", .finnish: "\(p)/kk", .polish: "\(p)/mies.", .czech: "\(p)/měs.", .greek: "\(p)/μήνα", .turkish: "Aylık \(p)", .russian: "\(p)/мес.", .indonesian: "\(p)/bulan", .thai: "\(p)/เดือน", .vietnamese: "\(p)/tháng"])
+    }
+
+    /// 연 줄의 배지: 월간 열두 달보다 얼마나 싼가. n = 퍼센트 정수.
+    public static func yearlySaving(_ n: Int) -> String {
+        pick([.korean: "\(n)% 절약", .english: "Save \(n)%", .japanese: "\(n)%お得", .chinese: "省 \(n)%", .german: "\(n) % sparen", .french: "−\(n) %", .spanish: "Ahorra un \(n) %", .italian: "Risparmi il \(n)%", .portuguese: "Economize \(n)%", .chineseTraditional: "省 \(n)%", .dutch: "\(n)% voordeel", .swedish: "Spara \(n) %", .norwegian: "Spar \(n) %", .danish: "Spar \(n) %", .finnish: "Säästä \(n) %", .polish: "Oszczędzasz \(n)%", .czech: "Ušetříte \(n) %", .greek: "Κερδίζετε \(n)%", .turkish: "%\(n) tasarruf", .russian: "Выгода \(n)%", .indonesian: "Hemat \(n)%", .thai: "ประหยัด \(n)%", .vietnamese: "Tiết kiệm \(n)%"])
+    }
+
+    /// 연 줄 아래: 처음 구독하는 사람의 첫 해 값(App Store 첫 구독 할인).
+    public static func firstYearPrice(_ p: String) -> String {
+        pick([.korean: "첫 해 \(p)", .english: "First year \(p)", .japanese: "初年度 \(p)", .chinese: "首年 \(p)", .german: "Erstes Jahr \(p)", .french: "Première année \(p)", .spanish: "Primer año \(p)", .italian: "Primo anno \(p)", .portuguese: "Primeiro ano \(p)", .chineseTraditional: "首年 \(p)", .dutch: "Eerste jaar \(p)", .swedish: "Första året \(p)", .norwegian: "Første år \(p)", .danish: "Første år \(p)", .finnish: "Ensimmäinen vuosi \(p)", .polish: "Pierwszy rok \(p)", .czech: "První rok \(p)", .greek: "Πρώτο έτος \(p)", .turkish: "İlk yıl \(p)", .russian: "Первый год — \(p)", .indonesian: "Tahun pertama \(p)", .thai: "ปีแรก \(p)", .vietnamese: "Năm đầu \(p)"])
+    }
+
+    /// 평생 줄 아래: 연 구독 몇 해 값인가. n ≥ 2.
+    public static func lifetimeWorth(_ n: Int) -> String {
+        pick([.korean: "연간 \(n)년 값으로 평생", .english: "Lifetime for the price of \(n) years", .japanese: "年額\(n)年分で永久に", .chinese: "\(n) 年订阅的价格，永久使用", .german: "Für immer zum Preis von \(n) Jahren", .french: "À vie pour le prix de \(n) ans", .spanish: "De por vida al precio de \(n) años", .italian: "A vita al prezzo di \(n) anni", .portuguese: "Vitalício pelo preço de \(n) anos", .chineseTraditional: "\(n) 年訂閱的價格，永久使用", .dutch: "Levenslang voor de prijs van \(n) jaar", .swedish: "För alltid till priset av \(n) år", .norwegian: "For alltid til prisen av \(n) år", .danish: "For altid til prisen for \(n) år", .finnish: "Ikuisesti \(n) vuoden hinnalla", .polish: "Na zawsze w cenie rocznej subskrypcji ×\(n)", .czech: "Navždy za cenu ročního předplatného ×\(n)", .greek: "Για πάντα στην τιμή \(n) ετών", .turkish: "\(n) yıllık abonelik fiyatına ömür boyu", .russian: "Навсегда по цене годовой подписки ×\(n)", .indonesian: "Selamanya seharga langganan \(n) tahun", .thai: "ใช้ตลอดชีพในราคาสมาชิกรายปี \(n) ปี", .vietnamese: "Trọn đời với giá \(n) năm"])
+    }
+
+    /// 평생 줄 아래: 플러스 평생을 가진 사람이 프로 평생으로 오를 때. 값은 차액 상품(`proUpgradeProductID`).
+    public static func upgradeLifetimeCaption(from: String, to: String) -> String {
+        pick([.korean: "\(from)에서 \(to)로 오르는 값 · 한 번 결제", .english: "Price to move up from \(from) to \(to) · one-time", .japanese: "\(from)から\(to)への差額・1回払い", .chinese: "从 \(from) 升级到 \(to) 的差价 · 一次性付款", .german: "Aufpreis von \(from) auf \(to) · einmalig", .french: "Passage de \(from) à \(to) · paiement unique", .spanish: "Precio para pasar de \(from) a \(to) · pago único", .italian: "Passaggio da \(from) a \(to) · pagamento unico", .portuguese: "Preço para passar de \(from) a \(to) · pagamento único", .chineseTraditional: "從 \(from) 升級到 \(to) 的差價 · 一次性付款", .dutch: "Prijs om van \(from) naar \(to) te gaan · eenmalig", .swedish: "Pris för att gå från \(from) till \(to) · engångsköp", .norwegian: "Pris for å gå fra \(from) til \(to) · engangskjøp", .danish: "Pris for at gå fra \(from) til \(to) · engangskøb", .finnish: "Hinta tasolta \(from) tasolle \(to) · kertamaksu", .polish: "Dopłata z \(from) do \(to) · jednorazowo", .czech: "Doplatek z \(from) na \(to) · jednorázově", .greek: "Τιμή αναβάθμισης από \(from) σε \(to) · εφάπαξ", .turkish: "\(from) sürümünden \(to) sürümüne geçiş · tek seferlik", .russian: "Доплата за переход с \(from) на \(to) · один раз", .indonesian: "Harga naik dari \(from) ke \(to) · sekali bayar", .thai: "ราคาอัปเกรดจาก \(from) เป็น \(to) · จ่ายครั้งเดียว", .vietnamese: "Giá nâng từ \(from) lên \(to) · trả một lần"])
+    }
+
+    /// 구매 단추 아래: 고른 구독의 갱신 조건(심사 기준 3.1.2). yearly 가 false 면 월간.
+    public static func renewalTerms(_ p: String, yearly: Bool) -> String {
+        yearly
+        ? pick([.korean: "1년마다 \(p)씩 자동으로 갱신돼요. 갱신 24시간 전까지 설정 > Apple 계정 > 구독에서 해지할 수 있어요.", .english: "Renews automatically at \(p) every year. Cancel at least 24 hours before renewal in Settings > Apple Account > Subscriptions.", .japanese: "毎年\(p)で自動更新されます。更新の24時間前までに設定 > Apple アカウント > サブスクリプションで解約できます。", .chinese: "每年按 \(p) 自动续订。可在续订前至少 24 小时于“设置 > Apple 账户 > 订阅”中取消。", .german: "Verlängert sich automatisch jährlich für \(p). Kündigung bis 24 Stunden vor der Verlängerung unter Einstellungen > Apple Account > Abonnements.", .french: "Renouvellement automatique chaque année à \(p). Résiliez au moins 24 heures avant dans Réglages > Compte Apple > Abonnements.", .spanish: "Se renueva automáticamente cada año por \(p). Cancela al menos 24 horas antes en Ajustes > Cuenta de Apple > Suscripciones.", .italian: "Si rinnova automaticamente ogni anno a \(p). Disdici almeno 24 ore prima in Impostazioni > Account Apple > Abbonamenti.", .portuguese: "Renova automaticamente todo ano por \(p). Cancele até 24 horas antes em Ajustes > Conta Apple > Assinaturas.", .chineseTraditional: "每年按 \(p) 自動續訂。可在續訂前至少 24 小時於「設定 > Apple 帳號 > 訂閱項目」中取消。", .dutch: "Wordt elk jaar automatisch verlengd voor \(p). Zeg minstens 24 uur van tevoren op via Instellingen > Apple Account > Abonnementen.", .swedish: "Förnyas automatiskt varje år för \(p). Avsluta senast 24 timmar innan i Inställningar > Apple-konto > Prenumerationer.", .norwegian: "Fornyes automatisk hvert år for \(p). Avslutt senest 24 timer før i Innstillinger > Apple-konto > Abonnementer.", .danish: "Fornyes automatisk hvert år for \(p). Opsig senest 24 timer før i Indstillinger > Apple-konto > Abonnementer.", .finnish: "Uusiutuu automaattisesti vuosittain hintaan \(p). Peru viimeistään 24 tuntia ennen kohdassa Asetukset > Apple-tili > Tilaukset.", .polish: "Odnawia się automatycznie co rok za \(p). Anuluj najpóźniej 24 godziny wcześniej w Ustawienia > Konto Apple > Subskrypcje.", .czech: "Automaticky se obnovuje každý rok za \(p). Zrušit můžete nejpozději 24 hodin předem v Nastavení > Účet Apple > Předplatné.", .greek: "Ανανεώνεται αυτόματα κάθε χρόνο στην τιμή \(p). Ακυρώστε τουλάχιστον 24 ώρες πριν στις Ρυθμίσεις > Λογαριασμός Apple > Συνδρομές.", .turkish: "Her yıl \(p) ücretle otomatik yenilenir. Yenilemeden en az 24 saat önce Ayarlar > Apple Hesabı > Abonelikler bölümünden iptal edebilirsiniz.", .russian: "Продлевается автоматически каждый год за \(p). Отменить можно не позднее чем за 24 часа в Настройки > Аккаунт Apple > Подписки.", .indonesian: "Diperpanjang otomatis setiap tahun seharga \(p). Batalkan paling lambat 24 jam sebelumnya di Pengaturan > Akun Apple > Langganan.", .thai: "ต่ออายุอัตโนมัติทุกปีในราคา \(p) ยกเลิกได้อย่างน้อย 24 ชั่วโมงก่อนต่ออายุที่ การตั้งค่า > บัญชี Apple > การสมัครรับ", .vietnamese: "Tự động gia hạn mỗi năm với giá \(p). Hủy ít nhất 24 giờ trước khi gia hạn trong Cài đặt > Tài khoản Apple > Đăng ký."])
+        : pick([.korean: "매달 \(p)씩 자동으로 갱신돼요. 갱신 24시간 전까지 설정 > Apple 계정 > 구독에서 해지할 수 있어요.", .english: "Renews automatically at \(p) every month. Cancel at least 24 hours before renewal in Settings > Apple Account > Subscriptions.", .japanese: "毎月\(p)で自動更新されます。更新の24時間前までに設定 > Apple アカウント > サブスクリプションで解約できます。", .chinese: "每月按 \(p) 自动续订。可在续订前至少 24 小时于“设置 > Apple 账户 > 订阅”中取消。", .german: "Verlängert sich automatisch monatlich für \(p). Kündigung bis 24 Stunden vor der Verlängerung unter Einstellungen > Apple Account > Abonnements.", .french: "Renouvellement automatique chaque mois à \(p). Résiliez au moins 24 heures avant dans Réglages > Compte Apple > Abonnements.", .spanish: "Se renueva automáticamente cada mes por \(p). Cancela al menos 24 horas antes en Ajustes > Cuenta de Apple > Suscripciones.", .italian: "Si rinnova automaticamente ogni mese a \(p). Disdici almeno 24 ore prima in Impostazioni > Account Apple > Abbonamenti.", .portuguese: "Renova automaticamente todo mês por \(p). Cancele até 24 horas antes em Ajustes > Conta Apple > Assinaturas.", .chineseTraditional: "每月按 \(p) 自動續訂。可在續訂前至少 24 小時於「設定 > Apple 帳號 > 訂閱項目」中取消。", .dutch: "Wordt elke maand automatisch verlengd voor \(p). Zeg minstens 24 uur van tevoren op via Instellingen > Apple Account > Abonnementen.", .swedish: "Förnyas automatiskt varje månad för \(p). Avsluta senast 24 timmar innan i Inställningar > Apple-konto > Prenumerationer.", .norwegian: "Fornyes automatisk hver måned for \(p). Avslutt senest 24 timer før i Innstillinger > Apple-konto > Abonnementer.", .danish: "Fornyes automatisk hver måned for \(p). Opsig senest 24 timer før i Indstillinger > Apple-konto > Abonnementer.", .finnish: "Uusiutuu automaattisesti kuukausittain hintaan \(p). Peru viimeistään 24 tuntia ennen kohdassa Asetukset > Apple-tili > Tilaukset.", .polish: "Odnawia się automatycznie co miesiąc za \(p). Anuluj najpóźniej 24 godziny wcześniej w Ustawienia > Konto Apple > Subskrypcje.", .czech: "Automaticky se obnovuje každý měsíc za \(p). Zrušit můžete nejpozději 24 hodin předem v Nastavení > Účet Apple > Předplatné.", .greek: "Ανανεώνεται αυτόματα κάθε μήνα στην τιμή \(p). Ακυρώστε τουλάχιστον 24 ώρες πριν στις Ρυθμίσεις > Λογαριασμός Apple > Συνδρομές.", .turkish: "Her ay \(p) ücretle otomatik yenilenir. Yenilemeden en az 24 saat önce Ayarlar > Apple Hesabı > Abonelikler bölümünden iptal edebilirsiniz.", .russian: "Продлевается автоматически каждый месяц за \(p). Отменить можно не позднее чем за 24 часа в Настройки > Аккаунт Apple > Подписки.", .indonesian: "Diperpanjang otomatis setiap bulan seharga \(p). Batalkan paling lambat 24 jam sebelumnya di Pengaturan > Akun Apple > Langganan.", .thai: "ต่ออายุอัตโนมัติทุกเดือนในราคา \(p) ยกเลิกได้อย่างน้อย 24 ชั่วโมงก่อนต่ออายุที่ การตั้งค่า > บัญชี Apple > การสมัครรับ", .vietnamese: "Tự động gia hạn mỗi tháng với giá \(p). Hủy ít nhất 24 giờ trước khi gia hạn trong Cài đặt > Tài khoản Apple > Đăng ký."])
+    }
+
+    /// 구매 단추 아래: 평생을 골랐을 때.
+    public static var lifetimeOnceTerms: String {
+        pick([.korean: "한 번만 결제해요. 자동 갱신은 없어요.", .english: "One-time payment. No auto-renewal.", .japanese: "1回だけのお支払いです。自動更新はありません。", .chinese: "一次性付款，不会自动续订。", .german: "Einmalige Zahlung. Keine automatische Verlängerung.", .french: "Paiement unique. Aucun renouvellement automatique.", .spanish: "Pago único. Sin renovación automática.", .italian: "Pagamento unico. Nessun rinnovo automatico.", .portuguese: "Pagamento único. Sem renovação automática.", .chineseTraditional: "一次性付款，不會自動續訂。", .dutch: "Eenmalige betaling. Geen automatische verlenging.", .swedish: "Engångsbetalning. Ingen automatisk förnyelse.", .norwegian: "Engangsbetaling. Ingen automatisk fornyelse.", .danish: "Engangsbetaling. Ingen automatisk fornyelse.", .finnish: "Kertamaksu. Ei automaattista uusiutumista.", .polish: "Płatność jednorazowa. Bez automatycznego odnawiania.", .czech: "Jednorázová platba. Bez automatického obnovení.", .greek: "Εφάπαξ πληρωμή. Χωρίς αυτόματη ανανέωση.", .turkish: "Tek seferlik ödeme. Otomatik yenileme yok.", .russian: "Разовый платёж. Без автопродления.", .indonesian: "Bayar sekali. Tanpa perpanjangan otomatis.", .thai: "ชำระครั้งเดียว ไม่มีการต่ออายุอัตโนมัติ", .vietnamese: "Thanh toán một lần. Không tự động gia hạn."])
     }
 }

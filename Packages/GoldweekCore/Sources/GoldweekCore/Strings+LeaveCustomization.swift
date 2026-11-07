@@ -11,7 +11,7 @@ extension Strings {
     private static var currentLang: AppLanguage { LanguageManager.shared.currentLanguage }
 
     /// 시간 단위 휴가 이름 (길이 버튼)
-    static var hoursLengthName: String {
+    public static var hoursLengthName: String {
         switch currentLang {
         case .korean: return "시간 단위"
         case .english: return "By hours"
@@ -40,7 +40,7 @@ extension Strings {
     }
 
     /// 길이 버튼 아래 작은 글씨
-    static var hoursLengthHint: String {
+    public static var hoursLengthHint: String {
         switch currentLang {
         case .korean: return "시·분"
         case .english: return "h · min"
@@ -69,7 +69,7 @@ extension Strings {
     }
 
     /// 시간 단위 휴가 — 시간 스테퍼
-    static var leaveHoursLabel: String {
+    public static var leaveHoursLabel: String {
         switch currentLang {
         case .korean: return "시간"
         case .english: return "Hours"
@@ -98,7 +98,7 @@ extension Strings {
     }
 
     /// 시간 단위 휴가 — 분 스테퍼
-    static var leaveMinutesLabel: String {
+    public static var leaveMinutesLabel: String {
         switch currentLang {
         case .korean: return "분"
         case .english: return "Minutes"
@@ -127,7 +127,7 @@ extension Strings {
     }
 
     /// 시간 단위 휴가 설명 — {days} 하루 근무 시간
-    static func hoursLeaveFooter(workday w: String) -> String {
+    public static func hoursLeaveFooter(workday w: String) -> String {
         switch currentLang {
         case .korean: return "하루 근무 시간(\(w))을 기준으로 일수로 바꿔 연차에서 빼요. 근무 시간은 설정에서 바꿀 수 있어요."
         case .english: return "Converted to days using your \(w) workday and taken from your leave. You can change the workday length in Settings."
@@ -156,7 +156,7 @@ extension Strings {
     }
 
     /// 설정 — 하루 근무 시간
-    static var workdayLengthSetting: String {
+    public static var workdayLengthSetting: String {
         switch currentLang {
         case .korean: return "하루 근무 시간"
         case .english: return "Workday Length"
@@ -185,7 +185,7 @@ extension Strings {
     }
 
     /// 설정·화면 제목 — 휴가 종류와 색
-    static var leaveKindsTitle: String {
+    public static var leaveKindsTitle: String {
         switch currentLang {
         case .korean: return "휴가 종류와 색"
         case .english: return "Leave Types & Colors"
@@ -214,7 +214,7 @@ extension Strings {
     }
 
     /// 휴가 종류 화면 설명
-    static var leaveKindsFooter: String {
+    public static var leaveKindsFooter: String {
         switch currentLang {
         case .korean: return "종류마다 색을 정하면 달력에서 그 색으로 보여요. 회사에서 쓰는 휴가 이름이 따로 있으면 새 종류로 만들어 쓰세요."
         case .english: return "Each type shows in its own color on the calendar. If your company uses its own leave names, create them as new types."
@@ -242,66 +242,8 @@ extension Strings {
         }
     }
 
-    /// 휴가 종류 화면 — 기본 종류 섹션
-    static var builtInLeaveKinds: String {
-        switch currentLang {
-        case .korean: return "기본 종류"
-        case .english: return "Built-in Types"
-        case .japanese: return "標準の種類"
-        case .chinese: return "默认类型"
-        case .german: return "Standardarten"
-        case .french: return "Types par défaut"
-        case .spanish: return "Tipos predeterminados"
-        case .italian: return "Tipi predefiniti"
-        case .portuguese: return "Tipos padrão"
-        case .chineseTraditional: return "預設假別"
-        case .dutch: return "Standaardtypes"
-        case .swedish: return "Standardtyper"
-        case .norwegian: return "Standardtyper"
-        case .danish: return "Standardtyper"
-        case .finnish: return "Vakiotyypit"
-        case .polish: return "Rodzaje domyślne"
-        case .czech: return "Výchozí typy"
-        case .greek: return "Προεπιλεγμένοι τύποι"
-        case .turkish: return "Varsayılan türler"
-        case .russian: return "Стандартные виды"
-        case .indonesian: return "Jenis bawaan"
-        case .thai: return "ประเภทพื้นฐาน"
-        case .vietnamese: return "Loại có sẵn"
-        }
-    }
-
-    /// 휴가 종류 화면 — 직접 만든 종류 섹션
-    static var myLeaveKinds: String {
-        switch currentLang {
-        case .korean: return "내가 만든 종류"
-        case .english: return "My Types"
-        case .japanese: return "自分で作った種類"
-        case .chinese: return "我创建的类型"
-        case .german: return "Eigene Arten"
-        case .french: return "Mes types"
-        case .spanish: return "Mis tipos"
-        case .italian: return "I miei tipi"
-        case .portuguese: return "Meus tipos"
-        case .chineseTraditional: return "我建立的假別"
-        case .dutch: return "Mijn types"
-        case .swedish: return "Mina typer"
-        case .norwegian: return "Mine typer"
-        case .danish: return "Mine typer"
-        case .finnish: return "Omat tyypit"
-        case .polish: return "Moje rodzaje"
-        case .czech: return "Moje typy"
-        case .greek: return "Οι τύποι μου"
-        case .turkish: return "Türlerim"
-        case .russian: return "Мои виды"
-        case .indonesian: return "Jenis buatanku"
-        case .thai: return "ประเภทของฉัน"
-        case .vietnamese: return "Loại của tôi"
-        }
-    }
-
     /// 새 휴가 종류 버튼
-    static var addLeaveKind: String {
+    public static var addLeaveKind: String {
         switch currentLang {
         case .korean: return "새 종류 만들기"
         case .english: return "New Type"
@@ -330,7 +272,7 @@ extension Strings {
     }
 
     /// 새 휴가 종류 — 이름 칸
-    static var leaveKindName: String {
+    public static var leaveKindName: String {
         switch currentLang {
         case .korean: return "이름"
         case .english: return "Name"
@@ -359,7 +301,7 @@ extension Strings {
     }
 
     /// 새 휴가 종류 — 색
-    static var leaveKindColor: String {
+    public static var leaveKindColor: String {
         switch currentLang {
         case .korean: return "색"
         case .english: return "Color"
@@ -388,7 +330,7 @@ extension Strings {
     }
 
     /// 새 휴가 종류 — 연차 차감
-    static var leaveKindDeducts: String {
+    public static var leaveKindDeducts: String {
         switch currentLang {
         case .korean: return "연차에서 빼기"
         case .english: return "Counts against annual leave"
@@ -417,7 +359,7 @@ extension Strings {
     }
 
     /// 기본 종류 색 되돌리기
-    static var resetLeaveColor: String {
+    public static var resetLeaveColor: String {
         switch currentLang {
         case .korean: return "기본 색으로"
         case .english: return "Reset Color"
@@ -446,7 +388,7 @@ extension Strings {
     }
 
     /// 달력 보기 범위 (접근성 라벨)
-    static var calendarSpanLabel: String {
+    public static var calendarSpanLabel: String {
         switch currentLang {
         case .korean: return "달력 보기 범위"
         case .english: return "Calendar Range"
@@ -475,7 +417,7 @@ extension Strings {
     }
 
     /// 여러 달 보기 — 달을 누르면 그 달로
-    static var calendarOverviewHint: String {
+    public static var calendarOverviewHint: String {
         switch currentLang {
         case .korean: return "달을 누르면 그 달을 자세히 볼 수 있어요"
         case .english: return "Tap a month to see it in detail"
@@ -504,7 +446,7 @@ extension Strings {
     }
 
     /// 직접 만든 종류 삭제 설명 — 기록은 남는다
-    static var deleteLeaveKindNote: String {
+    public static var deleteLeaveKindNote: String {
         switch currentLang {
         case .korean: return "이 종류로 등록한 휴가는 지워지지 않고 기본 종류로 보여요."
         case .english: return "Leave you added with this type stays, shown under its built-in type."
@@ -533,7 +475,7 @@ extension Strings {
     }
 
     /// "2시간 30분" · "2 h 30 min" — 앱 언어 기준
-    static func durationText(minutes: Int) -> String {
+    public static func durationText(minutes: Int) -> String {
         let f = DateComponentsFormatter()
         f.allowedUnits = minutes >= 60 ? [.hour, .minute] : [.minute]
         f.unitsStyle = .abbreviated
@@ -545,7 +487,7 @@ extension Strings {
     }
 
     /// 달력 보기 범위 이름 — "1개월" · "6 mo" · "1 yr" (앱 언어 기준)
-    static func calendarSpanName(months: Int) -> String {
+    public static func calendarSpanName(months: Int) -> String {
         let f = DateComponentsFormatter()
         f.allowedUnits = months >= 12 ? [.year] : [.month]
         f.unitsStyle = .short
@@ -560,7 +502,7 @@ extension Strings {
 
 extension Strings {
     /// 종류별 합계 — 휴가 종류마다 쓴 날·시간 (이탈리아 피드백)
-    static var statsByKindTitle: String {
+    public static var statsByKindTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "종류별 합계"
         case .english: return "Totals by leave kind"
@@ -589,7 +531,7 @@ extension Strings {
     }
 
     /// 종류별 합계 아래 설명
-    static var statsByKindFooter: String {
+    public static var statsByKindFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "끝난 예정 휴가는 사용으로 셉니다. 종일·반차는 그 요일 근무 시간으로 바꿔 시간을 셉니다."
         case .english: return "Planned leave that has passed counts as used. Full and half days are converted to hours using that weekday's work hours."
@@ -618,7 +560,7 @@ extension Strings {
     }
 
     /// 연간 한도 섹션 제목 (monte ore)
-    static var allowanceSection: String {
+    public static var allowanceSection: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "연간 한도"
         case .english: return "Yearly allowance"
@@ -647,7 +589,7 @@ extension Strings {
     }
 
     /// 연간 한도 켜기
-    static var allowanceToggle: String {
+    public static var allowanceToggle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "한도 정하기"
         case .english: return "Set a yearly allowance"
@@ -676,7 +618,7 @@ extension Strings {
     }
 
     /// 한도 단위 — 일
-    static var allowanceUnitDays: String {
+    public static var allowanceUnitDays: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "일"
         case .english: return "Days"
@@ -705,7 +647,7 @@ extension Strings {
     }
 
     /// 한도 단위 피커 제목
-    static var allowanceUnitLabel: String {
+    public static var allowanceUnitLabel: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "단위"
         case .english: return "Unit"
@@ -734,7 +676,7 @@ extension Strings {
     }
 
     /// 연간 한도 설명
-    static var allowanceFooter: String {
+    public static var allowanceFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "해마다 연차 기준월부터 새로 셉니다. 종일·반차로 쓴 날은 그 요일 근무 시간으로 바꿔 뺍니다."
         case .english: return "Resets every year from your leave year start month. Full and half days are subtracted using that weekday's work hours."
@@ -763,7 +705,7 @@ extension Strings {
     }
 
     /// 한도를 넘게 썼을 때
-    static func allowanceOver(_ amount: String) -> String {
+    public static func allowanceOver(_ amount: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "한도보다 \(amount) 더 썼어요"
         case .english: return "\(amount) over the allowance"
@@ -792,7 +734,7 @@ extension Strings {
     }
 
     /// 휴가 등록 화면 — 이걸 등록하면 남는 한도
-    static func allowanceAfterThis(_ amount: String) -> String {
+    public static func allowanceAfterThis(_ amount: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "등록하면 이 종류 한도가 \(amount) 남아요"
         case .english: return "After this, \(amount) of this kind's allowance is left"
@@ -821,7 +763,7 @@ extension Strings {
     }
 
     /// 휴가 등록 화면 — 이걸 등록하면 한도를 넘는다 (막지는 않음)
-    static func allowanceOverAfterThis(_ amount: String) -> String {
+    public static func allowanceOverAfterThis(_ amount: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "등록하면 이 종류 한도를 \(amount) 넘어요"
         case .english: return "This goes \(amount) over this kind's allowance"
@@ -850,7 +792,7 @@ extension Strings {
     }
 
     /// 휴가 종류 순서 바꾸기 안내
-    static var leaveKindsOrderFooter: String {
+    public static var leaveKindsOrderFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "편집을 눌러 끌어서 순서를 바꾸면 휴가 등록·수정 화면에도 그 순서로 나와요."
         case .english: return "Tap Edit and drag to reorder. Adding and editing leave use the same order."
@@ -879,7 +821,7 @@ extension Strings {
     }
 
     /// 편집 끝
-    static var doneEditing: String {
+    public static var doneEditing: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "완료"
         case .english: return "Done"
@@ -908,7 +850,7 @@ extension Strings {
     }
 
     /// 휴가 종류 목록 헤더 (기본 + 직접 만든 종류)
-    static var allLeaveKindsHeader: String {
+    public static var allLeaveKindsHeader: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "휴가 종류"
         case .english: return "Leave kinds"
@@ -937,7 +879,7 @@ extension Strings {
     }
 
     /// 요일별 근무 시간 (월~목 7시간 30분, 금 7시간 같은 경우)
-    static var workdayByWeekdayTitle: String {
+    public static var workdayByWeekdayTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "요일별 근무 시간"
         case .english: return "Hours by weekday"
@@ -966,7 +908,7 @@ extension Strings {
     }
 
     /// 요일별 근무 시간 설명
-    static var workdayByWeekdayFooter: String {
+    public static var workdayByWeekdayFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "요일마다 근무 시간이 다르면 따로 정하세요. 시간 단위 휴가를 일수로 바꿀 때와 종류별 시간 합계에 씁니다."
         case .english: return "Set this if your hours differ by day. Used to turn hourly leave into days and to total hours per leave kind."
@@ -995,7 +937,7 @@ extension Strings {
     }
 
     /// 요일별 근무 시간 — 기본값 그대로
-    static var workdayDefaultTag: String {
+    public static var workdayDefaultTag: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "기본"
         case .english: return "Default"
@@ -1024,7 +966,7 @@ extension Strings {
     }
 
     /// 요일별 근무 시간 모두 기본값으로
-    static var resetWorkdayHours: String {
+    public static var resetWorkdayHours: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "모두 기본 근무 시간으로"
         case .english: return "Reset all to default"
@@ -1057,7 +999,7 @@ extension Strings {
 
 extension Strings {
     /// 이전 연차 입력 — 사용한 만큼
-    static var pastLeaveModeUsed: String {
+    public static var pastLeaveModeUsed: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "사용한 연차"
         case .english: return "Leave used"
@@ -1086,7 +1028,7 @@ extension Strings {
     }
 
     /// 이전 연차 입력 — 지금 남은 만큼 (중간에 앱을 시작한 경우)
-    static var pastLeaveModeRemaining: String {
+    public static var pastLeaveModeRemaining: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "지금 남은 연차"
         case .english: return "Leave left now"
@@ -1115,7 +1057,7 @@ extension Strings {
     }
 
     /// 남은 연차로 넣으면 사용 연차로 바꿔 기록
-    static func pastLeaveWillRecordUsed(_ amount: String) -> String {
+    public static func pastLeaveWillRecordUsed(_ amount: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "사용한 연차 \(amount)로 기록돼요"
         case .english: return "Recorded as \(amount) used"
@@ -1144,7 +1086,7 @@ extension Strings {
     }
 
     /// 남은 연차가 받은 연차보다 많을 때
-    static var pastLeaveRemainingTooMuch: String {
+    public static var pastLeaveRemainingTooMuch: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "올해 받은 연차보다 많아요. 설정에서 총 연차를 먼저 바꿔 주세요."
         case .english: return "That's more than this year's total. Change your total leave in Settings first."
@@ -1173,7 +1115,7 @@ extension Strings {
     }
 
     /// 이미 일괄 입력한 기록이 있을 때
-    static var pastLeaveReplacesExisting: String {
+    public static var pastLeaveReplacesExisting: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "전에 일괄 입력한 값은 이 값으로 바뀌어요."
         case .english: return "Your earlier bulk entry will be replaced."
@@ -1206,7 +1148,7 @@ extension Strings {
 
 extension Strings {
     /// 남은 한도 다음 해로 넘기기
-    static var allowanceCarryToggle: String {
+    public static var allowanceCarryToggle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "남은 양을 다음 해로 넘겨요"
         case .english: return "Unused balance rolls over"
@@ -1235,7 +1177,7 @@ extension Strings {
     }
 
     /// 넘겨 쓰기 시작 해에 쌓여 있던 양
-    static func allowanceStartBalance(_ year: String) -> String {
+    public static func allowanceStartBalance(_ year: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(year) 시작 때 쌓인 양"
         case .english: return "Built up by \(year)"
@@ -1264,7 +1206,7 @@ extension Strings {
     }
 
     /// 넘겨 쓰기 켰을 때 설명
-    static var allowanceCarryOnFooter: String {
+    public static var allowanceCarryOnFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "해마다 남은 양이 다음 해 한도에 더해져요 (쌓이는 병가처럼). 지금까지 이미 쌓인 양을 위에 넣으세요."
         case .english: return "Whatever is left each year is added to next year, like sick days that roll over. Enter what you have already built up above."
@@ -1293,7 +1235,7 @@ extension Strings {
     }
 
     /// 넘겨 쓰기 껐을 때 설명
-    static var allowanceCarryOffFooter: String {
+    public static var allowanceCarryOffFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "끄면 남은 양은 해가 바뀌면 사라져요 (개인 휴가처럼)."
         case .english: return "When off, anything left resets at the end of the leave year, like personal days."
@@ -1322,7 +1264,7 @@ extension Strings {
     }
 
     /// 지난해에서 넘어온 양
-    static func allowanceCarriedIn(_ amount: String) -> String {
+    public static func allowanceCarriedIn(_ amount: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "지난해에서 넘어온 \(amount) 포함"
         case .english: return "Includes \(amount) rolled over"
@@ -1351,7 +1293,7 @@ extension Strings {
     }
 
     /// 학교 달력 가져오기
-    static var schoolImportTitle: String {
+    public static var schoolImportTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "학교 달력 가져오기"
         case .english: return "Import school calendar"
@@ -1380,7 +1322,7 @@ extension Strings {
     }
 
     /// 학교 달력 가져오기 안내
-    static var schoolImportGuide: String {
+    public static var schoolImportGuide: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "학교 달력 사진·PDF를 고르거나 글을 붙여 넣으세요. 칸으로 된 달력보다 날짜 목록(주요 일정) 부분을 잘 읽어요."
         case .english: return "Choose a photo or PDF of your school calendar, or paste its text. A list of key dates reads better than a grid."
@@ -1409,7 +1351,7 @@ extension Strings {
     }
 
     /// PDF·파일 고르기
-    static var schoolImportChooseFile: String {
+    public static var schoolImportChooseFile: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "PDF·파일 고르기"
         case .english: return "Choose PDF or file"
@@ -1438,7 +1380,7 @@ extension Strings {
     }
 
     /// 글 붙여 넣기
-    static var schoolImportPaste: String {
+    public static var schoolImportPaste: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "글 붙여 넣기"
         case .english: return "Paste text"
@@ -1467,7 +1409,7 @@ extension Strings {
     }
 
     /// 날짜 읽기
-    static var schoolImportRead: String {
+    public static var schoolImportRead: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "날짜 읽기"
         case .english: return "Find dates"
@@ -1496,7 +1438,7 @@ extension Strings {
     }
 
     /// 학년도
-    static var schoolImportSchoolYear: String {
+    public static var schoolImportSchoolYear: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "학년도"
         case .english: return "School year"
@@ -1525,7 +1467,7 @@ extension Strings {
     }
 
     /// 학교 달력 결과 설명
-    static var schoolImportFooter: String {
+    public static var schoolImportFooter: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "쉬는 날은 내 방학으로 넣어 연차에서 빠지지 않고, 공휴일 앞뒤 휴가 제한도 그 앞뒤에 걸려요. 시험 주간 같은 날은 휴가 불가 기간으로 넣으면 추천이 피해요."
         case .english: return "Days off are added as your breaks: no leave is taken, and the no-leave-around-holidays rule applies before and after them. Add testing weeks as no-leave periods and suggestions will avoid them."
@@ -1554,7 +1496,7 @@ extension Strings {
     }
 
     /// 날짜 못 찾음
-    static var schoolImportNothingFound: String {
+    public static var schoolImportNothingFound: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "날짜를 찾지 못했어요. 날짜 목록이 보이게 다시 찍거나 글을 붙여 넣어 보세요."
         case .english: return "No dates found. Try a photo of the list of dates, or paste the text."
@@ -1583,7 +1525,7 @@ extension Strings {
     }
 
     /// 쉬는 날
-    static var schoolImportDayOff: String {
+    public static var schoolImportDayOff: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "쉬는 날"
         case .english: return "Day off"
@@ -1612,7 +1554,7 @@ extension Strings {
     }
 
     /// 이미 쉬는 날
-    static var schoolImportAlreadyOff: String {
+    public static var schoolImportAlreadyOff: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "이미 쉬는 날이에요"
         case .english: return "Already a day off"
@@ -1641,7 +1583,7 @@ extension Strings {
     }
 
     /// 이름 없는 학교 쉬는 날
-    static var schoolImportUntitled: String {
+    public static var schoolImportUntitled: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "학교 쉬는 날"
         case .english: return "No school"
@@ -1670,7 +1612,7 @@ extension Strings {
     }
 
     /// 고른 항목 넣기
-    static func schoolImportAdd(_ n: Int) -> String {
+    public static func schoolImportAdd(_ n: Int) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "\(n)개 넣기"
         case .english: return "Add \(n)"
@@ -1703,7 +1645,7 @@ extension Strings {
 
 extension Strings {
     /// 보너스 연차 시트 — 시간으로 넣으면 며칠로 더해지는지. {w} 하루 근무 시간, {d} 환산 일수
-    static func bonusHoursFooter(workday w: String, days d: String) -> String {
+    public static func bonusHoursFooter(workday w: String, days d: String) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "하루 근무 시간(\(w)) 기준으로 \(d)로 더해요. 시간 단위로 쉬면 그만큼 줄어요. 근무 시간은 설정에서 바꿀 수 있어요."
         case .english: return "Added as \(d), based on your \(w) workday. Time you take off by the hour comes out of it. You can change the workday length in Settings."
@@ -1736,7 +1678,7 @@ extension Strings {
 
 extension Strings {
     /// 반차·시간 단위 휴가가 있는 날에 다른 휴가를 더 넣는 버튼
-    static var addAnotherLeaveOnThisDate: String {
+    public static var addAnotherLeaveOnThisDate: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "이 날짜에 다른 휴가 추가"
         case .english: return "Add another leave on this date"
@@ -1769,7 +1711,7 @@ extension Strings {
 
 extension Strings {
     /// 휴일 관리에서 보고 있는 해 말고 다른 해에도 항목이 있을 때 목록 아래에 붙는 줄
-    static func datesInOtherYears(_ n: Int) -> String {
+    public static func datesInOtherYears(_ n: Int) -> String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "다른 해에 \(n)개 더 있어요"
         case .english: return n == 1 ? "1 more in another year" : "\(n) more in other years"
@@ -1797,7 +1739,7 @@ extension Strings {
         }
     }
 
-    static var showAllDates: String {
+    public static var showAllDates: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "모두 보기"
         case .english: return "See All"
@@ -1826,7 +1768,7 @@ extension Strings {
     }
 
     /// 모든 해의 방학과 내 공휴일을 한 화면에 모은 목록의 제목
-    static var allBreaksAndHolidaysTitle: String {
+    public static var allBreaksAndHolidaysTitle: String {
         switch LanguageManager.shared.currentLanguage {
         case .korean: return "방학과 내 공휴일 전체"
         case .english: return "All Breaks & Holidays"

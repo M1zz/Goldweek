@@ -12,6 +12,7 @@
 
 import SwiftUI
 import TipKit
+import GoldweekCore
 
 enum AppTips {
     static let photoImport = PhotoImportTip()
@@ -19,7 +20,6 @@ enum AppTips {
     static let timeMachine = TimeMachineTip()
     static let calendarTap = CalendarTapTip()
     static let recommendation = RecommendationTip()
-    static let sharePlan = SharePlanTip()
     static let bonusLeave = BonusLeaveTip()
     static let leaveHistory = LeaveHistoryTip()
 
@@ -80,14 +80,6 @@ struct RecommendationTip: Tip {
     var message: Text? { Text(Strings.tipRecommendMessage) }
     var image: Image? { Image(systemName: "sparkles") }
     var options: [any TipOption] { MaxDisplayCount(3) }
-}
-
-/// 연차 현황 공유 — 홈 카드의 공유 버튼에 popover로 표시
-struct SharePlanTip: Tip {
-    var title: Text { Text(Strings.tipSharePlanTitle) }
-    var message: Text? { Text(Strings.tipSharePlanMessage) }
-    var image: Image? { Image(systemName: "square.and.arrow.up") }
-    var options: [any TipOption] { MaxDisplayCount(2) }
 }
 
 /// 보너스 연차 — 설정의 보너스 섹션에 표시

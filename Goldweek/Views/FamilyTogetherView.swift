@@ -10,6 +10,7 @@
 
 import SwiftUI
 import SwiftData
+import GoldweekCore
 
 // MARK: - 계산
 

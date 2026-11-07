@@ -19,6 +19,7 @@
 
 import SwiftUI
 import LeeoKit
+import GoldweekCore
 
 // MARK: - 추천 미리보기
 
