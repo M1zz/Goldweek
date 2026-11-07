@@ -15144,33 +15144,6 @@ public enum Strings {
         }
     }
 
-    public static var holidayMgmtSubtitle: String {
-        switch lang {
-        case .korean: return "공휴일 추가·숨기기, 방학 추가"
-        case .english: return "Add or hide holidays, add school breaks"
-        case .swedish: return "Lägg till eller dölj helgdagar, lägg till skollov"
-        case .norwegian: return "Legg til eller skjul helligdager, legg til skoleferier"
-        case .danish: return "Tilføj eller skjul helligdage, tilføj skoleferier"
-        case .finnish: return "Lisää tai piilota pyhäpäiviä, lisää koululomia"
-        case .polish: return "Dodaj lub ukryj święta, dodaj przerwy szkolne"
-        case .czech: return "Přidej nebo skryj svátky, přidej školní prázdniny"
-        case .greek: return "Πρόσθεσε ή κρύψε αργίες, πρόσθεσε σχολικές διακοπές"
-        case .turkish: return "Tatilleri ekle veya gizle, okul tatilleri ekle"
-        case .russian: return "Добавить или скрыть праздники, добавить каникулы"
-        case .indonesian: return "Tambah atau sembunyikan hari libur, tambah libur sekolah"
-        case .thai: return "เพิ่มหรือซ่อนวันหยุด เพิ่มช่วงปิดเทอม"
-        case .vietnamese: return "Thêm hoặc ẩn ngày lễ, thêm kỳ nghỉ học"
-        case .dutch: return "Feestdagen toevoegen of verbergen, schoolvakanties toevoegen"
-        case .japanese: return "祝日の追加・非表示、長期休みの追加"
-        case .chinese: return "添加·隐藏假日，添加假期"
-        case .german: return "Feiertage verwalten, Ferien eintragen"
-        case .french: return "Gérer les jours fériés, ajouter des vacances"
-        case .spanish: return "Añade u oculta festivos y añade vacaciones escolares"
-        case .italian: return "Aggiungi o nascondi festività, aggiungi vacanze scolastiche"
-        case .portuguese: return "Adicione ou oculte feriados e adicione férias escolares"
-        case .chineseTraditional: return "新增或隱藏國定假日、新增寒暑假"
-        }
-    }
 
     /// 설정 > 공휴일 — 홈의 "다가오는 휴가" 카드에 공휴일을 함께 보여줄지
     public static var showHolidaysInUpcomingTitle: String {
@@ -16625,34 +16598,6 @@ public enum Strings {
 
     // MARK: - 이용 중인 버전 · 연차 계산 기준 · 주말
 
-    /// 설정 — 무료/Pro 상태 섹션 제목
-    public static var planStatusTitle: String {
-        switch lang {
-        case .korean: return "이용 중인 버전"
-        case .english: return "Your Plan"
-        case .swedish: return "Din plan"
-        case .norwegian: return "Din plan"
-        case .danish: return "Din plan"
-        case .finnish: return "Sinun pakettisi"
-        case .polish: return "Twój plan"
-        case .czech: return "Tvůj plán"
-        case .greek: return "Το πλάνο σου"
-        case .turkish: return "Planın"
-        case .russian: return "Ваш тариф"
-        case .indonesian: return "Paketmu"
-        case .thai: return "แพ็กเกจของคุณ"
-        case .vietnamese: return "Gói của bạn"
-        case .dutch: return "Jouw abonnement"
-        case .japanese: return "ご利用中のプラン"
-        case .chinese: return "当前版本"
-        case .german: return "Dein Tarif"
-        case .french: return "Votre formule"
-        case .spanish: return "Tu plan"
-        case .italian: return "Il tuo piano"
-        case .portuguese: return "Seu plano"
-        case .chineseTraditional: return "目前方案"
-        }
-    }
 
     /// 무료 버전 이름
     public static var planFree: String {
@@ -19467,33 +19412,6 @@ public enum Strings {
         }
     }
 
-    public static var shareScheduleSubtitle: String {
-        switch lang {
-        case .korean: return "가족·친구와 휴가 일정을 실시간으로 공유"
-        case .english: return "Share your leave schedule with family & friends in real time"
-        case .swedish: return "Dela ditt ledighetsschema med familj och vänner i realtid"
-        case .norwegian: return "Del ferieplanen din med familie og venner i sanntid"
-        case .danish: return "Del din ferieplan med familie og venner i realtid"
-        case .finnish: return "Jaa lomakalenterisi perheen ja ystävien kanssa reaaliajassa"
-        case .polish: return "Udostępnij plan urlopów rodzinie i znajomym na żywo"
-        case .czech: return "Sdílej plán dovolené s rodinou a přáteli v reálném čase"
-        case .greek: return "Μοιράσου το πρόγραμμα αδειών σου με οικογένεια και φίλους σε πραγματικό χρόνο"
-        case .turkish: return "İzin programını aile ve arkadaşlarınla gerçek zamanlı paylaş"
-        case .russian: return "Делитесь графиком отпусков с семьёй и друзьями в реальном времени"
-        case .indonesian: return "Bagikan jadwal cutimu ke keluarga & teman secara real-time"
-        case .thai: return "แชร์ตารางวันลากับครอบครัวและเพื่อนแบบเรียลไทม์"
-        case .vietnamese: return "Chia sẻ lịch nghỉ phép với gia đình và bạn bè theo thời gian thực"
-        case .dutch: return "Deel je verlofplanning in realtime met familie en vrienden"
-        case .japanese: return "家族や友達と休暇予定をリアルタイムで共有"
-        case .chinese: return "与家人朋友实时共享休假日程"
-        case .german: return "Teile deinen Urlaubsplan in Echtzeit mit Familie und Freunden"
-        case .french: return "Partagez vos congés en temps réel avec famille et amis"
-        case .spanish: return "Comparte tus vacaciones con familia y amigos en tiempo real"
-        case .italian: return "Condividi le tue ferie in tempo reale con famiglia e amici"
-        case .portuguese: return "Compartilhe suas férias em tempo real com família e amigos"
-        case .chineseTraditional: return "與家人朋友即時共享休假行程"
-        }
-    }
 
     public static var shareMySection: String {
         switch lang {

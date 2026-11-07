@@ -283,7 +283,8 @@ struct PaywallView: View {
         if availableTerms.isEmpty {
             priceStatus
         } else {
-            VStack(spacing: 10) {
+            // 연간 줄의 할인 배지가 줄 위로 올라오므로 간격과 위 여백을 둔다
+            VStack(spacing: 18) {
                 ForEach(availableTerms, id: \.self) { optionRow($0) }
                 // 평생 가격이 오르기 전까지만 서는 한 줄
                 if term == .lifetime, LeeoLadderSchedule.showsLifetimeNotice() {
@@ -295,6 +296,7 @@ struct PaywallView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
+            .padding(.top, 10)
         }
     }
 
@@ -310,16 +312,7 @@ struct PaywallView: View {
                     .foregroundStyle(selected ? Color.accentColor : Color(.tertiaryLabel))
                     .voDecorative()
                 VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: 6) {
-                        Text(title(t)).font(.body.weight(.semibold))
-                        if let badge = badge(t) {
-                            Text(badge)
-                                .font(.caption2.weight(.bold))
-                                .padding(.horizontal, 6).padding(.vertical, 2)
-                                .background(Color.accentColor, in: Capsule())
-                                .foregroundStyle(.white)
-                        }
-                    }
+                    Text(title(t)).font(.body.weight(.semibold))
                     if let caption = caption(t) {
                         Text(caption)
                             .font(.footnote)
@@ -328,10 +321,21 @@ struct PaywallView: View {
                     }
                 }
                 Spacer(minLength: 8)
-                Text(price(t) ?? " ")
-                    .font(.body.weight(.semibold))
-                    .monospacedDigit()
-                    .multilineTextAlignment(.trailing)
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(price(t) ?? " ")
+                        .font(.body.weight(.semibold))
+                        .monospacedDigit()
+                        .multilineTextAlignment(.trailing)
+                    // 할인이 붙은 연간이면 월간으로 열두 달 낼 값을 그어 보인다 — 얼마나 아끼는지 한눈에
+                    if saving(t) != nil, let monthly = product(.monthly) {
+                        Text((monthly.price * 12).formatted(monthly.priceFormatStyle))
+                            .font(.footnote)
+                            .strikethrough()
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                            .voDecorative()
+                    }
+                }
             }
             .foregroundStyle(Color.primary)
             .padding(.horizontal, 16)
@@ -342,6 +346,9 @@ struct PaywallView: View {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .strokeBorder(selected ? Color.accentColor : .clear, lineWidth: 2)
             )
+            .overlay(alignment: .topTrailing) {
+                if let percent = saving(t) { savingBadge(percent) }
+            }
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -392,11 +399,22 @@ struct PaywallView: View {
         }
     }
 
-    /// 연간이 월간 열두 달보다 얼마나 싼가. 10% 넘게 쌀 때만 붙인다.
-    private func badge(_ t: Term) -> String? {
-        guard t == .yearly, let saving = PaywallPricing.yearlySaving(monthly: product(.monthly)?.price,
-                                                                     yearly: product(.yearly)?.price) else { return nil }
-        return Strings.yearlySaving(Int((saving * 100).rounded()))
+    /// 연간이 월간 열두 달보다 몇 % 싼가. 연간 줄에만, 5% 이상일 때만.
+    private func saving(_ t: Term) -> Int? {
+        guard t == .yearly else { return nil }
+        return PaywallPricing.yearlySaving(monthly: product(.monthly)?.price, yearly: product(.yearly)?.price)
+    }
+
+    /// 연간 줄 모서리에 올라앉는 할인 배지 — 눈에 띄게(LeeoKit 3.37 페이월과 같은 모양)
+    private func savingBadge(_ percent: Int) -> some View {
+        Text(Strings.yearlySaving(percent))
+            .font(.subheadline.weight(.heavy))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 5)
+            .background(Color.accentColor, in: Capsule())
+            .shadow(color: Color.accentColor.opacity(0.35), radius: 4, y: 2)
+            .offset(x: -14, y: -14)
     }
 
     /// 가격 로드 실패/로딩 중. 빈칸 대신 상태를 보여준다
@@ -629,11 +647,12 @@ struct PaywallView: View {
 // MARK: - 값 계산
 
 enum PaywallPricing {
-    /// 연간이 월간 열두 달보다 싼 몫(0.5 = 50%). 10% 넘게 쌀 때만, 모르면 nil. **순수 함수.**
-    static func yearlySaving(monthly: Decimal?, yearly: Decimal?) -> Double? {
+    /// 연간이 월간 열두 달보다 몇 % 싼가(내림). 5% 아래거나 모르면 nil — LeeoKit 페이월과 같은 기준. **순수 함수.**
+    static func yearlySaving(monthly: Decimal?, yearly: Decimal?) -> Int? {
         guard let monthly, let yearly, monthly > 0 else { return nil }
-        let saving = 1 - NSDecimalNumber(decimal: yearly / (monthly * 12)).doubleValue
-        return saving > 0.1 ? saving : nil
+        let ratio = NSDecimalNumber(decimal: yearly / (monthly * 12)).doubleValue
+        let percent = Int(((1 - ratio) * 100).rounded(.down))
+        return percent >= 5 ? percent : nil
     }
 
     /// 평생이 연간 몇 해치인가(내림). 두 해 아래면 nil. **순수 함수.**

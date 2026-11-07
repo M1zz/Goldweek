@@ -64,33 +64,6 @@ extension Strings {
         }
     }
 
-    public static var familyAnniversariesSubtitle: String {
-        switch LanguageManager.shared.currentLanguage {
-        case .korean: return "생신·결혼기념일·기일을 챙기고 휴가 내기"
-        case .english: return "Birthdays, anniversaries and remembrance days"
-        case .japanese: return "誕生日・結婚記念日・命日を忘れずに休む"
-        case .chinese: return "记住生日、结婚纪念日和忌日，提前休假"
-        case .german: return "Geburtstage, Hochzeitstage und Gedenktage"
-        case .french: return "Anniversaires, mariages et jours de mémoire"
-        case .spanish: return "Cumpleaños, aniversarios y días de recuerdo"
-        case .italian: return "Compleanni, anniversari e giorni del ricordo"
-        case .portuguese: return "Aniversários, casamentos e datas de memória"
-        case .chineseTraditional: return "記住生日、結婚紀念日和忌日，提前請假"
-        case .dutch: return "Verjaardagen, trouwdagen en gedenkdagen"
-        case .swedish: return "Födelsedagar, bröllopsdagar och minnesdagar"
-        case .norwegian: return "Bursdager, bryllupsdager og minnedager"
-        case .danish: return "Fødselsdage, bryllupsdage og mindedage"
-        case .finnish: return "Syntymäpäivät, hääpäivät ja muistopäivät"
-        case .polish: return "Urodziny, rocznice ślubu i dni pamięci"
-        case .czech: return "Narozeniny, výročí svatby a dny vzpomínek"
-        case .greek: return "Γενέθλια, επέτειοι γάμου και μνημόσυνα"
-        case .turkish: return "Doğum günleri, evlilik yıl dönümleri ve anma günleri"
-        case .russian: return "Дни рождения, годовщины свадьбы и дни памяти"
-        case .indonesian: return "Ulang tahun, hari pernikahan, dan hari peringatan"
-        case .thai: return "วันเกิด วันครบรอบแต่งงาน และวันรำลึก"
-        case .vietnamese: return "Sinh nhật, ngày cưới và ngày giỗ"
-        }
-    }
 
     public static var familyAnniversariesFooter: String {
         switch LanguageManager.shared.currentLanguage {

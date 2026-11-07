@@ -215,8 +215,8 @@ final class MaturityFeatureTests: XCTestCase {
     /// 연간 배지는 월간 열두 달보다 10% 넘게 쌀 때만, 평생은 연간 두 해치 이상일 때만 말한다.
     func testPaywallPricing() {
         // 프로: 월 6.49 × 12 = 77.88, 연 19.99 → 74% 절약
-        let saving = try? XCTUnwrap(PaywallPricing.yearlySaving(monthly: 6.49, yearly: 19.99))
-        XCTAssertEqual(Int(((saving ?? 0) * 100).rounded()), 74)
+        XCTAssertEqual(PaywallPricing.yearlySaving(monthly: 6.49, yearly: 19.99), 74)
+        XCTAssertEqual(PaywallPricing.yearlySaving(monthly: 10, yearly: 114), 5)     // 5% 부터 붙는다
         XCTAssertNil(PaywallPricing.yearlySaving(monthly: 10, yearly: 115))   // 4% 만 싸다
         XCTAssertNil(PaywallPricing.yearlySaving(monthly: nil, yearly: 19.99))
         XCTAssertNil(PaywallPricing.yearlySaving(monthly: 0, yearly: 19.99))

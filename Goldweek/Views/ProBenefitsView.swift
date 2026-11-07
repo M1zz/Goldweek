@@ -27,6 +27,9 @@ struct ProBenefitsView: View {
 
     /// 페이월을 열 때 처음 골라 둘 등급
     @State private var paywallTier: ProTier?
+    @State private var showingManageSubscription = false
+    @State private var showingGraduation = false
+    @State private var showingLifetimePaywall = false
 
     private var tier: ProTier { ProManager.shared.tier }
 
@@ -43,6 +46,7 @@ struct ProBenefitsView: View {
         let _ = LanguageManager.shared.currentLanguage
         List {
             heroSection
+            subscriptionSection
             limitsSection
             unlockedSection
             if let next = ProBenefits.nextTier(after: tier) {
@@ -55,6 +59,9 @@ struct ProBenefitsView: View {
         .sheet(item: $paywallTier) { tier in
             PaywallView(initialProductID: PaywallView.defaultProductID(for: tier))
         }
+        .manageSubscriptionsSheet(isPresented: $showingManageSubscription)
+        .sheet(isPresented: $showingGraduation) { GraduationSheet() }
+        .sheet(isPresented: $showingLifetimePaywall) { PaywallView(initialProductID: ProManager.proProductID) }
         .task { await ShareSyncService.shared.refreshSharedSchedules() }
     }
 
@@ -80,6 +87,27 @@ struct ProBenefitsView: View {
             }
             .padding(.vertical, 6)
             .accessibilityElement(children: .combine)
+        }
+    }
+
+    // MARK: - 구독
+
+    /// 구독 중일 때만 — 구독 관리와, 구독을 평생으로 바꾸는 길(LeeoGraduation). 설정 첫 화면에서 옮겨 왔다.
+    @ViewBuilder
+    private var subscriptionSection: some View {
+        switch ProManager.shared.activePlan {
+        case .yearly:
+            Section {
+                Button(Strings.manageSubscription) { showingManageSubscription = true }
+                Button(Strings.switchToLifetimeEntry) { showingGraduation = true }
+            }
+        case .shortTerm:
+            Section {
+                Button(Strings.manageSubscription) { showingManageSubscription = true }
+                Button(Strings.switchToLifetimeEntry) { showingLifetimePaywall = true }
+            }
+        default:
+            EmptyView()
         }
     }
 

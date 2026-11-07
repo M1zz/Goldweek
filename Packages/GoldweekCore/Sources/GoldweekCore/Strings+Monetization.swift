@@ -1122,10 +1122,6 @@ extension Strings {
 // MARK: - 페이월 템플릿 (2026-11, 클립키보드와 같은 틀)
 
 extension Strings {
-    /// 설정의 선물 칸 머리. 응원은 따로 칸을 둔다(요금제 바로 아래).
-    public static var giftSection: String {
-        pick([.korean: "선물하기", .english: "Gifts", .japanese: "プレゼント", .chinese: "赠送", .german: "Verschenken", .french: "Offrir", .spanish: "Regalar", .italian: "Regala", .portuguese: "Presentear", .chineseTraditional: "贈送", .dutch: "Cadeau geven", .swedish: "Ge bort", .norwegian: "Gi bort", .danish: "Giv i gave", .finnish: "Lahjoita", .polish: "Podaruj", .czech: "Darovat", .greek: "Δώρα", .turkish: "Hediye et", .russian: "Подарить", .indonesian: "Hadiahkan", .thai: "มอบเป็นของขวัญ", .vietnamese: "Tặng quà"])
-    }
 
     /// 월 · 연 · 평생 목록의 월 줄 이름. `planYearly` · `planLifetime` 과 짝.
     public static var planMonthly: String {

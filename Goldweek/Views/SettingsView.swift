@@ -58,11 +58,11 @@ struct SettingsView: View {
     @State private var backupAlertMessage = ""
     @State private var showingRestoreConfirm = false
     @State private var showingPaywall = false
-    @State private var showingManageSubscription = false
     /// 페이월이 앞세울 칸. 기능을 누른 자리가 정한다. 없으면 맨 위부터.
     @State private var paywallProductID: String?
     /// 구독 졸업(구독을 프로 평생으로) 화면
-    @State private var showingGraduation = false
+    /// 선물 결제 문제로 개발자에게 묻는 중인 선물
+    @State private var supportGift: SupportGift?
     @State private var editingBonus: BonusLeave?
     @State private var pendingBonusDeleteOffsets: IndexSet?
     @State private var showingBonusDeleteConfirm = false
@@ -334,60 +334,18 @@ struct SettingsView: View {
                                 .accessibilityInputLabels([Text(Strings.planUpgrade), Text("Pro")])
                         }
                     }
-                    if case .yearly = ProManager.shared.activePlan {
-                        Button(Strings.manageSubscription) { showingManageSubscription = true }
-                        // 구독 중일 때만 서는 줄: 구독을 평생으로 바꾸는 길을 늘 열어 둔다(LeeoGraduation)
-                        Button(Strings.switchToLifetimeEntry) { showingGraduation = true }
-                    } else if case .shortTerm = ProManager.shared.activePlan {
-                        Button(Strings.manageSubscription) { showingManageSubscription = true }
-                        Button(Strings.switchToLifetimeEntry) {
-                            paywallProductID = ProManager.proProductID
-                            showingPaywall = true
-                        }
+                    // 응원 · 선물도 같은 칸 — 이 앱에 돈을 내는 길은 한곳에 모은다. 간단히 보기에서도, 무료 사용자에게도 선다.
+                    if let tipJar = ProExtras.shared.tipJar {
+                        TipRow(tipJar: tipJar)
                     }
-                    // 구매 복원 — 누구에게나 선다. 플러스를 쓰는 사람도 다른 기기에서 산 프로 평생을 되살릴 수 있어야 한다
-                    Button {
-                        Task {
-                            let result = await ProManager.shared.restorePurchases()
-                            switch result {
-                            case .restored:
-                                restoreResultMessage = Strings.restorePurchasesSuccess
-                                HapticFeedback.success()
-                            case .nothingToRestore:
-                                restoreResultMessage = Strings.restorePurchasesNone
-                            case .failed(let reason):
-                                restoreResultMessage = Strings.restorePurchasesFailed(reason)
-                                HapticFeedback.error()
-                            }
-                            showingRestoreResult = true
-                        }
-                    } label: {
-                        HStack {
-                            Image(systemName: "arrow.clockwise.circle.fill")
-                                .foregroundStyle(.blue)
-                            Text(Strings.restorePurchase)
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            if ProManager.shared.isLoading {
-                                ProgressView()
-                            }
-                        }
-                    }
-                    .disabled(ProManager.shared.isLoading)
+                    GiftRows(gifts: ProExtras.shared.gifts) { supportGift = $0 }
                 } header: {
-                    Text(Strings.planStatusTitle)
+                    Text(verbatim: "Goldweek")
                 } footer: {
                     if !ProManager.shared.isPro, ProManager.shared.isLegacyUser {
                         Text(Strings.legacyFeaturesNote)
                     }
                 }
-
-                // 요금제 바로 아래: 내 응원, 그 아래 선물하기.
-                // 간단히 보기에서도 둔다 — 응원 · 선물은 배울 기능이 아니라 한 줄이고, 무료 사용자도 낸다.
-                if let tipJar = ProExtras.shared.tipJar {
-                    TipSection(tipJar: tipJar)
-                }
-                GiftSection(gifts: ProExtras.shared.gifts)
 
                 // 설정은 묶음마다 한 줄 — 누르면 안쪽 화면에서 고친다
                 Section {
@@ -403,56 +361,16 @@ struct SettingsView: View {
 
                 if AppSurface.shared.shows(.everything) {
                     Section {
-                        NavigationLink(destination: HolidayManagementView(country: profile.country)) {
-                            HStack(spacing: 12) {
-                                Image(systemName: "calendar.badge.plus")
-                                    .foregroundStyle(.orange)
-                                    .frame(width: 28)
-                                    .voDecorative()
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(Strings.holidayMgmtTitle)
-                                    Text(Strings.holidayMgmtSubtitle)
-                                        .font(.body)
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                            .accessibilityElement(children: .combine)
+                        settingsLink(Strings.holidayMgmtTitle, icon: "calendar.badge.plus", color: .orange) {
+                            HolidayManagementView(country: profile.country)
                         }
-
                         // 가족 기념일 — 쉬는 날은 아니지만 가족에게는 공휴일 같은 날
-                        NavigationLink(destination: FamilyAnniversariesView()) {
-                            HStack(spacing: 12) {
-                                Image(systemName: "heart.fill")
-                                    .foregroundStyle(.pink)
-                                    .frame(width: 28)
-                                    .voDecorative()
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(Strings.familyAnniversariesTitle)
-                                    Text(Strings.familyAnniversariesSubtitle)
-                                        .font(.body)
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                            .accessibilityElement(children: .combine)
+                        settingsLink(Strings.familyAnniversariesTitle, icon: "heart.fill", color: .pink) {
+                            FamilyAnniversariesView()
                         }
-
-                        // 일정 공유 (가족·친구와 실시간 공유)
-                        NavigationLink(destination: ShareScheduleView(profile: profile)
-                            .onAppear { AppTips.familyShare.invalidate(reason: .actionPerformed) }
-                        ) {
-                            HStack(spacing: 12) {
-                                Image(systemName: "person.2.fill")
-                                    .foregroundStyle(.blue)
-                                    .frame(width: 28)
-                                    .voDecorative()
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(Strings.shareScheduleTitle)
-                                    Text(Strings.shareScheduleSubtitle)
-                                        .font(.body)
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                            .accessibilityElement(children: .combine)
+                        settingsLink(Strings.shareScheduleTitle, icon: "person.2.fill", color: .blue) {
+                            ShareScheduleView(profile: profile)
+                                .onAppear { AppTips.familyShare.invalidate(reason: .actionPerformed) }
                         }
                     }
                 }
@@ -522,8 +440,13 @@ struct SettingsView: View {
             .sheet(isPresented: $showingPaywall, onDismiss: { paywallProductID = nil }) {
                 PaywallView(initialProductID: paywallProductID)
             }
-            .manageSubscriptionsSheet(isPresented: $showingManageSubscription)
-            .sheet(isPresented: $showingGraduation) { GraduationSheet() }
+            .sheet(item: $supportGift) { gift in
+                NavigationStack {
+                    // 결제 문제로 바로 — 결제 번호 · 코드를 붙여 개발자가 바로 찾게 한다
+                    LeeoFeedbackView<GoldweekSpec>(initialType: .bug, extraInfo: gift.store.supportLines,
+                                                   initialCategory: .purchase)
+                }
+            }
             .sheet(isPresented: $showingCalendarImport) {
                 CalendarImportSheet(existingRecords: Array(leaveRecords))
             }
@@ -1502,6 +1425,35 @@ struct SettingsView: View {
             }
 
             Section(Strings.appInfo) {
+            // 구매 복원 — 앱 정보 맨 위. 페이월에도 있지만, 플러스를 쓰는 사람도 다른 기기에서 산 프로 평생을 되살릴 수 있어야 한다
+            Button {
+                Task {
+                    let result = await ProManager.shared.restorePurchases()
+                    switch result {
+                    case .restored:
+                        restoreResultMessage = Strings.restorePurchasesSuccess
+                        HapticFeedback.success()
+                    case .nothingToRestore:
+                        restoreResultMessage = Strings.restorePurchasesNone
+                    case .failed(let reason):
+                        restoreResultMessage = Strings.restorePurchasesFailed(reason)
+                        HapticFeedback.error()
+                    }
+                    showingRestoreResult = true
+                }
+            } label: {
+                HStack {
+                    Image(systemName: "arrow.clockwise.circle.fill")
+                        .foregroundStyle(.blue)
+                    Text(Strings.restorePurchase)
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    if ProManager.shared.isLoading {
+                        ProgressView()
+                    }
+                }
+            }
+            .disabled(ProManager.shared.isLoading)
             Link(destination: GoldweekSpec.legal.privacyURL) {
                 Label(Strings.privacyPolicy, systemImage: "arrow.up.forward.square")
             }
@@ -1784,29 +1736,27 @@ struct DeveloperContactRows: View {
 
 // MARK: - 선물 · 응원
 
-/// 개발자 응원하기. 낸 사람에게는 설명 대신 내 응원 단계(후원자 배지)가 보인다 — 리이오의 어느 앱에서 냈든.
+/// 개발자 응원하기 한 줄. 낸 사람에게는 설명 대신 내 응원 단계(후원자 배지)가 보인다 — 리이오의 어느 앱에서 냈든.
 /// 팁을 팔 수 없어도(상품 없음) 이미 낸 사람에게는 줄을 남긴다. 내 단계를 볼 곳이 있어야 한다.
-struct TipSection: View {
+struct TipRow: View {
     @ObservedObject var tipJar: LeeoTipJar
 
     var body: some View {
         if tipJar.isAvailable || tipJar.level != nil {
-            Section {
-                NavigationLink(destination: LeeoTipJarView<GoldweekSpec>(tipJar: tipJar)) {
-                    Label {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(Strings.tipEntry)
-                            if tipJar.level != nil {
-                                LeeoSupporterBadge(tipJar: tipJar)
-                            } else {
-                                Text(Strings.tipEntrySubtitle)
-                                    .font(.body)
-                                    .foregroundStyle(.secondary)
-                            }
+            NavigationLink(destination: LeeoTipJarView<GoldweekSpec>(tipJar: tipJar)) {
+                Label {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(Strings.tipEntry)
+                        if tipJar.level != nil {
+                            LeeoSupporterBadge(tipJar: tipJar)
+                        } else {
+                            Text(Strings.tipEntrySubtitle)
+                                .font(.body)
+                                .foregroundStyle(.secondary)
                         }
-                    } icon: {
-                        Image(systemName: "heart")
                     }
+                } icon: {
+                    Image(systemName: "heart")
                 }
             }
             .task { await tipJar.syncSupporter(containerIdentifier: GoldweekSpec.feedback.containerIdentifier) }
@@ -1814,13 +1764,19 @@ struct TipSection: View {
     }
 }
 
-/// 선물하기: Pro 선물 · Plus 선물 보내기, 선물 코드 받기.
-/// 화면 안쪽은 LeeoKit 것을 그대로 쓰고(`LeeoGiftView` · `LeeoGiftRedeemView`), 행 이름만 앱 언어를 따르게 앱 문구로 그린다.
-struct GiftSection: View {
+/// 결제 문제를 묻는 선물 (시트용)
+struct SupportGift: Identifiable {
+    let store: LeeoGiftStore
+    var id: String { store.config.productID }
+}
+
+/// 선물하기 줄들: Pro 선물 · Plus 선물 보내기, 선물 코드 받기.
+/// 화면 안쪽은 LeeoKit 것을 그대로 쓰고(`LeeoGiftView` · `LeeoGiftRedeemView`), 줄 이름만 앱 언어를 따르게 앱 문구로 그린다.
+struct GiftRows: View {
     /// Pro 선물이 먼저, 그다음 Plus 선물(`ProExtras.gifts`).
     let gifts: [LeeoGiftStore]
-    @State private var showingGiftSupport = false
-    @State private var supportGift: LeeoGiftStore?
+    /// 결제 문제로 개발자에게 묻기 — 시트는 설정 화면이 띄운다
+    let onContactSupport: (SupportGift) -> Void
 
     /// 받기는 하나로 — App Store 오퍼 코드 시트는 어느 등급의 코드든 받는다.
     /// 이미 프로를 산 사람은 받을 것이 없고, 예전 방식으로 받은 사람은 받은 선물을 다시 본다.
@@ -1830,27 +1786,13 @@ struct GiftSection: View {
     }
 
     var body: some View {
-        let sendable = gifts.filter(GiftSendRow.isShown)
-        if !sendable.isEmpty || redeemGift != nil {
-            Section {
-                ForEach(sendable, id: \.config.productID) { gift in
-                    GiftSendRow(gift: gift) { supportGift = gift; showingGiftSupport = true }
-                }
-                if let gift = redeemGift {
-                    NavigationLink(destination: LeeoGiftRedeemView<GoldweekSpec>(gift: gift,
-                                                                                 onContactSupport: { supportGift = gift; showingGiftSupport = true })) {
-                        Label(Strings.giftRedeemEntry, systemImage: "giftcard")
-                    }
-                }
-            } header: {
-                Text(Strings.giftSection)
-            }
-            .sheet(isPresented: $showingGiftSupport) {
-                NavigationStack {
-                    // 결제 문제로 바로 — 결제 번호 · 코드를 붙여 개발자가 바로 찾게 한다
-                    LeeoFeedbackView<GoldweekSpec>(initialType: .bug, extraInfo: supportGift?.supportLines ?? [],
-                                                   initialCategory: .purchase)
-                }
+        ForEach(gifts.filter(GiftSendRow.isShown), id: \.config.productID) { gift in
+            GiftSendRow(gift: gift) { onContactSupport(SupportGift(store: gift)) }
+        }
+        if let gift = redeemGift {
+            NavigationLink(destination: LeeoGiftRedeemView<GoldweekSpec>(gift: gift,
+                                                                         onContactSupport: { onContactSupport(SupportGift(store: gift)) })) {
+                Label(Strings.giftRedeemEntry, systemImage: "giftcard")
             }
         }
     }
