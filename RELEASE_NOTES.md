@@ -1,5 +1,175 @@
 # Goldweek 릴리즈 노트
 
+## 2.4.4
+
+### 앱스토어 (한국어)
+
+결제 화면에서 기능을 그림으로 넘겨 볼 수 있어요
+고마운 사람에게 플러스와 프로를 선물할 수 있어요
+설정 화면이 짧고 깔끔해졌어요
+하루 한 번 iCloud에 자동으로 백업해요
+
+### App Store (English)
+
+See features in pictures before you buy
+Give Plus or Pro as a thank-you gift
+Settings are shorter and cleaner
+Your data backs up to iCloud once a day
+
+### App Store (en-GB)
+
+See features in pictures before you buy
+Give Plus or Pro as a thank-you gift
+Settings are shorter and tidier
+Your data backs up to iCloud once a day
+
+### 앱스토어 (일본어)
+
+機能を画像で見てから選べます
+感謝の気持ちにPlusやProを贈れます
+設定画面が短くすっきりしました
+1日1回iCloudに自動バックアップします
+
+### 앱스토어 (중국어 간체)
+
+升级前可滑动查看每项功能的示意图
+可以把 Plus 或 Pro 送给想感谢的人
+设置页面更短更清爽
+每天自动备份一次到 iCloud
+
+### 앱스토어 (독일어)
+
+Funktionen vorab in Bildern ansehen
+Plus oder Pro als Dankeschön verschenken
+Kürzere, klarere Einstellungen
+Täglich automatisches iCloud-Backup
+
+### 앱스토어 (프랑스어)
+
+Découvrez les fonctions en images
+Offrez Plus ou Pro pour dire merci
+Des réglages plus courts et clairs
+Une sauvegarde iCloud chaque jour
+
+### 앱스토어 (스페인어)
+
+Mira las funciones en imágenes
+Regala Plus o Pro para dar las gracias
+Ajustes más cortos y claros
+Copia en iCloud automática a diario
+
+### 앱스토어 (이탈리아어)
+
+Scopri le funzioni con le immagini
+Regala Plus o Pro per dire grazie
+Impostazioni più brevi e ordinate
+Backup automatico su iCloud ogni giorno
+
+### 앱스토어 (포르투갈어 브라질)
+
+Veja os recursos em imagens
+Presenteie Plus ou Pro para agradecer
+Ajustes mais curtos e limpos
+Backup automático no iCloud todo dia
+
+### 앱스토어 (중국어 번체)
+
+升級前可滑動查看每項功能的示意圖
+可以把 Plus 或 Pro 送給想感謝的人
+設定頁面更短更清爽
+每天自動備份一次到 iCloud
+
+### 앱스토어 (네덜란드어)
+
+Bekijk de functies in beeld
+Geef Plus of Pro als bedankje cadeau
+Kortere, overzichtelijke instellingen
+Elke dag automatisch een iCloud-back-up
+
+### 앱스토어 (스웨덴어)
+
+Se funktionerna i bilder
+Ge bort Plus eller Pro som tack
+Kortare och renare inställningar
+Automatisk iCloud-kopia varje dag
+
+### 앱스토어 (노르웨이어 보크말)
+
+Se funksjonene i bilder
+Gi Plus eller Pro som takk
+Kortere og ryddigere innstillinger
+Automatisk iCloud-kopi hver dag
+
+### 앱스토어 (덴마크어)
+
+Se funktionerne i billeder
+Giv Plus eller Pro som tak
+Kortere og klarere indstillinger
+Automatisk iCloud-kopi hver dag
+
+### 앱스토어 (핀란드어)
+
+Katso ominaisuudet kuvina
+Anna Plus tai Pro kiitoksena
+Lyhyemmät ja selkeämmät asetukset
+iCloud-varmuuskopio joka päivä
+
+### 앱스토어 (폴란드어)
+
+Zobacz funkcje na obrazkach
+Podaruj Plus lub Pro w podziękowaniu
+Krótsze i czytelniejsze ustawienia
+Codzienna kopia w iCloud
+
+### 앱스토어 (체코어)
+
+Prohlédněte si funkce v obrázcích
+Darujte Plus nebo Pro jako poděkování
+Kratší a přehlednější nastavení
+Každý den automatická záloha na iCloud
+
+### 앱스토어 (그리스어)
+
+Δες τις λειτουργίες σε εικόνες
+Χάρισε Plus ή Pro για να πεις ευχαριστώ
+Πιο σύντομες και καθαρές ρυθμίσεις
+Αυτόματο αντίγραφο στο iCloud κάθε μέρα
+
+### 앱스토어 (튀르키예어)
+
+Özellikleri görsellerle incele
+Teşekkür için Plus ya da Pro hediye et
+Daha kısa ve sade ayarlar
+Her gün otomatik iCloud yedeği
+
+### 앱스토어 (러시아어)
+
+Смотрите функции на картинках
+Дарите Plus или Pro в знак благодарности
+Настройки стали короче и понятнее
+Каждый день копия в iCloud
+
+### 앱스토어 (인도네시아어)
+
+Lihat fitur lewat gambar
+Kirim Plus atau Pro sebagai hadiah
+Pengaturan lebih singkat dan rapi
+Cadangan otomatis ke iCloud tiap hari
+
+### 앱스토어 (태국어)
+
+ดูภาพของแต่ละฟีเจอร์ก่อนอัปเกรดได้
+มอบ Plus หรือ Pro ให้คนที่อยากขอบคุณ
+หน้าการตั้งค่าสั้นและเรียบร้อยขึ้น
+สำรองข้อมูลไป iCloud อัตโนมัติทุกวัน
+
+### 앱스토어 (베트남어)
+
+Xem các tính năng qua hình ảnh
+Tặng Plus hoặc Pro để nói lời cảm ơn
+Cài đặt ngắn gọn và gọn gàng hơn
+Tự động sao lưu lên iCloud mỗi ngày
+
 ## 2.4.3
 
 ### 앱스토어 (한국어)

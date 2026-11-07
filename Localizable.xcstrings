@@ -1908,7 +1908,7 @@
       }
     },
     "Next Holiday" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -2057,7 +2057,7 @@
       }
     },
     "Remaining Leave" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -3650,7 +3650,7 @@
       }
     },
     "다가오는 공휴일을 찾지 못했어요." : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -3935,7 +3935,7 @@
       }
     },
     "다음 공휴일" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -4078,7 +4078,7 @@
       }
     },
     "다음 공휴일과 며칠 남았는지 알려 줍니다." : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -4221,7 +4221,7 @@
       }
     },
     "다음 공휴일은 %@ %@, %lld일 남았어요." : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -4790,7 +4790,7 @@
       }
     },
     "먼저 앱에서 연차를 설정해 주세요." : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -6637,7 +6637,7 @@
       }
     },
     "열어 볼 휴가 기록" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -6780,7 +6780,7 @@
       }
     },
     "오늘이 %@이에요." : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -6923,7 +6923,7 @@
       }
     },
     "올해 남은 연차를 알려 줍니다." : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -7066,7 +7066,7 @@
       }
     },
     "올해 연차가 %@일 남았어요." : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -7914,149 +7914,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在鎖定畫面查看倒數和剩餘特休"
-          }
-        }
-      }
-    },
-    "잠금화면에서 남은 연차 확인" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zbývající dovolená na zamčené obrazovce"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se resterende ferie på låseskærmen"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resturlaub auf dem Sperrbildschirm"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Υπόλοιπη άδεια στην οθόνη κλειδώματος"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check remaining leave on lock screen"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check remaining leave on lock screen"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vacaciones restantes en la pantalla bloqueada"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Katso jäljellä oleva loma lukitusnäytöltä"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Congés restants sur l’écran verrouillé"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sisa cuti di Layar Terkunci"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ferie rimaste nella schermata di blocco"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ロック画面で残り有給を確認"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se gjenstående ferie på låseskjermen"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resterend verlof op je vergrendelscherm"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sprawdź pozostały urlop na ekranie blokady"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Férias restantes na tela bloqueada"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Остаток отпуска на экране блокировки"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se kvarvarande semester på låsskärmen"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ดูวันลาคงเหลือบนหน้าจอล็อก"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kalan izni Kilit Ekranı'nda gör"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xem phép còn lại trên Màn hình khóa"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在锁屏上查看剩余年假"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在鎖定畫面查看剩餘特休"
           }
         }
       }
@@ -8915,7 +8772,7 @@
       }
     },
     "휴가" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -9342,7 +9199,7 @@
       }
     },
     "휴가 기록을 앱에서 열어 고칩니다." : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -9769,7 +9626,7 @@
       }
     },
     "휴가 열기" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -9912,7 +9769,7 @@
       }
     },
     "휴가캘린더" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
