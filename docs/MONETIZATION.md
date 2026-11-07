@@ -149,7 +149,7 @@ Pro는 "없어도 되지만 있으면 시간과 머리를 아껴 주는 것"에 
   구독은 선물하지 않는다 — 선물은 그 등급의 평생이다.
   2.4.4 부터(LeeoKit 3.36) 산 사람은 **App Store 오퍼 코드 링크**를 건넨다(자체 코드로 여는 것은 심사 3.1.1 거절 사유).
   오퍼 코드: 프로 평생 "LeeoKit Gift", 플러스 평생 "LeeoKit Gift Plus"(무료, 일회용 500장, 2027-05-01 만료). 묶음은 FeedbackHub 에서 등급마다 채운다.
-  판매(`sellsGifts`)는 묶음을 채우고 실기기에서 링크를 확인한 뒤에 연다. 그 전에는 받기(오퍼 코드 시트)만 선다.
+  판매(`sellsGifts`)는 2026-11-07 열었다. 묶음이 비면 산 사람이 코드를 못 받으므로 FeedbackHub 에서 등급마다 채워 둔다. 선물 상품은 이 버전과 함께 심사에 낸다.
   예전 방식(LeeoKit 코드)으로 받은 프로 선물의 기록은 `iCloud.com.Ysoup.FeedbackHub` 공개 DB(`LeeoGift` · `LeeoGiftRedemption`)와 받은 사람 비공개 DB(`LeeoGiftClaims`).
   이미 프로 이상을 **산** 사람은 받지 않는다(코드를 다른 사람에게 넘긴다).
 - ⚠️ 팁 · 선물 상품은 `ProManager.allProductIDs`(= Spec 의 productIDs · entitlementIDs)에 넣지 않는다.

@@ -56,14 +56,16 @@ enum GoldweekSpec: LeeoAppSpec {
             gift: LeeoGiftConfig(
                 productID: ProManager.giftProductID,
                 grantsProductID: ProManager.proProductID,
-                containerIdentifier: "iCloud.com.Ysoup.FeedbackHub"
+                containerIdentifier: "iCloud.com.Ysoup.FeedbackHub",
+                sellsGifts: true
             ),
             // Plus 선물. 받은 사람에게 플러스 평생을 App Store 오퍼 코드로 연다. 묶음은 등급마다 따로다(poolKey).
-            // ⚠️ 두 선물 모두 sellsGifts 는 닫혀 있다 — FeedbackHub 에서 오퍼 코드 묶음을 채운 뒤에 연다.
+            // 두 선물 모두 판다(sellsGifts, 2026-11-07 열었다). 묶음이 비면 산 사람이 코드를 못 받는다 — FeedbackHub 에서 채워 둔다.
             moreGifts: [LeeoGiftConfig(
                 productID: ProManager.plusGiftProductID,
                 grantsProductID: ProManager.plusLifetimeProductID,
                 containerIdentifier: "iCloud.com.Ysoup.FeedbackHub",
+                sellsGifts: true,
                 tierName: "Plus",
                 poolKey: "com.Ysoup.LeaveWise#\(ProManager.plusLifetimeProductID)"
             )],

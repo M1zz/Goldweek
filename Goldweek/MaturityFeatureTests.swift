@@ -244,9 +244,9 @@ final class MaturityFeatureTests: XCTestCase {
         XCTAssertEqual(ProManager.tier(of: plusGift.grantsProductID), .plus)
         XCTAssertNotEqual(plusGift.poolKey, gift.poolKey)
         XCTAssertEqual(Set(paywall.gifts.map(\.productID)), ProManager.giftProductIDs)
-        // 오퍼 코드 묶음을 채우기 전에는 팔지 않는다
-        XCTAssertFalse(gift.sellsGifts)
-        XCTAssertFalse(plusGift.sellsGifts)
+        // 두 선물 모두 판다
+        XCTAssertTrue(gift.sellsGifts)
+        XCTAssertTrue(plusGift.sellsGifts)
         for id in [gift.productID, plusGift.productID] + tips.productIDs {
             XCTAssertFalse(paywall.productIDs.contains(id), id)
             XCTAssertFalse(paywall.entitlementIDs.contains(id), id)
