@@ -969,7 +969,8 @@ extension HolidayService {
             (hijri(year, month: 12, day: 10, length: 3), Gulf.eidAdha),
             (hijri(year, month: 1, day: 1), Gulf.hijriNewYear),
             (hijri(year, month: 3, day: 12), Gulf.prophetBirthday),
-            ([day(year, 12, 1)].compactMap { $0 }, Gulf.commemoration),
+            // 추모일(11/30)은 2023년까지 12/1 에 따로 쉬었고, 2024년부터는 국경일 연휴 이틀만 쉰다 (MoHRE 발표)
+            ([day(year, 12, 1)].compactMap { $0 }.filter { _ in year < 2024 }, Gulf.commemoration),
             ([day(year, 12, 2), day(year, 12, 3)].compactMap { $0 }, Gulf.nationalDay),
         ])
     }
@@ -1283,12 +1284,9 @@ extension HolidayService {
         list.append((lastWeekday(weekday: 2, month: 10, year: year), bank))
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), Common.stStephen))
-        let base = makeList(list)
-        // 주말에 걸린 새해·성 패트릭·크리스마스·성 스테파노는 다음 평일에 쉰다
-        let movable = Set([day(year, 1, 1), day(year, 3, 17), day(year, 12, 25), day(year, 12, 26)].compactMap { $0 }.map(dateKey))
-        return (base + rollForward(base, substitutable: movable))
-            .filter { calendar.component(.year, from: $0.date) == year }
-            .sorted { $0.date < $1.date }
+        // 주말에 걸려도 다음 평일이 공휴일이 되지는 않는다 — 법(Organisation of Working Time Act)은
+        // 하루 유급휴가·추가 수당 같은 보상만 정하고, 무엇을 줄지는 회사가 고른다. 월요일을 쉬는 회사는 직접 더한다.
+        return makeList(list)
     }
 
     // MARK: 포르투갈

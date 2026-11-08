@@ -1545,6 +1545,14 @@ final class LeaveDeductionTests: XCTestCase {
         XCTAssertNotNil(names["2026-05-26"])   // 아라파트의 날
         XCTAssertNotNil(names["2026-05-27"])
         XCTAssertNotNil(names["2026-12-02"])
+        XCTAssertNil(names["2026-12-01"])      // 추모일은 2024년부터 따로 쉬지 않는다
+    }
+
+    func testIrelandHasNoAutomaticSubstituteDays() {
+        // 2026-12-26(토) 성 스테파노 — 법은 보상만 정하고 12/28(월)을 공휴일로 만들지 않는다
+        let days = Set(HolidayService().getHolidays(for: 2026, country: .ireland).map { key($0.date) })
+        XCTAssertTrue(days.contains("2026-12-26"))
+        XCTAssertFalse(days.contains("2026-12-28"))
     }
 
     func testSaudiWeekendIsFridaySaturday() {
