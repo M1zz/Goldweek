@@ -803,6 +803,8 @@ extension HolidayService {
             withSubstitute(day(year, 10, 25), retrocession)
             withSubstitute(day(year, 12, 25), constitution)
         }
+        // 다음 해 1/1 이 토요일이면 그 보충 휴무는 올해 12/31(금)이다 (예: 2027-12-31)
+        if let next = day(year + 1, 1, 1), weekday(next) == 7 { add(adding(-1, to: next), Common.newYear, substitute: true) }
         return holidays.filter { calendar.component(.year, from: $0.date) == year }.sorted { $0.date < $1.date }
     }
 
@@ -1634,6 +1636,11 @@ extension HolidayService {
         list.append((day(year, 9, 18), More.independence))
         list.append((day(year, 9, 19), N(ko: "육군 영광의 날", en: "Army Day", ja: "陸軍記念日", zh: "陆军光荣日", de: "Tag der Armee", fr: "Jour de l’Armée",
                                          es: "Día de las Glorias del Ejército", it: "Giorno dell’Esercito", pt: "Dia do Exército", zht: "陸軍光榮日")))
+        // 9/17 은 월요일(법 20.215)·금요일(법 20.983)이면, 9/20 은 금요일(법 20.215)이면 쉰다 — 독립기념일 연휴를 잇는다
+        let fiestasPatrias = N(ko: "독립기념일 연휴", en: "National Holiday", ja: "独立記念日の連休", zh: "国庆假日", de: "Nationalfeiertag", fr: "Fête nationale",
+                               es: "Fiestas Patrias", it: "Festa nazionale", pt: "Festas Pátrias", zht: "國慶假日")
+        if let d = day(year, 9, 17), [2, 6].contains(weekday(d)) { list.append((d, fiestasPatrias)) }
+        if let d = day(year, 9, 20), weekday(d) == 6 { list.append((d, fiestasPatrias)) }
         list.append((chileMonday(day(year, 10, 12)), More.columbus))
         if let r = day(year, 10, 31) {
             let moved: Date
@@ -1666,6 +1673,11 @@ extension HolidayService {
         }
         list.append((day(year, 5, 1), More.labourDay))
         list.append((emiliani(day(year, 6, 29)), More.saintsPeterPaul))
+        if year >= 2026 {   // 법 2578 (2026-06-01)
+            list.append((emiliani(day(year, 7, 9)), N(ko: "치키킨라 성모의 날", en: "Our Lady of Chiquinquirá", ja: "チキンキラの聖母の日", zh: "奇金基拉圣母日",
+                                                      de: "Unsere Liebe Frau von Chiquinquirá", fr: "Notre-Dame de Chiquinquirá", es: "Virgen de Chiquinquirá",
+                                                      it: "Madonna di Chiquinquirá", pt: "Nossa Senhora de Chiquinquirá", zht: "奇金基拉聖母日")))
+        }
         list.append((day(year, 7, 20), More.independence))
         list.append((day(year, 8, 7), N(ko: "보야카 전투 기념일", en: "Battle of Boyacá", ja: "ボヤカの戦い記念日", zh: "博亚卡战役纪念日", de: "Schlacht von Boyacá", fr: "Bataille de Boyacá",
                                         es: "Batalla de Boyacá", it: "Battaglia di Boyacá", pt: "Batalha de Boyacá", zht: "博亞卡戰役紀念日")))
@@ -1745,6 +1757,11 @@ extension HolidayService {
                                          es: "Día del Patrimonio", it: "Giornata del patrimonio", pt: "Dia do Patrimônio", zht: "傳統日")))
         list.append((day(year, 12, 16), N(ko: "화해의 날", en: "Day of Reconciliation", ja: "和解の日", zh: "和解日", de: "Tag der Versöhnung", fr: "Jour de la réconciliation",
                                           es: "Día de la Reconciliación", it: "Giorno della riconciliazione", pt: "Dia da Reconciliação", zht: "和解日")))
+        // 선거일은 대통령이 그때그때 공휴일로 선포한다
+        if year == 2026 {
+            list.append((day(2026, 11, 4), N(ko: "지방선거일", en: "Local Government Elections", ja: "地方選挙の日", zh: "地方选举日", de: "Kommunalwahltag",
+                                             fr: "Élections municipales", es: "Elecciones municipales", it: "Elezioni amministrative", pt: "Eleições municipais", zht: "地方選舉日")))
+        }
         list.append((day(year, 12, 25), Common.christmas))
         list.append((day(year, 12, 26), N(ko: "선의의 날", en: "Day of Goodwill", ja: "善意の日", zh: "亲善日", de: "Tag des guten Willens", fr: "Jour de la bonne volonté",
                                           es: "Día de la Buena Voluntad", it: "Giorno della buona volontà", pt: "Dia da Boa Vontade", zht: "親善日")))

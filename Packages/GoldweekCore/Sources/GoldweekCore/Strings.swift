@@ -8273,7 +8273,7 @@ public enum Strings {
 
     public static func mayGoldenWeekDesc(leaveDays: Int, totalDays: Int) -> String {
         switch lang {
-        case .korean: return "어린이날과 근로자의 날을 활용한 황금연휴! 연차 \(leaveDays)일로 \(totalDays)일 연휴를 만들 수 있어요."
+        case .korean: return "어린이날과 노동절을 활용한 황금연휴! 연차 \(leaveDays)일로 \(totalDays)일 연휴를 만들 수 있어요."
         case .english: return "Golden week around Children's Day! \(leaveDays) leave days for \(totalDays) days off."
         case .swedish: return "Golden week runt Barnens dag! \(leaveDays) semesterdagar ger \(totalDays) lediga dagar."
         case .norwegian: return "Golden week rundt barnas dag! \(leaveDays) feriedager gir \(totalDays) dager fri."

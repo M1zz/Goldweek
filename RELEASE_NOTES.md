@@ -1,5 +1,151 @@
 # Goldweek 릴리즈 노트
 
+## 2.4.5
+
+### 앱스토어 (한국어)
+
+싱가포르와 중국의 2027년 공휴일을 바로잡았어요
+대만, 칠레, 콜롬비아 공휴일도 새로 맞췄어요
+한국 노동절 대체공휴일을 넣었어요
+
+### App Store (English)
+
+Singapore and China 2027 holidays fixed
+Taiwan, Chile and Colombia updated too
+Korean Labour Day substitute added
+
+### App Store (en-GB)
+
+Singapore and China 2027 holidays fixed
+Taiwan, Chile and Colombia updated too
+Korean Labour Day substitute added
+
+### 앱스토어 (일본어)
+
+シンガポールと中国の2027年の祝日を修正しました
+台湾、チリ、コロンビアの祝日も更新しました
+韓国の労働節の振替休日に対応しました
+
+### 앱스토어 (중국어 간체)
+
+修正了新加坡和中国2027年的假日
+台湾、智利、哥伦比亚的假日也已更新
+新增韩国劳动节补休
+
+### 앱스토어 (독일어)
+
+Singapur und China 2027 jetzt korrekt
+Taiwan, Chile und Kolumbien aktualisiert
+Koreas Tag der Arbeit mit Ersatztag
+
+### 앱스토어 (프랑스어)
+
+Chine et Singapour : fériés 2027 à jour
+Taïwan, Chili et Colombie mis à jour
+Report du 1er Mai coréen ajouté
+
+### 앱스토어 (스페인어)
+
+Singapur y China: festivos 2027 al día
+Taiwán, Chile y Colombia actualizados
+Día del Trabajo de Corea con traslado
+
+### 앱스토어 (이탈리아어)
+
+Singapore e Cina: festivi 2027 corretti
+Aggiornati anche Taiwan, Cile e Colombia
+Recupero del Primo maggio in Corea
+
+### 앱스토어 (포르투갈어 브라질)
+
+Singapura e China: feriados 2027 certos
+Taiwan, Chile e Colômbia atualizados
+Feriado compensado do 1º de Maio coreano
+
+### 앱스토어 (중국어 번체)
+
+修正新加坡與中國2027年的假日
+台灣、智利、哥倫比亞的假日也已更新
+新增韓國勞動節補假
+
+### 앱스토어 (네덜란드어)
+
+Singapore en China 2027 gecorrigeerd
+Ook Taiwan, Chili en Colombia bijgewerkt
+Koreaanse 1 mei met vervangende dag
+
+### 앱스토어 (스웨덴어)
+
+Singapore och Kina 2027 rättade
+Taiwan, Chile och Colombia uppdaterade
+Ersättningsdag för Koreas första maj
+
+### 앱스토어 (노르웨이어 보크말)
+
+Singapore og Kina 2027 rettet
+Taiwan, Chile og Colombia oppdatert
+Erstatningsdag for Koreas 1. mai
+
+### 앱스토어 (덴마크어)
+
+Singapore og Kina 2027 rettet
+Taiwan, Chile og Colombia opdateret
+Erstatningsdag for Koreas 1. maj
+
+### 앱스토어 (핀란드어)
+
+Singaporen ja Kiinan 2027 pyhät korjattu
+Taiwan, Chile ja Kolumbia päivitetty
+Korean vappu saa korvaavan vapaapäivän
+
+### 앱스토어 (폴란드어)
+
+Singapur i Chiny: święta 2027 poprawione
+Tajwan, Chile i Kolumbia zaktualizowane
+Koreańskie 1 Maja z dniem zastępczym
+
+### 앱스토어 (체코어)
+
+Svátky 2027 v Singapuru a Číně opraveny
+Tchaj-wan, Chile i Kolumbie upraveny
+Náhradní volno za korejský Svátek práce
+
+### 앱스토어 (그리스어)
+
+Σιγκαπούρη και Κίνα 2027 διορθώθηκαν
+Ενημέρωση για Ταϊβάν, Χιλή και Κολομβία
+Αναπλήρωση της Πρωτομαγιάς στην Κορέα
+
+### 앱스토어 (튀르키예어)
+
+Singapur ve Çin 2027 tatili düzeltildi
+Tayvan, Şili ve Kolombiya güncellendi
+Kore İşçi Bayramı telafi tatili eklendi
+
+### 앱스토어 (러시아어)
+
+Сингапур и Китай 2027 исправлены
+Обновлены Тайвань, Чили и Колумбия
+Перенос выходного за 1 Мая в Корее
+
+### 앱스토어 (인도네시아어)
+
+Singapura dan Tiongkok 2027 diperbaiki
+Taiwan, Cile, dan Kolombia diperbarui
+Libur pengganti Hari Buruh Korea
+
+### 앱스토어 (태국어)
+
+แก้วันหยุดปี 2027 ของสิงคโปร์และจีน
+อัปเดตวันหยุดไต้หวัน ชิลี และโคลอมเบีย
+เพิ่มวันหยุดชดเชยวันแรงงานเกาหลี
+
+### 앱스토어 (베트남어)
+
+Sửa lịch nghỉ 2027 Singapore, Trung Quốc
+Cập nhật Đài Loan, Chile và Colombia
+Thêm nghỉ bù ngày Lao động Hàn Quốc
+
 ## 2.4.4
 
 ### 앱스토어 (한국어)

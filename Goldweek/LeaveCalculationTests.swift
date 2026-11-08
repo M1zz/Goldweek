@@ -1083,7 +1083,29 @@ final class HolidayRuleTests: XCTestCase {
         XCTAssertTrue(has(2026, 2, 15, .china))        // 춘절 연휴 시작 (腊月二十八)
         XCTAssertTrue(has(2026, 4, 4, .china))
         XCTAssertFalse(has(2026, 4, 7, .china))
-        XCTAssertFalse(service.isHolidayDataReliable(for: 2027, country: .china))
+        // 2027: 国办发明电〔2026〕10号 — 춘절 2/5~2/13 아흐레, 补班 1/31·2/14
+        XCTAssertTrue(has(2027, 2, 13, .china))
+        XCTAssertFalse(has(2027, 2, 14, .china))
+        XCTAssertTrue(HolidayService.isMakeupWorkday(Calendar.app.date(from: DateComponents(year: 2027, month: 1, day: 31))!, country: .china, includeShift: false))
+        XCTAssertTrue(service.isHolidayDataReliable(for: 2027, country: .china))
+        XCTAssertFalse(service.isHolidayDataReliable(for: 2028, country: .china))
+    }
+
+    func testKoreaLabourDayGetsSubstituteFrom2026() {
+        XCTAssertTrue(has(2027, 5, 3, .korea))         // 노동절 5/1(토) → 5/3(월), 2027 월력요항
+        XCTAssertFalse(has(2021, 5, 3, .korea))        // 근로자의 날 시절엔 대체공휴일이 없었다
+    }
+
+    /// 2026-11 전 나라 점검에서 나온 빠진 날들
+    func testHolidaysFoundInNovember2026Audit() {
+        XCTAssertTrue(has(2027, 12, 31, .taiwan))      // 2028-01-01(토) 개국기념일 보충 휴무
+        XCTAssertTrue(has(2027, 9, 17, .chile))        // 9/17(금) — 법 20.983
+        XCTAssertTrue(has(2024, 9, 20, .chile))        // 9/20(금) — 법 20.215
+        XCTAssertFalse(has(2026, 9, 17, .chile))       // 목요일이면 쉬지 않는다
+        XCTAssertTrue(has(2026, 7, 13, .colombia))     // 치키킨라 성모의 날 7/9 → 월요일 (법 2578)
+        XCTAssertTrue(has(2027, 7, 12, .colombia))
+        XCTAssertFalse(has(2025, 7, 14, .colombia))
+        XCTAssertTrue(has(2026, 11, 4, .southAfrica))  // 지방선거일
     }
 }
 
@@ -1698,7 +1720,7 @@ final class ChinaMakeupWorkdayTests: XCTestCase {
         XCTAssertFalse(HolidayService.isMakeupWorkday(d(2026, 2, 14), country: .korea))
         XCTAssertTrue(HolidayService.isRestWeekend(d(2026, 3, 7), country: .china))
         // 발표 전 연도는 비워 둔다
-        XCTAssertTrue(HolidayService.makeupWorkdays(for: 2027, country: .china).isEmpty)
+        XCTAssertTrue(HolidayService.makeupWorkdays(for: 2028, country: .china).isEmpty)
     }
 
     func testMakeupDayCostsLeave() {

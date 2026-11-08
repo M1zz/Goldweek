@@ -296,7 +296,10 @@ class HolidayService {
         var fixedDates: [(month: Int, day: Int, names: [AppLanguage: String])] = [
             (1, 1, [.korean: "신정", .english: "New Year's Day", .japanese: "元日", .chinese: "元旦"]),
             (3, 1, [.korean: "삼일절", .english: "Independence Movement Day", .japanese: "三一節", .chinese: "三一节"]),
-            (5, 1, [.korean: "근로자의 날", .english: "Workers' Day", .japanese: "労働者の日", .chinese: "劳动节"]),
+            // 근로자의 날: 2026-02 공휴일법 개정으로 그해 5월부터 관공서 공휴일, 이름도 '노동절'로 바뀌었다
+            (5, 1, year >= 2026
+                ? [.korean: "노동절", .english: "Labour Day", .japanese: "労働節", .chinese: "劳动节"]
+                : [.korean: "근로자의 날", .english: "Workers' Day", .japanese: "労働者の日", .chinese: "劳动节"]),
             (5, 5, [.korean: "어린이날", .english: "Children's Day", .japanese: "こどもの日", .chinese: "儿童节"]),
             (6, 6, [.korean: "현충일", .english: "Memorial Day", .japanese: "顕忠日", .chinese: "显忠日"]),
             (8, 15, [.korean: "광복절", .english: "Liberation Day", .japanese: "光復節", .chinese: "光复节"]),
@@ -430,7 +433,8 @@ class HolidayService {
         // - 토·일 또는 다른 공휴일과 겹치면: 삼일절·광복절·개천절·한글날·어린이날·부처님오신날·크리스마스·제헌절
         //   (부처님오신날·크리스마스는 2023년 개정으로 토요일까지 확대)
         // - 일요일 또는 다른 공휴일과 겹치면: 설날 연휴·추석 연휴
-        // - 적용 제외: 신정·현충일·근로자의 날(관공서 공휴일 아님)
+        // - 노동절: 2026년 관공서 공휴일이 되면서 토·일 대상에 들어갔다 (2027-05-01 토 → 05-03 월, 우주항공청 월력요항)
+        // - 적용 제외: 신정·현충일 (2025년까지의 근로자의 날)
         let weekendEligible: [AppLanguage: [String]] = [
             .korean:   ["삼일절", "광복절", "개천절", "한글날", "어린이날", "부처님오신날", "제헌절", "크리스마스"],
             .english:  ["Independence Movement Day", "Liberation Day", "National Foundation Day", "Hangul Day", "Children's Day", "Buddha's Birthday", "Constitution Day", "Christmas"],
@@ -444,7 +448,9 @@ class HolidayService {
             .chinese:  ["春节", "春节假期", "中秋节", "中秋节假期"]
         ]
 
-        let weekendNames = weekendEligible[lang] ?? weekendEligible[.english]!
+        let labourDay: [AppLanguage: String] = [.korean: "노동절", .english: "Labour Day", .japanese: "労働節", .chinese: "劳动节"]
+        var weekendNames = weekendEligible[lang] ?? weekendEligible[.english]!
+        if year >= 2026 { weekendNames.append(labourDay[lang] ?? labourDay[.english]!) }
         let sundayNames = sundayOnlyEligible[lang] ?? sundayOnlyEligible[.english]!
 
         let subLabel: String
@@ -690,16 +696,20 @@ class HolidayService {
                ("dragon", 5, 31, 3), ("national", 10, 1, 8)],
         2026: [("newYear", 1, 1, 3), ("spring", 2, 15, 9), ("qingming", 4, 4, 3), ("labor", 5, 1, 5),
                ("dragon", 6, 19, 3), ("midAutumn", 9, 25, 3), ("national", 10, 1, 7)],
+        // 国办发明电〔2026〕10号 (2026-11-05)
+        2027: [("newYear", 1, 1, 3), ("spring", 2, 5, 9), ("qingming", 4, 3, 3), ("labor", 5, 1, 5),
+               ("dragon", 6, 9, 1), ("midAutumn", 9, 15, 1), ("national", 10, 1, 7)],
     ]
 
     /// 발표된 휴무표가 있는 마지막 연도 — 이후 연도는 음력 기준 추정치다.
-    static let chinaOfficialLastYear = 2026
+    static let chinaOfficialLastYear = 2027
 
     /// 调休로 주말인데 출근하는 날(补班) (월, 일) — 같은 국무원 발표 원문. 발표된 연도만 수록한다.
     private static let chinaMakeupWorkdays: [Int: [(month: Int, day: Int)]] = [
         2024: [(2, 4), (2, 18), (4, 7), (4, 28), (5, 11), (9, 14), (9, 29), (10, 12)],
         2025: [(1, 26), (2, 8), (4, 27), (9, 28), (10, 11)],
         2026: [(1, 4), (2, 14), (2, 28), (5, 9), (9, 20), (10, 10)],
+        2027: [(1, 31), (2, 14), (5, 8), (9, 26), (10, 9)],
     ]
 
     /// 러시아 휴일 이동으로 출근하는 토요일 (рабочая суббота) — 같은 정부 결정 원문
