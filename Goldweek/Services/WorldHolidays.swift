@@ -1939,12 +1939,14 @@ extension HolidayService {
                                   es: "Día de votación", it: "Giorno delle elezioni", pt: "Dia de votação", zht: "投票日")
 
         /// 인력부(MOM)가 발표한 공휴일. 일요일에 걸린 날은 아래에서 월요일로 옮긴다(토요일은 법정 대체 휴일 없음).
-        /// 2025: MOM 2024-06 발표 + 총선 투표일 · 2026: MOM 2025-06 발표
+        /// 2025: MOM 2024-06 발표 + 총선 투표일 · 2026: MOM 2025-06 발표 · 2027: MOM 2026-06-18 발표
         static let official: [Int: [(Int, Int, String)]] = [
             2025: [(1, 1, "newYear"), (1, 29, "cny"), (1, 30, "cny"), (3, 31, "fitr"), (4, 18, "goodFriday"), (5, 1, "labour"),
                    (5, 3, "polling"), (5, 12, "vesak"), (6, 7, "adha"), (8, 9, "national"), (10, 20, "deepavali"), (12, 25, "christmas")],
             2026: [(1, 1, "newYear"), (2, 17, "cny"), (2, 18, "cny"), (3, 21, "fitr"), (4, 3, "goodFriday"), (5, 1, "labour"),
                    (5, 27, "adha"), (5, 31, "vesak"), (8, 9, "national"), (11, 8, "deepavali"), (12, 25, "christmas")],
+            2027: [(1, 1, "newYear"), (2, 6, "cny"), (2, 7, "cny"), (3, 10, "fitr"), (3, 26, "goodFriday"), (5, 1, "labour"),
+                   (5, 17, "adha"), (5, 20, "vesak"), (8, 9, "national"), (10, 28, "deepavali"), (12, 25, "christmas")],
         ]
 
         /// 발표 전 해의 디파발리 추정 (인도 힌두력 디왈리 기준 — 싱가포르 발표와 하루 다를 수 있다)

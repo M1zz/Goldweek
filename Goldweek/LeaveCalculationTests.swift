@@ -1221,10 +1221,15 @@ final class WorldHolidayTests: XCTestCase {
         // 토요일 공휴일은 법정 대체 휴일이 없다 (2026-03-21 하리 라야 푸아사)
         XCTAssertNil(y26["2026-03-23"])
         XCTAssertTrue(HolidayService().isHolidayDataReliable(for: 2026, country: .singapore))
-        XCTAssertFalse(HolidayService().isHolidayDataReliable(for: 2027, country: .singapore))
-        // 발표 전 해도 설 이틀·성금요일·국경일·크리스마스는 나온다
+        // MOM 2027: 11일 + 일요일에 걸린 설 둘째 날의 월요일 대체 (2/8). 토요일인 노동절·크리스마스는 대체 없음
+        XCTAssertTrue(HolidayService().isHolidayDataReliable(for: 2027, country: .singapore))
         let y27 = Set(HolidayService().getHolidays(for: 2027, country: .singapore).map { f.string(from: $0.date) })
-        XCTAssertTrue(y27.isSuperset(of: ["2027-02-06", "2027-02-07", "2027-02-08", "2027-03-26", "2027-08-09", "2027-12-25"]))
+        XCTAssertEqual(y27, ["2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08", "2027-03-10", "2027-03-26", "2027-05-01",
+                             "2027-05-17", "2027-05-20", "2027-08-09", "2027-10-28", "2027-12-25"])
+        XCTAssertFalse(HolidayService().isHolidayDataReliable(for: 2028, country: .singapore))
+        // 발표 전 해도 설 이틀·성금요일·국경일·크리스마스는 나온다
+        let y28 = Set(HolidayService().getHolidays(for: 2028, country: .singapore).map { f.string(from: $0.date) })
+        XCTAssertTrue(y28.isSuperset(of: ["2028-01-26", "2028-01-27", "2028-04-14", "2028-08-09", "2028-12-25"]))
         XCTAssertEqual(Country.detect(locale: Locale(identifier: "en_SG")).country, .singapore)
         XCTAssertEqual(Country.singapore.continent, .asia)
         XCTAssertFalse(Country.singapore.displayName.isEmpty)
