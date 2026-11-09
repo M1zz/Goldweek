@@ -1102,6 +1102,7 @@ final class HolidayRuleTests: XCTestCase {
         XCTAssertTrue(has(2027, 9, 17, .chile))        // 9/17(금) — 법 20.983
         XCTAssertTrue(has(2024, 9, 20, .chile))        // 9/20(금) — 법 20.215
         XCTAssertFalse(has(2026, 9, 17, .chile))       // 목요일이면 쉬지 않는다
+        XCTAssertTrue(has(2026, 4, 4, .chile))         // 성토요일
         XCTAssertTrue(has(2026, 7, 13, .colombia))     // 치키킨라 성모의 날 7/9 → 월요일 (법 2578)
         XCTAssertTrue(has(2027, 7, 12, .colombia))
         XCTAssertFalse(has(2025, 7, 14, .colombia))

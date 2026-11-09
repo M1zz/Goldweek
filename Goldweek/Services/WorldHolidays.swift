@@ -1669,7 +1669,10 @@ extension HolidayService {
             }
         }
         var list: [(Date?, N)] = [(day(year, 1, 1), Common.newYear)]
-        if let e = easter(year) { list.append((adding(-2, to: e), Common.goodFriday)) }
+        if let e = easter(year) {
+            list.append((adding(-2, to: e), Common.goodFriday))
+            list.append((adding(-1, to: e), Common.holySaturday))   // 성토요일도 법정 공휴일 (법 2.977)
+        }
         list.append((day(year, 5, 1), More.labourDay))
         list.append((day(year, 5, 21), N(ko: "해군 영웅의 날", en: "Navy Day", ja: "海軍記念日", zh: "海军英雄日", de: "Tag der Marine", fr: "Jour de la Marine",
                                          es: "Día de las Glorias Navales", it: "Giorno della Marina", pt: "Dia da Marinha", zht: "海軍英雄日")))
