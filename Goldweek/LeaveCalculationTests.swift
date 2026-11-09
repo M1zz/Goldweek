@@ -1368,8 +1368,8 @@ final class WorldHolidayTests: XCTestCase {
         XCTAssertTrue(has(2026, 4, 6, .spain, region: "ES-CT"))
         XCTAssertTrue(has(2026, 9, 11, .spain, region: "ES-CT"))
         // 2026 관보(BOE) 표
-        XCTAssertTrue(has(2026, 4, 2, .spain, region: "ES-VC"))    // 2026년 발렌시아는 성목요일에 쉰다
-        XCTAssertFalse(has(2026, 3, 19, .spain, region: "ES-VC"))
+        XCTAssertFalse(has(2026, 4, 2, .spain, region: "ES-VC"))   // 발렌시아는 성목요일 대신 3/19 (Decreto 100/2025)
+        XCTAssertTrue(has(2026, 3, 19, .spain, region: "ES-VC"))
         XCTAssertTrue(has(2026, 3, 2, .spain, region: "ES-IB"))    // 3/1(일) → 월
         XCTAssertTrue(has(2026, 11, 2, .spain, region: "ES-AN"))   // 만성절(일) → 월
         XCTAssertTrue(has(2026, 7, 25, .spain, region: "ES-PV"))
@@ -2814,5 +2814,58 @@ final class HolidayOverrideTests: XCTestCase {
         HolidayOverrideStore.replace(with: [change(.add, "2027-04-07", at: 1_800_000_000)])
         XCTAssertEqual(HolidayOverrideStore.dataVersion, "\(plain)+1800000000")
         XCTAssertEqual(LeaveRecord(startDate: Date(), endDate: Date()).holidayDataVersion, "\(plain)+1800000000")
+    }
+}
+
+// MARK: - 해마다 채우는 공식 날짜표
+
+/// 정부가 해마다 다음 해 공휴일을 발표하는 나라는 앱이 그 표를 들고 있어야 맞다.
+/// 발표 철이 지났는데 다음 해 표가 없으면 실패해서 알려 준다 (2026-11 싱가포르 2027 피드백에서 생겼다).
+final class OfficialScheduleFreshnessTests: XCTestCase {
+    /// (나라, 발표가 끝나는 달) — 그달 1일부터 다음 해 표가 있어야 한다
+    private let deadlines: [(name: String, month: Int, hasNextYear: (Int) -> Bool)] = [
+        ("싱가포르 — MOM 발표 (6월)", 8, { HolidayService().isHolidayDataReliable(for: $0, country: .singapore) }),
+        ("인도네시아 — SKB 3 Menteri (9~10월)", 11, { HolidayService().isHolidayDataReliable(for: $0, country: .indonesia) }),
+        ("러시아 — 정부 결정 (9~10월)", 11, { HolidayService().isHolidayDataReliable(for: $0, country: .russia) }),
+        ("스페인 — 관보 BOE 지역 공휴일 (10월)", 11, { HolidayService.spainOfficialRegional[$0] != nil }),
+        ("중국 — 국무원 통지 (11월 초)", 12, { HolidayService().isHolidayDataReliable(for: $0, country: .china) }),
+    ]
+
+    func testNextYearTablesAreFilledAfterAnnouncementSeason() {
+        let now = Calendar.app.dateComponents([.year, .month], from: Date())
+        guard let year = now.year, let month = now.month else { return }
+        for d in deadlines where month >= d.month {
+            XCTAssertTrue(d.hasNextYear(year + 1), "\(d.name): \(year + 1)년 공식 날짜표가 없다 — 발표를 찾아 표에 더할 것")
+        }
+    }
+}
+
+final class RegionalHolidayAuditTests: XCTestCase {
+    private func days(_ year: Int, _ code: String) -> Set<String> {
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+        let region = HolidayRegion.find(code)!
+        return Set(HolidayService().getHolidays(for: year, country: region.country, region: region).map { f.string(from: $0.date) })
+    }
+
+    func testSpainUsesBOETables() {
+        XCTAssertTrue(days(2026, "ES-MD").isSuperset(of: ["2026-11-02", "2026-12-07"]))   // BOE-A-2025-21667
+        XCTAssertFalse(days(2026, "ES-MC").contains("2026-11-02"))
+        XCTAssertFalse(days(2026, "ES-VC").contains("2026-04-02"))                         // 발렌시아는 성목요일이 없다
+        XCTAssertTrue(days(2027, "ES-AN").isSuperset(of: ["2027-03-01", "2027-08-16"]))   // BOE-A-2026-21254
+        XCTAssertTrue(days(2027, "ES-PV").contains("2027-10-07"))
+        XCTAssertFalse(days(2027, "ES-CE").contains("2027-09-02"))
+    }
+
+    func testAustraliaVictoriaAndAnzac() {
+        XCTAssertTrue(days(2026, "AU-VIC").contains("2026-09-25"))   // 그랜드 파이널 전날
+        XCTAssertTrue(days(2027, "AU-QLD").contains("2027-04-26"))   // 안작 데이(일) → 월
+        XCTAssertFalse(days(2027, "AU-NSW").contains("2027-04-26"))  // 뉴사우스웨일스는 옮기지 않는다
+    }
+
+    func testScotlandAndUSStates() {
+        XCTAssertTrue(days(2026, "GB-SCT").contains("2026-06-15"))   // 월드컵 공휴일
+        XCTAssertTrue(days(2026, "US-IL").isSuperset(of: ["2026-03-02", "2026-11-03"]))   // 풀라스키의 날·총선
+        XCTAssertFalse(days(2027, "US-HI").contains("2027-11-02"))   // 홀수 해에는 선거일이 없다
+        XCTAssertTrue(days(2027, "US-NY").contains("2027-11-02"))    // 뉴욕은 해마다
     }
 }

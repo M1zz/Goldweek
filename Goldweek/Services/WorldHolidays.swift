@@ -243,6 +243,10 @@ extension HolidayService {
         let patriots = N(ko: "애국자의 날", en: "Patriots' Day", ja: "愛国者の日", zh: "爱国者日", de: "Patriots’ Day", fr: "Jour des Patriotes",
                          es: "Día de los Patriotas", it: "Giorno dei Patrioti", pt: "Dia dos Patriotas", zht: "愛國者日")
 
+        // 선거일: 11월 첫 월요일 다음 화요일. 뉴욕은 해마다, 하와이·일리노이는 총선이 있는 짝수 해에만 쉰다
+        let electionDay = nthWeekday(nth: 1, weekday: 2, month: 11, year: year).map { adding(1, to: $0) }
+        let electionName = N(ko: "선거일", en: "Election Day", ja: "選挙日", zh: "选举日", zht: "選舉日")
+        func evenYearElectionDay() { if year % 2 == 0, let electionDay { list.append((electionDay, electionName)) } }
         switch region {
         case "US-AK":
             if let d = lastWeekday(weekday: 2, month: 3, year: year) {
@@ -265,9 +269,13 @@ extension HolidayService {
                 list.append((d, N(ko: "하와이 주 승격 기념일", en: "Statehood Day", ja: "州昇格記念日", zh: "建州日", zht: "建州紀念日")))
             }
             if let e = easter(year) { list.append((adding(-2, to: e), Common.goodFriday)) }
+            evenYearElectionDay()
         case "US-IL":
             fixedDay(2, 12, lincoln)
+            list.append((nthWeekday(nth: 1, weekday: 2, month: 3, year: year),
+                         N(ko: "카지미어 풀라스키의 날", en: "Casimir Pulaski Day", zh: "普瓦斯基日", zht: "普瓦斯基日")))
             dayAfterThanksgiving()
+            evenYearElectionDay()
         case "US-LA":
             if let e = easter(year) {
                 list.append((adding(-47, to: e), N(ko: "마르디 그라", en: "Mardi Gras", ja: "マルディグラ", zh: "狂欢节", fr: "Mardi gras",
@@ -279,10 +287,7 @@ extension HolidayService {
             if region == "US-ME" { dayAfterThanksgiving() }
         case "US-NY":
             fixedDay(2, 12, lincoln)
-            // 선거일: 11월 첫 월요일 다음 화요일
-            if let firstMonday = nthWeekday(nth: 1, weekday: 2, month: 11, year: year) {
-                list.append((adding(1, to: firstMonday), N(ko: "선거일", en: "Election Day", ja: "選挙日", zh: "选举日", zht: "選舉日")))
-            }
+            if let electionDay { list.append((electionDay, electionName)) }
         case "US-TX":
             dayAfterThanksgiving()
             fixedDay(12, 24, Common.christmasEve)
@@ -339,6 +344,10 @@ extension HolidayService {
             list.append((nthWeekday(nth: 1, weekday: 2, month: 8, year: year), summer))
         } else {
             list.append((lastWeekday(weekday: 2, month: 8, year: year), summer))
+        }
+        if region == "GB-SCT" && year == 2026 {   // 국왕 선포 (2026-02-05)
+            list.append((day(2026, 6, 15), N(ko: "월드컵 공휴일", en: "World Cup Bank Holiday", ja: "ワールドカップの祝日", zh: "世界杯假日", de: "WM-Feiertag",
+                                             fr: "Jour férié de la Coupe du monde", es: "Festivo del Mundial", it: "Festività dei Mondiali", pt: "Feriado da Copa do Mundo", zht: "世界盃假日")))
         }
         if region == "GB-SCT" {
             list.append((day(year, 11, 30), N(ko: "성 앤드루의 날", en: "St Andrew's Day", ja: "聖アンデレの日", zh: "圣安德鲁日", de: "Andreastag", fr: "Saint-André",
@@ -471,6 +480,10 @@ extension HolidayService {
             if let nov1 = day(year, 11, 1) {
                 add(weekday(3, onOrAfter: nov1), N(ko: "멜버른 컵", en: "Melbourne Cup", ja: "メルボルンカップ", zh: "墨尔本杯赛马日", zht: "墨爾本盃賽馬日"))
             }
+            // AFL 그랜드 파이널 전날 — 결승은 보통 9월 마지막 토요일 (해마다 주정부가 날짜를 확정한다)
+            if let final = lastWeekday(weekday: 7, month: 9, year: year) {
+                add(adding(-1, to: final), N(ko: "AFL 그랜드 파이널 전날", en: "Friday before the AFL Grand Final", zh: "澳式足球总决赛前日", zht: "澳式足球總決賽前日"))
+            }
         case "AU-QLD":
             add(nthWeekday(nth: 1, weekday: 2, month: 5, year: year), labour)
         case "AU-SA":
@@ -503,6 +516,10 @@ extension HolidayService {
         var holidays = list.compactMap { d, n, _ in d.map { Holiday(date: $0, name: n.text) } }
         let subKeys = Set(list.filter { $0.substitute }.compactMap { $0.0.map(dateKey) })
         holidays += rollForward(holidays, substitutable: subKeys)
+        // 안작 데이가 일요일이면 월요일에 쉰다 — 수도준주·북부준주·퀸즐랜드 (서호주는 위에서 토요일까지)
+        if ["AU-ACT", "AU-NT", "AU-QLD"].contains(region ?? ""), let anzac = day(year, 4, 25) {
+            holidays += rollForward(holidays, substitutable: [dateKey(anzac)], saturdayToo: false)
+        }
         return holidays.filter { calendar.component(.year, from: $0.date) == year }.sorted { $0.date < $1.date }
     }
 
@@ -581,10 +598,10 @@ extension HolidayService {
     }
 
     /// 스페인 자치주 공휴일 — 관보(BOE) 발표분. 전국 공휴일은 빼고 지역 몫만 적는다.
-    /// 2026: BOE-A-2025-21667 (2025-10-17). 새 해 발표가 나오면 여기에 더한다.
+    /// 관보 표를 그대로 옮겼다 (`(월, 일, 이름표 키)`). 해마다 10월께 다음 해 표가 나오면 여기에 더한다.
     static let spainOfficialRegional: [Int: [String: [(Int, Int, String)]]] = [
-        2026: [
-            "ES-AN": [(2, 28, "andalucia"), (4, 2, "maundy"), (11, 2, "afterAllSaints")],
+        2026: [   // BOE BOE-A-2025-21667
+            "ES-AN": [(2, 28, "andalucia"), (4, 2, "maundy"), (11, 2, "afterAllSaints"), (12, 7, "afterConstitution")],
             "ES-AR": [(4, 2, "maundy"), (4, 23, "aragon"), (11, 2, "afterAllSaints"), (12, 7, "afterConstitution")],
             "ES-AS": [(4, 2, "maundy"), (9, 8, "asturias"), (11, 2, "afterAllSaints"), (12, 7, "afterConstitution")],
             "ES-IB": [(3, 2, "balears"), (4, 2, "maundy"), (4, 6, "easterMonday"), (12, 26, "stStephen")],
@@ -593,16 +610,37 @@ extension HolidayService {
             "ES-CM": [(4, 2, "maundy"), (4, 6, "easterMonday"), (6, 4, "corpus"), (11, 2, "afterAllSaints")],
             "ES-CL": [(4, 2, "maundy"), (4, 23, "castillaLeon"), (11, 2, "afterAllSaints"), (12, 7, "afterConstitution")],
             "ES-CT": [(4, 6, "easterMonday"), (6, 24, "stJohn"), (9, 11, "catalunya"), (12, 26, "stStephen")],
-            "ES-VC": [(4, 2, "maundy"), (4, 6, "easterMonday"), (6, 24, "stJohn"), (10, 9, "valencia")],
-            "ES-EX": [(4, 2, "maundy"), (9, 8, "extremadura"), (11, 2, "afterAllSaints")],
-            "ES-GA": [(4, 2, "maundy"), (6, 24, "stJohn"), (7, 25, "galicia")],
-            "ES-MD": [(4, 2, "maundy"), (5, 2, "madrid")],
-            "ES-MC": [(4, 2, "maundy"), (6, 9, "murcia"), (11, 2, "afterAllSaints")],
-            "ES-NC": [(4, 2, "maundy"), (4, 6, "easterMonday")],
-            "ES-PV": [(4, 2, "maundy"), (4, 6, "easterMonday"), (7, 25, "santiago")],
-            "ES-RI": [(4, 2, "maundy"), (6, 9, "rioja")],
-            "ES-CE": [(4, 2, "maundy"), (5, 27, "eidAdha"), (9, 2, "ceuta")],
-            "ES-ML": [(3, 20, "eidFitr"), (4, 2, "maundy"), (5, 27, "eidAdha")],
+            "ES-EX": [(4, 2, "maundy"), (9, 8, "extremadura"), (11, 2, "afterAllSaints"), (12, 7, "afterConstitution")],
+            "ES-GA": [(3, 19, "stJoseph"), (4, 2, "maundy"), (6, 24, "stJohn"), (7, 25, "galicia")],
+            "ES-MD": [(4, 2, "maundy"), (5, 2, "madrid"), (11, 2, "afterAllSaints"), (12, 7, "afterConstitution")],
+            "ES-MC": [(3, 19, "stJoseph"), (4, 2, "maundy"), (6, 9, "murcia"), (12, 7, "afterConstitution")],
+            "ES-NC": [(3, 19, "stJoseph"), (4, 2, "maundy"), (4, 6, "easterMonday"), (11, 2, "afterAllSaints")],
+            "ES-PV": [(3, 19, "stJoseph"), (4, 2, "maundy"), (4, 6, "easterMonday"), (7, 25, "santiago")],
+            "ES-RI": [(4, 2, "maundy"), (4, 6, "easterMonday"), (6, 9, "rioja"), (12, 7, "afterConstitution")],
+            "ES-VC": [(3, 19, "stJoseph"), (4, 6, "easterMonday"), (6, 24, "stJohn"), (10, 9, "valencia")],
+            "ES-CE": [(4, 2, "maundy"), (5, 27, "eidAdha"), (8, 5, "africa"), (9, 2, "ceuta")],
+            "ES-ML": [(3, 20, "eidFitr"), (4, 2, "maundy"), (5, 27, "eidAdha"), (12, 7, "afterConstitution")],
+        ],
+        2027: [   // BOE BOE-A-2026-21254
+            "ES-AN": [(3, 1, "andalucia"), (3, 25, "maundy"), (8, 16, "afterAssumption")],
+            "ES-AR": [(3, 25, "maundy"), (4, 23, "aragon"), (8, 16, "afterAssumption")],
+            "ES-AS": [(3, 25, "maundy"), (8, 16, "afterAssumption"), (9, 8, "asturias")],
+            "ES-IB": [(3, 1, "balearsDay"), (3, 25, "maundy"), (3, 29, "easterMonday")],
+            "ES-CN": [(3, 25, "maundy"), (8, 16, "afterAssumption")],
+            "ES-CB": [(3, 25, "maundy"), (7, 28, "cantabria"), (9, 15, "bienAparecida")],
+            "ES-CM": [(3, 25, "maundy"), (5, 27, "corpus"), (5, 31, "castillaMancha")],
+            "ES-CL": [(3, 25, "maundy"), (4, 23, "castillaLeon"), (8, 16, "afterAssumption")],
+            "ES-CT": [(3, 29, "easterMonday"), (6, 24, "stJohn"), (9, 11, "catalunya")],
+            "ES-EX": [(3, 25, "maundy"), (9, 8, "extremadura"), (10, 11, "assumptionMoved")],
+            "ES-GA": [(3, 19, "stJoseph"), (3, 25, "maundy"), (5, 17, "letras")],
+            "ES-MD": [(3, 19, "stJoseph"), (3, 25, "maundy"), (8, 16, "afterAssumption")],
+            "ES-MC": [(3, 19, "stJoseph"), (3, 25, "maundy"), (6, 9, "murcia")],
+            "ES-NC": [(3, 19, "stJoseph"), (3, 25, "maundy"), (3, 29, "easterMonday")],
+            "ES-PV": [(3, 25, "maundy"), (3, 29, "easterMonday"), (10, 7, "euskadi")],
+            "ES-RI": [(3, 25, "maundy"), (3, 29, "easterMonday"), (6, 9, "rioja")],
+            "ES-VC": [(3, 19, "stJoseph"), (3, 29, "easterMonday"), (10, 9, "valencia")],
+            "ES-CE": [(3, 25, "maundy"), (5, 17, "eidAdha"), (8, 5, "africa")],
+            "ES-ML": [(3, 10, "eidFitr"), (3, 25, "maundy"), (5, 17, "eidAdha")],
         ],
     ]
 
@@ -639,6 +677,18 @@ extension HolidayService {
             "ceuta": r("Día de Ceuta", ko: "세우타의 날", en: "Ceuta Day"),
             "eidAdha": r("Fiesta del Sacrificio (Eidul Adha)", ko: "이드 알아드하", en: "Eid al-Adha"),
             "eidFitr": r("Fiesta del Fin del Ramadán (Eid al-Fitr)", ko: "이드 알피트르", en: "Eid al-Fitr"),
+            "stJoseph": Common.stJoseph,
+            "balearsDay": r("Día de las Illes Balears", ko: "발레아레스 제도의 날", en: "Balearic Islands Day"),
+            "castillaMancha": r("Día de Castilla-La Mancha", ko: "카스티야라만차의 날", en: "Castilla–La Mancha Day"),
+            "letras": r("Día de las Letras Gallegas", ko: "갈리시아 문학의 날", en: "Galician Literature Day"),
+            "africa": r("Nuestra Señora de África", ko: "아프리카 성모 축일", en: "Our Lady of Africa"),
+            "euskadi": r("Aniversario del primer Gobierno Vasco", ko: "바스크 첫 정부 기념일", en: "Anniversary of the First Basque Government"),
+            "afterAssumption": N(ko: "성모 승천 대체 휴일", en: "Assumption Day (observed)", ja: "聖母被昇天祭（振替）", zh: "圣母升天节（补休）", de: "Mariä Himmelfahrt (Ersatztag)",
+                                 fr: "Assomption (jour de remplacement)", es: "Lunes siguiente a la Asunción", it: "Assunzione (sostitutiva)",
+                                 pt: "Assunção (transferido)", zht: "聖母升天節（補假）"),
+            "assumptionMoved": N(ko: "성모 승천 대체 휴일", en: "Assumption Day (moved)", ja: "聖母被昇天祭（振替）", zh: "圣母升天节（调休）", de: "Mariä Himmelfahrt (verlegt)",
+                                 fr: "Assomption (déplacée)", es: "Sustitución del 15 de agosto", it: "Assunzione (spostata)",
+                                 pt: "Assunção (transferida)", zht: "聖母升天節（調移）"),
         ]
     }
 
