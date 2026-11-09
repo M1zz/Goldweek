@@ -221,6 +221,14 @@ class HolidayService {
         result = Self.applying(HolidayOverrideStore.overrides, to: result, year: year, country: country,
                                region: region, language: AppLanguage.current, calendar: calendar)
 
+        // 내가 켠 문화별 명절 — 나라 공휴일과 겹치는 날은 나라 이름을 그대로 둔다. 숨긴 날은 아래에서 빠진다
+        let festivals = CulturalFestival.enabled
+        if !festivals.isEmpty {
+            let taken = Set(result.map { dateKey($0.date) })
+            result += culturalFestivalHolidays(for: year, festivals).filter { !taken.contains(dateKey($0.date)) }
+            result.sort { $0.date < $1.date }
+        }
+
         // hiddenDates·customHolidays는 매번 동적이므로 캐시 후 적용
         if !hiddenDates.isEmpty {
             result = result.filter { !hiddenDates.contains(dateKey($0.date)) }

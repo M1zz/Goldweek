@@ -22,6 +22,7 @@ struct ContentView: View {
     @Query private var anniversaries: [FamilyAnniversary]
     /// 직접 만든 휴가 종류 — 달력 색·이름이 읽는 LeaveStyleStore 에 맞춰 둔다
     @Query(sort: \CustomLeaveType.createdAt) private var customLeaveTypes: [CustomLeaveType]
+    @AppStorage(CulturalFestival.storageKey) private var culturalFestivalsRaw = ""
     @AppStorage("hiddenHolidayDates") private var hiddenHolidayDatesRaw: String = ""
     /// 직접 입력 국가의 주말 요일 — 바뀌면 쉬는 날 판정을 다시 채운다
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
@@ -340,7 +341,7 @@ struct ContentView: View {
         let breaks = schoolBreaks.map { "\($0.kindRaw):\($0.startDate.timeIntervalSince1970):\($0.endDate.timeIntervalSince1970)" }.sorted()
         let customs = customHolidays.map { "\($0.date.timeIntervalSince1970)\($0.repeatsYearly ? "y" : "")" }.sorted()
         let anniversaryKeys = anniversaries.map { "\($0.date.timeIntervalSince1970)\($0.isLunar ? "L" : "")\($0.displayTitle)" }.sorted()
-        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(workPatternRaw)|\(shiftDaysOffRaw)|\(shiftWorkDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))|\(anniversaryKeys.joined(separator: ","))"
+        return "\(profile.countryRaw)|\(customWeekendDaysRaw)|\(partTimeDaysOffRaw)|\(partTimeSwapsRaw)|\(workPatternRaw)|\(shiftDaysOffRaw)|\(shiftWorkDaysRaw)|\(profile.holidayRegionRaw)|\(profile.homeCountryRaw)|\(profile.homeRegionRaw)|\(homeHolidaysDaysOff)|\(culturalFestivalsRaw)|\(holidayBlackoutDays)|\(hiddenHolidayDatesRaw)|\(customs.joined(separator: ","))|\(breaks.joined(separator: ","))|\(anniversaryKeys.joined(separator: ","))"
     }
 
     private func syncDayOffCalendar(profile: UserProfile) {

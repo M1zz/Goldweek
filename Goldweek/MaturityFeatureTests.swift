@@ -449,3 +449,71 @@ final class MaturityFeatureTests: XCTestCase {
         }
     }
 }
+
+// MARK: - 문화별 명절
+
+final class CulturalFestivalTests: XCTestCase {
+    private var saved = ""
+
+    override func setUp() {
+        saved = UserDefaults.standard.string(forKey: CulturalFestival.storageKey) ?? ""
+        UserDefaults.standard.set("en", forKey: "appLanguage")
+    }
+
+    override func tearDown() {
+        UserDefaults.standard.set(saved, forKey: CulturalFestival.storageKey)
+    }
+
+    private func days(_ year: Int, _ country: Country, festivals: Set<CulturalFestival>) -> [String: Holiday] {
+        UserDefaults.standard.set(CulturalFestival.raw(festivals), forKey: CulturalFestival.storageKey)
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; f.locale = Locale(identifier: "en_US_POSIX")
+        return Dictionary(HolidayService().getHolidays(for: year, country: country).map { (f.string(from: $0.date), $0) },
+                          uniquingKeysWith: { a, _ in a })
+    }
+
+    func testFestivalsAreDaysOffOnlyWhenTurnedOn() {
+        XCTAssertNil(days(2026, .uk, festivals: [])["2026-03-20"])
+        let on = days(2026, .uk, festivals: [.islamic, .jewish, .hindu, .lunar])
+        XCTAssertEqual(on["2026-03-20"]?.name, "Eid al-Fitr")        // 움 알쿠라 샤왈 1일
+        XCTAssertEqual(on["2026-05-27"]?.name, "Eid al-Adha")
+        XCTAssertEqual(on["2026-09-12"]?.name, "Rosh Hashanah")
+        XCTAssertNotNil(on["2026-09-13"])                             // 이틀
+        XCTAssertEqual(on["2026-09-21"]?.name, "Yom Kippur")
+        XCTAssertEqual(on["2026-04-02"]?.name, "Passover")
+        XCTAssertEqual(on["2026-11-08"]?.name, "Diwali")
+        XCTAssertEqual(on["2026-03-04"]?.name, "Holi")
+        XCTAssertEqual(on["2026-02-17"]?.name, "Lunar New Year")
+        XCTAssertEqual(on["2026-09-25"]?.name, "Mid-Autumn Festival")
+        XCTAssertTrue(on["2026-03-20"]?.isCultural == true)
+    }
+
+    func testNationalHolidayKeepsItsName() {
+        // 한국 설날은 나라 공휴일 이름 그대로, 한 번만
+        let korea = days(2026, .korea, festivals: [.lunar])
+        XCTAssertEqual(korea["2026-02-17"]?.isCultural, false)
+    }
+
+    func testHiddenFestivalDayIsDropped() {
+        UserDefaults.standard.set(CulturalFestival.raw([.islamic]), forKey: CulturalFestival.storageKey)
+        let date = Calendar.app.date(from: DateComponents(year: 2026, month: 3, day: 20))!
+        XCTAssertTrue(HolidayService().isHoliday(date, in: 2026, country: .uk))
+        let hidden = HolidayService().getHolidays(for: 2026, country: .uk, hiddenDates: ["2026-03-20"])
+        XCTAssertFalse(hidden.contains { Calendar.app.isDate($0.date, inSameDayAs: date) })
+    }
+
+    func testStringsCoverEveryLanguage() {
+        let savedLang = LanguageManager.shared.currentLanguage
+        defer { LanguageManager.shared.currentLanguage = savedLang }
+        for lang in AppLanguage.allCases {
+            LanguageManager.shared.currentLanguage = lang
+            let texts = CulturalFestival.allCases.flatMap { [Strings.culturalFestivalName($0), Strings.culturalFestivalExamples($0)] }
+                + [Strings.culturalFestivalsTitle, Strings.culturalFestivalsFooter]
+            for text in texts {
+                XCTAssertFalse(text.isEmpty, lang.rawValue)
+                if lang != .korean {
+                    XCTAssertNil(text.range(of: "[가-힣]", options: .regularExpression), "\(lang.rawValue): \(text)")
+                }
+            }
+        }
+    }
+}

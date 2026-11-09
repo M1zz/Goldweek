@@ -723,6 +723,8 @@ public struct Holiday: Identifiable {
     public let isBreak: Bool
     /// 정부가 정한 공동 휴가(인도네시아 cuti bersama) — 쉬는 날이지만 연휴 이름은 진짜 공휴일을 따른다
     public var isCollective = false
+    /// 내가 켠 문화별 명절(`CulturalFestival`) — 나라 공휴일이 아니지만 쉬는 날로 센다
+    public var isCultural = false
 
     public init(date: Date, name: String, isSubstitute: Bool = false, isCustom: Bool = false, isBreak: Bool = false) {
         self.date = date

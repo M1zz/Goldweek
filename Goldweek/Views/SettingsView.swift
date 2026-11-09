@@ -87,6 +87,7 @@ struct SettingsView: View {
     @AppStorage("customWeekendDays") private var customWeekendDaysRaw = ""
     @AppStorage("firstWeekday") private var firstWeekdayRaw = 0
     @AppStorage(SecondaryCalendar.storageKey) private var secondaryCalendarRaw = ""
+    @AppStorage(CulturalFestival.storageKey) private var culturalFestivalsRaw = ""
     @AppStorage("rest_radar_enabled") private var restRadarEnabled: Bool = true
 
     // 국가 & 언어
@@ -715,8 +716,38 @@ struct SettingsView: View {
             } footer: {
                 Text(Strings.secondaryCalendarFooter)
             }
+
+            Section {
+                ForEach(CulturalFestival.allCases) { festival in
+                    Toggle(isOn: culturalFestivalBinding(festival)) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(Strings.culturalFestivalName(festival))
+                            Text(Strings.culturalFestivalExamples(festival))
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            } header: {
+                Text(Strings.culturalFestivalsTitle)
+            } footer: {
+                Text(Strings.culturalFestivalsFooter)
+            }
             }
         }
+    }
+
+    /// 문화별 명절 하나를 켜고 끈다 — 쉬는 날이 바뀌니 추천도 다시 계산한다
+    private func culturalFestivalBinding(_ festival: CulturalFestival) -> Binding<Bool> {
+        Binding(
+            get: { CulturalFestival.parse(culturalFestivalsRaw).contains(festival) },
+            set: { isOn in
+                var set = CulturalFestival.parse(culturalFestivalsRaw)
+                if isOn { set.insert(festival) } else { set.remove(festival) }
+                culturalFestivalsRaw = CulturalFestival.raw(set)
+                recommendationEngine.invalidateCache()
+            }
+        )
     }
 
     private var leavePage: some View {

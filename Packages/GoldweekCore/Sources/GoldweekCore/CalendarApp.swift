@@ -90,6 +90,29 @@ public enum SecondaryCalendar: String, CaseIterable, Identifiable {
     }
 }
 
+/// 사는 나라와 상관없이 지키는 명절 — 켜면 그날을 쉬는 날로 세고 추천도 그날에 맞춘다.
+/// 예: 영국에 사는 무슬림이 이드에 맞춰 휴가를 짠다.
+public enum CulturalFestival: String, CaseIterable, Identifiable {
+    case islamic, jewish, hindu, lunar
+
+    /// 저장값은 켠 것만 쉼표로 ("islamic,hindu")
+    public static let storageKey = "culturalFestivals"
+
+    public var id: String { rawValue }
+
+    public static var enabled: Set<CulturalFestival> {
+        parse(UserDefaults.standard.string(forKey: storageKey) ?? "")
+    }
+
+    public static func parse(_ raw: String) -> Set<CulturalFestival> {
+        Set(raw.split(separator: ",").compactMap { CulturalFestival(rawValue: String($0)) })
+    }
+
+    public static func raw(_ festivals: Set<CulturalFestival>) -> String {
+        allCases.filter(festivals.contains).map(\.rawValue).joined(separator: ",")
+    }
+}
+
 public struct SurfaceFacts: Equatable {
     public var recordCount: Int
     public var upcomingCount: Int

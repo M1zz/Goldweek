@@ -113,7 +113,7 @@ final class DayOffCalendar {
         let weekend = HolidayService.weekendDays(for: country).sorted().map(String.init).joined()
         let homeDaysOff = HolidayService.homeHolidaysAreDaysOff
         let blackout = HolidayService.leaveBlackoutDays
-        let newFingerprint = "\(country.rawValue)|\(weekend)|blackout\(blackout)|\(HolidayService.selectedRegionCode)|\(HolidayService.workPattern.rawValue)|\(HolidayService.partTimeSwapsRaw)|\(HolidayService.shiftDaysOffRaw)|\(HolidayService.shiftWorkDaysRaw)|\(HolidayService.homeCountryCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
+        let newFingerprint = "\(country.rawValue)|\(weekend)|blackout\(blackout)|\(HolidayService.selectedRegionCode)|\(HolidayService.workPattern.rawValue)|\(HolidayService.partTimeSwapsRaw)|\(HolidayService.shiftDaysOffRaw)|\(HolidayService.shiftWorkDaysRaw)|\(HolidayService.homeCountryCode)|\(HolidayService.homeRegionCode)|\(homeDaysOff)|\(CulturalFestival.raw(CulturalFestival.enabled))|\(custom.keys.sorted().joined(separator: ","))|\(yearly.keys.sorted().joined(separator: ","))|\(mine.keys.sorted().joined(separator: ","))|\(hiddenDates.sorted().joined(separator: ","))|"
             + children.map { "\(key($0.start))~\(key($0.end))" }.joined(separator: ",")
             + "|nogo:" + blackoutRanges.map { "\(key($0.start))~\(key($0.end))" }.sorted().joined(separator: ",")
             + "|anniv:" + newAnniversaries.map { "\(key($0.date))\($0.isLunar ? "L" : "")\($0.title)" }.joined(separator: ",")

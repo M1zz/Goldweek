@@ -2059,3 +2059,69 @@ extension HolidayService {
         return (base + substitutes).sorted { $0.date < $1.date }
     }
 }
+
+// MARK: - 문화별 명절 (사는 나라와 상관없이 켜는 명절)
+
+extension HolidayService {
+    private enum Festival {
+        static let roshHashanah = N(ko: "로시 하샤나", en: "Rosh Hashanah", ja: "ロシュ・ハシャナ", zh: "犹太新年", de: "Rosch ha-Schana", fr: "Roch Hachana",
+                                    es: "Rosh Hashaná", it: "Rosh haShanà", pt: "Rosh Hashaná", zht: "猶太新年", nl: "Rosj Hasjana")
+        static let yomKippur = N(ko: "욤 키푸르", en: "Yom Kippur", ja: "ヨム・キプル", zh: "赎罪日", de: "Jom Kippur", fr: "Yom Kippour",
+                                 es: "Yom Kipur", it: "Yom Kippur", pt: "Yom Kipur", zht: "贖罪日", nl: "Jom Kipoer")
+        static let passover = N(ko: "유월절", en: "Passover", ja: "過越祭", zh: "逾越节", de: "Pessach", fr: "Pessa’h",
+                                es: "Pésaj", it: "Pesach", pt: "Pessach", zht: "逾越節", nl: "Pesach")
+        static let diwali = N(ko: "디왈리", en: "Diwali", ja: "ディワリ", zh: "排灯节", de: "Diwali", fr: "Diwali",
+                              es: "Diwali", it: "Diwali", pt: "Diwali", zht: "排燈節", nl: "Divali")
+        static let holi = N(ko: "홀리", en: "Holi", ja: "ホーリー", zh: "洒红节", de: "Holi", fr: "Holi",
+                            es: "Holi", it: "Holi", pt: "Holi", zht: "灑紅節", nl: "Holi")
+        static let lunarNewYear = N(ko: "설날", en: "Lunar New Year", ja: "旧正月", zh: "春节", de: "Mondneujahr", fr: "Nouvel An lunaire",
+                                    es: "Año Nuevo Lunar", it: "Capodanno lunare", pt: "Ano Novo Lunar", zht: "春節", nl: "Maannieuwjaar")
+        static let midAutumn = N(ko: "추석", en: "Mid-Autumn Festival", ja: "中秋節", zh: "中秋节", de: "Mondfest", fr: "Fête de la mi-automne",
+                                 es: "Festival del Medio Otoño", it: "Festa di metà autunno", pt: "Festival do Meio do Outono", zht: "中秋節", nl: "Medio-herfstfeest")
+
+        /// 힌두 명절은 달과 해를 함께 따르는 인도력이라 시스템 달력으로 풀 수 없어 날짜표로 둔다 (북인도 기준).
+        /// 디왈리 = 락슈미 푸자 날, 홀리 = 색 뿌리는 날. 홀리는 자료가 하루씩 갈리는 2029년부터 비워 둔다.
+        static let diwaliDates: [Int: (Int, Int)] = [2025: (10, 20), 2026: (11, 8), 2027: (10, 29), 2028: (10, 17), 2029: (11, 5), 2030: (10, 26)]
+        static let holiDates: [Int: (Int, Int)] = [2025: (3, 14), 2026: (3, 4), 2027: (3, 22), 2028: (3, 11)]
+    }
+
+    /// 히브리력 날짜 → 그 양력 해의 날. 유대 명절은 전날 해 질 녘에 시작하지만 쉬는 날은 그다음 날이다.
+    /// Foundation 히브리력은 티슈리가 1월, 니산이 8월이다 (윤달 아다르가 6월 자리).
+    private func hebrew(_ year: Int, month: Int, day: Int) -> [Date] {
+        var hebrew = Calendar(identifier: .hebrew)
+        hebrew.timeZone = calendar.timeZone
+        let approx = year + 3760
+        return (approx...(approx + 1)).compactMap { hy in
+            guard let d = hebrew.date(from: DateComponents(year: hy, month: month, day: day)) else { return nil }
+            let start = calendar.startOfDay(for: d)
+            return calendar.component(.year, from: start) == year ? start : nil
+        }
+    }
+
+    /// 켠 문화별 명절의 그해 날짜. 이름은 앱 언어를 따른다.
+    func culturalFestivalHolidays(for year: Int, _ festivals: Set<CulturalFestival>) -> [Holiday] {
+        var items: [([Date], N)] = []
+        if festivals.contains(.islamic) {
+            items.append((hijri(year, month: 10, day: 1), Gulf.eidFitr))
+            items.append((hijri(year, month: 12, day: 10), Gulf.eidAdha))
+        }
+        if festivals.contains(.jewish) {
+            items.append((hebrew(year, month: 1, day: 1) + hebrew(year, month: 1, day: 2), Festival.roshHashanah))
+            items.append((hebrew(year, month: 1, day: 10), Festival.yomKippur))
+            items.append((hebrew(year, month: 8, day: 15), Festival.passover))
+        }
+        if festivals.contains(.hindu) {
+            items.append(([Festival.diwaliDates[year].flatMap { day(year, $0.0, $0.1) }].compactMap { $0 }, Festival.diwali))
+            items.append(([Festival.holiDates[year].flatMap { day(year, $0.0, $0.1) }].compactMap { $0 }, Festival.holi))
+        }
+        if festivals.contains(.lunar) {
+            items.append(([lunar(year, month: 1, day: 1)].compactMap { $0 }, Festival.lunarNewYear))
+            items.append(([lunar(year, month: 8, day: 15)].compactMap { $0 }, Festival.midAutumn))
+        }
+        return gulfList(items).map {
+            var h = $0
+            h.isCultural = true
+            return h
+        }
+    }
+}
