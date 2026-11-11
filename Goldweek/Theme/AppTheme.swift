@@ -197,19 +197,26 @@ extension LeaveStatus {
 }
 
 // MARK: - Haptic Feedback Helper
+// Vision Pro 에는 진동이 없다 — 빈 함수로 둔다.
 struct HapticFeedback {
     static func success() {
+        #if !os(visionOS)
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
+        #endif
     }
 
     static func error() {
+        #if !os(visionOS)
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.error)
+        #endif
     }
 
     static func selection() {
+        #if !os(visionOS)
         let generator = UISelectionFeedbackGenerator()
         generator.selectionChanged()
+        #endif
     }
 }

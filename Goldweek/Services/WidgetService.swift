@@ -124,8 +124,10 @@ class WidgetService {
         // 즉시 디스크에 동기화
         defaults.synchronize()
 
-        // 위젯 리로드
+        // 위젯 리로드 (visionOS 2 에는 위젯이 없다 — 위젯 확장은 iOS · Mac 에만 묶여 있다)
+        #if !os(visionOS)
         WidgetCenter.shared.reloadAllTimelines()
+        #endif
         logInfo("위젯 타임라인 리로드 요청 완료 - 잔여: \(remaining)일", category: .widget)
     }
 

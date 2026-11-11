@@ -697,7 +697,9 @@ struct SetupPage: View {
             .padding(.horizontal, 24)
             .padding(.bottom, 24)
         }
+        #if !os(visionOS)
         .scrollDismissesKeyboard(.interactively)
+        #endif
     }
 }
 

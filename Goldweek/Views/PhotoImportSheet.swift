@@ -78,12 +78,14 @@ struct PhotoImportSheet: View {
                 guard let newItem else { return }
                 Task { await loadAndScan(item: newItem) }
             }
+            #if !os(visionOS)
             .fullScreenCover(isPresented: $showingCamera) {
                 CameraPicker { image in
                     Task { await scan(image: image) }
                 }
                 .ignoresSafeArea()
             }
+            #endif
             .alert(Strings.alert, isPresented: $showingResultAlert) {
                 Button(Strings.confirm, role: .cancel) {
                     if importSucceeded { dismiss() }
@@ -134,7 +136,7 @@ struct PhotoImportSheet: View {
                 }
                 .buttonStyle(.borderedProminent)
 
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                if CameraSupport.isAvailable {
                     Button {
                         showingCamera = true
                     } label: {
@@ -507,6 +509,18 @@ struct PhotoImportSheet: View {
 
 // MARK: - 카메라 촬영
 
+enum CameraSupport {
+    /// Vision Pro 에는 앱이 쓸 카메라가 없다 — 사진 고르기만 남긴다.
+    static var isAvailable: Bool {
+        #if os(visionOS)
+        false
+        #else
+        UIImagePickerController.isSourceTypeAvailable(.camera)
+        #endif
+    }
+}
+
+#if !os(visionOS)
 struct CameraPicker: UIViewControllerRepresentable {
     @Environment(\.dismiss) private var dismiss
     let onCapture: (UIImage) -> Void
@@ -546,6 +560,7 @@ struct CameraPicker: UIViewControllerRepresentable {
         }
     }
 }
+#endif
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)

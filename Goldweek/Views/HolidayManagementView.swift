@@ -1138,12 +1138,14 @@ struct SchoolCalendarImportSheet: View {
                     return try await PhotoImportService.shared.recognizeLines(in: image)
                 } }
             }
+            #if !os(visionOS)
             .sheet(isPresented: $showingCamera) {
                 CameraPicker { image in
                     Task { await read { try await PhotoImportService.shared.recognizeLines(in: image) } }
                 }
                 .ignoresSafeArea()
             }
+            #endif
             .fileImporter(isPresented: $showingFileImporter, allowedContentTypes: [.pdf, .image]) { result in
                 guard case .success(let url) = result else { return }
                 Task { await read {
@@ -1172,7 +1174,7 @@ struct SchoolCalendarImportSheet: View {
                 }
             }
             Section {
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                if CameraSupport.isAvailable {
                     Button { showingCamera = true } label: {
                         Label(Strings.takePhoto, systemImage: "camera.fill")
                     }

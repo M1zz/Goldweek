@@ -7,6 +7,7 @@
 
 import Foundation
 import StoreKit
+import UIKit
 import SwiftUI
 import Combine
 import LeeoKit
@@ -318,7 +319,16 @@ class ProManager {
         isLoading = true
         defer { isLoading = false }
 
+        #if os(visionOS)
+        // visionOS 는 결제 확인창을 띄울 창(scene)을 요구한다.
+        guard let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive })
+                ?? UIApplication.shared.connectedScenes.first else {
+            throw ProPurchaseError.productNotFound
+        }
+        let result = try await product.purchase(confirmIn: scene)
+        #else
         let result = try await product.purchase()
+        #endif
 
         switch result {
         case .success(let verification):

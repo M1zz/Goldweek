@@ -1,5 +1,151 @@
 # Goldweek 릴리즈 노트
 
+## 2.4.6
+
+### 앱스토어 (한국어)
+
+이제 Apple Vision Pro에서도 쓸 수 있어요
+넓은 창에서 달력과 연차 현황을 함께 봐요
+기록은 iCloud로 iPhone과 그대로 이어져요
+
+### App Store (English)
+
+Now available on Apple Vision Pro
+Calendar and leave balance side by side
+Everything syncs with iPhone via iCloud
+
+### App Store (en-GB)
+
+Now available on Apple Vision Pro
+Calendar and leave balance side by side
+Everything syncs with iPhone via iCloud
+
+### 앱스토어 (일본어)
+
+Apple Vision Proでも使えるようになりました
+広いウインドウでカレンダーと残日数を一緒に
+記録はiCloudでiPhoneとそのまま続きます
+
+### 앱스토어 (중국어 간체)
+
+现在也能在 Apple Vision Pro 上使用
+在宽大的窗口中同时查看日历与年假
+记录通过 iCloud 与 iPhone 保持同步
+
+### 앱스토어 (독일어)
+
+Jetzt auch auf Apple Vision Pro
+Kalender und Urlaubskonto nebeneinander
+Per iCloud synchron mit dem iPhone
+
+### 앱스토어 (프랑스어)
+
+Désormais aussi sur Apple Vision Pro
+Calendrier et congés côte à côte
+Vos données suivent l’iPhone via iCloud
+
+### 앱스토어 (스페인어)
+
+Ya disponible en Apple Vision Pro
+Calendario y saldo de vacaciones juntos
+Tus datos siguen en el iPhone con iCloud
+
+### 앱스토어 (이탈리아어)
+
+Ora anche su Apple Vision Pro
+Calendario e saldo ferie affiancati
+Con iCloud tutto segue l’iPhone
+
+### 앱스토어 (포르투갈어 브라질)
+
+Agora também no Apple Vision Pro
+Calendário e saldo de férias lado a lado
+Seus dados seguem no iPhone pelo iCloud
+
+### 앱스토어 (중국어 번체)
+
+現在也能在 Apple Vision Pro 上使用
+在寬大的視窗中同時檢視行事曆與年假
+記錄透過 iCloud 與 iPhone 保持同步
+
+### 앱스토어 (네덜란드어)
+
+Nu ook op Apple Vision Pro
+Kalender en verlofsaldo naast elkaar
+Via iCloud blijft alles gelijk op iPhone
+
+### 앱스토어 (스웨덴어)
+
+Nu även på Apple Vision Pro
+Kalender och semestersaldo sida vid sida
+Allt följer med din iPhone via iCloud
+
+### 앱스토어 (노르웨이어 보크말)
+
+Nå også på Apple Vision Pro
+Kalender og feriesaldo side om side
+Alt følger med iPhone via iCloud
+
+### 앱스토어 (덴마크어)
+
+Nu også på Apple Vision Pro
+Kalender og feriesaldo side om side
+Alt følger med din iPhone via iCloud
+
+### 앱스토어 (핀란드어)
+
+Nyt myös Apple Vision Prossa
+Kalenteri ja lomasaldo rinnakkain
+iCloud pitää tiedot iPhonen tahdissa
+
+### 앱스토어 (폴란드어)
+
+Teraz także na Apple Vision Pro
+Kalendarz i saldo urlopu obok siebie
+iCloud łączy dane z iPhone’em
+
+### 앱스토어 (체코어)
+
+Nyní také na Apple Vision Pro
+Kalendář a zůstatek dovolené vedle sebe
+Díky iCloudu vše navazuje na iPhone
+
+### 앱스토어 (그리스어)
+
+Τώρα και στο Apple Vision Pro
+Ημερολόγιο και άδειες δίπλα δίπλα
+Με το iCloud συνεχίζετε από το iPhone
+
+### 앱스토어 (튀르키예어)
+
+Artık Apple Vision Pro'da da
+Takvim ve izin bakiyesi yan yana
+Kayıtlar iCloud ile iPhone'da da güncel
+
+### 앱스토어 (러시아어)
+
+Теперь и на Apple Vision Pro
+Календарь и остаток отпуска рядом
+Через iCloud всё синхронно с iPhone
+
+### 앱스토어 (인도네시아어)
+
+Kini tersedia di Apple Vision Pro
+Kalender dan sisa cuti berdampingan
+Data sinkron dengan iPhone lewat iCloud
+
+### 앱스토어 (태국어)
+
+ใช้งานได้แล้วบน Apple Vision Pro
+ดูปฏิทินและวันลาคงเหลือในหน้าต่างเดียว
+ข้อมูลซิงค์กับ iPhone ผ่าน iCloud
+
+### 앱스토어 (베트남어)
+
+Nay đã có trên Apple Vision Pro
+Lịch và số ngày phép hiển thị cạnh nhau
+Dữ liệu đồng bộ với iPhone qua iCloud
+
 ## 2.4.5
 
 ### 앱스토어 (한국어)
