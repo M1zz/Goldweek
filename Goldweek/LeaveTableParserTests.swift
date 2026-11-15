@@ -215,3 +215,55 @@ final class LeaveTableParserTests: XCTestCase {
         XCTAssertEqual(result.count, 1)
     }
 }
+
+// MARK: - 퍼즈: 사진 · PDF 에서 읽은 글을 죽이려고 넣기
+
+/// OCR 글은 엉망으로 온다. 날짜 조각 · 숫자 · 기호 · 다른 언어가 뒤섞인 줄을 무작위로 만들어
+/// 연차 표 파서와 학사 일정 파서에 넣는다. 어떤 줄에서도 죽지 않아야 한다.
+final class ImportParserFuzzTests: XCTestCase {
+
+    private struct SeededRandom: RandomNumberGenerator {
+        var state: UInt64
+        mutating func next() -> UInt64 {
+            state &+= 0x9E37_79B9_7F4A_7C15
+            var z = state
+            z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
+            z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+            return z ^ (z >> 31)
+        }
+    }
+
+    private let pieces = ["2026.07.16", "2026-02-29", "2027.13.45", "0000.00.00", "9999.12.31", "1.1", "31/12", "12/31",
+                          "2/30", "Nov 24-28", "Nov 30 - 3 Dec", "Dec 31 – Jan 2", "24 - 28", "&", "and", "through",
+                          "Sept", "Feb", "1st", "22nd", "~", "–", "—", "-", ",", " ", "  ", "\t", "반차", "오전", "연차",
+                          "0.50일", "-1일", "999999일", "1e309일", "NaN일", "승인", "반려", "월", "화", "(", ")", "[", "]",
+                          "2026년", "7월", "16일", "학기", "방학", "개교기념일", "e\u{301}", "👍🏽", "١٢", "２０２６", "",
+                          "-2147483648", "99999999999999999999", ":", "/", ".", "..", "...", "2026.", ".07", "7.", "2026.07."]
+
+    private func line(_ random: inout SeededRandom) -> String {
+        (0..<Int.random(in: 0...14, using: &random))
+            .map { _ in pieces.randomElement(using: &random)! }
+            .joined(separator: Bool.random(using: &random) ? " " : "")
+    }
+
+    func testLeaveTableParserSurvivesAnyRows() {
+        var random = SeededRandom(state: 11)
+        for _ in 0..<2_000 {
+            let rows = (0..<Int.random(in: 0...6, using: &random)).map { _ in line(&random) }
+            _ = LeaveTableParser.parseRows(rows)
+        }
+    }
+
+    func testSchoolCalendarParserSurvivesAnyText() {
+        var random = SeededRandom(state: 23)
+        for _ in 0..<1_500 {
+            let text = (0..<Int.random(in: 0...8, using: &random)).map { _ in line(&random) }.joined(separator: "\n")
+            _ = SchoolCalendarParser.schoolYearStart(in: text)
+            _ = SchoolCalendarParser.parse(text: text, dayFirst: Bool.random(using: &random))
+            for single in text.split(separator: "\n") {
+                let mentions = SchoolCalendarParser.dateMentions(in: String(single), dayFirst: Bool.random(using: &random))
+                _ = SchoolCalendarParser.spans(from: mentions, in: String(single))
+            }
+        }
+    }
+}

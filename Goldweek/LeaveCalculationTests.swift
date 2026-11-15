@@ -2870,3 +2870,51 @@ final class RegionalHolidayAuditTests: XCTestCase {
         XCTAssertTrue(days(2027, "US-NY").contains("2027-11-02"))    // 뉴욕은 해마다
     }
 }
+
+// MARK: - 퍼즈: 연차 추천 계산을 죽이려고 넣기
+
+/// 나라 · 해 · 주말 모양 · 남은 연차 · 최소 연휴 길이를 무작위로. 사용자가 실제로 만들 수 있는
+/// 극단(주말이 이레 전부, 연차 400일, 아주 먼 해, 올해가 지난 '가장 이른 날')까지 넣는다.
+final class LeavePlannerFuzzTests: XCTestCase {
+
+    private struct SeededRandom: RandomNumberGenerator {
+        var state: UInt64
+        mutating func next() -> UInt64 {
+            state &+= 0x9E37_79B9_7F4A_7C15
+            var z = state
+            z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
+            z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+            return z ^ (z >> 31)
+        }
+    }
+
+    func testOptimalPlanSurvivesAnyInput() {
+        var random = SeededRandom(state: 5)
+        let calendar = Calendar.app
+        let service = HolidayService()
+        for _ in 0..<300 {
+            let year = [1970, 2000, 2024, 2026, 2027, 2038, 2100].randomElement(using: &random)!
+            let country = Country.allCases.randomElement(using: &random)!
+            let holidays = service.getHolidays(for: year, country: country).map(\.date)
+            let weekend = Set((1...7).filter { _ in Int.random(in: 0..<4, using: &random) == 0 })
+            let start = calendar.date(from: DateComponents(year: year, month: 1, day: 1))!
+            func someDay() -> Date {
+                calendar.date(byAdding: .day, value: Int.random(in: -40...400, using: &random), to: start)!
+            }
+            let excluded = Set((0..<Int.random(in: 0...60, using: &random)).map { _ in calendar.startOfDay(for: someDay()) })
+            let makeup = Set((0..<Int.random(in: 0...5, using: &random)).map { _ in calendar.startOfDay(for: someDay()) })
+            let plan = LeavePlanner.optimalPlan(
+                year: year,
+                availableLeaveDays: Int.random(in: -3...400, using: &random),
+                holidays: holidays,
+                excludedDates: excluded,
+                makeupWorkdays: makeup,
+                weekendDays: weekend,
+                minBreakLength: Int.random(in: -3...40, using: &random),
+                earliestDate: Bool.random(using: &random) ? someDay() : nil
+            )
+            XCTAssertGreaterThanOrEqual(plan.totalDaysOff, 0)
+            XCTAssertGreaterThanOrEqual(plan.leaveDaysUsed, 0)
+        }
+    }
+}
