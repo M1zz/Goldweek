@@ -165,6 +165,16 @@ class BackupService {
     private init() {}
 
     // MARK: - iCloud 경로
+
+    /// iCloud 컨테이너를 메인 밖에서 미리 한 번 열어 둔다. `url(forUbiquityContainerIdentifier:)` 는
+    /// 처음 부를 때 컨테이너가 준비될 때까지 막히는데, 하루 한 번 자동 백업이 그 첫 호출을
+    /// 메인에서 했다(앱이 앞으로 올 때 멈출 수 있다). 한 번 열린 뒤에는 바로 돌아온다.
+    static func warmUpICloudContainer() {
+        Task.detached(priority: .utility) {
+            _ = FileManager.default.url(forUbiquityContainerIdentifier: nil)
+        }
+    }
+
     private var iCloudContainerURL: URL? {
         fileManager.url(forUbiquityContainerIdentifier: nil)?
             .appendingPathComponent("Documents")

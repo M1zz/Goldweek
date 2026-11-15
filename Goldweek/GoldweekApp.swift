@@ -271,6 +271,7 @@ struct GoldweekApp: App {
     private func checkICloudStatus() {
         let isICloudAvailable = FileManager.default.ubiquityIdentityToken != nil
         if isICloudAvailable {
+            BackupService.warmUpICloudContainer()
             AppLogger.shared.info("iCloud 사용 가능", category: .iCloud)
         } else {
             AppLogger.shared.warning("iCloud 사용 불가 - 백업 기능이 제한됩니다", category: .iCloud)
