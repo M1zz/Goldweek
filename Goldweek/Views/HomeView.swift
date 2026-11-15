@@ -1154,9 +1154,9 @@ struct LeaveStatusCard: View {
                 } label: {
                     Image(systemName: "ellipsis")
                         .font(.body.weight(.semibold))
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.accentColor)
                         .frame(width: 32, height: 32)
-                        .background(Color.blue.opacity(0.1))
+                        .background(Color.accentColor.opacity(0.1))
                         .clipShape(Circle())
                 }
                 .popoverTip(AppTips.photoImport)
@@ -1168,9 +1168,9 @@ struct LeaveStatusCard: View {
                 } label: {
                     Image(systemName: "plus")
                         .font(.headline.weight(.semibold))
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.accentColor)
                         .frame(width: 32, height: 32)
-                        .background(Color.blue.opacity(0.1))
+                        .background(Color.accentColor.opacity(0.1))
                         .clipShape(Circle())
                 }
                 .accessibilityLabel(Text(Strings.registerLeave))
@@ -2074,7 +2074,7 @@ struct PastLeaveQuickEntrySheet: View {
                                     .fontWeight(.medium)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 7)
-                                    .background(days == n && extraMinutes == 0 ? Color.orange : Color(.systemGray5))
+                                    .background(days == n && extraMinutes == 0 ? Color.accentColor : Color(.systemGray5))
                                     .foregroundStyle(days == n && extraMinutes == 0 ? .white : .primary)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
@@ -2265,7 +2265,7 @@ struct BurnoutPaceCard: View {
         switch paceCategory {
         case .slow: return AppTheme.Colors.brand
         case .healthy: return AppTheme.Colors.success
-        case .fast: return AppTheme.Colors.compensatory
+        case .fast: return AppTheme.Colors.warning
         case .veryFast: return AppTheme.Colors.error
         }
     }
@@ -2306,7 +2306,7 @@ struct BurnoutPaceCard: View {
     private var burnoutColor: Color {
         switch burnoutRisk {
         case .healthy, .plannedAhead: return AppTheme.Colors.success
-        case .warning: return AppTheme.Colors.compensatory
+        case .warning: return AppTheme.Colors.warning
         case .risky: return AppTheme.Colors.error
         }
     }
@@ -2629,7 +2629,7 @@ struct BurnoutPaceCard: View {
     private var lastLeaveColor: Color {
         guard let since = daysSinceLastLeave else { return .secondary }
         if since < 60 { return AppTheme.Colors.success }
-        if since < 90 { return AppTheme.Colors.compensatory }
+        if since < 90 { return AppTheme.Colors.warning }
         return AppTheme.Colors.error
     }
 

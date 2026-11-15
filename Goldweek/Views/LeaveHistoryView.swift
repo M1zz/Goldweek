@@ -173,7 +173,7 @@ struct LeaveHistoryView: View {
                                     .font(.body.weight(selectedYear == year ? .semibold : .regular))
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 8)
-                                    .background(selectedYear == year ? Color.blue : Color(.systemGray6))
+                                    .background(selectedYear == year ? Color.accentColor : Color(.systemGray6))
                                     .foregroundStyle(selectedYear == year ? .white : .primary)
                                     .clipShape(Capsule())
                             }
@@ -201,7 +201,7 @@ struct LeaveHistoryView: View {
                             .rotationEffect(.degrees(showingFilters ? 180 : 0))
                     }
                     .font(.title3)
-                    .foregroundStyle(activeFilterCount > 0 ? Color.blue : .secondary)
+                    .foregroundStyle(activeFilterCount > 0 ? Color.accentColor : .secondary)
                     .padding(.vertical, 6)
                     .padding(.trailing)
                     .contentShape(Rectangle())

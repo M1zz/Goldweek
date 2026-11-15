@@ -659,8 +659,8 @@ struct DetailedRecommendationCard: View {
                                 .font(.body)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 5)
-                                .background(Color.blue.opacity(0.1))
-                                .foregroundStyle(.blue)
+                                .background(Color.accentColor.opacity(0.1))
+                                .foregroundStyle(Color.accentColor)
                                 .clipShape(Capsule())
                         }
                     }
@@ -685,7 +685,7 @@ struct DetailedRecommendationCard: View {
                     Spacer()
                 }
                 .padding(.vertical, 12)
-                .background(requiresPro ? Color.purple.opacity(0.85) : (isAdded ? Color.green : Color.blue))
+                .background(requiresPro ? Color.purple.opacity(0.85) : (isAdded ? Color.green : Color.accentColor))
                 .foregroundStyle(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             }

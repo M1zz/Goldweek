@@ -935,7 +935,7 @@ struct DayCell: View {
             // 번아웃 주의 구간 — 주황 점선 링으로 "구간" 강조 (배경 칠 X, 다른 표식과 겹쳐도 구분)
             if isBurnoutWarning && !isSelected {
                 Circle()
-                    .stroke(AppTheme.Colors.compensatory.opacity(0.7),
+                    .stroke(AppTheme.Colors.warning.opacity(0.7),
                             style: StrokeStyle(lineWidth: 1.5, dash: [3, 2]))
                     .frame(width: circleSize - 4, height: circleSize - 4)
             }
@@ -1049,7 +1049,7 @@ struct LegendView: View {
                            symbol: differentiateWithoutColor ? "star.fill" : nil)
             }
             if showsWarning {
-                LegendItem(color: AppTheme.Colors.compensatory, text: Strings.burnoutWarningLegend, dashed: true)
+                LegendItem(color: AppTheme.Colors.warning, text: Strings.burnoutWarningLegend, dashed: true)
             }
             if showsMyBreak {
                 LegendItem(color: .indigo, text: Strings.myBreakLabel)

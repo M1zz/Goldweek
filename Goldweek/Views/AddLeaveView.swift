@@ -237,7 +237,7 @@ struct LeaveStatusHeader: View {
                         .fixedSize(horizontal: true, vertical: false)
                     Text("\(Strings.dayCount(bonusLeave))")
                         .font(.title3.bold())
-                        .foregroundStyle(AppTheme.Colors.compensatory)
+                        .foregroundStyle(AppTheme.Colors.bonus)
                         .lineLimit(1)
                         .fixedSize(horizontal: true, vertical: false)
                 }
@@ -1187,7 +1187,7 @@ struct AddBonusLeaveSheet: View {
                                     .fontWeight(.medium)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 8)
-                                    .background(bonusDays == days ? Color.blue : Color(.systemGray5))
+                                    .background(bonusDays == days ? Color.accentColor : Color(.systemGray5))
                                     .foregroundStyle(bonusDays == days ? .white : .primary)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
@@ -1313,7 +1313,7 @@ struct EditBonusLeaveSheet: View {
                                     .font(.body).fontWeight(.medium)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 8)
-                                    .background(editedDays == d ? Color.blue : Color(.systemGray5))
+                                    .background(editedDays == d ? Color.accentColor : Color(.systemGray5))
                                     .foregroundStyle(editedDays == d ? .white : .primary)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
@@ -1446,7 +1446,7 @@ struct BonusHoursInput: View {
                         .font(.body).fontWeight(.medium)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .background(minutes == h * 60 ? Color.blue : Color(.systemGray5))
+                        .background(minutes == h * 60 ? Color.accentColor : Color(.systemGray5))
                         .foregroundStyle(minutes == h * 60 ? .white : .primary)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
@@ -1583,7 +1583,7 @@ struct LeaveRecordRow: View {
 
             if record.isRecommended {
                 Image(systemName: "sparkles")
-                    .foregroundStyle(AppTheme.Colors.compensatory)
+                    .foregroundStyle(AppTheme.Colors.bonus)
             }
         }
         .padding(.vertical, 4)

@@ -371,7 +371,7 @@ struct HolidayManagementView: View {
                 .font(.body.weight(isSelected ? .semibold : .regular))
                 .padding(.horizontal, 14)
                 .padding(.vertical, 7)
-                .background(isSelected ? Color.blue : Color(.systemGray5))
+                .background(isSelected ? Color.accentColor : Color(.systemGray5))
                 .foregroundStyle(isSelected ? .white : .primary)
                 .clipShape(Capsule())
         }

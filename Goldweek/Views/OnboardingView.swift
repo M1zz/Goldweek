@@ -434,7 +434,7 @@ struct FeaturesGridPage: View {
         [
             ("calendar.badge.plus", Strings.featureLeaveManagement, Strings.featureLeaveManagementDesc, AppTheme.Colors.brand),
             ("sparkles", Strings.featureAIRecommend, Strings.featureAIRecommendDesc, AppTheme.Colors.bonus),
-            ("gift.fill", Strings.featureBonusLeave, Strings.featureBonusLeaveDesc, AppTheme.Colors.compensatory),
+            ("gift.fill", Strings.featureBonusLeave, Strings.featureBonusLeaveDesc, AppTheme.Colors.bonus),
             ("apps.iphone", Strings.featureWidget, Strings.featureWidgetDesc, AppTheme.Colors.success)
         ]
     }
@@ -772,7 +772,7 @@ struct ProShowcasePage: View {
     private var proFeatures: [(String, String, String, Color)] {
         [
             ("lightbulb.fill", Strings.proFeatureRecommendTitle, Strings.proFeatureRecommendDesc, AppTheme.Colors.bonus),
-            ("gift.fill", Strings.proFeatureBonusTitle, Strings.proFeatureBonusDesc, AppTheme.Colors.compensatory),
+            ("gift.fill", Strings.proFeatureBonusTitle, Strings.proFeatureBonusDesc, AppTheme.Colors.bonus),
             ("calendar", Strings.proFeatureMultiYearTitle, Strings.proFeatureMultiYearDesc, AppTheme.Colors.brand),
             ("calendar.badge.plus", Strings.proFeatureCalendarTitle, Strings.proFeatureCalendarDesc, AppTheme.Colors.success),
             ("gauge.with.needle", Strings.proFeatureRulesTitle, Strings.proFeatureRulesDesc, AppTheme.Colors.brand)

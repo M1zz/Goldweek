@@ -13,10 +13,8 @@ struct AppTheme {
     // MARK: - Semantic Colors (다크모드 자동 대응)
     struct Colors {
         // 브랜드 컬러
-        static var brand: Color {
-            Color(light: Color(red: 0.0, green: 0.4, blue: 0.9),
-                  dark: Color(red: 0.3, green: 0.6, blue: 1.0))
-        }
+        // 브랜드 컬러 — 아이콘의 금빛. 값은 AccentColor 한 곳에 있다.
+        static var brand: Color { Color.accentColor }
 
         // 연차 유형별 컬러
         static var annual: Color {
@@ -34,9 +32,10 @@ struct AppTheme {
                   dark: Color(red: 0.2, green: 0.7, blue: 0.7))
         }
 
+        // 대체휴가 — 금빛 브랜드색과 겹치지 않게 분홍
         static var compensatory: Color {
-            Color(light: Color(red: 0.95, green: 0.5, blue: 0.0),
-                  dark: Color(red: 1.0, green: 0.6, blue: 0.2))
+            Color(light: Color(red: 0.85, green: 0.25, blue: 0.5),
+                  dark: Color(red: 1.0, green: 0.45, blue: 0.65))
         }
 
         static var official: Color {
@@ -58,6 +57,11 @@ struct AppTheme {
         static var success: Color {
             Color(light: Color(red: 0.15, green: 0.68, blue: 0.38),
                   dark: Color(red: 0.3, green: 0.8, blue: 0.5))
+        }
+
+        static var warning: Color {
+            Color(light: Color(red: 0.95, green: 0.5, blue: 0.0),
+                  dark: Color(red: 1.0, green: 0.6, blue: 0.2))
         }
 
         static var error: Color {
