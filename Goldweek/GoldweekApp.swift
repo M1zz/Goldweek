@@ -265,8 +265,11 @@ struct GoldweekApp: App {
         }
     }
 
+    /// iCloud 로그인 여부만 본다. `url(forUbiquityContainerIdentifier:)` 는 컨테이너를 만들 때까지
+    /// 막혀 있어 메인 스레드에서 부르면 안 된다 — 시작 중에 불러 워치독에 죽었다(2.4.1 · 2.4.2).
+    /// `ubiquityIdentityToken` 은 바로 돌아온다.
     private func checkICloudStatus() {
-        let isICloudAvailable = FileManager.default.url(forUbiquityContainerIdentifier: nil) != nil
+        let isICloudAvailable = FileManager.default.ubiquityIdentityToken != nil
         if isICloudAvailable {
             AppLogger.shared.info("iCloud 사용 가능", category: .iCloud)
         } else {
