@@ -1,0 +1,159 @@
+{
+  "color-space-for-untagged-svg-colors": "display-p3",
+  "fill-specializations": [
+    {
+      "value": {
+        "linear-gradient": [
+          "display-p3:1.00000,0.78039,0.27059,1.00000",
+          "display-p3:0.96078,0.55294,0.08235,1.00000"
+        ],
+        "orientation": {
+          "start": {
+            "x": 0.5,
+            "y": 0.0
+          },
+          "stop": {
+            "x": 0.5,
+            "y": 1.0
+          }
+        }
+      }
+    },
+    {
+      "appearance": "dark",
+      "value": {
+        "linear-gradient": [
+          "display-p3:0.17255,0.15686,0.14118,1.00000",
+          "display-p3:0.09412,0.08627,0.07843,1.00000"
+        ],
+        "orientation": {
+          "start": {
+            "x": 0.5,
+            "y": 0.0
+          },
+          "stop": {
+            "x": 0.5,
+            "y": 1.0
+          }
+        }
+      }
+    }
+  ],
+  "groups": [
+    {
+      "layers": [
+        {
+          "glass": false,
+          "image-name-specializations": [
+            {
+              "value": "bar.svg"
+            },
+            {
+              "appearance": "dark",
+              "value": "bar-dark.svg"
+            }
+          ],
+          "name": "Bar"
+        }
+      ],
+      "lighting": "individual",
+      "name": "Bar",
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.0
+      },
+      "specular": false,
+      "translucency": {
+        "enabled": false,
+        "value": 0.0
+      }
+    },
+    {
+      "layers": [
+        {
+          "glass": false,
+          "image-name-specializations": [
+            {
+              "value": "dots.svg"
+            },
+            {
+              "appearance": "dark",
+              "value": "dots-dark.svg"
+            }
+          ],
+          "name": "Dots"
+        }
+      ],
+      "lighting": "individual",
+      "name": "Dots",
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.0
+      },
+      "specular": false,
+      "translucency": {
+        "enabled": false,
+        "value": 0.0
+      }
+    },
+    {
+      "layers": [
+        {
+          "glass": true,
+          "image-name-specializations": [
+            {
+              "value": "rings.svg"
+            },
+            {
+              "appearance": "dark",
+              "value": "rings-dark.svg"
+            }
+          ],
+          "name": "Rings"
+        }
+      ],
+      "lighting": "individual",
+      "name": "Rings",
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.3
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": false,
+        "value": 0.0
+      }
+    },
+    {
+      "layers": [
+        {
+          "glass": true,
+          "image-name-specializations": [
+            {
+              "value": "calendar.svg"
+            },
+            {
+              "appearance": "dark",
+              "value": "calendar-dark.svg"
+            }
+          ],
+          "name": "Calendar"
+        }
+      ],
+      "lighting": "individual",
+      "name": "Calendar",
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.4
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": false,
+        "value": 0.0
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": "shared"
+  }
+}

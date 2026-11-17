@@ -33,6 +33,7 @@
 		A1000001 /* GoldweekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* GoldweekApp.swift */; };
 		A1000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* ContentView.swift */; };
 		A1000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000003 /* Assets.xcassets */; };
+		C7A1D0E12F5B000100AA0002 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = C7A1D0E12F5B000100AA0003 /* AppIcon.icon */; };
 		A1000004 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000004 /* Models.swift */; };
 		A1000005 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000005 /* HomeView.swift */; };
 		A1000006 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000006 /* CalendarView.swift */; };
@@ -158,6 +159,7 @@
 		A2000001 /* GoldweekApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldweekApp.swift; sourceTree = "<group>"; };
 		A2000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A2000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C7A1D0E12F5B000100AA0003 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		A2000004 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		A2000005 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A2000006 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -337,6 +339,7 @@
 				A4000006 /* Utilities */,
 				A4000007 /* Theme */,
 				A2000003 /* Assets.xcassets */,
+				C7A1D0E12F5B000100AA0003 /* AppIcon.icon */,
 				A2000036 /* LeaveCalculationTests.swift */,
 				A2000062 /* BurnoutEngineTests.swift */,
 				A2000063 /* LeaveTableParserTests.swift */,
@@ -629,6 +632,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1000003 /* Assets.xcassets in Resources */,
+				C7A1D0E12F5B000100AA0002 /* AppIcon.icon in Resources */,
 				A1000040 /* InfoPlist.xcstrings in Resources */,
 				75040D99ADBCBD0CCCA466AB /* PrivacyInfo.xcprivacy in Resources */,
 				02C3DC49A66860B13B6126FF /* AppShortcuts.xcstrings in Resources */,
