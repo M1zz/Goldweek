@@ -1,5 +1,175 @@
 # Goldweek 릴리즈 노트
 
+## 2.4.7
+
+### 앱스토어 (한국어)
+
+이제 Mac에서도 골드위크를 쓸 수 있어요
+큰 화면에서 연휴 계획을 한눈에 세워요
+기록은 iCloud로 iPhone과 그대로 이어져요
+모든 기기에 새 금빛 아이콘이 들어갔어요
+
+### App Store (English)
+
+Goldweek is now available on Mac
+Plan long weekends on a bigger screen
+Everything syncs with iPhone via iCloud
+The new golden icon on every device
+
+### App Store (en-GB)
+
+Goldweek is now available on Mac
+Plan long weekends on a bigger screen
+Everything syncs with iPhone via iCloud
+The new golden icon on every device
+
+### 앱스토어 (일본어)
+
+GoldweekがMacでも使えるようになりました
+大きな画面で連休の計画をひと目で
+記録はiCloudでiPhoneとそのまま続きます
+すべてのデバイスに新しいゴールドのアイコン
+
+### 앱스토어 (중국어 간체)
+
+Goldweek 现已登陆 Mac
+在大屏幕上一眼规划长假
+记录通过 iCloud 与 iPhone 保持同步
+所有设备都换上了全新金色图标
+
+### 앱스토어 (독일어)
+
+Goldweek gibt es jetzt auch für den Mac
+Brückentage auf großem Bildschirm planen
+Per iCloud synchron mit dem iPhone
+Das neue goldene Icon auf allen Geräten
+
+### 앱스토어 (프랑스어)
+
+Goldweek arrive enfin sur Mac
+Planifiez vos ponts d’un coup d’œil
+Vos données suivent l’iPhone via iCloud
+La nouvelle icône dorée partout
+
+### 앱스토어 (스페인어)
+
+Goldweek ya está disponible en Mac
+Planifica tus puentes en pantalla grande
+Tus datos siguen en el iPhone con iCloud
+El nuevo icono dorado en todo
+
+### 앱스토어 (이탈리아어)
+
+Goldweek ora è disponibile anche su Mac
+Pianifica i ponti a colpo d’occhio
+Dati allineati all’iPhone con iCloud
+La nuova icona dorata ovunque
+
+### 앱스토어 (포르투갈어 브라질)
+
+O Goldweek agora também está no Mac
+Planeje feriadões numa tela grande
+Seus dados seguem no iPhone pelo iCloud
+O novo ícone dourado em tudo
+
+### 앱스토어 (중국어 번체)
+
+Goldweek 現已登上 Mac
+在大螢幕上一眼規劃連假
+紀錄透過 iCloud 與 iPhone 保持同步
+所有裝置都換上全新金色圖示
+
+### 앱스토어 (네덜란드어)
+
+Goldweek is nu ook beschikbaar voor Mac
+Plan lange weekenden op groot scherm
+Via iCloud gelijk met je iPhone
+Het nieuwe gouden icoon overal
+
+### 앱스토어 (스웨덴어)
+
+Goldweek finns nu även för Mac
+Planera klämdagar på stor skärm
+Allt synkas med iPhone via iCloud
+Den nya guldiga symbolen på alla enheter
+
+### 앱스토어 (노르웨이어 보크말)
+
+Goldweek er nå også tilgjengelig på Mac
+Planlegg langhelger på stor skjerm
+Alt synkroniseres med iPhone via iCloud
+Det nye gylne ikonet på alle enheter
+
+### 앱스토어 (덴마크어)
+
+Goldweek fås nu også til Mac
+Planlæg lange weekender på stor skærm
+Alt synkroniseres med iPhone via iCloud
+Det nye gyldne ikon på alle enheder
+
+### 앱스토어 (핀란드어)
+
+Goldweek on nyt saatavilla myös Macille
+Suunnittele lomat isolla näytöllä
+Tiedot pysyvät iPhonen kanssa iCloudissa
+Uusi kultainen kuvake joka laitteessa
+
+### 앱스토어 (폴란드어)
+
+Goldweek jest już dostępny na Maca
+Planuj długie weekendy na dużym ekranie
+Dane zgrane z iPhone’em przez iCloud
+Nowa złota ikona na każdym urządzeniu
+
+### 앱스토어 (체코어)
+
+Goldweek je nyní k dispozici i pro Mac
+Plánujte volno na velké obrazovce
+Vše se přes iCloud sladí s iPhonem
+Nová zlatá ikona na všech zařízeních
+
+### 앱스토어 (그리스어)
+
+Το Goldweek ήρθε και στο Mac
+Σχεδιάστε τριήμερα σε μεγάλη οθόνη
+Συγχρονισμός με το iPhone μέσω iCloud
+Νέο χρυσό εικονίδιο παντού
+
+### 앱스토어 (튀르키예어)
+
+Goldweek artık Mac’te de kullanılabilir
+Uzun tatilleri büyük ekranda planlayın
+Her şey iCloud ile iPhone’la eşitlenir
+Tüm cihazlarda yeni altın renkli simge
+
+### 앱스토어 (러시아어)
+
+Goldweek теперь доступен и на Mac
+Планируйте отпуск на большом экране
+Данные синхронны с iPhone через iCloud
+Новая золотая иконка на всех устройствах
+
+### 앱스토어 (인도네시아어)
+
+Goldweek kini tersedia juga di Mac
+Rencanakan libur panjang di layar besar
+Tersinkron dengan iPhone lewat iCloud
+Ikon emas baru di semua perangkat
+
+### 앱스토어 (태국어)
+
+ตอนนี้ใช้ Goldweek บน Mac ได้แล้ว
+วางแผนวันหยุดยาวบนจอใหญ่ได้ในพริบตา
+ข้อมูลซิงค์กับ iPhone ผ่าน iCloud
+ไอคอนสีทองใหม่บนทุกอุปกรณ์
+
+### 앱스토어 (베트남어)
+
+Goldweek nay đã có trên Mac
+Lên kế hoạch nghỉ dài trên màn hình lớn
+Dữ liệu đồng bộ với iPhone qua iCloud
+Biểu tượng vàng mới trên mọi thiết bị
+
 ## 2.4.6
 
 ### 앱스토어 (한국어)
