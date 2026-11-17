@@ -271,6 +271,14 @@ final class MaturityFeatureTests: XCTestCase {
         XCTAssertTrue(codes.filter { $0.hasPrefix("gift.") || $0.hasPrefix("tip.") || $0.hasPrefix("gate.") }.isEmpty, "\(codes)")
     }
 
+    /// Siri · 단축어 — 단축어가 있고, 그 이름이 앱에 묶인 번역으로 모든 언어에 나온다.
+    /// (번역 파일이 위젯에만 묶여 단축어 앱에 영어 키가 그대로 나왔던 일, 2.4.7)
+    func testShortcutsAreLocalizedInApp() {
+        let codes = LeeoPreflight.audit(GoldweekSpec.self).map(\.code).filter { $0.hasPrefix("shortcuts.") }
+        XCTAssertTrue(codes.isEmpty, "\(codes)")
+        XCTAssertFalse(LeeoShortcuts.load().isEmpty)
+    }
+
     /// 부탁할 순간 — 넘어선 것만, 인상적인 것부터(추천으로 세운 계획이 앞).
     func testTipAskMomentsComeBiggestFirst() {
         XCTAssertTrue(TipAskMoments.reached(planCount: 2, leaveCount: 29, year: 2026).isEmpty)

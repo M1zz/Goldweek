@@ -20,6 +20,7 @@
 		7742C50334E3AD7E821C6C62 /* LaunchSafety.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894561BA0757CA4397D4F482 /* LaunchSafety.swift */; };
 		7CE684CE43F66CEBB9E32BA0 /* ProBenefitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5188D6069DFBC27D689B2866 /* ProBenefitsView.swift */; };
 		822C36ACF4633F97AA71D066 /* GoldweekIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B652F693B74D9614C6A46C4 /* GoldweekIntents.swift */; };
+		C7A1D0E12F5B000100AA0001 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9C2035672F29933E00AF1279 /* Localizable.xcstrings */; };
 		9C2035682F29933E00AF1279 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9C2035672F29933E00AF1279 /* Localizable.xcstrings */; };
 		9C5397B92F4E825600905CF0 /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5397B82F4E825600905CF0 /* ReviewManager.swift */; };
 		9C61C0042EDD629400BC5930 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C61C0032EDD629400BC5930 /* WidgetKit.framework */; };
@@ -631,6 +632,7 @@
 				A1000040 /* InfoPlist.xcstrings in Resources */,
 				75040D99ADBCBD0CCCA466AB /* PrivacyInfo.xcprivacy in Resources */,
 				02C3DC49A66860B13B6126FF /* AppShortcuts.xcstrings in Resources */,
+				C7A1D0E12F5B000100AA0001 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1178,7 +1180,7 @@
 			repositoryURL = "https://github.com/M1zz/LeeoKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.44.1;
+				minimumVersion = 3.45.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -4452,6 +4452,35 @@ public enum Strings {
         }
     }
 
+    /// 설정 ▸ 도움말 · 지원 — Siri · 단축어 앱에서 쓰는 법(LeeoShortcutsView)
+    public static var siriShortcuts: String {
+        switch lang {
+        case .korean: return "Siri와 단축어"
+        case .english: return "Siri & Shortcuts"
+        case .swedish: return "Siri och Genvägar"
+        case .norwegian: return "Siri og Snarveier"
+        case .danish: return "Siri og Genveje"
+        case .finnish: return "Siri ja Pikakomennot"
+        case .polish: return "Siri i Skróty"
+        case .czech: return "Siri a Zkratky"
+        case .greek: return "Siri και Συντομεύσεις"
+        case .turkish: return "Siri ve Kestirmeler"
+        case .russian: return "Siri и Команды"
+        case .indonesian: return "Siri & Pintasan"
+        case .thai: return "Siri และคำสั่งลัด"
+        case .vietnamese: return "Siri và Phím tắt"
+        case .dutch: return "Siri en Opdrachten"
+        case .japanese: return "Siriとショートカット"
+        case .chinese: return "Siri 与快捷指令"
+        case .german: return "Siri & Kurzbefehle"
+        case .french: return "Siri et Raccourcis"
+        case .spanish: return "Siri y Atajos"
+        case .italian: return "Siri e Comandi rapidi"
+        case .portuguese: return "Siri e Atalhos"
+        case .chineseTraditional: return "Siri 與捷徑"
+        }
+    }
+
     public static var helpTutorial: String {
         switch lang {
         case .korean: return "사용법 다시 보기"

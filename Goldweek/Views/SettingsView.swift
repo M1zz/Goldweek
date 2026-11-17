@@ -1398,6 +1398,11 @@ struct SettingsView: View {
                 Label(Strings.whatsNewEntry, systemImage: "gift")
             }
 
+            // Siri와 단축어 — 목록은 GoldweekShortcuts 가 원본, 화면은 LeeoKit
+            NavigationLink(destination: LeeoShortcutsView(appName: GoldweekSpec.displayName)) {
+                Label(Strings.siriShortcuts, systemImage: "square.2.layers.3d")
+            }
+
             Button {
                 AppTips.requestResetOnNextLaunch()
                 showingTipsResetNotice = true
