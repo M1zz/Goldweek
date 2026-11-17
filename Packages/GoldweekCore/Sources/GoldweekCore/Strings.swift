@@ -12125,34 +12125,6 @@ public enum Strings {
         }
     }
     
-    public static var youArePro: String {
-        switch lang {
-        case .korean: return "Pro 사용자입니다!"
-        case .english: return "You are a Pro user!"
-        case .swedish: return "Du är en Pro-användare!"
-        case .norwegian: return "Du er Pro-bruker!"
-        case .danish: return "Du er Pro-bruger!"
-        case .finnish: return "Olet Pro-käyttäjä!"
-        case .polish: return "Jesteś użytkownikiem Pro!"
-        case .czech: return "Jsi uživatel Pro!"
-        case .greek: return "Είσαι χρήστης Pro!"
-        case .turkish: return "Pro kullanıcısısın!"
-        case .russian: return "У вас Pro!"
-        case .indonesian: return "Kamu pengguna Pro!"
-        case .thai: return "คุณเป็นผู้ใช้ Pro แล้ว!"
-        case .vietnamese: return "Bạn đang dùng bản Pro!"
-        case .dutch: return "Je bent een Pro-gebruiker!"
-        case .japanese: return "Pro ユーザーです！"
-        case .chinese: return "您是Pro用户！"
-        case .german: return "Du bist Pro-Nutzer!"
-        case .french: return "Vous êtes utilisateur Pro !"
-        case .spanish: return "¡Eres usuario Pro!"
-        case .italian: return "Sei un utente Pro!"
-        case .portuguese: return "Você é usuário Pro!"
-        case .chineseTraditional: return "你是 Pro 使用者！"
-        }
-    }
-    
     public static var proFeaturesBanner: String {
         switch lang {
         case .korean: return "더 많은 기능을 원하시나요? Pro로 업그레이드하세요"

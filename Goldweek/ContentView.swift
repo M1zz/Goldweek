@@ -59,6 +59,9 @@ struct ContentView: View {
         Group {
             if let profile = currentProfile {
                 MainTabView(profile: profile)
+                    // 유료가 되면 콘페티로 축하, 이미 유료 · 무료 사용자에게도 한 번은 감사 (LeeoKit).
+                    // 온보딩이 끝난 뒤의 화면에 붙인다 — 온보딩 위에 '반가워요' 가 겹치지 않게.
+                    .leeoCelebrations(appName: GoldweekSpec.displayName)
                     // 온보딩을 막 마쳤다면 "어디를 눌러야 하는지"를 한 번 보여준다.
                     // 온보딩에 더 끼워 넣지 않는 이유: 설득과 사용법은 읽는 마음가짐이 다르다.
                     .sheet(isPresented: $showingTutorial) {

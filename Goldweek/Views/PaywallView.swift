@@ -588,11 +588,8 @@ struct PaywallView: View {
                 // 실제로 그 칸이 열렸을 때만 성공 알림을 띄운다
                 guard proManager.tier >= bought else { return }
                 UsageReportingService.record(event: "paywall_purchase:success")
-                await MainActor.run {
-                    isSuccess = true
-                    alertMessage = Strings.youArePro
-                    showingAlert = true
-                }
+                // 축하는 LeeoKit 이 콘페티로 한다(ProManager → LeeoCelebration). 결제 화면을 닫아 그 밑에 띄운다.
+                await MainActor.run { dismiss() }
             } catch {
                 // 사용자 취소는 에러가 아니므로 알림을 띄우지 않는다
                 if let skError = error as? StoreKitError, case .userCancelled = skError {

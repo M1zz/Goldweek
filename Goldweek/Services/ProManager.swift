@@ -334,6 +334,8 @@ class ProManager {
         case .success(let verification):
             let transaction = try checkVerified(verification)
             await transaction.finish()
+            // 권한을 아직 한 번도 안 읽었더라도 '방금 샀다' 로 축하하게 지금 칸을 적어 둔다.
+            if celebratedTier == nil { celebratedTier = isPro ? tier : .free }
             await checkEntitlement()
             UsageReportingService.record(event: "purchase_plan:\(Self.planSlice(product.id))")
             logInfo("Pro 구매 완료: \(product.id)", category: .app)
@@ -438,7 +440,24 @@ class ProManager {
                 self.tier = self.isPro ? .pro : .free
             }
             self.purchaseState = self.isPro ? .purchased : .notPurchased
+            self.celebrate(found)
         }
+    }
+
+    // MARK: - 축하 · 감사 (LeeoKit)
+
+    /// 이 실행에서 마지막으로 본 칸. nil 이면 아직 권한을 한 번도 안 읽었다.
+    @ObservationIgnored private var celebratedTier: ProTier?
+
+    /// 산 칸이 있으면 LeeoKit 에 알린다 — 이 실행에서 올랐으면 콘페티로 축하, 이미 있었으면 칸마다 한 번 감사.
+    /// TestFlight 로 열린 프로는 산 게 아니라서 건너뛴다.
+    @MainActor private func celebrate(_ found: Entitlement) {
+        let now: ProTier = found.plan == nil ? .free : found.tier
+        defer { celebratedTier = now }
+        guard now > .free, !isTestFlight else { return }
+        LeeoCelebration.shared.noteOwned(tierID: now == .pro ? "pro" : "plus",
+                                         tierName: Strings.trimName(now),
+                                         justNow: celebratedTier.map { now > $0 } ?? false)
     }
 
     // MARK: - 구독 졸업

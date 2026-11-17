@@ -452,6 +452,8 @@ struct SettingsView: View {
                 await checkLastBackup()
             }
         }
+        // 넓은 화면에서는 설정이 시트로 떠 있어 메인 화면의 축하가 가려진다 — 여기서도 같은 축하를 띄운다.
+        .leeoCelebrations(appName: GoldweekSpec.displayName)
     }
 
     // MARK: - 요금제 칸
