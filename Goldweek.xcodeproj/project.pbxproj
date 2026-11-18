@@ -1008,6 +1008,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Goldweek;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "캘린더에서 휴가로 보이는 일정을 찾아 가져오고, 등록한 휴가를 캘린더에 동기화하기 위해 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "휴가 신청 내역 화면을 촬영해 휴가 기록을 자동으로 등록하기 위해 카메라 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1045,6 +1046,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Goldweek;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "캘린더에서 휴가로 보이는 일정을 찾아 가져오고, 등록한 휴가를 캘린더에 동기화하기 위해 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "휴가 신청 내역 화면을 촬영해 휴가 기록을 자동으로 등록하기 위해 카메라 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
