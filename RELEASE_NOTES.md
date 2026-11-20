@@ -1,5 +1,151 @@
 # Goldweek 릴리즈 노트
 
+## 2.4.8
+
+### 앱스토어 (한국어)
+
+앱이 더 안정적으로 열려요
+작은 오류들을 고쳤어요
+전체적으로 더 매끄러워졌어요
+
+### App Store (English)
+
+The app opens more reliably
+Fixed a few small bugs
+Everything feels a bit smoother
+
+### App Store (en-GB)
+
+The app opens more reliably
+Fixed a few small bugs
+Everything feels a bit smoother
+
+### 앱스토어 (일본어)
+
+アプリがより安定して起動します
+細かな不具合を直しました
+全体の動きがなめらかになりました
+
+### 앱스토어 (중국어 간체)
+
+应用启动更稳定
+修复了一些小问题
+整体使用更顺畅
+
+### 앱스토어 (독일어)
+
+Die App startet zuverlässiger
+Kleine Fehler behoben
+Alles läuft etwas flüssiger
+
+### 앱스토어 (프랑스어)
+
+L'app s'ouvre de façon plus fiable
+Quelques petits bugs corrigés
+Tout est un peu plus fluide
+
+### 앱스토어 (스페인어)
+
+La app se abre de forma más fiable
+Hemos corregido pequeños errores
+Todo va un poco más fluido
+
+### 앱스토어 (이탈리아어)
+
+L'app si apre in modo più affidabile
+Abbiamo corretto piccoli errori
+Tutto è un po' più fluido
+
+### 앱스토어 (포르투갈어 브라질)
+
+O app abre de forma mais estável
+Corrigimos pequenos erros
+Tudo ficou um pouco mais fluido
+
+### 앱스토어 (중국어 번체)
+
+App 啟動更穩定
+修正了一些小問題
+整體使用更順暢
+
+### 앱스토어 (네덜란드어)
+
+De app opent betrouwbaarder
+Kleine foutjes opgelost
+Alles werkt net wat soepeler
+
+### 앱스토어 (스웨덴어)
+
+Appen startar mer pålitligt
+Små buggar har åtgärdats
+Allt flyter på lite smidigare
+
+### 앱스토어 (노르웨이어 보크말)
+
+Appen åpner mer pålitelig
+Små feil er rettet
+Alt går litt smidigere
+
+### 앱스토어 (덴마크어)
+
+Appen åbner mere pålideligt
+Små fejl er rettet
+Alt kører lidt mere glat
+
+### 앱스토어 (핀란드어)
+
+Sovellus avautuu luotettavammin
+Pieniä virheitä korjattu
+Kaikki toimii hieman sujuvammin
+
+### 앱스토어 (폴란드어)
+
+Aplikacja uruchamia się stabilniej
+Poprawiliśmy drobne błędy
+Wszystko działa nieco płynniej
+
+### 앱스토어 (체코어)
+
+Aplikace se spouští spolehlivěji
+Opravili jsme drobné chyby
+Vše běží o něco plynuleji
+
+### 앱스토어 (그리스어)
+
+Η εφαρμογή ανοίγει πιο αξιόπιστα
+Διορθώσαμε μικρά σφάλματα
+Όλα λειτουργούν πιο ομαλά
+
+### 앱스토어 (튀르키예어)
+
+Uygulama artık daha sorunsuz açılıyor
+Küçük hatalar giderildi
+Her şey biraz daha akıcı
+
+### 앱스토어 (러시아어)
+
+Приложение открывается стабильнее
+Исправили мелкие ошибки
+Всё работает чуть плавнее
+
+### 앱스토어 (인도네시아어)
+
+Aplikasi kini terbuka lebih andal
+Beberapa bug kecil diperbaiki
+Semuanya terasa lebih lancar
+
+### 앱스토어 (태국어)
+
+แอปเปิดได้เสถียรขึ้น
+แก้ไขข้อผิดพลาดเล็กน้อย
+ใช้งานลื่นไหลขึ้นโดยรวม
+
+### 앱스토어 (베트남어)
+
+Ứng dụng mở ổn định hơn
+Đã sửa một số lỗi nhỏ
+Mọi thứ mượt mà hơn
+
 ## 2.4.7
 
 ### 앱스토어 (한국어)
