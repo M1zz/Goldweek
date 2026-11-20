@@ -20,7 +20,7 @@ DeployBar 가 이 파일을 읽어 App Store Connect 의 언어별 칸에 올린
 
 ### 프로모션 텍스트
 
-다가오는 공휴일, 연차 며칠이면 긴 연휴가 될까요? 공휴일과 주말을 엮어 가장 적은 연차로 가장 오래 쉬는 조합을 찾아 드려요. 남은 연차는 홈 위젯에서 바로 확인하세요.
+내년 연차, 지금 짜 두면 가장 길게 쉽니다. 2027년 공휴일이 이미 들어 있어서 주말과 엮어 가장 적은 연차로 가장 오래 쉬는 날을 바로 찾아 드려요.
 
 ### 설명
 
@@ -74,7 +74,7 @@ weekend,leave,annual,optimizer,maximize,timeoff,sick,federal,getaway,accrual,bri
 
 ### 프로모션 텍스트
 
-Holiday coming up? Goldweek pairs public holidays with weekends to show which days to take off for the longest break. Check your remaining PTO from a Home Screen widget.
+Plan 2027's time off now. Goldweek already knows next year's public holidays and pairs them with weekends to turn the fewest PTO days into the longest breaks.
 
 ### 설명
 
@@ -128,7 +128,7 @@ Kalender,Urlaubstage,Resturlaub,Urlaubsplaner,Ferien,Wochenende,Urlaubsantrag,Au
 
 ### 프로모션 텍스트
 
-Welche Brückentage lohnen sich? Goldweek verbindet Feiertage und Wochenenden zur längsten Auszeit mit den wenigsten Urlaubstagen. Deinen Resturlaub zeigt das Widget.
+Plane jetzt deinen Urlaub für 2027. Goldweek kennt die Feiertage des nächsten Jahres schon und findet die Brückentage, mit denen wenige Urlaubstage am längsten reichen.
 
 ### 설명
 
@@ -182,7 +182,7 @@ festivos,calendario,acueducto,permiso,libre,planificador,widget,escapada,finde,a
 
 ### 프로모션 텍스트
 
-¿Cuántos días tienes que pedir para hacer puente? Goldweek une festivos y fines de semana para darte más descanso con menos días. Mira los que te quedan en el widget.
+Planifica ya tus vacaciones de 2027. Goldweek ya conoce los festivos del año que viene y encuentra los puentes para descansar más con menos días libres.
 
 ### 설명
 
@@ -236,7 +236,7 @@ vacances,calendrier,RTT,férié,fériés,week-end,viaduc,planning,absences,repos
 
 ### 프로모션 텍스트
 
-Un jour férié tombe un jeudi ? Goldweek repère le pont à faire et combine fériés et week-ends pour un maximum de repos. Votre solde de congés s'affiche en widget.
+Préparez dès maintenant vos congés 2027. Goldweek connaît déjà les jours fériés de l'an prochain et trouve les ponts qui transforment peu de congés en longues pauses.
 
 ### 설명
 
@@ -290,7 +290,7 @@ vacanze,calendario,festività,festivi,weekend,rol,assenze,widget,pianificatore,a
 
 ### 프로모션 텍스트
 
-Quanti giorni di ferie servono per fare il ponte? Goldweek unisce festivi e weekend per regalarti la pausa più lunga con meno giorni. Le ferie residue sono nel widget.
+Organizza ora le ferie del 2027. Goldweek conosce già i festivi del prossimo anno e trova i ponti che trasformano pochi giorni di ferie nelle pause più lunghe.
 
 ### 설명
 
@@ -344,7 +344,7 @@ Goldweek - 有給・連休プランナー
 
 ### 프로모션 텍스트
 
-次の祝日、有給を何日足せば大型連休になる？Goldweekが祝日と週末を組み合わせ、最少の有給で最長の連休になる取り方を提案します。残りの有給日数もホーム画面のウィジェットでひと目で確認できます。
+来年の休み、今のうちに計画を。Goldweekには2027年の祝日がもう入っていて、週末と組み合わせて最少の有給で最長の連休になる取り方を見つけます。
 
 ### 설명
 
@@ -398,7 +398,7 @@ calendário,ponte,emendar,recesso,descanso,viagem,planejador,agenda,widget,traba
 
 ### 프로모션 텍스트
 
-Quantos dias de férias você precisa para transformar o próximo feriado em feriadão? O Goldweek combina feriados e fins de semana e mostra seu saldo no widget.
+Planeje agora as férias de 2027. O Goldweek já conhece os feriados do ano que vem e mostra como emendar com o fim de semana para descansar mais usando menos dias.
 
 ### 설명
 
@@ -452,7 +452,7 @@ Goldweek - 黄金假期规划
 
 ### 프로모션 텍스트
 
-下一个节假日，请几天年假就能连休一大段？Goldweek 帮你把节假日和周末巧妙串联，推荐用最少年假换来最长假期的拼假方案。剩余年假也能在桌面小组件上一眼看清。
+现在就规划 2027 年的假期。Goldweek 已收录明年的法定节假日，帮你把节假日和周末串起来，用最少的年假拼出最长的假期。
 
 ### 설명
 
@@ -506,7 +506,7 @@ Goldweek - 連假請假規劃
 
 ### 프로모션 텍스트
 
-下一個國定假日，請幾天特休就能變成長連假？Goldweek 幫你把國定假日和週末串起來，推薦用最少特休換最長假期的請假組合。剩餘特休天數也能直接在桌面小工具查看。
+現在就規劃 2027 年的假期。Goldweek 已收錄明年的國定假日，幫你把假日和週末串起來，用最少的特休換到最長的連假。
 
 ### 설명
 
@@ -560,7 +560,7 @@ Goldweek: планер отпуска
 
 ### 프로모션 텍스트
 
-Скоро праздник? Goldweek сложит праздники с выходными и подскажет, какие дни взять, чтобы отдыхать дольше. Остаток отпуска виден прямо в виджете.
+Спланируйте отпуск на 2027 год уже сейчас. В Goldweek уже есть праздники следующего года: приложение подскажет, как взять меньше дней и отдыхать дольше.
 
 ### 설명
 
@@ -614,7 +614,7 @@ tanggal,merah,kalender,bersama,nasional,harpitnas,kejepit,akhir,pekan,jadwal,lib
 
 ### 프로모션 텍스트
 
-Ada tanggal merah? Goldweek merangkai hari libur dan akhir pekan, lalu menunjukkan hari cuti yang bikin liburanmu paling panjang. Sisa cuti terlihat di widget.
+Rencanakan cuti 2027 dari sekarang. Goldweek sudah memuat tanggal merah tahun depan dan merangkainya dengan akhir pekan, supaya cuti sedikit jadi libur panjang.
 
 ### 설명
 
@@ -668,7 +668,7 @@ feestdagen,vakantiedagen,brugdag,tussendag,snipperdag,kalender,vakantie,weekend,
 
 ### 프로모션 텍스트
 
-Feestdag in aantocht? Goldweek combineert feestdagen en weekenden en toont welke dagen je vrij neemt voor de langste vakantie. Je resterende verlof zie je in de widget.
+Plan nu al je vrije dagen voor 2027. Goldweek kent de feestdagen van volgend jaar al en combineert ze met weekenden, zodat weinig verlofdagen de langste vakanties geven.
 
 ### 설명
 
@@ -722,7 +722,7 @@ klämdag,klämdagar,helgdagar,röda,kalender,långhelg,midsommar,påsk,planering
 
 ### 프로모션 텍스트
 
-Är det en röd dag på väg? Goldweek kombinerar helgdagar och helger och visar vilka dagar du ska ta ledigt för längsta möjliga semester. Kvarvarande dagar syns i widgeten.
+Planera 2027 års ledighet redan nu. Goldweek har redan nästa års röda dagar och kombinerar dem med helger så att få semesterdagar ger längsta möjliga ledighet.
 
 ### 설명
 
@@ -776,7 +776,7 @@ inneklemt,klemdag,helligdager,røde,kalender,langhelg,påske,pinse,jul,avspaseri
 
 ### 프로모션 텍스트
 
-Kommer det en rød dag snart? Goldweek setter sammen helligdager og helger og viser hvilke dager du bør ta fri for lengst mulig ferie. Gjenstående ferie ser du i widgeten.
+Planlegg ferien for 2027 allerede nå. Goldweek har allerede neste års røde dager og kobler dem med helger, så få feriedager gir lengst mulig fri.
 
 ### 설명
 
@@ -830,7 +830,7 @@ helligdage,kalender,klemmedag,fridage,afspadsering,weekend,feriekalender,feriere
 
 ### 프로모션 텍스트
 
-Står der en helligdag for døren? Goldweek kobler helligdage og weekender og viser, hvilke dage du skal tage fri for at få den længste pause. Restferien ses i widgetten.
+Planlæg ferien for 2027 allerede nu. Goldweek kender allerede næste års helligdage og kobler dem med weekender, så få feriedage giver de længste pauser.
 
 ### 설명
 
@@ -884,7 +884,7 @@ loma,pyhäpäivät,kalenteri,arkipyhä,välipäivä,vuosiloma,lomapäivät,juhan
 
 ### 프로모션 텍스트
 
-Arkipyhä tulossa? Goldweek yhdistää pyhäpäivät ja viikonloput ja näyttää, mitkä päivät kannattaa ottaa vapaaksi, jotta loma venyy pisimmäksi. Lomasaldo näkyy widgetissä.
+Suunnittele vuoden 2027 lomat jo nyt. Goldweekissä ovat jo ensi vuoden pyhäpäivät, ja se yhdistää ne viikonloppuihin, jotta harvoilla lomapäivillä saat pisimmät vapaat.
 
 ### 설명
 
@@ -938,7 +938,7 @@ długi,weekend,majówka,święta,kalendarz,ustawowo,mostek,wakacje,urlopowy,graf
 
 ### 프로모션 텍스트
 
-Zbliża się święto? Goldweek łączy dni wolne od pracy z weekendami i podpowiada, które dni wziąć, żeby wypoczywać jak najdłużej. Pozostały urlop widać w widżecie.
+Zaplanuj urlop na 2027 rok już teraz. Goldweek zna już święta przyszłego roku i łączy je z weekendami, by z kilku dni urlopu zrobić jak najdłuższy odpoczynek.
 
 ### 설명
 
@@ -992,7 +992,7 @@ svátky,kalendář,státní,víkend,prodloužený,náhradní,půlden,evidence,do
 
 ### 프로모션 텍스트
 
-Blíží se svátek? Goldweek spojí svátky s víkendy a ukáže, které dny si vzít, aby volno trvalo co nejdéle. Zbývající dovolenou vidíš rovnou ve widgetu.
+Naplánuj si dovolenou na rok 2027 už teď. Goldweek už zná svátky příštího roku a spojí je s víkendy, aby z pár dní dovolené bylo co nejdelší volno.
 
 ### 설명
 
@@ -1048,7 +1048,7 @@ Goldweek: Πλάνο άδειας
 
 ### 프로모션 텍스트
 
-Έρχεται αργία; Το Goldweek ενώνει αργίες και Σαββατοκύριακα και σου δείχνει ποιες μέρες να πάρεις άδεια για το μεγαλύτερο ρεπό. Το υπόλοιπο φαίνεται σε widget.
+Σχεδίασε από τώρα τις άδειές σου για το 2027. Το Goldweek ξέρει ήδη τις αργίες της νέας χρονιάς και τις ενώνει με Σαββατοκύριακα για μεγάλα ρεπό με λίγες μέρες άδεια.
 
 ### 설명
 
@@ -1104,7 +1104,7 @@ resmi,bayram,takvim,yıllık,hafta,sonu,kurban,ramazan,arife,mesai,çalışan,he
 
 ### 프로모션 텍스트
 
-Bayram mı yaklaşıyor? Goldweek resmî tatilleri hafta sonlarıyla birleştirir ve en uzun tatil için hangi günler izin alman gerektiğini gösterir. Kalan iznin widget'ta.
+2027 izinlerini şimdiden planla. Goldweek gelecek yılın resmî tatillerini zaten biliyor; onları hafta sonlarıyla birleştirip az izinle en uzun tatili bulur.
 
 ### 설명
 
@@ -1160,7 +1160,7 @@ Goldweek: วางแผนวันลา
 
 ### 프로모션 텍스트
 
-มีวันหยุดใกล้เข้ามาไหม Goldweek ต่อวันหยุดเข้ากับเสาร์-อาทิตย์ แล้วบอกว่าควรลาวันไหนถึงจะได้หยุดติดกันนานที่สุด ดูวันลาคงเหลือได้จากวิดเจ็ต
+วางแผนวันลาปีหน้าได้ตั้งแต่ตอนนี้ ใส่วันหยุดของคุณเอง แล้ว Goldweek จะต่อเข้ากับเสาร์-อาทิตย์ บอกว่าควรลาวันไหนถึงจะได้หยุดยาวที่สุดด้วยวันลาน้อยที่สุด
 
 ### 설명
 
@@ -1214,7 +1214,7 @@ tết,ngày,bù,năm,quốc,khánh,kế,hoạch,du,xuân,hè,đơn,xin,công,ty,
 
 ### 프로모션 텍스트
 
-Sắp có ngày lễ? Goldweek ghép ngày lễ với cuối tuần và cho bạn biết nên xin nghỉ ngày nào để được kỳ nghỉ dài nhất. Xem số phép còn lại ngay trên tiện ích.
+Lên kế hoạch nghỉ phép năm sau ngay từ bây giờ. Nhập ngày lễ của bạn, Goldweek ghép với cuối tuần và chỉ ra nên nghỉ ngày nào để nghỉ dài nhất mà tốn ít phép nhất.
 
 ### 설명
 
@@ -1268,7 +1268,7 @@ annual,allowance,long weekend,days off,bridge day,time off,getaway,calendar,accr
 
 ### 프로모션 텍스트
 
-Bank holiday coming up? Goldweek pairs public holidays with weekends to show which days to book off for the longest break. See your leave left on a widget.
+Plan 2027's leave now. Goldweek already knows next year's bank holidays and pairs them with weekends to turn the fewest days of leave into the longest breaks.
 
 ### 설명
 
