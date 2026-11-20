@@ -39,7 +39,8 @@ for runtime, devices in json.load(sys.stdin)["devices"].items():
     if not phones:
         continue
     if best is None or version > best[0]:
-        mine = [d for d in phones if d["name"] == name]
+        # 이름에 "iPhone" 이 없는 게이트 전용 기기도 찾는다 — 못 찾으면 배포마다 새로 만들어 쌓인다.
+        mine = [d for d in devices if d.get("isAvailable") and d["name"] == name]
         best = (version, runtime, phones[0].get("deviceTypeIdentifier", ""), mine[0]["udid"] if mine else "")
 print(" ".join(best[1:]) if best else "")
 ')"
@@ -62,6 +63,8 @@ DEST="platform=iOS Simulator,id=$DEST_ID"
 # 그 안에 못 켜져 "Timed out trying to boot simulator" (exit 65) 로 시험 전에 죽는다.
 # 여기서 넉넉히(최대 10분) 기다려 두면 xcodebuild 는 이미 켜진 기기를 그대로 쓴다.
 echo "📱 시뮬레이터 준비 ($DEST_ID)"
+# 끝나면(실패해도) 끈다 — 켜 둔 채 쌓이면 맥 전체가 느려진다.
+[ -z "${PREDEPLOY_SIM_ID:-}" ] && trap 'xcrun simctl shutdown "$DEST_ID" >/dev/null 2>&1 || true' EXIT
 xcrun simctl boot "$DEST_ID" 2>/dev/null || true
 BOOT_OK=0
 i=0
