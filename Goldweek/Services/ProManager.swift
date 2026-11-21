@@ -727,6 +727,12 @@ enum ProPurchaseError: LocalizedError {
             case .verificationFailed: return "Xác minh giao dịch mua thất bại."
             case .purchaseFailed: return "Mua không thành công."
             }
+        case .arabic:
+            switch self {
+            case .productNotFound: return "لم يُعثر على المنتج."
+            case .verificationFailed: return "تعذّر التحقق من عملية الشراء."
+            case .purchaseFailed: return "لم تكتمل عملية الشراء."
+            }
         case .dutch:
             switch self {
             case .productNotFound: return "Product niet gevonden."

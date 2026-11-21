@@ -339,7 +339,7 @@ struct LeaveHistoryView: View {
                 Label(Strings.statsByKindTitle, systemImage: "chart.bar.doc.horizontal")
                     .font(.body.weight(.semibold))
                 Spacer()
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.body)
                     .foregroundStyle(.tertiary)
                     .voDecorative()

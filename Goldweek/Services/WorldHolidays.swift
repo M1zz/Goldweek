@@ -29,8 +29,40 @@ struct HolidayName {
     }
 
     var text: String {
-        names[AppLanguage.current] ?? names[.english]!
+        // 아랍어는 칸을 따로 두지 않고 영어 이름으로 찾는다 — 여러 나라가 같이 쓰는 이름과 아랍권 공휴일.
+        if AppLanguage.current == .arabic, let en = names[.english], let ar = Self.arabic[en] { return ar }
+        return names[AppLanguage.current] ?? names[.english]!
     }
+
+    /// 아랍어 공휴일 이름 (키는 영어 이름). 없는 이름은 영어로 떨어진다.
+    static let arabic: [String: String] = [
+        // 아랍권
+        "Eid al-Fitr": "عيد الفطر", "Eid al-Adha": "عيد الأضحى", "Arafat Day": "يوم عرفة",
+        "Islamic New Year": "رأس السنة الهجرية", "Prophet's Birthday": "المولد النبوي",
+        "Commemoration Day": "يوم الشهيد", "National Day": "اليوم الوطني", "Founding Day": "يوم التأسيس",
+        "National Sport Day": "اليوم الرياضي للدولة",
+        "Coptic Christmas": "عيد الميلاد المجيد", "Sinai Liberation Day": "عيد تحرير سيناء",
+        "June 30 Revolution Day": "ثورة 30 يونيو", "Armed Forces Day": "عيد القوات المسلحة",
+        "Sham El-Nessim": "شم النسيم", "Revolution Day": "عيد الثورة",
+        "Independence Manifesto Day": "ذكرى تقديم وثيقة الاستقلال", "Amazigh New Year (Yennayer)": "رأس السنة الأمازيغية",
+        "Throne Day": "عيد العرش", "Oued Ed-Dahab Day": "ذكرى استرجاع إقليم وادي الذهب",
+        "Revolution of the King and the People": "ذكرى ثورة الملك والشعب", "Youth Day": "عيد الشباب",
+        "Green March Day": "ذكرى المسيرة الخضراء", "Unity Day": "عيد الوحدة",
+        "Independence Day": "عيد الاستقلال",
+        // 여러 나라가 같이 쓰는 이름
+        "New Year's Day": "رأس السنة الميلادية", "New Year's Eve": "ليلة رأس السنة", "Labour Day": "عيد العمال",
+        "Christmas Day": "عيد الميلاد", "Christmas Eve": "عشية عيد الميلاد", "Boxing Day": "يوم الصناديق",
+        "Second Day of Christmas": "ثاني أيام عيد الميلاد", "St. Stephen's Day": "عيد القديس استيفانوس",
+        "Good Friday": "الجمعة العظيمة", "Maundy Thursday": "خميس العهد", "Easter Saturday": "سبت النور",
+        "Easter Sunday": "أحد الفصح", "Easter Monday": "اثنين الفصح", "Ascension Day": "عيد الصعود",
+        "Whit Sunday": "أحد العنصرة", "Whit Monday": "اثنين العنصرة", "Epiphany": "عيد الغطاس",
+        "Assumption Day": "عيد انتقال العذراء", "All Saints' Day": "عيد جميع القديسين",
+        "Corpus Christi": "عيد الجسد", "Immaculate Conception": "عيد الحبل بلا دنس",
+        "Thanksgiving": "عيد الشكر", "Day after Thanksgiving": "اليوم التالي لعيد الشكر",
+        "Remembrance Day": "يوم الذكرى", "King's Birthday": "عيد ميلاد الملك",
+        "Constitution Day": "يوم الدستور", "Republic Day": "عيد الجمهورية", "Freedom Day": "يوم الحرية",
+        "Carnival": "الكرنفال", "Midsummer Day": "عيد منتصف الصيف", "Midsummer Eve": "عشية منتصف الصيف",
+    ]
 }
 
 private typealias N = HolidayName
@@ -99,6 +131,7 @@ private enum Common {
         case .indonesian: return "hari pengganti"
         case .thai: return "วันหยุดชดเชย"
         case .vietnamese: return "ngày nghỉ bù"
+        case .arabic: return "عطلة تعويضية"
         case .dutch: return "vervangende dag"
         case .japanese: return "振替休日"
         case .chinese: return "补休"

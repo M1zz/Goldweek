@@ -649,6 +649,9 @@ class RecommendationEngine {
         case .vietnamese:
             title = "Golden Week"
             desc = "Golden Week Nhật Bản! Nghỉ phép \(Int(requiredLeave)) ngày, được nghỉ \(totalDays) ngày."
+        case .arabic:
+            title = "الأسبوع الذهبي"
+            desc = "الأسبوع الذهبي في اليابان! \(arDays(Int(requiredLeave))) من الإجازة مقابل عطلة مدتها \(arDays(totalDays, true))."
         case .dutch:
             title = "Golden Week"
             desc = "Japans Golden Week! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
@@ -727,6 +730,7 @@ class RecommendationEngine {
                 case .indonesian: title = "Libur Obon"; desc = "Musim Obon! Cuti \(Int(requiredLeave)) hari, libur \(totalDays) hari."
                 case .thai: title = "หยุดเทศกาลโอบ้ง"; desc = "ช่วงเทศกาลโอบ้ง! ลา \(Int(requiredLeave)) วัน หยุดได้ \(totalDays) วัน"
                 case .vietnamese: title = "Nghỉ lễ Obon"; desc = "Mùa lễ Obon! Nghỉ phép \(Int(requiredLeave)) ngày, được nghỉ \(totalDays) ngày."
+                case .arabic: title = "عطلة أوبون"; desc = "موسم أوبون في اليابان! \(arDays(Int(requiredLeave))) من الإجازة مقابل عطلة مدتها \(arDays(totalDays, true))."
                 case .dutch: title = "Obon-vakantie"; desc = "Obon-seizoen! \(Int(requiredLeave)) verlofdagen voor \(totalDays) dagen vrij."
                 case .japanese: title = "お盆休み"; desc = "お盆休み！有給\(Int(requiredLeave))日で\(totalDays)連休。"
                 case .chinese: title = "盂兰盆节假期"; desc = "盂兰盆节！请\(Int(requiredLeave))天年假获得\(totalDays)天假期。"
@@ -782,6 +786,7 @@ class RecommendationEngine {
                 case .indonesian: title = "Libur Thanksgiving"; desc = "Cuti 1 hari (Jumat), libur panjang 4 hari!"
                 case .thai: title = "หยุดยาวขอบคุณพระเจ้า"; desc = "ลา 1 วัน (วันศุกร์) ได้หยุดยาว 4 วัน!"
                 case .vietnamese: title = "Nghỉ lễ Tạ ơn"; desc = "Nghỉ phép 1 ngày (thứ Sáu), được nghỉ liền 4 ngày!"
+                case .arabic: title = "عطلة عيد الشكر"; desc = "يوم إجازة واحد (الجمعة) مقابل عطلة من 4 أيام!"
                 case .dutch: title = "Thanksgiving-vakantie"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                 case .japanese: title = "感謝祭連休"; desc = "金曜1日の有給で4連休！"
                 case .chinese: title = "感恩节假期"; desc = "周五请1天年假获得4天假期！"
@@ -832,6 +837,7 @@ class RecommendationEngine {
                     case .indonesian: title = "Libur Panjang 4 Juli"; desc = "Cuti 1 hari (Senin), libur panjang 4 hari!"
                     case .thai: title = "หยุดยาววันชาติสหรัฐฯ 4 ก.ค."; desc = "ลา 1 วัน (วันจันทร์) ได้หยุดยาว 4 วัน!"
                     case .vietnamese: title = "Kỳ nghỉ dài 4/7"; desc = "Nghỉ phép 1 ngày (thứ Hai), được nghỉ liền 4 ngày!"
+                    case .arabic: title = "عطلة عيد الاستقلال"; desc = "يوم إجازة واحد (الاثنين) مقابل عطلة من 4 أيام!"
                     case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (maandag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "月曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周一请1天年假获得4天假期！"
@@ -870,6 +876,7 @@ class RecommendationEngine {
                     case .indonesian: title = "Libur Panjang 4 Juli"; desc = "Cuti 1 hari (Jumat), libur panjang 4 hari!"
                     case .thai: title = "หยุดยาววันชาติสหรัฐฯ 4 ก.ค."; desc = "ลา 1 วัน (วันศุกร์) ได้หยุดยาว 4 วัน!"
                     case .vietnamese: title = "Kỳ nghỉ dài 4/7"; desc = "Nghỉ phép 1 ngày (thứ Sáu), được nghỉ liền 4 ngày!"
+                    case .arabic: title = "عطلة عيد الاستقلال"; desc = "يوم إجازة واحد (الجمعة) مقابل عطلة من 4 أيام!"
                     case .dutch: title = "Lang weekend 4 juli"; desc = "1 verlofdag (vrijdag) voor een weekend van 4 dagen!"
                     case .japanese: title = "独立記念日連休"; desc = "金曜1日の有給で4連休！"
                     case .chinese: title = "独立日假期"; desc = "周五请1天年假获得4天假期！"

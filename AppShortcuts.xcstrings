@@ -140,6 +140,12 @@
             "state" : "translated",
             "value" : "${applicationName}剩餘年假"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإجازة المتبقية في ${applicationName}"
+          }
         }
       }
     },
@@ -291,6 +297,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "${applicationName}我還剩多少年假"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كم بقي من إجازتي في ${applicationName}"
           }
         }
       }
@@ -444,6 +456,12 @@
             "state" : "translated",
             "value" : "${applicationName}下一個假日"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العطلة الرسمية القادمة في ${applicationName}"
+          }
         }
       }
     },
@@ -585,6 +603,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "${applicationName}下一個假期是什麼時候"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "متى العطلة القادمة في ${applicationName}"
           }
         }
       }

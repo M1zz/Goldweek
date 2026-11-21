@@ -36,6 +36,7 @@ extension Strings {
         case .indonesian: return "Hari libur tetap"
         case .thai: return "วันหยุดประจำ"
         case .vietnamese: return "Ngày nghỉ cố định"
+        case .arabic: return "أيام الراحة الأسبوعية"
         }
     }
 
@@ -65,6 +66,7 @@ extension Strings {
         case .indonesian: return "Pilih hari yang kamu tidak bekerja, seperti kerja paruh waktu. Sama seperti akhir pekan, hari itu tidak memotong cuti. Jika bertukar dengan rekan, ketuk hari itu di kalender untuk memindahkannya hanya minggu itu."
         case .thai: return "เลือกวันที่คุณไม่ต้องทำงาน เช่น วันหยุดของงานพาร์ตไทม์ วันเหล่านี้ไม่หักวันลาเหมือนวันหยุดสุดสัปดาห์ ถ้าสลับวันกับเพื่อนร่วมงาน แตะวันนั้นในปฏิทินเพื่อย้ายเฉพาะสัปดาห์นั้น"
         case .vietnamese: return "Chọn những ngày trong tuần bạn không đi làm, như ngày nghỉ của công việc bán thời gian. Giống cuối tuần, những ngày này không bị trừ phép. Nếu đổi ca với đồng nghiệp, hãy chạm vào ngày đó trên lịch để dời riêng tuần đó."
+        case .arabic: return "اختر أيام الأسبوع التي لا تعمل فيها، كما في الدوام الجزئي. لا تُخصم من إجازتك تمامًا مثل عطلة نهاية الأسبوع. وإن بدّلت يومًا مع زميل فاضغط على ذلك اليوم في التقويم لتنقله لهذا الأسبوع فقط."
         }
     }
 
@@ -94,6 +96,7 @@ extension Strings {
         case .indonesian: return "Hari libur tetap"
         case .thai: return "วันหยุดประจำ"
         case .vietnamese: return "Ngày nghỉ cố định"
+        case .arabic: return "يوم راحة ثابت"
         }
     }
 
@@ -123,6 +126,7 @@ extension Strings {
         case .indonesian: return "Pindahkan untuk minggu ini saja"
         case .thai: return "ย้ายเฉพาะสัปดาห์นี้"
         case .vietnamese: return "Chỉ dời trong tuần này"
+        case .arabic: return "انقله لهذا الأسبوع فقط"
         }
     }
 
@@ -152,6 +156,7 @@ extension Strings {
         case .indonesian: return "Hari apa kamu libur sebagai gantinya?"
         case .thai: return "จะหยุดวันไหนแทน"
         case .vietnamese: return "Bạn nghỉ bù vào ngày nào?"
+        case .arabic: return "أي يوم ترتاح فيه بدلًا منه؟"
         }
     }
 
@@ -181,6 +186,7 @@ extension Strings {
         case .indonesian: return "Hari libur (dipindah)"
         case .thai: return "วันหยุด (ย้ายมา)"
         case .vietnamese: return "Ngày nghỉ (đã dời sang)"
+        case .arabic: return "يوم راحة (منقول إلى هنا)"
         }
     }
 
@@ -210,6 +216,7 @@ extension Strings {
         case .indonesian: return "Minggu ini hari kerja (libur dipindah)"
         case .thai: return "สัปดาห์นี้ทำงาน (ย้ายวันหยุดแล้ว)"
         case .vietnamese: return "Tuần này đi làm (đã dời ngày nghỉ)"
+        case .arabic: return "يوم عمل هذا الأسبوع (نُقل يوم الراحة)"
         }
     }
 
@@ -239,6 +246,7 @@ extension Strings {
         case .indonesian: return "Batalkan pindah"
         case .thai: return "ยกเลิกการย้าย"
         case .vietnamese: return "Hoàn tác dời ngày"
+        case .arabic: return "إلغاء النقل"
         }
     }
 }
@@ -272,6 +280,7 @@ extension Strings {
         case .indonesian: return "Pola kerja"
         case .thai: return "รูปแบบการทำงาน"
         case .vietnamese: return "Hình thức làm việc"
+        case .arabic: return "نظام العمل"
         }
     }
 
@@ -301,6 +310,7 @@ extension Strings {
         case .indonesian: return "Jadwal tetap"
         case .thai: return "ทำงานวันประจำ"
         case .vietnamese: return "Lịch cố định"
+        case .arabic: return "دوام ثابت"
         }
     }
 
@@ -330,6 +340,7 @@ extension Strings {
         case .indonesian: return "Hari yang sama tiap minggu, akhir pekan libur"
         case .thai: return "ทำงานวันเดิมทุกสัปดาห์ หยุดเสาร์-อาทิตย์"
         case .vietnamese: return "Làm cùng các ngày mỗi tuần, nghỉ cuối tuần"
+        case .arabic: return "الأيام نفسها كل أسبوع، مع عطلة نهاية الأسبوع"
         }
     }
 
@@ -359,6 +370,7 @@ extension Strings {
         case .indonesian: return "Paruh waktu"
         case .thai: return "พาร์ตไทม์"
         case .vietnamese: return "Bán thời gian"
+        case .arabic: return "دوام جزئي"
         }
     }
 
@@ -388,6 +400,7 @@ extension Strings {
         case .indonesian: return "Satu hari libur tetap tiap minggu"
         case .thai: return "หยุดวันที่กำหนดไว้ทุกสัปดาห์ด้วย"
         case .vietnamese: return "Nghỉ thêm các ngày cố định mỗi tuần"
+        case .arabic: return "يوم راحة ثابت إضافي كل أسبوع"
         }
     }
 
@@ -417,6 +430,7 @@ extension Strings {
         case .indonesian: return "Kerja shift"
         case .thai: return "ทำงานเป็นกะ"
         case .vietnamese: return "Làm theo ca"
+        case .arabic: return "نظام المناوبات"
         }
     }
 
@@ -446,6 +460,7 @@ extension Strings {
         case .indonesian: return "Hari libur berubah tiap minggu"
         case .thai: return "วันหยุดเปลี่ยนไปทุกสัปดาห์"
         case .vietnamese: return "Ngày nghỉ thay đổi theo từng tuần"
+        case .arabic: return "أيام الراحة تتغير من أسبوع لآخر"
         }
     }
 
@@ -475,6 +490,7 @@ extension Strings {
         case .indonesian: return "Hanya pengaturan pola kerja Anda yang tampil. Hari libur yang dimasukkan tetap tersimpan jika diganti."
         case .thai: return "แสดงเฉพาะการตั้งค่าที่ตรงกับรูปแบบที่เลือก วันหยุดที่ใส่ไว้แล้วจะยังอยู่แม้เปลี่ยนรูปแบบ"
         case .vietnamese: return "Chỉ hiện cài đặt phù hợp với hình thức đã chọn. Khi đổi hình thức, các ngày nghỉ đã nhập vẫn được giữ."
+        case .arabic: return "تظهر فقط الإعدادات المناسبة لنظام عملك. أيام الراحة التي أدخلتها تبقى محفوظة إن غيّرت النظام."
         }
     }
 
@@ -504,6 +520,7 @@ extension Strings {
         case .indonesian: return "Saya juga cuti per jam"
         case .thai: return "ฉันลาเป็นชั่วโมงด้วย"
         case .vietnamese: return "Tôi cũng nghỉ theo giờ"
+        case .arabic: return "آخذ إجازات بالساعات"
         }
     }
 
@@ -533,6 +550,7 @@ extension Strings {
         case .indonesian: return "Aktifkan untuk mencatat cuti dalam jam dan menit serta mengatur jam kerja dan jatah jam."
         case .thai: return "เปิดเพื่อบันทึกการลาเป็นชั่วโมงและนาที และกำหนดชั่วโมงทำงานต่อวัน ชั่วโมงทำงานแต่ละวัน และโควตาเป็นชั่วโมง"
         case .vietnamese: return "Bật để ghi phép theo giờ và phút, đặt số giờ làm mỗi ngày, theo từng thứ và hạn mức theo giờ."
+        case .arabic: return "عند التفعيل تُدخل الإجازة بالساعات والدقائق، وتحدّد ساعات العمل اليومية والحدود بالساعات."
         }
     }
 
@@ -562,6 +580,7 @@ extension Strings {
         case .indonesian: return "Jadwal shift"
         case .thai: return "ตารางกะ"
         case .vietnamese: return "Lịch ca"
+        case .arabic: return "جدول المناوبات"
         }
     }
 
@@ -591,6 +610,7 @@ extension Strings {
         case .indonesian: return "Ketuk hari untuk beralih antara kerja dan libur. Hari libur tidak memotong cuti dan dianggap hari istirahat dalam saran."
         case .thai: return "แตะวันที่เพื่อสลับระหว่างวันทำงานกับวันหยุด วันหยุดจะไม่หักวันลา และคำแนะนำจะนับเป็นวันพัก"
         case .vietnamese: return "Chạm vào ngày để đổi giữa đi làm và nghỉ. Ngày nghỉ không bị trừ phép và được tính là ngày nghỉ trong gợi ý."
+        case .arabic: return "اضغط على اليوم للتبديل بين العمل والراحة. أيام الراحة لا تُخصم من إجازتك، وتعدّها الاقتراحات أيام راحة."
         }
     }
 
@@ -620,6 +640,7 @@ extension Strings {
         case .indonesian: return "Kerja"
         case .thai: return "ทำงาน"
         case .vietnamese: return "Làm"
+        case .arabic: return "عمل"
         }
     }
 
@@ -649,6 +670,7 @@ extension Strings {
         case .indonesian: return "Libur"
         case .thai: return "หยุด"
         case .vietnamese: return "Nghỉ"
+        case .arabic: return "راحة"
         }
     }
 
@@ -678,6 +700,7 @@ extension Strings {
         case .indonesian: return "Tandai libur"
         case .thai: return "หยุดวันนี้"
         case .vietnamese: return "Nghỉ ngày này"
+        case .arabic: return "تحديد كيوم راحة"
         }
     }
 
@@ -707,6 +730,7 @@ extension Strings {
         case .indonesian: return "Tandai hari kerja"
         case .thai: return "ทำงานวันนี้"
         case .vietnamese: return "Làm ngày này"
+        case .arabic: return "تحديد كيوم عمل"
         }
     }
 
@@ -736,6 +760,7 @@ extension Strings {
         case .indonesian: return "Libur shift"
         case .thai: return "วันหยุดกะ"
         case .vietnamese: return "Nghỉ theo ca"
+        case .arabic: return "راحة مناوبة"
         }
     }
 
@@ -765,6 +790,7 @@ extension Strings {
         case .indonesian: return "Hari kerja shift"
         case .thai: return "วันทำงานกะ"
         case .vietnamese: return "Ngày làm theo ca"
+        case .arabic: return "يوم عمل مناوبة"
         }
     }
 
@@ -794,6 +820,7 @@ extension Strings {
         case .indonesian: return "Kembalikan"
         case .thai: return "คืนค่าเดิม"
         case .vietnamese: return "Khôi phục"
+        case .arabic: return "إعادة"
         }
     }
 
@@ -823,6 +850,7 @@ extension Strings {
         case .indonesian: return "Minggu sebelumnya"
         case .thai: return "สัปดาห์ก่อน"
         case .vietnamese: return "Tuần trước"
+        case .arabic: return "الأسبوع الماضي"
         }
     }
 
@@ -852,6 +880,7 @@ extension Strings {
         case .indonesian: return "Minggu berikutnya"
         case .thai: return "สัปดาห์หน้า"
         case .vietnamese: return "Tuần sau"
+        case .arabic: return "الأسبوع القادم"
         }
     }
 
@@ -881,6 +910,7 @@ extension Strings {
         case .indonesian: return "Minggu ini"
         case .thai: return "สัปดาห์นี้"
         case .vietnamese: return "Tuần này"
+        case .arabic: return "هذا الأسبوع"
         }
     }
 
@@ -930,6 +960,7 @@ extension Strings {
         case .indonesian: return "Kirim cuti ke Kalender"
         case .thai: return "ส่งวันลาไปที่แอปปฏิทิน"
         case .vietnamese: return "Gửi ngày nghỉ sang Lịch"
+        case .arabic: return "إرسال الإجازات إلى تطبيق التقويم"
         }
     }
 
@@ -959,6 +990,7 @@ extension Strings {
         case .indonesian: return "Cuti otomatis masuk ke kalender \"Goldweek\" dan ikut berubah saat diubah atau dihapus. Ada di iCloud, jadi terlihat di Mac, iPad, dan aplikasi lain. Mematikannya akan menghapus kalender itu."
         case .thai: return "วันลาจะเข้าไปในปฏิทิน \"Goldweek วันลา\" โดยอัตโนมัติ และเปลี่ยนตามเมื่อคุณแก้ไขหรือลบ ถ้าเป็นปฏิทิน iCloud จะเห็นใน Mac, iPad และแอปปฏิทินอื่นด้วย ปิดแล้วปฏิทินนี้จะถูกลบ"
         case .vietnamese: return "Ngày nghỉ tự động vào lịch \"Goldweek Nghỉ phép\" và cập nhật khi bạn sửa hoặc xóa. Nếu là lịch iCloud, bạn sẽ thấy cả trên Mac, iPad và các ứng dụng lịch khác. Tắt đi sẽ xóa lịch này."
+        case .arabic: return "تُضاف إجازاتك تلقائيًا إلى تقويم باسم \"Goldweek\" وتتحدّث عند تعديلها أو حذفها. إن كان التقويم على iCloud فستظهر على Mac و iPad وباقي أجهزتك وتطبيقات التقويم. عند الإيقاف يُحذف هذا التقويم."
         }
     }
 
@@ -988,6 +1020,7 @@ extension Strings {
         case .indonesian: return "Akses kalender mati. Izinkan akses penuh di Pengaturan > Goldweek > Kalender."
         case .thai: return "การเข้าถึงปฏิทินปิดอยู่ กรุณาอนุญาตการเข้าถึงทั้งหมดใน การตั้งค่า > Goldweek > ปฏิทิน"
         case .vietnamese: return "Quyền truy cập Lịch đang tắt. Hãy cho phép Toàn quyền truy cập trong Cài đặt > Goldweek > Lịch."
+        case .arabic: return "الوصول إلى التقويم متوقف. اسمح بالوصول الكامل من الإعدادات > Goldweek > التقويم."
         }
     }
 }

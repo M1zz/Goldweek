@@ -33,6 +33,7 @@ extension Strings {
         case .indonesian: return "Hari penting keluarga"
         case .thai: return "วันสำคัญของครอบครัว"
         case .vietnamese: return "Ngày kỷ niệm gia đình"
+        case .arabic: return "مناسبات العائلة"
         }
     }
 
@@ -61,6 +62,7 @@ extension Strings {
         case .indonesian: return "Hari keluarga"
         case .thai: return "วันสำคัญของครอบครัว"
         case .vietnamese: return "Ngày của gia đình"
+        case .arabic: return "مناسبة عائلية"
         }
     }
 
@@ -90,6 +92,7 @@ extension Strings {
         case .indonesian: return "Bagi keluarga, hari-hari ini seperti hari libur. Ditandai hati di kalender, ada pengingat dua minggu sebelumnya untuk mengambil cuti, dan saran libur yang mencakupnya tampil lebih dulu. Saldo cuti tidak berubah."
         case .thai: return "สำหรับครอบครัว วันเหล่านี้ก็เหมือนวันหยุด จะมีรูปหัวใจในปฏิทิน แจ้งเตือนล่วงหน้าสองสัปดาห์ให้ลา และคำแนะนำวันหยุดที่มีวันนี้จะขึ้นก่อน วันลาคงเหลือไม่เปลี่ยน"
         case .vietnamese: return "Với gia đình, đây là những ngày như ngày lễ. Chúng được đánh dấu trái tim trên lịch, bạn được nhắc trước hai tuần để xin nghỉ, và gợi ý kỳ nghỉ có những ngày này sẽ hiện trước. Số ngày phép không đổi."
+        case .arabic: return "هذه الأيام بمثابة أعياد لعائلتك. تظهر بقلب على التقويم، ونذكّرك قبلها بأسبوعين لتحجز إجازتك، ونقدّم الاقتراحات التي تشملها. رصيد إجازتك لا يتغير."
         }
     }
 
@@ -118,6 +121,7 @@ extension Strings {
         case .indonesian: return "Tambahkan ulang tahun atau hari pernikahan"
         case .thai: return "เพิ่มวันเกิดหรือวันครบรอบแต่งงาน"
         case .vietnamese: return "Thêm sinh nhật hoặc ngày cưới"
+        case .arabic: return "أضف عيد ميلاد أو ذكرى زواج"
         }
     }
 
@@ -146,6 +150,7 @@ extension Strings {
         case .indonesian: return "Tambah hari"
         case .thai: return "เพิ่มวันสำคัญ"
         case .vietnamese: return "Thêm ngày"
+        case .arabic: return "إضافة مناسبة"
         }
     }
 
@@ -174,6 +179,7 @@ extension Strings {
         case .indonesian: return "Ubah hari"
         case .thai: return "แก้ไขวันสำคัญ"
         case .vietnamese: return "Sửa ngày"
+        case .arabic: return "تعديل المناسبة"
         }
     }
 
@@ -202,6 +208,7 @@ extension Strings {
         case .indonesian: return "Hapus hari ini?"
         case .thai: return "ลบวันสำคัญนี้ไหม"
         case .vietnamese: return "Xóa ngày này?"
+        case .arabic: return "هل تريد حذف هذه المناسبة؟"
         }
     }
 
@@ -230,6 +237,7 @@ extension Strings {
         case .indonesian: return "Jenis"
         case .thai: return "ประเภท"
         case .vietnamese: return "Loại"
+        case .arabic: return "النوع"
         }
     }
 
@@ -258,6 +266,7 @@ extension Strings {
         case .indonesian: return "Hari siapa?"
         case .thai: return "เป็นวันของใคร"
         case .vietnamese: return "Ngày của ai?"
+        case .arabic: return "مناسبة مَن؟"
         }
     }
 
@@ -286,6 +295,7 @@ extension Strings {
         case .indonesian: return "Hubungan (mis. Ibu)"
         case .thai: return "ความสัมพันธ์ (เช่น แม่)"
         case .vietnamese: return "Quan hệ (vd: mẹ)"
+        case .arabic: return "صلة القرابة (مثل: أمي)"
         }
     }
 
@@ -314,6 +324,7 @@ extension Strings {
         case .indonesian: return "Kalender lunar"
         case .thai: return "จันทรคติ"
         case .vietnamese: return "Âm lịch"
+        case .arabic: return "التقويم القمري"
         }
     }
 
@@ -342,6 +353,7 @@ extension Strings {
         case .indonesian: return "Setiap tahun mengikuti tanggal lunar dari hari yang dipilih. Cocok untuk ulang tahun dan peringatan menurut kalender lunar."
         case .thai: return "แต่ละปีจะตามวันจันทรคติของวันที่เลือก ใช้กับวันเกิดหรือวันทำบุญตามจันทรคติ"
         case .vietnamese: return "Mỗi năm sẽ theo ngày âm lịch của ngày đã chọn. Dùng cho sinh nhật âm lịch và ngày giỗ."
+        case .arabic: return "يتبع كل عام التاريخ القمري لليوم الذي اخترته. مناسب لأعياد الميلاد والذكريات التي تُحسب بالتقويم القمري."
         }
     }
 
@@ -370,6 +382,7 @@ extension Strings {
         case .indonesian: return "Masukkan tanggal awal (tahun lahir atau menikah) untuk melihat yang keberapa."
         case .thai: return "ใส่วันแรก (ปีเกิดหรือปีที่แต่งงาน) เพื่อดูว่าครบกี่ปี"
         case .vietnamese: return "Nhập ngày gốc (năm sinh hoặc năm cưới) để xem là lần thứ mấy."
+        case .arabic: return "أدخل التاريخ الأصلي مع سنة الميلاد أو الزواج لنحسب لك رقم الذكرى."
         }
     }
 
@@ -398,6 +411,7 @@ extension Strings {
         case .indonesian: return "Opsional, jika kosong pakai hubungan dan jenis"
         case .thai: return "ไม่ใส่ก็ได้ จะแสดงความสัมพันธ์และประเภท"
         case .vietnamese: return "Không bắt buộc, để trống sẽ hiện quan hệ và loại"
+        case .arabic: return "اختياري، وإن تركته فارغًا تظهر صلة القرابة والنوع"
         }
     }
 
@@ -426,6 +440,7 @@ extension Strings {
         case .indonesian: return "Pengingat"
         case .thai: return "การแจ้งเตือน"
         case .vietnamese: return "Nhắc trước"
+        case .arabic: return "التذكير"
         }
     }
 
@@ -454,6 +469,7 @@ extension Strings {
         case .indonesian: return "Pengingat dua minggu sebelumnya untuk mengambil cuti, dan sekali lagi pada pagi harinya. Jika hari itu sudah libur, pengingat pertama dilewati."
         case .thai: return "แจ้งเตือนล่วงหน้าสองสัปดาห์ให้ลา และอีกครั้งในเช้าวันนั้น ถ้าวันนั้นหยุดอยู่แล้วจะไม่แจ้งเตือนล่วงหน้า"
         case .vietnamese: return "Nhắc trước hai tuần để bạn xin nghỉ, và nhắc lại vào sáng hôm đó. Nếu hôm đó bạn đã nghỉ thì bỏ qua lời nhắc trước."
+        case .arabic: return "نذكّرك قبل الموعد بأسبوعين لتحجز إجازتك، ثم صباح اليوم نفسه. إن كنت في إجازة أو عطلة ذلك اليوم فلن يصلك تذكير الأسبوعين."
         }
     }
 
@@ -482,6 +498,7 @@ extension Strings {
         case .indonesian: return "Hari penting keluarga mendatang"
         case .thai: return "วันสำคัญของครอบครัวที่ใกล้เข้ามา"
         case .vietnamese: return "Ngày kỷ niệm gia đình sắp tới"
+        case .arabic: return "مناسبات العائلة القادمة"
         }
     }
 
@@ -510,6 +527,7 @@ extension Strings {
         case .indonesian: return "Sudah cuti"
         case .thai: return "ลาแล้ว"
         case .vietnamese: return "Đã xin nghỉ"
+        case .arabic: return "الإجازة محجوزة"
         }
     }
 
@@ -538,6 +556,7 @@ extension Strings {
         case .indonesian: return "Libur"
         case .thai: return "วันหยุด"
         case .vietnamese: return "Ngày nghỉ"
+        case .arabic: return "يوم راحة"
         }
     }
 
@@ -566,6 +585,7 @@ extension Strings {
         case .indonesian: return "Ambil cuti"
         case .thai: return "ลางาน"
         case .vietnamese: return "Xin nghỉ"
+        case .arabic: return "احجز إجازة"
         }
     }
 
@@ -597,6 +617,7 @@ extension Strings {
             case .indonesian: return "Ulang tahun"
             case .thai: return "วันเกิด"
             case .vietnamese: return "Sinh nhật"
+            case .arabic: return "عيد ميلاد"
             }
         case .wedding:
             switch lang {
@@ -623,6 +644,7 @@ extension Strings {
             case .indonesian: return "Hari pernikahan"
             case .thai: return "วันครบรอบแต่งงาน"
             case .vietnamese: return "Kỷ niệm ngày cưới"
+            case .arabic: return "ذكرى زواج"
             }
         case .memorial:
             switch lang {
@@ -649,6 +671,7 @@ extension Strings {
             case .indonesian: return "Hari peringatan"
             case .thai: return "วันรำลึก"
             case .vietnamese: return "Ngày giỗ"
+            case .arabic: return "ذكرى وفاة"
             }
         case .other:
             switch lang {
@@ -675,6 +698,7 @@ extension Strings {
             case .indonesian: return "Hari spesial"
             case .thai: return "วันสำคัญ"
             case .vietnamese: return "Ngày kỷ niệm"
+            case .arabic: return "مناسبة خاصة"
             }
         }
     }
@@ -707,6 +731,7 @@ extension Strings {
         case .indonesian: texts = ["Ulang tahun ke-\(n)", "Tahun ke-\(n) menikah", "Tahun ke-\(n)", "Tahun ke-\(n)"]
         case .thai: texts = ["อายุครบ \(n) ปี", "แต่งงานครบ \(n) ปี", "ครบ \(n) ปี", "ครบรอบ \(n) ปี"]
         case .vietnamese: texts = ["Tròn \(n) tuổi", "\(n) năm ngày cưới", "Giỗ lần thứ \(n)", "\(n) năm"]
+        case .arabic: texts = ["عيد الميلاد \(n)", "ذكرى الزواج \(n)", "الذكرى \(n)", "الذكرى \(n)"]
         }
         return texts[i]
     }
@@ -739,6 +764,7 @@ extension Strings {
         case .indonesian: texts = ["Sampaikan ucapan selamat", "Rayakan waktu bersama", "Kenang bersama keluarga", "Habiskan hari bersama keluarga"]
         case .thai: texts = ["อย่าลืมส่งคำอวยพร", "ฉลองเวลาที่อยู่ด้วยกัน", "รำลึกถึงพร้อมกันกับครอบครัว", "ใช้เวลากับครอบครัว"]
         case .vietnamese: texts = ["Gửi lời chúc mừng nhé", "Mừng quãng thời gian bên nhau", "Cùng gia đình tưởng nhớ", "Dành thời gian bên gia đình"]
+        case .arabic: texts = ["أرسل أجمل تهانيك", "احتفلا بأيامكما معًا", "استعيدوا ذكراه معًا", "اقضِ اليوم مع عائلتك"]
         }
         guard let ordinal else { return texts[i] }
         return "\(anniversaryOrdinal(kind, ordinal)) · \(texts[i])"
@@ -769,6 +795,7 @@ extension Strings {
         case .indonesian: return "Kalender lunar: \(day)/\(month)\(isLeap ? " (bulan kabisat)" : "")"
         case .thai: return "จันทรคติ \(day)/\(month)\(isLeap ? " (อธิกมาส)" : "")"
         case .vietnamese: return "Âm lịch \(day)/\(month)\(isLeap ? " (nhuận)" : "")"
+        case .arabic: return "قمري: \(day)/\(month)\(isLeap ? " (شهر كبيس)" : "")"
         }
     }
 
@@ -797,6 +824,7 @@ extension Strings {
         case .indonesian: return "Libur untuk \(name)"
         case .thai: return "หยุดวัน \(name)"
         case .vietnamese: return "Nghỉ dịp \(name)"
+        case .arabic: return "كن حاضرًا في \(name)"
         }
     }
 
@@ -825,6 +853,7 @@ extension Strings {
         case .indonesian: return "Dengan \(l) hari cuti, kamu libur \(t) hari dan bisa bersama keluarga di hari itu."
         case .thai: return "ลา \(l) วัน ได้หยุด \(t) วันติดกัน อยู่กับครอบครัวในวันนั้นได้"
         case .vietnamese: return "Nghỉ phép \(l) ngày để có \(t) ngày nghỉ liền, ở bên gia đình dịp \(name)."
+        case .arabic: return "مقابل \(arDays(l, true)) من الإجازة تحصل على عطلة مدتها \(arDays(t, true)) لتقضي \(name) مع عائلتك."
         }
     }
 
@@ -853,6 +882,7 @@ extension Strings {
         case .indonesian: return "\(days) hari lagi: \(title)"
         case .thai: return "อีก \(days) วัน: \(title)"
         case .vietnamese: return "Còn \(days) ngày: \(title)"
+        case .arabic: return "بقي \(arDays(days)) على \(title)"
         }
     }
 
@@ -881,6 +911,7 @@ extension Strings {
         case .indonesian: return "Tanggal \(date). Ambil cuti sekarang agar bisa bersama keluarga."
         case .thai: return "ตรงกับ \(date) ลาไว้ตอนนี้จะได้อยู่กับครอบครัว"
         case .vietnamese: return "Vào \(date). Xin nghỉ ngay để ở bên gia đình nhé."
+        case .arabic: return "الموعد \(date). احجز إجازتك الآن لتكون مع عائلتك."
         }
     }
 
@@ -909,6 +940,7 @@ extension Strings {
         case .indonesian: return "Hari ini: \(title)"
         case .thai: return "วันนี้: \(title)"
         case .vietnamese: return "Hôm nay: \(title)"
+        case .arabic: return "اليوم: \(title)"
         }
     }
 
@@ -938,6 +970,7 @@ extension Strings {
         case .indonesian: return ["Ibu", "Ayah", "Pasangan", "Anak", "Nenek", "Kakek"]
         case .thai: return ["แม่", "พ่อ", "คู่ชีวิต", "ลูก", "ยาย", "ตา", "ย่า", "ปู่"]
         case .vietnamese: return ["Mẹ", "Bố", "Vợ/chồng", "Con", "Bà", "Ông"]
+        case .arabic: return ["أمي", "أبي", "زوجي", "زوجتي", "ابني", "ابنتي", "جدتي", "جدي"]
         }
     }
 }

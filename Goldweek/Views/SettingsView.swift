@@ -671,7 +671,7 @@ struct SettingsView: View {
                     NavigationLink {
                         ShiftScheduleView(country: selectedCountry) { recommendationEngine.invalidateCache() }
                     } label: {
-                        Label(Strings.shiftScheduleTitle, systemImage: "calendar.day.timeline.left")
+                        Label(Strings.shiftScheduleTitle, systemImage: "calendar.day.timeline.leading")
                     }
                 }
 
@@ -1030,7 +1030,7 @@ struct SettingsView: View {
                             .foregroundStyle(ProManager.shared.hasProTier ? .primary : .secondary)
                         Spacer()
                         if ProManager.shared.hasProTier {
-                            Image(systemName: "chevron.right")
+                            Image(systemName: "chevron.forward")
                                 .foregroundStyle(.secondary)
                                 .font(.body)
                                 .voDecorative()
@@ -1123,7 +1123,7 @@ struct SettingsView: View {
                             .voDecorative()
                         Text(Strings.preferencesSettings)
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        Image(systemName: "chevron.forward")
                             .foregroundStyle(.secondary)
                             .voDecorative()
                     }
@@ -1223,7 +1223,7 @@ struct SettingsView: View {
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        Image(systemName: "chevron.forward")
                             .foregroundStyle(.secondary)
                             .font(.body)
                     }
@@ -1260,7 +1260,7 @@ struct SettingsView: View {
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        Image(systemName: "chevron.forward")
                             .foregroundStyle(.secondary)
                             .font(.body)
                     }
@@ -1454,7 +1454,7 @@ struct SettingsView: View {
                     Text(Strings.shareApp)
                         .foregroundStyle(.primary)
                     Spacer()
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                         .foregroundStyle(.secondary)
                         .font(.body)
                 }
@@ -1717,7 +1717,7 @@ struct DeveloperContactRows: View {
                     Text(Strings.contactByEmail)
                         .foregroundStyle(.primary)
                     Spacer()
-                    Image(systemName: "arrow.up.right.square")
+                    Image(systemName: "arrow.up.forward.square")
                         .foregroundStyle(.secondary)
                         .font(.body)
                         .voDecorative()
@@ -1732,7 +1732,7 @@ struct DeveloperContactRows: View {
                     Text(Strings.contactByInstagram)
                         .foregroundStyle(.primary)
                     Spacer()
-                    Image(systemName: "arrow.up.right.square")
+                    Image(systemName: "arrow.up.forward.square")
                         .foregroundStyle(.secondary)
                         .font(.body)
                         .voDecorative()

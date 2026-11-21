@@ -146,6 +146,12 @@
             "state" : "translated",
             "value" : "%1$@ · 特休 %2$@ 天"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ يوم إجازة"
+          }
         }
       }
     },
@@ -287,6 +293,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ 天"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ يوم"
           }
         }
       }
@@ -430,6 +442,12 @@
             "state" : "translated",
             "value" : "剩 %@ 天"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المتبقي %@ يوم"
+          }
         }
       }
     },
@@ -568,6 +586,12 @@
           }
         },
         "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld"
@@ -714,6 +738,12 @@
             "state" : "translated",
             "value" : "%lld%%"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
         }
       }
     },
@@ -855,6 +885,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "剩餘 %lld%%"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المتبقي %lld%%"
           }
         }
       }
@@ -1022,6 +1058,48 @@
             "state" : "translated",
             "value" : "%lld 天"
           }
+        },
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld يوم"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "يوم واحد"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "يومان"
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld أيام"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld يومًا"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld يوم"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1188,6 +1266,48 @@
             "state" : "translated",
             "value" : "%lld 天"
           }
+        },
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld يوم"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "يوم واحد"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "يومان"
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld أيام"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld يومًا"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld يوم"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1329,6 +1449,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "+%@ 天"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%@ يوم"
           }
         }
       }
@@ -1472,6 +1598,12 @@
             "state" : "translated",
             "value" : "🎉 就是今天！"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎉 اليوم هو الموعد!"
+          }
         }
       }
     },
@@ -1610,6 +1742,12 @@
           }
         },
         "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D-"
+          }
+        },
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "D-"
@@ -1756,6 +1894,12 @@
             "state" : "translated",
             "value" : "天"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اليوم"
+          }
         }
       }
     },
@@ -1900,6 +2044,12 @@
           }
         },
         "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goldweek"
+          }
+        },
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Goldweek"
@@ -2053,6 +2203,12 @@
             "state" : "translated",
             "value" : "下一個假日"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العطلة الرسمية القادمة"
+          }
         }
       }
     },
@@ -2202,6 +2358,12 @@
             "state" : "translated",
             "value" : "剩餘年假"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإجازة المتبقية"
+          }
         }
       }
     },
@@ -2343,6 +2505,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "距離重置"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حتى التجديد"
           }
         }
       }
@@ -2510,6 +2678,48 @@
             "state" : "translated",
             "value" : "距離重置還有 %lld 天"
           }
+        },
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld يوم حتى التجديد"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "يوم واحد حتى التجديد"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "يومان حتى التجديد"
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld أيام حتى التجديد"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld يومًا حتى التجديد"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld يوم حتى التجديد"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -2651,6 +2861,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "馬上開始 ✈️"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تبدأ قريبًا ✈️"
           }
         }
       }
@@ -2794,6 +3010,12 @@
             "state" : "translated",
             "value" : "期待中"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "موعد تنتظره بشوق"
+          }
         }
       }
     },
@@ -2935,6 +3157,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "預期"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المتوقع"
           }
         }
       }
@@ -3078,6 +3306,12 @@
             "state" : "translated",
             "value" : "剩餘特休"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإجازة المتبقية"
+          }
         }
       }
     },
@@ -3219,6 +3453,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "剩餘特休 %@ 天"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المتبقي من الإجازة %@ يوم"
           }
         }
       }
@@ -3362,6 +3602,12 @@
             "state" : "translated",
             "value" : "查看剩餘特休和即將到來的休假"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تابع إجازتك المتبقية وإجازاتك القادمة"
+          }
         }
       }
     },
@@ -3504,6 +3750,12 @@
             "state" : "translated",
             "value" : "就是明天！"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غدًا!"
+          }
         }
       }
     },
@@ -3645,6 +3897,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "偏慢"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بطيئة"
           }
         }
       }
@@ -3789,6 +4047,12 @@
             "state" : "translated",
             "value" : "找不到即將到來的假日。"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم أجد عطلة رسمية قادمة."
+          }
         }
       }
     },
@@ -3930,6 +4194,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "即將到來的休假"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإجازات القادمة"
           }
         }
       }
@@ -4074,6 +4344,12 @@
             "state" : "translated",
             "value" : "下一個假日"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العطلة الرسمية القادمة"
+          }
         }
       }
     },
@@ -4216,6 +4492,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "告訴你下一個國定假日以及還有幾天。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يخبرك بالعطلة الرسمية القادمة وكم يومًا بقي عليها."
           }
         }
       }
@@ -4360,6 +4642,12 @@
             "state" : "translated",
             "value" : "下一個假日是%1$@的%2$@，還有 %3$lld 天。"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العطلة الرسمية القادمة هي %2$@ في %1$@، والأيام المتبقية: %3$lld."
+          }
         }
       }
     },
@@ -4501,6 +4789,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "就在下週"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الأسبوع القادم"
           }
         }
       }
@@ -4644,6 +4938,12 @@
             "state" : "translated",
             "value" : "下次休假"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإجازة القادمة"
+          }
         }
       }
     },
@@ -4785,6 +5085,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "倒數距離下次休假還有幾天"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عدّ تنازلي للأيام المتبقية حتى إجازتك القادمة"
           }
         }
       }
@@ -4929,6 +5235,12 @@
             "state" : "translated",
             "value" : "請先在 App 裡設定年假。"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أدخل بيانات إجازتك في التطبيق أولًا."
+          }
         }
       }
     },
@@ -5070,6 +5382,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "額外"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإضافي"
           }
         }
       }
@@ -5213,6 +5531,12 @@
             "state" : "translated",
             "value" : "偏快"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سريعة"
+          }
         }
       }
     },
@@ -5354,6 +5678,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用進度"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وتيرة الاستهلاك"
           }
         }
       }
@@ -5497,6 +5827,12 @@
             "state" : "translated",
             "value" : "使用進度：%@"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وتيرة الاستهلاك: %@"
+          }
         }
       }
     },
@@ -5638,6 +5974,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "實際"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الفعلي"
           }
         }
       }
@@ -5781,6 +6123,12 @@
             "state" : "translated",
             "value" : "在 App 中新增休假計畫"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أضف خطة إجازة من التطبيق"
+          }
         }
       }
     },
@@ -5922,6 +6270,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "特休"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإجازة"
           }
         }
       }
@@ -6065,6 +6419,12 @@
             "state" : "translated",
             "value" : "特休 %@ 天"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ يوم إجازة"
+          }
         }
       }
     },
@@ -6206,6 +6566,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "特休剩 %@ 天"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المتبقي من الإجازة %@ يوم"
           }
         }
       }
@@ -6349,6 +6715,12 @@
             "state" : "translated",
             "value" : "查看到特休重置日前的使用進度"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تابع وتيرة استهلاك إجازتك حتى موعد تجديدها"
+          }
         }
       }
     },
@@ -6491,6 +6863,12 @@
             "state" : "translated",
             "value" : "特休使用進度"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وتيرة استهلاك الإجازة"
+          }
         }
       }
     },
@@ -6632,6 +7010,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "特休概況"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رصيد الإجازة"
           }
         }
       }
@@ -6776,6 +7160,12 @@
             "state" : "translated",
             "value" : "要打開的休假紀錄"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإجازة المراد فتحها"
+          }
         }
       }
     },
@@ -6918,6 +7308,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "今天是%@。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اليوم هو %@."
           }
         }
       }
@@ -7062,6 +7458,12 @@
             "state" : "translated",
             "value" : "告訴你今年還剩多少天年假。"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يخبرك بما بقي من إجازتك هذا العام."
+          }
         }
       }
     },
@@ -7205,6 +7607,12 @@
             "state" : "translated",
             "value" : "今年還剩 %@ 天年假。"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المتبقي من إجازتك هذا العام: %@ يوم."
+          }
         }
       }
     },
@@ -7346,6 +7754,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "天"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يوم"
           }
         }
       }
@@ -7489,6 +7903,12 @@
             "state" : "translated",
             "value" : "就在本月"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هذا الشهر"
+          }
         }
       }
     },
@@ -7630,6 +8050,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "就在本週！"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خلال هذا الأسبوع!"
           }
         }
       }
@@ -7773,6 +8199,12 @@
             "state" : "translated",
             "value" : "剩餘比例"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نسبة المتبقي"
+          }
         }
       }
     },
@@ -7914,6 +8346,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在鎖定畫面查看倒數和剩餘特休"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تابع العد التنازلي ورصيدك المتبقي من شاشة القفل"
           }
         }
       }
@@ -8057,6 +8495,12 @@
             "state" : "translated",
             "value" : "剛好"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مناسبة"
+          }
         }
       }
     },
@@ -8198,6 +8642,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正常 ✓"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مناسبة ✓"
           }
         }
       }
@@ -8342,6 +8792,12 @@
             "state" : "translated",
             "value" : "墾丁旅行"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رحلة إلى العلا"
+          }
         }
       }
     },
@@ -8483,6 +8939,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "略慢"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بطيئة قليلًا"
           }
         }
       }
@@ -8626,6 +9088,12 @@
             "state" : "translated",
             "value" : "略快"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سريعة قليلًا"
+          }
         }
       }
     },
@@ -8767,6 +9235,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "特休總數"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إجمالي الإجازة"
           }
         }
       }
@@ -8911,6 +9385,12 @@
             "state" : "translated",
             "value" : "休假"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إجازة"
+          }
         }
       }
     },
@@ -9053,6 +9533,12 @@
             "state" : "translated",
             "value" : "休假倒數"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العد التنازلي للإجازة"
+          }
         }
       }
     },
@@ -9194,6 +9680,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "來規劃下次休假吧"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ما رأيك أن تخطط لإجازتك القادمة؟"
           }
         }
       }
@@ -9338,6 +9830,12 @@
             "state" : "translated",
             "value" : "在 App 中打開休假紀錄進行編輯。"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يفتح الإجازة في التطبيق لتعديلها."
+          }
         }
       }
     },
@@ -9480,6 +9978,12 @@
             "state" : "translated",
             "value" : "尚無休假計畫"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا إجازة مخططة"
+          }
         }
       }
     },
@@ -9621,6 +10125,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "沒有休假"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا إجازة"
           }
         }
       }
@@ -9765,6 +10275,12 @@
             "state" : "translated",
             "value" : "打開休假"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح الإجازة"
+          }
         }
       }
     },
@@ -9907,6 +10423,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "休假行事曆"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تقويم الإجازات"
           }
         }
       }

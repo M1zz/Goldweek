@@ -36,6 +36,7 @@ extension Strings {
         case .indonesian: return "\(r) belum didukung. Kirim masukan untuk memintanya."
         case .thai: return "ยังไม่รองรับ \(r) ส่งความคิดเห็นมาขอให้เพิ่มได้เลย"
         case .vietnamese: return "Chưa hỗ trợ \(r). Hãy gửi góp ý để đề xuất."
+        case .arabic: return "العطل الرسمية في \(r) غير متوفرة بعد. أرسل لنا ملاحظة لطلب إضافتها."
         }
     }
 
@@ -65,6 +66,7 @@ extension Strings {
         case .indonesian: return "Minta negara ini"
         case .thai: return "ขอให้รองรับประเทศนี้"
         case .vietnamese: return "Đề xuất hỗ trợ nước này"
+        case .arabic: return "اطلب إضافة هذه الدولة"
         }
     }
 }

@@ -132,7 +132,7 @@ struct LeaveKindsView: View {
                         .font(.body)
                         .foregroundStyle(.secondary)
                 }
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.body)
                     .foregroundStyle(.tertiary)
                     .voDecorative()

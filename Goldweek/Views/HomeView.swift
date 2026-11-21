@@ -891,7 +891,7 @@ struct FirstPlanCard: View {
             HStack(spacing: 8) {
                 Label(Strings.leaveRequired(Int(plan.requiredLeaveDays)), systemImage: "briefcase.fill")
                     .foregroundStyle(.blue)
-                Text("→")
+                Text(Strings.flowArrow)
                     .foregroundStyle(.secondary)
                     .voDecorative()
                 Label(Strings.daysOff(plan.totalDaysOff), systemImage: "sun.max.fill")
@@ -1728,7 +1728,7 @@ struct LeaveHistoryButton: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .voDecorative()
@@ -1884,7 +1884,7 @@ struct PlannedLeavePromptCard: View {
     private func rangeText(_ record: LeaveRecord) -> String {
         Calendar.app.isDate(record.startDate, inSameDayAs: record.endDate)
             ? record.startDate.appMonthDay
-            : "\(record.startDate.appMonthDay) → \(record.endDate.appMonthDay)"
+            : "\(record.startDate.appMonthDay) \(Strings.flowArrow) \(record.endDate.appMonthDay)"
     }
 
     @ViewBuilder private var answers: some View {
@@ -2101,7 +2101,7 @@ struct PastLeaveQuickEntrySheet: View {
                     HStack {
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.blue)
-                        Text("\(yearStartDate.appMonthDay)  →  \(yesterday.appMonthDay)")
+                        Text("\(yearStartDate.appMonthDay)  \(Strings.flowArrow)  \(yesterday.appMonthDay)")
                             .font(.body)
                             .foregroundStyle(.secondary)
                     }

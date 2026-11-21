@@ -144,7 +144,7 @@ struct ShareScheduleView: View {
                                 Button(role: .destructive) {
                                     leavingSchedule = schedule
                                 } label: {
-                                    Label(Strings.shareLeaveButton, systemImage: "rectangle.portrait.and.arrow.right")
+                                    Label(Strings.shareLeaveButton, systemImage: "rectangle.portrait.and.arrow.forward")
                                 }
                             }
                     }

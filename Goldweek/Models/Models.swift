@@ -272,7 +272,7 @@ final class LeaveRecord {
         Self.bulkSummaryNotes.contains(note)
     }
 
-    /// `Strings.pastLeaveSummaryNote` 의 23개 언어 전부 — 빠진 언어가 있으면 그 기록을 근무일로 세어 줄어든다
+    /// `Strings.pastLeaveSummaryNote` 의 24개 언어 전부 — 빠진 언어가 있으면 그 기록을 근무일로 세어 줄어든다
     static let bulkSummaryNotes: Set<String> = [
         "이전 사용 연차 (일괄 입력)",
         "Prior leave (bulk entry)",
@@ -297,6 +297,7 @@ final class LeaveRecord {
         "先前特休（批次輸入）",
         "วันลาก่อนหน้า (กรอกรวม)",
         "Phép trước đó (nhập gộp)",
+        "إجازات سابقة (إدخال دفعة واحدة)",
     ]
 
     /// 실제 연차 차감 여부 — bonusLeaveId가 있으면 보너스 차감이므로 연차 차감 아님

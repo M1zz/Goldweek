@@ -148,7 +148,9 @@ class CalendarService {
         // 포르투갈어 (브라질)
         "férias", "folga", "atestado", "abono",
         // 중국어 (번체) — 대만의 特休 는 연차다
-        "請假", "特休", "補休", "事假", "婚假", "產假", "喪假"
+        "請假", "特休", "補休", "事假", "婚假", "產假", "喪假",
+        // 아랍어 — 함자를 빼고 적는 표기(اجازة)도 함께
+        "إجازة", "اجازة", "إجازه", "اجازه", "مرضية", "عطلة شخصية"
     ]
 
     /// 이벤트 제목에서 휴가 유형을 추론한다 (구체적인 유형 → 일반 유형 순서로 검사)
@@ -164,7 +166,7 @@ class CalendarService {
         }
         // 병가
         if t.contains("병가") || t.contains("病欠") || t.contains("病假") || t.contains("sick")
-            || t.contains("baja médica") || t.contains("malattia") || t.contains("atestado") {
+            || t.contains("baja médica") || t.contains("malattia") || t.contains("atestado") || t.contains("مرضية") {
             return .sick
         }
         // 대체휴무/보상휴가
@@ -573,6 +575,15 @@ enum CalendarError: LocalizedError {
             case .proFeatureRequired: return "Tính năng này cần bản Pro."
             case .eventNotFound: return "Không tìm thấy sự kiện."
             case .calendarNotFound: return "Không tìm thấy lịch."
+            }
+        case .arabic:
+            switch self {
+            case .permissionDenied: return "لم يُسمح بالوصول إلى التقويم."
+            case .unknownPermissionStatus: return "حالة الإذن غير معروفة."
+            case .noAvailableSource: return "لا يوجد مصدر تقويم متاح."
+            case .proFeatureRequired: return "هذه الميزة تتطلب برو."
+            case .eventNotFound: return "لم يُعثر على الحدث."
+            case .calendarNotFound: return "لم يُعثر على التقويم."
             }
         case .dutch:
             switch self {

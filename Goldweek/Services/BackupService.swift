@@ -952,6 +952,18 @@ enum BackupError: LocalizedError {
             case .backupRotationFailed: return "Xoay vòng tệp sao lưu thất bại."
             case .checksumMismatch: return "Tệp sao lưu bị hỏng. (Checksum không khớp)"
             }
+        case .arabic:
+            switch self {
+            case .iCloudNotAvailable: return "iCloud غير متاح. فعّل iCloud Drive من الإعدادات."
+            case .localPathNotAvailable: return "تعذّر الوصول إلى مساحة التخزين على الجهاز."
+            case .backupNotFound: return "لم يُعثر على ملف النسخة الاحتياطية."
+            case .invalidBackupData: return "تعذّرت قراءة بيانات النسخة الاحتياطية."
+            case .encryptionFailed: return "تعذّر تشفير النسخة الاحتياطية."
+            case .decryptionFailed: return "تعذّر فك تشفير النسخة الاحتياطية. قد تكون نسخة من جهاز آخر."
+            case .integrityVerificationFailed: return "تعذّر التحقق من سلامة ملف النسخة الاحتياطية."
+            case .backupRotationFailed: return "تعذّر تحديث ملفات النسخ الاحتياطية القديمة."
+            case .checksumMismatch: return "ملف النسخة الاحتياطية تالف."
+            }
         case .dutch:
             switch self {
             case .iCloudNotAvailable: return "iCloud is niet beschikbaar. Schakel iCloud Drive in via Instellingen."

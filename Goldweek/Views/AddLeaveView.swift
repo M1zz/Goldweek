@@ -163,6 +163,7 @@ struct LeaveStatusHeader: View {
             case .indonesian: return "\(Strings.basicLeave) \(formatD(remainingLeave)) hari, \(Strings.bonus) \(formatD(bonusLeave)) hari, \(Strings.totalAvailable) \(formatD(totalAvailable)) hari"
             case .thai: return "\(Strings.basicLeave) \(formatD(remainingLeave)) วัน, \(Strings.bonus) \(formatD(bonusLeave)) วัน, \(Strings.totalAvailable) \(formatD(totalAvailable)) วัน"
             case .vietnamese: return "\(Strings.basicLeave) \(formatD(remainingLeave)) ngày, \(Strings.bonus) \(formatD(bonusLeave)) ngày, \(Strings.totalAvailable) \(formatD(totalAvailable)) ngày"
+            case .arabic: return "\(Strings.basicLeave) \(arDays(formatD(remainingLeave)))، \(Strings.bonus) \(arDays(formatD(bonusLeave)))، \(Strings.totalAvailable) \(arDays(formatD(totalAvailable)))"
             case .dutch: return "\(Strings.basicLeave) \(formatD(remainingLeave)) dagen, \(Strings.bonus) \(formatD(bonusLeave)) dagen, \(Strings.totalAvailable) \(formatD(totalAvailable)) dagen"
             case .japanese: return "\(Strings.basicLeave) \(formatD(remainingLeave))日、\(Strings.bonus) \(formatD(bonusLeave))日、\(Strings.totalAvailable) \(formatD(totalAvailable))日"
             case .chinese: return "\(Strings.basicLeave) \(formatD(remainingLeave))天，\(Strings.bonus) \(formatD(bonusLeave))天，\(Strings.totalAvailable) \(formatD(totalAvailable))天"
@@ -189,6 +190,7 @@ struct LeaveStatusHeader: View {
             case .indonesian: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) hari"
             case .thai: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) วัน"
             case .vietnamese: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) ngày"
+            case .arabic: return "\(Strings.totalAvailable) \(arDays(formatD(totalAvailable)))"
             case .dutch: return "\(Strings.totalAvailable) \(formatD(totalAvailable)) dagen"
             case .japanese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))日"
             case .chinese: return "\(Strings.totalAvailable) \(formatD(totalAvailable))天"
@@ -1007,7 +1009,7 @@ struct BonusLeaveView: View {
                                 .background(Color.yellow.opacity(0.85))
                                 .clipShape(Capsule())
                         } else {
-                            Image(systemName: "chevron.right")
+                            Image(systemName: "chevron.forward")
                                 .foregroundStyle(.secondary)
                                 .font(.body)
                         }
@@ -2168,7 +2170,7 @@ private struct QuickAddMonthGrid: View {
         VStack(spacing: 8) {
             HStack {
                 Button { shiftMonth(-1) } label: {
-                    Image(systemName: "chevron.left").font(.body.bold()).frame(width: 44, height: 44)
+                    Image(systemName: "chevron.backward").font(.body.bold()).frame(width: 44, height: 44)
                 }
                 .accessibilityLabel(Text(Strings.previousMonth))
                 Spacer()
@@ -2176,7 +2178,7 @@ private struct QuickAddMonthGrid: View {
                     .font(.headline)
                 Spacer()
                 Button { shiftMonth(1) } label: {
-                    Image(systemName: "chevron.right").font(.body.bold()).frame(width: 44, height: 44)
+                    Image(systemName: "chevron.forward").font(.body.bold()).frame(width: 44, height: 44)
                 }
                 .accessibilityLabel(Text(Strings.nextMonth))
             }
@@ -2185,6 +2187,9 @@ private struct QuickAddMonthGrid: View {
                 ForEach(weekdays, id: \.self) { w in
                     Text(Strings.weekdays[w - 1])
                         .font(.body.bold())
+                        // 아랍어 요일(أربعاء · خميس)은 한 칸에 두 줄로 꺾였다 — 한 줄에 맞춰 줄인다
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
                         .foregroundStyle(w == 1 ? AppTheme.Colors.holiday : w == 7 ? AppTheme.Colors.brand : .secondary)
                         .frame(maxWidth: .infinity)
                 }

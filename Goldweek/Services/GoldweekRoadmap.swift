@@ -9,7 +9,7 @@
 //     - id 는 한 번 정하면 바꾸지 않는다(문구는 바꿔도 된다).
 //     - 문구는 사용자 말로 쓴다(내부 이름 · 기술 용어 금지).
 //     - 번역은 이 앱의 방식(`Strings.swift` 처럼 앱 언어 설정을 따르는 코드 안 번역)을 따른다 —
-//       `RoadmapL10n` 은 23개 언어를 모두 받아야 만들어지므로 한 언어라도 빠지면 빌드가 안 된다.
+//       `RoadmapL10n` 은 24개 언어를 모두 받아야 만들어지므로 한 언어라도 빠지면 빌드가 안 된다.
 //     - 사용자에게 보일 만한 것만 적는다. 리팩터링 · 시험 · 빌드 설정은 `.sprintcommander/tasks.json` 의 몫이다.
 //
 
@@ -44,7 +44,8 @@ extension GoldweekSpec {
                     ru: "Ваши праздники как выходные",
                     id: "Hari raya Anda sebagai hari libur",
                     th: "วันสำคัญของคุณนับเป็นวันหยุด",
-                    vi: "Ngày lễ của riêng bạn là ngày nghỉ").text,
+                    vi: "Ngày lễ của riêng bạn là ngày nghỉ",
+                    ar: "أعيادك الخاصة أيام راحة أيضًا").text,
               detail: RoadmapL10n(
                     ko: "이슬람 · 유대교 · 힌두교 · 음력 명절을 켜면 사는 나라와 상관없이 그날을 쉬는 날로 세고, 휴가 추천도 그날에 맞춰요.",
                     en: "Turn on Islamic, Jewish, Hindu or Lunar festivals and they count as days off wherever you live, with suggestions planned around them.",
@@ -68,7 +69,8 @@ extension GoldweekSpec {
                     ru: "Включите исламские, еврейские, индуистские или лунные праздники — они будут считаться выходными, где бы вы ни жили, а подсказки учтут их.",
                     id: "Aktifkan hari raya Islam, Yahudi, Hindu, atau Imlek, dan hari itu dihitung sebagai libur di mana pun Anda tinggal, dengan saran di sekitarnya.",
                     th: "เปิดเทศกาลอิสลาม ยิว ฮินดู หรือจันทรคติ แล้ววันนั้นจะนับเป็นวันหยุดไม่ว่าคุณอยู่ประเทศใด และคำแนะนำจะวางแผนรอบวันนั้น",
-                    vi: "Bật các lễ Hồi giáo, Do Thái, Hindu hoặc Âm lịch để những ngày đó được tính là ngày nghỉ dù bạn sống ở đâu, kèm gợi ý xoay quanh.").text),
+                    vi: "Bật các lễ Hồi giáo, Do Thái, Hindu hoặc Âm lịch để những ngày đó được tính là ngày nghỉ dù bạn sống ở đâu, kèm gợi ý xoay quanh.",
+                    ar: "فعّل الأعياد الإسلامية أو اليهودية أو الهندوسية أو القمرية لتُحسب أيام راحة أينما كنت تقيم، وتُبنى اقتراحات الإجازة حولها.").text),
         .init(id: "leave.accrual", status: .building,
               title: RoadmapL10n(
                     ko: "조금씩 쌓이는 연차",
@@ -93,7 +95,8 @@ extension GoldweekSpec {
                     ru: "Отпуск, который накапливается",
                     id: "Cuti yang bertambah tiap gajian",
                     th: "วันลาที่สะสมเพิ่มทีละน้อย",
-                    vi: "Phép tích lũy dần mỗi kỳ lương").text,
+                    vi: "Phép tích lũy dần mỗi kỳ lương",
+                    ar: "إجازة تتراكم مع كل راتب").text,
               detail: RoadmapL10n(
                     ko: "급여일마다 쌓이는 양을 적으면 지금 쓸 수 있는 연차와 그날까지 쌓일 연차를 보여 줘요.",
                     en: "Enter what you earn each payday to see what you can use now and what you’ll have by any date.",
@@ -117,7 +120,8 @@ extension GoldweekSpec {
                     ru: "Укажите, сколько отпуска начисляется с каждой зарплатой, и увидите, сколько есть сейчас и сколько будет к любой дате.",
                     id: "Masukkan cuti yang bertambah tiap gajian untuk melihat sisa cuti sekarang dan pada tanggal mana pun.",
                     th: "กรอกวันลาที่ได้เพิ่มในแต่ละรอบเงินเดือน แล้วดูว่าตอนนี้ใช้ได้เท่าไร และถึงวันไหนจะมีเท่าไร",
-                    vi: "Nhập số phép được cộng mỗi kỳ lương để xem bạn đang có bao nhiêu và đến ngày bất kỳ sẽ có bao nhiêu.").text),
+                    vi: "Nhập số phép được cộng mỗi kỳ lương để xem bạn đang có bao nhiêu và đến ngày bất kỳ sẽ có bao nhiêu.",
+                    ar: "أدخل ما يُضاف إلى رصيدك مع كل راتب لترى ما يمكنك استخدامه الآن وما سيتوفر لك حتى أي تاريخ.").text),
         .init(id: "a11y.voiceover", status: .building,
               title: RoadmapL10n(
                     ko: "VoiceOver로 더 편하게",
@@ -142,7 +146,8 @@ extension GoldweekSpec {
                     ru: "Удобнее с VoiceOver",
                     id: "Dukungan VoiceOver lebih baik",
                     th: "ใช้กับ VoiceOver ได้ดีขึ้น",
-                    vi: "Hỗ trợ VoiceOver tốt hơn").text,
+                    vi: "Hỗ trợ VoiceOver tốt hơn",
+                    ar: "تجربة أفضل مع VoiceOver").text,
               detail: RoadmapL10n(
                     ko: "VoiceOver가 단추와 연차 정보를 빠짐없이, 알맞은 순서로 읽어 줘요.",
                     en: "VoiceOver reads every button and leave detail in a sensible order.",
@@ -166,7 +171,8 @@ extension GoldweekSpec {
                     ru: "VoiceOver зачитает все кнопки и данные об отпусках в понятном порядке.",
                     id: "VoiceOver membacakan semua tombol dan info cuti dengan urutan yang tepat.",
                     th: "VoiceOver จะอ่านปุ่มและข้อมูลวันลาให้ครบ ตามลำดับที่เข้าใจง่าย",
-                    vi: "VoiceOver đọc đầy đủ các nút và thông tin nghỉ phép theo thứ tự hợp lý.").text),
+                    vi: "VoiceOver đọc đầy đủ các nút và thông tin nghỉ phép theo thứ tự hợp lý.",
+                    ar: "يقرأ VoiceOver كل الأزرار وتفاصيل الإجازة كاملة وبترتيب منطقي.").text),
         .init(id: "a11y.largetext", status: .building,
               title: RoadmapL10n(
                     ko: "큰 글씨에 맞춘 화면",
@@ -191,7 +197,8 @@ extension GoldweekSpec {
                     ru: "Удобно с крупным шрифтом",
                     id: "Pas untuk teks besar",
                     th: "รองรับตัวอักษรขนาดใหญ่",
-                    vi: "Phù hợp với chữ lớn").text,
+                    vi: "Phù hợp với chữ lớn",
+                    ar: "شاشات تناسب النص الكبير").text,
               detail: RoadmapL10n(
                     ko: "글자 크기를 키워도 달력과 목록이 잘리지 않고 보기 좋게 다시 배치돼요.",
                     en: "With bigger text, calendars and lists rearrange neatly instead of getting cut off.",
@@ -215,7 +222,8 @@ extension GoldweekSpec {
                     ru: "С крупным шрифтом календарь и списки перестраиваются, а не обрезаются.",
                     id: "Saat teks diperbesar, kalender dan daftar tertata ulang tanpa terpotong.",
                     th: "เมื่อขยายตัวอักษร ปฏิทินและรายการจะจัดเรียงใหม่โดยไม่ถูกตัด",
-                    vi: "Khi phóng to chữ, lịch và danh sách sẽ tự sắp xếp lại, không bị cắt.").text),
+                    vi: "Khi phóng to chữ, lịch và danh sách sẽ tự sắp xếp lại, không bị cắt.",
+                    ar: "عند تكبير الخط يُعاد ترتيب التقويم والقوائم بشكل مريح دون أن يُقتطع منها شيء.").text),
         .init(id: "a11y.contrast", status: .shipped("2.4.1"),
               title: RoadmapL10n(
                     ko: "보기 편한 색과 대비",
@@ -240,7 +248,8 @@ extension GoldweekSpec {
                     ru: "Более различимые цвета",
                     id: "Warna lebih mudah dilihat",
                     th: "สีและคอนทราสต์ที่ดูง่าย",
-                    vi: "Màu sắc dễ nhìn hơn").text,
+                    vi: "Màu sắc dễ nhìn hơn",
+                    ar: "ألوان وتباين أوضح").text,
               detail: RoadmapL10n(
                     ko: "대비를 높이거나 색을 구별하기 어려워도 휴일과 연차를 알아볼 수 있어요.",
                     en: "Holidays and days off stay clear with Increase Contrast, or if colors are hard to tell apart.",
@@ -264,7 +273,8 @@ extension GoldweekSpec {
                     ru: "Праздники и отпуска хорошо видны при повышенном контрасте или если трудно различать цвета.",
                     id: "Hari libur dan cuti tetap jelas dengan kontras tinggi atau jika sulit membedakan warna.",
                     th: "แม้เพิ่มคอนทราสต์หรือแยกสีได้ยาก ก็ยังเห็นวันหยุดและวันลาได้ชัด",
-                    vi: "Ngày lễ và ngày nghỉ vẫn rõ ràng khi tăng độ tương phản hoặc khi khó phân biệt màu.").text),
+                    vi: "Ngày lễ và ngày nghỉ vẫn rõ ràng khi tăng độ tương phản hoặc khi khó phân biệt màu.",
+                    ar: "تبقى العطل والإجازات واضحة مع زيادة التباين أو إن صعب عليك تمييز الألوان.").text),
         .init(id: "a11y.motion", status: .shipped("2.4.1"),
               title: RoadmapL10n(
                     ko: "움직임 줄이기",
@@ -289,7 +299,8 @@ extension GoldweekSpec {
                     ru: "Уменьшение движения",
                     id: "Kurangi gerakan",
                     th: "ลดการเคลื่อนไหว",
-                    vi: "Giảm chuyển động").text,
+                    vi: "Giảm chuyển động",
+                    ar: "تقليل الحركة").text,
               detail: RoadmapL10n(
                     ko: "움직임 줄이기를 켜면 화면 효과가 차분해져요.",
                     en: "With Reduce Motion on, animations get calmer.",
@@ -313,7 +324,8 @@ extension GoldweekSpec {
                     ru: "С включённым «Уменьшением движения» анимации станут спокойнее.",
                     id: "Saat Kurangi Gerakan aktif, animasi jadi lebih tenang.",
                     th: "เมื่อเปิด “ลดการเคลื่อนไหว” เอฟเฟกต์บนหน้าจอจะนุ่มนวลขึ้น",
-                    vi: "Khi bật Giảm chuyển động, hiệu ứng trên màn hình sẽ nhẹ nhàng hơn.").text),
+                    vi: "Khi bật Giảm chuyển động, hiệu ứng trên màn hình sẽ nhẹ nhàng hơn.",
+                    ar: "عند تفعيل تقليل الحركة تصبح مؤثرات الشاشة أهدأ.").text),
         .init(id: "whatsnew", status: .shipped("2.4.1"),
               title: RoadmapL10n(
                     ko: "업데이트 소식",
@@ -338,7 +350,8 @@ extension GoldweekSpec {
                     ru: "Что нового",
                     id: "Yang baru",
                     th: "มีอะไรใหม่",
-                    vi: "Có gì mới").text,
+                    vi: "Có gì mới",
+                    ar: "أخبار التحديثات").text,
               detail: RoadmapL10n(
                     ko: "업데이트 뒤 처음 열 때 무엇이 새로 생겼는지 알려 줘요.",
                     en: "After an update, see what's new the first time you open the app.",
@@ -362,7 +375,8 @@ extension GoldweekSpec {
                     ru: "После обновления при первом запуске покажем, что изменилось.",
                     id: "Setelah pembaruan, lihat apa saja yang baru saat pertama membuka aplikasi.",
                     th: "หลังอัปเดต เมื่อเปิดแอปครั้งแรกจะบอกว่ามีอะไรใหม่บ้าง",
-                    vi: "Sau khi cập nhật, lần mở đầu tiên sẽ cho bạn biết có gì mới.").text),
+                    vi: "Sau khi cập nhật, lần mở đầu tiên sẽ cho bạn biết có gì mới.",
+                    ar: "بعد كل تحديث نعرّفك بالجديد عند أول فتح للتطبيق.").text),
         .init(id: "gift", status: .planned,
               title: RoadmapL10n(
                     ko: "Pro 선물하기",
@@ -387,7 +401,8 @@ extension GoldweekSpec {
                     ru: "Подарить Pro",
                     id: "Hadiahkan Pro",
                     th: "มอบ Pro เป็นของขวัญ",
-                    vi: "Tặng Pro").text,
+                    vi: "Tặng Pro",
+                    ar: "إهداء برو").text,
               detail: RoadmapL10n(
                     ko: "Goldweek Pro를 친구나 동료에게 선물할 수 있어요.",
                     en: "Give Goldweek Pro to a friend or coworker.",
@@ -411,7 +426,8 @@ extension GoldweekSpec {
                     ru: "Подарите Goldweek Pro другу или коллеге.",
                     id: "Berikan Goldweek Pro sebagai hadiah untuk teman atau rekan kerja.",
                     th: "ส่ง Goldweek Pro เป็นของขวัญให้เพื่อนหรือเพื่อนร่วมงาน",
-                    vi: "Tặng Goldweek Pro cho bạn bè hoặc đồng nghiệp.").text),
+                    vi: "Tặng Goldweek Pro cho bạn bè hoặc đồng nghiệp.",
+                    ar: "أهدِ Goldweek برو إلى صديق أو زميل.").text),
         .init(id: "shortcuts", status: .shipped("2.4.2"),
               title: RoadmapL10n(
                     ko: "Siri와 단축어",
@@ -436,7 +452,8 @@ extension GoldweekSpec {
                     ru: "Siri и Быстрые команды",
                     id: "Siri dan Pintasan",
                     th: "Siri และคำสั่งลัด",
-                    vi: "Siri và Phím tắt").text,
+                    vi: "Siri và Phím tắt",
+                    ar: "Siri والاختصارات").text,
               detail: RoadmapL10n(
                     ko: "Siri에게 묻거나 단축어로 남은 연차를 바로 확인해요.",
                     en: "Ask Siri or run a shortcut to check your remaining leave.",
@@ -460,7 +477,8 @@ extension GoldweekSpec {
                     ru: "Спросите Siri или запустите быструю команду, чтобы узнать остаток отпуска.",
                     id: "Tanya Siri atau pakai pintasan untuk melihat sisa cuti Anda.",
                     th: "ถาม Siri หรือใช้คำสั่งลัดเพื่อดูวันลาที่เหลือได้ทันที",
-                    vi: "Hỏi Siri hoặc dùng phím tắt để xem ngay số ngày phép còn lại.").text),
+                    vi: "Hỏi Siri hoặc dùng phím tắt để xem ngay số ngày phép còn lại.",
+                    ar: "اسأل Siri أو شغّل اختصارًا لتعرف رصيدك المتبقي فورًا.").text),
         .init(id: "lock.faceid", status: .planned,
               title: RoadmapL10n(
                     ko: "Face ID 잠금",
@@ -485,7 +503,8 @@ extension GoldweekSpec {
                     ru: "Блокировка Face ID",
                     id: "Kunci Face ID",
                     th: "ล็อกด้วย Face ID",
-                    vi: "Khóa bằng Face ID").text,
+                    vi: "Khóa bằng Face ID",
+                    ar: "قفل Face ID").text,
               detail: RoadmapL10n(
                     ko: "Face ID나 Touch ID로 앱을 잠가 내 연차 기록을 지켜요.",
                     en: "Lock the app with Face ID or Touch ID to keep your leave records private.",
@@ -509,7 +528,8 @@ extension GoldweekSpec {
                     ru: "Заблокируйте приложение с помощью Face ID или Touch ID, чтобы защитить данные об отпусках.",
                     id: "Kunci aplikasi dengan Face ID atau Touch ID agar catatan cuti Anda tetap aman.",
                     th: "ล็อกแอปด้วย Face ID หรือ Touch ID เพื่อปกป้องข้อมูลวันลาของคุณ",
-                    vi: "Khóa ứng dụng bằng Face ID hoặc Touch ID để bảo vệ dữ liệu nghỉ phép.").text),
+                    vi: "Khóa ứng dụng bằng Face ID hoặc Touch ID để bảo vệ dữ liệu nghỉ phép.",
+                    ar: "اقفل التطبيق ببصمة الوجه أو بصمة الإصبع لتحمي سجل إجازاتك.").text),
         .init(id: "fold", status: .building,
               title: RoadmapL10n(
                     ko: "펼치는 아이폰 화면",
@@ -534,7 +554,8 @@ extension GoldweekSpec {
                     ru: "Для складного iPhone",
                     id: "Untuk iPhone lipat",
                     th: "รองรับ iPhone จอพับ",
-                    vi: "Cho iPhone màn hình gập").text,
+                    vi: "Cho iPhone màn hình gập",
+                    ar: "شاشة الآيفون القابل للطي").text,
               detail: RoadmapL10n(
                     ko: "펼치는 아이폰에서 넓은 화면을 두 쪽으로 나눠 써요.",
                     en: "On a foldable iPhone, use the big screen as two side-by-side panes.",
@@ -558,7 +579,8 @@ extension GoldweekSpec {
                     ru: "На складном iPhone большой экран делится на две колонки.",
                     id: "Di iPhone lipat, gunakan layar besar dalam dua kolom.",
                     th: "บน iPhone จอพับ ใช้หน้าจอใหญ่แบ่งเป็นสองฝั่งได้",
-                    vi: "Trên iPhone gập, dùng màn hình lớn chia thành hai cột.").text),
+                    vi: "Trên iPhone gập, dùng màn hình lớn chia thành hai cột.",
+                    ar: "على الآيفون القابل للطي تنقسم الشاشة الواسعة إلى قسمين متجاورين.").text),
         .init(id: "autosave", status: .planned,
               title: RoadmapL10n(
                     ko: "쓰던 내용 이어서",
@@ -583,7 +605,8 @@ extension GoldweekSpec {
                     ru: "Продолжить с того же места",
                     id: "Lanjutkan dari terakhir kali",
                     th: "ทำต่อจากที่ค้างไว้",
-                    vi: "Tiếp tục từ chỗ đang dở").text,
+                    vi: "Tiếp tục từ chỗ đang dở",
+                    ar: "أكمل من حيث توقفت").text,
               detail: RoadmapL10n(
                     ko: "입력하다 앱이 꺼져도 쓰던 내용이 그대로 남아 있어요.",
                     en: "If the app closes while you're typing, what you entered is still there.",
@@ -607,7 +630,8 @@ extension GoldweekSpec {
                     ru: "Если приложение закроется во время ввода, введённое сохранится.",
                     id: "Jika aplikasi tertutup saat mengetik, isian Anda tetap tersimpan.",
                     th: "หากแอปปิดไประหว่างพิมพ์ สิ่งที่กรอกไว้จะยังอยู่",
-                    vi: "Nếu ứng dụng tắt khi đang nhập, nội dung bạn đã nhập vẫn được giữ lại.").text),
+                    vi: "Nếu ứng dụng tắt khi đang nhập, nội dung bạn đã nhập vẫn được giữ lại.",
+                    ar: "إن أُغلق التطبيق وأنت تكتب، يبقى ما أدخلته كما هو.").text),
         .init(id: "siri-ai", status: .planned,
               title: RoadmapL10n(
                     ko: "더 똑똑해진 Siri와 함께",
@@ -632,7 +656,8 @@ extension GoldweekSpec {
                     ru: "С более умной Siri",
                     id: "Bersama Siri yang lebih pintar",
                     th: "ใช้กับ Siri ที่ฉลาดขึ้น",
-                    vi: "Cùng Siri thông minh hơn").text,
+                    vi: "Cùng Siri thông minh hơn",
+                    ar: "مع Siri الأذكى").text,
               detail: RoadmapL10n(
                     ko: "앱 이름을 말하지 않아도 Siri가 남은 연차를 알려 주고 휴가를 찾아 줘요.",
                     en: "Siri will tell you your remaining leave and find your days off, even without the app’s name.",
@@ -656,15 +681,16 @@ extension GoldweekSpec {
                     ru: "Siri подскажет остаток отпуска и найдёт ваши выходные, даже если не называть приложение.",
                     id: "Siri akan memberi tahu sisa cuti dan menemukan hari libur Anda, tanpa perlu menyebut nama aplikasi.",
                     th: "Siri จะบอกวันลาที่เหลือและหาวันหยุดของคุณได้ แม้ไม่ต้องพูดชื่อแอป",
-                    vi: "Siri sẽ cho biết số ngày phép còn lại và tìm ngày nghỉ của bạn, kể cả khi không nói tên ứng dụng.").text),
+                    vi: "Siri sẽ cho biết số ngày phép còn lại và tìm ngày nghỉ của bạn, kể cả khi không nói tên ứng dụng.",
+                    ar: "تخبرك Siri برصيدك المتبقي وتعثر على إجازاتك حتى دون ذكر اسم التطبيق.").text),
     ]}
 }
 
 // MARK: - 문구
 
-/// 로드맵 문구 한 줄의 23개 언어. 앱 언어 설정(`LanguageManager`)을 따른다.
+/// 로드맵 문구 한 줄의 24개 언어. 앱 언어 설정(`LanguageManager`)을 따른다.
 struct RoadmapL10n {
-    let ko, en, ja, zhHans, de, fr, es, it, ptBR, zhHant, nl, sv, nb, da, fi, pl, cs, el, tr, ru, id, th, vi: String
+    let ko, en, ja, zhHans, de, fr, es, it, ptBR, zhHant, nl, sv, nb, da, fi, pl, cs, el, tr, ru, id, th, vi, ar: String
 
     var text: String {
         switch LanguageManager.shared.currentLanguage {
@@ -691,6 +717,7 @@ struct RoadmapL10n {
         case .indonesian: return id
         case .thai: return th
         case .vietnamese: return vi
+        case .arabic: return ar
         }
     }
 
@@ -719,7 +746,8 @@ struct RoadmapL10n {
         ru: "Скоро в приложении",
         id: "Fitur yang Akan Datang",
         th: "ฟีเจอร์ที่กำลังจะมา",
-        vi: "Tính năng sắp có").text
+        vi: "Tính năng sắp có",
+        ar: "الميزات القادمة").text
     }
 }
 

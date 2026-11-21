@@ -41,7 +41,7 @@ struct PeriodNavigator: View {
     var body: some View {
         HStack {
             Button { move(-1) } label: {
-                Image(systemName: "chevron.left").font(.title2).foregroundStyle(.blue)
+                Image(systemName: "chevron.backward").font(.title2).foregroundStyle(.blue)
             }
             .accessibilityLabel(Text(Strings.previousMonth))
             Spacer()
@@ -52,7 +52,7 @@ struct PeriodNavigator: View {
                 .voHeader()
             Spacer()
             Button { move(1) } label: {
-                Image(systemName: "chevron.right").font(.title2).foregroundStyle(.blue)
+                Image(systemName: "chevron.forward").font(.title2).foregroundStyle(.blue)
             }
             .accessibilityLabel(Text(Strings.nextMonth))
         }

@@ -36,6 +36,7 @@ extension Strings {
         case .indonesian: return "Per jam"
         case .thai: return "ลาเป็นชั่วโมง"
         case .vietnamese: return "Theo giờ"
+        case .arabic: return "بالساعات"
         }
     }
 
@@ -65,6 +66,7 @@ extension Strings {
         case .indonesian: return "jam · mnt"
         case .thai: return "ชม. · นาที"
         case .vietnamese: return "giờ · phút"
+        case .arabic: return "ساعة · دقيقة"
         }
     }
 
@@ -94,6 +96,7 @@ extension Strings {
         case .indonesian: return "Jam"
         case .thai: return "ชั่วโมง"
         case .vietnamese: return "Giờ"
+        case .arabic: return "الساعات"
         }
     }
 
@@ -123,6 +126,7 @@ extension Strings {
         case .indonesian: return "Menit"
         case .thai: return "นาที"
         case .vietnamese: return "Phút"
+        case .arabic: return "الدقائق"
         }
     }
 
@@ -152,6 +156,7 @@ extension Strings {
         case .indonesian: return "Diubah ke hari berdasarkan jam kerjamu (\(w)) dan dipotong dari cuti. Lama jam kerja bisa diubah di Pengaturan."
         case .thai: return "แปลงเป็นวันตามชั่วโมงทำงานต่อวันของคุณ (\(w)) แล้วหักจากวันลา เปลี่ยนชั่วโมงทำงานต่อวันได้ในการตั้งค่า"
         case .vietnamese: return "Được quy đổi ra ngày theo số giờ làm mỗi ngày của bạn (\(w)) và trừ vào phép. Bạn có thể đổi số giờ làm trong Cài đặt."
+        case .arabic: return "تُحوَّل الساعات إلى أيام بحسب طول يوم عملك (\(w)) ثم تُخصم من إجازتك. يمكنك تغيير طول يوم العمل من الإعدادات."
         }
     }
 
@@ -181,6 +186,7 @@ extension Strings {
         case .indonesian: return "Lama jam kerja"
         case .thai: return "ชั่วโมงทำงานต่อวัน"
         case .vietnamese: return "Số giờ làm mỗi ngày"
+        case .arabic: return "طول يوم العمل"
         }
     }
 
@@ -210,6 +216,7 @@ extension Strings {
         case .indonesian: return "Jenis cuti dan warna"
         case .thai: return "ประเภทการลาและสี"
         case .vietnamese: return "Loại nghỉ và màu sắc"
+        case .arabic: return "أنواع الإجازات وألوانها"
         }
     }
 
@@ -239,6 +246,7 @@ extension Strings {
         case .indonesian: return "Setiap jenis tampil di kalender dengan warnanya sendiri. Jika perusahaanmu punya nama cuti sendiri, buat sebagai jenis baru."
         case .thai: return "แต่ละประเภทจะแสดงในปฏิทินด้วยสีของตัวเอง ถ้าบริษัทของคุณมีชื่อประเภทการลาเฉพาะ สร้างเป็นประเภทใหม่ได้เลย"
         case .vietnamese: return "Mỗi loại hiển thị trên lịch bằng màu riêng. Nếu công ty bạn dùng tên loại nghỉ riêng, hãy tạo thành loại mới."
+        case .arabic: return "لكل نوع لونه على التقويم. إن كانت لشركتك تسميات خاصة للإجازات فأنشئها كأنواع جديدة."
         }
     }
 
@@ -268,6 +276,7 @@ extension Strings {
         case .indonesian: return "Jenis baru"
         case .thai: return "ประเภทใหม่"
         case .vietnamese: return "Loại mới"
+        case .arabic: return "نوع جديد"
         }
     }
 
@@ -297,6 +306,7 @@ extension Strings {
         case .indonesian: return "Nama"
         case .thai: return "ชื่อ"
         case .vietnamese: return "Tên"
+        case .arabic: return "الاسم"
         }
     }
 
@@ -326,6 +336,7 @@ extension Strings {
         case .indonesian: return "Warna"
         case .thai: return "สี"
         case .vietnamese: return "Màu"
+        case .arabic: return "اللون"
         }
     }
 
@@ -355,6 +366,7 @@ extension Strings {
         case .indonesian: return "Potong dari cuti tahunan"
         case .thai: return "หักจากวันลาพักร้อน"
         case .vietnamese: return "Trừ vào phép năm"
+        case .arabic: return "تُخصم من الإجازة السنوية"
         }
     }
 
@@ -384,6 +396,7 @@ extension Strings {
         case .indonesian: return "Atur ulang warna"
         case .thai: return "รีเซ็ตสี"
         case .vietnamese: return "Đặt lại màu"
+        case .arabic: return "اللون الافتراضي"
         }
     }
 
@@ -413,6 +426,7 @@ extension Strings {
         case .indonesian: return "Rentang kalender"
         case .thai: return "ช่วงปฏิทิน"
         case .vietnamese: return "Khoảng hiển thị lịch"
+        case .arabic: return "نطاق عرض التقويم"
         }
     }
 
@@ -442,6 +456,7 @@ extension Strings {
         case .indonesian: return "Ketuk bulan untuk melihat detailnya"
         case .thai: return "แตะเดือนเพื่อดูรายละเอียด"
         case .vietnamese: return "Chạm vào tháng để xem chi tiết"
+        case .arabic: return "اضغط على أي شهر لعرضه بالتفصيل"
         }
     }
 
@@ -471,6 +486,7 @@ extension Strings {
         case .indonesian: return "Cuti dengan jenis ini tetap ada dan tampil sebagai jenis bawaan."
         case .thai: return "วันลาที่บันทึกด้วยประเภทนี้จะยังอยู่ และแสดงเป็นประเภทพื้นฐาน"
         case .vietnamese: return "Các ngày nghỉ đã ghi với loại này vẫn được giữ và hiển thị theo loại có sẵn."
+        case .arabic: return "الإجازات المسجّلة بهذا النوع لا تُحذف، بل تظهر ضمن النوع الأساسي."
         }
     }
 
@@ -527,6 +543,7 @@ extension Strings {
         case .indonesian: return "Total per jenis"
         case .thai: return "ยอดรวมตามประเภท"
         case .vietnamese: return "Tổng theo loại nghỉ"
+        case .arabic: return "الإجمالي حسب النوع"
         }
     }
 
@@ -556,6 +573,7 @@ extension Strings {
         case .indonesian: return "Cuti terencana yang sudah lewat dihitung terpakai. Hari penuh dan setengah hari dihitung ke jam menurut jam kerja hari itu."
         case .thai: return "วันลาที่วางแผนไว้และผ่านไปแล้วนับเป็นใช้แล้ว ลาเต็มวันและครึ่งวันจะแปลงเป็นชั่วโมงตามชั่วโมงทำงานของวันนั้น"
         case .vietnamese: return "Ngày nghỉ đã lên kế hoạch mà đã qua được tính là đã dùng. Nghỉ cả ngày và nửa ngày được quy ra giờ theo số giờ làm của thứ đó."
+        case .arabic: return "الإجازات المخططة التي انقضى موعدها تُحسب مستخدمة. اليوم الكامل ونصف اليوم يُحوَّلان إلى ساعات بحسب ساعات عمل ذلك اليوم."
         }
     }
 
@@ -585,6 +603,7 @@ extension Strings {
         case .indonesian: return "Jatah tahunan"
         case .thai: return "โควตาต่อปี"
         case .vietnamese: return "Hạn mức mỗi năm"
+        case .arabic: return "الحد السنوي"
         }
     }
 
@@ -614,6 +633,7 @@ extension Strings {
         case .indonesian: return "Atur jatah"
         case .thai: return "กำหนดโควตา"
         case .vietnamese: return "Đặt hạn mức"
+        case .arabic: return "تحديد حد سنوي"
         }
     }
 
@@ -643,6 +663,7 @@ extension Strings {
         case .indonesian: return "Hari"
         case .thai: return "วัน"
         case .vietnamese: return "Ngày"
+        case .arabic: return "أيام"
         }
     }
 
@@ -672,6 +693,7 @@ extension Strings {
         case .indonesian: return "Satuan"
         case .thai: return "หน่วย"
         case .vietnamese: return "Đơn vị"
+        case .arabic: return "الوحدة"
         }
     }
 
@@ -701,6 +723,7 @@ extension Strings {
         case .indonesian: return "Dihitung ulang setiap tahun mulai bulan awal tahun cuti. Hari penuh dan setengah hari dikurangi menurut jam kerja hari itu."
         case .thai: return "เริ่มนับใหม่ทุกปีตั้งแต่เดือนเริ่มต้นปีการลา ลาเต็มวันและครึ่งวันจะหักตามชั่วโมงทำงานของวันนั้น"
         case .vietnamese: return "Tính lại mỗi năm từ tháng bắt đầu năm phép. Nghỉ cả ngày và nửa ngày được trừ theo số giờ làm của thứ đó."
+        case .arabic: return "يبدأ العدّ من جديد كل عام من شهر بداية سنة الإجازة. اليوم الكامل ونصف اليوم يُخصمان بحسب ساعات عمل ذلك اليوم."
         }
     }
 
@@ -730,6 +753,7 @@ extension Strings {
         case .indonesian: return "Lebih \(amount) dari jatah"
         case .thai: return "ใช้เกินโควตา \(amount)"
         case .vietnamese: return "Vượt hạn mức \(amount)"
+        case .arabic: return "تجاوزت الحد بمقدار \(amount)"
         }
     }
 
@@ -759,6 +783,7 @@ extension Strings {
         case .indonesian: return "Setelah ini sisa jatah \(amount)"
         case .thai: return "หลังบันทึกนี้ โควตาประเภทนี้จะเหลือ \(amount)"
         case .vietnamese: return "Sau lần này, hạn mức loại này còn \(amount)"
+        case .arabic: return "بعد التسجيل يبقى \(amount) من حد هذا النوع"
         }
     }
 
@@ -788,6 +813,7 @@ extension Strings {
         case .indonesian: return "Ini melebihi jatah sebesar \(amount)"
         case .thai: return "บันทึกนี้จะเกินโควตาประเภทนี้ \(amount)"
         case .vietnamese: return "Lần này sẽ vượt hạn mức loại này \(amount)"
+        case .arabic: return "بعد التسجيل تتجاوز حد هذا النوع بمقدار \(amount)"
         }
     }
 
@@ -817,6 +843,7 @@ extension Strings {
         case .indonesian: return "Ketuk Edit lalu seret untuk mengurutkan. Menambah dan mengubah cuti memakai urutan yang sama."
         case .thai: return "แตะแก้ไขแล้วลากเพื่อจัดลำดับ หน้าบันทึกและแก้ไขวันลาจะเรียงตามลำดับนี้"
         case .vietnamese: return "Chạm Sửa rồi kéo để sắp xếp. Màn hình thêm và sửa ngày nghỉ cũng theo thứ tự này."
+        case .arabic: return "اضغط «تعديل» واسحب لتغيير الترتيب، وسيظهر الترتيب نفسه عند إضافة الإجازات وتعديلها."
         }
     }
 
@@ -846,6 +873,7 @@ extension Strings {
         case .indonesian: return "Selesai"
         case .thai: return "เสร็จสิ้น"
         case .vietnamese: return "Xong"
+        case .arabic: return "تم"
         }
     }
 
@@ -875,6 +903,7 @@ extension Strings {
         case .indonesian: return "Jenis cuti"
         case .thai: return "ประเภทการลา"
         case .vietnamese: return "Loại nghỉ"
+        case .arabic: return "أنواع الإجازات"
         }
     }
 
@@ -904,6 +933,7 @@ extension Strings {
         case .indonesian: return "Jam kerja per hari"
         case .thai: return "ชั่วโมงทำงานแต่ละวัน"
         case .vietnamese: return "Giờ làm theo thứ"
+        case .arabic: return "ساعات العمل لكل يوم"
         }
     }
 
@@ -933,6 +963,7 @@ extension Strings {
         case .indonesian: return "Atur jika jam kerja berbeda tiap hari. Dipakai untuk mengubah jam ke hari dan menjumlah jam per jenis."
         case .thai: return "ถ้าชั่วโมงทำงานแต่ละวันไม่เท่ากัน ให้กำหนดแยก ใช้ตอนแปลงการลาเป็นชั่วโมงให้เป็นวัน และตอนรวมชั่วโมงตามประเภทการลา"
         case .vietnamese: return "Đặt riêng nếu giờ làm mỗi thứ khác nhau. Dùng khi quy phép theo giờ ra ngày và khi cộng giờ theo loại nghỉ."
+        case .arabic: return "حدّدها إن كانت ساعات عملك تختلف من يوم لآخر. تُستخدم لتحويل الإجازة بالساعات إلى أيام ولحساب إجمالي الساعات لكل نوع."
         }
     }
 
@@ -962,6 +993,7 @@ extension Strings {
         case .indonesian: return "Bawaan"
         case .thai: return "ค่าเริ่มต้น"
         case .vietnamese: return "Mặc định"
+        case .arabic: return "افتراضي"
         }
     }
 
@@ -991,6 +1023,7 @@ extension Strings {
         case .indonesian: return "Kembalikan semua"
         case .thai: return "ใช้ค่าเริ่มต้นทั้งหมด"
         case .vietnamese: return "Đặt lại tất cả về mặc định"
+        case .arabic: return "إعادة الكل إلى الافتراضي"
         }
     }
 }
@@ -1024,6 +1057,7 @@ extension Strings {
         case .indonesian: return "Terpakai"
         case .thai: return "วันลาที่ใช้ไป"
         case .vietnamese: return "Phép đã dùng"
+        case .arabic: return "الإجازة المستخدمة"
         }
     }
 
@@ -1053,6 +1087,7 @@ extension Strings {
         case .indonesian: return "Sisa sekarang"
         case .thai: return "วันลาที่เหลือตอนนี้"
         case .vietnamese: return "Phép còn lại hiện tại"
+        case .arabic: return "الإجازة المتبقية الآن"
         }
     }
 
@@ -1082,6 +1117,7 @@ extension Strings {
         case .indonesian: return "Dicatat sebagai terpakai \(amount)"
         case .thai: return "จะบันทึกเป็นใช้ไป \(amount)"
         case .vietnamese: return "Sẽ ghi là đã dùng \(amount)"
+        case .arabic: return "ستُسجَّل كإجازة مستخدمة: \(amount)"
         }
     }
 
@@ -1111,6 +1147,7 @@ extension Strings {
         case .indonesian: return "Lebih dari total tahun ini. Ubah total cuti di Pengaturan dulu."
         case .thai: return "มากกว่าวันลาทั้งหมดของปีนี้ กรุณาเปลี่ยนวันลาทั้งหมดในการตั้งค่าก่อน"
         case .vietnamese: return "Nhiều hơn tổng số phép năm nay. Hãy đổi tổng số phép trong Cài đặt trước."
+        case .arabic: return "هذا أكثر من رصيدك لهذا العام. غيّر إجمالي الإجازة من الإعدادات أولًا."
         }
     }
 
@@ -1140,6 +1177,7 @@ extension Strings {
         case .indonesian: return "Input sekaligus sebelumnya akan diganti."
         case .thai: return "ค่าที่กรอกรวมไว้ก่อนหน้าจะถูกแทนที่ด้วยค่านี้"
         case .vietnamese: return "Số đã nhập gộp trước đó sẽ được thay bằng số này."
+        case .arabic: return "ستحل هذه القيمة محل ما أدخلته سابقًا دفعة واحدة."
         }
     }
 }
@@ -1173,6 +1211,7 @@ extension Strings {
         case .indonesian: return "Sisa dibawa ke tahun berikutnya"
         case .thai: return "ยกยอดที่เหลือไปปีถัดไป"
         case .vietnamese: return "Chuyển phần còn lại sang năm sau"
+        case .arabic: return "ترحيل المتبقي إلى العام التالي"
         }
     }
 
@@ -1202,6 +1241,7 @@ extension Strings {
         case .indonesian: return "Terkumpul hingga \(year)"
         case .thai: return "ยอดสะสม ณ ต้นปี \(year)"
         case .vietnamese: return "Đã tích lũy đến đầu năm \(year)"
+        case .arabic: return "الرصيد المتراكم في بداية \(year)"
         }
     }
 
@@ -1231,6 +1271,7 @@ extension Strings {
         case .indonesian: return "Sisa tiap tahun ditambahkan ke tahun berikutnya, seperti cuti sakit yang terakumulasi. Masukkan yang sudah terkumpul di atas."
         case .thai: return "ยอดที่เหลือแต่ละปีจะบวกเข้าโควตาปีถัดไป (เหมือนวันลาป่วยที่สะสมได้) ใส่ยอดที่สะสมไว้แล้วด้านบน"
         case .vietnamese: return "Phần còn lại mỗi năm được cộng vào hạn mức năm sau (như ngày nghỉ ốm cộng dồn). Nhập số đã tích lũy ở trên."
+        case .arabic: return "ما يتبقى كل عام يُضاف إلى حد العام التالي، مثل الإجازات المرضية المتراكمة. أدخل في الأعلى ما تراكم لديك حتى الآن."
         }
     }
 
@@ -1260,6 +1301,7 @@ extension Strings {
         case .indonesian: return "Jika mati, sisa hangus di akhir tahun, seperti hari pribadi."
         case .thai: return "ถ้าปิด ยอดที่เหลือจะหมดไปเมื่อขึ้นปีใหม่ (เหมือนลากิจ)"
         case .vietnamese: return "Khi tắt, phần còn lại sẽ mất khi sang năm mới (như ngày nghỉ việc riêng)."
+        case .arabic: return "عند الإيقاف يسقط المتبقي مع نهاية سنة الإجازة، مثل الإجازات الشخصية."
         }
     }
 
@@ -1289,6 +1331,7 @@ extension Strings {
         case .indonesian: return "Termasuk \(amount) dari tahun lalu"
         case .thai: return "รวมยอดยกมาจากปีที่แล้ว \(amount)"
         case .vietnamese: return "Gồm \(amount) chuyển từ năm trước"
+        case .arabic: return "يشمل \(amount) مرحّلة من العام الماضي"
         }
     }
 
@@ -1318,6 +1361,7 @@ extension Strings {
         case .indonesian: return "Impor kalender sekolah"
         case .thai: return "นำเข้าปฏิทินโรงเรียน"
         case .vietnamese: return "Nhập lịch của trường"
+        case .arabic: return "استيراد التقويم الدراسي"
         }
     }
 
@@ -1347,6 +1391,7 @@ extension Strings {
         case .indonesian: return "Pilih foto atau PDF kalender sekolah, atau tempel teksnya. Daftar tanggal penting lebih mudah dibaca daripada kisi."
         case .thai: return "เลือกรูปหรือ PDF ของปฏิทินโรงเรียน หรือวางข้อความ ส่วนที่เป็นรายการวันสำคัญอ่านได้ดีกว่าตารางปฏิทิน"
         case .vietnamese: return "Chọn ảnh hoặc PDF lịch của trường, hoặc dán văn bản. Danh sách các ngày quan trọng dễ đọc hơn dạng bảng lịch."
+        case .arabic: return "اختر صورة أو ملف PDF للتقويم الدراسي، أو الصق نصّه. قائمة التواريخ المهمة تُقرأ أفضل من الجدول الشهري."
         }
     }
 
@@ -1376,6 +1421,7 @@ extension Strings {
         case .indonesian: return "Pilih PDF atau file"
         case .thai: return "เลือก PDF หรือไฟล์"
         case .vietnamese: return "Chọn PDF hoặc tệp"
+        case .arabic: return "اختيار PDF أو ملف"
         }
     }
 
@@ -1405,6 +1451,7 @@ extension Strings {
         case .indonesian: return "Tempel teks"
         case .thai: return "วางข้อความ"
         case .vietnamese: return "Dán văn bản"
+        case .arabic: return "لصق النص"
         }
     }
 
@@ -1434,6 +1481,7 @@ extension Strings {
         case .indonesian: return "Cari tanggal"
         case .thai: return "หาวันที่"
         case .vietnamese: return "Tìm ngày"
+        case .arabic: return "قراءة التواريخ"
         }
     }
 
@@ -1463,6 +1511,7 @@ extension Strings {
         case .indonesian: return "Tahun ajaran"
         case .thai: return "ปีการศึกษา"
         case .vietnamese: return "Năm học"
+        case .arabic: return "العام الدراسي"
         }
     }
 
@@ -1492,6 +1541,7 @@ extension Strings {
         case .indonesian: return "Hari libur ditambahkan sebagai liburan Anda: cuti tidak dipotong, dan aturan sekitar hari libur berlaku sebelum dan sesudahnya. Tambahkan minggu ujian sebagai periode tanpa cuti agar saran menghindarinya."
         case .thai: return "วันหยุดจะถูกเพิ่มเป็นช่วงปิดเทอมของคุณ จึงไม่หักวันลา และกฎห้ามลาใกล้วันหยุดจะมีผลก่อนและหลังช่วงนั้นด้วย ถ้าใส่สัปดาห์สอบเป็นช่วงห้ามลา คำแนะนำจะเลี่ยงช่วงนั้น"
         case .vietnamese: return "Ngày nghỉ được thêm vào kỳ nghỉ của bạn nên không bị trừ phép, và quy tắc hạn chế nghỉ sát ngày lễ cũng áp dụng trước và sau đó. Thêm tuần thi vào thời gian không được nghỉ để gợi ý tránh những ngày đó."
+        case .arabic: return "أيام العطل تُضاف إلى إجازاتك الدراسية، فلا تُخصم من رصيدك، وتُطبَّق قبلها وبعدها قاعدة منع الإجازة حول العطل. أضف أسابيع الاختبارات كفترات لا تُسمح فيها الإجازة لتتجنبها الاقتراحات."
         }
     }
 
@@ -1521,6 +1571,7 @@ extension Strings {
         case .indonesian: return "Tanggal tidak ditemukan. Coba foto daftar tanggal atau tempel teksnya."
         case .thai: return "ไม่พบวันที่ ลองถ่ายให้เห็นรายการวันที่ หรือวางข้อความแทน"
         case .vietnamese: return "Không tìm thấy ngày nào. Hãy chụp lại phần danh sách ngày hoặc dán văn bản."
+        case .arabic: return "لم نجد أي تواريخ. جرّب صورة تُظهر قائمة التواريخ أو الصق النص."
         }
     }
 
@@ -1550,6 +1601,7 @@ extension Strings {
         case .indonesian: return "Libur"
         case .thai: return "วันหยุด"
         case .vietnamese: return "Ngày nghỉ"
+        case .arabic: return "يوم عطلة"
         }
     }
 
@@ -1579,6 +1631,7 @@ extension Strings {
         case .indonesian: return "Sudah libur"
         case .thai: return "เป็นวันหยุดอยู่แล้ว"
         case .vietnamese: return "Đã là ngày nghỉ"
+        case .arabic: return "عطلة مسجّلة من قبل"
         }
     }
 
@@ -1608,6 +1661,7 @@ extension Strings {
         case .indonesian: return "Sekolah libur"
         case .thai: return "โรงเรียนหยุด"
         case .vietnamese: return "Trường nghỉ"
+        case .arabic: return "عطلة مدرسية"
         }
     }
 
@@ -1637,6 +1691,7 @@ extension Strings {
         case .indonesian: return "Tambah \(n)"
         case .thai: return "เพิ่ม \(n) รายการ"
         case .vietnamese: return "Thêm \(n) mục"
+        case .arabic: return "إضافة \(n)"
         }
     }
 }
@@ -1670,6 +1725,7 @@ extension Strings {
         case .indonesian: return "Ditambahkan sebagai \(d) berdasarkan jam kerjamu (\(w)). Cuti per jam akan dipotong dari sini. Lama jam kerja bisa diubah di Pengaturan."
         case .thai: return "เพิ่มเป็น \(d) ตามชั่วโมงทำงานต่อวันของคุณ (\(w)) ลาเป็นชั่วโมงเมื่อไรจะหักจากส่วนนี้ เปลี่ยนชั่วโมงทำงานต่อวันได้ในการตั้งค่า"
         case .vietnamese: return "Được cộng thành \(d) theo số giờ làm mỗi ngày của bạn (\(w)). Nghỉ theo giờ sẽ trừ vào đây. Bạn có thể đổi số giờ làm trong Cài đặt."
+        case .arabic: return "تُضاف بما يعادل \(d) بحسب طول يوم عملك (\(w)). الإجازة التي تأخذها بالساعات تُخصم منها. يمكنك تغيير طول يوم العمل من الإعدادات."
         }
     }
 }
@@ -1703,6 +1759,7 @@ extension Strings {
         case .indonesian: return "Catat cuti lain di tanggal ini"
         case .thai: return "เพิ่มวันลาอื่นในวันนี้"
         case .vietnamese: return "Thêm ngày nghỉ khác vào ngày này"
+        case .arabic: return "إضافة إجازة أخرى في هذا اليوم"
         }
     }
 }
@@ -1736,6 +1793,7 @@ extension Strings {
         case .indonesian: return "\(n) lagi di tahun lain"
         case .thai: return "มีอีก \(n) รายการในปีอื่น"
         case .vietnamese: return "Còn \(n) mục nữa ở năm khác"
+        case .arabic: return arCount(n, "عنصر واحد آخر في سنة أخرى", "عنصران آخران في سنوات أخرى", "عناصر أخرى في سنوات أخرى", "عنصرًا آخر في سنوات أخرى", "عنصر آخر في سنوات أخرى")
         }
     }
 
@@ -1764,6 +1822,7 @@ extension Strings {
         case .indonesian: return "Lihat semua"
         case .thai: return "ดูทั้งหมด"
         case .vietnamese: return "Xem tất cả"
+        case .arabic: return "عرض الكل"
         }
     }
 
@@ -1793,6 +1852,7 @@ extension Strings {
         case .indonesian: return "Semua libur dan hari raya"
         case .thai: return "ช่วงปิดเทอมและวันหยุดทั้งหมด"
         case .vietnamese: return "Tất cả kỳ nghỉ và ngày lễ"
+        case .arabic: return "كل الإجازات الدراسية وعطلاتي"
         }
     }
 }

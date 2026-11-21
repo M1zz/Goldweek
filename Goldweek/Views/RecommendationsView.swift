@@ -225,7 +225,7 @@ struct YearPicker: View {
                     showingPaywall = true
                 }
             }) {
-                Image(systemName: proManager.isPro ? "chevron.left.circle.fill" : "lock.circle.fill")
+                Image(systemName: proManager.isPro ? "chevron.backward.circle.fill" : "lock.circle.fill")
                     .font(.title2)
                     .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
@@ -261,7 +261,7 @@ struct YearPicker: View {
                     showingPaywall = true
                 }
             }) {
-                Image(systemName: proManager.isPro ? "chevron.right.circle.fill" : "lock.circle.fill")
+                Image(systemName: proManager.isPro ? "chevron.forward.circle.fill" : "lock.circle.fill")
                     .font(.title2)
                     .foregroundStyle(proManager.isPro ? .blue : .gray)
             }
@@ -635,7 +635,7 @@ struct DetailedRecommendationCard: View {
                     .font(.body)
                     .foregroundStyle(.blue)
                 Spacer()
-                Text("→")
+                Text(Strings.flowArrow)
                     .foregroundStyle(.secondary)
                 Spacer()
                 Label(Strings.daysOff(recommendation.totalDaysOff), systemImage: "sun.max.fill")
@@ -745,7 +745,7 @@ struct RecommendationDatePreview: View {
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                 } else {
-                    Text("\(Strings.monthShort(startMonth)) → \(Strings.monthShort(endMonth))")
+                    Text("\(Strings.monthShort(startMonth)) \(Strings.flowArrow) \(Strings.monthShort(endMonth))")
                         .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
@@ -1737,7 +1737,7 @@ struct MRTFlightCard: View {
         out.locale = Locale(identifier: Strings.localeIdentifier)
         guard let dep = f.date(from: flight.departureDate) else { return flight.departureDate }
         if let retStr = flight.returnDate, let ret = f.date(from: retStr) {
-            return "\(out.string(from: dep)) → \(out.string(from: ret))"
+            return "\(out.string(from: dep)) \(Strings.flowArrow) \(out.string(from: ret))"
         }
         return out.string(from: dep)
     }
@@ -2165,7 +2165,7 @@ struct TravelSuggestionCard: View {
                     HStack(spacing: 3) {
                         Text(Strings.mrtPromoCTA)
                             .font(.body.weight(.semibold))
-                        Image(systemName: "arrow.up.right")
+                        Image(systemName: "arrow.up.forward")
                             .font(.caption2.weight(.bold))
                     }
                     .foregroundStyle(accentColor)
@@ -2468,7 +2468,7 @@ struct OptimalLeavePlannerCard: View {
                 HStack(spacing: 4) {
                     Text(Strings.optimalPlannerCTA)
                         .font(.body.weight(.semibold))
-                    Image(systemName: "arrow.right")
+                    Image(systemName: "arrow.forward")
                         .font(.body.weight(.bold))
                         .voDecorative()
                 }

@@ -523,7 +523,7 @@ struct MonthNavigator: View {
     var body: some View {
         HStack {
             Button(action: previousMonth) {
-                Image(systemName: "chevron.left")
+                Image(systemName: "chevron.backward")
                     .font(.title2)
                     .foregroundStyle(.blue)
             }
@@ -540,7 +540,7 @@ struct MonthNavigator: View {
             Spacer()
 
             Button(action: nextMonth) {
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.title2)
                     .foregroundStyle(.blue)
             }
@@ -671,6 +671,9 @@ struct CalendarGrid: View {
                 ForEach(orderedWeekdays, id: \.self) { weekday in
                     Text(Strings.weekdays[weekday - 1])
                         .font(.body.bold())
+                        // 아랍어 요일(أربعاء · خميس)은 한 칸에 두 줄로 꺾였다 — 한 줄에 맞춰 줄인다
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
                         .foregroundStyle(weekdayHeaderColor(weekday))
                         .frame(maxWidth: .infinity)
                 }

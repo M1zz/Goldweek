@@ -36,6 +36,7 @@ extension Strings {
         case .indonesian: return "Bawa sisa cuti"
         case .thai: return "ยกวันลาที่เหลือไปปีหน้า"
         case .vietnamese: return "Chuyển phép còn lại sang năm sau"
+        case .arabic: return "ترحيل الإجازة المتبقية"
         }
     }
 
@@ -65,6 +66,7 @@ extension Strings {
         case .indonesian: return "Tidak"
         case .thai: return "ปิด"
         case .vietnamese: return "Tắt"
+        case .arabic: return "بدون"
         }
     }
 
@@ -94,6 +96,7 @@ extension Strings {
         case .indonesian: return "Semua sisa hari"
         case .thai: return "ทุกวันที่เหลือ"
         case .vietnamese: return "Toàn bộ số ngày còn lại"
+        case .arabic: return "كل المتبقي"
         }
     }
 
@@ -123,6 +126,7 @@ extension Strings {
         case .indonesian: return "Sisa cuti dipakai paling lambat"
         case .thai: return "ใช้วันลาที่ยกมาได้ถึง"
         case .vietnamese: return "Hạn dùng phép chuyển sang"
+        case .arabic: return "مهلة استخدام الأيام المرحّلة"
         }
     }
 
@@ -152,6 +156,7 @@ extension Strings {
         case .indonesian: return "Tanpa batas"
         case .thai: return "ไม่จำกัด"
         case .vietnamese: return "Không giới hạn"
+        case .arabic: return "بلا مهلة"
         }
     }
 
@@ -181,6 +186,7 @@ extension Strings {
         case .indonesian: return "Jika perusahaanmu mengizinkan, sisa cuti tahun ini dibawa ke tahun berikutnya. Sisa itu ditambahkan ke cuti tahun baru, dan jika ada batas waktu, hanya yang terpakai sebelum batas itu yang dihitung. Cuti tahun depan sudah bisa direncanakan sekarang dan diambil dari jatah tahun depan."
         case .thai: return "ถ้าบริษัทอนุญาต วันลาที่ไม่ได้ใช้ในปีนี้จะยกไปปีหน้า โดยบวกเพิ่มในวันลาของปีหน้า และถ้ามีวันหมดอายุ จะนับเฉพาะวันที่ใช้ก่อนถึงกำหนด วางแผนวันลาของปีหน้าได้ตั้งแต่ตอนนี้ โดยจะหักจากวันลาของปีหน้า"
         case .vietnamese: return "Nếu công ty cho phép, số phép chưa dùng năm nay sẽ được chuyển sang năm sau và cộng vào phép năm mới. Nếu có hạn dùng, chỉ phần đã dùng trước hạn được tính. Bạn có thể lên kế hoạch nghỉ năm sau ngay từ bây giờ, số ngày đó sẽ trừ vào phép năm sau."
+        case .arabic: return "إن سمحت جهة عملك، تنتقل الأيام التي لم تستخدمها هذا العام إلى العام التالي وتُضاف إلى رصيده. وإن كانت لها مهلة فلا يُحسب منها إلا ما استخدمته قبل انتهائها. يمكنك من الآن حجز إجازات العام القادم، وتُخصم من رصيد ذلك العام."
         }
     }
 
@@ -210,6 +216,7 @@ extension Strings {
         case .indonesian: return "Hingga \(d)"
         case .thai: return "สูงสุด \(d)"
         case .vietnamese: return "Tối đa \(d)"
+        case .arabic: return "حتى \(d)"
         }
     }
 
@@ -239,6 +246,7 @@ extension Strings {
         case .indonesian: return "\(n) bulan sejak awal tahun"
         case .thai: return "\(n) เดือนแรกของปีใหม่"
         case .vietnamese: return "\(n) tháng đầu năm mới"
+        case .arabic: return "\(arCount(n, "شهر واحد", "شهران", "أشهر", "شهرًا", "شهر")) من بداية العام الجديد"
         }
     }
 
@@ -268,6 +276,7 @@ extension Strings {
         case .indonesian: return "Diambil dari cuti \(String(y)) · sisa \(r) tahun itu"
         case .thai: return "หักจากวันลาปี \(String(y)) · ปีนั้นเหลือ \(r)"
         case .vietnamese: return "Trừ vào phép năm \(String(y)) · năm đó còn \(r)"
+        case .arabic: return "تُخصم من رصيد عام \(String(y)) · المتبقي لذلك العام \(r)"
         }
     }
 }
@@ -275,65 +284,65 @@ extension Strings {
 // MARK: - 현황 구성 (2026-11-02) — 고른 것만, 경고는 필요할 때만
 
 extension Strings {
-    public static var homeOfferUpcoming: String { pick([.korean: "잡아 둔 휴가를 현황에 모아 볼까요?", .english: "Show your planned time off on the Overview?", .japanese: "予定した休暇を現況にまとめて表示しますか？", .chinese: "要在概况中集中显示已安排的休假吗？", .german: "Geplante Urlaube in der Übersicht anzeigen?", .french: "Afficher vos congés prévus dans l’aperçu ?", .spanish: "¿Mostrar tus vacaciones planeadas en el resumen?", .italian: "Mostrare le ferie in programma nella panoramica?", .portuguese: "Mostrar suas férias planejadas no resumo?", .chineseTraditional: "要在概況中集中顯示已安排的休假嗎？", .dutch: "Geplande vrije dagen in het overzicht tonen?", .swedish: "Visa planerad ledighet i översikten?", .norwegian: "Vise planlagt fri i oversikten?", .danish: "Vis planlagt fri i oversigten?", .finnish: "Näytetäänkö suunnitellut lomat yleiskatsauksessa?", .polish: "Pokazywać zaplanowany urlop w podsumowaniu?", .czech: "Zobrazit naplánované volno v přehledu?", .greek: "Να εμφανίζεται η προγραμματισμένη άδεια στην επισκόπηση;", .turkish: "Planlanan izinler özette gösterilsin mi?", .russian: "Показывать запланированный отпуск в обзоре?", .indonesian: "Tampilkan cuti yang direncanakan di ringkasan?", .thai: "แสดงวันลาที่วางไว้ในภาพรวมไหม", .vietnamese: "Hiện kỳ nghỉ đã lên lịch ở phần tổng quan?"]) }
+    public static var homeOfferUpcoming: String { pick([.korean: "잡아 둔 휴가를 현황에 모아 볼까요?", .english: "Show your planned time off on the Overview?", .japanese: "予定した休暇を現況にまとめて表示しますか？", .chinese: "要在概况中集中显示已安排的休假吗？", .german: "Geplante Urlaube in der Übersicht anzeigen?", .french: "Afficher vos congés prévus dans l’aperçu ?", .spanish: "¿Mostrar tus vacaciones planeadas en el resumen?", .italian: "Mostrare le ferie in programma nella panoramica?", .portuguese: "Mostrar suas férias planejadas no resumo?", .chineseTraditional: "要在概況中集中顯示已安排的休假嗎？", .dutch: "Geplande vrije dagen in het overzicht tonen?", .swedish: "Visa planerad ledighet i översikten?", .norwegian: "Vise planlagt fri i oversikten?", .danish: "Vis planlagt fri i oversigten?", .finnish: "Näytetäänkö suunnitellut lomat yleiskatsauksessa?", .polish: "Pokazywać zaplanowany urlop w podsumowaniu?", .czech: "Zobrazit naplánované volno v přehledu?", .greek: "Να εμφανίζεται η προγραμματισμένη άδεια στην επισκόπηση;", .turkish: "Planlanan izinler özette gösterilsin mi?", .russian: "Показывать запланированный отпуск в обзоре?", .indonesian: "Tampilkan cuti yang direncanakan di ringkasan?", .thai: "แสดงวันลาที่วางไว้ในภาพรวมไหม", .vietnamese: "Hiện kỳ nghỉ đã lên lịch ở phần tổng quan?", .arabic: "هل نعرض إجازاتك المخططة في الملخص؟"]) }
 
-    public static var homeOfferHolidays: String { pick([.korean: "곧 공휴일이 있어요. 다가오는 공휴일도 함께 볼까요?", .english: "A public holiday is coming up. Show upcoming holidays too?", .japanese: "もうすぐ祝日です。これからの祝日も一緒に表示しますか？", .chinese: "公共假日快到了。要一起显示即将到来的假日吗？", .german: "Bald ist ein Feiertag. Kommende Feiertage auch anzeigen?", .french: "Un jour férié approche. Afficher aussi les prochains jours fériés ?", .spanish: "Se acerca un festivo. ¿Mostrar también los próximos festivos?", .italian: "Sta per arrivare un giorno festivo. Mostrare anche i prossimi festivi?", .portuguese: "Um feriado está chegando. Mostrar também os próximos feriados?", .chineseTraditional: "公眾假期快到了。要一起顯示即將到來的假期嗎？", .dutch: "Er komt een feestdag aan. Ook komende feestdagen tonen?", .swedish: "En helgdag närmar sig. Visa kommande helgdagar också?", .norwegian: "En helligdag nærmer seg. Vise kommende helligdager også?", .danish: "En helligdag nærmer sig. Vis også kommende helligdage?", .finnish: "Pyhäpäivä lähestyy. Näytetäänkö myös tulevat pyhäpäivät?", .polish: "Zbliża się święto. Pokazywać też nadchodzące święta?", .czech: "Blíží se svátek. Zobrazit i nadcházející svátky?", .greek: "Πλησιάζει αργία. Να εμφανίζονται και οι επόμενες αργίες;", .turkish: "Yakında resmî tatil var. Yaklaşan tatiller de gösterilsin mi?", .russian: "Скоро праздник. Показывать и ближайшие праздники?", .indonesian: "Hari libur sudah dekat. Tampilkan juga hari libur mendatang?", .thai: "ใกล้วันหยุดแล้ว แสดงวันหยุดที่กำลังจะมาถึงด้วยไหม", .vietnamese: "Sắp đến ngày lễ. Hiện cả các ngày lễ sắp tới?"]) }
+    public static var homeOfferHolidays: String { pick([.korean: "곧 공휴일이 있어요. 다가오는 공휴일도 함께 볼까요?", .english: "A public holiday is coming up. Show upcoming holidays too?", .japanese: "もうすぐ祝日です。これからの祝日も一緒に表示しますか？", .chinese: "公共假日快到了。要一起显示即将到来的假日吗？", .german: "Bald ist ein Feiertag. Kommende Feiertage auch anzeigen?", .french: "Un jour férié approche. Afficher aussi les prochains jours fériés ?", .spanish: "Se acerca un festivo. ¿Mostrar también los próximos festivos?", .italian: "Sta per arrivare un giorno festivo. Mostrare anche i prossimi festivi?", .portuguese: "Um feriado está chegando. Mostrar também os próximos feriados?", .chineseTraditional: "公眾假期快到了。要一起顯示即將到來的假期嗎？", .dutch: "Er komt een feestdag aan. Ook komende feestdagen tonen?", .swedish: "En helgdag närmar sig. Visa kommande helgdagar också?", .norwegian: "En helligdag nærmer seg. Vise kommende helligdager også?", .danish: "En helligdag nærmer sig. Vis også kommende helligdage?", .finnish: "Pyhäpäivä lähestyy. Näytetäänkö myös tulevat pyhäpäivät?", .polish: "Zbliża się święto. Pokazywać też nadchodzące święta?", .czech: "Blíží se svátek. Zobrazit i nadcházející svátky?", .greek: "Πλησιάζει αργία. Να εμφανίζονται και οι επόμενες αργίες;", .turkish: "Yakında resmî tatil var. Yaklaşan tatiller de gösterilsin mi?", .russian: "Скоро праздник. Показывать и ближайшие праздники?", .indonesian: "Hari libur sudah dekat. Tampilkan juga hari libur mendatang?", .thai: "ใกล้วันหยุดแล้ว แสดงวันหยุดที่กำลังจะมาถึงด้วยไหม", .vietnamese: "Sắp đến ngày lễ. Hiện cả các ngày lễ sắp tới?", .arabic: "هناك عطلة رسمية قريبة. هل نعرض العطل القادمة أيضًا؟"]) }
 
-    public static var homeOfferYes: String { pick([.korean: "볼게요", .english: "Show", .japanese: "表示する", .chinese: "显示", .german: "Anzeigen", .french: "Afficher", .spanish: "Mostrar", .italian: "Mostra", .portuguese: "Mostrar", .chineseTraditional: "顯示", .dutch: "Tonen", .swedish: "Visa", .norwegian: "Vis", .danish: "Vis", .finnish: "Näytä", .polish: "Pokaż", .czech: "Zobrazit", .greek: "Εμφάνιση", .turkish: "Göster", .russian: "Показывать", .indonesian: "Tampilkan", .thai: "แสดง", .vietnamese: "Hiện"]) }
+    public static var homeOfferYes: String { pick([.korean: "볼게요", .english: "Show", .japanese: "表示する", .chinese: "显示", .german: "Anzeigen", .french: "Afficher", .spanish: "Mostrar", .italian: "Mostra", .portuguese: "Mostrar", .chineseTraditional: "顯示", .dutch: "Tonen", .swedish: "Visa", .norwegian: "Vis", .danish: "Vis", .finnish: "Näytä", .polish: "Pokaż", .czech: "Zobrazit", .greek: "Εμφάνιση", .turkish: "Göster", .russian: "Показывать", .indonesian: "Tampilkan", .thai: "แสดง", .vietnamese: "Hiện", .arabic: "اعرضها"]) }
 
-    public static var homeOfferNo: String { pick([.korean: "괜찮아요", .english: "No thanks", .japanese: "表示しない", .chinese: "不用了", .german: "Nein, danke", .french: "Non merci", .spanish: "No, gracias", .italian: "No, grazie", .portuguese: "Não, obrigado", .chineseTraditional: "不用了", .dutch: "Nee, bedankt", .swedish: "Nej tack", .norwegian: "Nei takk", .danish: "Nej tak", .finnish: "Ei kiitos", .polish: "Nie, dziękuję", .czech: "Ne, díky", .greek: "Όχι, ευχαριστώ", .turkish: "Hayır, teşekkürler", .russian: "Не нужно", .indonesian: "Tidak usah", .thai: "ไม่เป็นไร", .vietnamese: "Không, cảm ơn"]) }
+    public static var homeOfferNo: String { pick([.korean: "괜찮아요", .english: "No thanks", .japanese: "表示しない", .chinese: "不用了", .german: "Nein, danke", .french: "Non merci", .spanish: "No, gracias", .italian: "No, grazie", .portuguese: "Não, obrigado", .chineseTraditional: "不用了", .dutch: "Nee, bedankt", .swedish: "Nej tack", .norwegian: "Nei takk", .danish: "Nej tak", .finnish: "Ei kiitos", .polish: "Nie, dziękuję", .czech: "Ne, díky", .greek: "Όχι, ευχαριστώ", .turkish: "Hayır, teşekkürler", .russian: "Не нужно", .indonesian: "Tidak usah", .thai: "ไม่เป็นไร", .vietnamese: "Không, cảm ơn", .arabic: "لا، شكرًا"]) }
 
-    public static var homeGotIt: String { pick([.korean: "알겠어요", .english: "Got it", .japanese: "わかりました", .chinese: "知道了", .german: "Verstanden", .french: "Compris", .spanish: "Entendido", .italian: "Ho capito", .portuguese: "Entendi", .chineseTraditional: "知道了", .dutch: "Begrepen", .swedish: "Uppfattat", .norwegian: "Skjønner", .danish: "Forstået", .finnish: "Selvä", .polish: "Rozumiem", .czech: "Rozumím", .greek: "Εντάξει", .turkish: "Anladım", .russian: "Понятно", .indonesian: "Mengerti", .thai: "เข้าใจแล้ว", .vietnamese: "Đã hiểu"]) }
+    public static var homeGotIt: String { pick([.korean: "알겠어요", .english: "Got it", .japanese: "わかりました", .chinese: "知道了", .german: "Verstanden", .french: "Compris", .spanish: "Entendido", .italian: "Ho capito", .portuguese: "Entendi", .chineseTraditional: "知道了", .dutch: "Begrepen", .swedish: "Uppfattat", .norwegian: "Skjønner", .danish: "Forstået", .finnish: "Selvä", .polish: "Rozumiem", .czech: "Rozumím", .greek: "Εντάξει", .turkish: "Anladım", .russian: "Понятно", .indonesian: "Mengerti", .thai: "เข้าใจแล้ว", .vietnamese: "Đã hiểu", .arabic: "فهمت"]) }
 
-    public static var homePaceAlways: String { pick([.korean: "휴가 페이스 늘 보기", .english: "Always show leave pace", .japanese: "休暇ペースを常に表示", .chinese: "始终显示休假节奏", .german: "Urlaubstempo immer anzeigen", .french: "Toujours afficher le rythme des congés", .spanish: "Mostrar siempre el ritmo de vacaciones", .italian: "Mostra sempre il ritmo delle ferie", .portuguese: "Sempre mostrar o ritmo das férias", .chineseTraditional: "始終顯示休假節奏", .dutch: "Verloftempo altijd tonen", .swedish: "Visa alltid ledighetstakten", .norwegian: "Vis alltid fritempoet", .danish: "Vis altid ferietempoet", .finnish: "Näytä lomatahti aina", .polish: "Zawsze pokazuj tempo urlopu", .czech: "Vždy zobrazovat tempo čerpání volna", .greek: "Να εμφανίζεται πάντα ο ρυθμός αδειών", .turkish: "İzin hızını her zaman göster", .russian: "Всегда показывать темп отпуска", .indonesian: "Selalu tampilkan laju cuti", .thai: "แสดงจังหวะการลาเสมอ", .vietnamese: "Luôn hiện nhịp nghỉ phép"]) }
+    public static var homePaceAlways: String { pick([.korean: "휴가 페이스 늘 보기", .english: "Always show leave pace", .japanese: "休暇ペースを常に表示", .chinese: "始终显示休假节奏", .german: "Urlaubstempo immer anzeigen", .french: "Toujours afficher le rythme des congés", .spanish: "Mostrar siempre el ritmo de vacaciones", .italian: "Mostra sempre il ritmo delle ferie", .portuguese: "Sempre mostrar o ritmo das férias", .chineseTraditional: "始終顯示休假節奏", .dutch: "Verloftempo altijd tonen", .swedish: "Visa alltid ledighetstakten", .norwegian: "Vis alltid fritempoet", .danish: "Vis altid ferietempoet", .finnish: "Näytä lomatahti aina", .polish: "Zawsze pokazuj tempo urlopu", .czech: "Vždy zobrazovat tempo čerpání volna", .greek: "Να εμφανίζεται πάντα ο ρυθμός αδειών", .turkish: "İzin hızını her zaman göster", .russian: "Всегда показывать темп отпуска", .indonesian: "Selalu tampilkan laju cuti", .thai: "แสดงจังหวะการลาเสมอ", .vietnamese: "Luôn hiện nhịp nghỉ phép", .arabic: "إظهار وتيرة الإجازة دائمًا"]) }
 
-    public static var homePaceAlwaysDescription: String { pick([.korean: "끄면 쉬지 못했거나 연차가 남을 것 같을 때만 보여요.", .english: "When off, it appears only when you’re overdue for a break or likely to leave days unused.", .japanese: "オフにすると、休めていないときや年休が余りそうなときだけ表示します。", .chinese: "关闭后，仅在久未休息或年假可能用不完时显示。", .german: "Wenn aus, erscheint es nur, wenn eine Pause überfällig ist oder Urlaubstage verfallen könnten.", .french: "Désactivé, il n’apparaît que si une pause s’impose ou si des jours risquent d’être perdus.", .spanish: "Si está desactivado, solo aparece cuando te toca descansar o podrían sobrarte días.", .italian: "Se disattivato, appare solo quando ti serve una pausa o rischi di non usare dei giorni.", .portuguese: "Desligado, aparece só quando você precisa de pausa ou pode sobrar dias.", .chineseTraditional: "關閉後，僅在久未休息或年假可能用不完時顯示。", .dutch: "Uit: alleen zichtbaar als je toe bent aan rust of dagen dreigt over te houden.", .swedish: "Av: visas bara när du behöver vila eller kan få dagar över.", .norwegian: "Av: vises bare når du trenger en pause eller kan få dager til overs.", .danish: "Fra: vises kun, når du trænger til en pause eller kan få dage i overskud.", .finnish: "Pois päältä: näkyy vain, kun lepo on myöhässä tai lomapäiviä uhkaa jäädä käyttämättä.", .polish: "Wyłączone: pojawia się tylko, gdy należy Ci się odpoczynek lub mogą zostać niewykorzystane dni.", .czech: "Vypnuto: zobrazí se jen, když potřebuješ pauzu nebo ti můžou zbýt dny.", .greek: "Όταν είναι ανενεργό, εμφανίζεται μόνο όταν χρειάζεσαι διάλειμμα ή μπορεί να περισσέψουν μέρες.", .turkish: "Kapalıyken yalnızca mola gerektiğinde veya izin günleri artabilecekken görünür.", .russian: "Если выключено, появляется, только когда пора отдохнуть или дни могут сгореть.", .indonesian: "Jika mati, hanya muncul saat kamu perlu istirahat atau cuti bisa tersisa.", .thai: "เมื่อปิด จะแสดงเฉพาะตอนที่ควรพักหรือวันลาอาจเหลือ", .vietnamese: "Khi tắt, chỉ hiện khi bạn cần nghỉ hoặc có thể còn dư ngày phép."]) }
+    public static var homePaceAlwaysDescription: String { pick([.korean: "끄면 쉬지 못했거나 연차가 남을 것 같을 때만 보여요.", .english: "When off, it appears only when you’re overdue for a break or likely to leave days unused.", .japanese: "オフにすると、休めていないときや年休が余りそうなときだけ表示します。", .chinese: "关闭后，仅在久未休息或年假可能用不完时显示。", .german: "Wenn aus, erscheint es nur, wenn eine Pause überfällig ist oder Urlaubstage verfallen könnten.", .french: "Désactivé, il n’apparaît que si une pause s’impose ou si des jours risquent d’être perdus.", .spanish: "Si está desactivado, solo aparece cuando te toca descansar o podrían sobrarte días.", .italian: "Se disattivato, appare solo quando ti serve una pausa o rischi di non usare dei giorni.", .portuguese: "Desligado, aparece só quando você precisa de pausa ou pode sobrar dias.", .chineseTraditional: "關閉後，僅在久未休息或年假可能用不完時顯示。", .dutch: "Uit: alleen zichtbaar als je toe bent aan rust of dagen dreigt over te houden.", .swedish: "Av: visas bara när du behöver vila eller kan få dagar över.", .norwegian: "Av: vises bare når du trenger en pause eller kan få dager til overs.", .danish: "Fra: vises kun, når du trænger til en pause eller kan få dage i overskud.", .finnish: "Pois päältä: näkyy vain, kun lepo on myöhässä tai lomapäiviä uhkaa jäädä käyttämättä.", .polish: "Wyłączone: pojawia się tylko, gdy należy Ci się odpoczynek lub mogą zostać niewykorzystane dni.", .czech: "Vypnuto: zobrazí se jen, když potřebuješ pauzu nebo ti můžou zbýt dny.", .greek: "Όταν είναι ανενεργό, εμφανίζεται μόνο όταν χρειάζεσαι διάλειμμα ή μπορεί να περισσέψουν μέρες.", .turkish: "Kapalıyken yalnızca mola gerektiğinde veya izin günleri artabilecekken görünür.", .russian: "Если выключено, появляется, только когда пора отдохнуть или дни могут сгореть.", .indonesian: "Jika mati, hanya muncul saat kamu perlu istirahat atau cuti bisa tersisa.", .thai: "เมื่อปิด จะแสดงเฉพาะตอนที่ควรพักหรือวันลาอาจเหลือ", .vietnamese: "Khi tắt, chỉ hiện khi bạn cần nghỉ hoặc có thể còn dư ngày phép.", .arabic: "عند الإيقاف تظهر فقط إن طال بك العمل دون راحة أو كان رصيدك مهددًا بالضياع."]) }
 
-    public static var homeMoreActions: String { pick([.korean: "더 보기", .english: "More", .japanese: "その他", .chinese: "更多", .german: "Mehr", .french: "Plus", .spanish: "Más", .italian: "Altro", .portuguese: "Mais", .chineseTraditional: "更多", .dutch: "Meer", .swedish: "Mer", .norwegian: "Mer", .danish: "Mere", .finnish: "Lisää", .polish: "Więcej", .czech: "Další", .greek: "Περισσότερα", .turkish: "Diğer", .russian: "Ещё", .indonesian: "Lainnya", .thai: "เพิ่มเติม", .vietnamese: "Thêm"]) }
+    public static var homeMoreActions: String { pick([.korean: "더 보기", .english: "More", .japanese: "その他", .chinese: "更多", .german: "Mehr", .french: "Plus", .spanish: "Más", .italian: "Altro", .portuguese: "Mais", .chineseTraditional: "更多", .dutch: "Meer", .swedish: "Mer", .norwegian: "Mer", .danish: "Mere", .finnish: "Lisää", .polish: "Więcej", .czech: "Další", .greek: "Περισσότερα", .turkish: "Diğer", .russian: "Ещё", .indonesian: "Lainnya", .thai: "เพิ่มเติม", .vietnamese: "Thêm", .arabic: "المزيد"]) }
 
     public static func paceWarnSlow(year: Int, used: Int) -> String {
-        pick([.korean: "올해가 \(year)% 지났는데 연차는 \(used)%만 잡혀 있어요. 남기 전에 계획해 보세요.", .english: "\(year)% of the year has passed, but only \(used)% of your leave is planned. Plan it before it goes unused.", .japanese: "今年が\(year)%過ぎましたが、年休は\(used)%しか予定がありません。余る前に計画しましょう。", .chinese: "今年已过去 \(year)%，年假只安排了 \(used)%。在用不完之前做好计划吧。", .german: "\(year) % des Jahres sind vorbei, aber erst \(used) % deines Urlaubs sind geplant. Plane ihn, bevor er verfällt.", .french: "\(year) % de l’année est passée, mais seulement \(used) % de vos congés sont prévus. Planifiez-les avant de les perdre.", .spanish: "Ha pasado el \(year) % del año y solo tienes planeado el \(used) % de tus vacaciones. Planéalas antes de que se pierdan.", .italian: "È passato il \(year)% dell’anno, ma hai programmato solo il \(used)% delle ferie. Pianificale prima di perderle.", .portuguese: "\(year)% do ano já passou, mas só \(used)% das suas férias estão planejadas. Planeje antes que sobrem.", .chineseTraditional: "今年已過去 \(year)%，年假只安排了 \(used)%。在用不完之前做好計畫吧。", .dutch: "\(year)% van het jaar is voorbij, maar pas \(used)% van je verlof is gepland. Plan het voordat het vervalt.", .swedish: "\(year) % av året har gått, men bara \(used) % av ledigheten är planerad. Planera innan den går förlorad.", .norwegian: "\(year) % av året har gått, men bare \(used) % av fridagene er planlagt. Planlegg før de går tapt.", .danish: "\(year) % af året er gået, men kun \(used) % af ferien er planlagt. Planlæg, før den går tabt.", .finnish: "Vuodesta on kulunut \(year) %, mutta lomista on suunniteltu vain \(used) %. Suunnittele ennen kuin ne jäävät käyttämättä.", .polish: "Minęło \(year)% roku, a zaplanowano tylko \(used)% urlopu. Zaplanuj, zanim przepadnie.", .czech: "Uběhlo \(year) % roku, ale naplánováno je jen \(used) % volna. Naplánuj ho, než propadne.", .greek: "Πέρασε το \(year)% της χρονιάς, αλλά έχεις προγραμματίσει μόνο το \(used)% της άδειας. Προγραμμάτισέ την πριν χαθεί.", .turkish: "Yılın %\(year)’i geçti ama izninin yalnızca %\(used)’i planlandı. Yanmadan planla.", .russian: "Прошло \(year)% года, а запланировано лишь \(used)% отпуска. Спланируйте, пока дни не сгорели.", .indonesian: "Sudah \(year)% tahun berlalu, tapi baru \(used)% cuti yang direncanakan. Rencanakan sebelum hangus.", .thai: "ปีนี้ผ่านไป \(year)% แต่วางวันลาไว้แค่ \(used)% วางแผนก่อนวันลาจะเหลือทิ้ง", .vietnamese: "Đã qua \(year)% năm nhưng mới lên kế hoạch \(used)% ngày phép. Hãy lên kế hoạch trước khi bị bỏ phí."])
+        pick([.korean: "올해가 \(year)% 지났는데 연차는 \(used)%만 잡혀 있어요. 남기 전에 계획해 보세요.", .english: "\(year)% of the year has passed, but only \(used)% of your leave is planned. Plan it before it goes unused.", .japanese: "今年が\(year)%過ぎましたが、年休は\(used)%しか予定がありません。余る前に計画しましょう。", .chinese: "今年已过去 \(year)%，年假只安排了 \(used)%。在用不完之前做好计划吧。", .german: "\(year) % des Jahres sind vorbei, aber erst \(used) % deines Urlaubs sind geplant. Plane ihn, bevor er verfällt.", .french: "\(year) % de l’année est passée, mais seulement \(used) % de vos congés sont prévus. Planifiez-les avant de les perdre.", .spanish: "Ha pasado el \(year) % del año y solo tienes planeado el \(used) % de tus vacaciones. Planéalas antes de que se pierdan.", .italian: "È passato il \(year)% dell’anno, ma hai programmato solo il \(used)% delle ferie. Pianificale prima di perderle.", .portuguese: "\(year)% do ano já passou, mas só \(used)% das suas férias estão planejadas. Planeje antes que sobrem.", .chineseTraditional: "今年已過去 \(year)%，年假只安排了 \(used)%。在用不完之前做好計畫吧。", .dutch: "\(year)% van het jaar is voorbij, maar pas \(used)% van je verlof is gepland. Plan het voordat het vervalt.", .swedish: "\(year) % av året har gått, men bara \(used) % av ledigheten är planerad. Planera innan den går förlorad.", .norwegian: "\(year) % av året har gått, men bare \(used) % av fridagene er planlagt. Planlegg før de går tapt.", .danish: "\(year) % af året er gået, men kun \(used) % af ferien er planlagt. Planlæg, før den går tabt.", .finnish: "Vuodesta on kulunut \(year) %, mutta lomista on suunniteltu vain \(used) %. Suunnittele ennen kuin ne jäävät käyttämättä.", .polish: "Minęło \(year)% roku, a zaplanowano tylko \(used)% urlopu. Zaplanuj, zanim przepadnie.", .czech: "Uběhlo \(year) % roku, ale naplánováno je jen \(used) % volna. Naplánuj ho, než propadne.", .greek: "Πέρασε το \(year)% της χρονιάς, αλλά έχεις προγραμματίσει μόνο το \(used)% της άδειας. Προγραμμάτισέ την πριν χαθεί.", .turkish: "Yılın %\(year)’i geçti ama izninin yalnızca %\(used)’i planlandı. Yanmadan planla.", .russian: "Прошло \(year)% года, а запланировано лишь \(used)% отпуска. Спланируйте, пока дни не сгорели.", .indonesian: "Sudah \(year)% tahun berlalu, tapi baru \(used)% cuti yang direncanakan. Rencanakan sebelum hangus.", .thai: "ปีนี้ผ่านไป \(year)% แต่วางวันลาไว้แค่ \(used)% วางแผนก่อนวันลาจะเหลือทิ้ง", .vietnamese: "Đã qua \(year)% năm nhưng mới lên kế hoạch \(used)% ngày phép. Hãy lên kế hoạch trước khi bị bỏ phí.", .arabic: "مضى \(year)% من العام ولم تخطط إلا لـ \(used)% من إجازتك. خطّط لها قبل أن تضيع."])
     }
 
     public static func paceWarnFast(year: Int, used: Int) -> String {
-        pick([.korean: "연차를 빠르게 쓰고 있어요. 올해가 \(year)% 지났고 연차는 \(used)%를 썼어요.", .english: "You’re using leave quickly: \(year)% of the year has passed and \(used)% of your leave is used.", .japanese: "年休の消化が早めです。今年が\(year)%過ぎ、年休は\(used)%使いました。", .chinese: "年假用得有点快。今年已过去 \(year)%，年假已用 \(used)%。", .german: "Du nimmst schnell Urlaub: \(year) % des Jahres sind vorbei, \(used) % deines Urlaubs sind verbraucht.", .french: "Vous utilisez vite vos congés : \(year) % de l’année est passée et \(used) % des congés sont pris.", .spanish: "Estás usando las vacaciones rápido: ha pasado el \(year) % del año y ya usaste el \(used) %.", .italian: "Stai usando le ferie in fretta: è passato il \(year)% dell’anno e hai usato il \(used)%.", .portuguese: "Você está usando as férias rápido: \(year)% do ano passou e \(used)% já foi usado.", .chineseTraditional: "年假用得有點快。今年已過去 \(year)%，年假已用 \(used)%。", .dutch: "Je gebruikt je verlof snel: \(year)% van het jaar is voorbij en \(used)% is opgenomen.", .swedish: "Du använder ledigheten snabbt: \(year) % av året har gått och \(used) % är använt.", .norwegian: "Du bruker fridagene raskt: \(year) % av året har gått og \(used) % er brukt.", .danish: "Du bruger ferien hurtigt: \(year) % af året er gået, og \(used) % er brugt.", .finnish: "Käytät lomia nopeasti: vuodesta on kulunut \(year) % ja lomista käytetty \(used) %.", .polish: "Szybko wykorzystujesz urlop: minęło \(year)% roku, a wykorzystano \(used)%.", .czech: "Čerpáš volno rychle: uběhlo \(year) % roku a vyčerpáno je \(used) %.", .greek: "Χρησιμοποιείς γρήγορα την άδεια: πέρασε το \(year)% της χρονιάς και έχεις πάρει το \(used)%.", .turkish: "İznini hızlı kullanıyorsun: yılın %\(year)’i geçti, iznin %\(used)’i kullanıldı.", .russian: "Вы быстро тратите отпуск: прошло \(year)% года, использовано \(used)%.", .indonesian: "Kamu memakai cuti dengan cepat: \(year)% tahun berlalu dan \(used)% cuti terpakai.", .thai: "คุณใช้วันลาเร็ว ปีนี้ผ่านไป \(year)% และใช้วันลาไป \(used)%", .vietnamese: "Bạn đang dùng phép khá nhanh: đã qua \(year)% năm và đã dùng \(used)% ngày phép."])
+        pick([.korean: "연차를 빠르게 쓰고 있어요. 올해가 \(year)% 지났고 연차는 \(used)%를 썼어요.", .english: "You’re using leave quickly: \(year)% of the year has passed and \(used)% of your leave is used.", .japanese: "年休の消化が早めです。今年が\(year)%過ぎ、年休は\(used)%使いました。", .chinese: "年假用得有点快。今年已过去 \(year)%，年假已用 \(used)%。", .german: "Du nimmst schnell Urlaub: \(year) % des Jahres sind vorbei, \(used) % deines Urlaubs sind verbraucht.", .french: "Vous utilisez vite vos congés : \(year) % de l’année est passée et \(used) % des congés sont pris.", .spanish: "Estás usando las vacaciones rápido: ha pasado el \(year) % del año y ya usaste el \(used) %.", .italian: "Stai usando le ferie in fretta: è passato il \(year)% dell’anno e hai usato il \(used)%.", .portuguese: "Você está usando as férias rápido: \(year)% do ano passou e \(used)% já foi usado.", .chineseTraditional: "年假用得有點快。今年已過去 \(year)%，年假已用 \(used)%。", .dutch: "Je gebruikt je verlof snel: \(year)% van het jaar is voorbij en \(used)% is opgenomen.", .swedish: "Du använder ledigheten snabbt: \(year) % av året har gått och \(used) % är använt.", .norwegian: "Du bruker fridagene raskt: \(year) % av året har gått og \(used) % er brukt.", .danish: "Du bruger ferien hurtigt: \(year) % af året er gået, og \(used) % er brugt.", .finnish: "Käytät lomia nopeasti: vuodesta on kulunut \(year) % ja lomista käytetty \(used) %.", .polish: "Szybko wykorzystujesz urlop: minęło \(year)% roku, a wykorzystano \(used)%.", .czech: "Čerpáš volno rychle: uběhlo \(year) % roku a vyčerpáno je \(used) %.", .greek: "Χρησιμοποιείς γρήγορα την άδεια: πέρασε το \(year)% της χρονιάς και έχεις πάρει το \(used)%.", .turkish: "İznini hızlı kullanıyorsun: yılın %\(year)’i geçti, iznin %\(used)’i kullanıldı.", .russian: "Вы быстро тратите отпуск: прошло \(year)% года, использовано \(used)%.", .indonesian: "Kamu memakai cuti dengan cepat: \(year)% tahun berlalu dan \(used)% cuti terpakai.", .thai: "คุณใช้วันลาเร็ว ปีนี้ผ่านไป \(year)% และใช้วันลาไป \(used)%", .vietnamese: "Bạn đang dùng phép khá nhanh: đã qua \(year)% năm và đã dùng \(used)% ngày phép.", .arabic: "تستهلك إجازتك بسرعة: مضى \(year)% من العام واستخدمت \(used)% من رصيدك."])
     }
 }
 
 // MARK: - 처음 쓰는 사람의 첫 단계 (캘린더): 잡아 둔 휴가 넣기
 extension Strings {
-    public static var plannedPromptTitle: String { pick([.korean: "앞으로 잡아 둔 휴가가 있나요?", .english: "Any time off already planned?", .japanese: "これから予定している休暇はありますか？", .chinese: "有已经安排好的休假吗？", .german: "Hast du schon Urlaub geplant?", .french: "Des congés déjà prévus ?", .spanish: "¿Tienes vacaciones ya planeadas?", .italian: "Hai già delle ferie in programma?", .portuguese: "Já tem férias planejadas?", .chineseTraditional: "有已經安排好的休假嗎？", .dutch: "Heb je al vrije dagen gepland?", .swedish: "Har du redan planerat ledighet?", .norwegian: "Har du allerede planlagt fri?", .danish: "Har du allerede planlagt fri?", .finnish: "Onko sinulla jo suunniteltuja lomia?", .polish: "Masz już zaplanowany urlop?", .czech: "Máš už naplánované volno?", .greek: "Έχεις ήδη προγραμματίσει άδεια;", .turkish: "Planladığın bir izin var mı?", .russian: "Уже запланировали отпуск?", .indonesian: "Sudah ada cuti yang direncanakan?", .thai: "มีวันลาที่วางไว้แล้วไหม", .vietnamese: "Bạn đã lên lịch kỳ nghỉ nào chưa?"]) }
+    public static var plannedPromptTitle: String { pick([.korean: "앞으로 잡아 둔 휴가가 있나요?", .english: "Any time off already planned?", .japanese: "これから予定している休暇はありますか？", .chinese: "有已经安排好的休假吗？", .german: "Hast du schon Urlaub geplant?", .french: "Des congés déjà prévus ?", .spanish: "¿Tienes vacaciones ya planeadas?", .italian: "Hai già delle ferie in programma?", .portuguese: "Já tem férias planejadas?", .chineseTraditional: "有已經安排好的休假嗎？", .dutch: "Heb je al vrije dagen gepland?", .swedish: "Har du redan planerat ledighet?", .norwegian: "Har du allerede planlagt fri?", .danish: "Har du allerede planlagt fri?", .finnish: "Onko sinulla jo suunniteltuja lomia?", .polish: "Masz już zaplanowany urlop?", .czech: "Máš už naplánované volno?", .greek: "Έχεις ήδη προγραμματίσει άδεια;", .turkish: "Planladığın bir izin var mı?", .russian: "Уже запланировали отпуск?", .indonesian: "Sudah ada cuti yang direncanakan?", .thai: "มีวันลาที่วางไว้แล้วไหม", .vietnamese: "Bạn đã lên lịch kỳ nghỉ nào chưa?", .arabic: "هل لديك إجازات محددة مسبقًا؟"]) }
 
-    public static var plannedPromptDesc: String { pick([.korean: "정해 둔 날을 넣어 두면 남은 연차와 추천 휴가가 그만큼 맞춰져요.", .english: "Add the dates you’ve set, and your balance and suggestions adjust to match.", .japanese: "決まっている日を入れると、残りの年休とおすすめがそれに合わせて変わります。", .chinese: "填入已定的日期，剩余年假和推荐会随之调整。", .german: "Trag feste Termine ein, dann passen sich Resturlaub und Vorschläge an.", .french: "Ajoutez les dates fixées : votre solde et les suggestions s’ajustent.", .spanish: "Añade las fechas decididas y tu saldo y las sugerencias se ajustarán.", .italian: "Aggiungi le date decise: saldo e suggerimenti si adeguano.", .portuguese: "Adicione as datas definidas e o saldo e as sugestões se ajustam.", .chineseTraditional: "填入已定的日期，剩餘年假和推薦會隨之調整。", .dutch: "Voeg vastgelegde data toe; je saldo en suggesties passen zich aan.", .swedish: "Lägg till bestämda datum så anpassas saldot och förslagen.", .norwegian: "Legg inn bestemte datoer, så tilpasses saldoen og forslagene.", .danish: "Tilføj faste datoer, så tilpasses saldoen og forslagene.", .finnish: "Lisää sovitut päivät, niin saldo ja ehdotukset mukautuvat.", .polish: "Dodaj ustalone daty, a saldo i propozycje się dopasują.", .czech: "Přidej domluvená data a zůstatek i návrhy se upraví.", .greek: "Πρόσθεσε τις ημερομηνίες που έχεις ορίσει και το υπόλοιπο και οι προτάσεις προσαρμόζονται.", .turkish: "Belirlediğin tarihleri ekle; kalan izin ve öneriler buna göre ayarlanır.", .russian: "Добавьте выбранные даты — остаток и подсказки подстроятся.", .indonesian: "Tambahkan tanggal yang sudah ditentukan, sisa cuti dan saran akan menyesuaikan.", .thai: "ใส่วันที่กำหนดไว้ แล้ววันลาคงเหลือและคำแนะนำจะปรับตาม", .vietnamese: "Thêm những ngày đã định, số phép còn lại và gợi ý sẽ tự điều chỉnh."]) }
+    public static var plannedPromptDesc: String { pick([.korean: "정해 둔 날을 넣어 두면 남은 연차와 추천 휴가가 그만큼 맞춰져요.", .english: "Add the dates you’ve set, and your balance and suggestions adjust to match.", .japanese: "決まっている日を入れると、残りの年休とおすすめがそれに合わせて変わります。", .chinese: "填入已定的日期，剩余年假和推荐会随之调整。", .german: "Trag feste Termine ein, dann passen sich Resturlaub und Vorschläge an.", .french: "Ajoutez les dates fixées : votre solde et les suggestions s’ajustent.", .spanish: "Añade las fechas decididas y tu saldo y las sugerencias se ajustarán.", .italian: "Aggiungi le date decise: saldo e suggerimenti si adeguano.", .portuguese: "Adicione as datas definidas e o saldo e as sugestões se ajustam.", .chineseTraditional: "填入已定的日期，剩餘年假和推薦會隨之調整。", .dutch: "Voeg vastgelegde data toe; je saldo en suggesties passen zich aan.", .swedish: "Lägg till bestämda datum så anpassas saldot och förslagen.", .norwegian: "Legg inn bestemte datoer, så tilpasses saldoen og forslagene.", .danish: "Tilføj faste datoer, så tilpasses saldoen og forslagene.", .finnish: "Lisää sovitut päivät, niin saldo ja ehdotukset mukautuvat.", .polish: "Dodaj ustalone daty, a saldo i propozycje się dopasują.", .czech: "Přidej domluvená data a zůstatek i návrhy se upraví.", .greek: "Πρόσθεσε τις ημερομηνίες που έχεις ορίσει και το υπόλοιπο και οι προτάσεις προσαρμόζονται.", .turkish: "Belirlediğin tarihleri ekle; kalan izin ve öneriler buna göre ayarlanır.", .russian: "Добавьте выбранные даты — остаток и подсказки подстроятся.", .indonesian: "Tambahkan tanggal yang sudah ditentukan, sisa cuti dan saran akan menyesuaikan.", .thai: "ใส่วันที่กำหนดไว้ แล้ววันลาคงเหลือและคำแนะนำจะปรับตาม", .vietnamese: "Thêm những ngày đã định, số phép còn lại và gợi ý sẽ tự điều chỉnh.", .arabic: "أدخل المواعيد التي حددتها ليتوافق رصيدك والاقتراحات معها."]) }
 
-    public static var plannedPromptNone: String { pick([.korean: "아직 없어요", .english: "Not yet", .japanese: "まだない", .chinese: "还没有", .german: "Noch nicht", .french: "Pas encore", .spanish: "Todavía no", .italian: "Non ancora", .portuguese: "Ainda não", .chineseTraditional: "還沒有", .dutch: "Nog niet", .swedish: "Inte än", .norwegian: "Ikke ennå", .danish: "Ikke endnu", .finnish: "Ei vielä", .polish: "Jeszcze nie", .czech: "Zatím ne", .greek: "Όχι ακόμα", .turkish: "Henüz yok", .russian: "Пока нет", .indonesian: "Belum", .thai: "ยังไม่มี", .vietnamese: "Chưa có"]) }
+    public static var plannedPromptNone: String { pick([.korean: "아직 없어요", .english: "Not yet", .japanese: "まだない", .chinese: "还没有", .german: "Noch nicht", .french: "Pas encore", .spanish: "Todavía no", .italian: "Non ancora", .portuguese: "Ainda não", .chineseTraditional: "還沒有", .dutch: "Nog niet", .swedish: "Inte än", .norwegian: "Ikke ennå", .danish: "Ikke endnu", .finnish: "Ei vielä", .polish: "Jeszcze nie", .czech: "Zatím ne", .greek: "Όχι ακόμα", .turkish: "Henüz yok", .russian: "Пока нет", .indonesian: "Belum", .thai: "ยังไม่มี", .vietnamese: "Chưa có", .arabic: "ليس بعد"]) }
 
-    public static var plannedPromptAdd: String { pick([.korean: "날짜 고르기", .english: "Pick dates", .japanese: "日付を選ぶ", .chinese: "选择日期", .german: "Daten wählen", .french: "Choisir les dates", .spanish: "Elegir fechas", .italian: "Scegli le date", .portuguese: "Escolher datas", .chineseTraditional: "選擇日期", .dutch: "Data kiezen", .swedish: "Välj datum", .norwegian: "Velg datoer", .danish: "Vælg datoer", .finnish: "Valitse päivät", .polish: "Wybierz daty", .czech: "Vybrat data", .greek: "Επιλογή ημερομηνιών", .turkish: "Tarih seç", .russian: "Выбрать даты", .indonesian: "Pilih tanggal", .thai: "เลือกวันที่", .vietnamese: "Chọn ngày"]) }
+    public static var plannedPromptAdd: String { pick([.korean: "날짜 고르기", .english: "Pick dates", .japanese: "日付を選ぶ", .chinese: "选择日期", .german: "Daten wählen", .french: "Choisir les dates", .spanish: "Elegir fechas", .italian: "Scegli le date", .portuguese: "Escolher datas", .chineseTraditional: "選擇日期", .dutch: "Data kiezen", .swedish: "Välj datum", .norwegian: "Velg datoer", .danish: "Vælg datoer", .finnish: "Valitse päivät", .polish: "Wybierz daty", .czech: "Vybrat data", .greek: "Επιλογή ημερομηνιών", .turkish: "Tarih seç", .russian: "Выбрать даты", .indonesian: "Pilih tanggal", .thai: "เลือกวันที่", .vietnamese: "Chọn ngày", .arabic: "اختيار التواريخ"]) }
 
-    public static var plannedMoreTitle: String { pick([.korean: "잡아 둔 휴가가 더 있나요?", .english: "Any more planned time off?", .japanese: "ほかにも予定している休暇はありますか？", .chinese: "还有其他已安排的休假吗？", .german: "Noch weiterer geplanter Urlaub?", .french: "D’autres congés prévus ?", .spanish: "¿Más vacaciones planeadas?", .italian: "Altre ferie in programma?", .portuguese: "Mais férias planejadas?", .chineseTraditional: "還有其他已安排的休假嗎？", .dutch: "Nog meer geplande vrije dagen?", .swedish: "Mer planerad ledighet?", .norwegian: "Mer planlagt fri?", .danish: "Mere planlagt fri?", .finnish: "Onko muita suunniteltuja lomia?", .polish: "Masz jeszcze zaplanowany urlop?", .czech: "Máš ještě další naplánované volno?", .greek: "Έχεις κι άλλη προγραμματισμένη άδεια;", .turkish: "Planlanmış başka izin var mı?", .russian: "Есть ещё запланированный отпуск?", .indonesian: "Ada cuti lain yang direncanakan?", .thai: "มีวันลาที่วางไว้อีกไหม", .vietnamese: "Còn kỳ nghỉ nào đã lên lịch nữa không?"]) }
+    public static var plannedMoreTitle: String { pick([.korean: "잡아 둔 휴가가 더 있나요?", .english: "Any more planned time off?", .japanese: "ほかにも予定している休暇はありますか？", .chinese: "还有其他已安排的休假吗？", .german: "Noch weiterer geplanter Urlaub?", .french: "D’autres congés prévus ?", .spanish: "¿Más vacaciones planeadas?", .italian: "Altre ferie in programma?", .portuguese: "Mais férias planejadas?", .chineseTraditional: "還有其他已安排的休假嗎？", .dutch: "Nog meer geplande vrije dagen?", .swedish: "Mer planerad ledighet?", .norwegian: "Mer planlagt fri?", .danish: "Mere planlagt fri?", .finnish: "Onko muita suunniteltuja lomia?", .polish: "Masz jeszcze zaplanowany urlop?", .czech: "Máš ještě další naplánované volno?", .greek: "Έχεις κι άλλη προγραμματισμένη άδεια;", .turkish: "Planlanmış başka izin var mı?", .russian: "Есть ещё запланированный отпуск?", .indonesian: "Ada cuti lain yang direncanakan?", .thai: "มีวันลาที่วางไว้อีกไหม", .vietnamese: "Còn kỳ nghỉ nào đã lên lịch nữa không?", .arabic: "هل لديك إجازات مخططة أخرى؟"]) }
 
-    public static var plannedDone: String { pick([.korean: "다 넣었어요", .english: "That’s all", .japanese: "これで全部", .chinese: "就这些", .german: "Das war’s", .french: "C’est tout", .spanish: "Eso es todo", .italian: "È tutto", .portuguese: "É só isso", .chineseTraditional: "就這些", .dutch: "Dat is alles", .swedish: "Det var allt", .norwegian: "Det var alt", .danish: "Det var det hele", .finnish: "Siinä kaikki", .polish: "To wszystko", .czech: "To je vše", .greek: "Αυτά ήταν", .turkish: "Hepsi bu", .russian: "Это всё", .indonesian: "Sudah semua", .thai: "ครบแล้ว", .vietnamese: "Vậy là đủ"]) }
+    public static var plannedDone: String { pick([.korean: "다 넣었어요", .english: "That’s all", .japanese: "これで全部", .chinese: "就这些", .german: "Das war’s", .french: "C’est tout", .spanish: "Eso es todo", .italian: "È tutto", .portuguese: "É só isso", .chineseTraditional: "就這些", .dutch: "Dat is alles", .swedish: "Det var allt", .norwegian: "Det var alt", .danish: "Det var det hele", .finnish: "Siinä kaikki", .polish: "To wszystko", .czech: "To je vše", .greek: "Αυτά ήταν", .turkish: "Hepsi bu", .russian: "Это всё", .indonesian: "Sudah semua", .thai: "ครบแล้ว", .vietnamese: "Vậy là đủ", .arabic: "أدخلتها كلها"]) }
 
-    public static var plannedAddAnother: String { pick([.korean: "하나 더", .english: "Add another", .japanese: "もう一つ", .chinese: "再加一个", .german: "Noch einen", .french: "En ajouter un", .spanish: "Añadir otro", .italian: "Aggiungine un altro", .portuguese: "Adicionar outro", .chineseTraditional: "再加一個", .dutch: "Nog een", .swedish: "Lägg till fler", .norwegian: "Legg til en til", .danish: "Tilføj en til", .finnish: "Lisää toinen", .polish: "Dodaj kolejny", .czech: "Přidat další", .greek: "Προσθήκη άλλης", .turkish: "Bir tane daha", .russian: "Добавить ещё", .indonesian: "Tambah lagi", .thai: "เพิ่มอีก", .vietnamese: "Thêm nữa"]) }
+    public static var plannedAddAnother: String { pick([.korean: "하나 더", .english: "Add another", .japanese: "もう一つ", .chinese: "再加一个", .german: "Noch einen", .french: "En ajouter un", .spanish: "Añadir otro", .italian: "Aggiungine un altro", .portuguese: "Adicionar outro", .chineseTraditional: "再加一個", .dutch: "Nog een", .swedish: "Lägg till fler", .norwegian: "Legg til en til", .danish: "Tilføj en til", .finnish: "Lisää toinen", .polish: "Dodaj kolejny", .czech: "Přidat další", .greek: "Προσθήκη άλλης", .turkish: "Bir tane daha", .russian: "Добавить ещё", .indonesian: "Tambah lagi", .thai: "เพิ่มอีก", .vietnamese: "Thêm nữa", .arabic: "إضافة أخرى"]) }
 }
 
 // MARK: - 더 쉽게 넣기 (캡처 · 캘린더)
 extension Strings {
-    public static var easyEntryTitle: String { pick([.korean: "하나씩 넣기 번거롭다면", .english: "Too many to add one by one?", .japanese: "一つずつ入れるのが面倒なら", .chinese: "嫌一个个输入太麻烦？", .german: "Zu viele zum Einzeln-Eintragen?", .french: "Trop nombreux à saisir un par un ?", .spanish: "¿Demasiados para añadir uno a uno?", .italian: "Troppi da aggiungere uno per uno?", .portuguese: "Muitos para adicionar um por um?", .chineseTraditional: "嫌一個個輸入太麻煩？", .dutch: "Te veel om één voor één toe te voegen?", .swedish: "För många att lägga till en i taget?", .norwegian: "For mange å legge inn én og én?", .danish: "For mange at tilføje én ad gangen?", .finnish: "Liian monta lisättäväksi yksitellen?", .polish: "Za dużo, by dodawać po kolei?", .czech: "Příliš mnoho na přidávání po jednom?", .greek: "Πολλές για να τις προσθέσεις μία-μία;", .turkish: "Tek tek eklemek zahmetli mi?", .russian: "Долго вводить по одному?", .indonesian: "Repot menambah satu per satu?", .thai: "ใส่ทีละรายการยุ่งยากไหม", .vietnamese: "Thêm từng cái một quá phiền?"]) }
+    public static var easyEntryTitle: String { pick([.korean: "하나씩 넣기 번거롭다면", .english: "Too many to add one by one?", .japanese: "一つずつ入れるのが面倒なら", .chinese: "嫌一个个输入太麻烦？", .german: "Zu viele zum Einzeln-Eintragen?", .french: "Trop nombreux à saisir un par un ?", .spanish: "¿Demasiados para añadir uno a uno?", .italian: "Troppi da aggiungere uno per uno?", .portuguese: "Muitos para adicionar um por um?", .chineseTraditional: "嫌一個個輸入太麻煩？", .dutch: "Te veel om één voor één toe te voegen?", .swedish: "För många att lägga till en i taget?", .norwegian: "For mange å legge inn én og én?", .danish: "For mange at tilføje én ad gangen?", .finnish: "Liian monta lisättäväksi yksitellen?", .polish: "Za dużo, by dodawać po kolei?", .czech: "Příliš mnoho na přidávání po jednom?", .greek: "Πολλές για να τις προσθέσεις μία-μία;", .turkish: "Tek tek eklemek zahmetli mi?", .russian: "Долго вводить по одному?", .indonesian: "Repot menambah satu per satu?", .thai: "ใส่ทีละรายการยุ่งยากไหม", .vietnamese: "Thêm từng cái một quá phiền?", .arabic: "هل إدخالها واحدة واحدة متعب؟"]) }
 
-    public static var easyEntryPhoto: String { pick([.korean: "캡처로 넣기", .english: "From a screenshot", .japanese: "スクショから", .chinese: "从截图导入", .german: "Aus Screenshot", .french: "Depuis une capture", .spanish: "Desde una captura", .italian: "Da uno screenshot", .portuguese: "De uma captura", .chineseTraditional: "從截圖匯入", .dutch: "Uit screenshot", .swedish: "Från skärmdump", .norwegian: "Fra skjermbilde", .danish: "Fra skærmbillede", .finnish: "Kuvakaappauksesta", .polish: "Ze zrzutu ekranu", .czech: "Ze snímku obrazovky", .greek: "Από στιγμιότυπο", .turkish: "Ekran görüntüsünden", .russian: "Со скриншота", .indonesian: "Dari tangkapan layar", .thai: "จากภาพหน้าจอ", .vietnamese: "Từ ảnh chụp màn hình"]) }
+    public static var easyEntryPhoto: String { pick([.korean: "캡처로 넣기", .english: "From a screenshot", .japanese: "スクショから", .chinese: "从截图导入", .german: "Aus Screenshot", .french: "Depuis une capture", .spanish: "Desde una captura", .italian: "Da uno screenshot", .portuguese: "De uma captura", .chineseTraditional: "從截圖匯入", .dutch: "Uit screenshot", .swedish: "Från skärmdump", .norwegian: "Fra skjermbilde", .danish: "Fra skærmbillede", .finnish: "Kuvakaappauksesta", .polish: "Ze zrzutu ekranu", .czech: "Ze snímku obrazovky", .greek: "Από στιγμιότυπο", .turkish: "Ekran görüntüsünden", .russian: "Со скриншота", .indonesian: "Dari tangkapan layar", .thai: "จากภาพหน้าจอ", .vietnamese: "Từ ảnh chụp màn hình", .arabic: "من لقطة شاشة"]) }
 
-    public static var easyEntryCalendar: String { pick([.korean: "캘린더에서", .english: "From Calendar", .japanese: "カレンダーから", .chinese: "从日历导入", .german: "Aus Kalender", .french: "Depuis Calendrier", .spanish: "Desde Calendario", .italian: "Da Calendario", .portuguese: "Do Calendário", .chineseTraditional: "從行事曆匯入", .dutch: "Uit Agenda", .swedish: "Från Kalender", .norwegian: "Fra Kalender", .danish: "Fra Kalender", .finnish: "Kalenterista", .polish: "Z Kalendarza", .czech: "Z Kalendáře", .greek: "Από Ημερολόγιο", .turkish: "Takvimden", .russian: "Из Календаря", .indonesian: "Dari Kalender", .thai: "จากปฏิทิน", .vietnamese: "Từ Lịch"]) }
+    public static var easyEntryCalendar: String { pick([.korean: "캘린더에서", .english: "From Calendar", .japanese: "カレンダーから", .chinese: "从日历导入", .german: "Aus Kalender", .french: "Depuis Calendrier", .spanish: "Desde Calendario", .italian: "Da Calendario", .portuguese: "Do Calendário", .chineseTraditional: "從行事曆匯入", .dutch: "Uit Agenda", .swedish: "Från Kalender", .norwegian: "Fra Kalender", .danish: "Fra Kalender", .finnish: "Kalenterista", .polish: "Z Kalendarza", .czech: "Z Kalendáře", .greek: "Από Ημερολόγιο", .turkish: "Takvimden", .russian: "Из Календаря", .indonesian: "Dari Kalender", .thai: "จากปฏิทิน", .vietnamese: "Từ Lịch", .arabic: "من التقويم"]) }
 
-    public static var photoStepOpen: String { pick([.korean: "회사 시스템이나 메신저에서 휴가 신청 내역 화면을 열어요", .english: "Open your leave request history in your company system or messenger", .japanese: "会社のシステムやメッセンジャーで休暇申請履歴の画面を開きます", .chinese: "在公司系统或通讯软件中打开休假申请记录页面", .german: "Öffne deinen Urlaubsantragsverlauf im Firmensystem oder Messenger", .french: "Ouvrez l’historique de vos demandes de congé dans l’outil de l’entreprise ou la messagerie", .spanish: "Abre el historial de solicitudes de vacaciones en el sistema de tu empresa o en la mensajería", .italian: "Apri lo storico delle richieste di ferie nel sistema aziendale o nella chat", .portuguese: "Abra o histórico de pedidos de férias no sistema da empresa ou no mensageiro", .chineseTraditional: "在公司系統或通訊軟體中打開休假申請紀錄頁面", .dutch: "Open je verlofaanvragen in het bedrijfssysteem of de chatapp", .swedish: "Öppna din ledighetshistorik i företagets system eller chatt", .norwegian: "Åpne fraværssøknadene dine i firmasystemet eller chatten", .danish: "Åbn dine ferieanmodninger i firmaets system eller chat", .finnish: "Avaa lomahakemushistoriasi yrityksen järjestelmässä tai viestisovelluksessa", .polish: "Otwórz historię wniosków urlopowych w systemie firmy lub komunikatorze", .czech: "Otevři historii žádostí o volno ve firemním systému nebo chatu", .greek: "Άνοιξε το ιστορικό αιτήσεων άδειας στο σύστημα της εταιρείας ή στο messenger", .turkish: "Şirket sisteminde veya mesajlaşma uygulamasında izin talep geçmişini aç", .russian: "Откройте историю заявок на отпуск в системе компании или мессенджере", .indonesian: "Buka riwayat pengajuan cuti di sistem kantor atau aplikasi pesan", .thai: "เปิดหน้าประวัติการขอลาในระบบของบริษัทหรือแอปแชต", .vietnamese: "Mở lịch sử xin nghỉ phép trong hệ thống công ty hoặc ứng dụng nhắn tin"]) }
+    public static var photoStepOpen: String { pick([.korean: "회사 시스템이나 메신저에서 휴가 신청 내역 화면을 열어요", .english: "Open your leave request history in your company system or messenger", .japanese: "会社のシステムやメッセンジャーで休暇申請履歴の画面を開きます", .chinese: "在公司系统或通讯软件中打开休假申请记录页面", .german: "Öffne deinen Urlaubsantragsverlauf im Firmensystem oder Messenger", .french: "Ouvrez l’historique de vos demandes de congé dans l’outil de l’entreprise ou la messagerie", .spanish: "Abre el historial de solicitudes de vacaciones en el sistema de tu empresa o en la mensajería", .italian: "Apri lo storico delle richieste di ferie nel sistema aziendale o nella chat", .portuguese: "Abra o histórico de pedidos de férias no sistema da empresa ou no mensageiro", .chineseTraditional: "在公司系統或通訊軟體中打開休假申請紀錄頁面", .dutch: "Open je verlofaanvragen in het bedrijfssysteem of de chatapp", .swedish: "Öppna din ledighetshistorik i företagets system eller chatt", .norwegian: "Åpne fraværssøknadene dine i firmasystemet eller chatten", .danish: "Åbn dine ferieanmodninger i firmaets system eller chat", .finnish: "Avaa lomahakemushistoriasi yrityksen järjestelmässä tai viestisovelluksessa", .polish: "Otwórz historię wniosków urlopowych w systemie firmy lub komunikatorze", .czech: "Otevři historii žádostí o volno ve firemním systému nebo chatu", .greek: "Άνοιξε το ιστορικό αιτήσεων άδειας στο σύστημα της εταιρείας ή στο messenger", .turkish: "Şirket sisteminde veya mesajlaşma uygulamasında izin talep geçmişini aç", .russian: "Откройте историю заявок на отпуск в системе компании или мессенджере", .indonesian: "Buka riwayat pengajuan cuti di sistem kantor atau aplikasi pesan", .thai: "เปิดหน้าประวัติการขอลาในระบบของบริษัทหรือแอปแชต", .vietnamese: "Mở lịch sử xin nghỉ phép trong hệ thống công ty hoặc ứng dụng nhắn tin", .arabic: "افتح سجل طلبات الإجازة في نظام شركتك أو تطبيق المراسلة"]) }
 
-    public static var photoStepCaptureFaceID: String { pick([.korean: "측면 버튼과 음량 높이기 버튼을 함께 눌러 캡처해요", .english: "Press the side button and volume up together to take a screenshot", .japanese: "サイドボタンと音量を上げるボタンを同時に押してスクショします", .chinese: "同时按侧边按钮和音量加键截屏", .german: "Drücke Seitentaste und Lauter gleichzeitig für einen Screenshot", .french: "Appuyez en même temps sur le bouton latéral et volume + pour faire une capture", .spanish: "Pulsa a la vez el botón lateral y subir volumen para hacer una captura", .italian: "Premi insieme il tasto laterale e volume su per lo screenshot", .portuguese: "Pressione o botão lateral e aumentar volume juntos para capturar a tela", .chineseTraditional: "同時按側邊按鈕和音量加鍵截圖", .dutch: "Druk tegelijk op de zijknop en volume omhoog voor een screenshot", .swedish: "Tryck på sidoknappen och volym upp samtidigt för en skärmdump", .norwegian: "Trykk sideknappen og volum opp samtidig for et skjermbilde", .danish: "Tryk på sideknappen og lydstyrke op samtidig for et skærmbillede", .finnish: "Paina sivupainiketta ja äänenvoimakkuus ylös yhtä aikaa", .polish: "Naciśnij jednocześnie przycisk boczny i głośniej, by zrobić zrzut", .czech: "Stiskni současně boční tlačítko a zvýšení hlasitosti", .greek: "Πάτησε μαζί το πλαϊνό κουμπί και την αύξηση έντασης για στιγμιότυπο", .turkish: "Ekran görüntüsü için yan düğme ile ses açma düğmesine birlikte bas", .russian: "Нажмите одновременно боковую кнопку и кнопку увеличения громкости", .indonesian: "Tekan tombol samping dan volume naik bersamaan untuk tangkapan layar", .thai: "กดปุ่มด้านข้างพร้อมปุ่มเพิ่มเสียงเพื่อจับภาพหน้าจอ", .vietnamese: "Nhấn đồng thời nút sườn và nút tăng âm lượng để chụp màn hình"]) }
+    public static var photoStepCaptureFaceID: String { pick([.korean: "측면 버튼과 음량 높이기 버튼을 함께 눌러 캡처해요", .english: "Press the side button and volume up together to take a screenshot", .japanese: "サイドボタンと音量を上げるボタンを同時に押してスクショします", .chinese: "同时按侧边按钮和音量加键截屏", .german: "Drücke Seitentaste und Lauter gleichzeitig für einen Screenshot", .french: "Appuyez en même temps sur le bouton latéral et volume + pour faire une capture", .spanish: "Pulsa a la vez el botón lateral y subir volumen para hacer una captura", .italian: "Premi insieme il tasto laterale e volume su per lo screenshot", .portuguese: "Pressione o botão lateral e aumentar volume juntos para capturar a tela", .chineseTraditional: "同時按側邊按鈕和音量加鍵截圖", .dutch: "Druk tegelijk op de zijknop en volume omhoog voor een screenshot", .swedish: "Tryck på sidoknappen och volym upp samtidigt för en skärmdump", .norwegian: "Trykk sideknappen og volum opp samtidig for et skjermbilde", .danish: "Tryk på sideknappen og lydstyrke op samtidig for et skærmbillede", .finnish: "Paina sivupainiketta ja äänenvoimakkuus ylös yhtä aikaa", .polish: "Naciśnij jednocześnie przycisk boczny i głośniej, by zrobić zrzut", .czech: "Stiskni současně boční tlačítko a zvýšení hlasitosti", .greek: "Πάτησε μαζί το πλαϊνό κουμπί και την αύξηση έντασης για στιγμιότυπο", .turkish: "Ekran görüntüsü için yan düğme ile ses açma düğmesine birlikte bas", .russian: "Нажмите одновременно боковую кнопку и кнопку увеличения громкости", .indonesian: "Tekan tombol samping dan volume naik bersamaan untuk tangkapan layar", .thai: "กดปุ่มด้านข้างพร้อมปุ่มเพิ่มเสียงเพื่อจับภาพหน้าจอ", .vietnamese: "Nhấn đồng thời nút sườn và nút tăng âm lượng để chụp màn hình", .arabic: "اضغط الزر الجانبي وزر رفع الصوت معًا لأخذ لقطة شاشة"]) }
 
-    public static var photoStepCaptureHome: String { pick([.korean: "홈 버튼과 측면 버튼을 함께 눌러 캡처해요", .english: "Press the Home button and side button together to take a screenshot", .japanese: "ホームボタンとサイドボタンを同時に押してスクショします", .chinese: "同时按主屏幕按钮和侧边按钮截屏", .german: "Drücke Home- und Seitentaste gleichzeitig für einen Screenshot", .french: "Appuyez en même temps sur le bouton principal et le bouton latéral", .spanish: "Pulsa a la vez el botón de inicio y el lateral para hacer una captura", .italian: "Premi insieme il tasto Home e il tasto laterale", .portuguese: "Pressione o botão de início e o lateral juntos para capturar a tela", .chineseTraditional: "同時按主畫面按鈕和側邊按鈕截圖", .dutch: "Druk tegelijk op de thuisknop en de zijknop", .swedish: "Tryck på hemknappen och sidoknappen samtidigt", .norwegian: "Trykk Hjem-knappen og sideknappen samtidig", .danish: "Tryk på hjemknappen og sideknappen samtidig", .finnish: "Paina kotipainiketta ja sivupainiketta yhtä aikaa", .polish: "Naciśnij jednocześnie przycisk Początek i boczny", .czech: "Stiskni současně tlačítko plochy a boční tlačítko", .greek: "Πάτησε μαζί το κουμπί αφετηρίας και το πλαϊνό κουμπί", .turkish: "Ana Ekran düğmesiyle yan düğmeye birlikte bas", .russian: "Нажмите одновременно кнопку «Домой» и боковую кнопку", .indonesian: "Tekan tombol Utama dan tombol samping bersamaan", .thai: "กดปุ่มโฮมพร้อมปุ่มด้านข้างเพื่อจับภาพหน้าจอ", .vietnamese: "Nhấn đồng thời nút Home và nút sườn để chụp màn hình"]) }
+    public static var photoStepCaptureHome: String { pick([.korean: "홈 버튼과 측면 버튼을 함께 눌러 캡처해요", .english: "Press the Home button and side button together to take a screenshot", .japanese: "ホームボタンとサイドボタンを同時に押してスクショします", .chinese: "同时按主屏幕按钮和侧边按钮截屏", .german: "Drücke Home- und Seitentaste gleichzeitig für einen Screenshot", .french: "Appuyez en même temps sur le bouton principal et le bouton latéral", .spanish: "Pulsa a la vez el botón de inicio y el lateral para hacer una captura", .italian: "Premi insieme il tasto Home e il tasto laterale", .portuguese: "Pressione o botão de início e o lateral juntos para capturar a tela", .chineseTraditional: "同時按主畫面按鈕和側邊按鈕截圖", .dutch: "Druk tegelijk op de thuisknop en de zijknop", .swedish: "Tryck på hemknappen och sidoknappen samtidigt", .norwegian: "Trykk Hjem-knappen og sideknappen samtidig", .danish: "Tryk på hjemknappen og sideknappen samtidig", .finnish: "Paina kotipainiketta ja sivupainiketta yhtä aikaa", .polish: "Naciśnij jednocześnie przycisk Początek i boczny", .czech: "Stiskni současně tlačítko plochy a boční tlačítko", .greek: "Πάτησε μαζί το κουμπί αφετηρίας και το πλαϊνό κουμπί", .turkish: "Ana Ekran düğmesiyle yan düğmeye birlikte bas", .russian: "Нажмите одновременно кнопку «Домой» и боковую кнопку", .indonesian: "Tekan tombol Utama dan tombol samping bersamaan", .thai: "กดปุ่มโฮมพร้อมปุ่มด้านข้างเพื่อจับภาพหน้าจอ", .vietnamese: "Nhấn đồng thời nút Home và nút sườn để chụp màn hình", .arabic: "اضغط زر الشاشة الرئيسية والزر الجانبي معًا لأخذ لقطة شاشة"]) }
 
-    public static var photoStepPick: String { pick([.korean: "아래에서 캡처한 사진을 고르면 날짜·종류·일수를 알아서 읽어요", .english: "Pick the screenshot below and the dates, types and days are read for you", .japanese: "下でスクショを選ぶと、日付・種類・日数を自動で読み取ります", .chinese: "在下方选择截图，日期、类型和天数会自动识别", .german: "Wähle unten den Screenshot – Daten, Art und Tage werden automatisch erkannt", .french: "Choisissez la capture ci-dessous : dates, types et jours sont lus automatiquement", .spanish: "Elige la captura abajo y se leen solas las fechas, tipos y días", .italian: "Scegli lo screenshot qui sotto: date, tipi e giorni vengono letti da soli", .portuguese: "Escolha a captura abaixo e datas, tipos e dias são lidos automaticamente", .chineseTraditional: "在下方選擇截圖，日期、類型和天數會自動辨識", .dutch: "Kies hieronder de screenshot; data, soort en dagen worden vanzelf gelezen", .swedish: "Välj skärmdumpen nedan så läses datum, typ och dagar in automatiskt", .norwegian: "Velg skjermbildet nedenfor, så leses datoer, type og dager automatisk", .danish: "Vælg skærmbilledet nedenfor, så aflæses datoer, type og dage automatisk", .finnish: "Valitse kuvakaappaus alta, niin päivät, tyyppi ja määrä luetaan automaattisesti", .polish: "Wybierz zrzut poniżej, a daty, rodzaj i dni zostaną odczytane same", .czech: "Vyber snímek níže a data, druh i počet dní se načtou samy", .greek: "Διάλεξε το στιγμιότυπο παρακάτω και ημερομηνίες, τύπος και ημέρες διαβάζονται αυτόματα", .turkish: "Aşağıdan ekran görüntüsünü seç; tarih, tür ve gün sayısı otomatik okunur", .russian: "Выберите скриншот ниже — даты, тип и дни распознаются сами", .indonesian: "Pilih tangkapan layar di bawah, tanggal, jenis, dan jumlah hari terbaca otomatis", .thai: "เลือกภาพหน้าจอด้านล่าง แล้ววันที่ ประเภท และจำนวนวันจะถูกอ่านให้อัตโนมัติ", .vietnamese: "Chọn ảnh chụp bên dưới, ngày, loại và số ngày sẽ được đọc tự động"]) }
+    public static var photoStepPick: String { pick([.korean: "아래에서 캡처한 사진을 고르면 날짜·종류·일수를 알아서 읽어요", .english: "Pick the screenshot below and the dates, types and days are read for you", .japanese: "下でスクショを選ぶと、日付・種類・日数を自動で読み取ります", .chinese: "在下方选择截图，日期、类型和天数会自动识别", .german: "Wähle unten den Screenshot – Daten, Art und Tage werden automatisch erkannt", .french: "Choisissez la capture ci-dessous : dates, types et jours sont lus automatiquement", .spanish: "Elige la captura abajo y se leen solas las fechas, tipos y días", .italian: "Scegli lo screenshot qui sotto: date, tipi e giorni vengono letti da soli", .portuguese: "Escolha a captura abaixo e datas, tipos e dias são lidos automaticamente", .chineseTraditional: "在下方選擇截圖，日期、類型和天數會自動辨識", .dutch: "Kies hieronder de screenshot; data, soort en dagen worden vanzelf gelezen", .swedish: "Välj skärmdumpen nedan så läses datum, typ och dagar in automatiskt", .norwegian: "Velg skjermbildet nedenfor, så leses datoer, type og dager automatisk", .danish: "Vælg skærmbilledet nedenfor, så aflæses datoer, type og dage automatisk", .finnish: "Valitse kuvakaappaus alta, niin päivät, tyyppi ja määrä luetaan automaattisesti", .polish: "Wybierz zrzut poniżej, a daty, rodzaj i dni zostaną odczytane same", .czech: "Vyber snímek níže a data, druh i počet dní se načtou samy", .greek: "Διάλεξε το στιγμιότυπο παρακάτω και ημερομηνίες, τύπος και ημέρες διαβάζονται αυτόματα", .turkish: "Aşağıdan ekran görüntüsünü seç; tarih, tür ve gün sayısı otomatik okunur", .russian: "Выберите скриншот ниже — даты, тип и дни распознаются сами", .indonesian: "Pilih tangkapan layar di bawah, tanggal, jenis, dan jumlah hari terbaca otomatis", .thai: "เลือกภาพหน้าจอด้านล่าง แล้ววันที่ ประเภท และจำนวนวันจะถูกอ่านให้อัตโนมัติ", .vietnamese: "Chọn ảnh chụp bên dưới, ngày, loại và số ngày sẽ được đọc tự động", .arabic: "اختر اللقطة في الأسفل فنقرأ التواريخ والأنواع وعدد الأيام تلقائيًا"]) }
 
-    public static var photoPrivacy: String { pick([.korean: "사진은 이 기기 안에서만 읽고 어디로도 보내지 않아요", .english: "Photos are read only on this device and never sent anywhere", .japanese: "写真はこの端末の中だけで読み取り、どこにも送信しません", .chinese: "照片只在本机内识别，不会发送到任何地方", .german: "Fotos werden nur auf diesem Gerät gelesen und nirgendwohin gesendet", .french: "Les photos sont lues uniquement sur cet appareil et ne sont envoyées nulle part", .spanish: "Las fotos se leen solo en este dispositivo y no se envían a ningún sitio", .italian: "Le foto vengono lette solo su questo dispositivo e non inviate altrove", .portuguese: "As fotos são lidas só neste aparelho e não são enviadas a lugar nenhum", .chineseTraditional: "照片只在本機內辨識，不會傳送到任何地方", .dutch: "Foto’s worden alleen op dit apparaat gelezen en nergens heen gestuurd", .swedish: "Bilder läses bara på den här enheten och skickas ingenstans", .norwegian: "Bilder leses bare på denne enheten og sendes ingen steder", .danish: "Billeder læses kun på denne enhed og sendes ingen steder hen", .finnish: "Kuvat luetaan vain tällä laitteella eikä niitä lähetetä minnekään", .polish: "Zdjęcia są odczytywane tylko na tym urządzeniu i nigdzie nie są wysyłane", .czech: "Fotky se čtou jen v tomto zařízení a nikam se neposílají", .greek: "Οι φωτογραφίες διαβάζονται μόνο σε αυτή τη συσκευή και δεν στέλνονται πουθενά", .turkish: "Fotoğraflar yalnızca bu cihazda okunur, hiçbir yere gönderilmez", .russian: "Фото распознаются только на этом устройстве и никуда не отправляются", .indonesian: "Foto hanya dibaca di perangkat ini dan tidak dikirim ke mana pun", .thai: "อ่านรูปภาพในเครื่องนี้เท่านั้น ไม่ส่งไปที่ใด", .vietnamese: "Ảnh chỉ được đọc trên thiết bị này và không gửi đi đâu cả"]) }
+    public static var photoPrivacy: String { pick([.korean: "사진은 이 기기 안에서만 읽고 어디로도 보내지 않아요", .english: "Photos are read only on this device and never sent anywhere", .japanese: "写真はこの端末の中だけで読み取り、どこにも送信しません", .chinese: "照片只在本机内识别，不会发送到任何地方", .german: "Fotos werden nur auf diesem Gerät gelesen und nirgendwohin gesendet", .french: "Les photos sont lues uniquement sur cet appareil et ne sont envoyées nulle part", .spanish: "Las fotos se leen solo en este dispositivo y no se envían a ningún sitio", .italian: "Le foto vengono lette solo su questo dispositivo e non inviate altrove", .portuguese: "As fotos são lidas só neste aparelho e não são enviadas a lugar nenhum", .chineseTraditional: "照片只在本機內辨識，不會傳送到任何地方", .dutch: "Foto’s worden alleen op dit apparaat gelezen en nergens heen gestuurd", .swedish: "Bilder läses bara på den här enheten och skickas ingenstans", .norwegian: "Bilder leses bare på denne enheten og sendes ingen steder", .danish: "Billeder læses kun på denne enhed og sendes ingen steder hen", .finnish: "Kuvat luetaan vain tällä laitteella eikä niitä lähetetä minnekään", .polish: "Zdjęcia są odczytywane tylko na tym urządzeniu i nigdzie nie są wysyłane", .czech: "Fotky se čtou jen v tomto zařízení a nikam se neposílají", .greek: "Οι φωτογραφίες διαβάζονται μόνο σε αυτή τη συσκευή και δεν στέλνονται πουθενά", .turkish: "Fotoğraflar yalnızca bu cihazda okunur, hiçbir yere gönderilmez", .russian: "Фото распознаются только на этом устройстве и никуда не отправляются", .indonesian: "Foto hanya dibaca di perangkat ini dan tidak dikirim ke mana pun", .thai: "อ่านรูปภาพในเครื่องนี้เท่านั้น ไม่ส่งไปที่ใด", .vietnamese: "Ảnh chỉ được đọc trên thiết bị này và không gửi đi đâu cả", .arabic: "تُقرأ الصور على هذا الجهاز فقط ولا تُرسل إلى أي مكان"]) }
 }
 
 // MARK: - 빠른 휴가 넣기 (달력에서 고르고 바로 저장)
@@ -368,6 +377,7 @@ extension Strings {
         case .indonesian: return "Cuti \(d) → libur \(rest) hari"
         case .thai: return "ลา \(d) → หยุด \(rest) วัน"
         case .vietnamese: return "Nghỉ phép \(d) → được nghỉ \(rest) ngày"
+        case .arabic: return "الإجازة: \(d) ← الراحة: \(arDays(rest))"
         }
     }
 
@@ -397,6 +407,7 @@ extension Strings {
         case .indonesian: return "Semuanya hari libur, tidak perlu cuti"
         case .thai: return "เป็นวันหยุดทั้งหมด ไม่ต้องใช้วันลา"
         case .vietnamese: return "Đều là ngày nghỉ, không cần dùng phép"
+        case .arabic: return "كلها أيام راحة، فلا حاجة إلى إجازة"
         }
     }
 
@@ -426,6 +437,7 @@ extension Strings {
         case .indonesian: return "Tambah satu hari jadi libur \(rest) hari"
         case .thai: return "ลาเพิ่มอีกวันเดียว ได้หยุด \(rest) วัน"
         case .vietnamese: return "Thêm một ngày là được nghỉ \(rest) ngày"
+        case .arabic: return "يوم واحد إضافي يجعلها عطلة من \(arDays(rest, true))"
         }
     }
 
@@ -455,6 +467,7 @@ extension Strings {
         case .indonesian: return "Tambah"
         case .thai: return "เพิ่ม"
         case .vietnamese: return "Thêm"
+        case .arabic: return "إضافة"
         }
     }
 
@@ -484,6 +497,7 @@ extension Strings {
         case .indonesian: return "Setengah hari, jenis, catatan"
         case .thai: return "ครึ่งวัน · ประเภท · บันทึก"
         case .vietnamese: return "Nửa ngày, loại, ghi chú"
+        case .arabic: return "نصف يوم · النوع · ملاحظة"
         }
     }
 
@@ -513,6 +527,7 @@ extension Strings {
         case .indonesian: return "Ketuk tanggal akhir untuk memilih rentang. Hari berwarna emas memberi libur terpanjang dengan satu hari cuti."
         case .thai: return "แตะวันสิ้นสุดเพื่อเลือกช่วง วันสีทองยิ่งเข้มยิ่งได้หยุดนานด้วยวันลาวันเดียว"
         case .vietnamese: return "Chạm vào ngày kết thúc để chọn khoảng. Ngày màu vàng cho kỳ nghỉ dài nhất với một ngày phép."
+        case .arabic: return "اضغط على يوم النهاية لتحديد فترة. كلما كان اليوم أقرب إلى الذهبي طالت عطلتك مقابل يوم إجازة واحد."
         }
     }
 
@@ -542,6 +557,7 @@ extension Strings {
         case .indonesian: return "Libur \(n) hari"
         case .thai: return "หยุด \(n) วัน"
         case .vietnamese: return "Nghỉ \(n) ngày"
+        case .arabic: return "ترتاح \(arDays(n, true))"
         }
     }
 
@@ -572,6 +588,7 @@ extension Strings {
         case .indonesian: return "Sisa \(d)"
         case .thai: return "เหลือ \(d)"
         case .vietnamese: return "Còn \(d)"
+        case .arabic: return "المتبقي: \(d)"
         }
     }
 
@@ -603,6 +620,7 @@ extension Strings {
         case .indonesian: return "Cara mendapat cuti"
         case .thai: return "วิธีได้รับวันลา"
         case .vietnamese: return "Cách nhận ngày phép"
+        case .arabic: return "طريقة استحقاق الإجازة"
         }
     }
 
@@ -632,6 +650,7 @@ extension Strings {
         case .indonesian: return "Sekaligus tiap tahun"
         case .thai: return "ได้ครั้งเดียวทั้งปี"
         case .vietnamese: return "Nhận một lần mỗi năm"
+        case .arabic: return "رصيد السنة كاملًا دفعة واحدة"
         }
     }
 
@@ -661,6 +680,7 @@ extension Strings {
         case .indonesian: return "Per periode gaji"
         case .thai: return "ต่อรอบเงินเดือน"
         case .vietnamese: return "Mỗi kỳ lương"
+        case .arabic: return "المقدار المضاف مع كل راتب"
         }
     }
 
@@ -690,6 +710,7 @@ extension Strings {
         case .indonesian: return "hari"
         case .thai: return "วัน"
         case .vietnamese: return "ngày"
+        case .arabic: return "أيام"
         }
     }
 
@@ -719,6 +740,7 @@ extension Strings {
         case .indonesian: return "jam"
         case .thai: return "ชั่วโมง"
         case .vietnamese: return "giờ"
+        case .arabic: return "ساعات"
         }
     }
 
@@ -748,6 +770,7 @@ extension Strings {
         case .indonesian: return "Hari gajian terakhir"
         case .thai: return "วันเงินเดือนออกล่าสุด"
         case .vietnamese: return "Ngày nhận lương gần nhất"
+        case .arabic: return "آخر يوم راتب"
         }
     }
 
@@ -777,6 +800,7 @@ extension Strings {
         case .indonesian: return "Terkumpul sejauh ini"
         case .thai: return "สะสมถึงตอนนี้"
         case .vietnamese: return "Đã tích lũy đến nay"
+        case .arabic: return "المستحق حتى الآن"
         }
     }
 
@@ -806,6 +830,7 @@ extension Strings {
         case .indonesian: return "Hingga akhir tahun"
         case .thai: return "ภายในสิ้นปี"
         case .vietnamese: return "Đến cuối năm"
+        case .arabic: return "المستحق حتى نهاية العام"
         }
     }
 
@@ -835,6 +860,7 @@ extension Strings {
         case .indonesian: return "Pilih ini jika perusahaan menambah cuti setiap gajian. Kamu bisa mencatat cuti dengan jumlah yang sudah terkumpul sampai hari itu, dan aplikasi menyisakan cukup untuk cuti yang sudah direncanakan setelahnya. Jam diubah ke hari sesuai lama hari kerjamu."
         case .thai: return "เลือกข้อนี้ถ้าบริษัทเพิ่มวันลาให้ทุกครั้งที่จ่ายเงินเดือน คุณลงวันลาได้ตามที่สะสมถึงวันนั้น และแอปจะกันส่วนไว้สำหรับวันลาที่วางแผนไว้หลังจากนั้น ถ้ากรอกเป็นชั่วโมง จะแปลงเป็นวันตามชั่วโมงทำงานต่อวัน"
         case .vietnamese: return "Chọn mục này nếu công ty cộng phép cho bạn mỗi kỳ lương. Bạn có thể đặt lịch nghỉ bằng số phép đã tích lũy đến ngày đó, và ứng dụng sẽ chừa đủ cho những ngày nghỉ đã lên kế hoạch sau đó. Số giờ được đổi sang ngày theo thời gian làm việc mỗi ngày của bạn."
+        case .arabic: return "اختر هذا إن كانت جهة عملك تضيف الإجازة تدريجيًا مع كل راتب. يمكنك حجز إجازة بما سيكون مستحقًا لك حتى ذلك اليوم، ويحتفظ التطبيق بما يكفي لإجازاتك المخططة لاحقًا. الساعات تُحوَّل إلى أيام بحسب طول يوم عملك."
         }
     }
 
@@ -864,6 +890,7 @@ extension Strings {
         case .indonesian: return "Tersedia sekarang \(n) · terkumpul \(m)"
         case .thai: return "ใช้ได้ตอนนี้ \(n) · สะสมแล้ว \(m)"
         case .vietnamese: return "Dùng được ngay \(n) · đã tích lũy \(m)"
+        case .arabic: return "المتاح الآن \(n) · المستحق حتى الآن \(m)"
         }
     }
 
@@ -893,6 +920,7 @@ extension Strings {
         case .indonesian: return "Sampai hari itu tersedia \(r)"
         case .thai: return "ถึงวันนั้นจะใช้ได้ \(r)"
         case .vietnamese: return "Đến ngày đó bạn có \(r) để dùng"
+        case .arabic: return "حتى هذا اليوم سيكون المتاح لك \(r)"
         }
     }
 
@@ -922,6 +950,7 @@ extension Strings {
         case .indonesian: return "Dibawa ke tahun ini"
         case .thai: return "ยกมาปีนี้"
         case .vietnamese: return "Chuyển sang năm nay"
+        case .arabic: return "المرحّل هذا العام"
         }
     }
 
@@ -951,6 +980,7 @@ extension Strings {
         case .indonesian: return "Otomatis \(d)"
         case .thai: return "อัตโนมัติ \(d)"
         case .vietnamese: return "Tự động \(d)"
+        case .arabic: return "تلقائي \(d)"
         }
     }
 
@@ -967,7 +997,7 @@ extension Strings {
               .portuguese: "Próximas", .chineseTraditional: "之後的假期", .dutch: "Gepland", .swedish: "Kommande",
               .norwegian: "Kommende", .danish: "Kommende", .finnish: "Tulevat", .polish: "Nadchodzące",
               .czech: "Plánované", .greek: "Επερχόμενες", .turkish: "Gelecek", .russian: "Будущие",
-              .indonesian: "Mendatang", .thai: "วันลาที่จะถึง", .vietnamese: "Sắp tới"])
+              .indonesian: "Mendatang", .thai: "วันลาที่จะถึง", .vietnamese: "Sắp tới", .arabic: "إجازات قادمة"])
     }
 
     public static var quickAddModePast: String {
@@ -976,7 +1006,7 @@ extension Strings {
               .portuguese: "Já tiradas", .chineseTraditional: "已休的假", .dutch: "Al opgenomen", .swedish: "Redan tagna",
               .norwegian: "Allerede tatt", .danish: "Allerede taget", .finnish: "Jo pidetyt", .polish: "Już wykorzystane",
               .czech: "Už vybrané", .greek: "Ήδη ληφθείσες", .turkish: "Kullanılanlar", .russian: "Уже взятые",
-              .indonesian: "Sudah diambil", .thai: "ลาไปแล้ว", .vietnamese: "Đã nghỉ"])
+              .indonesian: "Sudah diambil", .thai: "ลาไปแล้ว", .vietnamese: "Đã nghỉ", .arabic: "إجازات سابقة"])
     }
 
     public static var quickAddPastEmpty: String {
@@ -991,7 +1021,7 @@ extension Strings {
               .czech: "Klepni na každý den, kdy jsi měl volno", .greek: "Πάτησε κάθε μέρα που πήρες άδεια",
               .turkish: "İzin yaptığın her güne dokun", .russian: "Отметьте все дни, когда вы отдыхали",
               .indonesian: "Ketuk setiap hari kamu cuti", .thai: "แตะทุกวันที่คุณลาไปแล้ว",
-              .vietnamese: "Chạm vào mọi ngày bạn đã nghỉ"])
+              .vietnamese: "Chạm vào mọi ngày bạn đã nghỉ", .arabic: "اضغط على كل الأيام التي أخذتها إجازة"])
     }
 
     public static func quickAddPastSummary(_ days: Int) -> String {
@@ -1004,7 +1034,7 @@ extension Strings {
               .danish: days == 1 ? "1 dag taget" : "\(days) dage taget", .finnish: "\(days) pv pidetty",
               .polish: "Wykorzystane dni: \(days)", .czech: "Vybrané dny: \(days)", .greek: "Ημέρες άδειας: \(days)",
               .turkish: "\(days) gün izin", .russian: "Взято дней: \(days)", .indonesian: "\(days) hari cuti",
-              .thai: "ลาไปแล้ว \(days) วัน", .vietnamese: "Đã nghỉ \(days) ngày"])
+              .thai: "ลาไปแล้ว \(days) วัน", .vietnamese: "Đã nghỉ \(days) ngày", .arabic: "الإجازات السابقة: \(arDays(days))"])
     }
 
     public static var quickAddPastHint: String {
@@ -1030,7 +1060,7 @@ extension Strings {
               .russian: "Выбирайте сколько угодно дней. Они сохраняются при смене месяца. Нажмите ещё раз, чтобы убрать.",
               .indonesian: "Pilih sebanyak hari yang kamu mau. Tetap terpilih saat ganti bulan. Ketuk lagi untuk menghapus.",
               .thai: "เลือกได้หลายวันพร้อมกัน เปลี่ยนเดือนแล้ววันที่เลือกยังอยู่ แตะซ้ำเพื่อเอาออก",
-              .vietnamese: "Chọn bao nhiêu ngày cũng được. Đổi tháng thì ngày đã chọn vẫn giữ nguyên. Chạm lại để bỏ."])
+              .vietnamese: "Chọn bao nhiêu ngày cũng được. Đổi tháng thì ngày đã chọn vẫn giữ nguyên. Chạm lại để bỏ.", .arabic: "اختر ما تشاء من الأيام. تبقى الأيام المحددة عند تغيير الشهر. اضغط مرة أخرى لإلغاء التحديد."])
     }
 
     public static func quickAddPastSaved(_ days: Int) -> String {
@@ -1047,6 +1077,6 @@ extension Strings {
               .danish: days == 1 ? "1 fridag tilføjet" : "\(days) fridage tilføjet", .finnish: "Lisätty \(days) pv vapaata",
               .polish: "Dodano dni wolnych: \(days)", .czech: "Přidané dny volna: \(days)", .greek: "Προστέθηκαν ημέρες άδειας: \(days)",
               .turkish: "\(days) gün izin eklendi", .russian: "Добавлено дней отдыха: \(days)", .indonesian: "\(days) hari cuti ditambahkan",
-              .thai: "เพิ่มวันลา \(days) วันแล้ว", .vietnamese: "Đã thêm \(days) ngày nghỉ"])
+              .thai: "เพิ่มวันลา \(days) วันแล้ว", .vietnamese: "Đã thêm \(days) ngày nghỉ", .arabic: "تمت إضافة \(arDays(days, true))"])
     }
 }

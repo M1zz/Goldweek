@@ -83,7 +83,7 @@ struct PartTimeDayRow: View {
     var body: some View {
         let _ = (daysRaw, swapsRaw)
         if HolidayService.partTimeSwapOffKeys.contains(key) {
-            row(icon: "arrow.uturn.left.circle.fill", text: Strings.partTimeMovedOff, undo: true)
+            row(icon: "arrow.uturn.backward.circle.fill", text: Strings.partTimeMovedOff, undo: true)
         } else if HolidayService.partTimeSwapWorkKeys.contains(key) {
             row(icon: "briefcase.fill", text: Strings.partTimeMovedWork, undo: true)
         } else if isRegularOff {
@@ -255,7 +255,7 @@ struct ShiftScheduleView: View {
                     Button {
                         withAnimation { weekOffset -= 1 }
                     } label: {
-                        Image(systemName: "chevron.left").font(.body.weight(.semibold))
+                        Image(systemName: "chevron.backward").font(.body.weight(.semibold))
                     }
                     .buttonStyle(.borderless)
                     .accessibilityLabel(Text(Strings.shiftPrevWeek))
@@ -274,7 +274,7 @@ struct ShiftScheduleView: View {
                     Button {
                         withAnimation { weekOffset += 1 }
                     } label: {
-                        Image(systemName: "chevron.right").font(.body.weight(.semibold))
+                        Image(systemName: "chevron.forward").font(.body.weight(.semibold))
                     }
                     .buttonStyle(.borderless)
                     .accessibilityLabel(Text(Strings.shiftNextWeek))

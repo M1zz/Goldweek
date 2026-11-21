@@ -282,10 +282,27 @@ struct GoldweekApp: App {
         WindowGroup {
             ContentView()
                 .modifier(OpenLeaveSheet())
+                .modifier(AppLayoutDirection())
                 // 개발자가 보낸 의견에 답장하면, 앱이 앞으로 올 때 답장을 시트로 보여 준다 (LeeoKit).
                 .leeoFeedbackReplyNotice(GoldweekSpec.self)
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+// MARK: - 글 방향
+
+/// 화면 방향을 **앱 언어**에 맞춘다 — 아랍어는 오른쪽에서 왼쪽.
+/// 방향은 원래 기기(번들) 언어를 따르므로, 설정에서 앱 언어만 바꾸면 다음 실행까지 글과 배치가 어긋난다.
+/// 아랍어에서는 숫자도 맞춘다: `Text("\(n)")` 은 기기 지역을 따라 ١٢٣ 으로, 문구 속 숫자는 123 으로 나와 한 화면에 섞였다.
+private struct AppLayoutDirection: ViewModifier {
+    @Environment(\.locale) private var deviceLocale
+
+    func body(content: Content) -> some View {
+        let arabic = LanguageManager.shared.currentLanguage == .arabic
+        content
+            .environment(\.layoutDirection, arabic ? .rightToLeft : .leftToRight)
+            .environment(\.locale, arabic ? Locale(identifier: Strings.localeIdentifier) : deviceLocale)
     }
 }
 

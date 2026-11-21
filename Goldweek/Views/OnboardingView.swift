@@ -125,7 +125,7 @@ struct OnboardingView: View {
                 Button {
                     withAnimation { currentPage -= 1 }
                 } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "chevron.backward")
                         .font(.headline)
                         .foregroundStyle(AppTheme.Colors.brand)
                         .frame(width: 56, height: 56)

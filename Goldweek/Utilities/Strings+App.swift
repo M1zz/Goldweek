@@ -31,6 +31,7 @@ extension Strings {
             case .indonesian: return "Bertambah tiap minggu"
             case .thai: return "สะสมทุกสัปดาห์"
             case .vietnamese: return "Cộng dồn mỗi tuần"
+            case .arabic: return "يُضاف كل أسبوع"
             }
         case .biweekly:
             switch LanguageManager.shared.currentLanguage {
@@ -57,6 +58,7 @@ extension Strings {
             case .indonesian: return "Bertambah tiap 2 minggu"
             case .thai: return "สะสมทุก 2 สัปดาห์"
             case .vietnamese: return "Cộng dồn mỗi 2 tuần"
+            case .arabic: return "يُضاف كل أسبوعين"
             }
         case .semimonthly:
             switch LanguageManager.shared.currentLanguage {
@@ -83,6 +85,7 @@ extension Strings {
             case .indonesian: return "Dua kali sebulan (tgl 15 & akhir bulan)"
             case .thai: return "เดือนละ 2 ครั้ง (วันที่ 15 และสิ้นเดือน)"
             case .vietnamese: return "Hai lần mỗi tháng (ngày 15 và cuối tháng)"
+            case .arabic: return "يُضاف مرتين في الشهر (يوم 15 وآخر يوم)"
             }
         case .monthly:
             switch LanguageManager.shared.currentLanguage {
@@ -109,6 +112,7 @@ extension Strings {
             case .indonesian: return "Bertambah tiap bulan"
             case .thai: return "สะสมทุกเดือน"
             case .vietnamese: return "Cộng dồn mỗi tháng"
+            case .arabic: return "يُضاف كل شهر"
             }
         }
     }

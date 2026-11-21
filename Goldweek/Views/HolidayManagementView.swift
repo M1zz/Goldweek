@@ -225,7 +225,7 @@ struct HolidayManagementView: View {
                 Spacer()
                 Text(Strings.showAllDates)
                     .fontWeight(.semibold)
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.tertiary)
                     .voDecorative()

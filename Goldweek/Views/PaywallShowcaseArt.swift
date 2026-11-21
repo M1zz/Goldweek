@@ -149,7 +149,7 @@ private struct LeaveToRestChip: View {
         HStack(spacing: 6) {
             Label { Text(verbatim: "\(leave)") } icon: { Image(systemName: "briefcase.fill") }
                 .foregroundStyle(AppTheme.Colors.bonus)
-            Image(systemName: "arrow.right").font(.caption.weight(.bold)).foregroundStyle(.secondary)
+            Image(systemName: "arrow.forward").font(.caption.weight(.bold)).foregroundStyle(.secondary)
             Text(Strings.quickAddRestDays(rest)).foregroundStyle(AppTheme.Colors.brand)
         }
         .font(.subheadline.weight(.bold))
@@ -262,7 +262,7 @@ private struct CalendarExportArt: View {
                     Capsule().fill(AppTheme.Colors.bonus.opacity(0.5)).frame(width: 50, height: 8)
                 }
             }
-            Image(systemName: "arrow.right").font(.title3.weight(.bold)).foregroundStyle(.secondary)
+            Image(systemName: "arrow.forward").font(.title3.weight(.bold)).foregroundStyle(.secondary)
             // 캘린더 앱 아이콘처럼: 위에 요일, 가운데 큰 날짜, 아래 일정 막대
             VStack(spacing: 0) {
                 Text(Calendar.app.shortWeekdaySymbols[5].uppercased())
@@ -365,7 +365,7 @@ private struct SchoolImportArt: View {
             .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: 8))
             .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(Color.indigo, style: StrokeStyle(lineWidth: 2, dash: [5, 4])))
             .rotationEffect(.degrees(-4))
-            Image(systemName: "arrow.right").font(.title3.weight(.bold)).foregroundStyle(.secondary)
+            Image(systemName: "arrow.forward").font(.title3.weight(.bold)).foregroundStyle(.secondary)
             ArtCard {
                 ArtMonth(title: monthName(7), startColumn: 4,
                          marked: Set(20...31), markColor: .indigo)
