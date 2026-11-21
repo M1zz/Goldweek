@@ -34,13 +34,14 @@ FLAGS = ["🇰🇷", "🇺🇸", "🇯🇵", "🇨🇳", "🇩🇪", "🇫🇷",
 ALL_FLAGS = FLAGS + ["🇦🇪", "🇸🇦", "🇶🇦", "🇵🇪", "🇳🇱", "🇧🇪", "🇦🇹", "🇨🇭", "🇮🇪", "🇵🇹", "🇸🇪", "🇳🇴", "🇩🇰", "🇫🇮",
                      "🇵🇱", "🇨🇿", "🇬🇷", "🇹🇷", "🇪🇬", "🇿🇦", "🇲🇦", "🇲🇽", "🇦🇷", "🇨🇱", "🇨🇴", "🇳🇿", "🇷🇺", "🇮🇩"]
 
-# (원본 파일, 레이아웃) — 5장 구성은 모든 언어에서 같다
+# (원본 파일, 레이아웃, COPY 의 몇 번째 문구) — 5장 구성은 모든 언어에서 같다
+# 첫 장은 앱이 하는 일(최소 연차로 최대 연휴)부터 — 연차 통계로 열면 핵심이 아래로 묻힌다
 SLIDES = [
-    ("01-home.png", "hero-bleed"),
-    ("02-recommend.png", "left-text"),
-    ("03-calendar.png", "text-bottom"),
-    (None, "flags"),
-    ("04-settings.png", "flat-rotate"),
+    ("02-recommend.png", "left-text", 1),
+    ("01-home.png", "hero-bleed", 0),
+    ("03-calendar.png", "text-bottom", 2),
+    (None, "flags", 3),
+    ("04-settings.png", "flat-rotate", 4),
 ]
 
 # 언어마다 (헤드라인, 서브카피) × 5 — 직역이 아니라 그 언어로 다시 쓴 문구
@@ -299,8 +300,8 @@ def page(locale, css, body):
 # ── iPad 13" ─────────────────────────────────────────────
 IW, IH = 2064, 2752
 IPAD_SLIDES = [   # (원본, 레이아웃, COPY 의 몇 번째 문구)
-    ("01-calendar.png", "ipad", 2),
     ("02-recommend.png", "ipad", 1),
+    ("01-calendar.png", "ipad", 2),
     (None, "ipad-flags", 3),
     ("03-settings.png", "ipad", 4),
 ]
@@ -402,7 +403,8 @@ def render(locale, duo=False):
     prefix, raw, w, h_px = ("duo-", RAW / "duo", DW, DH) if duo else ("", RAW, W, H)
     for old in out_dir.glob(f"{prefix}0*.png"):
         old.unlink()
-    for i, ((src, layout), (h, s)) in enumerate(zip(SLIDES, COPY[locale]), start=1):
+    for i, (src, layout, k) in enumerate(SLIDES, start=1):
+        h, s = COPY[locale][k]
         text = TEXT.format(h=h, s=s)
         if layout == "flags":
             layout = "flags-many"
