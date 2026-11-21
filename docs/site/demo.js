@@ -6,6 +6,9 @@
   if (!root) return;
   const T = JSON.parse(root.dataset.text);
   const lang = document.documentElement.lang;
+  // 아랍어: 글은 오른쪽에서 왼쪽, 숫자는 앱과 같이 0~9 로 쓴다
+  const rtl = document.documentElement.dir === "rtl";
+  const dateLang = lang === "ar" ? "ar-u-nu-latn-ca-gregory" : lang;
   const fill = (s, n) => s.replace("{n}", n);
   const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
@@ -18,7 +21,7 @@
   if (!budgets.length) { root.closest("section").hidden = true; return; }
   let pick = budgets[0];
 
-  const md = new Intl.DateTimeFormat(lang, { year: "numeric", month: "short", day: "numeric" });
+  const md = new Intl.DateTimeFormat(dateLang, { year: "numeric", month: "short", day: "numeric" });
   const range = (a, b) => md.formatRange ? md.formatRange(a, b) : `${md.format(a)} – ${md.format(b)}`;
   const KIND = { L: "leave", H: "holiday", W: "weekend" };
 
@@ -40,7 +43,7 @@
       <h3>${esc(r.t)}</h3>
       <p class="muted small">${esc(range(start, end))}</p>
       <ol class="gw-days" aria-label="${esc(range(start, end))}">${cells}</ol>
-      <p class="gw-sum"><span>${esc(fill(T.leave, leaveOf(r)))}</span><span aria-hidden="true">→</span><b>${esc(fill(T.rest, r.d.length))}</b></p>
+      <p class="gw-sum"><span>${esc(fill(T.leave, leaveOf(r)))}</span><span aria-hidden="true">${rtl ? "←" : "→"}</span><b>${esc(fill(T.rest, r.d.length))}</b></p>
     </article>`;
   }
 
@@ -67,7 +70,7 @@
   });
   root.addEventListener("keydown", e => {
     if (!e.target.dataset.n || !["ArrowRight", "ArrowLeft"].includes(e.key)) return;
-    const i = budgets.indexOf(pick) + (e.key === "ArrowRight" ? 1 : -1);
+    const i = budgets.indexOf(pick) + ((e.key === "ArrowRight") !== rtl ? 1 : -1);
     if (i < 0 || i >= budgets.length) return;
     pick = budgets[i]; e.preventDefault(); render(true);
   });

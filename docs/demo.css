@@ -30,7 +30,7 @@
 
 .gw-legend { list-style: none; padding: 0; margin: var(--s4) 0 0; display: flex; flex-wrap: wrap; gap: var(--s4); }
 .gw-legend li::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%;
-                        margin-right: 6px; vertical-align: 0; }
+                        margin-inline-end: 6px; vertical-align: 0; }
 .gw-legend .leave::before { background: var(--gw-leave); }
 .gw-legend .holiday::before { background: var(--gw-holiday); }
 .gw-legend .weekend::before { background: var(--gw-weekend); }
@@ -38,3 +38,10 @@
 
 @media (prefers-reduced-motion: reduce) { .gw-rec { animation: none; } }
 @media (max-width: 900px) { .gw-list { grid-template-columns: 1fr; } }
+
+/* 오른쪽에서 왼쪽으로 쓰는 언어(아랍어). 공용 sitegen.css 는 왼쪽 · 오른쪽으로 적혀 있어 여기서 뒤집는다. */
+[dir="rtl"] .plan ul { padding-left: 0; padding-right: 1.2em; }
+[dir="rtl"] summary { padding-left: var(--s6); padding-right: 0; }
+[dir="rtl"] summary::after { right: auto; left: 0; }
+[dir="rtl"] .skip { left: auto; right: var(--s4); }
+@media (max-width: 760px) { [dir="rtl"] .hero { text-align: right; } }

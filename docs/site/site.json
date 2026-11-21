@@ -31,6 +31,7 @@
     {"code": "el", "path": "el/", "name": "Ελληνικά"},
     {"code": "tr", "path": "tr/", "name": "Türkçe"},
     {"code": "th", "path": "th/", "name": "ไทย"},
-    {"code": "vi", "path": "vi/", "name": "Tiếng Việt"}
+    {"code": "vi", "path": "vi/", "name": "Tiếng Việt"},
+    {"code": "ar", "path": "ar/", "name": "العربية"}
   ]
 }
