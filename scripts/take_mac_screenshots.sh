@@ -9,7 +9,7 @@
 # ⚠️ 스크린샷 모드는 이 Mac 의 Goldweek 데이터(샌드박스 컨테이너)를 데모 데이터로 덮어쓴다.
 # ⚠️ 창 크기 조절에 손쉬운 사용(Accessibility) 권한이 필요하다 — 터미널에 권한을 준다.
 #
-# 사용법: scripts/take_mac_screenshots.sh [언어...]   (기본: 스토어 24개 언어)
+# 사용법: scripts/take_mac_screenshots.sh [언어...]   (기본: 스토어 25개 언어)
 
 set -euo pipefail
 
@@ -17,7 +17,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DERIVED="${DERIVED:-$ROOT/build/mac-screenshots-dd}"
 RAW="$ROOT/docs/screenshots/raw-mac"
 MKT="$ROOT/docs/screenshots/marketing"
-LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(ko en en-GB ja zh de fr es it pt zh-Hant ru id nl sv nb da fi pl cs el tr th vi)
+LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(ko en en-GB ja zh de fr es it pt zh-Hant ru id nl sv nb da fi pl cs el tr th vi ar)
 # 탭:이름:스크롤 — take_screenshots.sh 의 iPad 두 칸과 같은 화면
 SHOTS=("1:calendar:nextYear" "1:recommend:recommendations")
 
@@ -31,7 +31,7 @@ apple_locale() {
     pt) echo "pt_BR" ;; zh-Hant) echo "zh_TW" ;; ru) echo "ru_RU" ;; id) echo "id_ID" ;;
     nl) echo "nl_NL" ;; sv) echo "sv_SE" ;; nb) echo "nb_NO" ;; da) echo "da_DK" ;; fi) echo "fi_FI" ;;
     pl) echo "pl_PL" ;; cs) echo "cs_CZ" ;; el) echo "el_GR" ;; tr) echo "tr_TR" ;;
-    th) echo "th_TH" ;; vi) echo "vi_VN" ;; *) echo "$1" ;;
+    th) echo "th_TH" ;; vi) echo "vi_VN" ;; ar) echo "ar_SA" ;; *) echo "$1" ;;
   esac
 }
 
