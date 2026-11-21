@@ -277,7 +277,7 @@ struct PaywallView: View {
                 ForEach(availableTerms, id: \.self) { optionRow($0) }
                 // 평생 가격이 오르기 전까지만 서는 한 줄
                 if term == .lifetime, LeeoLadderSchedule.showsLifetimeNotice() {
-                    Label(Strings.lifetimeDealNotice(LeeoLadderSchedule.lifetimePriceChange.formatted(.dateTime.month(.wide).day())),
+                    Label(Strings.lifetimeDealNotice(LeeoLadderSchedule.lifetimePriceChange.formatted(Date.FormatStyle(locale: Locale(identifier: Strings.localeIdentifier), calendar: .app).month(.wide).day())),
                           systemImage: "calendar.badge.clock")
                         .font(.footnote.weight(.semibold))
                         .foregroundStyle(.secondary)

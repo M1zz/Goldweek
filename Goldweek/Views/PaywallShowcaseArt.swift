@@ -171,8 +171,9 @@ private func dateRange(month: Int, from: Int, to: Int) -> String {
     var a = DateComponents(); a.year = 2027; a.month = month; a.day = from
     var b = a; b.day = to
     guard let start = Calendar.app.date(from: a), let end = Calendar.app.date(from: b) else { return "" }
-    return (start..<end).formatted(.interval.month(.abbreviated).day()
-        .locale(Locale(identifier: Strings.localeIdentifier)))
+    // 달력을 정해 주지 않으면 기기 달력을 따른다 — 사우디 기기에서는 히즈라력 날짜가 나왔다
+    return (start..<end).formatted(Date.IntervalFormatStyle(locale: Locale(identifier: Strings.localeIdentifier), calendar: .app)
+        .month(.abbreviated).day())
 }
 
 // MARK: - 플러스
@@ -307,7 +308,7 @@ private struct BonusLeaveArt: View {
                             Label(dateRange(month: item.month, from: item.day, to: item.day), systemImage: "clock")
                                 .font(.caption2).foregroundStyle(.secondary)
                         }
-                        Text(verbatim: "+\(item.left.formatted())")
+                        Text(verbatim: "+\(item.left.formatted(.number.locale(Locale(identifier: Strings.localeIdentifier))))")
                             .font(.subheadline.weight(.bold)).foregroundStyle(item.color)
                     }
                 }

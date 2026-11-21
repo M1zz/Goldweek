@@ -297,12 +297,15 @@ struct GoldweekApp: App {
 /// 아랍어에서는 숫자도 맞춘다: `Text("\(n)")` 은 기기 지역을 따라 ١٢٣ 으로, 문구 속 숫자는 123 으로 나와 한 화면에 섞였다.
 private struct AppLayoutDirection: ViewModifier {
     @Environment(\.locale) private var deviceLocale
+    @Environment(\.calendar) private var deviceCalendar
 
     func body(content: Content) -> some View {
         let arabic = LanguageManager.shared.currentLanguage == .arabic
         content
             .environment(\.layoutDirection, arabic ? .rightToLeft : .leftToRight)
             .environment(\.locale, arabic ? Locale(identifier: Strings.localeIdentifier) : deviceLocale)
+            // 사우디 기기의 기본 달력은 히즈라력이다. 앱은 양력으로 세므로 `Text(date, format:)` 도 양력으로 맞춘다.
+            .environment(\.calendar, arabic ? Calendar.app : deviceCalendar)
     }
 }
 

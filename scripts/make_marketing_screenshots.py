@@ -215,6 +215,32 @@ COPY = {
         ("Ngày lễ của<br>42 quốc gia", "Nước khác có thể tự thêm ngày lễ"),
         ("Quốc gia của bạn,<br>ngôn ngữ của bạn", "Có 23 ngôn ngữ"),
     ],
+    "ar": [
+        ("متى يحين<br>وقت راحتك؟", "آخر إجازة والقادمة، وتنبيه حين يحين وقت الراحة"),
+        ("أقل إجازة،<br>أطول عطلة", "نجمع لك العطل الرسمية مع نهاية الأسبوع"),
+        ("إجازاتك كلها<br>في لمحة", "اضغط على أي يوم لتسجيل إجازة أو تعديلها"),
+        ("العطل الرسمية<br>في 42 دولة", "منها السعودية والإمارات وقطر ومصر والمغرب"),
+        ("بلدك<br>ولغتك", "متوفر بـ 24 لغة"),
+    ],
+}
+
+# 오른쪽에서 왼쪽으로 쓰는 언어(아랍어): 글은 오른쪽에서 시작하고, 기울인 기기는 거울처럼 뒤집는다.
+# 가운데 맞춘 장면(hero-bleed · 국기 · iPad)은 dir=rtl 만으로 맞는다.
+RTL = {"ar", "he"}
+# 아랍어는 글자가 이어 쓰여서 글자 사이를 좁히면 끊어진다. Helvetica Neue 엔 아랍 글자가 없다.
+RTL_CSS = """
+body { font-family:"SF Arabic","Geeza Pro",-apple-system,sans-serif; }
+.headline, .sub { letter-spacing:0; }
+.headline { line-height:1.3; }
+"""
+RTL_LAYOUTS = {
+    "left-text": """
+.text { text-align:right; padding:250px 100px 0 90px; }
+.wrap { left:auto; right:290px; perspective-origin:70% 30%; }
+.phone { transform:rotateY(-16deg) rotateX(2deg); }
+""",
+    "text-bottom": ".phone { transform:rotateY(10deg) rotateX(2deg); }",
+    "flat-rotate": ".wrap { left:auto; right:120px; } .phone { transform:rotate(6deg); }",
 }
 
 BRAND = "#0066FF"
@@ -285,7 +311,7 @@ body { background:linear-gradient(160deg,#0B57E3 0%,#0A7BD8 50%,#05A86A 100%); }
 
 TEXT = '<div class="text"><div class="bar"></div><div class="headline">{h}</div><div class="sub">{s}</div></div>'
 PHONE = '<div class="wrap"><div class="phone"><img src="{img}"></div></div>'
-PAGE = '<!doctype html><html><head><meta charset="utf-8"><style>{css}</style></head><body>{body}</body></html>'
+PAGE = '<!doctype html><html{attrs}><head><meta charset="utf-8"><style>{css}</style></head><body>{body}</body></html>'
 
 # 헤드리스 Chrome 은 -apple-system 을 못 찾아 다음 글꼴(한글)로 그린다 — 그 글꼴엔 그리스 문자·체코 악센트가 없다.
 # 한중일이 아닌 언어는 라틴·그리스·키릴을 다 가진 Helvetica Neue 로 먼저 그린다.
@@ -294,7 +320,9 @@ LATIN_FONT = 'body { font-family:"Helvetica Neue",-apple-system,sans-serif; }'
 
 
 def page(locale, css, body):
-    return PAGE.format(css=css + ("" if locale in CJK else LATIN_FONT), body=body)
+    if locale in RTL:
+        return PAGE.format(attrs=f' lang="{locale}" dir="rtl"', css=css + RTL_CSS, body=body)
+    return PAGE.format(attrs="", css=css + ("" if locale in CJK else LATIN_FONT), body=body)
 
 
 # ── iPad 13" ─────────────────────────────────────────────
@@ -418,6 +446,8 @@ def render(locale, duo=False):
             body = phone + text if layout == "text-bottom" else text + phone
             name = src[3:-4]
         css = BASE_CSS + LAYOUTS[layout] + (DUO_CSS + DUO_LAYOUTS[layout] if duo else "")
+        if locale in RTL and not duo:
+            css += RTL_LAYOUTS.get(layout, "")
         shoot(page(locale, css, body), out_dir / f"{prefix}{i:02d}-{name}.png", w, h_px)
 
 

@@ -5,7 +5,7 @@
 # 탭마다 시뮬레이터 화면을 캡처한다. 결과: docs/screenshots/raw/<로케일>/<번호>-<화면>.png (원본 — 스토어에 안 올라감)
 # 제출본은 scripts/make_marketing_screenshots.py 가 이 원본으로 docs/screenshots/marketing/<로케일>/ 에 만든다.
 #
-# 사용법: scripts/take_screenshots.sh [언어...]   (기본: 23개 언어 전부)
+# 사용법: scripts/take_screenshots.sh [언어...]   (기본: 24개 언어 전부)
 #         IPAD=1 scripts/take_screenshots.sh …   iPad 13" (2064×2752) — 원본은 raw/ipad/<로케일>/
 #         DUO=1 DEVICE=<듀오 UDID> DEVELOPER_DIR=<Xcode 27.1>/Contents/Developer scripts/take_screenshots.sh …
 #           iPhone Duo 바깥 화면 (1398×2034) — 원본은 raw/duo/<로케일>/. 화면이 둘이라 바깥(--display=1)만 찍는다.
@@ -25,7 +25,7 @@ BUNDLE_ID="com.Ysoup.LeaveWise"
 DERIVED="${DERIVED:-$ROOT/build/screenshots-dd${DUO:+-duo}}"
 OUT="${OUT:-$ROOT/docs/screenshots/raw${IPAD:+/ipad}${DUO:+/duo}}"
 DISPLAY_ARG=""; [ -n "${DUO:-}" ] && DISPLAY_ARG="--display=1"   # 듀오: 1번 바깥 화면, 3번 안쪽(접혀 있으면 검다)
-LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr es it pt zh-Hant ru id nl sv nb da fi pl cs el tr th vi)
+LANGS=("$@"); [ ${#LANGS[@]} -eq 0 ] && LANGS=(en ko ja zh de fr es it pt zh-Hant ru id nl sv nb da fi pl cs el tr th vi ar)
 
 # 탭 번호:이름[:스크롤 위치] (MainTabView 의 tag, ScreenshotMode.scrollTarget)
 SHOTS=("0:home" "1:recommend:recommendations" "1:calendar:nextYear" "3:settings")
@@ -47,7 +47,7 @@ apple_locale() {   # 앱 언어 코드 → 지역 (국가 판별이 지역을 �
     pt) echo "pt_BR" ;; zh-Hant) echo "zh_TW" ;; ru) echo "ru_RU" ;; id) echo "id_ID" ;;
     nl) echo "nl_NL" ;; sv) echo "sv_SE" ;; nb) echo "nb_NO" ;; da) echo "da_DK" ;; fi) echo "fi_FI" ;;
     pl) echo "pl_PL" ;; cs) echo "cs_CZ" ;; el) echo "el_GR" ;; tr) echo "tr_TR" ;;
-    th) echo "th_TH" ;; vi) echo "vi_VN" ;; *) echo "$1" ;;
+    th) echo "th_TH" ;; vi) echo "vi_VN" ;; ar) echo "ar_SA" ;; *) echo "$1" ;;
   esac
 }
 
