@@ -59,6 +59,7 @@ HEADER = {
     "tr":      ("İzin planlayıcı", "Daha az izin,<br>daha uzun tatil"),
     "th":      ("วางแผนวันลา", "ลาน้อย<br>ได้หยุดยาว"),
     "vi":      ("Lịch nghỉ phép", "Ít ngày phép,<br>nghỉ thật dài"),
+    "ar":      ("مخطط الإجازات", "إجازة أقل،<br>وعطلة أطول"),
 }
 
 # 검색 결과: 스크린샷 1장(홈 · "언제 쉬어야 할까?")과 **같은 이야기**. 눈썹글은 그 나라 사람이 검색창에 치는 말.
@@ -87,7 +88,17 @@ SEARCH = {
     "tr":      ("Yıllık izin", "Ne zaman<br>izin almalı?", "Son tatilin, sıradaki tatilin ve dinlenme zamanın"),
     "th":      ("ปฏิทินวันลา", "ถึงเวลาพัก<br>หรือยัง?", "หยุดครั้งก่อน ครั้งถัดไป และเวลาที่ควรพัก"),
     "vi":      ("Quản lý phép năm", "Khi nào nên<br>nghỉ ngơi?", "Lần nghỉ trước, lần nghỉ tới và lúc cần nghỉ"),
+    "ar":      ("رصيد الإجازات", "متى يحين<br>وقت راحتك؟", "آخر إجازة والقادمة، وتنبيه حين يحين وقت الراحة"),
 }
+
+# 오른쪽에서 왼쪽으로 쓰는 언어. 검색 결과 그림은 글과 기기 자리를 맞바꾼다.
+RTL = {"ar", "he"}
+# 아랍어는 글자가 이어 쓰여서 글자 사이를 좁히면 끊어진다. Helvetica Neue 엔 아랍 글자가 없다.
+RTL_CSS = """
+body { font-family:"SF Arabic","Geeza Pro",-apple-system,sans-serif; }
+.headline, .sub, .eyebrow { letter-spacing:0; }
+.headline { line-height:1.3; }
+"""
 
 BRAND = "#0066FF"
 # ⚠️ 바탕 · 글자색 · 막대는 마케팅 스크린샷(make_marketing_screenshots.py)과 같다.
@@ -172,6 +183,11 @@ def search_html(lang):
     col = int(sw * 0.56)
     ph_w = 1040
     ph_left = l + col + int(sw * 0.04)
+    text_left = l
+    if lang in RTL:
+        # 거울처럼: 글은 안전 영역 오른쪽, 기기는 왼쪽
+        ph_left = W - ph_left - ph_w
+        text_left = r - col
     deco = days([(3300, 380, 220, "r", 3, .9), (3420, 700, 170, "g", 4, .85), (3330, 1960, 200, "b", 7, .85),
                  (420, 2180, 180, "g", 5, .7), (300, 280, 150, "b", 6, .6)])
     return f"""
@@ -179,7 +195,7 @@ def search_html(lang):
 <div class="glow" style="left:{l - 700}px;top:{t + 300}px;width:1600px;height:1200px;background:rgba(0,196,113,.10)"></div>
 {deco}
 {phone(raw(lang, "01-home.png"), ph_left, t - 360, ph_w, 0)}
-<div class="text" style="left:{l}px;top:{t}px;width:{col}px;height:{sh}px">
+<div class="text" style="left:{text_left}px;top:{t}px;width:{col}px;height:{sh}px">
   <div class="bar" style="margin-bottom:56px"></div>
   <div class="eyebrow" style="font-size:96px">{eyebrow}</div>
   <div class="headline" data-max="230" data-min="130" style="margin-top:36px">{headline}</div>
@@ -230,8 +246,9 @@ def chrome(args, done, timeout=90):
 def render(lang, kind):
     W, H, _ = SPEC[kind]
     body = search_html(lang) if kind == "search" else header_html(lang)
-    css = BASE_CSS % {"W": W, "H": H} + ("" if lang in CJK else LATIN_FONT)
-    page = (f'<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><style>'
+    css = BASE_CSS % {"W": W, "H": H} + (RTL_CSS if lang in RTL else "" if lang in CJK else LATIN_FONT)
+    rtl = ' dir="rtl"' if lang in RTL else ""
+    page = (f'<!doctype html><html lang="{lang}"{rtl}><head><meta charset="utf-8"><style>'
             f'{css}</style></head><body>{body}{FIT_JS}</body></html>')
     html_path = pathlib.Path(tempfile.gettempdir()) / f"goldweek-creative-{lang}-{kind}.html"
     html_path.write_text(page, encoding="utf-8")
