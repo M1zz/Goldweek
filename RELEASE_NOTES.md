@@ -4,54 +4,63 @@
 
 ### 앱스토어 (한국어)
 
+App Store 세일 소식에서 바로 요금제가 열려요
 이제 아랍어로도 쓸 수 있어요
 아랍어에서는 화면이 오른쪽에서 왼쪽으로 놓여요
 아랍권 공휴일 이름을 아랍어로 보여 줘요
 
 ### App Store (English)
 
+App Store sales open your plans directly
 Now available in Arabic
 Arabic screens run right to left
 Arab holidays shown in Arabic
 
 ### App Store (en-GB)
 
+App Store sales open your plans directly
 Now available in Arabic
 Arabic screens run right to left
 Arab holidays shown in Arabic
 
 ### 앱스토어 (일본어)
 
+App Storeのセールから料金プランをすぐ開けます
 アラビア語で使えるようになりました
 アラビア語では画面が右から左に並びます
 アラブ諸国の祝日名をアラビア語で表示します
 
 ### 앱스토어 (중국어 간체)
 
+点按 App Store 优惠可直接打开订阅方案
 现已支持阿拉伯语
 阿拉伯语界面从右向左排列
 阿拉伯国家的节假日以阿拉伯语显示
 
 ### 앱스토어 (독일어)
 
+App-Store-Angebote öffnen die Tarife
 Jetzt auch auf Arabisch
 Arabisch läuft von rechts nach links
 Arabische Feiertage auf Arabisch
 
 ### 앱스토어 (프랑스어)
 
+Les offres App Store ouvrent les forfaits
 Désormais disponible en arabe
 En arabe, affichage de droite à gauche
 Jours fériés arabes affichés en arabe
 
 ### 앱스토어 (스페인어)
 
+Las ofertas de App Store abren tu plan
 Ya disponible en árabe
 En árabe, todo va de derecha a izquierda
 Festivos árabes con su nombre en árabe
 
 ### 앱스토어 (이탈리아어)
 
+Le offerte dell’App Store aprono i piani
 Ora disponibile in arabo
 In arabo tutto va da destra a sinistra
 Festività arabe con il nome in arabo
@@ -64,90 +73,105 @@ Feriados árabes com nome em árabe
 
 ### 앱스토어 (중국어 번체)
 
+點按 App Store 優惠可直接打開訂閱方案
 現已支援阿拉伯文
 阿拉伯文介面由右至左排列
 阿拉伯國家的假日以阿拉伯文顯示
 
 ### 앱스토어 (네덜란드어)
 
+App Store-acties openen de abonnementen
 Nu ook beschikbaar in het Arabisch
 Arabisch loopt van rechts naar links
 Arabische feestdagen in het Arabisch
 
 ### 앱스토어 (스웨덴어)
 
+Erbjudanden i App Store öppnar planerna
 Finns nu på arabiska
 Arabiska visas från höger till vänster
 Arabiska helgdagar visas på arabiska
 
 ### 앱스토어 (노르웨이어 보크말)
 
+Tilbud i App Store åpner abonnementene
 Finnes nå på arabisk
 Arabisk vises fra høyre mot venstre
 Arabiske helligdager vises på arabisk
 
 ### 앱스토어 (덴마크어)
 
+Tilbud i App Store åbner abonnementerne
 Findes nu på arabisk
 Arabisk vises fra højre mod venstre
 Arabiske helligdage vises på arabisk
 
 ### 앱스토어 (핀란드어)
 
+App Storen tarjoukset avaavat tilaukset
 Nyt saatavilla myös arabiaksi
 Arabia näkyy oikealta vasemmalle
 Arabimaiden pyhäpäivät arabiaksi
 
 ### 앱스토어 (폴란드어)
 
+Promocje w App Store otwierają plany
 Teraz także po arabsku
 Arabski układa się od prawej do lewej
 Arabskie święta z arabskimi nazwami
 
 ### 앱스토어 (체코어)
 
+Akce v App Storu otevřou předplatné
 Nově i v arabštině
 Arabština se řadí zprava doleva
 Arabské svátky se zobrazují arabsky
 
 ### 앱스토어 (그리스어)
 
+Οι προσφορές App Store ανοίγουν τα πακέτα
 Τώρα διαθέσιμο και στα αραβικά
 Τα αραβικά πάνε από δεξιά προς αριστερά
 Αραβικές αργίες με αραβικά ονόματα
 
 ### 앱스토어 (튀르키예어)
 
+App Store fırsatları planları açar
 Artık Arapça da kullanılabiliyor
 Arapçada ekranlar sağdan sola dizilir
 Arap tatilleri Arapça adlarıyla görünür
 
 ### 앱스토어 (러시아어)
 
+Акции в App Store сразу открывают тарифы
 Goldweek теперь доступен на арабском
 На арабском экраны идут справа налево
 Арабские праздники названы по-арабски
 
 ### 앱스토어 (인도네시아어)
 
+Promo App Store langsung membuka paket
 Kini tersedia dalam bahasa Arab
 Layar bahasa Arab dari kanan ke kiri
 Hari libur Arab tampil berbahasa Arab
 
 ### 앱스토어 (태국어)
 
+ดีลใน App Store เปิดแพ็กเกจได้ทันที
 ใช้งานเป็นภาษาอาหรับได้แล้ว
 ภาษาอาหรับจัดหน้าจอจากขวาไปซ้าย
 วันหยุดของประเทศอาหรับแสดงเป็นภาษาอาหรับ
 
 ### 앱스토어 (베트남어)
 
+Ưu đãi trên App Store mở thẳng các gói
 Goldweek đã có tiếng Ả Rập
 Tiếng Ả Rập hiển thị từ phải sang trái
 Ngày lễ Ả Rập hiện bằng tiếng Ả Rập
 
 ### 앱스토어 (아랍어)
 
+عروض App Store تفتح الخطط مباشرة
 صار Goldweek متوفرًا باللغة العربية
 الواجهة العربية من اليمين إلى اليسار
 عطل الدول العربية تظهر بأسمائها العربية
