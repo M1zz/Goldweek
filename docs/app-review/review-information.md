@@ -11,6 +11,36 @@
 2. 아래 영어 글을 **App Store Connect ▸ 해당 제출 ▸ 앱 심사에 회신** 에 붙이고 영상을 첨부해 보낸다
 3. 같은 글을 **앱 심사 정보 ▸ 메모** 에도 넣는다 (다음 제출 때 같은 질문을 다시 받지 않는다)
 
+## 2026-11-24 Mac 2.4.8(28) Guideline 2.4.5(i) — 권한(entitlement) 질문
+
+애플이 Mac 앱의 `com.apple.security.device.camera` · `com.apple.security.personal-information.calendars` 를
+어디서 쓰는지 물었다(두 번째 요청).
+
+- **카메라**: Mac Catalyst 에서는 `UIImagePickerController` 카메라가 없어 촬영 버튼이 원래 안 뜬다 → 권한만 남아 있던 것.
+  Mac 권한 파일에서 뺐고, 코드에서도 Mac 은 촬영을 안 띄우게 못 박았다(`CameraSupport`).
+- **사진 보관함**(`photos-library`): `PhotosPicker` 는 권한 없이 돈다 → 다음에 같은 질문이 오지 않게 함께 뺐다.
+- **캘린더**: 실제로 쓰는 기능이라 남기고, 어디서 쓰는지 아래 글로 답한다.
+- 앞으로 Mac 권한 파일(`Goldweek/Goldweek-macOS.entitlements`)에 권한을 더할 때는 Mac 화면에서 그 기능이 보이는지 먼저 확인한다.
+
+### 답장 · 메모 (영어, 그대로 붙여 넣기)
+
+Hello App Review team,
+
+Thank you for the feedback. We have submitted a new build that removes the entitlements the Mac app does not need:
+
+- com.apple.security.device.camera: removed. Taking a photo is not offered on Mac. To import leave from an image, Mac users choose a screenshot, photo, or PDF instead.
+- com.apple.security.personal-information.photos-library: also removed, because the system photo picker does not require it.
+
+com.apple.security.personal-information.calendars is still used, by two optional features built on EventKit. Calendar access is requested only when the user turns one of them on:
+
+1. Import Leaves from Calendar (free)
+Click the gear button to open Settings, then click "Import Leaves from Calendar". The app asks for calendar access, looks through events from the past 3 months and the next 6 months for ones that look like time off (for example "vacation", "annual leave", "sick leave"), and lists them. The user selects which ones to add as leave records.
+
+2. Send leave to Calendar (Plus)
+In Settings, turn on "Send leave to Calendar". The app creates a calendar named "Goldweek Leave" and adds the user's leave days to it, updating or deleting events when the user edits or deletes leave in the app. Turning the switch off removes that calendar.
+
+Thank you.
+
 ## 녹화 (이 맥에서 자동)
 
     scripts/record_mac_review.sh     # 도는 동안(약 2분) 마우스·키보드를 건드리지 말 것

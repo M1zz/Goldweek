@@ -510,9 +510,10 @@ struct PhotoImportSheet: View {
 // MARK: - 카메라 촬영
 
 enum CameraSupport {
-    /// Vision Pro 에는 앱이 쓸 카메라가 없다 — 사진 고르기만 남긴다.
+    /// Vision Pro · Mac 에서는 찍지 않는다 — 사진 고르기만 남긴다.
+    /// (Mac 은 카메라 권한을 받지 않는다: App Review 2.4.5(i), 2026-11-24)
     static var isAvailable: Bool {
-        #if os(visionOS)
+        #if os(visionOS) || targetEnvironment(macCatalyst)
         false
         #else
         UIImagePickerController.isSourceTypeAvailable(.camera)
