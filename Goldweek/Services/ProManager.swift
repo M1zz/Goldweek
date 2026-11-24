@@ -288,6 +288,8 @@ class ProManager {
         defer { isLoading = false }
 
         do {
+            // 할인 배너가 첫 구독 할인을 받을 수 있는 사람인지 보려고 파는 상품을 알려 준다 (LeeoKit).
+            await MainActor.run { LeeoSale.productIDs = Self.saleProductIDs }
             let loaded = try await Product.products(for: Self.saleProductIDs)
             products = Self.saleProductIDs.compactMap { id in loaded.first { $0.id == id } }
             var eligible: Set<String> = []
